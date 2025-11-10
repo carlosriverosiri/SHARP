@@ -1,0 +1,55 @@
+---
+// Import av den nya BaseLayout
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Södermalms Ortopedi - Specialistklinik">
+    
+    <main>
+        <section class="max-w-4xl mx-auto text-center py-24 md:py-32 px-4">
+            
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-4">
+                Södermalms Ortopedi
+            </h1>
+
+            <p class="text-xl md:text-2xl text-blue-700 font-medium mb-8">
+                Specialistmottagning och dagkirurgi i Stockholm
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-16">
+                <a href="/bli-patient" class="bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-800 transition duration-300 transform hover:scale-105">
+                    Hur blir jag patient?
+                </a>
+                <a href="/kontakt" class="bg-gray-200 text-gray-700 font-semibold py-3 px-8 rounded-full shadow-md hover:bg-gray-300 transition duration-300 transform hover:scale-105">
+                    Kontakta oss
+                </a>
+            </div>
+
+        </section>
+
+        <section class="bg-white py-16 px-4">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+                
+                <div class="text-center">
+                    <div class="text-4xl text-blue-700 mb-4">🩺</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Axel & Knä Kirurgi</h3>
+                    <p class="text-gray-600">Vi är specialiserade på modern artroskopisk dagkirurgi och utredningar av axel- och knäproblem.</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="text-4xl text-blue-700 mb-4">🇸🇪</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Fritt Vårdval</h3>
+                    <p class="text-gray-600">Vi tar emot patienter från hela Sverige via Fritt Vårdval, samt patienter från Region Stockholm och försäkringsbolag.</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="text-4xl text-blue-700 mb-4">📍</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Centralt i Stockholm</h3>
+                    <p class="text-gray-600">Hitta oss centralt belägna med goda kommunikationer.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+</BaseLayout>
