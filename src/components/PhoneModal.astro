@@ -1,0 +1,56 @@
+<dialog id="telefon-modal" class="w-full max-w-sm rounded-lg shadow-xl p-6 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+  
+  <div class="relative">
+    
+    <button id="close-modal" class="absolute -top-2 -right-2 p-1 rounded-full text-gray-400 hover:text-gray-800 hover:bg-gray-100 transition-colors" aria-label="Stäng">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    
+    <h4 class="text-xl font-bold mb-2">08-55 11 04 22</h4>
+    <p class="font-semibold">Telefontider</p>
+    
+    <table class="w-full my-4 text-left">
+      <tbody>
+        <tr>
+          <td>Måndag-Fredag</td>
+        </tr>
+        <tr>
+          <td>08.00-16.00</td>
+        </tr>
+      </tbody>
+      <tfoot class="border-t border-gray-200">
+        <tr>
+          <td class="pt-2 text-gray-700">
+            <em style="color: #1967af;">Fax: 08-55 11 04 24</em>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    
+    <div class="text-sm text-gray-600 border-t border-gray-200 pt-4 mt-4">
+      Begränsade öppettider under sommaren samt julhelger
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // Hitta de element vi behöver inuti komponenten
+  const dialog = document.querySelector("#telefon-modal") as HTMLDialogElement;
+  const closeButton = document.querySelector("#close-modal");
+
+  if (dialog && closeButton) {
+    // 1. Stäng när man klickar på X-knappen
+    closeButton.addEventListener("click", () => {
+      dialog.close(); // Inbyggd funktion för <dialog>
+    });
+
+    // 2. Stäng när man klickar på bakgrunden (utanför rutan)
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+  }
+</script>
