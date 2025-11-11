@@ -1,23 +1,38 @@
 ---
-// NY KORRIGERAD IMPORT: Importerar din befintliga stylesheet
-import '../styles/global.css'; 
-
-const { title } = Astro.props; 
+// src/layouts/BaseLayout.astro
+import '../styles/global.css';
+const { title } = Astro.props;
 ---
+
 <!DOCTYPE html>
 <html lang="sv">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body class="bg-gray-50 text-gray-800 font-sans">
-
-    <slot /> 
-
-  </body>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+    <slot />
+   
+    <!-- Karta-sektion -->
+    <section aria-labelledby="karta-rubrik" class="w-full mt-auto">
+        <h2 id="karta-rubrik" class="sr-only">Karta till vår mottagning</h2>
+        <div class="w-full h-96 bg-gray-200 relative overflow-hidden">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2036.1291282728003!2d18.066933!3d59.3141007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465f77e6978f6831%3A0x1b5a5c317135f608!2sS%C3%B6dermalms%20Ortopedi!5e0!3m2!1ssv!2sse!4v1731289200000!5m2!1ssv!2sse"
+                width="100%"
+                height="100%"
+                class="absolute inset-0"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Karta till Södermalms Ortopedi på Medborgarplatsen"
+            ></iframe>
+        </div>
+    </section>
+</body>
 </html>
