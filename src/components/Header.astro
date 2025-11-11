@@ -1,0 +1,136 @@
+---
+import logo from '../assets/logo.svg'; 
+---
+
+<header id="main-header" class="relative z-50 bg-white shadow-md">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    
+    <a href="/" class="flex-shrink-0">
+      <img src={logo.src} alt="Klinikens logotyp" class="h-10 w-auto" />
+    </a>
+
+    <nav class="hidden lg:flex items-center space-x-6">
+      
+      <div class="group relative">
+        <a href="/sjukdomar/" class="text-gray-700 hover:text-blue-600 font-semibold text-lg transition-colors py-2 px-3">Sjukdomar</a>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
+          <li><a href="/sjukdomar/axel/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Axel</a></li>
+          <li><a href="/sjukdomar/kna/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Knä</a></li>
+          <li><a href="/sjukdomar/armbage/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Armbåge</a></li>
+        </ul>
+      </div>
+
+      <div class="group relative">
+        <a href="/rehab/" class="text-gray-700 hover:text-blue-600 font-semibold text-lg transition-colors py-2 px-3">Rehab</a>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
+          <li><a href="/rehab/axel/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Axel</a></li>
+          <li><a href="/rehab/kna/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Knä</a></li>
+          <li><a href="/rehab/armbage/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Armbåge</a></li>
+        </ul>
+      </div>
+
+      <div class="group relative">
+        <a href="/fraga-doktorn/" class="text-gray-700 hover:text-blue-600 font-semibold text-lg transition-colors py-2 px-3">Fråga Doktorn</a>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
+          <li><a href="/fraga-doktorn/axel/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Axel</a></li>
+          <li><a href="/fraga-doktorn/kna/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Knä</a></li>
+          <li><a href="/fraga-doktorn/armbage/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Armbåge</a></li>
+          <li><a href="/fraga-doktorn/stall-ny-fraga/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ställ ny fråga</a></li>
+        </ul>
+      </div>
+
+      <div class="group relative">
+        <a href="/patient/" class="text-gray-700 hover:text-blue-600 font-semibold text-lg transition-colors py-2 px-3">Patient</a>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
+          <li><a href="/patient/kom-till-oss/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kom till oss från hela Sverige</a></li>
+          <li><a href="/patient/remiss-vantetid/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Remiss & Väntetid</a></li>
+          <li><a href="/patient/forsakringar-betalning/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Försäkringar & Betalning</a></li>
+          <li><a href="/patient/boka-omboka/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Boka & Omboka tid</a></li>
+        </ul>
+      </div>
+
+      <div class="group relative">
+        <a href="/om-oss/" class="text-gray-700 hover:text-blue-600 font-semibold text-lg transition-colors py-2 px-3">Om Oss</a>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
+          <li><a href="/om-oss/vart-team/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vårt Team</a></li>
+          <li><a href="/om-oss/kvalitet-forskning/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kvalitet & Forskning</a></li>
+          <li><a href="/om-oss/om-kliniken-hitta-hit/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Om Kliniken & Hitta Hit</a></li>
+          <li><a href="/om-oss/faq/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">FAQ</a></li>
+        </ul>
+      </div>
+    </nav>
+    
+    <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-label="Öppna menyn" aria-expanded="false">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+  </div>
+
+  <nav id="mobile-menu" class="hidden lg:hidden fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+    <div class="p-4 flex justify-end">
+      <button id="close-mobile-menu" class="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-label="Stäng menyn">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <div class="flex flex-col items-center pt-8 pb-4 space-y-4">
+      <a href="/sjukdomar/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 block py-2">Sjukdomar</a>
+      <a href="/rehab/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 block py-2">Rehab</a>
+      <a href="/fraga-doktorn/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 block py-2">Fråga Doktorn</a>
+      <a href="/patient/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 block py-2">Patient</a>
+      <a href="/om-oss/" class="text-2xl font-bold text-gray-800 hover:text-blue-600 block py-2">Om Oss</a>
+    </div>
+
+    
+    <div class="mt-8 px-4 py-6 bg-gray-50 border-t border-gray-100">
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 text-center">Mer för dig som patient</h3>
+      <div class="flex flex-col items-center space-y-2 text-base text-gray-600">
+        <a href="/patient/kom-till-oss/" class="hover:text-blue-600">Kom till oss från hela Sverige</a>
+        <a href="/patient/remiss-vantetid/" class="hover:text-blue-600">Remiss & Väntetid</a>
+        <a href="/patient/forsakringar-betalning/" class="hover:text-blue-600">Försäkringar & Betalning</a>
+        <a href="/patient/boka-omboka/" class="hover:text-blue-600">Boka & Omboka tid</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Script för mobilmeny
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+  mobileMenuToggle.addEventListener('click', () => {
+    mobileMenu.classList.remove('translate-x-full');
+    mobileMenu.classList.add('translate-x-0');
+    mobileMenu.classList.remove('hidden'); // Ensure it's not hidden
+    mobileMenuToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden'; 
+  });
+
+  closeMobileMenu.addEventListener('click', () => {
+    mobileMenu.classList.remove('translate-x-0');
+    mobileMenu.classList.add('translate-x-full');
+    setTimeout(() => {
+      mobileMenu.classList.add('hidden');
+    }, 300); 
+    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = ''; 
+  });
+
+  // Stäng mobilmenyn om man klickar på en länk inuti den
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('translate-x-0');
+      mobileMenu.classList.add('translate-x-full');
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+      }, 300);
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
