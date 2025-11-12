@@ -2,48 +2,101 @@
 // src/layouts/BaseLayout.astro
 import "../styles/global.css";
 import Footer from "../components/footer.astro";
-import Header from "../components/Header.astro"; // <-- 1. LÄGG TILL DENNA RAD
+import Header from "../components/Header.astro";
 
 const { title } = Astro.props;
+
+// ************************************************
+// LOGIKEN FÖR DYNAMISKA BRÖDSMULOR
+// ************************************************
+
+// 1. Hämtar den aktuella URL-sökvägen (ex: '/fritt-vardval-sverige')
+//    och tar bort eventuellt avslutande snedstreck.
+const pathname = Astro.url.pathname.replace(/\/$/, '');
+
+// 2. Delar upp sökvägen i segment (ex: ['fritt-vardval-sverige'])
+//    och filtrerar bort tomma strängar (från det inledande '/')
+const segments = pathname.split('/').filter(s => s.length > 0);
+
+// 3. Funktion för att formatera segmentet till läsbar titel
+function formatSegment(segment) {
+    // Ersätter bindestreck med mellanslag och kapitaliserar första bokstaven i varje ord.
+    return segment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+// Logik för att dölja brödsmulorna på rotsidan (/)
+const shouldShowBreadcrumbs = pathname !== ''; // pathname === '' är startsidan (/) efter att / är borttaget
 ---
 
 <!doctype html>
 <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    </head>
-  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
-    
-    <Header /> <slot /> <section aria-labelledby="karta-rubrik" class="w-full mt-auto">
-      <h2 id="karta-rubrik" class="sr-only">Karta till vår mottagning</h2>
-      <div class="w-full h-96 bg-gray-200 relative overflow-hidden">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2036.1291282728003!2d18.066933!3d59.3141007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465f77e6978f6831%3A0x1b5a5c317135f608!2sS%C3%B6dermalms%20Ortopedi!5e0!3m2!1ssv!2sse!4v1731289200000!5m2!1ssv!2sse"
-          width="100%"
-          height="100%"
-          class="absolute inset-0"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Karta till Södermalms Ortopedi på Medborgarplatsen"
-        ></iframe>
-      </div>
-    </section>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+    
+    <Header /> 
+    
+        {shouldShowBreadcrumbs && (
+      <nav aria-label="Brödsmulor" class="max-w-6xl mx-auto w-full px-6 pt-4 pb-2">
+        <ol class="flex items-center space-x-2 text-sm text-gray-500">
+          <li>
+            <a href="/" class="hover:text-sky-700 font-medium">Startsidan</a>
+          </li>
+          
+          {segments.map((segment, index) => {
+            const isLast = index === segments.length - 1;
+            // Skapar sökvägen till segmentet (t.ex. 'fritt-vardval-sverige')
+            const href = segments.slice(0, index + 1).join('/');
+            
+            return (
+              <>
+                <li class="text-gray-400" aria-hidden="true">/</li>
+                <li class:list={[{ 'font-semibold text-gray-700': isLast }]}>
+                  {isLast ? (
+                    <span aria-current="page">{formatSegment(segment)}</span>
+                  ) : (
+                    <a href={`/${href}`} class="hover:text-sky-700">{formatSegment(segment)}</a>
+                  )}
+                </li>
+              </>
+            );
+          })}
+        </ol>
+      </nav>
+    )}
+        
+    <slot /> 
+    
+    <section aria-labelledby="karta-rubrik" class="w-full mt-auto">
+      <h2 id="karta-rubrik" class="sr-only">Karta till vår mottagning</h2>
+      <div class="w-full h-96 bg-gray-200 relative overflow-hidden">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2036.1291282728003!2d18.066933!3d59.3141007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465f77e6978f6831%3A0x1b5a5c317135f608!2sS%C3%B6dermalms%20Ortopedi!5e0!3m2!1ssv!2sse!4v1731289200000!5m2!1ssv!2sse"
+          width="100%"
+          height="100%"
+          class="absolute inset-0"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Karta till Södermalms Ortopedi på Medborgarplatsen"
+        ></iframe>
+      </div>
+    </section>
 
-    <Footer />
-  </body>
+    <Footer />
+  </body>
 </html>

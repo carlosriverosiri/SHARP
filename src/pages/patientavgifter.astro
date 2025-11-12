@@ -1,0 +1,107 @@
+---
+// src/pages/patientavgifter.astro
+
+// 1. Importera din BaseLayout
+import BaseLayout from '../layouts/BaseLayout.astro';
+// (Ta bort Tailwind CDN och styling härifrån; det ska hanteras av BaseLayout)
+---
+
+<BaseLayout title="Patientavgifter - Region Stockholm">
+
+    <style>
+        /* Sätt Inter som standardfont */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Denna stil är inte nödvändig då Tailwind löser det, men behålls för säkerhets skull */
+        /* .pris-item + .pris-item {
+            border-top: 1px solid #e5e7eb;
+        } */
+    </style>
+
+    <div class="container mx-auto max-w-3xl p-4 sm:p-8">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+            <div class="flex justify-between items-center p-6 sm:p-8 bg-sky-800 text-white">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white">Patientavgifter</h1>
+                    <p class="mt-2 text-base text-sky-100">Enligt avtal med Region Stockholm</p>
+                </div>
+                <div>
+                    <img src="https://specialist.se/wp-content/uploads/stockholms_lans_landsting_64.svg" alt="Logotyp Region Stockholm" class="h-16 w-16 filter brightness-0 invert" />
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-8">
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900">Högkostnadsskydd för mottagningsbesök</h2>
+                    <p class="mt-2 text-gray-700">
+                        Vi har avtal med Region Stockholm och tillämpar samma patientavgifter som inom den offentliga vården.
+                    </p>
+                    <p class="mt-4 text-gray-700">
+                        Alla avgifter för nybesök, återbesök och operation räknas in i <strong>högkostnadsskyddet</strong>. Det innebär att du betalar som vanligt för dina besök tills du når den fastställda gränsen (takbeloppet) på <strong>1 450 kr</strong>. När du har nått detta belopp får du automatiskt ett <strong>frikort</strong>. Frikortet gör att dina kommande besök blir kostnadsfria under resten av högkostnadsperioden (12 månader från ditt första besök).
+                    </p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Mottagningsbesök & Operation</h2>
+                    <div class="rounded-lg border border-gray-200 overflow-hidden">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5">
+                                <div class="mb-2 sm:mb-0">
+                                    <h3 class="text-base font-semibold text-gray-900">Nybesök</h3>
+                                    <p class="text-sm text-gray-600">(med remiss från leg. sjukvårdspersonal)</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">Frikort gäller</span>
+                                    <span class="text-xl font-semibold text-gray-900 w-20 text-right">275 kr</span>
+                                </div>
+                            </li>
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5">
+                                <div class="mb-2 sm:mb-0">
+                                    <h3 class="text-base font-semibold text-gray-900">Återbesök / Övriga besök</h3>
+                                    <p class="text-sm text-gray-600">&nbsp;</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">Frikort gäller</span>
+                                    <span class="text-xl font-semibold text-gray-900 w-20 text-right">275 kr</span>
+                                </div>
+                            </li>
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5">
+                                <div class="mb-2 sm:mb-0">
+                                    <h3 class="text-base font-semibold text-gray-900">Operation</h3>
+                                    <p class="text-sm text-gray-600">(Dagkirurgi)</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">Frikort gäller</span>
+                                    <span class="text-xl font-semibold text-gray-900 w-20 text-right">275 kr</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Övriga avgifter</h2>
+                    <div class="rounded-lg border border-gray-200 overflow-hidden">
+                        <ul class="divide-y divide-gray-200">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5">
+                                <div class="mb-2 sm:mb-0">
+                                    <h3 class="text-base font-semibold text-gray-900">Uteblivet besök</h3>
+                                    <p class="text-sm text-gray-600">(ej avbokat 24 timmar innan)</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm font-medium text-red-700 bg-red-100 px-3 py-1 rounded-full">Frikort gäller ej</span>
+                                    <span class="text-xl font-semibold text-gray-900 w-20 text-right">400 kr</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                </div>
+        </div>
+    </div>
+
+</BaseLayout>

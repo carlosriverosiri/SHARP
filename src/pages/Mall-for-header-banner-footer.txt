@@ -1,0 +1,30 @@
+DETTA SKALL KLISTRAS IN ÖVERST PÅ VARJE NY SIDA!
+
+---
+// 1. Importera din BaseLayout
+import BaseLayout from '../layouts/BaseLayout.astro';
+// (Lägg till imports för eventuella unika komponenter eller data här)
+---
+
+<BaseLayout title="Titel för din nya sida här">
+
+    <main>
+        
+        <section class="py-12 md:py-20">
+            <div class="max-w-6xl mx-auto px-6">
+                
+                <h1>Huvudrubrik för min nya sida</h1>
+                <p>Detta är det unika innehållet som visas i `<slot />` i BaseLayout.</p>
+                </div>
+        </section>
+
+    </main>
+    
+    <style>
+        /* CSS unikt för denna sida */
+    </style>
+    <script>
+        // JavaScript unikt för denna sida
+    </script>
+
+</BaseLayout>

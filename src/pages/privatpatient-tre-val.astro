@@ -1,0 +1,72 @@
+---
+// src/pages/privatpatient-tre-val.astro
+
+// 1. Importera din BaseLayout
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Välj Frågeformulär - Södermalms Ortopedi">
+
+    <main class="py-12 md:py-20">
+        <div class="max-w-6xl mx-auto px-6">
+
+            <header class="text-center space-y-3 mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-sky-700">Välj frågeformulär</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">Välj det område du söker vård för nedan för att komma till rätt digitala frågeformulär.</p>
+
+                <div class="max-w-xl mx-auto bg-sky-50 border border-sky-200 text-sky-900 p-6 rounded-2xl mt-8 text-left sm:text-center shadow-sm">
+                    <h4 class="font-bold text-lg">Prisinformation privatbesök</h4>
+                    <p class="mt-2 text-base">
+                        Vårt fasta pris för ett privatbesök är <span class="font-bold">1450:-</span>.
+                        <br />
+                        I priset <span class="font-bold">ingår</span> <span class="font-bold">eventuell</span> ultraljudsundersökning (värde 550:-) <span class="font-bold">och/eller</span> kortisoninjektion (värde 350:-). Inga andra avgifter tillkommer.
+                    </p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                    <div class="h-48 md:h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                        <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="Ikon för axel" class="h-full w-full object-contain" />
+                    </div>
+                    <div class="p-8 bg-white flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Axel</h3>
+                        <p class="text-gray-700 mb-6 flex-grow">Har du smärta, instabilitet eller nedsatt rörlighet i din axel? Klicka här för att fylla i formuläret.</p>
+                        <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-center text-lg">
+                            Starta formulär (Axel)
+                        </a>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                    <div class="h-48 md:h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                        <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="Ikon för knä" class="h-full w-full object-contain" />
+                    </div>
+                    <div class="p-8 bg-white flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Knä</h3>
+                        <p class="text-gray-700 mb-6 flex-grow">Rör det sig om en meniskskada, korsbandsskada eller artros? Starta din bedömning genom att fylla i formuläret.</p>
+                        <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-center text-lg">
+                            Starta formulär (Knä)
+                        </a>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                    <div class="h-48 md:h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                        <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="Ikon för armbåge" class="h-full w-full object-contain" />
+                    </div>
+                    <div class="p-8 bg-white flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Armbåge</h3>
+                        <p class="text-gray-700 mb-6 flex-grow">Har du besvär med tennisarmbåge, golfarmbåge, bicepsskada eller annan smärta från armbågen? Klicka här.</p>
+                        <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-center text-lg">
+                            Starta formulär (Armbåge)
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</BaseLayout>
