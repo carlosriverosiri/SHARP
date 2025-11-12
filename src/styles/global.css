@@ -1,0 +1,5 @@
+/* Styling för mobila ikoner i headern */
+.icon-button {
+  /* Tailwind-klasser som gör knapparna runda, gröna och vita inuti */
+  @apply w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white transition-colors hover:bg-green-600; 
+}
