@@ -4,256 +4,246 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Södermalms Ortopedi - Startsida">
-    
-    <main>
+    
+    <main>
 
-        <section id="hero" class="bg-sky-700 text-white pt-24 pb-32">
-            <div class="max-w-6xl mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">Specialistvård för axel, knä och armbåge</h1>
-                <p class="text-xl md:text-2xl text-sky-100 mb-10 max-w-3xl mx-auto">Öppet för patienter från hela Sverige.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#vardvagar" class="bg-white text-sky-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 text-lg">
-                        Patienter
-                    </a>
-                    <a href="#specialiteter" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-sky-700 transition duration-300 text-lg">
-                        Vårdgivare
-                    </a>
-                </div>
-            </div>
-        </section>
+        <section id="hero" class="bg-sky-700 text-white pt-24 pb-32">
+            <div class="max-w-6xl mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">Specialistvård för axel, knä och armbåge</h1>
+                <p class="text-xl md:text-2xl text-sky-100 mb-10 max-w-3xl mx-auto">Öppet för patienter från hela Sverige.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#vardvagar" class="bg-white text-sky-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 text-lg">
+                        Patienter
+                    </a>
+                    <a href="#specialiteter" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-sky-700 transition duration-300 text-lg">
+                        Vårdgivare
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <section id="akut-skada" class="py-4 md:py-8">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-lg shadow-md"> 
-                    
-                    <h3 class="text-xl font-bold text-amber-800 mb-3 flex items-center">
-                        <svg class="w-7 h-7 text-amber-600 flex-shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        AKUT ORTOPEDI: Prioriterad handläggning av specialistfall
-                    </h3>
+        <!-- =================================================================
+             START: UPPDATERAT AKUT-SKADA BLOCK
+             Topp-delen och linjen är nu borttagna.
+        ================================================================== -->
+        <section id="akut-skada" class="py-4 md:py-8">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-lg shadow-md"> 
+                    
+                    <!-- Denna div innehåller nu bara knapparna och 24h-infon -->
+                    <div>
+                        <p class="text-lg font-bold text-amber-800 mb-4">
+                            Akuta remisser handläggs inom **24 timmar** – oftast kan vi erbjuda besök samma dag.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="tel:0855110422" class="bg-amber-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-amber-700 transition duration-300 text-lg text-center whitespace-nowrap">
+                                Ring oss direkt: 08-55 11 04 22
+                            </a>
+                            <a href="/kontaktformular" class="bg-white text-amber-700 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-amber-600 text-lg text-center whitespace-nowrap">
+                                Fyll i kontaktformulär &rarr;
+                            </a>
+                        </div>
+                        
+                        <p class="mt-4 text-sm text-amber-700">
+                            Vi är anslutna till Nationell Patientöversikt (NPÖ) och kan med ditt godkännande hämta dina journaler och röntgenbilder från andra regioner.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- =================================================================
+             SLUT: UPPDATERAT AKUT-SKADA BLOCK
+        ================================================================== -->
+                
+        <section id="vardvagar" class="py-20 bg-gray-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-4">Fyra vägar till snabbare vård</h2>
+                <p class="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">Vi välkomnar patienter oavsett var i Sverige du bor. Välj den väg som passar din situation bäst.</p>
 
-                    <p class="text-amber-700 mt-2 font-semibold">
-                        Har du en akut skada som kräver snabb utredning efter besök på Närakuten? Vi hanterar följande specialistfall:
-                    </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                    <ul class="list-disc list-inside text-amber-700 mt-3 ml-4 text-base space-y-1">
-                        <li>Avriven rotatorcuff efter fall</li>
-                        <li>Nedre eller övre bicepsruptur</li>
-                        <li>Avslitning av bröstmuskeln (Pectoralis major-sena)</li>
-                        <li>Axelluxation (axeln ur led)</li>
-                        <li>Nyckelbensluxation (AC-led)</li>
-                        <li>Allvarlig knästukning med svullnad / Låst knä</li>
-                        <li>Allvarlig armbågsstukning</li>
-                    </ul>
+                                    
+                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                        <h3 class="text-2xl font-bold text-sky-700 mb-4">För dig i Region Stockholm</h3>
+                        
+                        <p class="text-gray-700 mb-4 font-semibold">Vårt avtal med Region Stockholm kräver remiss.</p>
+                        
+                        <p class="text-gray-700 mb-4 flex-grow">Vi tar emot remisser från följande <strong class="font-bold text-gray-800">legitimerade vårdgivare</strong>:</p>
+                        
+                        <ul class="text-gray-700 space-y-2 mb-6 list-disc list-inside">
+                            <li>Leg. läkare</li> 
+                            <li>Leg. fysioterapeut</li>
+                            <li>Leg. naprapat</li>
+                            <li>Leg. kiropraktor</li>
+                            <li>Leg. sjuksköterska</li>
+                        </ul>
+                        
+                        <p class="text-gray-700 mb-6 flex-grow">Frikort gäller och du betalar din vanliga patientavgift.</p>
+                        
+                        <a href="/patientavgifter" class="font-bold text-sky-600 hover:underline">Patientavgifter &rarr;</a>
+                    </div>
 
-                    <div class="mt-4 border-t border-amber-300 pt-3">
-                        <p class="text-lg font-bold text-amber-800 mb-4">
-                            Akuta remisser handläggs inom **24 timmar** – oftast kan vi erbjuda besök samma dag.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="tel:0855110422" class="bg-amber-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-amber-700 transition duration-300 text-lg text-center whitespace-nowrap">
-                                Ring oss direkt: 08-55 11 04 22
-                            </a>
-                            <a href="/kontaktformular" class="bg-white text-amber-700 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-amber-600 text-lg text-center whitespace-nowrap">
-                                Fyll i kontaktformulär &rarr;
-                            </a>
-                        </div>
-                        
-                        <p class="mt-4 text-sm text-amber-700">
-                            Vi har tillgång till journaler och röntgenbilder från hela Sverige.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-                <section id="vardvagar" class="py-20 bg-gray-50">
-            <div class="max-w-6xl mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-4">Fyra vägar till snabbare vård</h2>
-                <p class="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">Vi välkomnar patienter oavsett var i Sverige du bor. Välj den väg som passar din situation bäst.</p>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Vård för dig från annan region</h3>
+                        <p class="text-gray-700 mb-4">Välj oss tack vare <a href="/fritt-vardval-sverige" class="text-sky-600 font-semibold underline hover:text-sky-800">Fritt Vårdval</a>, oavsett var du bor.</p>
+                        <ul class="text-gray-700 space-y-3 mb-6 flex-grow list-disc list-inside">
+                            <li><strong class="font-semibold text-gray-800">Remiss krävs:</strong> Du behöver en remiss från t.ex. läkare, fysioterapeut, naprapat eller kiropraktor. Remisser från digitala vårdgivare (t.ex. Kry, Doktor.se) går också bra.</li>
+                            <li><strong class="font-semibold text-gray-800">Kostnad:</strong> Frikort gäller och du betalar vanlig patientavgift.</li>
+                            <li><strong class="font-semibold text-gray-800">Fördel:</strong> Du behöver inte vänta på att Vårdgarantin (90 dagar) ska gälla för att söka vård hos oss.</li>
+                        </ul>
+                        <a href="/fritt-vardval-sverige" class="font-bold text-sky-600 hover:underline">Läs mer om Fritt Vårdval &rarr;</a>
+                    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                        <a href="/privatpatient-tre-val" class="flex flex-col flex-grow group">
+                            <h3 class="text-2xl font-bold text-sky-700 mb-4 group-hover:underline">Som privatpatient</h3>
+                            <p class="text-gray-700 mb-6 flex-grow">Behöver du snabb hjälp utan remiss? Du kan boka en tid som privatpatient. Fyll i ett frågeformulär digitalt så återkommer vi till dig för en bedömning och tidsbokning.</p>
+                            <span class="font-bold text-sky-600 group-hover:underline">Gå till frågeformulär &rarr;</span>
+                        </a>
+                    </div>
 
-                                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">För dig i Region Stockholm</h3>
-                        
-                        <p class="text-gray-700 mb-4 font-semibold">Vårt avtal med Region Stockholm kräver remiss.</p>
-                        
-                        <p class="text-gray-700 mb-4 flex-grow">Vi tar emot remisser från följande <strong class="font-bold text-gray-800">legitimerade vårdgivare</strong>:</p>
-                        
-                        <ul class="text-gray-700 space-y-2 mb-6 list-disc list-inside">
-                            <li>Leg. läkare</li> 
-                            <li>Leg. fysioterapeut</li>
-                            <li>Leg. naprapat</li>
-                            <li>Leg. kiropraktor</li>
-                            <li>Leg. sjuksköterska</li>
-                        </ul>
-                        
-                        <p class="text-gray-700 mb-6 flex-grow">Frikort gäller och du betalar din vanliga patientavgift.</p>
-                        
-                        <a href="/patientavgifter" class="font-bold text-sky-600 hover:underline">Patientavgifter &rarr;</a>
-                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Via försäkringsbolag</h3>
+                        <p class="text-gray-700 mb-6 flex-grow">Vi har avtal med vissa försäkringsbolag. Kontakta ditt bolag för att få en bokningsbekräftelse eller ett remissnummer, och boka sedan din tid hos oss.</p>
+                        <a href="#" class="font-bold text-sky-600 hover:underline">Försäkringsbolag &rarr;</a>
+                    </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Vård för dig från annan region</h3>
-                        <p class="text-gray-700 mb-4">Välj oss tack vare <a href="/fritt-vardval-sverige" class="text-sky-600 font-semibold underline hover:text-sky-800">Fritt Vårdval</a>, oavsett var du bor.</p>
-                        <ul class="text-gray-700 space-y-3 mb-6 flex-grow list-disc list-inside">
-                            <li><strong class="font-semibold text-gray-800">Remiss krävs:</strong> Du behöver en remiss från t.ex. läkare, fysioterapeut, naprapat eller kiropraktor. Remisser från digitala vårdgivare (t.ex. Kry, Doktor.se) går också bra.</li>
-                            <li><strong class="font-semibold text-gray-800">Kostnad:</strong> Frikort gäller och du betalar vanlig patientavgift.</li>
-                            <li><strong class="font-semibold text-gray-800">Fördel:</strong> Du behöver inte vänta på att Vårdgarantin (90 dagar) ska gälla för att söka vård hos oss.</li>
-                        </ul>
-                        <a href="/fritt-vardval-sverige" class="font-bold text-sky-600 hover:underline">Läs mer om Fritt Vårdval &rarr;</a>
-                    </div>
+                </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <a href="/privatpatient-tre-val" class="flex flex-col flex-grow group">
-                            <h3 class="text-2xl font-bold text-sky-700 mb-4 group-hover:underline">Som privatpatient</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Behöver du snabb hjälp utan remiss? Du kan boka en tid som privatpatient. Fyll i ett frågeformulär digitalt så återkommer vi till dig för en bedömning och tidsbokning.</p>
-                            <span class="font-bold text-sky-600 group-hover:underline">Gå till frågeformulär &rarr;</span>
-                        </a>
-                    </div>
+                <div class="mt-16 border-t border-gray-200 pt-12">
+                    <h3 class="text-2xl font-bold text-center text-sky-700 mb-10">Fler vägar till oss</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        
+                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                            <h4 class="text-xl font-bold text-sky-700 mb-3">För dig inom vården</h4>
+                            <p class="text-gray-700 mb-6 flex-grow">Är du legitimerad sjukvårdspersonal (läkare, fysioterapeut, sjuksköterska etc.) och söker vård för dig själv? Du kan skriva en egenremiss direkt till oss.</p>
+                            <a href="#" class="font-bold text-sky-600 hover:underline">Egenremiss för sjukvårdspersonal &rarr;</a>
+                        </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Via försäkringsbolag</h3>
-                        <p class="text-gray-700 mb-6 flex-grow">Vi har avtal med vissa försäkringsbolag. Kontakta ditt bolag för att få en bokningsbekräftelse eller ett remissnummer, och boka sedan din tid hos oss.</p>
-                        <a href="#" class="font-bold text-sky-600 hover:underline">Försäkringsbolag &rarr;</a>
-                    </div>
+                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
+                            <h4 class="text-xl font-bold text-sky-700 mb-3">Flytta en befintlig remiss</h4>
+                            <p class="text-gray-700 mb-6 flex-grow">Har du redan en remiss skickad till en annan mottagning (t.ex. ett sjukhus) men vill komma till oss istället? Kontakta oss så hjälper vi dig att flytta din remiss.</p>
+                            <a href="#" class="font-bold text-sky-600 hover:underline">Kontakta oss för att flytta remiss &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                </div>
+        <section id="specialiteter" class="py-20 bg-white">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-12">Vår expertis</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                            <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="Ikon för axel" class="h-full w-full object-contain"/>
+                        </div>
+                        <div class="p-8 bg-white flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Axel</h3>
+                            <p class="text-gray-700 mb-6 flex-grow">Från impingement (inklämning) och rotatorcuffskador till frusen axel och artros. Vi utreder och behandlar all typ av axelsmärta.</p>
+                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om axelbesvär &rarr;</a>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                            <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="Ikon för knä" class="h-full w-full object-contain"/>
+                        </div>
+                        <div class="p-8 bg-white flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Knä</h3>
+                            <p class="text-gray-700 mb-6 flex-grow">Specialister på meniskskador, korsbandsskador och knäartros. Vi erbjuder allt från titthålskirurgi till avancerad rehab.</p>
+                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om knäbesvär &rarr;</a>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
+                            <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="Ikon för armbåge" class="h-full w-full object-contain"/>
+                        </div>
+                        <div class="p-8 bg-white flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Armbåge</h3>
+                            <p class="text-gray-700 mb-6 flex-grow">Vi behandlar vanliga tillstånd som tennisarmbåge och golfarmbåge, samt instabilitet och artros i armbågsleden.</p>
+                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om armbågsbesvär &rarr;</a>
+                        </div>
+                    </div>
 
-                <div class="mt-16 border-t border-gray-200 pt-12">
-                    <h3 class="text-2xl font-bold text-center text-sky-700 mb-10">Fler vägar till oss</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        
-                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                            <h4 class="text-xl font-bold text-sky-700 mb-3">För dig inom vården</h4>
-                            <p class="text-gray-700 mb-6 flex-grow">Är du legitimerad sjukvårdspersonal (läkare, fysioterapeut, sjuksköterska etc.) och söker vård för dig själv? Du kan skriva en egenremiss direkt till oss.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Egenremiss för sjukvårdspersonal &rarr;</a>
-                        </div>
+                </div>
+            </div>
+        </section>
 
-                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                            <h4 class="text-xl font-bold text-sky-700 mb-3">Flytta en befintlig remiss</h4>
-                            <p class="text-gray-700 mb-6 flex-grow">Har du redan en remiss skickad till en annan mottagning (t.ex. ett sjukhus) men vill komma till oss istället? Kontakta oss så hjälper vi dig att flytta din remiss.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Kontakta oss för att flytta remiss &rarr;</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section id="patientinfo" class="py-20 bg-sky-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    
+                    <div class="bg-white p-10 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-sky-700 mb-3">Patientinformation</h3>
+                        <p class="text-gray-700 mb-6">Vi tror på välinformerade patienter. Här hittar du detaljerad information om olika diagnoser, sjukdomar och hur en operation går till.</p>
+                        <a href="#" class="font-bold text-sky-600 hover:underline">Utforska sjukdomsinformation &rarr;</a>
+                    </div>
+                    
+                    <div class="bg-white p-10 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-sky-700 mb-3">Rehabprogram</h3>
+                        <p class="text-gray-700 mb-6">En lyckad operation är bara halva jobbet. Vi har tagit fram uppskattade rehabprogram som hjälper dig att komma tillbaka snabbt och säkert.</p>
+                        <a href="#" class="font-bold text-sky-600 hover:underline">Se våra rehabprogram &rarr;</a>
+                    </div>
 
-        <section id="specialiteter" class="py-20 bg-white">
-            <div class="max-w-6xl mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-12">Vår expertis</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    
-                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
-                            <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="Ikon för axel" class="h-full w-full object-contain"/>
-                        </div>
-                        <div class="p-8 bg-white flex flex-col flex-grow">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Axel</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Från impingement (inklämning) och rotatorcuffskador till frusen axel och artros. Vi utreder och behandlar all typ av axelsmärta.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om axelbesvär &rarr;</a>
-                        </div>
-                    </div>
-                    
-                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
-                            <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="Ikon för knä" class="h-full w-full object-contain"/>
-                        </div>
-                        <div class="p-8 bg-white flex flex-col flex-grow">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Knä</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Specialister på meniskskador, korsbandsskador och knäartros. Vi erbjuder allt från titthålskirurgi till avancerad rehab.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om knäbesvär &rarr;</a>
-                        </div>
-                    </div>
-                    
-                    <div class="border border-gray-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                        <div class="h-64 w-full bg-sky-50 flex items-center justify-center p-4">
-                            <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="Ikon för armbåge" class="h-full w-full object-contain"/>
-                        </div>
-                        <div class="p-8 bg-white flex flex-col flex-grow">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Armbåge</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Vi behandlar vanliga tillstånd som tennisarmbåge och golfarmbåge, samt instabilitet och artros i armbågsleden.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Läs om armbågsbesvär &rarr;</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section id="patientinfo" class="py-20 bg-sky-50">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                    
-                    <div class="bg-white p-10 rounded-2xl shadow-lg">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-3">Patientinformation</h3>
-                        <p class="text-gray-700 mb-6">Vi tror på välinformerade patienter. Här hittar du detaljerad information om olika diagnoser, sjukdomar och hur en operation går till.</p>
-                        <a href="#" class="font-bold text-sky-600 hover:underline">Utforska sjukdomsinformation &rarr;</a>
-                    </div>
-                    
-                    <div class="bg-white p-10 rounded-2xl shadow-lg">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-3">Rehabprogram</h3>
-                        <p class="text-gray-700 mb-6">En lyckad operation är bara halva jobbet. Vi har tagit fram uppskattade rehabprogram som hjälper dig att komma tillbaka snabbt och säkert.</p>
-                        <a href="#" class="font-bold text-sky-600 hover:underline">Se våra rehabprogram &rarr;</a>
-                    </div>
-
-                </div>
-            </div>
-        </section>
+                </div>
+            </div>
+        </section>
 
 
-        <section id="recensioner" class="py-20 bg-white">
-            <div class="max-w-6xl mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-12">Vad våra patienter säger</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    
-                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
-                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
-                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
-                            "Otroligt kunnig läkare. Fick snabb tid för min axeloperation och allt kändes proffsigt från start till mål. Rekommenderas varmt."
-                        </blockquote>
-                        <footer class="font-semibold text-gray-800">- Anna K. (Google Omdöme)</footer>
-                    </div>
+        <section id="recensioner" class="py-20 bg-white">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-12">Vad våra patienter säger</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
+                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
+                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
+                            "Otroligt kunnig läkare. Fick snabb tid för min axeloperation och allt kändes proffsigt från start till mål. Rekommenderas varmt."
+                        </blockquote>
+                        <footer class="font-semibold text-gray-800">- Anna K. (Google Omdöme)</footer>
+                    </div>
 
-                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
-                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
-                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
-                            "Fantastiskt bemötande av all personal. Kände mig verkligen sedd och trygg genom hela processen. Stor skillnad från andra ställen."
-                        </blockquote>
-                        <footer class="font-semibold text-gray-800">- Lars P. (Google Omdöme)</footer>
-                    </div>
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
+                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
+                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
+                            "Fantastiskt bemötande av all personal. Kände mig verkligen sedd och trygg genom hela processen. Stor skillnad från andra ställen."
+                        </blockquote>
+                        <footer class="font-semibold text-gray-800">- Lars P. (Google Omdöme)</footer>
+                    </div>
 
-                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
-                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
-                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
-                            "Efter månader av smärta i knät (och lång kö i min hemregion) fick jag äntligen hjälp här. Otroligt tacksam för den snabba och effektiva vården."
-                        </blockquote>
-                        <footer class="font-semibold text-gray-800">- Eva S. (Google Omdöme)</footer>
-                    </div>
+                    <div class="bg-gray-50 p-8 rounded-2xl shadow-lg flex flex-col border border-gray-200">
+                        <div class="text-2xl text-yellow-400 mb-4" aria-label="5 av 5 stjärnor">★★★★★</div>
+                        <blockquote class="text-gray-700 italic mb-6 flex-grow">
+                            "Efter månader av smärta i knät (och lång kö i min hemregion) fick jag äntligen hjälp här. Otroligt tacksam för den snabba och effektiva vården."
+                        </blockquote>
+                        <footer class="font-semibold text-gray-800">- Eva S. (Google Omdöme)</footer>
+                    </div>
 
-                </div>
-                <div class="text-center mt-12">
-                    <a href="#" class="bg-white text-sky-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-gray-200">
-                        Läs fler omdömen på Google
-                    </a>
-                </div>
-            </div>
-        </section>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#" class="bg-white text-sky-700 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-gray-200">
+                        Läs fler omdömen på Google
+                    </a>
+                </div>
+            </div>
+        </section>
 
-        <section id="fortroende" class="py-20 bg-sky-50">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto">
-                    <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-6">Varför välja Södermalms ortopedi?</h2>
-                    <p class="text-lg text-gray-700 mb-10">Vi erbjuder en komplett vårdresa – från första bedömning och diagnos till högspecialiserad dagkirurgi och skräddarsydd rehabilitering. Vårt team av erfarna ortopedspecialister fokuserar på moderna, minimalinvasiva tekniker för att ge dig bästa möjliga resultat och snabbaste vägen tillbaka till ett aktivt liv.</p>
-                    <a href="#" class="bg-sky-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg">
-                        Lär känna våra läkare
-                    </a>
-                </div>
-            </div>
-        </section>
+        <section id="fortroende" class="py-20 bg-sky-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-6">Varför välja Södermalms ortopedi?</h2>
+                    <p class="text-lg text-gray-700 mb-10">Vi erbjuder en komplett vårdresa – från första bedömning och diagnos till högspecialiserad dagkirurgi och skräddarsydd rehabilitering. Vårt team av erfarna ortopedspecialister fokuserar på moderna, minimalinvasiva tekniker för att ge dig bästa möjliga resultat och snabbaste vägen tillbaka till ett aktivt liv.</p>
+                    <a href="#" class="bg-sky-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg">
+                        Lär känna våra läkare
+                    </a>
+                </div>
+            </div>
+        </section>
 
-
-    </main>
+    </main>
 
 </BaseLayout>
