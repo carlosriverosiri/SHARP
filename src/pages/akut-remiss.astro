@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akutremiss - Handläggning</title>
+    <!-- Inkluderar Tailwind CSS för styling (samma som index) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Sätter Inter som standard-typsnitt (samma som index) */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- 
+      Det här är den "wrapper" från din index.astro som centrerar innehållet.
+      Du skulle placera denna inuti din akutremiss.astro-fil.
+    -->
+    <main class="relative mx-auto max-w-7xl px-6 py-12 md:py-16 lg:py-24 xl:px-0">
+        
+        <!-- 
+        ============================================================
+        START: SEKTION "AKUT ORTOPEDI"
+        Det här är det enda innehållsblocket på denna sida.
+        ============================================================
+        -->
+        <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="px-6 py-10 md:p-12 lg:p-16">
+                
+                <!-- Rubrik -->
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl flex items-center">
+                    <span class="text-red-500 mr-3">
+                        <!-- SVG-ikon för "larm" eller "akut" -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                        </svg>
+                    </span>
+                    Akutremiss: Snabb Handläggning
+                </h1>
+                
+                <!-- Ingress -->
+                <p class="mt-4 text-lg text-gray-600">
+                    Har du nyligen drabbats av en <strong>akut skada</strong> till följd av ett fall, ett plötsligt ryck eller annan typ av trauma? Akuta händelser, som en vridning i knät eller en luxation i armbågen, kräver <strong>snabba insatser</strong> för bästa möjliga resultat.
+                </p>
+                <p class="mt-3 text-lg text-gray-600">
+                    Vi är specialiserade på att handlägga akuta ortopediska fall och kan <strong>oftast erbjuda en tid inom 24 timmar</strong>.
+                </p>
+
+                <!-- Hur man söker vård -->
+                <div class="mt-10">
+                    <h2 class="text-2xl font-semibold text-gray-900 flex items-center">
+                        <span class="text-indigo-600 mr-2">
+                            <!-- Ikon för "process" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                            </svg>
+                        </span>
+                        Hur söker du akut vård hos oss?
+                    </h2>
+                    <p class="mt-3 text-gray-600">
+                        Det enklaste sättet att komma akut till oss är att  be en vårdgivare att skicka en remiss direkt till oss. Vi rekommenderar också starkt att en första röntgen har utförts vid misstanke om fraktur eller luxation (ur led vridning), då det underlättar och snabbar upp den initiala bedömningen.
+                    </p>
+                    
+                    <p class="mt-4 font-medium text-gray-800">Be din vårdgivare att remittera dig:</p>
+                    <ul class="mt-2 list-disc list-inside space-y-1 text-gray-600">
+                        <li>Din läkare på närakut eller vårdcentral</li>
+                        <li>Din husläkare</li>
+                        <li>Din sjukgymnast/fysioterapeut</li>
+                        <li>Din naprat eller kiropraktor</li>
+                        <li>Sjuksköterska på din vårdcentral</li>
+                    </ul>
+                </div>
+
+                <!-- "Viktigt att veta"-ruta -->
+                <div class="mt-8 border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-bold text-blue-900">Viktigt att veta</p>
+                            <p class="mt-1 text-sm text-blue-800">
+                                Vi <strong>föredrar</strong> att din skadade axel, armbåge eller ditt knä är <strong>röntgat</strong> innan ditt besök, men det är <strong>inte ett absolut krav</strong>. Om röntgen saknas, kan det i vissa fall leda till att du behöver komma tillbaka för ett uppföljande besök efter utförd röntgen.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exempel på trauman -->
+                <div class="mt-10">
+                    <h2 class="text-2xl font-semibold text-gray-900 flex items-center">
+                        <span class="text-indigo-600 mr-2">
+                            <!-- Ikon för "checklista" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                            </svg>
+                        </span>
+                        Exempel på akuta trauman vi handlägger
+                    </h2>
+                    <p class="mt-3 text-gray-600">
+                        Vi har stor erfarenhet av att behandla komplexa och akuta mjukdelsskador, inklusive men inte begränsat till:
+                    </p>
+                    
+                    <!-- Lista uppdelad i två kolumner på större skärmar -->
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                        <!-- Kolumn 1 -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Axel & Överarm:</h3>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <li>Avriven <strong>rotatorcuff</strong> efter fall.</li>
+                                <li>Övre eller nedre <strong>bicepsruptur</strong> efter ett kraftigt lyft.</li>
+                                <li>Avslitning av <strong>bröstmuskeln (Pectoralis major-sena)</strong>, t.ex. efter bänkpress.</li>
+                                <li><strong>Axelluxation</strong> (ur led) och <strong>nyckelbensluxation (AC-lux)</strong>.</li>
+                            </ul>
+                        </div>
+                        <!-- Kolumn 2 -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Knä & Armbåge:</h3>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                <li><strong>Allvarlig knästukning</strong> (distorsion) med svullnad eller <strong>låst knä</strong>.</li>
+                                <li><strong>Allvarlig armbågsstukning</strong> (distorsion) med svullnad och blåmärken.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- 
+        ============================================================
+        SLUT: SEKTION "AKUT ORTOPEDI"
+        ============================================================
+        -->
+
+    </main> <!-- Slut på max-w-7xl wrapper -->
+
+</body>
+</html>
