@@ -22,29 +22,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
         </section>
 
-        <!-- =================================================================
-             START: UPPDATERAT AKUT-SKADA BLOCK
-             Topp-delen och linjen är nu borttagna.
-        ================================================================== -->
         <section id="akut-skada" class="py-4 md:py-8">
             <div class="max-w-6xl mx-auto px-6">
                 <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-lg shadow-md"> 
                     
-                    <!-- Denna div innehåller nu bara knapparna och 24h-infon -->
                     <div>
                         <p class="text-lg font-bold text-amber-800 mb-4">
-                            Akuta remisser handläggs inom 24 timmar – oftast kan vi erbjuda besök samma dag.
+                            Akuta remisser handläggs inom **24 timmar** – oftast kan vi erbjuda besök samma dag.
                         </p>
                         
-                        <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-4">
                             <a href="tel:0855110422" class="bg-amber-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-amber-700 transition duration-300 text-lg text-center whitespace-nowrap">
                                 Ring oss direkt: 08-55 11 04 22
                             </a>
-                            <a href="/kontaktformular" class="bg-white text-amber-700 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-amber-600 text-lg text-center whitespace-nowrap">
-                                Fyll i kontaktformulär &rarr;
+                            <a href="/akut-remiss" class="bg-white text-amber-700 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-amber-600 text-lg text-center whitespace-nowrap">
+                                För Patienter &rarr;
+                            </a>
+                            <a href="/akut-remiss#info-vardgivare" class="bg-white text-amber-700 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 border border-amber-600 text-lg text-center whitespace-nowrap">
+                                För Vårdgivare &rarr;
                             </a>
                         </div>
-                        
                         <p class="mt-4 text-sm text-amber-700">
                             Vi är anslutna till Nationell Patientöversikt (NPÖ) och kan med ditt godkännande hämta dina journaler och röntgenbilder från andra regioner.
                         </p>
@@ -52,10 +49,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 </div>
             </div>
         </section>
-        <!-- =================================================================
-             SLUT: UPPDATERAT AKUT-SKADA BLOCK
-        ================================================================== -->
-                
         <section id="vardvagar" class="py-20 bg-gray-50">
             <div class="max-w-6xl mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-4">Fyra vägar till snabbare vård</h2>
@@ -63,7 +56,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                                    
+                                      
                     <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
                         <h3 class="text-2xl font-bold text-sky-700 mb-4">För dig i Region Stockholm</h3>
                         

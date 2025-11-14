@@ -43,8 +43,9 @@
             <section>
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto">
                     <div class="px-6 py-10 md:p-12 lg:p-16">
+                        
                         <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-8">
-                            Så söker du akut vård hos oss
+                            Så söker du akut vård hos oss – oavsett var du bor
                         </h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -58,12 +59,6 @@
                                     Vi är anslutna till Nationell Patientöversikt (NPÖ), vilket ger oss tillgång till dina <strong>digitala journaler</strong>. Dessutom har vi kopplingar till radiologisystem i <strong>hela Sverige</strong> och kan med ditt godkännande <strong>snabbt hämta dina digitala röntgenbilder</strong>, oavsett region.
                                 </p>
                                 
-                                <div class="md:hidden mb-8">
-                                    <a href="#qr-box" class="block w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 text-lg text-center">
-                                        Ladda upp remiss direkt &darr;
-                                    </a>
-                                </div>
-                                
                                 <h3 class="text-lg font-bold text-gray-900 mb-3">Be din vårdgivare att remittera dig:</h3>
                                 <ul class="list-disc list-inside space-y-2 text-lg text-gray-600">
                                     <li>Din läkare på närakut eller vårdcentral</li>
@@ -72,67 +67,47 @@
                                     <li>Din naprat eller kiropraktor</li>
                                     <li>Leg. Sjuksköterska</li>
                                 </ul>
+                            </div>
 
-                                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mt-6">
+                            <div class="space-y-6">
+                                
+                                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
                                     <p class="text-lg text-blue-900 font-semibold">
                                         Har du fått en pappersremiss i handen?
                                     </p>
                                     <p class="mt-2 text-gray-700">
-                                        Istället för att vänta på hantering i din hemregion kan du fota och skicka in remissen direkt till vårt journalsystem. Använd funktionen i rutan till höger.
+                                        Istället för att vänta på hantering i din hemregion kan du fota och skicka in remissen direkt till vårt journalsystem. Använd den digitala remissuppladdningen i sektionen nedan.
                                     </p>
                                 </div>
-
-                            </div>
-
-                            <div id="qr-box" class="bg-blue-50 p-8 rounded-2xl border border-blue-100 flex flex-col h-full">
-                                <h3 class="text-xl font-bold text-blue-900 mb-2">Remiss via mobil (Patient & Vårdgivare)</h3>
-                                <p class="text-blue-800 mb-6">Både patienter och vårdgivare kan använda denna QR-kod för att fota och ladda upp en remiss direkt.</p>
                                 
-                                <div class="bg-white p-4 rounded-xl shadow-sm w-48 h-48 mx-auto mb-6 flex items-center justify-center border border-blue-100">
-                                    <img src="/qrcode-akut-remiss.svg" alt="QR-kod för att ladda upp remiss" class="w-full h-full object-contain">
+                                <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-lg font-bold text-blue-900">Viktigt att veta om röntgen</h3>
+                                            <p class="mt-2 text-blue-800">
+                                                Vi <strong>föredrar</strong> att din skadade axel, armbåge eller ditt knä är <strong>röntgat</strong> innan ditt besök, men det är <strong>inte ett absolut krav</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <ol class="list-decimal list-inside text-sm text-blue-900 space-y-2 mb-6 font-medium">
-                                    <li>Öppna kameran på mobilen</li>
-                                    <li>Rikta den mot QR-koden</li>
-                                    <li>Följ länken och logga in med BankID</li>
-                                    <li>Fota och ladda upp remissen</li>
-                                </ol>
-
-                                <div class="mt-auto pt-4 border-t border-blue-200">
-                                    <p class="text-xs text-blue-800 leading-relaxed">
-                                        <span class="font-bold block mb-1 text-blue-900">Tryggt & Säkert</span>
-                                        Uppladdningen sker via en svensk molntjänst där all data lagras krypterat på servrar i Sverige. Detta garanterar högsta säkerhet och full efterlevnad av GDPR och Patientdatalagen.
-                                    </d>
-                                </div>
                             </div>
-                        </div> <div class="mt-12 bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-lg font-bold text-blue-900">Viktigt att veta om röntgen</h3>
-                                    <p class="mt-2 text-blue-800">
-                                        Vi <strong>föredrar</strong> att din skadade axel, armbåge eller ditt knä är <strong>röntgat</strong> innan ditt besök, men det är <strong>inte ett absolut krav</strong>.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
 
-                    </div>
+                        </div> </div>
                 </div>
             </section>
 
-            <section>
-                <div class="text-center mb-12">
+            <section id="info-vardgivare"> <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700">
-                        Information till din vårdgivare
+                        Digital Remissuppladdning: Två vägar in
                     </h2>
                     <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto">
-                        Be din vårdgivare att skicka remissen digitalt för snabbast hantering. Det finns två enkla sätt:
+                        Oavsett om du är patient eller vårdgivare, på dator eller mobil, här är sätten du laddar upp remissen:
                     </p>
                 </div>
 
@@ -141,7 +116,7 @@
                     <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
                         <h3 class="text-2xl font-semibold text-gray-900 mb-3">1. Ladda upp från dator (PC/Mac)</h3>
                         <p class="text-lg text-gray-700 mb-6">
-                            Det enklaste sättet för vårdgivare på en mottagning. Be dem att:
+                            Det enklaste sättet för vårdgivare på en mottagning.
                         </p>
                         <ol class="list-decimal list-inside text-lg text-gray-700 space-y-2 flex-grow mb-8">
                             <li>Klicka på knappen nedan.</li>
@@ -154,10 +129,28 @@
                     </div>
 
                     <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">2. Ladda upp från mobil</h3>
-                        <p class="text-lg text-gray-700 mb-6 flex-grow">
-                            Använd mobilen för att skanna QR-koden som finns högre upp på den här sidan. Processen är densamma: skanna, logga in med BankID och ladda upp filen.
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">2. Ladda upp från mobil (i fält)</h3>
+                        <p class="text-lg text-gray-700 mb-6">
+                            Perfekt för patienter med pappersremiss eller vårdgivare i fält (t.ex. i skidbacken).
                         </p>
+                        <ol class="list-decimal list-inside text-lg text-gray-700 space-y-3 flex-grow mb-8">
+                            <li>
+                                Skriv en anteckning i mobilen.
+                                <br>
+                                <strong class="font-semibold text-gray-900">VIKTIGT:</strong> Anteckningen måste innehålla:
+                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1 text-base">
+                                    <li>Patientens personnummer</li>
+                                    <li>Patientens mobilnummer</li>
+                                    <li>Ditt namn och titel som vårdgivare</li>
+                                </ul>
+                            </li>
+                            <li>Ta en <strong>skärmbild</strong> av anteckningen (eller fota pappersremissen).</li>
+                            <li>Klicka på knappen nedan.</li>
+                            <li>Logga in med BankID och ladda upp filen.</li>
+                        </ol>
+                         <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
+                            Starta Remissuppladdning
+                        </a>
                     </div>
 
                 </div>
