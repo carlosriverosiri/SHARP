@@ -1,9 +1,18 @@
+Absolut\! Då tar jag den senaste koden du skickade och implementerar de förslag vi diskuterade:
+
+1.  **Uppdaterad text i "Klicka-för-att-kopiera"-rutorna** (från "Klicka för att kopiera..." till den mer direkta "Klicka här för att kopiera...").
+2.  **Helt ny "Vad händer nu?"-sektion** (den detaljerade 4-stegs-processen med den gula "snabbspår"-rutan).
+
+Här är den färdiga koden:
+
+```html
 <!DOCTYPE html>
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akutremiss - Handläggning</title>
+    <meta name="description" content="Akut ortopedisk skada? Skicka in din remiss digitalt till Södermalms Ortopedi, oavsett var du bor. Vi erbjuder snabb handläggning, oftast inom 24 timmar.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -98,11 +107,13 @@
                                 
                             </div>
 
-                        </div> </div>
+                        </div> 
+                    </div>
                 </div>
             </section>
 
-            <section id="info-vardgivare"> <div class="text-center mb-12">
+            <section id="info-vardgivare">
+                <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700">
                         Digital Remissuppladdning: Två vägar in
                     </h2>
@@ -118,92 +129,167 @@
                         <p class="text-lg text-gray-700 mb-6">
                             Det enklaste sättet för vårdgivare på en mottagning.
                         </p>
-                        <ol class="list-decimal list-inside text-lg text-gray-700 space-y-2 flex-grow mb-8">
-                            <li>Klicka på knappen nedan.</li>
-                            <li>Identifiera sig med BankID.</li>
-                            <li>Ladda upp remiss (PDF, bildfil eller media).</li>
-                        </ol>
-                        <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
+                        
+                        <div class="flex-grow mb-8">
+                            <ol class="list-decimal list-inside text-lg text-gray-700 space-y-2">
+                                <li>Klicka på knappen nedan.</li>
+                                <li>Identifiera sig med BankID.</li>
+                                <li>Ladda upp remiss (PDF, bildfil eller media).</li>
+                            </ol>
+                            
+                            <div class="mt-6 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+                                <p class="font-semibold text-gray-900">Varför bara dessa filtyper?</p>
+                                <p class="mt-1 text-sm text-gray-700">
+                                    För att skydda din patientdata accepterar vi endast filer som PDF, bilder, foton (JPG, PNG) och video (MP4). Dessa format kan inte innehålla skadlig kod, vilket garanterar en säker överföring och följer GDPR.
+                                </p>
+                                <p class="mt-2 text-sm text-gray-700 font-medium">
+                                    Filer med redigerbar text (ex från ordbehandlare) accepteras ej.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="copy-password-trigger mb-4 text-center p-3 bg-gray-100 rounded-lg cursor-pointer group hover:bg-sky-50 transition" 
+                             data-password="2026nyår">
+                            <p class="password-label text-sm text-gray-600 group-hover:text-sky-800">Klicka här för att kopiera lösenordet:</p>
+                            <p class="password-text text-2xl font-bold text-sky-700 tracking-wider group-hover:text-sky-800">
+                                2026nyår
+                            </p>
+                        </div>
+                        
+                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
                             Starta Remissuppladdning
                         </a>
-                    </div>
+                        </div>
 
                     <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">2. Ladda upp från mobil (i fält)</h3>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">2. Ladda upp från mobil (Patient & Vårdgivare på språng)</h3>
                         <p class="text-lg text-gray-700 mb-6">
-                            Perfekt för patienter med pappersremiss eller vårdgivare i fält (t.ex. i skidbacken).
+                            Perfekt för patienter med pappersremiss eller vårdgivare utanför kontoret (t.ex. i skidbacken, på landet).
                         </p>
-                        <ol class="list-decimal list-inside text-lg text-gray-700 space-y-3 flex-grow mb-8">
-                            <li>
-                                Skriv en anteckning i mobilen.
-                                <br>
-                                <strong class="font-semibold text-gray-900">VIKTIGT:</strong> Anteckningen måste innehålla:
-                                <ul class="list-disc list-inside ml-6 mt-2 space-y-1 text-base">
+                        
+                        <div class="flex-grow mb-8">
+                            <ol class="list-decimal list-inside text-lg text-gray-700 space-y-3">
+                                <li>Klicka på knappen nedan.</li>
+                                <li>Logga in med BankID.</li>
+                                <li>
+                                    Ladda upp din fil. Du kan antingen:
+                                    <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-base">
+                                        <li><strong>Fota</strong> din pappersremiss direkt.</li>
+                                        <li>Ladda upp en <strong>skärmbild</strong> eller befintlig fil.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            
+                            <div class="mt-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                                <p class="font-semibold text-gray-900">VIKTIGT (för vårdgivare):</p>
+                                <p class="mt-1 text-sm text-gray-700">Om du skickar en skärmbild av en anteckning, se till att den innehåller:</p>
+                                <ul class="list-disc list-inside ml-5 mt-2 space-y-1 text-sm text-gray-700">
                                     <li>Patientens personnummer</li>
                                     <li>Patientens mobilnummer</li>
-                                    <li>Ditt namn och titel som vårdgivare</li>
+                                    <li>Ditt namn och titel</li>
                                 </ul>
-                            </li>
-                            <li>Ta en <strong>skärmbild</strong> av anteckningen (eller fota pappersremissen).</li>
-                            <li>Klicka på knappen nedan.</li>
-                            <li>Logga in med BankID och ladda upp filen.</li>
-                        </ol>
-                         <a href="#" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
+                            </div>
+                        </div>
+
+                        <div class="copy-password-trigger mb-4 text-center p-3 bg-gray-100 rounded-lg cursor-pointer group hover:bg-sky-50 transition" 
+                             data-password="2026nyår">
+                            <p class="password-label text-sm text-gray-600 group-hover:text-sky-800">Klicka här för att kopiera lösenordet:</p>
+                            <p class="password-text text-2xl font-bold text-sky-700 tracking-wider group-hover:text-sky-800">
+                                2026nyår
+                            </p>
+                        </div>
+                        
+                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
                             Starta Remissuppladdning
                         </a>
-                    </div>
+                        </div>
 
                 </div>
             </section>
+
             <section>
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700">
-                        Exempel på akuta trauman
-                    </h2>
-                    <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto">
-                        Vi har stor erfarenhet av att behandla komplexa och akuta mjukdelsskador.
-                    </p>
-                </div>
+                <div class="max-w-3xl mx-auto space-y-8">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <div class="flex-shrink-0">
-                            <span class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-                                <svg class="h-7 w-7 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </span>
-                        </div>
-                        <h3 class="mt-4 text-2xl font-semibold text-gray-900">Axel & Överarm</h3>
-                        <ul class="mt-4 list-disc list-inside space-y-3 text-lg text-gray-600 flex-grow">
-                            <li>Avriven <strong>rotatorcuff</strong> efter fall.</li>
-                            <li>Övre eller nedre <strong>bicepsruptur</strong> efter ett kraftigt lyft.</li>
-                            <li>Avslitning av <strong>bröstmuskeln (Pectoralis major-sena)</strong>.</li>
-                            <li><strong>Axelluxation</strong> och <strong>nyckelbensluxation (AC-lux)</strong>.</li>
-                        </ul>
+                    <div class="p-8 bg-white rounded-2xl shadow-xl">
+                        <h2 class="text-3xl font-bold text-center text-sky-700 mb-6">Vad händer efter din uppladdning?</h2>
+                        <ol class="list-decimal list-outside ml-5 text-lg text-gray-700 space-y-4">
+                            <li>
+                                <span class="font-semibold text-gray-900">Sjuksköterska granskar (förmiddag)</span><br>
+                                En sjuksköterska kontrollerar din remiss och att alla uppgifter (personnummer, namn, mobilnummer) stämmer. Detta sker normalt på förmiddagen (vardagar).
+                            </li>
+                            <li>
+                                <span class="font-semibold text-gray-900">Specialist bedömer (eftermiddag)</span><br>
+                                En ortopedspecialist bedömer din skada medicinskt.
+                            </li>
+                            <li>
+                                <span class="font-semibold text-gray-900">Du får ett boknings-SMS</span><br>
+                                När din remiss är godkänd får du ett SMS med en länk för att boka din tid.
+                            </li>
+                            <li>
+                                <span class="font-semibold text-gray-900">VIKTIGT: Fyll i frågeformulär</span><br>
+                                När du har bokat din tid kommer du att slussas vidare till ett digitalt frågeformulär om din skada och hälsa. <strong class="text-gray-900">Det är av yttersta vikt att du fyller i detta</strong> för att vi ska kunna förbereda ditt besök.
+                            </li>
+                        </ol>
                     </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <div class="flex-shrink-0">
-                            <span class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-                                <svg class="h-7 w-7 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </span>
-                        </div>
-                        <h3 class="mt-4 text-2xl font-semibold text-gray-900">Knä & Armbåge</h3>
-                        <ul class="mt-4 list-disc list-inside space-y-3 text-lg text-gray-600 flex-grow">
-                            <li><strong>Allvarlig knästukning</strong> (distorsion) med svullnad.</li>
-                            <li><strong>Låst knä</strong> (misstänkt meniskskada).</li>
-                            <li><strong>Allvarlig armbågsstukning</strong> (distorsion) med svullnad.</li>
-                        </ul>
+                    <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                        <h3 class="text-xl font-bold text-gray-900">Behöver du en tid extra snabbt?</h3>
+                        <p class="mt-2 text-gray-700 text-lg">
+                            Vissa akuta skador är tidskritiska. Om du eller din vårdgivare bedömer att du måste komma in omedelbart, <strong class="text-gray-900">ring oss direkt</strong> efter att du laddat upp remissen. Vi har ofta möjlighet att lägga in extratider efter kl. 16.00 för dessa fall.
+                        </p>
                     </div>
 
                 </div>
             </section>
-        </div> 
+            </div> 
     </main>
 
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyTriggers = document.querySelectorAll('.copy-password-trigger');
+            
+            copyTriggers.forEach(trigger => {
+                const label = trigger.querySelector('.password-label');
+                const textEl = trigger.querySelector('.password-text');
+                const originalLabel = label.innerHTML;
+                const originalText = textEl.innerHTML;
+
+                trigger.addEventListener('click', () => {
+                    const password = trigger.getAttribute('data-password');
+                    
+                    if (!navigator.clipboard) {
+                        alert('Kunde inte kopiera. Vänligen kopiera manuellt.');
+                        return;
+                    }
+
+                    navigator.clipboard.writeText(password).then(() => {
+                        // Success! Visa feedback
+                        label.innerHTML = "Lösenord Kopierat!";
+                        textEl.innerHTML = "✓";
+                        
+                        // Byt färg till grön
+                        label.classList.add('text-green-600', 'font-bold');
+                        textEl.classList.add('text-green-600');
+                        label.classList.remove('text-gray-600', 'group-hover:text-sky-800');
+                        textEl.classList.remove('text-sky-700', 'group-hover:text-sky-800');
+
+                        // Återställ efter 2 sekunder
+                        setTimeout(() => {
+                            label.innerHTML = originalLabel;
+                            textEl.innerHTML = originalText;
+                            label.classList.remove('text-green-600', 'font-bold');
+                            textEl.classList.remove('text-green-600');
+                            label.classList.add('text-gray-600', 'group-hover:text-sky-800');
+                            textEl.classList.add('text-sky-700', 'group-hover:text-sky-800');
+                        }, 2000);
+                        
+                    }).catch(err => {
+                        console.error('Kunde inte kopiera lösenord: ', err);
+                    });
+                });
+            });
+        });
+    </script>
+    </body>
 </html>
+```
