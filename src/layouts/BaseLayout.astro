@@ -45,8 +45,8 @@ const shouldShowBreadcrumbs = pathname !== ''; // pathname === '' är startsidan
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   </head>
-  <!-- ÄNDRING HÄR: Lagt till pt-20 för att flytta ner sidans innehåll -->
-  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col pt-20">
+  <!-- ÄNDRING: Tog bort 'pt-20' eftersom headern är sticky och tar upp plats själv -->
+  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
     
     <Header /> 
     
