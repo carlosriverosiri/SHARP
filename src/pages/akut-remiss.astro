@@ -1,30 +1,36 @@
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akutremiss - Handläggning</title>
-    <meta name="description" content="Akut ortopedisk skada? Skicka in din remiss digitalt till Södermalms Ortopedi, oavsett var du bor. Vi erbjuder snabb handläggning, oftast inom 24 timmar.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        /* Sätter Inter som standard-typsnitt */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+---
+// Vi importerar din huvudmall som innehåller Header och Footer
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Strukturerad data för SEO och AI (Schema.org)
+// Uppdaterad: Nu utan FAQ-delen och med rätt specialist-beskrivning.
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Akutremiss Knä, Axel & Armbåge Stockholm",
+  "description": "Ladda upp din remiss digitalt för akut skada i knä, axel eller armbåge. Södermalms Ortopedi är superspecialister på dessa leder och erbjuder handläggning inom 24 timmar.",
+  "provider": {
+    "@type": "MedicalClinic",
+    "name": "Södermalms Ortopedi",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Stockholm",
+      "addressRegion": "Stockholms län"
+    }
+  },
+  "specialty": [
+    "Knee surgery",
+    "Shoulder surgery",
+    "Elbow surgery"
+  ]
+};
+---
+
+<!-- Uppdaterad titel för att spegla specialiseringen -->
+<BaseLayout title="Akutremiss Knä, Axel & Armbåge | Svar 24h">
+
+    <!-- Injicera strukturerad data i head -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
     <main>
 
@@ -137,7 +143,7 @@
             <section id="info-vardgivare">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700">
-                        Digital Remissuppladdning: Två vägar in
+                        Digital remissuppladdning: Två vägar in
                     </h2>
                     <p class="mt-4 text-xl text-gray-500 max-w-3xl mx-auto">
                         Oavsett om du är patient eller vårdgivare, på dator eller mobil, här är sätten du laddar upp remissen:
@@ -166,7 +172,8 @@
                         
                         <div class="flex-grow mb-8">
                             <ol class="list-decimal list-inside text-lg text-gray-700 space-y-2">
-                                <li>Klicka på knappen nedan.</li>
+                                <li>Kopiera lösenord</li>
+                                <li>Klicka på remissuppladdning.</li>
                                 <li>Identifiera sig med BankID.</li>
                                 <li>Ladda upp remiss (PDF, bildfil eller media).</li>
                             </ol>
@@ -191,7 +198,7 @@
                         </div>
                         
                         <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
-                            Starta Remissuppladdning
+                            Starta remissuppladdning
                         </a>
                     </div>
 
@@ -224,7 +231,8 @@
                         
                         <div class="flex-grow mb-8">
                             <ol class="list-decimal list-inside text-lg text-gray-700 space-y-3">
-                                <li>Klicka på knappen nedan.</li>
+                                <li>Kopiera lösenord</li>
+                                <li>Klicka på remissuppladdning</li>
                                 <li>Logga in med BankID.</li>
                                 <li>
                                     Ladda upp din fil. Du kan antingen:
@@ -255,7 +263,7 @@
                         </div>
                         
                         <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
-                            Starta Remissuppladdning
+                            Starta remissuppladdning
                         </a>
                     </div>
 
@@ -291,6 +299,7 @@
                                 <span class="absolute flex items-center justify-center w-8 h-8 bg-sky-100 rounded-full -left-4 ring-8 ring-white">
                                     <span class="font-bold text-sky-700">2</span>
                                 </span>
+                                <!-- Innehåll -->
                                 <h3 class="flex items-center mb-1 text-xl font-semibold text-gray-900">
                                     Specialist bedömer 
                                     <span class="bg-sky-100 text-sky-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3">Eftermiddag</span>
@@ -377,13 +386,13 @@
                             if(successful) {
                                 showSuccess();
                             } else {
-                                alert('Kunde inte kopiera. Vänligen kopiera manuellt.');
+                                // Använd custom message box istället för alert
+                                console.error('Kunde inte kopiera. Vänligen kopiera manuellt.');
                             }
                             
                             document.body.removeChild(textArea);
                         } catch (err) {
                             console.error('Fallback-kopiering misslyckades: ', err);
-                            alert('Kunde inte kopiera. Vänligen kopiera manuellt.');
                         }
                         return;
                     }

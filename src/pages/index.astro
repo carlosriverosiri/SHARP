@@ -1,10 +1,73 @@
 ---
 // 1. Vi importerar din huvudmall (BaseLayout)
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Strukturerad data för Startsidan (MedicalClinic)
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Södermalms Ortopedi",
+  "image": "https://sodermalmsortopedi.se/logo.svg", // Byt gärna till absolut URL om möjligt
+  "description": "Specialistklinik i Stockholm för knä, axel och armbåge. Vi utför dagkirurgi och tar emot patienter från hela Sverige via Fritt Vårdval och försäkringsbolag.",
+  "url": "https://sodermalmsortopedi.se",
+  "telephone": "+46-8-55110422",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Fatburs Brunnsgata 15-17",
+    "addressLocality": "Stockholm",
+    "postalCode": "118 28",
+    "addressCountry": "SE"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 59.3141,
+    "longitude": 18.0669
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "opens": "08:00",
+    "closes": "16:00"
+  },
+  "medicalSpecialty": [
+    "Orthopedic surgery",
+    "Sports medicine"
+  ],
+  "availableService": [
+    {
+      "@type": "MedicalProcedure",
+      "name": "Axelkirurgi",
+      "description": "Specialistvård för rotatorcuff, impingement och instabilitet."
+    },
+    {
+      "@type": "MedicalProcedure",
+      "name": "Knäkirurgi",
+      "description": "Menisk, korsband och artrosbehandling."
+    },
+    {
+      "@type": "MedicalProcedure",
+      "name": "Armbågskirurgi",
+      "description": "Tennisarmbåge och ligamentskador."
+    }
+  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "Sweden"
+  },
+  "isAcceptingNewPatients": true
+};
 ---
 
-<BaseLayout title="Södermalms Ortopedi - Startsida">
+<BaseLayout title="Specialistvård Knä, Axel & Armbåge Stockholm | Södermalms Ortopedi">
     
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
     <main>
 
         <section id="hero" class="bg-sky-700 text-white pt-24 pb-32">
@@ -42,6 +105,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                                 För Vårdgivare &rarr;
                             </a>
                         </div>
+                        
                         <p class="mt-4 text-sm text-amber-700">
                             Vi är anslutna till Nationell Patientöversikt (NPÖ) och kan med ditt godkännande hämta dina journaler och röntgenbilder från andra regioner.
                         </p>
@@ -49,77 +113,126 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 </div>
             </div>
         </section>
+                
         <section id="vardvagar" class="py-20 bg-gray-50">
             <div class="max-w-6xl mx-auto px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-4">Fyra vägar till snabbare vård</h2>
+                <div class="text-center mb-8"><span class="bg-red-600 text-white px-6 py-2 rounded-full font-bold text-lg">NYHET: Nu tar vi emot patienter från hela Sverige utan väntan!</span></div>
+                
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-sky-700 mb-4">Kom till oss – oavsett var du bor</h2>
                 <p class="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">Vi välkomnar patienter oavsett var i Sverige du bor. Välj den väg som passar din situation bäst.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                                      
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">För dig i Region Stockholm</h3>
-                        
-                        <p class="text-gray-700 mb-4 font-semibold">Vårt avtal med Region Stockholm kräver remiss.</p>
-                        
-                        <p class="text-gray-700 mb-4 flex-grow">Vi tar emot remisser från följande <strong class="font-bold text-gray-800">legitimerade vårdgivare</strong>:</p>
-                        
-                        <ul class="text-gray-700 space-y-2 mb-6 list-disc list-inside">
-                            <li>Leg. läkare</li> 
-                            <li>Leg. fysioterapeut</li>
-                            <li>Leg. naprapat</li>
-                            <li>Leg. kiropraktor</li>
-                            <li>Leg. sjuksköterska</li>
-                        </ul>
-                        
-                        <p class="text-gray-700 mb-6 flex-grow">Frikort gäller och du betalar din vanliga patientavgift.</p>
-                        
-                        <a href="/patientavgifter" class="font-bold text-sky-600 hover:underline">Patientavgifter &rarr;</a>
+                  <div class="bg-white rounded-3xl shadow-xl overflow-hidden border-t-8 border-sky-600 flex flex-col h-full transition duration-300 hover:-translate-y-2">
+                    <div class="bg-sky-600 text-white p-6 text-center">
+                      <div class="w-16 h-16 mx-auto mb-3 bg-white/20 rounded-full flex items-center justify-center p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-full h-full text-white" fill="currentColor">
+                            <g>
+                                <path d="M33.5,23.6c0-5.5,0-11,0-16.5c0-0.6,0.1-0.8,0.8-0.8c1.2,0.1,2.4,0.1,3.6,0c0.7,0,0.8,0.2,0.8,0.8
+                                    c0,7.8,0,15.6,0,23.5c0,3-0.1,6,0,9c0.2,6.9,5.7,12.5,12.6,12.9c3.7,0.2,7.4,0,11.1,0.1c1.1,0,1.1,0,1.1,1.2c0,1.1,0,2.2,0,3.4
+                                    c0,0.4-0.1,0.5-0.5,0.5c-4.1,0-8.3,0.1-12.4-0.1c-8.2-0.4-15.3-7-16.7-15c-0.2-1.2-0.3-2.4-0.3-3.6C33.5,33.8,33.5,28.7,33.5,23.6z"/>
+                                <path d="M25.3,23.7c0-5.5,0-11,0-16.5c0-0.8,0.2-1,1-0.9c1.1,0.1,2.2,0.1,3.4,0c0.7,0,0.8,0.2,0.8,0.8
+                                    c0,8.3,0,16.6,0,24.9c0,2.7,0.1,5.4,0,8c-0.3,8.8-7.3,16.4-16.1,17.5c-2,0.2-4,0.1-6.1,0.1c-2.3,0-4.7,0-7,0
+                                    c-0.6,0-0.7-0.2-0.7-0.7c0-1.2,0-2.4,0-3.7c0-0.5,0.1-0.7,0.7-0.7c3.4,0,6.8,0,10.2,0c3.2,0,6.2-0.9,8.8-2.9
+                                    c3.4-2.7,5.1-6.3,5.1-10.7C25.3,33.9,25.3,28.8,25.3,23.7z"/>
+                                <path d="M41.8,23.4c0-5.4,0-10.9,0-16.3c0-0.6,0.1-0.8,0.8-0.8c1.2,0.1,2.4,0,3.6,0c0.6,0,0.7,0.2,0.7,0.7
+                                    c0,3.3,0,6.6,0,9.9c0,7.3,0,14.5,0,21.8c0,3.4,2.2,5.6,5.6,5.6c3.4,0,6.9,0,10.3,0c0.5,0,0.8,0.1,0.8,0.7c-0.1,1.3,0,2.5,0,3.8
+                                    c0,0.4-0.1,0.5-0.5,0.5c-3.9,0-7.7,0.1-11.6-0.1c-5.2-0.2-9.6-4.8-9.6-10C41.8,34,41.8,28.7,41.8,23.4z"/>
+                                <path d="M22.2,23.5c0,5,0,10.1,0,15.1c0,4.2-1.8,7.4-5.5,9.5c-1.4,0.8-3,1.2-4.6,1.2c-3.6,0-7.2,0-10.8,0
+                                    c-0.6,0-0.8-0.1-0.7-0.7c0-1.2,0-2.4,0-3.7c0-0.6,0.2-0.7,0.7-0.7c3.4,0,6.9,0,10.3,0c3.3,0,5.6-2.2,5.6-5.6c0-10.5,0-21.1,0-31.6
+                                    c0-0.7,0.1-0.9,0.9-0.9c1.2,0.1,2.4,0,3.6,0c0.5,0,0.6,0.1,0.6,0.6C22.2,12.5,22.2,18,22.2,23.5C22.2,23.5,22.2,23.5,22.2,23.5z"/>
+                            </g>
+                        </svg>
+                      </div>
+                      <h3 class="text-xl font-bold">Region Stockholm</h3>
                     </div>
-
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Vård för dig från annan region</h3>
-                        <p class="text-gray-700 mb-4">Välj oss tack vare <a href="/fritt-vardval-sverige" class="text-sky-600 font-semibold underline hover:text-sky-800">Fritt Vårdval</a>, oavsett var du bor.</p>
-                        <ul class="text-gray-700 space-y-3 mb-6 flex-grow list-disc list-inside">
-                            <li><strong class="font-semibold text-gray-800">Remiss krävs:</strong> Du behöver en remiss från t.ex. läkare, fysioterapeut, naprapat eller kiropraktor. Remisser från digitala vårdgivare (t.ex. Kry, Doktor.se) går också bra.</li>
-                            <li><strong class="font-semibold text-gray-800">Kostnad:</strong> Frikort gäller och du betalar vanlig patientavgift.</li>
-                            <li><strong class="font-semibold text-gray-800">Fördel:</strong> Du behöver inte vänta på att Vårdgarantin (90 dagar) ska gälla för att söka vård hos oss.</li>
-                        </ul>
-                        <a href="/fritt-vardval-sverige" class="font-bold text-sky-600 hover:underline">Läs mer om Fritt Vårdval &rarr;</a>
+                    <div class="p-8 flex flex-col flex-grow">
+                      <p class="text-lg font-semibold text-gray-800 mb-4">Kräver remiss</p>
+                      <ul class="space-y-2 text-gray-600 mb-6 text-sm">
+                        <li>✔ Leg. läkare, fysioterapeut, naprapat m.fl.</li>
+                        <li>✔ Frikort gäller</li>
+                        <li>✔ Vanlig patientavgift</li>
+                      </ul>
+                      <a href="/patientavgifter" class="mt-auto text-sky-600 font-bold hover:underline">Patientavgifter →</a>
                     </div>
+                  </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <a href="/privatpatient-tre-val" class="flex flex-col flex-grow group">
-                            <h3 class="text-2xl font-bold text-sky-700 mb-4 group-hover:underline">Som privatpatient</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Behöver du snabb hjälp utan remiss? Du kan boka en tid som privatpatient. Fyll i ett frågeformulär digitalt så återkommer vi till dig för en bedömning och tidsbokning.</p>
-                            <span class="font-bold text-sky-600 group-hover:underline">Gå till frågeformulär &rarr;</span>
-                        </a>
+                  <div class="bg-white rounded-3xl shadow-xl overflow-hidden border-t-8 border-emerald-500 flex flex-col h-full transition duration-300 hover:-translate-y-2">
+                    <div class="bg-emerald-500 text-white p-6 text-center">
+                      <!-- Start: Uppdaterad SVG (Sverigeflagga) -->
+                      <svg width="100%" height="100%" viewBox="0 0 800 800" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" class="w-16 h-16 mx-auto mb-3">
+                        <g>
+                            <path d="M344,754.3C363.5,757.6 383.5,759.3 403.9,759.3C577.3,759.3 721.9,636.1 755,472.4L344,472.4L344,754.3Z" style="fill:rgb(0,106,167);fill-rule:nonzero;"/>
+                            <path d="M52.8,472.4C71.4,564.3 125.1,643.5 199.4,695.2L199.4,472.4L52.8,472.4Z" style="fill:rgb(0,106,167);fill-rule:nonzero;"/>
+                            <path d="M199.4,107C125.1,158.7 71.4,237.9 52.8,329.8L199.4,329.8L199.4,107Z" style="fill:rgb(0,106,167);fill-rule:nonzero;"/>
+                            <path d="M755,329.8C721.9,166.1 577.3,42.9 403.9,42.9C383.5,42.9 363.5,44.6 344,47.9L344,329.8L755,329.8Z" style="fill:rgb(0,106,167);fill-rule:nonzero;"/>
+                            <path d="M199.4,329.8L52.8,329.8C48.1,352.8 45.7,376.7 45.7,401.1C45.7,425.5 48.1,449.4 52.8,472.4L199.4,472.4L199.4,329.8Z" style="fill:rgb(254,204,0);fill-rule:nonzero;"/>
+                            <path d="M755,329.8L344,329.8L344,472.4L755,472.4C759.7,449.4 762.1,425.5 762.1,401.1C762.1,376.7 759.7,352.8 755,329.8Z" style="fill:rgb(254,204,0);fill-rule:nonzero;"/>
+                            <path d="M344,329.8L344,47.9C290.9,56.8 241.8,77.4 199.4,107L199.4,329.8L344,329.8Z" style="fill:rgb(254,204,0);fill-rule:nonzero;"/>
+                            <path d="M199.4,472.4L199.4,695.2C241.8,724.7 290.9,745.3 344,754.3L344,472.4L199.4,472.4Z" style="fill:rgb(254,204,0);fill-rule:nonzero;"/>
+                            <rect x="199.4" y="329.8" width="144.6" height="142.6" style="fill:rgb(254,204,0);"/>
+                        </g>
+                      </svg>
+                      <!-- Slut: Uppdaterad SVG -->
+                      <h3 class="text-xl font-bold">Från annan region</h3>
                     </div>
-
-                    <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                        <h3 class="text-2xl font-bold text-sky-700 mb-4">Via försäkringsbolag</h3>
-                        <p class="text-gray-700 mb-6 flex-grow">Vi har avtal med vissa försäkringsbolag. Kontakta ditt bolag för att få en bokningsbekräftelse eller ett remissnummer, och boka sedan din tid hos oss.</p>
-                        <a href="#" class="font-bold text-sky-600 hover:underline">Försäkringsbolag &rarr;</a>
+                    <div class="p-8 flex flex-col flex-grow">
+                      <p class="text-lg font-semibold text-gray-800 mb-4">Fritt vårdval</p>
+                      <ul class="space-y-2 text-gray-600 mb-6 text-sm">
+                        <li>✔ Remiss krävs (även från Kry/Doktor.se)</li>
+                        <li>✔ Ingen väntan på vårdgarantin</li>
+                        <li>✔ Frikort & vanlig patientavgift</li>
+                      </ul>
+                      <a href="/fritt-vardval-sverige" class="mt-auto text-emerald-600 font-bold hover:underline">Mer om Fritt vårdval →</a>
                     </div>
+                  </div>
 
+                  <div class="bg-white rounded-3xl shadow-xl overflow-hidden border-t-8 border-amber-500 flex flex-col h-full transition duration-300 hover:-translate-y-2">
+                    <div class="bg-amber-500 text-white p-6 text-center">
+                      <div class="w-16 h-16 mx-auto mb-3 bg-white/20 rounded-full flex items-center justify-center text-3xl">⚡</div>
+                      <h3 class="text-xl font-bold">Privatpatient</h3>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                      <p class="text-lg font-semibold text-gray-800 mb-4">Snabbast – ingen remiss</p>
+                      <p class="text-gray-600 mb-6 text-sm">Fyll i vårt digitala formulär så ringer vi dig för bedömning och bokning (oftast samma vecka).</p>
+                      <a href="/privatpatient-tre-val" class="mt-auto inline-block bg-amber-500 text-white font-bold py-4 px-6 rounded-full hover:bg-amber-600 transition text-center">
+                        Starta här →
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="bg-white rounded-3xl shadow-xl overflow-hidden border-t-8 border-indigo-600 flex flex-col h-full transition duration-300 hover:-translate-y-2">
+                    <div class="bg-indigo-600 text-white p-6 text-center">
+                      <div class="w-16 h-16 mx-auto mb-3 bg-white/20 rounded-full flex items-center justify-center text-3xl">🛡️</div>
+                      <h3 class="text-xl font-bold">Försäkring</h3>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                      <p class="text-lg font-semibold text-gray-800 mb-4">Vi har avtal med flera bolag</p>
+                      <p class="text-gray-600 mb-6 text-sm">Kontakta ditt försäkringsbolag → få remissnummer → boka tid hos oss.</p>
+                      <a href="/forsakringsbolag" class="mt-auto text-indigo-600 font-bold hover:underline">Vilka bolag? →</a>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="mt-16 border-t border-gray-200 pt-12">
                     <h3 class="text-2xl font-bold text-center text-sky-700 mb-10">Fler vägar till oss</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        
-                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                            <h4 class="text-xl font-bold text-sky-700 mb-3">För dig inom vården</h4>
-                            <p class="text-gray-700 mb-6 flex-grow">Är du legitimerad sjukvårdspersonal (läkare, fysioterapeut, sjuksköterska etc.) och söker vård för dig själv? Du kan skriva en egenremiss direkt till oss.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Egenremiss för sjukvårdspersonal &rarr;</a>
-                        </div>
+                    
+                    <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                      <a href="/egenremiss" class="group block bg-gradient-to-r from-sky-50 to-sky-100 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition text-center">
+                        <div class="text-5xl mb-4">👩‍⚕️</div>
+                        <h4 class="text-2xl font-bold text-sky-700 mb-3">Sjukvårdspersonal?</h4>
+                        <p class="text-gray-700 mb-4">Skriv egenremiss direkt till oss – ingen väntetid.</p>
+                        <span class="font-bold text-sky-600 group-hover:underline">Egenremiss här →</span>
+                      </a>
 
-                        <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col transition duration-300 hover:shadow-xl">
-                            <h4 class="text-xl font-bold text-sky-700 mb-3">Flytta en befintlig remiss</h4>
-                            <p class="text-gray-700 mb-6 flex-grow">Har du redan en remiss skickad till en annan mottagning (t.ex. ett sjukhus) men vill komma till oss istället? Kontakta oss så hjälper vi dig att flytta din remiss.</p>
-                            <a href="#" class="font-bold text-sky-600 hover:underline">Kontakta oss för att flytta remiss &rarr;</a>
-                        </div>
+                      <a href="/kontakt" class="group block bg-gradient-to-r from-purple-50 to-purple-100 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition text-center">
+                        <div class="text-5xl mb-4">📨</div>
+                        <h4 class="text-2xl font-bold text-purple-700 mb-3">Flytta befintlig remiss</h4>
+                        <p class="text-gray-700 mb-4">Har du redan en remiss till ett sjukhus? Vi hjälper dig flytta den hit.</p>
+                        <span class="font-bold text-purple-600 group-hover:underline">Kontakta oss →</span>
+                      </a>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -146,7 +259,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                         </div>
                         <div class="p-8 bg-white flex flex-col flex-grow">
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">Knä</h3>
-                            <p class="text-gray-700 mb-6 flex-grow">Specialister på meniskskador, korsbandsskador och knäartros. Vi erbjuder allt från titthålskirurgi till avancerad rehab.</p>
+                            <p class="text-gray-700 mb-6 flex-grow">Specialister på meniskskador och korsbandsskador och knäartros. Vi erbjuder allt från titthålskirurgi till avancerad rehab.</p>
                             <a href="#" class="font-bold text-sky-600 hover:underline">Läs om knäbesvär &rarr;</a>
                         </div>
                     </div>

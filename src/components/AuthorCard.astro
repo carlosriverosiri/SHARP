@@ -1,0 +1,118 @@
+---
+// src/components/AuthorCard.astro
+
+const {
+  // Här sätter vi Carlos som standard. 
+  // Om du inte anger något annat, används dessa värden.
+  name = "Dr. Carlos Rivero Siri",
+  title = "Leg. Läkare, Specialist i Ortopedi",
+  image = "/images/carlos-rivero-siri.jpg", // KONTROLLERA SÖKVÄGEN TILL DIN BILD
+  link = "/om-oss/dr-carlos-rivero-siri",
+  bio = "Dr. Rivero Siri är specialist inom ortopedi med inriktning på axelkirurgi. Han ansvarar för det medicinska innehållet på denna webbplats."
+} = Astro.props;
+---
+
+<div class="author-card">
+  <div class="author-image-container">
+    <img src={image} alt={name} class="author-img" width="80" height="80" />
+  </div>
+
+  <div class="author-content">
+    <p class="author-label">Medicinskt granskad av</p>
+    
+    <h3 class="author-name">
+      <a href={link}>{name}</a>
+    </h3>
+    
+    <p class="author-title">{title}</p>
+    <p class="author-bio">{bio}</p>
+    
+    <a href={link} class="read-more-link">Läs fullständig profil &rarr;</a>
+  </div>
+</div>
+
+<style>
+  .author-card {
+    background-color: #f9fafb; /* Ljusgrå */
+    border-left: 4px solid #0f766e; /* En snygg teal/grön färg, eller byt till din profilfärg */
+    padding: 1.5rem;
+    margin-top: 3rem;
+    border-radius: 6px;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .author-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .author-content {
+    flex: 1;
+  }
+
+  .author-label {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .author-name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .author-name a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .author-name a:hover {
+    color: #0f766e;
+    text-decoration: underline;
+  }
+
+  .author-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  .author-bio {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .read-more-link {
+    font-size: 0.85rem;
+    color: #0f766e;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .read-more-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .author-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+</style>
