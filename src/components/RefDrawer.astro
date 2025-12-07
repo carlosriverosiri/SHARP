@@ -1,0 +1,118 @@
+---
+// src/components/RefDrawer.astro
+---
+
+<div id="ref-drawer-backdrop" class="backdrop hidden"></div>
+<aside id="ref-drawer" class="drawer hidden" aria-hidden="true">
+  <div class="drawer-header">
+    <span class="drawer-title">Källa</span>
+    <button id="close-drawer" aria-label="Stäng">✕</button>
+  </div>
+  <div class="drawer-content">
+    <p id="drawer-text"></p>
+    <a id="drawer-link" href="#" target="_blank" class="external-link">Läs hela studien &rarr;</a>
+  </div>
+</aside>
+
+<script>
+  // Körs på klienten
+  const triggers = document.querySelectorAll('.ref-trigger');
+  const drawer = document.getElementById('ref-drawer');
+  const backdrop = document.getElementById('ref-drawer-backdrop');
+  const closeBtn = document.getElementById('close-drawer');
+  const textEl = document.getElementById('drawer-text');
+  const linkEl = document.getElementById('drawer-link');
+
+  function openDrawer(dataset) {
+    textEl.textContent = dataset.text;
+    if (dataset.url) {
+        linkEl.href = dataset.url;
+        linkEl.style.display = 'inline-block';
+    } else {
+        linkEl.style.display = 'none';
+    }
+    
+    drawer.classList.remove('hidden');
+    backdrop.classList.remove('hidden');
+    // Liten fördröjning för CSS transition
+    requestAnimationFrame(() => {
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+    });
+  }
+
+  function closeDrawerFn() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+    setTimeout(() => {
+      drawer.classList.add('hidden');
+      backdrop.classList.add('hidden');
+    }, 300); // Matcha CSS transition tid
+  }
+
+  triggers.forEach(btn => {
+    btn.addEventListener('click', (e) => openDrawer(e.target.dataset));
+  });
+
+  closeBtn.addEventListener('click', closeDrawerFn);
+  backdrop.addEventListener('click', closeDrawerFn);
+</script>
+
+<style>
+  /* Backdrop (mörk bakgrund) */
+  .backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Själva panelen */
+  .drawer {
+    position: fixed;
+    bottom: 0; left: 0; width: 100%;
+    background: white; /* Eller din mörka temafärg */
+    z-index: 999;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    max-height: 50vh; /* Max halva skärmen */
+    overflow-y: auto;
+  }
+
+  /* Aktiva klasser */
+  .backdrop.open { opacity: 1; }
+  .drawer.open { transform: translateY(0); }
+  .hidden { display: none; }
+
+  /* Innehållsstyling */
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  .drawer-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  #close-drawer {
+    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+  }
+  .external-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--color-accent, #007bff);
+    font-weight: bold;
+    text-decoration: none;
+  }
+</style>

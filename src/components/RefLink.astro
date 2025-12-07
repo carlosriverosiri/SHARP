@@ -1,0 +1,27 @@
+---
+// src/components/RefLink.astro
+const { id, text, url } = Astro.props;
+---
+
+<button 
+  class="ref-trigger" 
+  data-id={id} 
+  data-text={text} 
+  data-url={url}
+  aria-label={`Visa referens ${id}`}
+>
+  [{id}]
+</button>
+
+<style>
+  .ref-trigger {
+    background: none;
+    border: none;
+    color:var(--color-accent, #007bff);
+    font-size: 0.75em;
+    font-weight: bold;
+    vertical-align: super;
+    cursor: pointer;
+    padding: 4px; /* Öka touch-ytan något för feta fingrar */
+  }
+</style>

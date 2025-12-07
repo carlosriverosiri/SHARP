@@ -1,242 +1,329 @@
-<!DOCTYPE html>
-<html lang="sv" class="scroll-smooth">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          slate: { 850: '#152033' },
-          teal: { 600: '#0d9488', 700: '#0f766e', 50: '#f0fdfa' },
-        },
-        typography: (theme) => ({
-          DEFAULT: {
-            css: {
-              color: '#334155',
-              h2: { color: '#0f172a', fontWeight: '700' },
-              h3: { color: '#1e293b', fontWeight: '600' },
-              strong: { color: '#0f766e' },
-            },
-          },
-        }),
-      }
-    },
-    plugins: [
-      function({ addBase, theme }) {
-        addBase({
-          'h1': { fontSize: theme('fontSize.4xl') },
-          'h2': { fontSize: theme('fontSize.2xl') },
-          'h3': { fontSize: theme('fontSize.xl') },
-        })
-      }
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AuthorCard from '../../../components/AuthorCard.astro';
+import RefLink from '../../../components/RefLink.astro';
+import RefDrawer from '../../../components/RefDrawer.astro';
+
+// FAKTA & FÖRFATTARE
+const authorName = "Dr. Carlos Rivero Siri";
+const authorUrl = "https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri";
+const authorImage = "/images/carlos-rivero-siri.jpg";
+const currentDate = new Date().toISOString().split('T')[0];
+
+// REFERENSDATA
+const references = [
+  {
+    id: "1",
+    text: "Cuzzolin M, et al. Operative Versus Nonoperative Management for Distal Biceps Brachii Tendon Lesions. Orthop J Sports Med. 2021.",
+    url: "https://doi.org/10.1177/23259671211037311"
+  },
+  {
+    id: "2",
+    text: "Savin DD, et al. Surgical Management of Acute Distal Biceps Tendon Ruptures. JBJS Rev. 2017.",
+    url: "https://doi.org/10.2106/JBJS.RVW.17.00080"
+  },
+  {
+    id: "3",
+    text: "Kruger N, et al. Acute distal biceps tendon ruptures: anatomy, pathology and management. J ISAKOS. 2020.",
+    url: "https://doi.org/10.1136/jisakos-2019-000279"
+  },
+  {
+    id: "4",
+    text: "Qureshi MK, et al. Operative Versus Non-Operative Management... Muscles Ligaments Tendons J. 2020.",
+    url: "https://doi.org/10.32098/mltj.04.2020.16"
+  },
+  {
+    id: "5",
+    text: "Amarasooriya M, et al. Complications After Distal Biceps Tendon Repair. Am J Sports Med. 2020.",
+    url: "https://doi.org/10.1177/0363546519899933"
+  },
+  {
+    id: "6",
+    text: "Phelps BM, et al. Postoperative rehabilitation... JSES Rev Rep Tech. 2025.",
+    url: "https://doi.org/10.1016/j.jseint.2025.02.013"
+  }
+];
+
+// SCHEMA.ORG
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Distal Bicepsseneruptur - Symptom & Behandling",
+  "author": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "datePublished": currentDate,
+  "about": {
+    "@type": "MedicalCondition",
+    "name": "Distal Biceps Tendon Rupture",
+    "possibleTreatment": [
+      { "@type": "MedicalTherapy", "name": "Kirurgisk fixation (Cortical button)" },
+      { "@type": "MedicalTherapy", "name": "Konservativ rehabilitering" }
     ]
   }
-</script>
-<style>
-  /* Enkel simulering av typography plugin */
-  .prose p { margin-bottom: 1.2em; line-height: 1.7; }
-  .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.2em; }
-  .active-tab { background-color: #0d9488; color: white; border-color: #0d9488; }
-  .inactive-tab { background-color: white; color: #475569; border-color: #e2e8f0; }
-  .inactive-tab:hover { background-color: #f1f5f9; }
-</style>
-</head>
-<body class="bg-gray-50 text-slate-800 antialiased font-sans">
+};
+---
 
-<section class="relative bg-slate-900 text-white py-20 lg:py-24 overflow-hidden">
-  <img src="https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay" alt="Medical background">
-  <div class="relative container mx-auto px-6 max-w-7xl">
-    <span class="inline-block py-1 px-3 rounded-full bg-teal-900/50 border border-teal-500/30 text-teal-200 text-xs font-bold uppercase tracking-wide mb-6">
-      Armbåge & Underarm
-    </span>
-    <h1 class="font-extrabold mb-6 leading-tight max-w-4xl">
-      Distal Bicepsseneruptur: <br><span class="text-teal-400">En komplett patientguide</span>
-    </h1>
-    <p class="text-lg text-slate-300 max-w-2xl mb-8 leading-relaxed">
-      Har du känt en smäll i armbågen och tappat styrkan? Här går vi igenom allt från det klassiska "Hook-testet" till varför snabb operation ofta är avgörande för aktiva personer.
-    </p>
-    
-    <div class="flex items-center gap-4 text-sm text-slate-400 border-t border-slate-700 pt-6 mt-6">
-      <div class="flex items-center gap-2">
-        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-           <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+<BaseLayout title="Distal Bicepsruptur - Symptom & Behandling | Södermalms Ortopedi">
+  
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+
+  <section class="bg-sky-700 text-white pt-12 pb-24 md:pt-20 md:pb-32 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <span class="inline-block py-1 px-3 rounded-full bg-sky-800 text-sky-200 text-sm font-bold mb-6 tracking-wide">
+        ARMBÅGE & UNDERARM
+      </span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        Distal bicepsseneruptur
+      </h1>
+      <p class="text-sky-100 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-light">
+        En distal bicepsruptur innebär att muskelfästet i armvecket släpper helt eller delvis. Detta drabbar oftast aktiva män och kräver i många fall kirurgisk åtgärd för att återställa full styrka i armen<RefLink id="1" text="Incidensen har fördubblats i USA på 20 år." url={references[0].url} />.
+      </p>
+
+      <div class="flex items-center gap-4 pt-4">
+        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-sky-400 bg-sky-800">
+          <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
         </div>
         <div>
-          <span class="block text-white font-bold">Dr. Carlos Rivero Siri</span>
-          <span class="text-xs">Specialist i Ortopedi</span>
+          <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medicinskt granskad av</p>
+          <p class="text-base font-bold text-white">{authorName}</p>
         </div>
       </div>
-      <span class="hidden sm:inline">|</span>
-      <span>Uppdaterad: 2025-12-06</span>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="container mx-auto px-4 py-12 lg:py-16 max-w-7xl">
-  <div class="lg:flex lg:gap-16">
-    
-    <aside class="hidden lg:block w-64 shrink-0">
-      <nav class="sticky top-24 space-y-8">
-        <div>
-          <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">I denna guide</h5>
-          <ul class="space-y-3 text-sm border-l-2 border-slate-200">
-            <li><a href="#" class="block pl-4 border-l-2 border-teal-600 text-teal-700 font-bold">Symtom & Varningstecken</a></li>
-            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Diagnos (Hook Test)</a></li>
-            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Kirurgi vs Icke-kirurgi</a></li>
-            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Operationsmetoder</a></li>
-            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Rehabilitering</a></li>
-            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Risker & Komplikationer</a></li>
-          </ul>
-        </div>
-        
-        <div class="bg-teal-50 p-6 rounded-xl border border-teal-100">
-          <h4 class="font-bold text-teal-900 mb-2">Behöver du bedömning?</h4>
-          <p class="text-xs text-teal-800 mb-4">Vänta inte för länge. Vid bicepsruptur är tiden en viktig faktor.</p>
-          <button class="w-full bg-teal-600 text-white text-sm font-bold py-3 rounded shadow hover:bg-teal-700">Boka tid online</button>
-        </div>
-      </nav>
-    </aside>
-
-    <main class="flex-1 min-w-0 prose prose-slate prose-lg max-w-none">
-      
-      <p class="lead text-xl text-slate-600 mb-10">
-        Bicepsmuskelns nedre sena fäster på strålbenet (radius) i underarmen. När den rycks av helt kallas det distal bicepsseneruptur. Skadan är relativt ovanlig men har blivit vanligare – i USA har incidensen mer än fördubblats på 20 år.
-      </p>
-
-      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">1. Symtom: Så vet du om senan är av</h2>
-      <p>Det typiska scenariot är en man i åldern 40–60 år som lyfter något tungt (exempelvis en flyttkartong eller på gymmet). Plötsligt ger armen vika.</p>
-      
-      <div class="grid md:grid-cols-2 gap-6 not-prose my-8">
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-          <div class="flex items-center gap-3 mb-3">
-             <div class="bg-red-100 text-red-600 p-2 rounded-full">💥</div>
-             <h3 class="font-bold text-slate-900 text-lg m-0">Hörbart "Pop"</h3>
-          </div>
-          <p class="text-sm text-slate-600">Många beskriver ett tydligt ljud eller en känsla av att ett gummiband smäller av inuti armbågen.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-          <div class="flex items-center gap-3 mb-3">
-             <div class="bg-blue-100 text-blue-600 p-2 rounded-full">💪</div>
-             <h3 class="font-bold text-slate-900 text-lg m-0">Popeye-tecken</h3>
-          </div>
-          <p class="text-sm text-slate-600">Muskeln drar ihop sig uppåt mot axeln. Du får en onaturlig bula på överarmen och en grop i armbågsvecket.</p>
-        </div>
-      </div>
-
-      <div class="bg-slate-100 border-l-4 border-slate-500 p-6 rounded-r-lg my-8">
-        <h4 class="font-bold text-slate-800 m-0 mb-2">Vem drabbas?</h4>
-        <ul class="m-0 text-sm text-slate-700">
-           <li>86 % sker på den <strong>dominanta armen</strong>.</li>
-           <li><strong>Rökare</strong> löper 7,5 gånger högre risk att drabbas.</li>
-           <li>Användning av anabola steroider försvagar senans struktur och ökar risken markant.</li>
-        </ul>
-      </div>
-
-      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">2. Diagnos med "Hook Test"</h2>
-      <p>
-        Oftast behövs ingen röntgen för att ställa diagnos. Din berättelse och en enkel klinisk undersökning räcker. Det viktigaste testet kallas <strong>Hook Test</strong>.
-      </p>
-      <div class="flex flex-col md:flex-row gap-8 items-center bg-white p-6 rounded-xl shadow-sm border border-slate-200 not-prose">
-         <div class="flex-1">
-            <h4 class="font-bold text-teal-800">Så går testet till:</h4>
-            <p class="text-slate-600 text-sm mb-4">Du håller armen böjd i 90 grader och vrider handflatan mot ansiktet. Läkaren försöker "kroka" sitt pekfinger runt senan i armvecket.</p>
-            <ul class="space-y-2 text-sm">
-              <li class="flex items-start gap-2">
-                <span class="text-green-500 font-bold">✓</span>
-                <span><strong>Normalt:</strong> Fingret stoppas av en hård sträng (senan).</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-red-500 font-bold">✕</span>
-                <span><strong>Ruptur:</strong> Fingret hittar inget motstånd. Testet har 100% säkerhet vid totalruptur.</span>
-              </li>
-            </ul>
-         </div>
-         <div class="w-full md:w-1/3 aspect-video bg-slate-200 rounded-lg flex items-center justify-center text-slate-400">
-           [Illustration: Hook Test]
-         </div>
-      </div>
-
-      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">3. Måste jag operera mig?</h2>
-      <p>
-        Det korta svaret är: Om du vill återfå full styrka, <strong>ja</strong>. Men om du är äldre eller inte använder armen tungt kan du klara dig bra utan.
-      </p>
-      
-      <div class="overflow-hidden rounded-xl border border-slate-200 shadow-sm not-prose my-8">
-        <table class="w-full text-sm text-left">
-          <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
-            <tr>
-              <th class="p-4">Funktion</th>
-              <th class="p-4 text-teal-700">Med Operation</th>
-              <th class="p-4 text-slate-500">Utan Operation</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 bg-white">
-            <tr>
-              <td class="p-4 font-medium">Böjstyrka (Flexion)</td>
-              <td class="p-4">≈ 95% återställd</td>
-              <td class="p-4 text-red-600">≈ 80% (20% förlust)</td>
-            </tr>
-            <tr>
-              <td class="p-4 font-medium">Vridstyrka (Supination)</td>
-              <td class="p-4">≈ 90% återställd</td>
-              <td class="p-4 text-red-600">≈ 60% (40% förlust!)</td>
-            </tr>
-            <tr>
-              <td class="p-4 font-medium">Uthållighet</td>
-              <td class="p-4">Normal</td>
-              <td class="p-4">Krampkänsla vid arbete</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="p-6 bg-teal-50 border-l-4 border-teal-600 rounded-r-lg my-8">
-        <h4 class="font-bold text-teal-900 m-0 mb-2 flex items-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-          Dr. Carlos rekommenderar:
-        </h4>
-        <p class="italic text-teal-800 text-sm m-0">
-          "För en aktiv person under 65 år, särskilt om det är höger hand för en högerhänt, rekommenderar jag starkt operation. En 40-procentig förlust av vridstyrkan (som att använda en skruvmejsel) är ofta mycket märkbar i vardagen."
+  <section class="bg-white py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 max-w-3xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-4">Så vet du att senan gått av</h2>
+        <p class="text-gray-600 text-lg">
+          Klassiska tecken på en akut distal bicepsruptur. Skadan uppstår ofta vid tung excentrisk belastning<RefLink id="3" text="Vanlig skademekanism vid tunga lyft." url={references[2].url} />.
         </p>
       </div>
 
-      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">4. Rehab: Vecka för vecka</h2>
-      <p class="mb-6">
-        Moderna operationsmetoder (t.ex. "Cortical Button") är så starka att vi kan börja röra armen nästan direkt. Här är en översikt av mitt rehab-protokoll.
-      </p>
-
-      <div class="not-prose bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="flex border-b border-slate-200 bg-slate-50">
-           <button class="flex-1 py-4 text-sm font-bold border-b-2 active-tab transition-colors">Vecka 0-2<br><span class="font-normal text-xs opacity-80">Skyddsfas</span></button>
-           <button class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:bg-slate-100 transition-colors">Vecka 2-6<br><span class="font-normal text-xs opacity-80">Rörelse</span></button>
-           <button class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:bg-slate-100 transition-colors">Månad 3+<br><span class="font-normal text-xs opacity-80">Styrka</span></button>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">Hörbart "knäpp"</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Många patienter hör eller känner en tydlig "smäll" i armbågen vid skadeögonblicket. Detta följs ofta av akut smärta som sedan lägger sig till en mer molande värk.
+          </p>
         </div>
-        
-        <div class="p-8">
-           <h4 class="text-xl font-bold text-slate-900 mb-4">Vecka 0-2: Sårläkning</h4>
-           <ul class="space-y-3 mb-6">
-             <li class="flex items-start gap-3">
-               <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0">1</span>
-               <span class="text-slate-700">Armbågsortos eller slynga används för komfort och skydd.</span>
-             </li>
-             <li class="flex items-start gap-3">
-               <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0">2</span>
-               <span class="text-slate-700">Passiv rörelseträning tillåten (hjälp armen böja sig med den friska handen).</span>
-             </li>
-             <li class="flex items-start gap-3">
-               <span class="w-6 h-6 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold shrink-0">!</span>
-               <span class="text-slate-700 font-medium">Maxvikt: En kaffekopp (0.5 kg). Ingen aktiv böjning mot motstånd.</span>
-             </li>
-           </ul>
+
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">"Popeye-tecken"</h3>
+          <p class="text-gray-600 leading-relaxed">
+            När senan släpper drar bicepsmuskeln ihop sig uppåt mot axeln. Detta skapar en onaturlig bula på överarmen ("Reverse Popeye Sign") och en tydlig grop i armvecket.
+          </p>
+        </div>
+
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">Rotationssvaghet</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Det tydligaste tecknet är svaghet när du försöker rotera underarmen (supination), t.ex. när du ska skruva i en skruv eller vrida om en nyckel<RefLink id="2" text="Betydande svaghet i supination." url={references[1].url} />.
+          </p>
         </div>
       </div>
+    </div>
+  </section>
 
-    </main>
-  </div>
-</div>
+  <section class="bg-sky-50 py-24">
+    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div class="prose prose-lg text-gray-700">
+        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Diagnos och riskfaktorer</h2>
+        <p>
+          Diagnosen är oftast klinisk och ställs direkt på mottagningen. Det viktigaste testet jag utför kallas för <strong>"Hook-test"</strong>. Jag försöker då kroka mitt finger runt bicepssenan i armvecket. Vid en komplett ruptur finns ingen sena att kroka i (100% sensitivitet)<RefLink id="3" text="Hook-test är guldstandard." url={references[2].url} />.
+        </p>
+        
+        <h3 class="text-sky-800 font-bold mt-8 text-xl not-prose">Vem drabbas?</h3>
+        <ul class="list-disc pl-5 space-y-2 marker:text-sky-600">
+            <li>Oftast män mellan 40–60 år.</li>
+            <li>86 % av skadorna sker i den dominanta armen<RefLink id="2" text="Dominant arm drabbas oftast." url={references[1].url} />.</li>
+            <li><strong>Rökning</strong> är en betydande riskfaktor och ökar risken ca 7,5 gånger.</li>
+            <li>Användning av anabola steroider.</li>
+        </ul>
+        <p class="mt-4 text-sm italic">
+           Vid osäkerhet (t.ex. partiell skada) är MRT den bästa bilddiagnostiken.
+        </p>
+      </div>
 
-</body>
-</html>
+      <div class="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white group">
+        <div class="aspect-[4/3] bg-gray-100 flex items-center justify-center text-gray-400">
+            
+        </div>
+        <div class="p-6 bg-white">
+          <p class="text-sm text-gray-500 font-medium">
+             Illustration: Vid "Hook-test" ska läkaren kunna känna senan som en sträng i armvecket. Saknas den föreligger ruptur.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="bg-white border-l-4 border-sky-600 p-8 md:p-12 rounded-r-3xl relative shadow-lg">
+        <div class="absolute -top-6 -left-6 bg-sky-700 text-white p-4 rounded-full shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-sky-900 mb-4 ml-4">Dr. Carlos rekommenderar</h3>
+        <blockquote class="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-6 pl-4">
+          "För aktiva patienter under 65 år, särskilt om skadan sitter i den dominanta armen, rekommenderar jag starkt <strong>kirurgisk reparation inom 2–3 veckor</strong>. Studier visar entydigt att kirurgi ger bäst styrka och funktion<RefLink id="1" text="Metaanalys: Kirurgi ger bäst styrka." url={references[0].url} />. Utan operation får du räkna med en permanent styrkeförlust på ca 40% vid rotation och 20% vid böjning."
+        </blockquote>
+        <div class="flex items-center gap-4 border-t border-gray-100 pt-6 pl-4">
+             <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+             </div>
+             <div>
+                <span class="block text-sm font-bold text-sky-900">Dr. Carlos Rivero Siri</span>
+                <span class="block text-xs text-gray-500">Överläkare, Ortopedi</span>
+             </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24">
+    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div class="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-xl bg-gray-100 border border-gray-200 h-[500px]">
+         <div class="absolute inset-0 flex items-center justify-center text-gray-400">
+             
+
+[Image of distal biceps repair surgery]
+
+         </div>
+      </div>
+
+      <div class="order-1 lg:order-2 prose prose-lg text-gray-700">
+        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Behandlingsalternativ</h2>
+        <p>
+          Valet står mellan konservativ behandling (fysioterapi) och kirurgi. Jag anpassar alltid metoden efter din livsstil och hälsa.
+        </p>
+
+        <div class="bg-sky-50 p-8 rounded-3xl mb-8 not-prose border border-sky-100">
+            <h3 class="text-sky-800 font-bold mb-3 text-xl">Kirurgisk behandling</h3>
+            <p class="text-gray-700 mb-4">
+                Målet är att fästa senan åter mot strålbenet (radius). Jag använder moderna fixationsmetoder (t.ex. "Cortical button") som är extremt starka.
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>Styrka:</strong> Återfår ca 95% flexion och 90% supination<RefLink id="1" text="Styrkeresultat post-op." url={references[0].url} />.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>Teknik:</strong> En eller två incisioner beroende på anatomi för att minska risker<RefLink id="5" text="Singel vs Dubbel incision." url={references[4].url} />.</span>
+                </li>
+            </ul>
+        </div>
+
+        <h3 class="text-gray-900 font-bold text-lg">Konservativ behandling</h3>
+        <p class="text-base">
+            Lämpligt för äldre (>70 år) eller personer med låga fysiska krav som kan acceptera en permanent styrkeförlust på 30–40% vid rotation<RefLink id="4" text="Systematisk review: Konservativ behandling." url={references[3].url} />.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sky-50 py-24">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center text-sky-700 mb-12">Vanliga frågor</h2>
+      
+      <div class="space-y-4">
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Hur ser rehabplanen ut?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Vi använder ett accelererat protokoll.
+            <br><br>
+            <strong>0–1 vecka:</strong> Slynga för komfort. Tidig passiv rörelse.
+            <br>
+            <strong>1–6 veckor:</strong> Full rörlighet utan belastning. Lättare vardagsaktivitet.
+            <br>
+            <strong>6–12 veckor:</strong> Progressiv styrketräning.
+            <br>
+            <strong>>12 veckor:</strong> Återgång till tung aktivitet och idrott<RefLink id="6" text="Accelererad rehab minskar stelhet." url={references[5].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Finns det risker med operationen?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Total komplikationsfrekvens är ca 25%, men majoriteten är lindriga och övergående. Vanligast är en övergående känselstörning på utsidan av underarmen (ca 10%). Allvarliga nervskador är sällsynta (&lt;2%)<RefLink id="5" text="Komplikationsfrekvenser." url={references[4].url} />. Re-ruptur sker i ca 1-2% av fallen.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Hur lång är sjukskrivningen?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            För kontorsarbete kan du ofta återgå inom 1–2 veckor. För tungt fysiskt arbete krävs ofta 3–4 månaders sjukskrivning tills senan läkt fast ordentligt i benet.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Vad kostar det?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Om du har en privat sjukvårdsförsäkring täcks kostnaden ofta av den. För privatbetalande patienter finns fasta prispaket. Kontakta oss för aktuell prislista.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-6">Vänta inte med diagnosen</h2>
+      <p class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
+        Vid en distal bicepsruptur är tiden avgörande för ett optimalt resultat. Boka en tid hos Dr. Carlos Rivero Siri för en expertbedömning.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/boka" class="bg-sky-700 hover:bg-sky-800 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          Boka tid online
+        </a>
+        <a href="/egenremiss" class="bg-white text-sky-700 border-2 border-sky-700 hover:bg-sky-50 px-10 py-4 rounded-full font-bold text-lg transition duration-300">
+          Skicka egenremiss
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-6 space-y-12">
+      <AuthorCard 
+        name={authorName}
+        title="Specialist i Ortopedi & Armbågskirurgi"
+        image={authorImage}
+        profileUrl={authorUrl}
+      />
+      <RefDrawer references={references} />
+    </div>
+  </section>
+
+</BaseLayout>
