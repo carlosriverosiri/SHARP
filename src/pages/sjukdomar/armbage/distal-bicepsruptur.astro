@@ -1,344 +1,242 @@
----
-// Fil: src/pages/sjukdomar/armbage/distal-bicepsruptur.astro
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-
-// --- METADATA & DATA ---
-const title = "Distal Bicepsseneruptur: Diagnos, Operation & Rehab";
-const description = "Komplett guide om distal bicepsseneruptur. Lär dig om Hook Test, skillnaden mellan kirurgisk och icke-kirurgisk behandling samt rehabilitering vecka för vecka.";
-const author = "Dr. Anna Specialist";
-const publishDate = "2025-12-06";
-
-// FAQ-data (används både för visning och Schema)
-const faqs = [
-  {
-    question: "Kan jag träna biceps igen efter operationen?",
-    answer: "Ja. De flesta patienter kan börja med lätt styrketräning efter 3 månader och återgå till full belastning (tunga lyft) efter cirka 4–6 månader."
-  },
-  {
-    question: "Måste jag operera mig?",
-    answer: "Nej, inte nödvändigtvis. För äldre eller lågaktiva kan icke-kirurgisk behandling fungera bra, men du får räkna med en permanent styrkenedsättning på ca 30-40% i rotation (supination)."
-  },
-  {
-    question: "Hur ställer läkaren diagnos?",
-    answer: "Oftast räcker en fysisk undersökning med 'Hook Test', som är mycket tillförlitligt. Om senan inte känns, är den av. Vid osäkerhet kan ultraljud eller MR användas."
-  }
-];
-
-// Schema.org JSON-LD
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "MedicalWebPage",
-  "name": title,
-  "description": description,
-  "author": { "@type": "Person", "name": author },
-  "datePublished": publishDate,
-  "about": {
-    "@type": "MedicalCondition",
-    "name": "Distal Biceps Tendon Rupture",
-    "possibleTreatment": [
-      { "@type": "MedicalTherapy", "name": "Kirurgisk fixation (Button/Anchor)" },
-      { "@type": "MedicalTherapy", "name": "Konservativ behandling" }
+<!DOCTYPE html>
+<html lang="sv" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          slate: { 850: '#152033' },
+          teal: { 600: '#0d9488', 700: '#0f766e', 50: '#f0fdfa' },
+        },
+        typography: (theme) => ({
+          DEFAULT: {
+            css: {
+              color: '#334155',
+              h2: { color: '#0f172a', fontWeight: '700' },
+              h3: { color: '#1e293b', fontWeight: '600' },
+              strong: { color: '#0f766e' },
+            },
+          },
+        }),
+      }
+    },
+    plugins: [
+      function({ addBase, theme }) {
+        addBase({
+          'h1': { fontSize: theme('fontSize.4xl') },
+          'h2': { fontSize: theme('fontSize.2xl') },
+          'h3': { fontSize: theme('fontSize.xl') },
+        })
+      }
     ]
-  },
-  "mainEntity": {
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(f => ({
-      "@type": "Question",
-      "name": f.question,
-      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
-    }))
   }
-};
----
+</script>
+<style>
+  /* Enkel simulering av typography plugin */
+  .prose p { margin-bottom: 1.2em; line-height: 1.7; }
+  .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.2em; }
+  .active-tab { background-color: #0d9488; color: white; border-color: #0d9488; }
+  .inactive-tab { background-color: white; color: #475569; border-color: #e2e8f0; }
+  .inactive-tab:hover { background-color: #f1f5f9; }
+</style>
+</head>
+<body class="bg-gray-50 text-slate-800 antialiased font-sans">
 
-<BaseLayout title={title} description={description}>
-  
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} slot="head" />
-
-  <section class="relative w-full py-20 lg:py-32 bg-slate-900 overflow-hidden">
-    <div class="absolute inset-0 z-0">
-      <img 
-        src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop" 
-        alt="Anatomi armbåge" 
-        class="w-full h-full object-cover opacity-30 mix-blend-overlay"
-      />
-    </div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-6">
-      <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl md:w-2/3 lg:w-1/2 border-l-8 border-sky-600">
-        <span class="inline-block py-1 px-3 rounded-full bg-sky-100 text-sky-800 text-xs font-bold uppercase tracking-wide mb-4">
-          Ortopedi / Armbåge
-        </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-          Distal Bicepsseneruptur
-        </h1>
-        
-        <div class="flex flex-wrap items-center text-sm text-slate-500 mb-6 gap-4">
-          <div class="flex items-center">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            <span>{author}</span>
-          </div>
-          <div class="flex items-center">
-             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <time datetime={publishDate}>{publishDate}</time>
-          </div>
+<section class="relative bg-slate-900 text-white py-20 lg:py-24 overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay" alt="Medical background">
+  <div class="relative container mx-auto px-6 max-w-7xl">
+    <span class="inline-block py-1 px-3 rounded-full bg-teal-900/50 border border-teal-500/30 text-teal-200 text-xs font-bold uppercase tracking-wide mb-6">
+      Armbåge & Underarm
+    </span>
+    <h1 class="font-extrabold mb-6 leading-tight max-w-4xl">
+      Distal Bicepsseneruptur: <br><span class="text-teal-400">En komplett patientguide</span>
+    </h1>
+    <p class="text-lg text-slate-300 max-w-2xl mb-8 leading-relaxed">
+      Har du känt en smäll i armbågen och tappat styrkan? Här går vi igenom allt från det klassiska "Hook-testet" till varför snabb operation ofta är avgörande för aktiva personer.
+    </p>
+    
+    <div class="flex items-center gap-4 text-sm text-slate-400 border-t border-slate-700 pt-6 mt-6">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+           <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
         </div>
-
-        <p class="text-lg text-slate-700 leading-relaxed">
-          En distal bicepsseneruptur innebär att bicepsmuskelns fäste vid armbågen slits av. Skadan drabbar oftast aktiva individer vid tunga lyft och kräver rätt diagnos för att återfå full styrka.
-        </p>
+        <div>
+          <span class="block text-white font-bold">Dr. Carlos Rivero Siri</span>
+          <span class="text-xs">Specialist i Ortopedi</span>
+        </div>
       </div>
+      <span class="hidden sm:inline">|</span>
+      <span>Uppdaterad: 2025-12-06</span>
     </div>
-  </section>
+  </div>
+</section>
 
-
-  <div class="max-w-7xl mx-auto px-6 py-12 lg:py-20 flex flex-col lg:flex-row gap-12">
+<div class="container mx-auto px-4 py-12 lg:py-16 max-w-7xl">
+  <div class="lg:flex lg:gap-16">
     
     <aside class="hidden lg:block w-64 shrink-0">
-      <nav class="sticky top-24 p-6 bg-white rounded-xl shadow-sm border border-slate-100">
-        <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Innehåll</h5>
-        <ul class="space-y-3 text-sm border-l-2 border-slate-100">
-          <li><a href="#symptom" class="block pl-4 py-1 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-700 text-slate-600 transition-colors">Symptom & Tecken</a></li>
-          <li><a href="#diagnos" class="block pl-4 py-1 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-700 text-slate-600 transition-colors">Diagnos (Hook Test)</a></li>
-          <li><a href="#behandling" class="block pl-4 py-1 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-700 text-slate-600 transition-colors">Behandlingsval</a></li>
-          <li><a href="#faq" class="block pl-4 py-1 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-700 text-slate-600 transition-colors">Vanliga frågor</a></li>
-          <li><a href="#rehab" class="block pl-4 py-1 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-700 text-slate-600 transition-colors">Rehabilitering</a></li>
-        </ul>
-        <div class="mt-8 pt-6 border-t border-slate-100">
-            <a href="#boka" class="flex items-center text-sky-600 font-bold text-sm hover:underline">
-                <span>Boka bedömning</span>
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </a>
+      <nav class="sticky top-24 space-y-8">
+        <div>
+          <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">I denna guide</h5>
+          <ul class="space-y-3 text-sm border-l-2 border-slate-200">
+            <li><a href="#" class="block pl-4 border-l-2 border-teal-600 text-teal-700 font-bold">Symtom & Varningstecken</a></li>
+            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Diagnos (Hook Test)</a></li>
+            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Kirurgi vs Icke-kirurgi</a></li>
+            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Operationsmetoder</a></li>
+            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Rehabilitering</a></li>
+            <li><a href="#" class="block pl-4 border-l-2 border-transparent hover:border-slate-300 text-slate-600">Risker & Komplikationer</a></li>
+          </ul>
+        </div>
+        
+        <div class="bg-teal-50 p-6 rounded-xl border border-teal-100">
+          <h4 class="font-bold text-teal-900 mb-2">Behöver du bedömning?</h4>
+          <p class="text-xs text-teal-800 mb-4">Vänta inte för länge. Vid bicepsruptur är tiden en viktig faktor.</p>
+          <button class="w-full bg-teal-600 text-white text-sm font-bold py-3 rounded shadow hover:bg-teal-700">Boka tid online</button>
         </div>
       </nav>
     </aside>
 
-    <main class="flex-1 w-full min-w-0 space-y-16">
+    <main class="flex-1 min-w-0 prose prose-slate prose-lg max-w-none">
+      
+      <p class="lead text-xl text-slate-600 mb-10">
+        Bicepsmuskelns nedre sena fäster på strålbenet (radius) i underarmen. När den rycks av helt kallas det distal bicepsseneruptur. Skadan är relativt ovanlig men har blivit vanligare – i USA har incidensen mer än fördubblats på 20 år.
+      </p>
 
-      <section id="symptom" class="scroll-mt-24">
-        <h2 class="text-3xl font-bold text-slate-900 mb-6">Klinisk Bild & Symptom</h2>
-        <p class="text-lg text-slate-600 mb-8">
-            Skadan uppstår vanligtvis vid en plötslig, excentrisk belastning på böjd armbåge. Patienten känner ofta igen följande triad av symptom.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gray-50 p-6 rounded-lg border-t-4 border-sky-600">
-                <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                </div>
-                <h3 class="font-bold text-slate-900 mb-2">Hörbart "Pop"</h3>
-                <p class="text-sm text-slate-600">En distinkt smäll eller knäppning känns i armbågen vid skadeögonblicket.</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg border-t-4 border-sky-600">
-                <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <h3 class="font-bold text-slate-900 mb-2">Popeye-tecken</h3>
-                <p class="text-sm text-slate-600">Bicepsmuskeln dras uppåt på överarmen ("Reverse Popeye Deformity").</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg border-t-4 border-sky-600">
-                <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 mb-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h3 class="font-bold text-slate-900 mb-2">Svaghet</h3>
-                <p class="text-sm text-slate-600">Oförmåga att rotera handflatan uppåt (supination) med kraft.</p>
-            </div>
+      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">1. Symtom: Så vet du om senan är av</h2>
+      <p>Det typiska scenariot är en man i åldern 40–60 år som lyfter något tungt (exempelvis en flyttkartong eller på gymmet). Plötsligt ger armen vika.</p>
+      
+      <div class="grid md:grid-cols-2 gap-6 not-prose my-8">
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center gap-3 mb-3">
+             <div class="bg-red-100 text-red-600 p-2 rounded-full">💥</div>
+             <h3 class="font-bold text-slate-900 text-lg m-0">Hörbart "Pop"</h3>
+          </div>
+          <p class="text-sm text-slate-600">Många beskriver ett tydligt ljud eller en känsla av att ett gummiband smäller av inuti armbågen.</p>
         </div>
-      </section>
-
-      <hr class="border-slate-100" />
-
-      <section id="diagnos" class="scroll-mt-24">
-        <div class="grid md:grid-cols-2 gap-10 items-center">
-            <div class="prose prose-slate">
-                <h2 class="text-2xl font-bold text-slate-900 not-prose">Diagnostik: "Hook Test"</h2>
-                <p>
-                    Diagnosen ställs primärt genom klinisk undersökning. Det mest tillförlitliga testet är <strong>"Hook Test"</strong>. Studier visar att testet har 100% sensitivitet och specificitet för kompletta rupturer.
-                </p>
-                <ul class="text-slate-700 space-y-2 list-disc pl-4">
-                    <li>Patienten håller armbågen i 90 grader och supinerar.</li>
-                    <li>Läkaren försöker "kroka" sitt finger under senan från utsidan.</li>
-                    <li><strong>Intakt sena:</strong> Känns som en spänd sträng.</li>
-                    <li><strong>Ruptur:</strong> Ingen sena känns, fingret sjunker in.</li>
-                </ul>
-                <p class="text-sm text-slate-500 italic mt-4">
-                    Bilddiagnostik som MR används främst vid osäkerhet eller för att utvärdera partiella skador.
-                </p>
-            </div>
-            <figure class="rounded-xl overflow-hidden shadow-lg bg-slate-100 h-80 relative group">
-                <img src="https://placehold.co/800x600/e2e8f0/1e293b?text=Illustration:+Hook+Test" alt="Hook Test visualisering" class="object-cover w-full h-full">
-                <div class="absolute bottom-0 w-full bg-slate-900/80 p-4">
-                    <span class="text-white text-sm font-medium">Figur 1: Utförande av Hook Test</span>
-                </div>
-            </figure>
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+          <div class="flex items-center gap-3 mb-3">
+             <div class="bg-blue-100 text-blue-600 p-2 rounded-full">💪</div>
+             <h3 class="font-bold text-slate-900 text-lg m-0">Popeye-tecken</h3>
+          </div>
+          <p class="text-sm text-slate-600">Muskeln drar ihop sig uppåt mot axeln. Du får en onaturlig bula på överarmen och en grop i armbågsvecket.</p>
         </div>
-      </section>
+      </div>
 
-      <hr class="border-slate-100" />
-
-      <section id="behandling" class="scroll-mt-24">
-        <h2 class="text-3xl font-bold text-slate-900 mb-6">Ska jag operera mig?</h2>
-        <p class="text-lg text-slate-600 mb-8">
-            Valet står mellan kirurgisk reparation och icke-kirurgisk behandling. Beslutet baseras på din aktivitetsnivå och funktionella krav.
-        </p>
-
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="border border-slate-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <h3 class="text-xl font-bold text-sky-700 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                    Kirurgisk Behandling
-                </h3>
-                <p class="text-sm text-slate-600 mb-4"><strong>Rekommenderas för:</strong> Aktiva patienter, idrottare och personer med fysiska arbeten.</p>
-                <ul class="text-sm space-y-2 mb-4">
-                    <li class="flex justify-between"><span>Flexionsstyrka:</span> <span class="font-bold text-sky-700">~95% återställd</span></li>
-                    <li class="flex justify-between"><span>Supinationsstyrka:</span> <span class="font-bold text-sky-700">~90% återställd</span></li>
-                </ul>
-                <div class="bg-orange-50 p-3 rounded text-xs text-orange-800">
-                    <strong>Risker:</strong> Nervpåverkan (LABCN, ca 10%) och benbildning (HO).
-                </div>
-            </div>
-
-            <div class="border border-slate-200 rounded-xl p-6 bg-gray-50 hover:shadow-md transition-shadow">
-                <h3 class="text-xl font-bold text-slate-700 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                    Icke-kirurgisk
-                </h3>
-                <p class="text-sm text-slate-600 mb-4"><strong>Rekommenderas för:</strong> Äldre, lågaktiva eller vid medicinska risker.</p>
-                <ul class="text-sm space-y-2 mb-4">
-                    <li class="flex justify-between"><span>Flexionsstyrka:</span> <span class="font-bold text-slate-500">~83% (17% förlust)</span></li>
-                    <li class="flex justify-between"><span>Supinationsstyrka:</span> <span class="font-bold text-orange-600">~63% (37% förlust)</span></li>
-                </ul>
-                <p class="text-xs text-slate-500 italic">Data från metaanalys av Cuzzolin et al. (2021).</p>
-            </div>
-        </div>
-      </section>
-
-      <section id="faq" class="scroll-mt-24">
-        <h3 class="text-2xl font-bold text-slate-900 mb-6">Vanliga frågor</h3>
-        <div class="space-y-4">
-          {faqs.map((faq) => (
-            <details class="group bg-white rounded-lg border border-slate-200 open:ring-2 open:ring-sky-100 open:border-sky-300 transition-all duration-300">
-              <summary class="flex justify-between items-center cursor-pointer p-5 font-medium text-slate-800 list-none">
-                <span>{faq.question}</span>
-                <span class="transition group-open:rotate-180 text-sky-600">
-                  <svg fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg>
-                </span>
-              </summary>
-              <div class="text-slate-600 px-5 pb-5 text-sm leading-relaxed border-t border-slate-100 pt-3">
-                {faq.answer}
-              </div>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section id="rehab" class="scroll-mt-24 bg-sky-50 rounded-2xl p-8 border border-sky-100">
-        <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Rehabiliteringsfaserna</h2>
-        
-        <div class="flex flex-wrap justify-center gap-2 mb-8" id="rehab-tabs">
-            <button data-target="fas1" class="rehab-tab active bg-sky-600 text-white font-bold py-2 px-6 rounded-full transition-all text-sm shadow-md">
-                Vecka 0-2
-            </button>
-            <button data-target="fas2" class="rehab-tab bg-white text-slate-600 hover:bg-sky-100 font-bold py-2 px-6 rounded-full transition-all text-sm border border-slate-200">
-                Vecka 2-6
-            </button>
-            <button data-target="fas3" class="rehab-tab bg-white text-slate-600 hover:bg-sky-100 font-bold py-2 px-6 rounded-full transition-all text-sm border border-slate-200">
-                Månad 3+
-            </button>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 shadow-sm min-h-[250px] relative">
-            <div id="fas1" class="rehab-content animate-fade-in block">
-                <div class="flex gap-4">
-                    <div class="bg-sky-100 text-sky-700 p-3 rounded-lg h-fit hidden md:block">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-900 mb-2">Skyddsfasen</h4>
-                        <p class="text-slate-600 text-sm mb-4">Fokus på sårläkning och att skydda fixationen.</p>
-                        <ul class="text-sm text-slate-700 space-y-2">
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Armbågsortos eller slynga dygnet runt.</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Passiv rörelseträning (ROM).</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>Viktbegränsning: Max 0.5 kg (kaffekopp).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div id="fas2" class="rehab-content hidden animate-fade-in">
-                <div class="flex gap-4">
-                    <div class="bg-sky-100 text-sky-700 p-3 rounded-lg h-fit hidden md:block">
-                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-900 mb-2">Rörelsefasen</h4>
-                        <p class="text-slate-600 text-sm mb-4">Gradvis ökning av rörelseomfånget.</p>
-                        <ul class="text-sm text-slate-700 space-y-2">
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Påbörja aktiv assistiv rörelse.</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Mål: Full extension (sträckning) vecka 6.</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>Ingen aktiv supination mot motstånd.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div id="fas3" class="rehab-content hidden animate-fade-in">
-                <div class="flex gap-4">
-                    <div class="bg-sky-100 text-sky-700 p-3 rounded-lg h-fit hidden md:block">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-900 mb-2">Styrkefasen</h4>
-                        <p class="text-slate-600 text-sm mb-4">Återuppbyggnad av muskelstyrka.</p>
-                        <ul class="text-sm text-slate-700 space-y-2">
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Progressiv styrketräning biceps/triceps.</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-sky-500 rounded-full mr-2"></span>Återgång till tungt arbete ca v.12.</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></span>Full idrottsaktivitet när styrkan är liksidig.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </section>
-
-      <section class="border-t border-slate-200 pt-8">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Källförteckning</h3>
-        <ul class="space-y-2 text-xs text-slate-500 font-mono break-all">
-          <li>[1] Savin et al. (2017). Surgical Management of Acute Distal Biceps Tendon Ruptures. <a href="https://doi.org/10.2106/JBJS.17.00080" class="text-sky-600 hover:underline">DOI: 10.2106/JBJS.17.00080</a></li>
-          <li>[2] Cuzzolin et al. (2021). Operative Versus Nonoperative Management... <a href="https://doi.org/10.1177/23259671211037311" class="text-sky-600 hover:underline">DOI: 10.1177/23259671211037311</a></li>
-          <li>[3] Kruger et al. (2020). Acute distal biceps tendon ruptures... <a href="https://doi.org/10.1136/jisakos-2019-000279" class="text-sky-600 hover:underline">DOI: 10.1136/jisakos-2019-000279</a></li>
-          <li>[6] Savin, D.D. et al. (2017). JBJS Reviews.</li>
-          <li>[7] Amin et al. (2016). Orthop J Sports Med.</li>
+      <div class="bg-slate-100 border-l-4 border-slate-500 p-6 rounded-r-lg my-8">
+        <h4 class="font-bold text-slate-800 m-0 mb-2">Vem drabbas?</h4>
+        <ul class="m-0 text-sm text-slate-700">
+           <li>86 % sker på den <strong>dominanta armen</strong>.</li>
+           <li><strong>Rökare</strong> löper 7,5 gånger högre risk att drabbas.</li>
+           <li>Användning av anabola steroider försvagar senans struktur och ökar risken markant.</li>
         </ul>
-      </section>
+      </div>
+
+      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">2. Diagnos med "Hook Test"</h2>
+      <p>
+        Oftast behövs ingen röntgen för att ställa diagnos. Din berättelse och en enkel klinisk undersökning räcker. Det viktigaste testet kallas <strong>Hook Test</strong>.
+      </p>
+      <div class="flex flex-col md:flex-row gap-8 items-center bg-white p-6 rounded-xl shadow-sm border border-slate-200 not-prose">
+         <div class="flex-1">
+            <h4 class="font-bold text-teal-800">Så går testet till:</h4>
+            <p class="text-slate-600 text-sm mb-4">Du håller armen böjd i 90 grader och vrider handflatan mot ansiktet. Läkaren försöker "kroka" sitt pekfinger runt senan i armvecket.</p>
+            <ul class="space-y-2 text-sm">
+              <li class="flex items-start gap-2">
+                <span class="text-green-500 font-bold">✓</span>
+                <span><strong>Normalt:</strong> Fingret stoppas av en hård sträng (senan).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-red-500 font-bold">✕</span>
+                <span><strong>Ruptur:</strong> Fingret hittar inget motstånd. Testet har 100% säkerhet vid totalruptur.</span>
+              </li>
+            </ul>
+         </div>
+         <div class="w-full md:w-1/3 aspect-video bg-slate-200 rounded-lg flex items-center justify-center text-slate-400">
+           [Illustration: Hook Test]
+         </div>
+      </div>
+
+      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">3. Måste jag operera mig?</h2>
+      <p>
+        Det korta svaret är: Om du vill återfå full styrka, <strong>ja</strong>. Men om du är äldre eller inte använder armen tungt kan du klara dig bra utan.
+      </p>
+      
+      <div class="overflow-hidden rounded-xl border border-slate-200 shadow-sm not-prose my-8">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+            <tr>
+              <th class="p-4">Funktion</th>
+              <th class="p-4 text-teal-700">Med Operation</th>
+              <th class="p-4 text-slate-500">Utan Operation</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 bg-white">
+            <tr>
+              <td class="p-4 font-medium">Böjstyrka (Flexion)</td>
+              <td class="p-4">≈ 95% återställd</td>
+              <td class="p-4 text-red-600">≈ 80% (20% förlust)</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-medium">Vridstyrka (Supination)</td>
+              <td class="p-4">≈ 90% återställd</td>
+              <td class="p-4 text-red-600">≈ 60% (40% förlust!)</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-medium">Uthållighet</td>
+              <td class="p-4">Normal</td>
+              <td class="p-4">Krampkänsla vid arbete</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="p-6 bg-teal-50 border-l-4 border-teal-600 rounded-r-lg my-8">
+        <h4 class="font-bold text-teal-900 m-0 mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          Dr. Carlos rekommenderar:
+        </h4>
+        <p class="italic text-teal-800 text-sm m-0">
+          "För en aktiv person under 65 år, särskilt om det är höger hand för en högerhänt, rekommenderar jag starkt operation. En 40-procentig förlust av vridstyrkan (som att använda en skruvmejsel) är ofta mycket märkbar i vardagen."
+        </p>
+      </div>
+
+      <h2 class="text-3xl font-bold text-slate-900 mt-12 mb-6">4. Rehab: Vecka för vecka</h2>
+      <p class="mb-6">
+        Moderna operationsmetoder (t.ex. "Cortical Button") är så starka att vi kan börja röra armen nästan direkt. Här är en översikt av mitt rehab-protokoll.
+      </p>
+
+      <div class="not-prose bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="flex border-b border-slate-200 bg-slate-50">
+           <button class="flex-1 py-4 text-sm font-bold border-b-2 active-tab transition-colors">Vecka 0-2<br><span class="font-normal text-xs opacity-80">Skyddsfas</span></button>
+           <button class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:bg-slate-100 transition-colors">Vecka 2-6<br><span class="font-normal text-xs opacity-80">Rörelse</span></button>
+           <button class="flex-1 py-4 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:bg-slate-100 transition-colors">Månad 3+<br><span class="font-normal text-xs opacity-80">Styrka</span></button>
+        </div>
+        
+        <div class="p-8">
+           <h4 class="text-xl font-bold text-slate-900 mb-4">Vecka 0-2: Sårläkning</h4>
+           <ul class="space-y-3 mb-6">
+             <li class="flex items-start gap-3">
+               <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+               <span class="text-slate-700">Armbågsortos eller slynga används för komfort och skydd.</span>
+             </li>
+             <li class="flex items-start gap-3">
+               <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+               <span class="text-slate-700">Passiv rörelseträning tillåten (hjälp armen böja sig med den friska handen).</span>
+             </li>
+             <li class="flex items-start gap-3">
+               <span class="w-6 h-6 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold shrink-0">!</span>
+               <span class="text-slate-700 font-medium">Maxvikt: En kaffekopp (0.5 kg). Ingen aktiv böjning mot motstånd.</span>
+             </li>
+           </ul>
+        </div>
+      </div>
 
     </main>
   </div>
+</div>
 
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tabs = document.querySelectorAll('.rehab-tab');
-        const contents = document.querySelectorAll('.rehab-content');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetId = tab.getAttribute('data-target');
-
-                // 1. Reset all tabs styling
-                tabs.forEach(t => {
-                    t.classList.remove('bg-sky-600', 'text-white', 'shadow-md');
-                    t.classList.add('bg-white', 'text-slate-600', 'hover:bg-sky-100');
-                });
-
-                // 2. Activate clicked tab
-                tab.classList.remove('bg-white', 'text-slate-600', 'hover:bg-sky-100');
-                tab.classList.add('bg-sky-600', 'text-white', 'shadow-md');
-
-                // 3. Hide all content and show target
-                contents.forEach(c => c.classList.add('hidden'));
-                document.getElementById(targetId).classList.remove('hidden');
-            });
-        });
-    });
-  </script>
-
-</BaseLayout>
+</body>
+</html>

@@ -1,12 +1,12 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+// VIKTIGT: Vi går upp 3 steg (../../../) och importerar BaseLayout.astro
+import Layout from '../../../layouts/BaseLayout.astro';
 ---
 
 <Layout 
   title="Dr. Carlos Rivero Siri | Specialist i Ortopedi & Axelkirurgi"
   description="Träffa Dr. Carlos Rivero Siri, grundare av Södermalms Ortopedi och specialist i ortopedi sedan 1999. Expert på artroskopisk axel- och armbågskirurgi."
 >
-
   <section class="profile-hero">
     <div class="container">
       <div class="hero-content">
@@ -21,7 +21,7 @@ import Layout from '../../layouts/Layout.astro';
             Med över 20 års erfarenhet fokuserar jag på avancerad titthålskirurgi (artroskopi) i axlar och armbågar.
           </p>
           <div class="cta-buttons">
-            <a href="/boka-tid" class="btn-primary">Boka tid / Egenremiss</a>
+            <a href="/patient/boka-omboka/" class="btn-primary">Boka tid / Egenremiss</a>
             <a href="#meriter" class="btn-secondary">Se meriter</a>
           </div>
         </div>
@@ -87,7 +87,6 @@ import Layout from '../../layouts/Layout.astro';
             </li>
           </ul>
         </div>
-
         <div class="cv-column">
           <h3>Utbildning</h3>
           <ul class="cv-list">
@@ -135,17 +134,6 @@ import Layout from '../../layouts/Layout.astro';
             </p>
           </div>
         </article>
-
-        <article class="pub-item">
-          <span class="pub-year">2006</span>
-          <div class="pub-content">
-            <h3>Glenohumeral osteoarthritis following arthroscopic Bankart repair</h3>
-            <p class="pub-journal">Knee Surgery, Sports Traumatology, Arthroscopy</p>
-            <p class="pub-desc">
-              Forskning kring riskfaktorer för artrosutveckling efter stabiliserande axelkirurgi.
-            </p>
-          </div>
-        </article>
       </div>
 
       <div class="scholar-link-container">
@@ -165,31 +153,6 @@ import Layout from '../../layouts/Layout.astro';
       </p>
     </div>
   </section>
-
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Physician",
-      "name": "Dr. Carlos Rivero Siri",
-      "medicalSpecialty": "Orthopedic Surgery",
-      "image": "https://dinsajt.se/images/carlos-rivero-siri.jpg",
-      "description": "Specialist i ortopedi sedan 1999. Grundare av Södermalms Ortopedi med fokus på axel- och armbågskirurgi.",
-      "worksFor": {
-        "@type": "MedicalOrganization",
-        "name": "Södermalms Ortopedi"
-      },
-      "alumniOf": {
-        "@type": "Organization",
-        "name": "Huddinge Universitetssjukhus"
-      },
-      "knowsLanguage": ["svenska", "engelska", "spanska"],
-      "sameAs": [
-        "https://scholar.google.com.tw/citations?user=gTd3-DkAAAAJ",
-        "https://specialist.se/kontakt/dr-carlos-rivero-siri/"
-      ]
-    }
-  </script>
-
 </Layout>
 
 <style>
@@ -206,7 +169,7 @@ import Layout from '../../layouts/Layout.astro';
     object-fit: cover; 
     border-radius: 50%;
     border: 4px solid white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
   
   .text-wrapper h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #1e293b; }
@@ -240,7 +203,7 @@ import Layout from '../../layouts/Layout.astro';
   .year { display: block; font-size: 0.85rem; color: #0f766e; font-weight: bold; margin-bottom: 0.25rem; }
   .place { display: block; color: #64748b; font-style: italic; margin-top: 0.25rem; }
 
-  /* --- Forskning & Publikationer (NYTT) --- */
+  /* --- Forskning & Publikationer --- */
   .research-section { background-color: white; border-top: 1px solid #e2e8f0; padding: 4rem 0; }
   .section-intro { text-align: center; max-width: 70ch; margin: 0 auto 3rem auto; color: #475569; font-size: 1.1rem; }
   
