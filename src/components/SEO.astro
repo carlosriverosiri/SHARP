@@ -1,0 +1,111 @@
+---
+// src/components/SEO.astro
+interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+}
+
+const {
+  title,
+  description,
+  canonicalUrl,
+  ogImage = "https://sodermalmsortopedi.se/logo.svg",
+  ogType = "website",
+  breadcrumbs = [],
+} = Astro.props;
+
+// Hämta base URL från Astro
+const siteUrl = Astro.site?.href || "https://sodermalmsortopedi.se";
+const currentUrl = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href;
+const fullOgImage = ogImage.startsWith("http") ? ogImage : new URL(ogImage, siteUrl).href;
+
+// Skapa BreadcrumbList structured data
+const breadcrumbList = breadcrumbs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((crumb, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": crumb.name,
+    "item": crumb.url.startsWith("http") ? crumb.url : new URL(crumb.url, siteUrl).href,
+  })),
+} : null;
+
+// Skapa MedicalClinic structured data
+const medicalClinic = {
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Södermalms Ortopedi",
+  "url": siteUrl,
+  "telephone": "+46855110422",
+  "email": "info@sodermalmsortopedi.se",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Fatburs Brunnsgata 15-17",
+    "addressLocality": "Stockholm",
+    "postalCode": "106 46",
+    "addressCountry": "SE",
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 59.3141007,
+    "longitude": 18.066933,
+  },
+  "medicalSpecialty": "Orthopedics",
+  "priceRange": "$$",
+};
+---
+
+<!-- Primary Meta Tags -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={currentUrl} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={currentUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={fullOgImage} />
+<meta property="og:locale" content="sv_SE" />
+<meta property="og:site_name" content="Södermalms Ortopedi" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={currentUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={fullOgImage} />
+
+<!-- Structured Data - BreadcrumbList -->
+{breadcrumbList && (
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
+)}
+
+<!-- Structured Data - MedicalClinic -->
+<script type="application/ld+json" set:html={JSON.stringify(medicalClinic)} />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+

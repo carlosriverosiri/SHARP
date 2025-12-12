@@ -1,0 +1,479 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AuthorCard from '../../../components/AuthorCard.astro';
+import RefLink from '../../../components/RefLink.astro';
+import RefDrawer from '../../../components/RefDrawer.astro';
+
+// FAKTA & FÖRFATTARE
+const authorName = "Dr. Carlos Rivero Siri";
+const authorUrl = "https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri";
+const authorImage = "/images/carlos-rivero-siri.jpg";
+const currentDate = new Date().toISOString().split('T')[0];
+
+// REFERENSDATA
+const references = [
+  {
+    id: "1",
+    text: "McKeever et al. A systematic review of the treatment of primary acromioclavicular joint osteoarthritis. 2024.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/38655415/"
+  },
+  {
+    id: "2",
+    text: "Farrell et al. Current evidence for nonpharmacological interventions and criteria for surgical management of persistent acromioclavicular joint osteoarthritis: A systematic review. 2019.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/32269599/"
+  },
+  {
+    id: "3",
+    text: "Buttaci et al. Osteoarthritis of the acromioclavicular joint: a review of anatomy, biomechanics, diagnosis, and treatment. 2004.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/15385790/"
+  },
+  {
+    id: "4",
+    text: "Eck et al. Prevalence of acromioclavicular joint osteoarthritis in people not seeking care: A systematic review. 2022.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/35638093/"
+  },
+  {
+    id: "5",
+    text: "Patterson et al. MRI findings of acromioclavicular joint osteoarthritis are the norm after age 40. 2023.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/36563961/"
+  },
+  {
+    id: "6",
+    text: "Soler et al. No differences between conservative and surgical management of acromioclavicular joint osteoarthritis: a scoping review. 2021.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/33386878/"
+  },
+  {
+    id: "7",
+    text: "Docimo et al. Surgical treatment for acromioclavicular joint osteoarthritis: patient selection, surgical options, complications, and outcome. 2008.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/19468890/"
+  },
+  {
+    id: "8",
+    text: "Jacob & Sallay. Therapeutic efficacy of corticosteroid injections in the acromioclavicular joint. 1998.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/9603070/"
+  },
+  {
+    id: "9",
+    text: "Hossain et al. The long-term effectiveness of steroid injections in primary acromioclavicular joint arthritis: a five-year prospective study. 2008.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/18359647/"
+  },
+  {
+    id: "10",
+    text: "Mall et al. Degenerative joint disease of the acromioclavicular joint: a review. 2013.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/23649008/"
+  },
+  {
+    id: "11",
+    text: "Koo et al. Arthroscopic Distal Clavicle and Medial Border of Acromion Resection for Symptomatic Acromioclavicular Joint Osteoarthritis. 2017.",
+    url: "https://www.arthroscopytechniques.org/article/S2212-6287(16)30134-7/fulltext"
+  },
+  {
+    id: "12",
+    text: "Kim et al. Distal Clavicular Osteolysis. StatPearls. 2021.",
+    url: "https://www.ncbi.nlm.nih.gov/books/NBK582148/"
+  },
+  {
+    id: "13",
+    text: "Böhm et al. Iatrogenic instability of the acromioclavicular joint leads to ongoing impairment of shoulder function even following secondary surgical stabilization. 2023.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10030407/"
+  },
+  {
+    id: "14",
+    text: "Waterman et al. Distal Clavicular Augmentation with Acromioclavicular and Coracoclavicular Ligament Reconstruction in the Setting of Iatrogenic Induced Acromioclavicular Instability. 2019.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6930955/"
+  },
+  {
+    id: "15",
+    text: "Bishop et al. Preoperative Factors Associated With Subsequent Distal Clavicle Resection After Rotator Cuff Repair. 2019.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6498781/"
+  }
+];
+
+// SCHEMA.ORG
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "AC-ledsartros - Symptom & Behandling",
+  "author": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "datePublished": currentDate,
+  "about": {
+    "@type": "MedicalCondition",
+    "name": "Acromioclavicular Joint Osteoarthritis",
+    "possibleTreatment": [
+      { "@type": "MedicalTherapy", "name": "Konservativ behandling (avlastning, NSAID)" },
+      { "@type": "MedicalTherapy", "name": "Distal klavikelresektion (DCR)" }
+    ]
+  }
+};
+---
+
+<BaseLayout title="AC-ledsartros - Symptom & Behandling | Södermalms Ortopedi">
+  
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+
+  <section class="bg-sky-700 text-white pt-12 pb-24 md:pt-20 md:pb-32 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <span class="inline-block py-1 px-3 rounded-full bg-sky-800 text-sky-200 text-sm font-bold mb-6 tracking-wide">
+        AXEL
+      </span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        AC-ledsartros
+      </h1>
+      <p class="text-sky-100 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-light">
+        Artros i yttre nyckelbensleden (akromioklavikulärleden) är en vanlig orsak till axelsmärta, särskilt vid belastning. Trots hög prevalens med åldern<RefLink id="4" text="Prevalens 83% efter 40 år, nästan 100% efter 70 år." url={references[3].url} /> är många fall asymptomatiska.
+      </p>
+
+      <div class="flex items-center gap-4 pt-4">
+        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-sky-400 bg-sky-800">
+          <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medicinskt granskad av</p>
+          <p class="text-base font-bold text-white">
+            <a href={authorUrl} class="underline hover:text-sky-200">{authorName}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16 max-w-3xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-4">Så känner du igen AC-ledsartros</h2>
+        <p class="text-gray-600 text-lg">
+          Symtomen är ofta belastningsberoende och uppstår vid specifika aktiviteter. Till skillnad från många andra axelbesvär är smärtan sällan intensiv<RefLink id="10" text="Lätta till moderata besvär vid belastning." url={references[9].url} />.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">Belastningsberoende smärta</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Smärta uppstår vid overhead-arbete, grävning eller cross-body rörelser. Vid vila eller kontorsarbete försvinner smärtan ofta helt. Det enklaste sättet att bli kvitt smärtan är att avlasta axeln<RefLink id="2" text="Avlastning är mest effektiva konservativa metoden." url={references[1].url} />.
+          </p>
+        </div>
+
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">Lokaliserad värk</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Smärtan sitter ofta överst på axeln, precis där nyckelbenet möter skulderbladet. Tryck på leden kan vara ömt. Smärtan är främst anterior/superior vid overhead/cross-body aktiviteter.
+          </p>
+        </div>
+
+        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-sky-900 mb-3">Lätta till moderata besvär</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Patienter söker oftast med lätta till moderata smärtor som varit långvariga. Smärtan är sällan intensiv, vilket gör att många patienter väntar länge innan de söker vård.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sky-50 py-24">
+    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div class="prose prose-lg text-gray-700">
+        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Diagnos och prevalens</h2>
+        <p>
+          AC-ledsartros är mycket vanligt med åldern. Studier visar att <strong>83% av personer över 40 år</strong> har radiologiska tecken på artros via MRI<RefLink id="5" text="MRI-fynd är normen efter 40 år." url={references[4].url} />, och prevalensen ökar till nästan 100% efter 70 år<RefLink id="4" text="Hög prevalens med åldern." url={references[3].url} />. Trots detta är många fall asymptomatiska.
+        </p>
+        
+        <h3 class="text-sky-800 font-bold mt-8 text-xl not-prose">Vem drabbas?</h3>
+        <ul class="list-disc pl-5 space-y-2 marker:text-sky-600">
+            <li>Vanligare med åldern (åldersrelaterad degeneration)</li>
+            <li>Ofta asymptomatisk trots radiologiska fynd</li>
+            <li>Symtom uppstår vid överbelastning eller trauma</li>
+            <li>Överdiagnostik är en risk p.g.a. hög basalprevalens</li>
+        </ul>
+        <p class="mt-4 text-sm italic">
+           Diagnosen ställs kliniskt baserat på smärtkaraktär och lokalisation. Röntgen kan bekräfta artros, men många har radiologiska fynd utan symtom.
+        </p>
+      </div>
+
+      <div class="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white group">
+        <div class="aspect-[4/3] bg-gray-100 flex items-center justify-center text-gray-400">
+            <p class="text-center px-6">Illustration: AC-ledens anatomi och lokalisation av smärta</p>
+        </div>
+        <div class="p-6 bg-white">
+          <p class="text-sm text-gray-500 font-medium">
+             AC-leden (akromioklavikulärleden) är den lilla leden mellan nyckelbenet (klavikeln) och skulderbladets utskott (akromion). Artros här ger smärta vid belastning.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="bg-white border-l-4 border-sky-600 p-8 md:p-12 rounded-r-3xl relative shadow-lg">
+        <div class="absolute -top-6 -left-6 bg-sky-700 text-white p-4 rounded-full shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-sky-900 mb-4 ml-4">Dr. Carlos rekommenderar</h3>
+        <blockquote class="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-6 pl-4">
+          "Det enklaste sättet att bli kvitt smärtan är inte fysioterapi utan bara att avlasta. Ju mindre man belastar axeln, desto mindre smärtor får man. Gräver man i trädgården, får man ont. Sitter man på kontoret, så försvinner smärtan. För patienter med ihållande symtom efter 3-6 månaders konservativ behandling, rekommenderar jag isolerad distal klavikelresektion med 4-5 mm resektion. Detta ger utmärkta resultat med mycket låg återbesöksfrekvens<RefLink id="1" text="Låg reoperationsrisk vid isolerad DCR." url={references[0].url} />."
+        </blockquote>
+        <div class="flex items-center gap-4 border-t border-gray-100 pt-6 pl-4">
+             <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+             </div>
+             <div>
+                <span class="block text-sm font-bold text-sky-900">Dr. Carlos Rivero Siri</span>
+                <span class="block text-xs text-gray-500">Överläkare, Ortopedi & Axelkirurgi</span>
+             </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24">
+    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <div class="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-xl bg-gray-100 border border-gray-200 h-[500px]">
+         <div class="absolute inset-0 flex items-center justify-center text-gray-400 p-6">
+            <p class="text-center">Illustration: Distal klavikelresektion(DCR) - kirurgisk teknik med 4-5 mm resektion</p>
+         </div>
+      </div>
+
+      <div class="order-1 lg:order-2 prose prose-lg text-gray-700">
+        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Behandlingsalternativ</h2>
+        <p>
+          Behandlingen anpassas efter symtomens svårighetsgrad och patientens aktivitetsnivå. Konservativ behandling rekommenderas först i 3-6 månader<RefLink id="2" text="Konservativ behandling rekommenderas i 3-6 månader först." url={references[1].url} />.
+        </p>
+
+        <div class="bg-sky-50 p-8 rounded-3xl mb-8 not-prose border border-sky-100">
+            <h3 class="text-sky-800 font-bold mb-3 text-xl">Konservativ behandling</h3>
+            <p class="text-gray-700 mb-4">
+                Första steget är att minska belastningen på axeln. Detta är ofta mer effektivt än andra konservativa metoder.
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>Avlastning:</strong> Mest effektiva metoden. Minskar smärta med upp till 70% genom reducerad friktion<RefLink id="10" text="Avlastning ger 70% symtomlindring." url={references[9].url} />.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>NSAID:</strong> Minskar inflammation och smärta vid akuta skov.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-amber-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>Kortisoninjektioner:</strong> Ger korttidslindring (VAS-reduktion ~50%, 1-3 mån) men 70-80% återfall vid belastning<RefLink id="8" text="Kortison ger korttidslindring men ingen långtidseffekt." url={references[7].url} />. Patienter blir bättre men inte bra.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="bg-white p-1 rounded-full text-amber-600 shadow-sm mt-0.5">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </div>
+                    <span class="text-sm"><strong>Fysioterapi:</strong> Begränsad evidens vid isolerad artros (VAS-reduktion ~20%)<RefLink id="2" text="Fysioterapi har svag evidens vid isolerad AC-artros." url={references[1].url} />. Bättre vid kombinerad impingement.</span>
+                </li>
+            </ul>
+        </div>
+
+        <h3 class="text-gray-900 font-bold text-lg">Kirurgisk behandling</h3>
+        <p class="text-base">
+            Vid ihållande symtom efter misslyckad konservativ behandling rekommenderas <strong>distal klavikelresektion (DCR)</strong><RefLink id="7" text="Kirurgi rekommenderas efter misslyckad konservativ behandling." url={references[6].url} />. Optimal resektion är 4-7 mm för att balansera smärtlindring och stabilitet<RefLink id="11" text="Optimal resektion 4-7 mm för stabilitet." url={references[10].url} />. Både öppen och artroskopisk teknik ger likvärdiga resultat<RefLink id="1" text="Ingen skillnad mellan öppen och artroskopisk DCR." url={references[0].url} />.
+        </p>
+        <p class="text-base mt-3">
+            <strong>Viktigt:</strong> Överresektion (&gt;10 mm) kan leda till postoperativ instabilitet som är svår att åtgärda<RefLink id="13" text="Överresektion kan orsaka instabilitet." url={references[12].url} />. Underresektion (&lt;4 mm) är enklare att korrigera med revision.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-sky-50 py-24">
+    <div class="max-w-3xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center text-sky-700 mb-12">Vanliga frågor</h2>
+      
+      <div class="space-y-4">
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Varför fungerar inte fysioterapi vid isolerad AC-artros?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Vid isolerad AC-ledsartros har fysioterapi begränsad evidens. Smärtan är starkt belastningsberoende, och rehab kan inte ändra den underliggande degenerationen. Fysioterapi kan dock vara värdefullt vid kombinerad impingement eller rotatorcuff-patologi<RefLink id="2" text="Fysioterapi har svag evidens vid isolerad artros." url={references[1].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Vad är risken för komplikationer vid operation?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Komplikationer är sällsynta (totalt 5-15% i stora serier). Vanligast är underresektion (10-15%), vilket enkelt kan korrigeras med revision (ytterligare 2-3 mm resektion, &gt;90% framgång)<RefLink id="1" text="Underresektion är enkel att korrigera." url={references[0].url} />. Överresektion (&gt;10 mm) kan leda till instabilitet (5-10%) och är svårare att åtgärda<RefLink id="13" text="Överresektion riskerar instabilitet." url={references[12].url} />. Postoperativ osteolys förekommer i 2-8% av fallen men är ofta asymptomatisk<RefLink id="12" text="Postoperativ osteolys 2-8%." url={references[11].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Hur lång är återhämtningen efter operation?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            För kontorsarbete kan du ofta återgå inom 1-2 veckor. För tungt fysiskt arbete krävs ofta 6-8 veckor. Full återgång till idrott och tung belastning kan ta 3-4 månader. Artroskopisk teknik ger snabbare rehabilitering än öppen kirurgi.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Varför är resektionsstorleken så viktig?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Resektionsstorlek påverkar både smärtlindring och stabilitet. För liten resektion (&lt;4 mm) leder till kvarstående kollision och smärta. För stor resektion (&gt;10 mm) ökar risken för horisontell instabilitet p.g.a. skada på ligament<RefLink id="11" text="4-7 mm optimerar stabilitet." url={references[10].url} />. Optimal resektion (4-7 mm) eliminerar friktionen utan att kompromissa stabiliteten. Postoperativ osteolys kan också göra en initialt lagom resektion skenbart större över tid.
+          </div>
+        </details>
+
+        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
+          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
+            <span>Vad händer om jag har både AC-artros och impingement?</span>
+            <span class="transition-transform group-open:rotate-180 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
+            Vid kombinerad impingement och AC-artros kan fysioterapi vara mer värdefullt, eftersom den kan förbättra scapulär rytm och minska sekundär impingement på AC-leden. Kirurgi kan kombineras med andra axeloperationer (t.ex. rotatorcuff-reparation) vid behov.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-24 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-6">Behöver du expertbedömning?</h2>
+      <p class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
+        Vid ihållande axelsmärta, särskilt vid belastning, kan AC-ledsartros vara orsaken. Boka en tid hos Dr. Carlos Rivero Siri för en expertbedömning.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/boka" class="bg-sky-700 hover:bg-sky-800 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-300">
+          Boka tid online
+        </a>
+        <a href="/egenremiss" class="bg-white text-sky-700 border-2 border-sky-700 hover:bg-sky-50 px-10 py-4 rounded-full font-bold text-lg transition duration-300">
+          Skicka egenremiss
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-gray-50 py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-sky-700 mb-8 text-center">Referenser</h2>
+      <ol class="list-decimal list-inside space-y-4 text-gray-700 max-w-4xl mx-auto">
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/38655415/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            McKeever et al. A systematic review of the treatment of primary acromioclavicular joint osteoarthritis. 2024.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/32269599/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Farrell et al. Current evidence for nonpharmacological interventions and criteria for surgical management of persistent acromioclavicular joint osteoarthritis: A systematic review. 2019.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/15385790/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Buttaci et al. Osteoarthritis of the acromioclavicular joint: a review of anatomy, biomechanics, diagnosis, and treatment. 2004.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/35638093/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Eck et al. Prevalence of acromioclavicular joint osteoarthritis in people not seeking care: A systematic review. 2022.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/36563961/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Patterson et al. MRI findings of acromioclavicular joint osteoarthritis are the norm after age 40. 2023.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/33386878/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Soler et al. No differences between conservative and surgical management of acromioclavicular joint osteoarthritis: a scoping review. 2021.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/19468890/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Docimo et al. Surgical treatment for acromioclavicular joint osteoarthritis: patient selection, surgical options, complications, and outcome. 2008.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/9603070/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Jacob & Sallay. Therapeutic efficacy of corticosteroid injections in the acromioclavicular joint. 1998.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/18359647/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Hossain et al. The long-term effectiveness of steroid injections in primary acromioclavicular joint arthritis: a five-year prospective study. 2008.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/23649008/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Mall et al. Degenerative joint disease of the acromioclavicular joint: a review. 2013.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://www.arthroscopytechniques.org/article/S2212-6287(16)30134-7/fulltext" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Koo et al. Arthroscopic Distal Clavicle and Medial Border of Acromion Resection for Symptomatic Acromioclavicular Joint Osteoarthritis. 2017.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://www.ncbi.nlm.nih.gov/books/NBK582148/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Kim et al. Distal Clavicular Osteolysis. StatPearls. 2021.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10030407/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Böhm et al. Iatrogenic instability of the acromioclavicular joint leads to ongoing impairment of shoulder function even following secondary surgical stabilization. 2023.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6930955/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Waterman et al. Distal Clavicular Augmentation with Acromioclavicular and Coracoclavicular Ligament Reconstruction in the Setting of Iatrogenic Induced Acromioclavicular Instability. 2019.
+          </a>
+        </li>
+        <li itemprop="citation">
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6498781/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+            Bishop et al. Preoperative Factors Associated With Subsequent Distal Clavicle Resection After Rotator Cuff Repair. 2019.
+          </a>
+        </li>
+      </ol>
+      <p class="text-sm text-gray-500 mt-6 text-center italic">
+        Alla referenser är granskade och valda för hög medicinsk tillförlitlighet. Senast uppdaterad {currentDate}.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-6 space-y-12">
+      <AuthorCard 
+        name={authorName}
+        title="Specialist i Ortopedi & Axelkirurgi"
+        image={authorImage}
+        profileUrl={authorUrl}
+      />
+      <RefDrawer references={references} />
+    </div>
+  </section>
+
+</BaseLayout>
+
