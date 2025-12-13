@@ -3,6 +3,14 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AuthorCard from '../../../components/AuthorCard.astro';
 import RefLink from '../../../components/RefLink.astro';
 import RefDrawer from '../../../components/RefDrawer.astro';
+import { Image } from 'astro:assets';
+
+// BILDIMPORTER
+import acAnatomy from '../../../assets/images/ac-ledsartros/ac-anatomy.svg';
+import acXray from '../../../assets/images/ac-ledsartros/ac-xray-before-after.png';
+import acClinicalArrow from '../../../assets/images/ac-ledsartros/ac-clinical-arrow.png';
+import acPainDistribution from '../../../assets/images/ac-ledsartros/ac-pain-distribution.svg';
+import acGanglion from '../../../assets/images/ac-ledsartros/ac-ganglion.png';
 
 // FAKTA & FÖRFATTARE
 const authorName = "Dr. Carlos Rivero Siri";
@@ -172,6 +180,39 @@ const schemaData = {
           </p>
         </div>
       </div>
+
+      <!-- Ny grid med kliniska bilder efter de tre korten -->
+      <div class="grid md:grid-cols-2 gap-8 mt-12">
+        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
+          <Image 
+            src={acClinicalArrow}
+            alt="Kliniskt foto av axel där en gul pil pekar på AC-leden där smärta och ömhet vid tryck ofta känns"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto"
+          />
+          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
+            Kliniskt foto av axel där pilen pekar på AC-leden – här känns ofta smärtan och ömheten vid tryck.
+          </figcaption>
+        </figure>
+
+        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
+          <Image 
+            src={acPainDistribution}
+            alt="Illustration av typisk smärtutbredning vid AC-ledsartros med rött markerat område över axel och trapezius"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto"
+          />
+          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
+            Typisk smärtutbredning vid AC-ledsartros (rött område över axel och trapezius).
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -195,15 +236,36 @@ const schemaData = {
         </p>
       </div>
 
-      <div class="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white group">
-        <div class="aspect-[4/3] bg-gray-100 flex items-center justify-center text-gray-400">
-            <p class="text-center px-6">Illustration: AC-ledens anatomi och lokalisation av smärta</p>
-        </div>
-        <div class="p-6 bg-white">
-          <p class="text-sm text-gray-500 font-medium">
-             AC-leden (akromioklavikulärleden) är den lilla leden mellan nyckelbenet (klavikeln) och skulderbladets utskott (akromion). Artros här ger smärta vid belastning.
-          </p>
-        </div>
+      <div class="space-y-6">
+        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
+          <Image 
+            src={acAnatomy}
+            alt="Anatomisk illustration av AC-leden (akromioklavikulärleden) med artrosförändringar markerade i rött"
+            widths={[400, 800, 1200, 1600]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto"
+          />
+          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
+            Anatomisk illustration av AC-leden. Artrosförändringar markerade i rött.
+          </figcaption>
+        </figure>
+
+        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white max-w-sm">
+          <Image 
+            src={acGanglion}
+            alt="Foto av axel med ganglion (vätskeansamling) över AC-leden vid uttalad artros"
+            widths={[400, 800]}
+            sizes="(max-width: 768px) 100vw, 384px"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto"
+          />
+          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
+            Ibland ses ett ganglion (vätskeansamling) över AC-leden vid uttalad artros – ett vanligt och ofarligt fynd.
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -236,11 +298,22 @@ const schemaData = {
 
   <section class="bg-white py-24">
     <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-      <div class="order-2 lg:order-1 relative rounded-3xl overflow-hidden shadow-xl bg-gray-100 border border-gray-200 h-[500px]">
-         <div class="absolute inset-0 flex items-center justify-center text-gray-400 p-6">
-            <p class="text-center">Illustration: Distal klavikelresektion(DCR) - kirurgisk teknik med 4-5 mm resektion</p>
-         </div>
-      </div>
+      <figure class="order-2 lg:order-1 rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
+        <div class="bg-gray-50">
+          <Image 
+            src={acXray}
+            alt="Röntgenbild före och efter distal klavikelresektion där 6-8 mm av nyckelbenet avlägsnats för att behandla AC-ledsartros"
+            widths={[400, 800, 1200, 1600]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto object-contain"
+          />
+        </div>
+        <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
+          Röntgen före (övre) och efter (undre) distal klavikelresektion där 6–8 mm av nyckelbenet avlägsnats.
+        </figcaption>
+      </figure>
 
       <div class="order-1 lg:order-2 prose prose-lg text-gray-700">
         <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Behandlingsalternativ</h2>
@@ -476,4 +549,3 @@ const schemaData = {
   </section>
 
 </BaseLayout>
-

@@ -189,15 +189,21 @@ const schemaData = {
                             </div>
                         </div>
 
-                        <div class="copy-password-trigger mb-4 text-center p-3 bg-gray-100 rounded-lg cursor-pointer group hover:bg-sky-50 transition" 
-                             data-password="2026nyår">
-                            <p class="password-label text-sm text-gray-600 group-hover:text-sky-800">Klicka här för att kopiera lösenordet:</p>
-                            <p class="password-text text-2xl font-bold text-sky-700 tracking-wider group-hover:text-sky-800">
+                        <!-- Lösenordsruta -->
+                        <div class="mb-6 bg-sky-100 border-4 border-sky-700 rounded-2xl p-6 text-center">
+                            <p class="text-sm font-semibold text-sky-900 mb-3 uppercase tracking-wide">Lösenord</p>
+                            <code 
+                                class="block text-5xl md:text-6xl font-extrabold text-sky-700 tracking-wider select-all cursor-text font-mono"
+                                style="user-select: all; -webkit-user-select: all; -moz-user-select: all;"
+                            >
                                 2026nyår
+                            </code>
+                            <p class="text-xs text-sky-600 mt-3">
+                                Dubbelklicka för att markera → Kopiera (Ctrl+C) → Klicka på "Starta remissuppladdning"
                             </p>
                         </div>
                         
-                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
+                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block w-full bg-sky-700 text-white font-bold py-4 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
                             Starta remissuppladdning
                         </a>
                     </div>
@@ -254,15 +260,21 @@ const schemaData = {
                             </div>
                         </div>
 
-                        <div class="copy-password-trigger mb-4 text-center p-3 bg-gray-100 rounded-lg cursor-pointer group hover:bg-sky-50 transition" 
-                             data-password="2026nyår">
-                            <p class="password-label text-sm text-gray-600 group-hover:text-sky-800">Klicka här för att kopiera lösenordet:</p>
-                            <p class="password-text text-2xl font-bold text-sky-700 tracking-wider group-hover:text-sky-800">
+                        <!-- Lösenordsruta -->
+                        <div class="mb-6 bg-sky-100 border-4 border-sky-700 rounded-2xl p-6 text-center">
+                            <p class="text-sm font-semibold text-sky-900 mb-3 uppercase tracking-wide">Lösenord</p>
+                            <code 
+                                class="block text-5xl md:text-6xl font-extrabold text-sky-700 tracking-wider select-all cursor-text font-mono"
+                                style="user-select: all; -webkit-user-select: all; -moz-user-select: all;"
+                            >
                                 2026nyår
+                            </code>
+                            <p class="text-xs text-sky-600 mt-3">
+                                Dubbelklicka för att markera → Kopiera (Ctrl+C) → Klistra in på Storegate-sidan
                             </p>
                         </div>
                         
-                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
+                        <a href="https://web1.storegate.com/share/M85ZWN0" target="_blank" rel="noopener noreferrer" class="inline-block w-full bg-sky-700 text-white font-bold py-4 px-6 rounded-full shadow-lg hover:bg-sky-800 transition duration-300 text-lg text-center">
                             Starta remissuppladdning
                         </a>
                     </div>
@@ -347,87 +359,5 @@ const schemaData = {
             </div> 
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const copyTriggers = document.querySelectorAll('.copy-password-trigger');
-            
-            copyTriggers.forEach(trigger => {
-                const label = trigger.querySelector('.password-label');
-                const textEl = trigger.querySelector('.password-text');
-                const originalLabel = label.innerHTML;
-                const originalText = textEl.innerHTML;
 
-                trigger.addEventListener('click', () => {
-                    const password = trigger.getAttribute('data-password');
-                    
-                    // Fallback för äldre webbläsare eller osäkra kontexter
-                    if (!navigator.clipboard) {
-                        try {
-                            const textArea = document.createElement('textarea');
-                            textArea.value = password;
-                            
-                            // Gör osynlig
-                            textArea.style.position = 'fixed';
-                            textArea.style.top = 0;
-                            textArea.style.left = 0;
-                            textArea.style.width = '2em';
-                            textArea.style.height = '2em';
-                            textArea.style.padding = 0;
-                            textArea.style.border = 'none';
-                            textArea.style.outline = 'none';
-                            textArea.style.boxShadow = 'none';
-                            textArea.style.background = 'transparent';
-                            
-                            document.body.appendChild(textArea);
-                            textArea.focus();
-                            textArea.select();
-                            
-                            const successful = document.execCommand('copy');
-                            if(successful) {
-                                showSuccess();
-                            } else {
-                                // Använd custom message box istället för alert
-                                console.error('Kunde inte kopiera. Vänligen kopiera manuellt.');
-                            }
-                            
-                            document.body.removeChild(textArea);
-                        } catch (err) {
-                            console.error('Fallback-kopiering misslyckades: ', err);
-                        }
-                        return;
-                    }
-
-                    // Modern clipboard-API
-                    navigator.clipboard.writeText(password).then(() => {
-                        showSuccess();
-                    }).catch(err => {
-                        console.error('Kunde inte kopiera lösenord: ', err);
-                    });
-
-                    function showSuccess() {
-                        // Success! Visa feedback
-                        label.innerHTML = "Lösenord Kopierat!";
-                        textEl.innerHTML = "✓";
-                        
-                        // Byt färg till grön
-                        label.classList.add('text-green-600', 'font-bold');
-                        textEl.classList.add('text-green-600');
-                        label.classList.remove('text-gray-600', 'group-hover:text-sky-800');
-                        textEl.classList.remove('text-sky-700', 'group-hover:text-sky-800');
-
-                        // Återställ efter 2 sekunder
-                        setTimeout(() => {
-                            label.innerHTML = originalLabel;
-                            textEl.innerHTML = originalText;
-                            label.classList.remove('text-green-600', 'font-bold');
-                            textEl.classList.remove('text-green-600');
-                            label.classList.add('text-gray-600', 'group-hover:text-sky-800');
-                            textEl.classList.add('text-sky-700', 'group-hover:text-sky-800');
-                        }, 2000);
-                    }
-                });
-            });
-        });
-    </script>
-    </body>
-</html>
+</BaseLayout>
