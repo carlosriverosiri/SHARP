@@ -6,11 +6,13 @@ import RefDrawer from '../../../components/RefDrawer.astro';
 import { Image } from 'astro:assets';
 
 // BILDIMPORTER
-import acAnatomy from '../../../assets/images/ac-ledsartros/ac-anatomy.svg';
+import acAnatomy from '../../../assets/images/ac-ledsartros/ac-joint-osteoarthritis-illustration.svg';
 import acXray from '../../../assets/images/ac-ledsartros/ac-xray-before-after.png';
 import acClinicalArrow from '../../../assets/images/ac-ledsartros/ac-clinical-arrow.png';
 import acPainDistribution from '../../../assets/images/ac-ledsartros/ac-pain-distribution.svg';
 import acGanglion from '../../../assets/images/ac-ledsartros/ac-ganglion.png';
+import acMriPrevalence from '../../../assets/images/ac-ledsartros/ac-mri-prevalence-by-age.png';
+import dcoXray from '../../../assets/images/ac-ledsartros/distal-clavicular-osteolysis-xray.png';
 
 // FAKTA & FÖRFATTARE
 const authorName = "Dr. Carlos Rivero Siri";
@@ -94,8 +96,102 @@ const references = [
     id: "15",
     text: "Bishop et al. Preoperative Factors Associated With Subsequent Distal Clavicle Resection After Rotator Cuff Repair. 2019.",
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6498781/"
+  },
+  {
+    id: "16",
+    text: "Edwards SL, et al. Arthroscopic Distal Clavicle Resection: A Biomechanical Analysis of Resection Length and Joint Compliance. Arthroscopy. 2007.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/18063170/"
+  },
+  {
+    id: "17",
+    text: "Gokkus K, et al. Limited distal clavicle excision of acromioclavicular joint osteoarthritis. Orthop Traumatol Surg Res. 2016.",
+    url: "https://www.sciencedirect.com/science/article/pii/S1877056816000505"
+  },
+  {
+    id: "18",
+    text: "Park TS, Lee KW. Arthroscopic resection of the distal clavicle in osteoarthritis of the acromioclavicular joint. Indian J Orthop. 2016.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/27512219/"
+  },
+  {
+    id: "19",
+    text: "Jensen MM, et al. Patient-reported outcomes for arthroscopic resection of the distal clavicle for acromioclavicular joint osteoarthritis. JSES Int. 2022.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9637578/"
+  },
+  {
+    id: "20",
+    text: "Charron KM, et al. Arthroscopic distal clavicle resection in athletes: a prospective comparison of the direct and indirect approach. Am J Sports Med. 2007.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/17130246/"
+  },
+  {
+    id: "21",
+    text: "Friedman DJ, et al. Direct Arthroscopic Distal Clavicle Resection: A Technical Review. Iowa Orthop J. 2005.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC1888780/"
+  },
+  {
+    id: "22",
+    text: "Pensak M, et al. Open versus arthroscopic distal clavicle resection. Arthroscopy. 2010.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/20434670/"
+  },
+  {
+    id: "23",
+    text: "Jensen MM, et al. Patient-reported outcomes for arthroscopic resection of the distal clavicle in osteoarthritis of the acromioclavicular joint. JSES Int. 2023.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10638592/"
+  },
+  {
+    id: "24",
+    text: "Auge WK 2nd, Fischer RA. Arthroscopic distal clavicle resection for isolated atraumatic osteolysis in weight lifters. Am J Sports Med. 1998.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/9548111/"
+  },
+  {
+    id: "25",
+    text: "DeFroda SF, et al. Diagnosis and management of distal clavicle osteolysis. Orthopedics. 2017.",
+    url: "https://journals.healio.com/doi/10.3928/01477447-20161128-03"
+  },
+  {
+    id: "26",
+    text: "Singh M, Soo Hoo J. A Sports Medicine Clinician's Guide to the Diagnosis and Management of Distal Clavicular Osteolysis. Curr Sports Med Rep. 2023.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/37294199/"
   }
 ];
+
+// BILDMETADATA FÖR SEO
+const imageData = {
+  acAnatomy: {
+    alt: "Anatomi av AC-leden (acromioclavikularleden) som visar nyckelbenet, skulderbladet och ledkapseln vid yttre nyckelbensleden",
+    title: "AC-ledens anatomi - yttre nyckelbensleden",
+    caption: "AC-ledens anatomi: nyckelbenet (clavicula) möter skulderbladet (acromion) i yttre nyckelbensleden"
+  },
+  acXray: {
+    alt: "Röntgenbild före och efter distal klavikelresektion (DCR) vid AC-ledsartros - visar kirurgiskt resultat",
+    title: "Röntgen före/efter DCR-operation vid AC-ledsartros",
+    caption: "Röntgen före och efter DCR: notera spalten efter att yttersta delen av nyckelbenet resecerats (~5 mm)"
+  },
+  acClinicalArrow: {
+    alt: "Kliniskt foto som visar smärtpunkten vid AC-ledsartros - pil markerar AC-leden överst på axeln",
+    title: "Typisk smärtpunkt vid AC-ledsartros",
+    caption: "Pilen visar AC-leden – den typiska smärtpunkten vid AC-ledsartros, överst på axeln"
+  },
+  acPainDistribution: {
+    alt: "Smärtutbredning vid AC-ledsartros illustrerad på axel - rött område visar typisk smärtlokalisation",
+    title: "Smärtutbredning vid AC-ledsartros",
+    caption: "Typisk smärtutbredning vid AC-ledsartros (rött område) – lokaliserad överst på axeln"
+  },
+  acGanglion: {
+    alt: "Ganglion (vätskecysta) vid AC-ledsartros - synlig svullnad över yttre nyckelbensleden vid uttalad artros",
+    title: "Ganglion vid AC-ledsartros",
+    caption: "Ganglion (vätskecysta) – en vanlig klinisk manifestation vid uttalad AC-ledsartros"
+  },
+  acMriPrevalence: {
+    alt: "Stapeldiagram över MRI-fynd av AC-ledsartros per åldersgrupp - visar prevalens hos män och kvinnor från 20 till 80+ år",
+    title: "MRI-prevalens av AC-ledsartros per ålder och kön",
+    caption: "MRI-fynd av AC-ledsartros per åldersgrupp: blå staplar = män, röda = kvinnor. Majoriteten har artrosfynd efter 40 år."
+  },
+  dcoXray: {
+    alt: "Röntgenbild av distal klavikulär osteolys (DCO) vid AC-leden - weightlifter's shoulder med typisk benresorption, cystor och förlust av subkondral kontur i distala nyckelbenet hos tyngdlyftare",
+    title: "Distal klavikulär osteolys (DCO) röntgen - Weightlifter's shoulder vid AC-ledssmärta",
+    caption: "Röntgen av distal klavikulär osteolys (DCO): notera ojämn kontur, benresorption och cystbildning i distala klavikeln – typiskt fynd vid weightlifter's shoulder."
+  }
+};
 
 // SCHEMA.ORG
 const schemaData = {
@@ -114,6 +210,50 @@ const schemaData = {
     "possibleTreatment": [
       { "@type": "MedicalTherapy", "name": "Konservativ behandling (avlastning, NSAID)" },
       { "@type": "MedicalTherapy", "name": "Distal klavikelresektion (DCR)" }
+    ],
+    "image": [
+      {
+        "@type": "ImageObject",
+        "name": "AC-ledens anatomi",
+        "description": imageData.acAnatomy.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-joint-osteoarthritis-illustration.svg"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "Röntgen före/efter DCR",
+        "description": imageData.acXray.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-xray-before-after.png"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "Smärtpunkt vid AC-ledsartros",
+        "description": imageData.acClinicalArrow.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-clinical-arrow.png"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "Smärtutbredning vid AC-ledsartros",
+        "description": imageData.acPainDistribution.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-pain-distribution.svg"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "Ganglion vid AC-ledsartros",
+        "description": imageData.acGanglion.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-ganglion.png"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "MRI-prevalens av AC-ledsartros",
+        "description": imageData.acMriPrevalence.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/ac-mri-prevalence-by-age.png"
+      },
+      {
+        "@type": "ImageObject",
+        "name": "Röntgen distal klavikulär osteolys DCO weightlifter's shoulder",
+        "description": imageData.dcoXray.alt,
+        "contentUrl": "https://sodermalmsortopedi.se/assets/images/ac-ledsartros/distal-clavicular-osteolysis-xray.png"
+      }
     ]
   }
 };
@@ -123,421 +263,742 @@ const schemaData = {
   
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
 
-  <section class="bg-sky-700 text-white pt-12 pb-24 md:pt-20 md:pb-32 relative overflow-hidden">
-    <div class="max-w-6xl mx-auto px-6 relative z-10">
-      <span class="inline-block py-1 px-3 rounded-full bg-sky-800 text-sky-200 text-sm font-bold mb-6 tracking-wide">
-        AXEL
-      </span>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-        AC-ledsartros
-      </h1>
-      <p class="text-sky-100 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-light">
-        Artros i yttre nyckelbensleden (akromioklavikulärleden) är en vanlig orsak till axelsmärta, särskilt vid belastning. Trots hög prevalens med åldern<RefLink id="4" text="Prevalens 83% efter 40 år, nästan 100% efter 70 år." url={references[3].url} /> är många fall asymptomatiska.
-      </p>
-
-      <div class="flex items-center gap-4 pt-4">
-        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-sky-400 bg-sky-800">
-          <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
-        </div>
-        <div>
-          <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medicinskt granskad av</p>
-          <p class="text-base font-bold text-white">
-            <a href={authorUrl} class="underline hover:text-sky-200">{authorName}</a>
-          </p>
-        </div>
+  <!-- KOMPAKT HERO -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-4">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/sjukdomar" class="text-slate-400 hover:text-white">Sjukdomar</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-sky-400">Axel</span>
       </div>
-    </div>
-  </section>
-
-  <section class="bg-white py-20">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16 max-w-3xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-4">Så känner du igen AC-ledsartros</h2>
-        <p class="text-gray-600 text-lg">
-          Symtomen är ofta belastningsberoende och uppstår vid specifika aktiviteter. Till skillnad från många andra axelbesvär är smärtan sällan intensiv<RefLink id="10" text="Lätta till moderata besvär vid belastning." url={references[9].url} />.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
-          <h3 class="text-xl font-bold text-sky-900 mb-3">Belastningsberoende smärta</h3>
-          <p class="text-gray-600 leading-relaxed">
-            Smärta uppstår vid overhead-arbete, grävning eller cross-body rörelser. Vid vila eller kontorsarbete försvinner smärtan ofta helt. Det enklaste sättet att bli kvitt smärtan är att avlasta axeln<RefLink id="2" text="Avlastning är mest effektiva konservativa metoden." url={references[1].url} />.
-          </p>
-        </div>
-
-        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
-          <h3 class="text-xl font-bold text-sky-900 mb-3">Lokaliserad värk</h3>
-          <p class="text-gray-600 leading-relaxed">
-            Smärtan sitter ofta överst på axeln, precis där nyckelbenet möter skulderbladet. Tryck på leden kan vara ömt. Smärtan är främst anterior/superior vid overhead/cross-body aktiviteter.
-          </p>
-        </div>
-
-        <div class="bg-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 border-t-4 border-t-amber-500 hover:shadow-xl transition-shadow duration-300">
-          <h3 class="text-xl font-bold text-sky-900 mb-3">Lätta till moderata besvär</h3>
-          <p class="text-gray-600 leading-relaxed">
-            Patienter söker oftast med lätta till moderata smärtor som varit långvariga. Smärtan är sällan intensiv, vilket gör att många patienter väntar länge innan de söker vård.
-          </p>
-        </div>
-      </div>
-
-      <!-- Ny grid med kliniska bilder efter de tre korten -->
-      <div class="grid md:grid-cols-2 gap-8 mt-12">
-        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
-          <Image 
-            src={acClinicalArrow}
-            alt="Kliniskt foto av axel där en gul pil pekar på AC-leden där smärta och ömhet vid tryck ofta känns"
-            widths={[400, 800, 1200]}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto"
-          />
-          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
-            Kliniskt foto av axel där pilen pekar på AC-leden – här känns ofta smärtan och ömheten vid tryck.
-          </figcaption>
-        </figure>
-
-        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
-          <Image 
-            src={acPainDistribution}
-            alt="Illustration av typisk smärtutbredning vid AC-ledsartros med rött markerat område över axel och trapezius"
-            widths={[400, 800, 1200]}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto"
-          />
-          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
-            Typisk smärtutbredning vid AC-ledsartros (rött område över axel och trapezius).
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-sky-50 py-24">
-    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-      <div class="prose prose-lg text-gray-700">
-        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Diagnos och prevalens</h2>
-        <p>
-          AC-ledsartros är mycket vanligt med åldern. Studier visar att <strong>83% av personer över 40 år</strong> har radiologiska tecken på artros via MRI<RefLink id="5" text="MRI-fynd är normen efter 40 år." url={references[4].url} />, och prevalensen ökar till nästan 100% efter 70 år<RefLink id="4" text="Hög prevalens med åldern." url={references[3].url} />. Trots detta är många fall asymptomatiska.
-        </p>
-        
-        <h3 class="text-sky-800 font-bold mt-8 text-xl not-prose">Vem drabbas?</h3>
-        <ul class="list-disc pl-5 space-y-2 marker:text-sky-600">
-            <li>Vanligare med åldern (åldersrelaterad degeneration)</li>
-            <li>Ofta asymptomatisk trots radiologiska fynd</li>
-            <li>Symtom uppstår vid överbelastning eller trauma</li>
-            <li>Överdiagnostik är en risk p.g.a. hög basalprevalens</li>
-        </ul>
-        <p class="mt-4 text-sm italic">
-           Diagnosen ställs kliniskt baserat på smärtkaraktär och lokalisation. Röntgen kan bekräfta artros, men många har radiologiska fynd utan symtom.
-        </p>
-      </div>
-
-      <div class="space-y-6">
-        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
-          <Image 
-            src={acAnatomy}
-            alt="Anatomisk illustration av AC-leden (akromioklavikulärleden) med artrosförändringar markerade i rött"
-            widths={[400, 800, 1200, 1600]}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto"
-          />
-          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
-            Anatomisk illustration av AC-leden. Artrosförändringar markerade i rött.
-          </figcaption>
-        </figure>
-
-        <figure class="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white max-w-sm">
-          <Image 
-            src={acGanglion}
-            alt="Foto av axel med ganglion (vätskeansamling) över AC-leden vid uttalad artros"
-            widths={[400, 800]}
-            sizes="(max-width: 768px) 100vw, 384px"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto"
-          />
-          <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
-            Ibland ses ett ganglion (vätskeansamling) över AC-leden vid uttalad artros – ett vanligt och ofarligt fynd.
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-white py-16">
-    <div class="max-w-4xl mx-auto px-6">
-      <div class="bg-white border-l-4 border-sky-600 p-8 md:p-12 rounded-r-3xl relative shadow-lg">
-        <div class="absolute -top-6 -left-6 bg-sky-700 text-white p-4 rounded-full shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-        </div>
-        
-        <h3 class="text-2xl font-bold text-sky-900 mb-4 ml-4">Dr. Carlos rekommenderar</h3>
-        <blockquote class="text-lg md:text-xl text-gray-700 italic leading-relaxed mb-6 pl-4">
-          "Det enklaste sättet att bli kvitt smärtan är inte fysioterapi utan bara att avlasta. Ju mindre man belastar axeln, desto mindre smärtor får man. Gräver man i trädgården, får man ont. Sitter man på kontoret, så försvinner smärtan. För patienter med ihållande symtom efter 3-6 månaders konservativ behandling, rekommenderar jag isolerad distal klavikelresektion med 4-5 mm resektion. Detta ger utmärkta resultat med mycket låg återbesöksfrekvens<RefLink id="1" text="Låg reoperationsrisk vid isolerad DCR." url={references[0].url} />."
-        </blockquote>
-        <div class="flex items-center gap-4 border-t border-gray-100 pt-6 pl-4">
-             <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-                <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
-             </div>
-             <div>
-                <span class="block text-sm font-bold text-sky-900">Dr. Carlos Rivero Siri</span>
-                <span class="block text-xs text-gray-500">Överläkare, Ortopedi & Axelkirurgi</span>
-             </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-white py-24">
-    <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-      <figure class="order-2 lg:order-1 rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white">
-        <div class="bg-gray-50">
-          <Image 
-            src={acXray}
-            alt="Röntgenbild före och efter distal klavikelresektion där 6-8 mm av nyckelbenet avlägsnats för att behandla AC-ledsartros"
-            widths={[400, 800, 1200, 1600]}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto object-contain"
-          />
-        </div>
-        <figcaption class="p-6 text-sm text-gray-500 font-medium bg-white">
-          Röntgen före (övre) och efter (undre) distal klavikelresektion där 6–8 mm av nyckelbenet avlägsnats.
-        </figcaption>
-      </figure>
-
-      <div class="order-1 lg:order-2 prose prose-lg text-gray-700">
-        <h2 class="text-3xl font-bold text-sky-700 not-prose mb-6">Behandlingsalternativ</h2>
-        <p>
-          Behandlingen anpassas efter symtomens svårighetsgrad och patientens aktivitetsnivå. Konservativ behandling rekommenderas först i 3-6 månader<RefLink id="2" text="Konservativ behandling rekommenderas i 3-6 månader först." url={references[1].url} />.
-        </p>
-
-        <div class="bg-sky-50 p-8 rounded-3xl mb-8 not-prose border border-sky-100">
-            <h3 class="text-sky-800 font-bold mb-3 text-xl">Konservativ behandling</h3>
-            <p class="text-gray-700 mb-4">
-                Första steget är att minska belastningen på axeln. Detta är ofta mer effektivt än andra konservativa metoder.
-            </p>
-            <ul class="space-y-3">
-                <li class="flex items-start gap-3">
-                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                    </div>
-                    <span class="text-sm"><strong>Avlastning:</strong> Mest effektiva metoden. Minskar smärta med upp till 70% genom reducerad friktion<RefLink id="10" text="Avlastning ger 70% symtomlindring." url={references[9].url} />.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <div class="bg-white p-1 rounded-full text-green-600 shadow-sm mt-0.5">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                    </div>
-                    <span class="text-sm"><strong>NSAID:</strong> Minskar inflammation och smärta vid akuta skov.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <div class="bg-white p-1 rounded-full text-amber-600 shadow-sm mt-0.5">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </div>
-                    <span class="text-sm"><strong>Kortisoninjektioner:</strong> Ger korttidslindring (VAS-reduktion ~50%, 1-3 mån) men 70-80% återfall vid belastning<RefLink id="8" text="Kortison ger korttidslindring men ingen långtidseffekt." url={references[7].url} />. Patienter blir bättre men inte bra.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <div class="bg-white p-1 rounded-full text-amber-600 shadow-sm mt-0.5">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </div>
-                    <span class="text-sm"><strong>Fysioterapi:</strong> Begränsad evidens vid isolerad artros (VAS-reduktion ~20%)<RefLink id="2" text="Fysioterapi har svag evidens vid isolerad AC-artros." url={references[1].url} />. Bättre vid kombinerad impingement.</span>
-                </li>
-            </ul>
-        </div>
-
-        <h3 class="text-gray-900 font-bold text-lg">Kirurgisk behandling</h3>
-        <p class="text-base">
-            Vid ihållande symtom efter misslyckad konservativ behandling rekommenderas <strong>distal klavikelresektion (DCR)</strong><RefLink id="7" text="Kirurgi rekommenderas efter misslyckad konservativ behandling." url={references[6].url} />. Optimal resektion är 4-7 mm för att balansera smärtlindring och stabilitet<RefLink id="11" text="Optimal resektion 4-7 mm för stabilitet." url={references[10].url} />. Både öppen och artroskopisk teknik ger likvärdiga resultat<RefLink id="1" text="Ingen skillnad mellan öppen och artroskopisk DCR." url={references[0].url} />.
-        </p>
-        <p class="text-base mt-3">
-            <strong>Viktigt:</strong> Överresektion (&gt;10 mm) kan leda till postoperativ instabilitet som är svår att åtgärda<RefLink id="13" text="Överresektion kan orsaka instabilitet." url={references[12].url} />. Underresektion (&lt;4 mm) är enklare att korrigera med revision.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-sky-50 py-24">
-    <div class="max-w-3xl mx-auto px-6">
-      <h2 class="text-3xl font-bold text-center text-sky-700 mb-12">Vanliga frågor</h2>
       
-      <div class="space-y-4">
-        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
-          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
-            <span>Varför fungerar inte fysioterapi vid isolerad AC-artros?</span>
-            <span class="transition-transform group-open:rotate-180 text-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      <div class="grid lg:grid-cols-3 gap-8 items-end">
+        <div class="lg:col-span-2">
+          <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase">
+            Axelsjukdom
+          </span>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight tracking-tight">
+            AC-ledsartros
+          </h1>
+          <p class="text-slate-300 text-base md:text-lg max-w-xl leading-relaxed">
+            Artros i yttre nyckelbensleden är en vanlig orsak till axelsmärta vid belastning. Prevalens: 83% efter 40 år<RefLink id="4" text="Prevalens 83% efter 40 år." url={references[3].url} />.
+          </p>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+              <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Granskad av</p>
+              <a href={authorUrl} class="text-sm font-bold text-white hover:text-sky-200">{authorName}</a>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Specialist i Ortopedi & Axelkirurgi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HUVUDINNEHÅLL: 3-KOLUMN LAYOUT -->
+  <section class="bg-slate-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-12 gap-8">
+        
+        <!-- VÄNSTER SIDEBAR: SNABBFAKTA -->
+        <aside class="lg:col-span-3 order-2 lg:order-1">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Snabbfakta -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Snabbfakta</h3>
+              </div>
+              <div class="p-4 space-y-3 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Prevalens 40+</span>
+                  <span class="font-bold text-slate-800">83%</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Prevalens 70+</span>
+                  <span class="font-bold text-slate-800">~100%</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Asymptomatiska</span>
+                  <span class="font-bold text-slate-800">Majoriteten</span>
+                </div>
+                <hr class="border-slate-100" />
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Optimal DCR</span>
+                  <span class="font-bold text-sky-700">~5 mm</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Avlastningseffekt</span>
+                  <span class="font-bold text-green-600">70%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ganglion-bild -->
+            <figure class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <Image 
+                src={acGanglion}
+                alt={imageData.acGanglion.alt}
+                title={imageData.acGanglion.title}
+                widths={[200, 400]}
+                sizes="200px"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-auto"
+              />
+              <figcaption class="p-3 text-xs text-slate-500 bg-slate-50">
+                <strong>Ganglion vid AC-ledsartros:</strong> vätskecysta som uppstår vid uttalad artros i yttre nyckelbensleden.
+              </figcaption>
+            </figure>
+
+            <!-- Distal Klavikulär Osteolys (DCO) -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-amber-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Weightlifter's Shoulder</h3>
+              </div>
+              <div class="p-4">
+                <figure class="rounded-lg overflow-hidden border border-slate-200 mb-4">
+                  <Image 
+                    src={dcoXray}
+                    alt={imageData.dcoXray.alt}
+                    title={imageData.dcoXray.title}
+                    widths={[200, 400]}
+                    sizes="200px"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-auto"
+                  />
+                  <figcaption class="p-2 text-xs text-slate-500 bg-slate-50">
+                    <strong>Röntgen DCO:</strong> benresorption i distala klavikeln.
+                  </figcaption>
+                </figure>
+                
+                <h4 class="font-bold text-slate-800 text-sm mb-2">Distal klavikulär osteolys (DCO)</h4>
+                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                  Överbelastningsskada med benresorption i distala nyckelbensänden<RefLink id="12" text="DCO patofysiologi." url={references[11].url} />. 
+                  Ses hos tyngdlyftare och vid repetitiva press-/overhead-rörelser, men även posttraumatiskt<RefLink id="25" text="Diagnos och behandling." url={references[24].url} />.
+                </p>
+                
+                <div class="space-y-2 text-xs text-slate-600 mb-3">
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>Lokaliserad smärta vid palpation och horisontell adduktion</span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>Röntgen: osteolys, cystor, förlust av subkondral kontur</span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>MRI: benmärgsödem, subkondrala frakturer<RefLink id="25" text="MRI-fynd." url={references[24].url} /></span>
+                  </div>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
+                  <h5 class="font-bold text-green-800 text-xs mb-1">Behandling</h5>
+                  <p class="text-xs text-slate-600">
+                    Konservativt först: aktivitetsmodifiering, NSAID, fysioterapi. Många blir symtomfria inom månader<RefLink id="26" text="Konservativ behandling." url={references[25].url} />. 
+                    Vid terapisvikt: artroskopisk DCR med direkt operationsteknik<RefLink id="20" text="Kirurgisk teknik." url={references[19].url} />.
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <h5 class="font-bold text-slate-700 text-xs mb-1 flex items-center gap-1">
+                    <span class="text-green-600">✓</span> Prognos
+                  </h5>
+                  <p class="text-xs text-slate-600">
+                    Utmärkt efter kirurgi: &gt;90% framgång, snabb återgång till sport<RefLink id="24" text="Kirurgisk prognos." url={references[23].url} />.
+                  </p>
+                </div>
+
+                <!-- Dr. Carlos kommentar -->
+                <blockquote class="mt-3 p-3 bg-slate-800 text-white rounded-lg border-l-3 border-l-amber-500">
+                  <p class="text-xs italic text-slate-200 leading-relaxed mb-1">
+                    "Weightlifter's shoulder är ofta självläkande. Men har det inte gått över efter ett år och förhindrar träning, så är det lika bra att operera."
+                  </p>
+                  <p class="text-xs text-amber-300 font-medium">— Dr. Carlos Rivero Siri</p>
+                </blockquote>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="bg-gradient-to-br from-sky-600 to-sky-700 rounded-xl p-4 text-white">
+              <h4 class="font-bold mb-2">Behöver du hjälp?</h4>
+              <p class="text-sky-100 text-sm mb-3">Boka tid för expertbedömning.</p>
+              <a href="/boka" class="block text-center bg-white text-sky-700 font-bold py-2 px-4 rounded-lg text-sm hover:bg-sky-50 transition">
+                Boka tid
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- HUVUDKOLUMN -->
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-8">
+          
+          <!-- SYMTOM -->
+          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">1</span>
+              Så känner du igen AC-ledsartros
+            </h2>
+            <p class="text-slate-600 mb-5 text-base leading-relaxed">
+              Symtomen är belastningsberoende och uppstår vid specifika aktiviteter. Smärtan är sällan intensiv<RefLink id="10" text="Lätta till moderata besvär." url={references[9].url} />.
+            </p>
+            
+            <div class="grid sm:grid-cols-3 gap-3 mb-6">
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Belastningssmärta</h3>
+                <p class="text-slate-600 text-sm">Overhead-arbete, grävning, cross-body rörelser<RefLink id="2" text="Avlastning mest effektivt." url={references[1].url} />.</p>
+              </div>
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Lokaliserad värk</h3>
+                <p class="text-slate-600 text-sm">Överst på axeln där nyckelbenet möter skulderbladet.</p>
+              </div>
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Lågintensiv smärta</h3>
+                <p class="text-slate-600 text-sm">Lätta-moderata, långvariga besvär.</p>
+              </div>
+            </div>
+
+            <!-- Bilder i rad -->
+            <div class="grid grid-cols-2 gap-3">
+              <figure class="rounded-lg overflow-hidden border border-slate-200">
+                <Image 
+                  src={acClinicalArrow}
+                  alt={imageData.acClinicalArrow.alt}
+                  title={imageData.acClinicalArrow.title}
+                  widths={[300, 600]}
+                  sizes="(max-width: 640px) 50vw, 300px"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-auto"
+                />
+                <figcaption class="p-2 text-xs text-slate-500 bg-slate-50">
+                  <strong>Smärtpunkt:</strong> pilen markerar AC-leden överst på axeln.
+                </figcaption>
+              </figure>
+              <figure class="rounded-lg overflow-hidden border border-slate-200">
+                <Image 
+                  src={acPainDistribution}
+                  alt={imageData.acPainDistribution.alt}
+                  title={imageData.acPainDistribution.title}
+                  widths={[300, 600]}
+                  sizes="(max-width: 640px) 50vw, 300px"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-auto"
+                />
+                <figcaption class="p-2 text-xs text-slate-500 bg-slate-50">
+                  <strong>Smärtutbredning:</strong> rött område visar typisk smärtlokalisation vid AC-ledsartros.
+                </figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- DIAGNOS -->
+          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm">2</span>
+              Diagnos och prevalens
+            </h2>
+            
+            <div class="flex flex-col md:flex-row gap-5 mb-6">
+              <div class="flex-1">
+                <p class="text-slate-600 text-base leading-relaxed mb-4">
+                  <strong>83% av personer över 40 år</strong> har radiologiska tecken på artros<RefLink id="5" text="MRI-fynd normala efter 40." url={references[4].url} />. Efter 70 år: nästan 100%<RefLink id="4" text="Hög prevalens med åldern." url={references[3].url} />. Trots detta är de flesta asymptomatiska.
+                </p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Åldersrelaterad degeneration</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Ofta asymptomatisk trots röntgenfynd</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Symtom vid överbelastning/trauma</li>
+                  <li class="flex gap-2"><span class="text-amber-500">⚠</span>Risk för överdiagnostik</li>
+                </ul>
+              </div>
+              <figure class="w-full md:w-48 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                <Image 
+                  src={acAnatomy}
+                  alt={imageData.acAnatomy.alt}
+                  title={imageData.acAnatomy.title}
+                  widths={[200, 400]}
+                  sizes="200px"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-auto"
+                />
+                <figcaption class="p-2 text-xs text-slate-500 bg-slate-50 text-center">
+                  <strong>AC-ledens anatomi:</strong> nyckelbenet möter skulderbladet
+                </figcaption>
+              </figure>
+            </div>
+
+            <!-- MRI-prevalens diagram -->
+            <figure class="rounded-lg overflow-hidden border border-slate-200 bg-white">
+              <Image 
+                src={acMriPrevalence}
+                alt={imageData.acMriPrevalence.alt}
+                title={imageData.acMriPrevalence.title}
+                widths={[400, 600, 800]}
+                sizes="(max-width: 768px) 100vw, 600px"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-auto"
+              />
+              <figcaption class="p-3 text-xs text-slate-600 bg-slate-50 border-t border-slate-100">
+                <strong>MRI-prevalens av AC-ledsartros per åldersgrupp.</strong> Blå staplar = män, röda staplar = kvinnor. 
+                Diagrammet visar alla grader av artros. Redan i 30-årsåldern har majoriteten av män MRI-förändringar. 
+                <span class="text-amber-600 font-medium">Viktigt: artrosfynd på MR betyder inte symptom – överdiagnostik är vanligt.</span>
+                <br />
+                <span class="text-slate-500 italic mt-1 block">
+                  Källa: Patterson et al. "MRI findings of acromioclavicular joint osteoarthritis are the norm after age 40." 2023<RefLink id="5" text="Patterson et al. 2023" url={references[4].url} />
+                </span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <!-- BEHANDLING -->
+          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">3</span>
+              Behandlingsalternativ
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Konservativ behandling rekommenderas i 3-6 månader<RefLink id="2" text="Konservativ behandling först." url={references[1].url} />.
+            </p>
+
+            <!-- Konservativ -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-green-800 mb-3 text-sm uppercase tracking-wide">Konservativ behandling</h3>
+              <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Avlastning:</strong> 70% effekt<RefLink id="10" text="Avlastning mest effektivt." url={references[9].url} /></div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>NSAID:</strong> Vid akuta skov</div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">~</span>
+                  <div><strong>Kortison:</strong> Korttidseffekt, 70-80% återfall<RefLink id="8" text="Kortison korttidseffekt." url={references[7].url} /></div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">~</span>
+                  <div><strong>Fysioterapi:</strong> Svag evidens (~20%)<RefLink id="2" text="Fysioterapi svag evidens." url={references[1].url} /></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kirurgisk -->
+            <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+              <h3 class="font-bold text-sky-800 mb-3 text-sm uppercase tracking-wide">Kirurgisk behandling</h3>
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 text-sm text-slate-700">
+                  <p class="mb-2">
+                    <strong>Distal klavikelresektion (DCR)</strong> vid ihållande symtom efter 3-6 månaders konservativ behandling<RefLink id="7" text="Kirurgi efter misslyckad konservativ." url={references[6].url} />.
+                  </p>
+                  <p class="mb-3 text-slate-600">
+                    Flera studier stödjer en begränsad resektionslängd på <strong>4–7 mm</strong>, vilket ger god smärtlindring och funktionell förbättring utan ökad risk för instabilitet<RefLink id="16" text="Biomekanisk analys av resektionslängd." url={references[15].url} /><RefLink id="17" text="Begränsad resektion effektiv." url={references[16].url} /><RefLink id="18" text="Artroskopisk DCR vid artros." url={references[17].url} />.
+                  </p>
+                  <ul class="space-y-1 text-slate-600">
+                    <li>• Rekommenderad resektion: <strong>~5 mm</strong> – eliminerar benkontakt (särskilt posteriort-inferiort) med bevarade ligament<RefLink id="16" text="5mm tillräckligt." url={references[15].url} /><RefLink id="19" text="Patientrapporterade utfall." url={references[18].url} /></li>
+                    <li>• Signifikant förbättring i UCLA/OSS-score, hög patientnöjdhet<RefLink id="17" text="Kliniska resultat." url={references[16].url} /><RefLink id="18" text="Förbättrade funktionsscore." url={references[17].url} /></li>
+                    <li>• Öppen och artroskopisk operationsteknik ger likvärdiga resultat<RefLink id="1" text="Likvärdiga resultat." url={references[0].url} /></li>
+                    <li class="text-amber-700">⚠ Överresektion &gt;10mm → instabilitetsrisk<RefLink id="13" text="Risk för instabilitet." url={references[12].url} /></li>
+                  </ul>
+                </div>
+                <figure class="w-full md:w-40 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                  <Image 
+                    src={acXray}
+                    alt={imageData.acXray.alt}
+                    title={imageData.acXray.title}
+                    widths={[160, 320]}
+                    sizes="160px"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-auto"
+                  />
+                  <figcaption class="p-1 text-xs text-slate-500 bg-slate-50 text-center">
+                    <strong>Röntgen:</strong> före/efter DCR-operation
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
+
+          <!-- SJUKSKRIVNINGSTID -->
+          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">4</span>
+              Sjukskrivningstid efter operation
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Vid artroskopisk distal klavikelresektion (DCR) med <strong>direkt operationsteknik</strong> är återhämtningen ofta betydligt snabbare än vad litteraturen anger för indirekta metoder<RefLink id="20" text="Direkt operationsteknik ger snabbare återhämtning." url={references[19].url} /><RefLink id="21" text="Minimal vävnadsskada." url={references[20].url} />.
+            </p>
+
+            <!-- Direkt operationsteknik förklaring -->
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-purple-800 mb-2 text-sm uppercase tracking-wide">Vad är direkt operationsteknik?</h3>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Vid den direkta (superiora) operationstekniken går man in med artroskopet antingen framifrån eller bakifrån i AC-leden, och använder burren från motsatt håll. Operationen sker helt inuti nyckelbensleden, vilket ger ett extremt litet operationsområde och minimalt trauma mot omgivande strukturer<RefLink id="21" text="Teknisk beskrivning." url={references[20].url} /><RefLink id="22" text="Jämförelse öppen vs artroskopisk." url={references[21].url} />.
+              </p>
+            </div>
+
+            <!-- Återgångstider -->
+            <div class="space-y-3 mb-5">
+              <div class="flex items-center gap-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Kontorsarbete / Lätt arbete</h4>
+                  <p class="text-slate-600 text-sm">Ofta <strong>ingen sjukskrivning</strong> – återgång inom dagar<RefLink id="21" text="Snabb återgång kontorsarbete." url={references[20].url} /><RefLink id="22" text="Minimal postoperativ smärta." url={references[21].url} /></p>
+                </div>
+                <div class="text-green-700 font-bold text-sm whitespace-nowrap">0–1 v</div>
+              </div>
+
+              <div class="flex items-center gap-4 bg-sky-50 border border-sky-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Måttligt fysiskt arbete</h4>
+                  <p class="text-slate-600 text-sm">Lättare manuellt arbete utan tung lyft<RefLink id="20" text="Måttligt arbete återgång." url={references[19].url} /></p>
+                </div>
+                <div class="text-sky-700 font-bold text-sm whitespace-nowrap">2–4 v</div>
+              </div>
+
+              <div class="flex items-center gap-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Tungt fysiskt arbete</h4>
+                  <p class="text-slate-600 text-sm">Tung lyft, overhead-aktiviteter. Egna företagare återgår ofta tidigare<RefLink id="20" text="Tungt arbete återgång." url={references[19].url} /><RefLink id="23" text="Individuell variation." url={references[22].url} /></p>
+                </div>
+                <div class="text-amber-700 font-bold text-sm whitespace-nowrap">4–8 v</div>
+              </div>
+            </div>
+
+            <!-- Jämförelse med litteraturen -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 class="font-bold text-slate-700 text-sm mb-2 flex items-center gap-2">
+                <span class="text-purple-500">📊</span> Jämfört med generella rekommendationer
+              </h4>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Dessa tider är kortare än generella rekommendationer för kombinerade ingrepp (t.ex. DCR med subakromiell dekompression), där återgång till tungt arbete kan ta 6–12 veckor. Den direkta operationstekniken med minimalt operationsområde förklarar den snabbare återhämtningen<RefLink id="20" text="Direkt operationsteknik snabbare." url={references[19].url} /><RefLink id="21" text="Mindre vävnadstrauma." url={references[20].url} />.
+              </p>
+            </div>
+
+            <!-- Dr. Carlos kommentar -->
+            <blockquote class="mt-5 p-4 bg-slate-800 text-white rounded-lg border-l-4 border-sky-500">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+                  <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <p class="text-sm italic text-slate-200 leading-relaxed mb-2">
+                    "Min erfarenhet är att sjukskrivningstider vid isolerad DCR med direkt operationsteknik är betydligt kortare än i litteraturen. Jag sjukskriver normalt sett inte efter operationen om patienten har kontorsarbete. Egna företagare med tungt arbete kan ofta återgå redan efter 2–4 veckor."
+                  </p>
+                  <p class="text-xs text-sky-300 font-medium">— Dr. Carlos Rivero Siri</p>
+                </div>
+              </div>
+            </blockquote>
+          </article>
+
+          <!-- ÅTERGÅNG TILL SPORT -->
+          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm">5</span>
+              Återgång till sport (Return to Sport)
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Vid artroskopisk distal klavikulär resektion (DCR) för AC-ledsartros eller osteolys rapporteras generellt god <strong>return to sport</strong> (RTS) med hög framgångsgrad, särskilt hos idrottare<RefLink id="20" text="RTS hos idrottare." url={references[19].url} /><RefLink id="24" text="Viktlyftare RTS." url={references[23].url} /><RefLink id="23" text="Patientrapporterade utfall." url={references[22].url} />.
+            </p>
+
+            <!-- Direkt vs indirekt operationsteknik -->
+            <div class="bg-rose-50 border border-rose-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-rose-800 mb-3 text-sm uppercase tracking-wide">Direkt operationsteknik ger snabbare återgång</h3>
+              <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                Den direkta (superiora) operationstekniken ger ofta snabbare RTS jämfört med indirekt (bursal) operationsteknik. I en prospektiv randomiserad studie på 38 idrottare återgick patienter med direkt operationsteknik till sport i genomsnitt efter <strong>21 dagar</strong>, medan indirekt operationsteknik tog <strong>42 dagar</strong>, med likvärdiga långsiktiga resultat<RefLink id="20" text="Direkt operationsteknik 21 dagar vs 42 dagar." url={references[19].url} />.
+              </p>
+              <div class="grid sm:grid-cols-2 gap-3">
+                <div class="flex items-center gap-3 bg-white rounded-lg p-3 border border-rose-100">
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </div>
+                  <div>
+                    <p class="font-bold text-slate-800 text-sm">Direkt operationsteknik</p>
+                    <p class="text-green-600 font-bold text-lg">~21 dagar</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 bg-white rounded-lg p-3 border border-rose-100">
+                  <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  </div>
+                  <div>
+                    <p class="font-bold text-slate-800 text-sm">Indirekt operationsteknik</p>
+                    <p class="text-amber-600 font-bold text-lg">~42 dagar</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Viktlyftare-studie -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-5">
+              <h4 class="font-bold text-slate-700 text-sm mb-2 flex items-center gap-2">
+                <span class="text-rose-500">🏋️</span> Extrem snabb återhämtning hos viktlyftare
+              </h4>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                En studie på viktlyftare med isolerad osteolys och direkt operationsteknik visade RTS efter i genomsnitt <strong>3,2 dagar</strong> och full träning efter <strong>9,1 dagar</strong><RefLink id="24" text="Viktlyftare 3,2 dagar RTS." url={references[23].url} />.
+              </p>
+            </div>
+
+            <!-- Sammanfattning -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h4 class="font-bold text-green-800 text-sm mb-2 flex items-center gap-2">
+                <span class="text-green-600">✓</span> Evidenssammanfattning
+              </h4>
+              <ul class="text-sm text-slate-700 space-y-2">
+                <li class="flex gap-2">
+                  <span class="text-green-600 font-bold">•</span>
+                  <span>Artroskopisk DCR (särskilt direkt operationsteknik) möjliggör snabbare RTS än öppen operationsteknik<RefLink id="22" text="Artroskopisk vs öppen." url={references[21].url} /></span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-green-600 font-bold">•</span>
+                  <span>Framgångsgrad över <strong>90%</strong> för återgång till sport<RefLink id="22" text="Över 90% framgång." url={references[21].url} /><RefLink id="23" text="Hög framgångsgrad." url={references[22].url} /></span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-green-600 font-bold">•</span>
+                  <span>Minimalt bursatrauma vid direkt operationsteknik bidrar till tidig smärtlindring och funktion</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Klinisk kommentar -->
+            <p class="mt-4 text-sm text-slate-600 italic bg-slate-50 p-3 rounded-lg border-l-3 border-l-rose-400">
+              Dessa fynd stödjer den kliniska erfarenheten av extremt snabb återhämtning med direkt operationsteknik, där minimalt bursatrauma bidrar till tidig smärtlindring och funktion. Det är inte ovanligt att patienter kan komma igång med idrott redan inom 2–3 veckor.
+            </p>
+          </article>
+
+        </main>
+
+        <!-- HÖGER SIDEBAR -->
+        <aside class="lg:col-span-3 order-3">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Dr. Carlos rekommenderar -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-slate-800 text-white px-4 py-3 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+                  <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm">Dr. Carlos säger</h3>
+                </div>
+              </div>
+              <blockquote class="p-4 text-sm text-slate-700 italic leading-relaxed border-l-3 border-l-sky-500 ml-4 my-4">
+                "Det enklaste sättet att bli kvitt smärtan är att avlasta. Gräver man i trädgården får man ont. Sitter man på kontoret försvinner smärtan."
+              </blockquote>
+              <div class="px-4 pb-4">
+                <p class="text-sm text-slate-600">
+                  Vid ihållande symtom: isolerad DCR med <strong>~5 mm</strong> resektion – tillräckligt för att eliminera benkontakt samtidigt som ligament bevaras<RefLink id="16" text="Biomekanisk analys." url={references[15].url} /><RefLink id="17" text="Kliniskt effektivt." url={references[16].url} />.
+                </p>
+              </div>
+            </div>
+
+            <!-- Behandlingsöversikt -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-emerald-700 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Behandlingsväg</h3>
+              </div>
+              <div class="p-4">
+                <ol class="relative border-l-2 border-slate-200 ml-2 space-y-4">
+                  <li class="ml-4">
+                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
+                    <p class="text-sm font-bold text-slate-800">Steg 1: Avlastning</p>
+                    <p class="text-xs text-slate-500">Undvik overhead/tung belastning</p>
+                  </li>
+                  <li class="ml-4">
+                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-sky-500 border-2 border-white"></div>
+                    <p class="text-sm font-bold text-slate-800">Steg 2: NSAID vid behov</p>
+                    <p class="text-xs text-slate-500">Vid akuta skov</p>
+                  </li>
+                  <li class="ml-4">
+                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-amber-500 border-2 border-white"></div>
+                    <p class="text-sm font-bold text-slate-800">Steg 3: Utvärdera 3-6 mån</p>
+                    <p class="text-xs text-slate-500">Kvarstående symtom?</p>
+                  </li>
+                  <li class="ml-4">
+                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-purple-500 border-2 border-white"></div>
+                    <p class="text-sm font-bold text-slate-800">Steg 4: DCR-kirurgi</p>
+                    <p class="text-xs text-slate-500">~5 mm resektion (4-7 mm)</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- Återhämtningstid (direkt operationsteknik) -->
+            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+              <h4 class="font-bold text-purple-800 text-sm mb-1">⏱ Återgång till arbete</h4>
+              <p class="text-xs text-purple-600 mb-3">Vid isolerad DCR med direkt operationsteknik</p>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-slate-600">Kontorsarbete</span>
+                  <span class="font-bold text-green-600">0–1 v</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-600">Lätt manuellt</span>
+                  <span class="font-bold text-sky-600">2–4 v</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-600">Tungt arbete</span>
+                  <span class="font-bold text-amber-600">4–8 v</span>
+                </div>
+                <hr class="border-purple-200 my-2" />
+                <div class="flex justify-between">
+                  <span class="text-slate-600">Sport, direkt op.teknik</span>
+                  <span class="font-bold text-rose-600">~3 v</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-600">Sport, indirekt op.teknik</span>
+                  <span class="font-medium text-slate-500">~6 v</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SEKTION - KOMPAKT -->
+  <section class="bg-white py-10 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Vanliga frågor</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Varför fungerar inte fysioterapi?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </span>
           </summary>
-          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
-            Vid isolerad AC-ledsartros har fysioterapi begränsad evidens. Smärtan är starkt belastningsberoende, och rehab kan inte ändra den underliggande degenerationen. Fysioterapi kan dock vara värdefullt vid kombinerad impingement eller rotatorcuff-patologi<RefLink id="2" text="Fysioterapi har svag evidens vid isolerad artros." url={references[1].url} />.
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Vid isolerad AC-ledsartros har fysioterapi begränsad evidens. Smärtan är belastningsberoende och rehab kan inte ändra degenerationen<RefLink id="2" text="Fysioterapi svag evidens." url={references[1].url} />.
           </div>
         </details>
 
-        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
-          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
-            <span>Vad är risken för komplikationer vid operation?</span>
-            <span class="transition-transform group-open:rotate-180 text-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Risk för komplikationer?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </span>
           </summary>
-          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
-            Komplikationer är sällsynta (totalt 5-15% i stora serier). Vanligast är underresektion (10-15%), vilket enkelt kan korrigeras med revision (ytterligare 2-3 mm resektion, &gt;90% framgång)<RefLink id="1" text="Underresektion är enkel att korrigera." url={references[0].url} />. Överresektion (&gt;10 mm) kan leda till instabilitet (5-10%) och är svårare att åtgärda<RefLink id="13" text="Överresektion riskerar instabilitet." url={references[12].url} />. Postoperativ osteolys förekommer i 2-8% av fallen men är ofta asymptomatisk<RefLink id="12" text="Postoperativ osteolys 2-8%." url={references[11].url} />.
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Sällsynta (5-15%). Underresektion (10-15%) korrigeras enkelt<RefLink id="1" text="Enkel korrigering." url={references[0].url} />. Överresektion (&gt;10mm) kan ge instabilitet<RefLink id="13" text="Instabilitetsrisk." url={references[12].url} />.
           </div>
         </details>
 
-        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
-          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
-            <span>Hur lång är återhämtningen efter operation?</span>
-            <span class="transition-transform group-open:rotate-180 text-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Varför är resektionsstorlek viktig?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </span>
           </summary>
-          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
-            För kontorsarbete kan du ofta återgå inom 1-2 veckor. För tungt fysiskt arbete krävs ofta 6-8 veckor. Full återgång till idrott och tung belastning kan ta 3-4 månader. Artroskopisk teknik ger snabbare rehabilitering än öppen kirurgi.
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Flera studier visar att 4-7mm är optimalt<RefLink id="16" text="Biomekanisk analys." url={references[15].url} /><RefLink id="17" text="Begränsad resektion." url={references[16].url} /><RefLink id="18" text="Kliniska resultat." url={references[17].url} />. ~5mm eliminerar benkontakt (särskilt posteriort-inferiort) utan att skada ligament<RefLink id="16" text="Ligamentbevarande." url={references[15].url} />. &lt;4mm = kvarstående smärta. &gt;10mm = instabilitetsrisk<RefLink id="13" text="Överresektion." url={references[12].url} />.
           </div>
         </details>
 
-        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
-          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
-            <span>Varför är resektionsstorleken så viktig?</span>
-            <span class="transition-transform group-open:rotate-180 text-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>AC-artros + impingement?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </span>
           </summary>
-          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
-            Resektionsstorlek påverkar både smärtlindring och stabilitet. För liten resektion (&lt;4 mm) leder till kvarstående kollision och smärta. För stor resektion (&gt;10 mm) ökar risken för horisontell instabilitet p.g.a. skada på ligament<RefLink id="11" text="4-7 mm optimerar stabilitet." url={references[10].url} />. Optimal resektion (4-7 mm) eliminerar friktionen utan att kompromissa stabiliteten. Postoperativ osteolys kan också göra en initialt lagom resektion skenbart större över tid.
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Fysioterapi kan då vara mer värdefullt för scapulär rytm. Kirurgi kan kombineras med andra axeloperationer.
           </div>
         </details>
 
-        <details class="group bg-white rounded-xl shadow-sm cursor-pointer open:ring-2 open:ring-sky-200 transition-all duration-300">
-          <summary class="flex justify-between items-center p-5 font-bold text-sky-900 list-none select-none">
-            <span>Vad händer om jag har både AC-artros och impingement?</span>
-            <span class="transition-transform group-open:rotate-180 text-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all md:col-span-2 lg:col-span-2">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Hur länge varar kortisoneffekten?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </span>
           </summary>
-          <div class="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 mt-2 pt-4">
-            Vid kombinerad impingement och AC-artros kan fysioterapi vara mer värdefullt, eftersom den kan förbättra scapulär rytm och minska sekundär impingement på AC-leden. Kirurgi kan kombineras med andra axeloperationer (t.ex. rotatorcuff-reparation) vid behov.
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Korttidslindring 1-3 månader med ~50% VAS-reduktion, men 70-80% återfall vid belastning<RefLink id="8" text="Kortison korttidseffekt." url={references[7].url} />. Patienter blir bättre men inte bra.
           </div>
         </details>
       </div>
     </div>
   </section>
 
-  <section class="bg-white py-24 text-center">
-    <div class="max-w-4xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-sky-700 mb-6">Behöver du expertbedömning?</h2>
-      <p class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
-        Vid ihållande axelsmärta, särskilt vid belastning, kan AC-ledsartros vara orsaken. Boka en tid hos Dr. Carlos Rivero Siri för en expertbedömning.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/boka" class="bg-sky-700 hover:bg-sky-800 text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-300">
-          Boka tid online
-        </a>
-        <a href="/egenremiss" class="bg-white text-sky-700 border-2 border-sky-700 hover:bg-sky-50 px-10 py-4 rounded-full font-bold text-lg transition duration-300">
-          Skicka egenremiss
-        </a>
+  <!-- KOMPAKT CTA -->
+  <section class="bg-gradient-to-r from-sky-700 to-sky-800 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-center md:text-left">
+          <h2 class="text-xl font-bold text-white mb-1">Behöver du expertbedömning?</h2>
+          <p class="text-sky-200 text-sm">Boka tid hos Dr. Carlos Rivero Siri för axelsmärta.</p>
+        </div>
+        <div class="flex gap-3">
+          <a href="/boka" class="bg-white text-sky-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-50 transition shadow-lg">
+            Boka tid
+          </a>
+          <a href="/egenremiss" class="bg-sky-600 text-white border border-sky-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-500 transition">
+            Egenremiss
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="bg-gray-50 py-12">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-3xl font-bold text-sky-700 mb-8 text-center">Referenser</h2>
-      <ol class="list-decimal list-inside space-y-4 text-gray-700 max-w-4xl mx-auto">
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/38655415/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            McKeever et al. A systematic review of the treatment of primary acromioclavicular joint osteoarthritis. 2024.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/32269599/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Farrell et al. Current evidence for nonpharmacological interventions and criteria for surgical management of persistent acromioclavicular joint osteoarthritis: A systematic review. 2019.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/15385790/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Buttaci et al. Osteoarthritis of the acromioclavicular joint: a review of anatomy, biomechanics, diagnosis, and treatment. 2004.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/35638093/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Eck et al. Prevalence of acromioclavicular joint osteoarthritis in people not seeking care: A systematic review. 2022.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/36563961/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Patterson et al. MRI findings of acromioclavicular joint osteoarthritis are the norm after age 40. 2023.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/33386878/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Soler et al. No differences between conservative and surgical management of acromioclavicular joint osteoarthritis: a scoping review. 2021.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/19468890/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Docimo et al. Surgical treatment for acromioclavicular joint osteoarthritis: patient selection, surgical options, complications, and outcome. 2008.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/9603070/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Jacob & Sallay. Therapeutic efficacy of corticosteroid injections in the acromioclavicular joint. 1998.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/18359647/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Hossain et al. The long-term effectiveness of steroid injections in primary acromioclavicular joint arthritis: a five-year prospective study. 2008.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/23649008/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Mall et al. Degenerative joint disease of the acromioclavicular joint: a review. 2013.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://www.arthroscopytechniques.org/article/S2212-6287(16)30134-7/fulltext" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Koo et al. Arthroscopic Distal Clavicle and Medial Border of Acromion Resection for Symptomatic Acromioclavicular Joint Osteoarthritis. 2017.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://www.ncbi.nlm.nih.gov/books/NBK582148/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Kim et al. Distal Clavicular Osteolysis. StatPearls. 2021.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10030407/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Böhm et al. Iatrogenic instability of the acromioclavicular joint leads to ongoing impairment of shoulder function even following secondary surgical stabilization. 2023.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6930955/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Waterman et al. Distal Clavicular Augmentation with Acromioclavicular and Coracoclavicular Ligament Reconstruction in the Setting of Iatrogenic Induced Acromioclavicular Instability. 2019.
-          </a>
-        </li>
-        <li itemprop="citation">
-          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6498781/" class="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-            Bishop et al. Preoperative Factors Associated With Subsequent Distal Clavicle Resection After Rotator Cuff Repair. 2019.
-          </a>
-        </li>
-      </ol>
-      <p class="text-sm text-gray-500 mt-6 text-center italic">
-        Alla referenser är granskade och valda för hög medicinsk tillförlitlighet. Senast uppdaterad {currentDate}.
-      </p>
+  <!-- KOMPAKT REFERENSER -->
+  <section class="bg-slate-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <details class="group">
+        <summary class="flex items-center gap-2 cursor-pointer text-slate-700 font-bold text-sm uppercase tracking-wide select-none">
+          <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          Visa alla {references.length} referenser
+        </summary>
+        <div class="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {references.map((ref, i) => (
+            <a href={ref.url} class="text-xs text-slate-600 hover:text-sky-700 hover:bg-white p-2 rounded transition block" target="_blank" rel="noopener noreferrer">
+              <span class="font-bold text-slate-400 mr-1">[{i + 1}]</span>
+              {ref.text}
+            </a>
+          ))}
+        </div>
+        <p class="text-xs text-slate-500 mt-4 italic">
+          Alla referenser granskade för hög medicinsk tillförlitlighet. Uppdaterad {currentDate}.
+        </p>
+      </details>
     </div>
   </section>
 
-  <section class="py-16 bg-white border-t border-gray-100">
-    <div class="max-w-4xl mx-auto px-6 space-y-12">
+  <!-- FÖRFATTARE & REFDRAWER -->
+  <section class="py-8 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
       <AuthorCard 
         name={authorName}
         title="Specialist i Ortopedi & Axelkirurgi"
