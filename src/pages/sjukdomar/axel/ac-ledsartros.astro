@@ -354,8 +354,47 @@ const faqSchema = {
 
 <BaseLayout title="AC-ledsartros - Symptom & Behandling | Södermalms Ortopedi">
   
+  <!-- SEO Meta Tags -->
+  <meta slot="head" name="description" content="AC-ledsartros (artros i yttre nyckelbensleden) - symtom, diagnos och behandling. Expertinformation från axelspecialist Dr. Carlos Rivero Siri vid Södermalms Ortopedi i Stockholm." />
+  <link slot="head" rel="canonical" href="https://sodermalmsortopedi.se/sjukdomar/axel/ac-ledsartros" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta slot="head" property="og:type" content="article" />
+  <meta slot="head" property="og:url" content="https://sodermalmsortopedi.se/sjukdomar/axel/ac-ledsartros" />
+  <meta slot="head" property="og:title" content="AC-ledsartros - Symptom & Behandling | Södermalms Ortopedi" />
+  <meta slot="head" property="og:description" content="AC-ledsartros (artros i yttre nyckelbensleden) - symtom, diagnos och behandling. Expertinformation från axelspecialist vid Södermalms Ortopedi." />
+  <meta slot="head" property="og:image" content="https://sodermalmsortopedi.se/images/ac-ledsartros/ac-joint-osteoarthritis-illustration.svg" />
+  <meta slot="head" property="og:locale" content="sv_SE" />
+  <meta slot="head" property="og:site_name" content="Södermalms Ortopedi" />
+  
+  <!-- Twitter -->
+  <meta slot="head" name="twitter:card" content="summary_large_image" />
+  <meta slot="head" name="twitter:title" content="AC-ledsartros - Symptom & Behandling" />
+  <meta slot="head" name="twitter:description" content="AC-ledsartros (artros i yttre nyckelbensleden) - symtom, diagnos och behandling från Södermalms Ortopedi." />
+  <meta slot="head" name="twitter:image" content="https://sodermalmsortopedi.se/images/ac-ledsartros/ac-joint-osteoarthritis-illustration.svg" />
+  
+  <!-- Article Meta -->
+  <meta slot="head" property="article:author" content="Dr. Carlos Rivero Siri" />
+  <meta slot="head" property="article:published_time" content="2024-12-01" />
+  <meta slot="head" property="article:modified_time" content="2024-12-14" />
+  <meta slot="head" property="article:section" content="Axelsjukdomar" />
+  <meta slot="head" property="article:tag" content="AC-ledsartros" />
+  <meta slot="head" property="article:tag" content="Axelsmärta" />
+  <meta slot="head" property="article:tag" content="Ortopedi" />
+
+  <!-- Structured Data -->
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Hem", "item": "https://sodermalmsortopedi.se/" },
+      { "@type": "ListItem", "position": 2, "name": "Sjukdomar", "item": "https://sodermalmsortopedi.se/sjukdomar" },
+      { "@type": "ListItem", "position": 3, "name": "Axel", "item": "https://sodermalmsortopedi.se/sjukdomar/axel" },
+      { "@type": "ListItem", "position": 4, "name": "AC-ledsartros", "item": "https://sodermalmsortopedi.se/sjukdomar/axel/ac-ledsartros" }
+    ]
+  })} />
 
   <!-- KOMPAKT HERO -->
   <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12 relative">
@@ -500,31 +539,7 @@ const faqSchema = {
         <aside class="lg:col-span-3 order-2 lg:order-1">
           <div class="lg:sticky lg:top-6 space-y-4">
             
-<!-- Ganglion -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-amber-600 text-white px-4 py-3">
-                <h3 class="font-bold text-sm uppercase tracking-wide">Ganglion vid AC-leden</h3>
-              </div>
-              <div class="p-4">
-                <figure class="rounded-lg overflow-hidden border border-slate-200 mb-3">
-                  <Image
-                    src={acGanglion}
-                    alt={imageData.acGanglion.alt}
-                    title={imageData.acGanglion.title}
-                    widths={[200, 400]}
-                    sizes="200px"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-auto"
-                  />
-                </figure>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                  Vätskecysta som kan uppstå vid uttalad artros i yttre nyckelbensleden. Synlig svullnad överst på axeln.
-                </p>
-              </div>
-            </div>
-
-            <!-- Distal Klavikulär Osteolys (DCO) -->
+<!-- Distal Klavikulär Osteolys (DCO) / Weightlifter's Shoulder -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div class="bg-amber-600 text-white px-4 py-3">
                 <h3 class="font-bold text-sm uppercase tracking-wide">Weightlifter's Shoulder</h3>
@@ -591,6 +606,30 @@ const faqSchema = {
                   </p>
                   <p class="text-xs text-amber-300 font-medium">— Dr. Carlos Rivero Siri</p>
                 </blockquote>
+              </div>
+            </div>
+
+            <!-- Ganglion -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-amber-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Ganglion vid AC-leden</h3>
+              </div>
+              <div class="p-4">
+                <figure class="rounded-lg overflow-hidden border border-slate-200 mb-3">
+                  <Image
+                    src={acGanglion}
+                    alt={imageData.acGanglion.alt}
+                    title={imageData.acGanglion.title}
+                    widths={[200, 400]}
+                    sizes="200px"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-auto"
+                  />
+                </figure>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Vätskecysta som kan uppstå vid uttalad artros i yttre nyckelbensleden. Synlig svullnad överst på axeln.
+                </p>
               </div>
             </div>
 
