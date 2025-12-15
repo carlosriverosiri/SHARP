@@ -11,14 +11,32 @@ import acXray from '../../../assets/images/ac-ledsartros/ac-xray-before-after.pn
 import acClinicalArrow from '../../../assets/images/ac-ledsartros/ac-clinical-arrow.png';
 import acPainDistribution from '../../../assets/images/ac-ledsartros/ac-pain-distribution.svg';
 import acGanglion from '../../../assets/images/ac-ledsartros/ac-ganglion.png';
-import acMriPrevalence from '../../../assets/images/ac-ledsartros/ac-mri-prevalence-by-age.png';
+import acMriPrevalence from '../../../assets/images/ac-ledsartros/ac-mri-prevalence-by-age.svg';
 import dcoXray from '../../../assets/images/ac-ledsartros/distal-clavicular-osteolysis-xray.png';
+import acPalpation from '../../../assets/images/ac-ledsartros/ac-joint-tenderness-palpation.svg';
 
 // FAKTA & FÖRFATTARE
 const authorName = "Dr. Carlos Rivero Siri";
 const authorUrl = "https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri";
 const authorImage = "/images/carlos-rivero-siri.jpg";
 const currentDate = new Date().toISOString().split('T')[0];
+
+// SENAST MEDICINSKT GRANSKAD (uppdatera manuellt vid innehållsändringar)
+const lastMedicalReview = "14 december 2024";
+
+// INNEHÅLLSFÖRTECKNING
+const tableOfContents = [
+  { id: "symtom", title: "Symtom", icon: "1" },
+  { id: "diagnos", title: "Diagnos & prevalens", icon: "2" },
+  { id: "behandling", title: "Behandling", icon: "3" },
+  { id: "sjukskrivning", title: "Sjukskrivning", icon: "4" },
+  { id: "sport", title: "Återgång till sport", icon: "5" },
+  { id: "faq", title: "Vanliga frågor", icon: "?" },
+];
+
+// VIDEO (sätt till null för att dölja sektionen, eller lägg in URL när video finns)
+const videoUrl = null; // Exempel: "https://www.youtube.com/embed/VIDEO_ID"
+const videoTitle = "AC-ledsartros förklarad";
 
 // REFERENSDATA
 const references = [
@@ -151,6 +169,21 @@ const references = [
     id: "26",
     text: "Singh M, Soo Hoo J. A Sports Medicine Clinician's Guide to the Diagnosis and Management of Distal Clavicular Osteolysis. Curr Sports Med Rep. 2023.",
     url: "https://pubmed.ncbi.nlm.nih.gov/37294199/"
+  },
+  {
+    id: "27",
+    text: "Miedema N, et al. Mid- to long-term success rate and functional outcomes of acromioclavicular injections in patients with acromioclavicular osteoarthritis. Clin Shoulder Elb. 2023.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10277705/"
+  },
+  {
+    id: "28",
+    text: "Walton J, et al. Diagnostic values of tests for acromioclavicular joint pain. J Bone Joint Surg Am. 2004.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/15069148/"
+  },
+  {
+    id: "29",
+    text: "Krill MK, et al. A concise evidence-based physical examination for diagnosis of acromioclavicular joint pathology: a systematic review. Phys Sportsmed. 2018.",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6396285/"
   }
 ];
 
@@ -182,18 +215,23 @@ const imageData = {
     caption: "Ganglion (vätskecysta) – en vanlig klinisk manifestation vid uttalad AC-ledsartros"
   },
   acMriPrevalence: {
-    alt: "Stapeldiagram över MRI-fynd av AC-ledsartros per åldersgrupp - visar prevalens hos män och kvinnor från 20 till 80+ år",
-    title: "MRI-prevalens av AC-ledsartros per ålder och kön",
-    caption: "MRI-fynd av AC-ledsartros per åldersgrupp: blå staplar = män, röda = kvinnor. Majoriteten har artrosfynd efter 40 år."
+    alt: "Stapeldiagram över MRI-prevalens av AC-ledsartros per åldersgrupp - visar att 75% har artrosfynd vid 40-49 år och nästan 100% efter 80 år",
+    title: "MRI-prevalens av AC-ledsartros per åldersgrupp",
+    caption: "MRI-prevalens av AC-ledsartros per åldersgrupp. Majoriteten har artrosfynd efter 40 år – men artrosfynd betyder inte symtom."
   },
   dcoXray: {
     alt: "Röntgenbild av distal klavikulär osteolys (DCO) vid AC-leden - weightlifter's shoulder med typisk benresorption, cystor och förlust av subkondral kontur i distala nyckelbenet hos tyngdlyftare",
     title: "Distal klavikulär osteolys (DCO) röntgen - Weightlifter's shoulder vid AC-ledssmärta",
     caption: "Röntgen av distal klavikulär osteolys (DCO): notera ojämn kontur, benresorption och cystbildning i distala klavikeln – typiskt fynd vid weightlifter's shoulder."
+  },
+  acPalpation: {
+    alt: "Palpation av AC-leden - finger som trycker på nyckelbensleden för att undersöka ömhet vid AC-ledsartros",
+    title: "Palpationsömhet över AC-leden - viktigt kliniskt tecken",
+    caption: "Palpation av AC-leden: direkt ömhet över leden är ett viktigt kliniskt tecken vid AC-ledsartros"
   }
 };
 
-// SCHEMA.ORG
+// SCHEMA.ORG - MedicalWebPage
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "MedicalWebPage",
@@ -203,7 +241,14 @@ const schemaData = {
     "name": authorName,
     "url": authorUrl
   },
-  "datePublished": currentDate,
+  "datePublished": "2024-12-01",
+  "dateModified": "2024-12-14",
+  "lastReviewed": "2024-12-14",
+  "reviewedBy": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
   "about": {
     "@type": "MedicalCondition",
     "name": "Acromioclavicular Joint Osteoarthritis",
@@ -257,11 +302,60 @@ const schemaData = {
     ]
   }
 };
+
+// SCHEMA.ORG - FAQPage (visas i Google-sökresultat)
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Varför fungerar inte fysioterapi vid AC-ledsartros?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vid isolerad AC-ledsartros har fysioterapi begränsad evidens. Smärtan är belastningsberoende och rehabilitering kan inte ändra den degenerativa processen i leden. Avlastning är ofta mer effektivt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hur länge varar kortisoneffekten vid AC-ledsartros?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kortisoninjektioner ger korttidslindring på 1-3 månader hos de flesta, men 40-60% uppnår långvarig lindring efter ett år enligt injektionsstudier. Många får dock återfall vid fortsatt belastning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vilken resektionsstorlek är optimal vid DCR-operation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Flera studier visar att 4-7mm är optimalt. Cirka 5mm eliminerar benkontakt utan att skada ligamenten. Mindre än 4mm ger kvarstående smärta, mer än 10mm ökar risken för instabilitet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hur lång är sjukskrivningen efter AC-ledsoperation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vid isolerad DCR med direkt operationsteknik: kontorsarbete 0-1 vecka, lätt manuellt arbete 2-4 veckor, tungt arbete 4-8 veckor. Återgång till sport ofta inom 3 veckor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vad är weightlifter's shoulder (distal klavikulär osteolys)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Distal klavikulär osteolys (DCO) är en överbelastningsskada som orsakar benresorption i yttersta nyckelbensänden. Vanligt hos tyngdlyftare och vid repetitiva pressrörelser. Ofta självläkande, men kirurgi kan behövas om besvären kvarstår över ett år."
+      }
+    }
+  ]
+};
 ---
 
 <BaseLayout title="AC-ledsartros - Symptom & Behandling | Södermalms Ortopedi">
   
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
   <!-- KOMPAKT HERO -->
   <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12 relative">
@@ -293,15 +387,109 @@ const schemaData = {
               <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
             </div>
             <div>
-              <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Granskad av</p>
+              <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medicinskt granskad</p>
               <a href={authorUrl} class="text-sm font-bold text-white hover:text-sky-200">{authorName}</a>
             </div>
           </div>
           <div class="text-xs text-slate-400">Specialist i Ortopedi & Axelkirurgi</div>
+          <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-xs text-slate-300">Uppdaterad: <strong class="text-white">{lastMedicalReview}</strong></span>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- TL;DR SAMMANFATTNING -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <div class="bg-gradient-to-r from-sky-50 to-emerald-50 rounded-xl p-5 border border-sky-200">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+              Sammanfattning
+              <span class="text-xs font-normal text-slate-500 normal-case">⏱ 8 min läsning</span>
+            </h2>
+            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+              <strong>AC-ledsartros</strong> (artros i yttre nyckelbensleden) är vanligt – 83% har röntgenfynd efter 40 år – men 
+              <strong>de flesta har inga besvär</strong>. Smärtan är belastningsberoende och uppstår vid overhead-arbete, 
+              träning eller tunga lyft.
+            </p>
+            <div class="grid sm:grid-cols-3 gap-3 text-xs">
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span><strong>De flesta</strong> förbättras utan operation</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-sky-600 font-bold">✓</span>
+                <span><strong>Operation</strong> vid långvariga smärtor</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-purple-600 font-bold">✓</span>
+                <span><strong>&gt;90%</strong> nöjda efter kirurgi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Innehållsförteckning - endast mobil -->
+      <nav class="mt-4 lg:hidden">
+        <details class="bg-sky-50 rounded-lg border border-sky-200">
+          <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+            <span class="font-bold text-sky-800 text-sm uppercase tracking-wide">📑 Innehåll</span>
+            <svg class="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="px-3 pb-2 flex flex-wrap gap-2">
+            {tableOfContents.map((item) => (
+              <a href={`#${item.id}`} class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-sky-700 bg-white px-2.5 py-1 rounded-full border border-slate-200 hover:border-sky-300 transition-colors">
+                <span class="w-4 h-4 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">{item.icon}</span>
+                {item.title}
+              </a>
+            ))}
+          </div>
+        </details>
+      </nav>
+    </div>
+  </section>
+
+  <!-- VIDEO SEKTION (visas endast om videoUrl är satt) -->
+  {videoUrl && (
+    <section class="bg-slate-900 py-10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
+            <path fill="#fff" d="M9.545 15.568V8.432L15.818 12z"/>
+          </svg>
+          {videoTitle}
+        </h2>
+        <div class="aspect-video rounded-xl overflow-hidden bg-slate-800">
+          <iframe 
+            src={videoUrl}
+            title={videoTitle}
+            class="w-full h-full"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <p class="text-slate-400 text-sm mt-3 text-center">
+          Video: Dr. Carlos Rivero Siri förklarar AC-ledsartros
+        </p>
+      </div>
+    </section>
+  )}
 
   <!-- HUVUDINNEHÅLL: 3-KOLUMN LAYOUT -->
   <section class="bg-slate-50 py-10">
@@ -312,52 +500,29 @@ const schemaData = {
         <aside class="lg:col-span-3 order-2 lg:order-1">
           <div class="lg:sticky lg:top-6 space-y-4">
             
-            <!-- Snabbfakta -->
+<!-- Ganglion -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-sky-700 text-white px-4 py-3">
-                <h3 class="font-bold text-sm uppercase tracking-wide">Snabbfakta</h3>
+              <div class="bg-amber-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Ganglion vid AC-leden</h3>
               </div>
-              <div class="p-4 space-y-3 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Prevalens 40+</span>
-                  <span class="font-bold text-slate-800">83%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Prevalens 70+</span>
-                  <span class="font-bold text-slate-800">~100%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Asymptomatiska</span>
-                  <span class="font-bold text-slate-800">Majoriteten</span>
-                </div>
-                <hr class="border-slate-100" />
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Optimal DCR</span>
-                  <span class="font-bold text-sky-700">~5 mm</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-500">Avlastningseffekt</span>
-                  <span class="font-bold text-green-600">70%</span>
-                </div>
+              <div class="p-4">
+                <figure class="rounded-lg overflow-hidden border border-slate-200 mb-3">
+                  <Image
+                    src={acGanglion}
+                    alt={imageData.acGanglion.alt}
+                    title={imageData.acGanglion.title}
+                    widths={[200, 400]}
+                    sizes="200px"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-auto"
+                  />
+                </figure>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Vätskecysta som kan uppstå vid uttalad artros i yttre nyckelbensleden. Synlig svullnad överst på axeln.
+                </p>
               </div>
             </div>
-
-            <!-- Ganglion-bild -->
-            <figure class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <Image 
-                src={acGanglion}
-                alt={imageData.acGanglion.alt}
-                title={imageData.acGanglion.title}
-                widths={[200, 400]}
-                sizes="200px"
-                loading="lazy"
-                decoding="async"
-                class="w-full h-auto"
-              />
-              <figcaption class="p-3 text-xs text-slate-500 bg-slate-50">
-                <strong>Ganglion vid AC-ledsartros:</strong> vätskecysta som uppstår vid uttalad artros i yttre nyckelbensleden.
-              </figcaption>
-            </figure>
 
             <!-- Distal Klavikulär Osteolys (DCO) -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -444,7 +609,7 @@ const schemaData = {
         <main class="lg:col-span-6 order-1 lg:order-2 space-y-8">
           
           <!-- SYMTOM -->
-          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <article id="symtom" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">1</span>
               Så känner du igen AC-ledsartros
@@ -487,9 +652,9 @@ const schemaData = {
               </figure>
               <figure class="rounded-lg overflow-hidden border border-slate-200">
                 <Image 
-                  src={acPainDistribution}
-                  alt={imageData.acPainDistribution.alt}
-                  title={imageData.acPainDistribution.title}
+                  src={acPalpation}
+                  alt={imageData.acPalpation.alt}
+                  title={imageData.acPalpation.title}
                   widths={[300, 600]}
                   sizes="(max-width: 640px) 50vw, 300px"
                   loading="lazy"
@@ -497,14 +662,53 @@ const schemaData = {
                   class="w-full h-auto"
                 />
                 <figcaption class="p-2 text-xs text-slate-500 bg-slate-50">
-                  <strong>Smärtutbredning:</strong> rött område visar typisk smärtlokalisation vid AC-ledsartros.
+                  <strong>Palpationsömhet:</strong> direkt ömhet vid tryck över AC-leden har 96% sensitivitet för AC-ledssmärta.
+                </figcaption>
+              </figure>
+            </div>
+
+            <!-- Kliniskt tecken: Palpationsömhet -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
+              <h4 class="font-bold text-amber-800 text-sm mb-2">Viktigt kliniskt tecken: Palpationsömhet</h4>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Palpationsömhet över AC-leden har <strong>96% sensitivitet</strong> – det mest känsliga kliniska testet för AC-ledssmärta<RefLink id="28" text="Walton et al. 2004" url={references[27].url} />. 
+                Ett negativt test talar starkt emot AC-ledsursprung. Specificiteten är dock låg (10%), varför testet bäst kombineras med provocerande tester som Paxinos test eller O'Brien's test<RefLink id="29" text="Krill et al. 2018" url={references[28].url} />.
+              </p>
+            </div>
+
+            <!-- Smärtutstrålning -->
+            <div class="mt-6 flex flex-col md:flex-row gap-4">
+              <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">Varför gör det ont i nacken?</h4>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  Många patienter undrar varför de får ont i nacken vid AC-ledsartros. Smärtan sitter oftast direkt över AC-leden, men <strong>referred pain</strong> (överförd smärta) till nacke och skulderblad är vanligt förekommande.
+                </p>
+                <ul class="space-y-1 text-sm text-slate-600">
+                  <li class="flex gap-2"><span class="text-amber-500">•</span><strong>Vanligast:</strong> Smärta rakt över AC-leden</li>
+                  <li class="flex gap-2"><span class="text-amber-500">•</span><strong>Nacke:</strong> Relativt vanlig referred pain</li>
+                  <li class="flex gap-2"><span class="text-amber-500">•</span><strong>Skulderblad:</strong> Också vanligt förekommande</li>
+                </ul>
+              </div>
+              <figure class="w-full md:w-48 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                <Image 
+                  src={acPainDistribution}
+                  alt={imageData.acPainDistribution.alt}
+                  title={imageData.acPainDistribution.title}
+                  widths={[200, 400]}
+                  sizes="200px"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-auto"
+                />
+                <figcaption class="p-2 text-xs text-slate-500 bg-slate-50 text-center">
+                  <strong>Smärtutbredning:</strong> rött område visar typisk smärtlokalisation
                 </figcaption>
               </figure>
             </div>
           </article>
 
           <!-- DIAGNOS -->
-          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <article id="diagnos" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm">2</span>
               Diagnos och prevalens
@@ -552,9 +756,7 @@ const schemaData = {
                 class="w-full h-auto"
               />
               <figcaption class="p-3 text-xs text-slate-600 bg-slate-50 border-t border-slate-100">
-                <strong>MRI-prevalens av AC-ledsartros per åldersgrupp.</strong> Blå staplar = män, röda staplar = kvinnor. 
-                Diagrammet visar alla grader av artros. Redan i 30-årsåldern har majoriteten av män MRI-förändringar. 
-                <span class="text-amber-600 font-medium">Viktigt: artrosfynd på MR betyder inte symptom – överdiagnostik är vanligt.</span>
+                <strong>MRI-prevalens av AC-ledsartros per åldersgrupp.</strong> Redan vid 40–49 år har 75% artrosförändringar på MRI. Efter 80 år: nästan 100%.
                 <br />
                 <span class="text-slate-500 italic mt-1 block">
                   Källa: Patterson et al. "MRI findings of acromioclavicular joint osteoarthritis are the norm after age 40." 2023<RefLink id="5" text="Patterson et al. 2023" url={references[4].url} />
@@ -564,14 +766,14 @@ const schemaData = {
           </article>
 
           <!-- BEHANDLING -->
-          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <article id="behandling" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">3</span>
               Behandlingsalternativ
             </h2>
             
             <p class="text-slate-600 text-base leading-relaxed mb-5">
-              Konservativ behandling rekommenderas i 3-6 månader<RefLink id="2" text="Konservativ behandling först." url={references[1].url} />.
+              Konservativ behandling (avlastning, NSAID, fysioterapi, eventuellt kortison) rekommenderas i 3–6 månader<RefLink id="2" text="Konservativ behandling först." url={references[1].url} />. Systematiska översikter visar likvärdiga långsiktiga resultat som kirurgi för de flesta patienter<RefLink id="6" text="Likvärdiga resultat." url={references[5].url} /><RefLink id="1" text="Systematisk översikt." url={references[0].url} />.
             </p>
 
             <!-- Konservativ -->
@@ -580,7 +782,7 @@ const schemaData = {
               <div class="grid sm:grid-cols-2 gap-3 text-sm">
                 <div class="flex gap-2">
                   <span class="text-green-600 font-bold">✓</span>
-                  <div><strong>Avlastning:</strong> 70% effekt<RefLink id="10" text="Avlastning mest effektivt." url={references[9].url} /></div>
+                  <div><strong>Avlastning:</strong> Förstahandsval – majoriteten förbättras<RefLink id="6" text="Konservativ lika effektivt som kirurgi." url={references[5].url} /></div>
                 </div>
                 <div class="flex gap-2">
                   <span class="text-green-600 font-bold">✓</span>
@@ -588,7 +790,7 @@ const schemaData = {
                 </div>
                 <div class="flex gap-2">
                   <span class="text-amber-500 font-bold">~</span>
-                  <div><strong>Kortison:</strong> Korttidseffekt, 70-80% återfall<RefLink id="8" text="Kortison korttidseffekt." url={references[7].url} /></div>
+                  <div><strong>Kortison:</strong> 40–60% långvarig lindring, korttidseffekt vanligare<RefLink id="27" text="Injektionsstudier." url={references[26].url} /><RefLink id="8" text="Korttidseffekt." url={references[7].url} /></div>
                 </div>
                 <div class="flex gap-2">
                   <span class="text-amber-500 font-bold">~</span>
@@ -599,7 +801,7 @@ const schemaData = {
 
             <!-- Kirurgisk -->
             <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <h3 class="font-bold text-sky-800 mb-3 text-sm uppercase tracking-wide">Kirurgisk behandling</h3>
+              <h3 id="kirurgisk-behandling" class="font-bold text-sky-800 mb-3 text-sm uppercase tracking-wide scroll-mt-16">Kirurgisk behandling</h3>
               <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1 text-sm text-slate-700">
                   <p class="mb-2">
@@ -635,7 +837,7 @@ const schemaData = {
           </article>
 
           <!-- SJUKSKRIVNINGSTID -->
-          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <article id="sjukskrivning" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">4</span>
               Sjukskrivningstid efter operation
@@ -716,7 +918,7 @@ const schemaData = {
           </article>
 
           <!-- ÅTERGÅNG TILL SPORT -->
-          <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <article id="sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm">5</span>
               Återgång till sport (Return to Sport)
@@ -797,6 +999,26 @@ const schemaData = {
         <aside class="lg:col-span-3 order-3">
           <div class="lg:sticky lg:top-6 space-y-4">
             
+            <!-- Innehållsförteckning - endast desktop -->
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Innehåll</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a 
+                    href={`#${item.id}`} 
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
             <!-- Dr. Carlos rekommenderar -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div class="bg-slate-800 text-white px-4 py-3 flex items-center gap-3">
@@ -817,67 +1039,7 @@ const schemaData = {
               </div>
             </div>
 
-            <!-- Behandlingsöversikt -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-emerald-700 text-white px-4 py-3">
-                <h3 class="font-bold text-sm uppercase tracking-wide">Behandlingsväg</h3>
-              </div>
-              <div class="p-4">
-                <ol class="relative border-l-2 border-slate-200 ml-2 space-y-4">
-                  <li class="ml-4">
-                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
-                    <p class="text-sm font-bold text-slate-800">Steg 1: Avlastning</p>
-                    <p class="text-xs text-slate-500">Undvik overhead/tung belastning</p>
-                  </li>
-                  <li class="ml-4">
-                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-sky-500 border-2 border-white"></div>
-                    <p class="text-sm font-bold text-slate-800">Steg 2: NSAID vid behov</p>
-                    <p class="text-xs text-slate-500">Vid akuta skov</p>
-                  </li>
-                  <li class="ml-4">
-                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-amber-500 border-2 border-white"></div>
-                    <p class="text-sm font-bold text-slate-800">Steg 3: Utvärdera 3-6 mån</p>
-                    <p class="text-xs text-slate-500">Kvarstående symtom?</p>
-                  </li>
-                  <li class="ml-4">
-                    <div class="absolute -left-2 w-4 h-4 rounded-full bg-purple-500 border-2 border-white"></div>
-                    <p class="text-sm font-bold text-slate-800">Steg 4: DCR-kirurgi</p>
-                    <p class="text-xs text-slate-500">~5 mm resektion (4-7 mm)</p>
-                  </li>
-                </ol>
-              </div>
-            </div>
-
-            <!-- Återhämtningstid (direkt operationsteknik) -->
-            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
-              <h4 class="font-bold text-purple-800 text-sm mb-1">⏱ Återgång till arbete</h4>
-              <p class="text-xs text-purple-600 mb-3">Vid isolerad DCR med direkt operationsteknik</p>
-              <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-slate-600">Kontorsarbete</span>
-                  <span class="font-bold text-green-600">0–1 v</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-600">Lätt manuellt</span>
-                  <span class="font-bold text-sky-600">2–4 v</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-600">Tungt arbete</span>
-                  <span class="font-bold text-amber-600">4–8 v</span>
-                </div>
-                <hr class="border-purple-200 my-2" />
-                <div class="flex justify-between">
-                  <span class="text-slate-600">Sport, direkt op.teknik</span>
-                  <span class="font-bold text-rose-600">~3 v</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-slate-600">Sport, indirekt op.teknik</span>
-                  <span class="font-medium text-slate-500">~6 v</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
+                      </div>
         </aside>
 
       </div>
@@ -885,7 +1047,7 @@ const schemaData = {
   </section>
 
   <!-- FAQ SEKTION - KOMPAKT -->
-  <section class="bg-white py-10 border-t border-slate-200">
+  <section id="faq" class="bg-white py-10 border-t border-slate-200 scroll-mt-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <h2 class="text-xl font-bold text-slate-900 mb-6">Vanliga frågor</h2>
       
@@ -946,7 +1108,7 @@ const schemaData = {
             </span>
           </summary>
           <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
-            Korttidslindring 1-3 månader med ~50% VAS-reduktion, men 70-80% återfall vid belastning<RefLink id="8" text="Kortison korttidseffekt." url={references[7].url} />. Patienter blir bättre men inte bra.
+            Korttidslindring 1–3 månader är vanligast, men 40–60% uppnår långvarig lindring efter ett år<RefLink id="27" text="Injektionsstudier." url={references[26].url} />. Många får dock återfall vid belastning<RefLink id="8" text="Korttidseffekt." url={references[7].url} />.
           </div>
         </details>
       </div>

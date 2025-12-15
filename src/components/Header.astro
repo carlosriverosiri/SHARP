@@ -9,75 +9,208 @@
       <img src="/logo.svg" alt="Klinikens logotyp" class="h-10 w-auto" />
     </a>
 
-    <nav class="hidden lg:flex items-center space-x-6">
+    <nav class="hidden lg:flex items-center space-x-2">
       
+      <!-- Sjukdomar - Mega Menu -->
       <div class="group relative">
-        <a href="/sjukdomar/" class="text-[#024264] hover:text-blue-700 font-semibold text-lg transition-colors py-2 px-3">Sjukdomar</a>
-        <ul class="absolute top-full left-0 bg-[#EBF8FF] shadow-xl rounded-md mt-2 py-2 min-w-[260px] hidden group-hover:block z-10">
-          
-          <li class="relative">
-            <a href="/sjukdomar/axel/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200 font-medium">Axel</a>
-            <a href="/sjukdomar/axel/ac-ledsartros" class="block pl-8 pr-4 py-1.5 text-xs text-slate-600 hover:text-blue-800 hover:bg-blue-100">
-                ↳ AC-ledsartros
-            </a>
-          </li>
-          
-          <li><a href="/sjukdomar/kna/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Knä</a></li>
-          
-          <li class="relative">
-            <a href="/sjukdomar/armbage/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200 font-medium">Armbåge</a>
-            <a href="/sjukdomar/armbage/distal-bicepsruptur" class="block pl-8 pr-4 py-1.5 text-xs text-slate-600 hover:text-blue-800 hover:bg-blue-100">
-                ↳ Distal bicepsruptur
-            </a>
-          </li>
-
-        </ul>
+        <a href="/sjukdomar/" class="nav-link group-hover:text-blue-600">
+          Sjukdomar
+          <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+          <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Axel -->
+              <div class="group/axel relative">
+                <a href="/sjukdomar/axel/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Axel</span>
+                </a>
+                <!-- Axel diagnoser - visas vid hover -->
+                <div class="hidden group-hover/axel:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <a href="/sjukdomar/axel/ac-ledsartros" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">AC-ledsartros</a>
+                </div>
+              </div>
+              <!-- Knä -->
+              <div class="group/kna relative">
+                <a href="/sjukdomar/kna/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Knä</span>
+                </a>
+                <!-- Knä diagnoser - visas vid hover -->
+                <div class="hidden group-hover/kna:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Kommer snart</span>
+                </div>
+              </div>
+              <!-- Armbåge -->
+              <div class="group/arm relative">
+                <a href="/sjukdomar/armbage/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Armbåge</span>
+                </a>
+                <!-- Armbåge diagnoser - visas vid hover -->
+                <div class="hidden group-hover/arm:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <a href="/sjukdomar/armbage/distal-bicepsruptur" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">Distal bicepsruptur</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- Rehab - Mega Menu -->
       <div class="group relative">
-        <a href="/rehab/" class="text-[#024264] hover:text-blue-700 font-semibold text-lg transition-colors py-2 px-3">Rehab</a>
-        <ul class="absolute top-full left-0 bg-[#EBF8FF] shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
-          <li><a href="/rehab/axel/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Axel</a></li>
-          <li><a href="/rehab/kna/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Knä</a></li>
-          <li><a href="/rehab/armbage/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Armbåge</a></li>
-        </ul>
+        <a href="/rehab/" class="nav-link group-hover:text-blue-600">
+          Rehab
+          <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+          <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Axel -->
+              <div class="group/axel relative">
+                <a href="/rehab/axel/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Axel</span>
+                </a>
+                <div class="hidden group-hover/axel:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Rehabprogram kommer</span>
+                </div>
+              </div>
+              <!-- Knä -->
+              <div class="group/kna relative">
+                <a href="/rehab/kna/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Knä</span>
+                </a>
+                <div class="hidden group-hover/kna:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Rehabprogram kommer</span>
+                </div>
+              </div>
+              <!-- Armbåge -->
+              <div class="group/arm relative">
+                <a href="/rehab/armbage/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Armbåge</span>
+                </a>
+                <div class="hidden group-hover/arm:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Rehabprogram kommer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
+      <!-- Fråga Doktorn - Mega Menu -->
       <div class="group relative">
-        <a href="/fraga-doktorn/" class="text-[#024264] hover:text-blue-700 font-semibold text-lg transition-colors py-2 px-3">Fråga Doktorn</a>
-        <ul class="absolute top-full left-0 bg-[#EBF8FF] shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
-          <li><a href="/fraga-doktorn/axel/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Axel</a></li>
-          <li><a href="/fraga-doktorn/kna/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Knä</a></li>
-          <li><a href="/fraga-doktorn/armbage/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Armbåge</a></li>
-          <li><a href="/fraga-doktorn/stall-ny-fraga/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Ställ ny fråga</a></li>
-        </ul>
+        <a href="/fraga-doktorn/" class="nav-link group-hover:text-blue-600">
+          Fråga Doktorn
+          <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+          <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Axel -->
+              <div class="group/axel relative">
+                <a href="/fraga-doktorn/axel/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/Axel-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Axel</span>
+                </a>
+                <div class="hidden group-hover/axel:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Frågor kommer</span>
+                </div>
+              </div>
+              <!-- Knä -->
+              <div class="group/kna relative">
+                <a href="/fraga-doktorn/kna/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/kna-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Knä</span>
+                </a>
+                <div class="hidden group-hover/kna:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Frågor kommer</span>
+                </div>
+              </div>
+              <!-- Armbåge -->
+              <div class="group/arm relative">
+                <a href="/fraga-doktorn/armbage/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors">
+                  <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
+                    <img src="https://specialist.se/wp-content/uploads/armbage-icon.gif" alt="" class="w-16 h-16 object-contain" />
+                  </div>
+                  <span class="font-bold text-[#024264] text-base">Armbåge</span>
+                </a>
+                <div class="hidden group-hover/arm:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <span class="text-xs text-gray-400 italic">Frågor kommer</span>
+                </div>
+              </div>
+            </div>
+            <!-- Ställ ny fråga-länk -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center">
+              <a href="/fraga-doktorn/stall-ny-fraga/" class="text-sm bg-purple-100 text-purple-700 px-4 py-2 rounded-full hover:bg-purple-200 transition-colors font-medium">✍️ Ställ ny fråga</a>
+            </div>
+          </div>
+        </div>
       </div>
       
+      <!-- Patient -->
       <div class="group relative">
-        <a href="/patient/" class="text-[#024264] hover:text-blue-700 font-semibold text-lg transition-colors py-2 px-3">Patient</a>
-        <ul class="absolute top-full left-0 bg-[#EBF8FF] shadow-xl rounded-md mt-2 py-2 min-w-[240px] hidden group-hover:block z-10">
-          <li><a href="/patient/kom-till-oss/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Kom till oss från hela Sverige</a></li>
-          <li><a href="/patient/remiss-vantetid/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Remiss & Väntetid</a></li>
-          <li><a href="/patient/forsakringar-betalning/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Försäkringar & Betalning</a></li>
-          <li><a href="/patient/boka-omboka/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Boka & Omboka tid</a></li>
-        </ul>
+        <a href="/patient/" class="nav-link group-hover:text-blue-600">
+          Patient
+          <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+        <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+          <ul class="dropdown-menu min-w-[260px]">
+            <li><a href="/patient/kom-till-oss/" class="dropdown-link">Kom till oss från hela Sverige</a></li>
+            <li><a href="/patient/remiss-vantetid/" class="dropdown-link">Remiss & Väntetid</a></li>
+            <li><a href="/patient/forsakringar-betalning/" class="dropdown-link">Försäkringar & Betalning</a></li>
+            <li><a href="/patient/boka-omboka/" class="dropdown-link">Boka & Omboka tid</a></li>
+          </ul>
+        </div>
       </div>
       
+      <!-- Om Oss -->
       <div class="group relative">
-        <a href="/om-oss/" class="text-[#024264] hover:text-blue-700 font-semibold text-lg transition-colors py-2 px-3">Om Oss</a>
-        <ul class="absolute top-full left-0 bg-[#EBF8FF] shadow-xl rounded-md mt-2 py-2 min-w-[260px] hidden group-hover:block z-10">
-          <li><a href="/om-oss/vart-team/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200 font-medium">Vårt Team</a></li>
-          
-          <li>
-            <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="block pl-8 pr-4 py-1.5 text-xs text-slate-600 hover:text-blue-800 hover:bg-blue-100">
-                ↳ Dr. Carlos Rivero Siri
-            </a>
-          </li>
-
-          <li><a href="/om-oss/kvalitet-forskning/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Kvalitet & Forskning</a></li>
-          <li><a href="/om-oss/om-kliniken-hitta-hit/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">Om Kliniken & Hitta Hit</a></li>
-          <li><a href="/om-oss/faq/" class="block px-4 py-2 text-sm text-[#024264] hover:bg-blue-200">FAQ</a></li>
-        </ul>
+        <a href="/om-oss/" class="nav-link group-hover:text-blue-600">
+          Om Oss
+          <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+        <div class="absolute top-full right-0 pt-2 hidden group-hover:block z-50">
+          <ul class="dropdown-menu min-w-[240px]">
+            <li>
+              <a href="/om-oss/vart-team/" class="dropdown-link font-medium">Vårt Team</a>
+              <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="block px-4 py-1.5 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-blue-200 ml-4 transition-colors">Dr. Carlos Rivero Siri</a>
+            </li>
+            <li><a href="/om-oss/kvalitet-forskning/" class="dropdown-link">Kvalitet & Forskning</a></li>
+            <li><a href="/om-oss/om-kliniken-hitta-hit/" class="dropdown-link">Om Kliniken & Hitta Hit</a></li>
+            <li><a href="/om-oss/faq/" class="dropdown-link">FAQ</a></li>
+          </ul>
+        </div>
       </div>
 
     </nav>
@@ -146,6 +279,24 @@
 
   </nav>
 </header>
+
+<style>
+  .nav-link {
+    @apply text-[#024264] font-semibold text-base transition-all duration-200 py-2 px-4 rounded-lg inline-flex items-center hover:bg-blue-50;
+  }
+  
+  .dropdown-menu {
+    @apply bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[200px];
+  }
+  
+  .dropdown-link {
+    @apply block px-4 py-2.5 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors;
+  }
+  
+  .submenu-link {
+    @apply block py-1.5 text-sm text-gray-600 hover:text-blue-600 transition-colors border-l-2 border-transparent hover:border-blue-400 pl-3;
+  }
+</style>
 
 <script>
   const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
