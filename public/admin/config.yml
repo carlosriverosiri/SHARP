@@ -1,0 +1,118 @@
+backend:
+  name: github
+  repo: carlosriverosiri/SHARP
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+# Lokal utveckling (ta bort/kommentera ut i produktion)
+# local_backend: true
+
+# Media
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# Språk
+locale: "sv"
+
+# Slug-inställningar
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# Collections
+collections:
+  # Fråga Doktorn
+  - name: "fraga-doktorn"
+    label: "Fråga Doktorn"
+    label_singular: "Fråga"
+    folder: "src/content/fraga-doktorn"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: false
+    sortable_fields: ["date", "title"]
+    view_filters:
+      - label: "Axel"
+        field: category
+        pattern: "axel"
+      - label: "Knä"
+        field: category
+        pattern: "kna"
+      - label: "Armbåge"
+        field: category
+        pattern: "armbage"
+    fields:
+      - label: "Titel"
+        name: "title"
+        widget: "string"
+        hint: "Kort, beskrivande titel för frågan (syns i listor och sökresultat)"
+
+      - label: "Beskrivning (SEO)"
+        name: "description"
+        widget: "string"
+        required: false
+        hint: "Kort sammanfattning för Google (max 160 tecken)"
+
+      - label: "Kategori"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "Axel", value: "axel" }
+          - { label: "Knä", value: "kna" }
+          - { label: "Armbåge", value: "armbage" }
+
+      - label: "Taggar"
+        name: "tags"
+        widget: "list"
+        required: false
+        hint: "Kommaseparerade nyckelord"
+
+      - label: "Datum"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+
+      - label: "Författare"
+        name: "author"
+        widget: "string"
+        default: "Dr. Carlos Rivero Siri"
+
+      - label: "Relaterat tillstånd"
+        name: "relatedCondition"
+        widget: "string"
+        required: false
+        hint: "Länk till sjukdomssida, t.ex. /sjukdomar/axel/ac-ledsartros"
+
+      - label: "Publicerad"
+        name: "published"
+        widget: "boolean"
+        default: true
+
+      - label: "Patientens namn"
+        name: "patientName"
+        widget: "string"
+        required: false
+        hint: "Förnamn eller påhittat namn"
+
+      - label: "Patientens ålder"
+        name: "patientAge"
+        widget: "number"
+        required: false
+        value_type: "int"
+
+      - label: "Patientens fråga"
+        name: "question"
+        widget: "text"
+        hint: "Klistra in patientens fråga här (visas i grå ruta)"
+
+      - label: "Doktorns svar"
+        name: "body"
+        widget: "markdown"
+        hint: "Ditt svar (stödjer markdown med rubriker, punktlistor, länkar etc.)"
+

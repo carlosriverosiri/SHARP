@@ -1,0 +1,516 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Hämta alla publicerade frågor
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => data.published);
+
+// Sortera efter datum (nyast först)
+const sortedQuestions = allQuestions.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Gruppera per kategori (vi specialiserar oss på axel, knä och armbåge)
+const categories = {
+  axel: { name: 'Axel', icon: '💪', questions: [] as typeof allQuestions },
+  kna: { name: 'Knä', icon: '🦵', questions: [] as typeof allQuestions },
+  armbage: { name: 'Armbåge', icon: '🦾', questions: [] as typeof allQuestions },
+};
+
+// Fyll kategorierna
+sortedQuestions.forEach(q => {
+  if (categories[q.data.category]) {
+    categories[q.data.category].questions.push(q);
+  }
+});
+
+// Filtrera bort tomma kategorier
+const activeCategories = Object.entries(categories).filter(([_, cat]) => cat.questions.length > 0);
+
+// Räkna totalt antal frågor
+const totalQuestions = sortedQuestions.length;
+
+// Formatera datum
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('sv-SE', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }).format(date);
+}
+---
+
+<BaseLayout title="Fråga Doktorn - Södermalms Ortopedi">
+  
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-12 pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-4 tracking-wider uppercase">
+          Patientfrågor
+        </span>
+        <h1 class="text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tight">
+          Fråga Doktorn
+        </h1>
+        <p class="text-slate-300 text-lg leading-relaxed mb-4">
+          Dr. Carlos Rivero Siri svarar på frågor om <strong class="text-white">axel</strong>, <strong class="text-white">knä</strong> och <strong class="text-white">armbåge</strong> från patienter i hela Sverige.
+        </p>
+        <div class="flex items-center gap-4 text-sm text-slate-400">
+          <span class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {totalQuestions} besvarade frågor
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ställ en fråga -->
+  <section id="fraga-form" class="bg-sky-50 border-b border-sky-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div class="bg-white rounded-2xl shadow-lg border border-sky-100 overflow-hidden">
+        <div class="bg-sky-700 px-6 py-4">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            Ställ en ny fråga
+          </h2>
+        </div>
+        <form 
+          name="fraga-doktorn" 
+          method="POST" 
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="p-6"
+          id="fraga-form"
+        >
+          <input type="hidden" name="form-name" value="fraga-doktorn" />
+          <p class="hidden">
+            <label>Fyll inte i detta: <input name="bot-field" /></label>
+          </p>
+          
+          <!-- VARNINGSRUTA: Inga personuppgifter -->
+          <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r-lg">
+            <div class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-amber-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <p class="font-bold text-amber-800">Viktigt om anonymitet</p>
+                <p class="text-amber-700 text-sm mt-1">
+                  Din fråga och svaret publiceras på webbplatsen. <strong>Skriv därför inte:</strong>
+                </p>
+                <ul class="text-amber-700 text-sm mt-1 list-disc list-inside">
+                  <li>Fullständigt namn (för- och efternamn)</li>
+                  <li>Personnummer</li>
+                  <li>Telefonnummer eller e-postadress</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEG 1: Om dig -->
+          <div class="mb-6">
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center">1</span>
+              Om dig
+            </h3>
+            <div class="grid md:grid-cols-4 gap-4">
+              <div>
+                <label for="namn" class="block text-sm font-medium text-slate-700 mb-1">Förnamn *</label>
+                <input 
+                  type="text" 
+                  id="namn"
+                  name="namn" 
+                  required
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="Eller påhittat"
+                />
+              </div>
+              <div>
+                <label for="alder" class="block text-sm font-medium text-slate-700 mb-1">Ålder *</label>
+                <input 
+                  type="number" 
+                  id="alder"
+                  name="alder" 
+                  required
+                  min="1" 
+                  max="120"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="År"
+                />
+              </div>
+              <div>
+                <label for="kon" class="block text-sm font-medium text-slate-700 mb-1">Kön</label>
+                <select 
+                  id="kon"
+                  name="kon"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">Välj...</option>
+                  <option value="man">Man</option>
+                  <option value="kvinna">Kvinna</option>
+                  <option value="annat">Annat/vill ej ange</option>
+                </select>
+              </div>
+              <div>
+                <label for="kategori" class="block text-sm font-medium text-slate-700 mb-1">Kroppsdel *</label>
+                <select 
+                  id="kategori"
+                  name="kategori" 
+                  required
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">Välj...</option>
+                  <option value="axel">Axel</option>
+                  <option value="kna">Knä</option>
+                  <option value="armbage">Armbåge</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEG 2: Bakgrund -->
+          <div class="mb-6">
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center">2</span>
+              Bakgrund
+              <span class="text-xs font-normal text-slate-500">(hjälper doktorn förstå din situation)</span>
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label for="yrke" class="block text-sm font-medium text-slate-700 mb-1">Yrke</label>
+                <input 
+                  type="text" 
+                  id="yrke"
+                  name="yrke"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="T.ex. kontorsjobb, byggnadsarbetare, pensionär"
+                />
+              </div>
+              <div>
+                <label for="aktivitet" class="block text-sm font-medium text-slate-700 mb-1">Träning / fritidsaktiviteter</label>
+                <input 
+                  type="text" 
+                  id="aktivitet"
+                  name="aktivitet"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="T.ex. gym 3 ggr/vecka, golf, löpning, ingen träning"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- STEG 3: Dina besvär -->
+          <div class="mb-6">
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center">3</span>
+              Dina besvär
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label for="debut" class="block text-sm font-medium text-slate-700 mb-1">När började besvären? *</label>
+                <input 
+                  type="text" 
+                  id="debut"
+                  name="debut"
+                  required
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="T.ex. för 2 veckor sedan, efter en olycka i mars"
+                />
+              </div>
+              <div>
+                <label for="utlosande" class="block text-sm font-medium text-slate-700 mb-1">Vad utlöste besvären?</label>
+                <input 
+                  type="text" 
+                  id="utlosande"
+                  name="utlosande"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="T.ex. lyfte tungt, föll, smög sig på gradvis, vet ej"
+                />
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="lokalisation" class="block text-sm font-medium text-slate-700 mb-1">Var sitter smärtan/besvären?</label>
+              <input 
+                type="text" 
+                id="lokalisation"
+                name="lokalisation"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                placeholder="T.ex. överst på axeln, utsidan, inuti knäet, framsidan av armbågen"
+              />
+            </div>
+            <div>
+              <label for="symptom" class="block text-sm font-medium text-slate-700 mb-1">Beskriv dina symptom *</label>
+              <textarea 
+                id="symptom"
+                name="symptom"
+                required
+                rows="3"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                placeholder="T.ex. smärta vid rörelse, svaghet, svullnad, låsningar, instabilitet, när gör det ont, när gör det inte ont?"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- STEG 4: Tidigare vård -->
+          <div class="mb-6">
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center">4</span>
+              Tidigare vård
+              <span class="text-xs font-normal text-slate-500">(om du sökt hjälp tidigare)</span>
+            </h3>
+            <div class="space-y-3">
+              <div class="flex flex-wrap gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="tidigare_lakarbesok" value="ja" class="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500" />
+                  <span class="text-sm text-slate-700">Besökt läkare</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="tidigare_fysioterapi" value="ja" class="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500" />
+                  <span class="text-sm text-slate-700">Gått hos fysioterapeut</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="tidigare_rontgen" value="ja" class="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500" />
+                  <span class="text-sm text-slate-700">Röntgen/MR</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="tidigare_operation" value="ja" class="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500" />
+                  <span class="text-sm text-slate-700">Opererats</span>
+                </label>
+              </div>
+              <div>
+                <label for="tidigare_info" class="block text-sm font-medium text-slate-700 mb-1">Beskriv gärna (vad sade läkaren/fysioterapeuten?)</label>
+                <textarea 
+                  id="tidigare_info"
+                  name="tidigare_info"
+                  rows="2"
+                  class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  placeholder="T.ex. fysioterapeuten sa att det var en inflammation, har fått kortison, MR visade..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- INFO: Så här får du bäst svar (visas före steg 5) -->
+          <div class="bg-sky-50 border border-sky-200 rounded-xl p-5 mb-6">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <div>
+                <p class="font-bold text-sky-900 mb-2">Tips: Så här får du bäst svar</p>
+                <p class="text-sky-800 text-sm mb-3">
+                  Nu när du fyllt i bakgrunden är det dags att formulera din fråga. 
+                  Frågor som bara är <em>"Vad ska jag göra?"</em> är svåra att besvara – var gärna specifik med vad du undrar över.
+                </p>
+                <details class="text-sm">
+                  <summary class="text-sky-700 font-medium cursor-pointer hover:text-sky-900">
+                    Visa exempel på bra vs. dåliga frågor
+                  </summary>
+                  <div class="mt-3 space-y-3">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p class="text-red-700 font-medium text-xs uppercase mb-1">❌ Svårt att besvara</p>
+                      <p class="text-red-800 text-sm italic">"Jag har ont i axeln efter träning. Vad ska jag göra?"</p>
+                    </div>
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <p class="text-green-700 font-medium text-xs uppercase mb-1">✅ Bra fråga</p>
+                      <p class="text-green-800 text-sm italic">"Jag är en 32-årig kvinna som jobbar som sjuksköterska. Gymtränar 3 ggr/vecka sedan 5 år tillbaka och har aldrig haft axelproblem tidigare. För 3 veckor sedan fick jag plötsligt ont överst på axeln när jag körde tung bänkpress – precis där nyckelbenet möter axeln. Jag avbröt passet direkt.</p>
+                      <p class="text-green-800 text-sm italic mt-2">Sedan dess har jag vilat helt från överkroppsträning men smärtan är kvar. Det gör ont när jag lyfter armen åt sidan, speciellt över axelhöjd. Kan inte längre sova på den sidan – vaknar flera gånger per natt. På jobbet börjar det bli jobbigt att lyfta patienter.</p>
+                      <p class="text-green-800 text-sm italic mt-2">Har testat Ipren i en vecka utan effekt. Väntar nu på tid hos fysioterapeut men det tar 4 veckor. Lätta övningar med gummiband går okej men allt med vikt gör ont. Känner också en liten upphöjning/knöl precis på leden.</p>
+                      <p class="text-green-800 text-sm italic mt-2">Min fråga: Ska jag verkligen vänta på fysioterapeuten eller bör jag söka läkare nu? Kan det vara något allvarligt? Kommer jag kunna återgå till tyngre träning?"</p>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEG 5: Din fråga -->
+          <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-sm flex items-center justify-center">5</span>
+              Ställ din fråga
+            </h3>
+            <label for="fraga" class="block text-sm font-medium text-slate-700 mb-1">
+              Beskriv utförligt dina besvär och vad du undrar över *
+            </label>
+            <p class="text-xs text-slate-500 mb-2">
+              Ju mer du berättar, desto bättre svar kan du få. Avsluta gärna med dina specifika frågor.
+            </p>
+            <textarea 
+              id="fraga"
+              name="fraga" 
+              required
+              rows="6"
+              class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="Beskriv dina besvär utförligt här. Hur påverkar det din vardag? Vad har du testat? Vad undrar du över?"
+            ></textarea>
+            <!-- Varningsmeddelande som visas vid upptäckt av personuppgifter -->
+            <div id="privacy-warning" class="hidden mt-2 p-3 bg-red-50 border border-red-300 rounded-lg text-red-700 text-sm">
+              <strong>⚠️ Varning:</strong> Det verkar som att du har skrivit känslig information (personnummer, telefonnummer eller e-postadress). 
+              Skriv inte heller ditt fullständiga namn. Vänligen ta bort detta innan du skickar – frågan publiceras offentligt.
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input 
+                type="checkbox" 
+                name="godkanner" 
+                required
+                class="mt-1 w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
+              />
+              <span class="text-sm text-slate-600">
+                Jag godkänner att min fråga och svaret publiceras anonymt på webbplatsen. 
+                Jag har inte inkluderat några personuppgifter i min fråga. *
+              </span>
+            </label>
+          </div>
+
+          <button 
+            type="submit"
+            id="submit-btn"
+            class="w-full md:w-auto bg-sky-700 hover:bg-sky-800 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+          >
+            Skicka fråga
+          </button>
+          
+          <p class="mt-4 text-xs text-slate-500">
+            Observera: Detta är inte en akutmottagning. Vid akuta besvär, kontakta 1177 eller närmaste akutmottagning.
+            Svar på frågor kan ta upp till 2 veckor.
+          </p>
+        </form>
+
+        <!-- JavaScript för att upptäcka personuppgifter -->
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const warningDiv = document.getElementById('privacy-warning');
+            const form = document.getElementById('fraga-form');
+            
+            // Alla textfält som ska kontrolleras
+            const textFields = [
+              document.getElementById('namn'),
+              document.getElementById('fraga'),
+              document.getElementById('symptom'),
+              document.getElementById('tidigare_info'),
+              document.getElementById('yrke'),
+              document.getElementById('aktivitet'),
+              document.getElementById('debut'),
+              document.getElementById('utlosande'),
+              document.getElementById('lokalisation')
+            ].filter(Boolean);
+            
+            // Mönster för att upptäcka känslig information
+            const patterns = [
+              /\d{6}[-\s]?\d{4}/,                    // Personnummer (YYMMDD-XXXX)
+              /\d{8}[-\s]?\d{4}/,                    // Personnummer (YYYYMMDD-XXXX)
+              /07\d{1}[-\s]?\d{2,3}[-\s]?\d{2,3}[-\s]?\d{2}/,  // Mobilnummer
+              /0\d{1,3}[-\s]?\d{2,3}[-\s]?\d{2,3}[-\s]?\d{2}/, // Telefonnummer
+              /[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,}/     // E-postadress
+            ];
+            
+            function checkForPrivateInfo(text) {
+              return patterns.some(pattern => pattern.test(text));
+            }
+            
+            function getAllText() {
+              return textFields.map(field => field.value).join(' ');
+            }
+            
+            function updateWarning() {
+              const allText = getAllText();
+              const hasPrivateInfo = checkForPrivateInfo(allText);
+              
+              if (hasPrivateInfo) {
+                warningDiv.classList.remove('hidden');
+              } else {
+                warningDiv.classList.add('hidden');
+              }
+            }
+            
+            // Lyssna på input från alla fält
+            textFields.forEach(field => {
+              field.addEventListener('input', updateWarning);
+            });
+            
+            // Varning vid submit om personuppgifter finns
+            form.addEventListener('submit', function(e) {
+              const allText = getAllText();
+              
+              if (checkForPrivateInfo(allText)) {
+                const confirmed = confirm(
+                  '⚠️ VARNING!\n\n' +
+                  'Det verkar som att du har inkluderat känslig information (personnummer, telefonnummer eller e-postadress) i din fråga.\n\n' +
+                  'Kontrollera även att du inte har skrivit ditt fullständiga namn.\n\n' +
+                  'Din fråga kommer att publiceras offentligt på webbplatsen.\n\n' +
+                  'Vill du verkligen skicka frågan som den är?\n\n' +
+                  'Klicka "Avbryt" för att gå tillbaka och redigera.'
+                );
+                
+                if (!confirmed) {
+                  e.preventDefault();
+                }
+              }
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frågelista -->
+  <section class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="text-2xl font-bold text-slate-900 mb-8">Tidigare frågor & svar</h2>
+      
+      {activeCategories.length === 0 ? (
+        <p class="text-slate-500 text-center py-12">Inga frågor publicerade ännu.</p>
+      ) : (
+        <div class="space-y-8">
+          {activeCategories.map(([key, category]) => (
+            <div>
+              <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span>{category.icon}</span>
+                {category.name}
+                <span class="text-sm font-normal text-slate-500">({category.questions.length} frågor)</span>
+              </h3>
+              <div class="grid gap-3">
+                {category.questions.map((question) => (
+                  <a 
+                    href={`/fraga-doktorn/${question.slug}`}
+                    class="block bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-xl p-4 transition-colors group"
+                  >
+                    <h4 class="font-bold text-slate-800 group-hover:text-sky-700 mb-1">
+                      {question.data.title}
+                    </h4>
+                    {question.data.description && (
+                      <p class="text-sm text-slate-600 mb-2 line-clamp-2">{question.data.description}</p>
+                    )}
+                    <div class="flex items-center gap-4 text-xs text-slate-500">
+                      <span>{formatDate(question.data.date)}</span>
+                      {question.data.tags && question.data.tags.length > 0 && (
+                        <div class="flex gap-1">
+                          {question.data.tags.slice(0, 3).map((tag) => (
+                            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>
+

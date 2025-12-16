@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Definiera tillåtna kategorier
+const kategorier = {
+  axel: { 
+    name: 'Axel', 
+    icon: '💪',
+    iconUrl: 'https://specialist.se/wp-content/uploads/Axel-icon.gif',
+    description: 'Frågor och svar om axelbesvär som AC-ledsartros, rotatorcuffskador, axelinstabilitet och mer.'
+  },
+  kna: { 
+    name: 'Knä', 
+    icon: '🦵',
+    iconUrl: 'https://specialist.se/wp-content/uploads/kna-icon.gif',
+    description: 'Frågor och svar om knäbesvär som meniskskador, korsbandsrupturer, artros och mer.'
+  },
+  armbage: { 
+    name: 'Armbåge', 
+    icon: '🦾',
+    iconUrl: 'https://specialist.se/wp-content/uploads/armbage-icon.gif',
+    description: 'Frågor och svar om armbågsbesvär som tennisarmbåge, bicepsruptur, armbågsartros och mer.'
+  },
+};
+
+// Generera statiska paths för alla kategorier
+export function getStaticPaths() {
+  return [
+    { params: { kategori: 'axel' } },
+    { params: { kategori: 'kna' } },
+    { params: { kategori: 'armbage' } },
+  ];
+}
+
+const { kategori } = Astro.params;
+
+// Kontrollera att kategorin finns
+if (!kategorier[kategori as keyof typeof kategorier]) {
+  return Astro.redirect('/fraga-doktorn/');
+}
+
+const categoryInfo = kategorier[kategori as keyof typeof kategorier];
+
+// Hämta alla publicerade frågor för denna kategori
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published && data.category === kategori
+);
+
+// Sortera efter datum (nyast först)
+const sortedQuestions = allQuestions.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Formatera datum
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('sv-SE', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }).format(date);
+}
+
+// Andra kategorier för navigation
+const otherCategories = Object.entries(kategorier)
+  .filter(([key]) => key !== kategori);
+---
+
+<BaseLayout 
+  title={`Frågor om ${categoryInfo.name.toLowerCase()} - Fråga Doktorn`}
+  description={categoryInfo.description}
+>
+  
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-12 pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Brödsmulor -->
+      <nav class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Hem</a>
+        <span>›</span>
+        <a href="/fraga-doktorn/" class="hover:text-white transition-colors">Fråga Doktorn</a>
+        <span>›</span>
+        <span class="text-white font-medium">{categoryInfo.name}</span>
+      </nav>
+      
+      <div class="flex items-center gap-6">
+        <div class="w-24 h-24 rounded-full bg-sky-700/50 flex items-center justify-center overflow-hidden shrink-0">
+          <img src={categoryInfo.iconUrl} alt="" class="w-20 h-20 object-contain" />
+        </div>
+        <div>
+          <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase">
+            {categoryInfo.icon} {categoryInfo.name}
+          </span>
+          <h1 class="text-3xl md:text-4xl font-black mb-2 leading-tight tracking-tight">
+            Frågor om {categoryInfo.name.toLowerCase()}
+          </h1>
+          <p class="text-slate-300 text-lg leading-relaxed">
+            {categoryInfo.description}
+          </p>
+          <div class="mt-3 text-sm text-slate-400">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {sortedQuestions.length} besvarade frågor
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation till andra kategorier -->
+  <section class="bg-sky-50 border-b border-sky-200 py-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-4 justify-center">
+        <span class="text-sm text-slate-600 font-medium">Andra kategorier:</span>
+        {otherCategories.map(([key, cat]) => (
+          <a 
+            href={`/fraga-doktorn/${key}/`}
+            class="flex items-center gap-2 bg-white hover:bg-sky-100 border border-slate-200 hover:border-sky-300 px-4 py-2 rounded-full text-sm font-medium text-slate-700 hover:text-sky-700 transition-colors"
+          >
+            <span>{cat.icon}</span>
+            {cat.name}
+          </a>
+        ))}
+        <a 
+          href="/fraga-doktorn/"
+          class="flex items-center gap-2 bg-sky-700 hover:bg-sky-800 px-4 py-2 rounded-full text-sm font-medium text-white transition-colors"
+        >
+          Visa alla kategorier
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frågelista -->
+  <section class="bg-white py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      
+      {sortedQuestions.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-100 flex items-center justify-center text-4xl">
+            {categoryInfo.icon}
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800 mb-2">Inga frågor ännu</h2>
+          <p class="text-slate-600 mb-6">
+            Det finns inga publicerade frågor om {categoryInfo.name.toLowerCase()} ännu.
+          </p>
+          <a 
+            href="/fraga-doktorn/#fraga-form"
+            class="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            Ställ den första frågan
+          </a>
+        </div>
+      ) : (
+        <div class="space-y-4">
+          {sortedQuestions.map((question) => (
+            <a 
+              href={`/fraga-doktorn/${question.slug}`}
+              class="block bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-xl p-5 transition-colors group"
+            >
+              <h2 class="text-lg font-bold text-slate-800 group-hover:text-sky-700 mb-2">
+                {question.data.title}
+              </h2>
+              {question.data.description && (
+                <p class="text-slate-600 mb-3 line-clamp-2">{question.data.description}</p>
+              )}
+              <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {formatDate(question.data.date)}
+                </span>
+                {question.data.patientName && (
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Fråga från {question.data.patientName}{question.data.patientAge ? `, ${question.data.patientAge} år` : ''}
+                  </span>
+                )}
+                {question.data.tags && question.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1">
+                    {question.data.tags.slice(0, 3).map((tag) => (
+                      <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-xs">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+      
+      <!-- CTA för att ställa fråga -->
+      <div class="mt-12 text-center">
+        <div class="bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-200 rounded-2xl p-8">
+          <h3 class="text-xl font-bold text-slate-800 mb-2">Har du en fråga om {categoryInfo.name.toLowerCase()}?</h3>
+          <p class="text-slate-600 mb-4">
+            Dr. Carlos Rivero Siri svarar gärna på din fråga.
+          </p>
+          <a 
+            href="/fraga-doktorn/#fraga-form"
+            class="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            Ställ en ny fråga
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+

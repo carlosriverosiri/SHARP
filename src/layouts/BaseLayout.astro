@@ -5,83 +5,77 @@ import Footer from "../components/footer.astro";
 import Header from "../components/Header.astro";
 import FooterMap from "../components/FooterMap.astro";
 
-const { title, hideBreadcrumbs = false } = Astro.props;
-
-// ************************************************
-// LOGIKEN FÖR DYNAMISKA BRÖDSMULOR
-// ************************************************
-
-// 1. Hämtar den aktuella URL-sökvägen (ex: '/fritt-vardval-sverige')
-//    och tar bort eventuellt avslutande snedstreck.
-const pathname = Astro.url.pathname.replace(/\/$/, '');
-
-// 2. Delar upp sökvägen i segment (ex: ['fritt-vardval-sverige'])
-//    och filtrerar bort tomma strängar (från det inledande '/')
-const segments = pathname.split('/').filter(s => s.length > 0);
-
-// 3. Funktion för att formatera segmentet till läsbar titel
-function formatSegment(segment) {
-    // Ersätter bindestreck med mellanslag och kapitaliserar första bokstaven i varje ord.
-    return segment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+// Props med default-värden
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
 }
-// Logik för att dölja brödsmulorna på rotsidan (/) eller när hideBreadcrumbs är true
-const shouldShowBreadcrumbs = pathname !== '' && !hideBreadcrumbs;
+
+const { 
+  title,
+  description = "Specialistklinik i Stockholm för knä, axel och armbåge. Vi tar emot patienter från hela Sverige via Fritt Vårdval och försäkringsbolag.",
+  image = "https://sodermalmsortopedi.se/logo.svg",
+  type = "website",
+  noindex = false
+} = Astro.props;
+
+// Generera full URL för canonical och OG
+const siteUrl = "https://sodermalmsortopedi.se";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 ---
 
 <!doctype html>
 <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    
+    <!-- SEO Meta -->
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:site_name" content="Södermalms Ortopedi" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
+    <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     
-    <!-- Named slot for page-specific head content (meta tags, schemas, etc.) -->
+    <!-- Named slot for page-specific head content (schemas, extra meta, etc.) -->
     <slot name="head" />
   </head>
   <!-- ÄNDRING: Tog bort 'pt-20' eftersom headern är sticky och tar upp plats själv -->
   <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
     
-    <Header /> 
-    
-        {shouldShowBreadcrumbs && (
-      <nav aria-label="Brödsmulor" class="max-w-6xl mx-auto w-full px-6 pt-4 pb-2">
-        <ol class="flex items-center space-x-2 text-sm text-gray-500">
-          <li>
-            <a href="/" class="hover:text-sky-700 font-medium">Startsidan</a>
-          </li>
-          
-          {segments.map((segment, index) => {
-            const isLast = index === segments.length - 1;
-            // Skapar sökvägen till segmentet (t.ex. 'fritt-vardval-sverige')
-            const href = segments.slice(0, index + 1).join('/');
-            
-            return (
-              <>
-                <li class="text-gray-400" aria-hidden="true">/</li>
-                <li class:list={[{ 'font-semibold text-gray-700': isLast }]}>
-                  {isLast ? (
-                    <span aria-current="page">{formatSegment(segment)}</span>
-                  ) : (
-                    <a href={`/${href}`} class="hover:text-sky-700">{formatSegment(segment)}</a>
-                  )}
-                </li>
-              </>
-            );
-          })}
-        </ol>
-      </nav>
-    )}
+    <Header />
         
     <slot /> 
     
