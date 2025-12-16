@@ -69,6 +69,9 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     
+    <!-- Netlify Identity Widget (för admin-inloggning) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
     <!-- Named slot for page-specific head content (schemas, extra meta, etc.) -->
     <slot name="head" />
   </head>
@@ -82,5 +85,18 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <Footer />
 
     <FooterMap />
+
+    <!-- Netlify Identity: Redirect till admin efter inloggning -->
+    <script is:inline>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>
