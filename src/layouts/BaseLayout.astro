@@ -5,27 +5,27 @@ import Footer from "../components/footer.astro";
 import Header from "../components/Header.astro";
 import FooterMap from "../components/FooterMap.astro";
 
-const { title } = Astro.props;
+const { title, hideBreadcrumbs = false } = Astro.props;
 
 // ************************************************
 // LOGIKEN FÖR DYNAMISKA BRÖDSMULOR
 // ************************************************
 
 // 1. Hämtar den aktuella URL-sökvägen (ex: '/fritt-vardval-sverige')
-//    och tar bort eventuellt avslutande snedstreck.
+//    och tar bort eventuellt avslutande snedstreck.
 const pathname = Astro.url.pathname.replace(/\/$/, '');
 
 // 2. Delar upp sökvägen i segment (ex: ['fritt-vardval-sverige'])
-//    och filtrerar bort tomma strängar (från det inledande '/')
+//    och filtrerar bort tomma strängar (från det inledande '/')
 const segments = pathname.split('/').filter(s => s.length > 0);
 
 // 3. Funktion för att formatera segmentet till läsbar titel
 function formatSegment(segment) {
-    // Ersätter bindestreck med mellanslag och kapitaliserar första bokstaven i varje ord.
-    return segment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    // Ersätter bindestreck med mellanslag och kapitaliserar första bokstaven i varje ord.
+    return segment.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
-// Logik för att dölja brödsmulorna på rotsidan (/)
-const shouldShowBreadcrumbs = pathname !== ''; // pathname === '' är startsidan (/) efter att / är borttaget
+// Logik för att dölja brödsmulorna på rotsidan (/) eller när hideBreadcrumbs är true
+const shouldShowBreadcrumbs = pathname !== '' && !hideBreadcrumbs;
 ---
 
 <!doctype html>
@@ -83,10 +83,10 @@ const shouldShowBreadcrumbs = pathname !== ''; // pathname === '' är startsidan
       </nav>
     )}
         
-    <slot /> 
-    
-    <FooterMap />
+    <slot /> 
+    
+    <Footer />
 
-    <Footer />
-  </body>
+    <FooterMap />
+  </body>
 </html>
