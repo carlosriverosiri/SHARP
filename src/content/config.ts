@@ -6,7 +6,8 @@ const fragaDoktornCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
-    category: z.enum(['axel', 'kna', 'armbage']), // Vi specialiserar oss på axel, knä och armbåge
+    category: z.enum(['axel', 'kna', 'armbage']), // Kroppsdel: axel, knä, armbåge
+    topic: z.string().optional(), // Ämne: ac-ledsartros, impingement, ont-ovansidan-axeln, etc.
     tags: z.array(z.string()).optional(),
     date: z.date(),
     author: z.string().default('Dr. Carlos Rivero Siri'),

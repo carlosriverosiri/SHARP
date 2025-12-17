@@ -1,8 +1,9 @@
 ---
-title: "Hur går operation av nyckelbensleden till?"
-description: "Fråga om operationsteknik och rehabilitering vid AC-ledsartros."
+title: "Operation för artros i yttre nyckelbensleden"
+description: "Fråga om hur en operation för artros i nyckelbensleden går till och hur lång rehabiliteringen är."
 category: "axel"
-tags: ["ac-led", "nyckelbensleden", "operation", "artroskopi", "titthålskirurgi", "rehabilitering"]
+topic: "ac-ledsartros"
+tags: ["ac-led", "nyckelbensleden", "operation", "artroskopi", "titthålskirurgi"]
 date: 2015-04-12
 author: "Dr. Carlos Rivero Siri"
 relatedCondition: "/sjukdomar/axel/ac-ledsartros"
@@ -11,59 +12,22 @@ patientName: "K"
 question: |
   Hej!
 
-  Jag undrar hur en operation av nyckelbenet/skrapning går till?
-
-  Går det att göra med titthålskirurgi? Är det lång rehabilitering efter?
+  Jag undrar hur en operation av nyckelbens-skrapning går till? Går det att göra med titthålskirurgi? Är det lång rehabilitering efter?
 ---
 
-Jag förmodar att du menar operation för **artros i yttre nyckelbensleden** (AC-leden). Låt mig förklara hur det går till.
+Jag förmodar att den operation du avser är en operation för artros i yttre nyckelbensleden.
 
-## Två operationsmetoder
+På Södermalms ortopedi utförs denna operation med direkt artroskopisk teknik. Det innebär att man gör ett hål på framsidan och baksidan av nyckelbensleden. Man går sedan in med ett artroskop och en fräs och fräser bort 6 mm av den utslitna ledytan på nyckelbenet.
 
-### 1. Artroskopisk teknik (titthålskirurgi)
+Den vanligaste tekniken idag, vid isolerad artros i nyckelbensleden, är nog ändå en öppen operation där man gör ett litet snitt i huden över nyckelbensleden och sedan sågar bort 6–8 mm av den yttersta delen av nyckelbenet.
 
-På Södermalms Ortopedi använder vi **direkt artroskopisk teknik**:
+Den öppna operationen är tekniskt enkel att utföra, men ger några veckors längre rehabiliteringstid än den artroskopiska tekniken. Båda operationerna är likvärdiga vad gäller resultat ett år efter operationen.
 
-- Man gör ett litet hål på framsidan och baksidan av nyckelbensleden
-- Ett artroskop (kamera) och en fräs förs in
-- Cirka 6 mm av den utslitna ledytan på nyckelbenet fräses bort
-
-**Fördelar:**
-- Snabbare rehabilitering
-- Mindre vävnadsskada
-- Mindre ärr
-
-### 2. Öppen operation
-
-Den vanligaste tekniken vid isolerad AC-ledsartros är fortfarande öppen kirurgi:
-
-- Ett litet snitt görs i huden över nyckelbensleden
-- 6–8 mm av yttersta delen av nyckelbenet sågas bort
-
-**Fördelar:**
-- Tekniskt enklare att utföra
-- Lika goda resultat på lång sikt
-
-## Rehabilitering
-
-| Metod | Rehabiliteringstid |
-|-------|-------------------|
-| Artroskopisk | Kortare – snabbare återgång |
-| Öppen | Några veckor längre |
-
-**Ett år efter operationen** visar båda metoderna likvärdiga resultat.
-
-## Forskning stödjer artroskopi
-
-Studier visar att patienter som opereras artroskopiskt med direkt teknik kan förvänta sig:
-- **Snabbare återgång till aktiviteter**
-- **Lika bra långtidsresultat** som vid öppen operation
-
-## Sammanfattning
-
-Båda metoderna fungerar väl. Vid artroskopisk operation går rehabiliteringen snabbare, men slutresultatet är detsamma. Diskutera med din kirurg vilken metod som passar bäst i ditt fall.
-
-*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- Operationen kan göras artroskopiskt (titthålskirurgi) eller öppet
+- Artroskopisk teknik ger snabbare rehabilitering
+- Öppen teknik är tekniskt enklare men tar längre att återhämta sig från
+- Båda metoderna ger likvärdiga långtidsresultat
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

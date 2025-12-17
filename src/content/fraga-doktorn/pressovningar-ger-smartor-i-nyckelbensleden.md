@@ -1,8 +1,9 @@
 ---
 title: "Pressövningar ger smärtor i nyckelbensleden"
-description: "Fråga om man kan fortsätta styrketräna när nyckelbensleden gör ont vid pressövningar."
+description: "Fråga om smärta i nyckelbensleden vid pressövningar och om man kan fortsätta styrketräna."
 category: "axel"
-tags: ["gym", "styrketräning", "ac-led", "nyckelbensleden", "artros", "pressövningar"]
+topic: "ac-ledsartros"
+tags: ["gym", "ac-led", "nyckelbensleden", "styrketräning", "artros"]
 date: 2015-04-17
 author: "Dr. Carlos Rivero Siri"
 relatedCondition: "/sjukdomar/axel/ac-ledsartros"
@@ -17,45 +18,21 @@ question: |
   Tack på förhand från en som älskar styrketräning!
 ---
 
-Bra fråga – och jag förstår att du vill fortsätta träna! Låt mig svara på dina funderingar.
+Den vanligaste orsaken till smärtor över nyckelbensleden är artros i nyckelbensleden. Då problemen oftast uppkommer genom belastning så har vila god effekt.
 
-## Vad orsakar smärtan?
+Sjukgymnastik har inte någon effekt vid artros i yttre nyckelbensleden om du har normal rörlighet i själva axelleden. Är själva axelleden lite stel kan dock stretching av axelleden och sjukgymnastik minska belastningen på den yttre nyckelbensleden.
 
-Den vanligaste orsaken till smärtor över nyckelbensleden vid pressövningar är **artros i AC-leden**. Leden utsätts för stor belastning vid press, och om det finns slitage gör det ont.
+Ta kontakt med en sjukgymnast eller naprapat för att få hjälp med övningar.
 
-## Kan du skada leden allvarligt?
+Din nyckelbensled kommer inte att ta allvarlig skada av att du belastar den. Däremot kan den göra ont av belastningen.
 
-**Nej, din nyckelbensled kommer inte att ta allvarlig skada av att du belastar den.** Däremot kan den göra ont – och det är smärtan som är begränsande, inte risken för skada.
+Hos personer som i många år utsatt sin axelled för tung belastning är artros i yttre nyckelbensleden ett normalt tillstånd som vanligen inte ger några kroniska smärtor.
 
-### Viktigt att veta
-
-Hos personer som i många år utsatt axeln för tung belastning är artros i yttre nyckelbensleden **ett normalt tillstånd** som vanligen inte ger kroniska smärtor. De flesta kan fortsätta träna.
-
-## Vad hjälper?
-
-### Vila har god effekt
-
-Eftersom problemen ofta uppkommer genom belastning, brukar **vila från provocerande övningar** ge bra resultat.
-
-### Sjukgymnastik – begränsad effekt
-
-Vid AC-ledsartros med normal rörlighet i axelleden har sjukgymnastik **inte så stor effekt** på själva ledproblemet.
-
-**Men:** Om din axelled är lite stel kan stretching och sjukgymnastik hjälpa till att minska belastningen på nyckelbensleden indirekt.
-
-## Praktiska råd
-
-1. **Pausa pressövningar** tills smärtan minskat
-2. **Prova alternativa övningar** – kanske tolererar du kabeldrag bättre
-3. **Testa lättare vikter** och se om det gör skillnad
-4. **Kontakta sjukgymnast eller naprapat** för hjälp med övningar
-5. **Återgå gradvis** när smärtan tillåter
-
-## Sammanfattning
-
-Du kan fortsätta styrketräna – men lyssna på kroppen. Smärta är en signal att minska belastningen tillfälligt. Långsiktig skada är inte något du behöver oroa dig för.
-
-*Läs mer om [AC-ledsartros och träning](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- Vila hjälper eftersom smärtan uppkommer vid belastning
+- Sjukgymnastik hjälper om axelleden är stel
+- Du kan inte skada nyckelbensleden allvarligt genom träning
+- Artros vid långvarig styrketräning är normalt och ger sällan kroniska besvär
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

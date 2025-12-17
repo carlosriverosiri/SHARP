@@ -2,6 +2,7 @@
 title: "Utbuktning över nyckelbensleden efter CrossFit"
 description: "Fråga om synlig utbuktning och molande värk i nyckelbensleden efter träning med vikter."
 category: "axel"
+topic: "ac-ledsartros"
 tags: ["crossfit", "ac-led", "nyckelbensleden", "artros", "styrketräning", "knöl"]
 date: 2018-06-18
 author: "Dr. Carlos Rivero Siri"
@@ -23,56 +24,17 @@ question: |
   Tacksam för svar.
 ---
 
-CrossFit innebär intensiv belastning av axlarna, och det du beskriver är tyvärr ett vanligt problem bland tränande.
+De vanligaste orsakerna till smärtor vid träning med vikter är impingement och artros i yttre nyckelbensleden.
 
-## Vad kan det vara?
+Smärtan vid impingement sitter oftast på utsidan av armen, medan smärtan vid artros i yttre nyckelbensleden brukar sitta på ovansidan av axeln och ibland stråla ut mot nacken.
 
-De vanligaste orsakerna till smärtor vid träning med vikter är:
+Bägge åkommorna behandlas bäst med tålamod och en period av minskad belastning. Sjukgymnastik hjälper oftast mot impingement, men fungerar sämre vid artros i yttre nyckelbensleden.
 
-### 1. Artros i yttre nyckelbensleden (troligast i ditt fall)
-
-**Typiska tecken:**
-- Smärta på **ovansidan av axeln**
-- Utstrålning **mot nacken**
-- Synlig **knöl eller utbuktning** vid nyckelbenet
-- Knaster vid tryck
-
-Dina symtom stämmer mycket väl med detta.
-
-### 2. Impingement (inklämd sena)
-
-**Typiska tecken:**
-- Smärta på **utsidan av armen**
-- Värre vid lyft i axelhöjd
-- Sällan synlig knöl
-
-## Varför det inte blivit bättre
-
-Du har gjort rätt i att minska belastningen och prova antiinflammatoriska läkemedel. Men vid artros i nyckelbensleden:
-
-- **Sjukgymnastik har begränsad effekt** – till skillnad från impingement
-- **Det kan ta tid** – ofta månader snarare än veckor
-- **Diklofenak hjälper mot inflammation** – men inte mot själva slitaget
-
-## Vad kan du göra?
-
-### Nu
-
-1. **Fortsätt undvika provocerande rörelser** – särskilt overhead-press, dips, snatch
-2. **Sök läkare** – för klinisk undersökning och eventuell röntgen
-3. **Överväg kortisoninjektion** – kan ge bättre smärtlindring än tabletter
-
-### På sikt
-
-- **Anpassa träningen** – undvik rörelser som belastar AC-leden tungt
-- **Ha tålamod** – besvären minskar ofta över tid
-- **Operation** kan övervägas vid långvariga, svåra besvär
-
-## Om knölen
-
-Utbuktningen du ser beror sannolikt på att leden svullnat upp eller att benet vuxit till (osteofyter). Det är inte farligt, men det är ett tecken på förslitning.
-
-*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- Smärta på ovansidan av axeln tyder på artros i nyckelbensleden
+- Smärta på utsidan av armen tyder på impingement
+- Behandling: minskad belastning och tålamod
+- Sjukgymnastik hjälper vid impingement, men inte lika bra vid artros
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

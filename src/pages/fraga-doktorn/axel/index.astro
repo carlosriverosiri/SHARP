@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { 
+  getTopicsByBodyPart, 
+  getAllCategories, 
+  getTopicsByCategory,
+  categoryLabels, 
+  categoryDescriptions,
+  type Topic 
+} from '../../../data/topics';
+
+// Hämta alla frågor för axel
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published && data.category === 'axel'
+);
+
+// Hämta alla axel-ämnen
+const axelTopics = getTopicsByBodyPart('axel');
+
+// Räkna frågor per ämne
+function countQuestionsForTopic(topicId: string): number {
+  return allQuestions.filter(q => q.data.topic === topicId).length;
+}
+
+// Räkna frågor utan ämne (för att visa hur många som behöver kategoriseras)
+const uncategorizedCount = allQuestions.filter(q => !q.data.topic).length;
+
+// Hämta de senaste frågorna
+const latestQuestions = allQuestions
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+
+const pageTitle = "Frågor om axeln - Fråga Doktorn | Södermalms Ortopedi";
+const pageDescription = "Läs svar på vanliga frågor om axelbesvär. Dr. Carlos Rivero Siri svarar på frågor om AC-ledsartros, impingement, frusen axel, instabilitet och mer.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-6">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/fraga-doktorn" class="text-slate-400 hover:text-white">Fråga Doktorn</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-sky-400">Axel</span>
+      </div>
+      
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-2xl bg-sky-600/30 flex items-center justify-center">
+          <svg class="w-8 h-8 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight">Frågor om axeln</h1>
+          <p class="text-sky-300 mt-1">{allQuestions.length} besvarade frågor</p>
+        </div>
+      </div>
+      
+      <p class="text-slate-300 max-w-2xl">
+        Här hittar du svar på vanliga frågor om axelbesvär. Välj ett ämne nedan eller 
+        <a href="/fraga-doktorn#fraga-form" class="text-sky-400 hover:text-sky-300 underline">ställ en egen fråga</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Ämnen grupperade efter kategori -->
+  <section class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      
+      {getAllCategories().map((categoryId) => {
+        const topicsInCategory = getTopicsByCategory('axel', categoryId);
+        if (topicsInCategory.length === 0) return null;
+        
+        return (
+          <div class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+              <h2 class="text-xl font-bold text-slate-800">
+                {categoryLabels[categoryId]}
+              </h2>
+              <span class="text-sm text-slate-500">
+                {categoryDescriptions[categoryId]}
+              </span>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topicsInCategory.map((topic) => {
+                const questionCount = countQuestionsForTopic(topic.id);
+                return (
+                  <a 
+                    href={`/fraga-doktorn/axel/${topic.id}/`}
+                    class={`block p-4 rounded-xl border transition-all ${
+                      questionCount > 0 
+                        ? 'bg-white border-slate-200 hover:border-sky-400 hover:shadow-md' 
+                        : 'bg-slate-50 border-slate-100 opacity-60'
+                    }`}
+                  >
+                    <div class="flex justify-between items-start">
+                      <h3 class="font-semibold text-slate-800">
+                        {topic.shortTitle || topic.title}
+                      </h3>
+                      {questionCount > 0 && (
+                        <span class="bg-sky-100 text-sky-700 text-xs font-bold px-2 py-1 rounded-full">
+                          {questionCount}
+                        </span>
+                      )}
+                    </div>
+                    <p class="text-sm text-slate-600 mt-1 line-clamp-2">
+                      {topic.description}
+                    </p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Visa okategoriserade frågor om det finns */}
+      {uncategorizedCount > 0 && (
+        <div class="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <p class="text-amber-800">
+            <strong>{uncategorizedCount} frågor</strong> har ännu inte kategoriserats efter ämne.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Senaste frågorna -->
+  <section class="bg-slate-50 py-12 border-t border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="text-xl font-bold text-slate-800 mb-6">Senaste frågorna om axeln</h2>
+      
+      <div class="grid gap-3">
+        {latestQuestions.map((q) => (
+          <a 
+            href={`/fraga-doktorn/${q.slug}`}
+            class="block bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-xl p-4 transition-colors"
+          >
+            <h3 class="font-bold text-slate-800 hover:text-sky-700">{q.data.title}</h3>
+            {q.data.description && (
+              <p class="text-sm text-slate-600 mt-1 line-clamp-2">{q.data.description}</p>
+            )}
+          </a>
+        ))}
+      </div>
+      
+      <div class="mt-6 text-center">
+        <a 
+          href="/fraga-doktorn"
+          class="text-sky-700 hover:text-sky-900 font-medium text-sm"
+        >
+          ← Tillbaka till alla frågor
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+

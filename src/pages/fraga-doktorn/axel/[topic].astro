@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { 
+  getTopicsByBodyPart, 
+  getTopicById,
+  categoryLabels,
+  type Topic 
+} from '../../../data/topics';
+import { getConditionInfo } from '../../../data/conditions';
+
+// Generera sidor för alla axel-ämnen
+export async function getStaticPaths() {
+  const axelTopics = getTopicsByBodyPart('axel');
+  
+  return axelTopics.map((topic) => ({
+    params: { topic: topic.id },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+
+// Hämta frågor för detta ämne
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published && data.category === 'axel' && data.topic === topic.id
+);
+
+// Sortera efter datum (nyast först)
+const questions = allQuestions.sort((a, b) => 
+  b.data.date.getTime() - a.data.date.getTime()
+);
+
+// Hämta info om relaterad diagnossida
+const conditionInfo = topic.relatedConditionUrl 
+  ? getConditionInfo(topic.relatedConditionUrl) 
+  : null;
+
+// Formatera datum
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('sv-SE', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  }).format(date);
+}
+
+const pageTitle = `${topic.title} - Frågor | Södermalms Ortopedi`;
+const pageDescription = `Läs ${questions.length} besvarade frågor om ${topic.title.toLowerCase()}. Dr. Carlos Rivero Siri svarar.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-6">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/fraga-doktorn" class="text-slate-400 hover:text-white">Fråga Doktorn</a>
+        <span class="text-slate-500">/</span>
+        <a href="/fraga-doktorn/axel/" class="text-slate-400 hover:text-white">Axel</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-sky-400">{topic.shortTitle || topic.title}</span>
+      </div>
+      
+      <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase">
+        {categoryLabels[topic.category].replace(/^[^\s]+\s/, '')}
+      </span>
+      
+      <h1 class="text-2xl md:text-3xl lg:text-4xl font-black mb-3 leading-tight tracking-tight">
+        {topic.title}
+      </h1>
+      
+      <p class="text-slate-300 max-w-2xl mb-4">
+        {topic.description}
+      </p>
+      
+      <p class="text-sky-300">
+        {questions.length} {questions.length === 1 ? 'besvarad fråga' : 'besvarade frågor'}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-white py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-3 gap-8">
+        
+        <!-- Huvudinnehåll: Lista med frågor -->
+        <div class="lg:col-span-2">
+          
+          {questions.length > 0 ? (
+            <div class="space-y-4">
+              {questions.map((q) => (
+                <a 
+                  href={`/fraga-doktorn/${q.slug}`}
+                  class="block bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-400 rounded-xl p-5 transition-all hover:shadow-md"
+                >
+                  <h2 class="font-bold text-slate-800 text-lg hover:text-sky-700 mb-2">
+                    {q.data.title}
+                  </h2>
+                  
+                  {q.data.description && (
+                    <p class="text-slate-600 text-sm line-clamp-2 mb-3">
+                      {q.data.description}
+                    </p>
+                  )}
+                  
+                  <div class="flex items-center gap-4 text-xs text-slate-500">
+                    <span>{formatDate(q.data.date)}</span>
+                    {q.data.patientName && (
+                      <span>Fråga från {q.data.patientName}</span>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
+              <p class="text-slate-600 mb-4">Inga frågor har ännu kategoriserats under detta ämne.</p>
+              <a 
+                href="/fraga-doktorn#fraga-form"
+                class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-medium px-5 py-2.5 rounded-lg transition-colors"
+              >
+                Ställ den första frågan
+              </a>
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1 space-y-6">
+          
+          <!-- Länk till diagnossida -->
+          {conditionInfo && (
+            <a 
+              href={conditionInfo.url}
+              class="block bg-gradient-to-br from-slate-50 to-sky-50 rounded-xl border border-sky-200 overflow-hidden hover:border-sky-400 hover:shadow-lg transition-all group"
+            >
+              {conditionInfo.image && (
+                <div class="bg-white flex items-center justify-center p-4 border-b border-sky-200">
+                  <img 
+                    src={conditionInfo.image} 
+                    alt={conditionInfo.imageAlt || conditionInfo.title}
+                    class="w-24 h-auto object-contain"
+                  />
+                </div>
+              )}
+              <div class="p-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Fördjupning</span>
+                <h3 class="font-bold text-slate-800 mt-1 group-hover:text-sky-700 transition-colors">
+                  {conditionInfo.title}
+                </h3>
+                <p class="text-slate-600 text-sm mt-1 line-clamp-3">
+                  {conditionInfo.shortDescription}
+                </p>
+              </div>
+            </a>
+          )}
+
+          <!-- CTA -->
+          <div class="bg-gradient-to-br from-sky-600 to-sky-700 rounded-xl p-5 text-white">
+            <h3 class="font-bold mb-2">Har du en egen fråga?</h3>
+            <p class="text-sky-100 text-sm mb-4">Ställ din fråga till Dr. Carlos.</p>
+            <a 
+              href="/fraga-doktorn#fraga-form"
+              class="block text-center bg-white text-sky-700 font-bold py-2 px-4 rounded-lg text-sm hover:bg-sky-50 transition"
+            >
+              Ställ en fråga
+            </a>
+          </div>
+
+          <!-- Tillbaka -->
+          <a 
+            href="/fraga-doktorn/axel/"
+            class="block text-center text-sky-700 hover:text-sky-900 font-medium text-sm"
+          >
+            ← Alla axelämnen
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+

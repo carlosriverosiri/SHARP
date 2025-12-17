@@ -1,7 +1,8 @@
 ---
-title: "Weightlifter's shoulder – vad kan jag göra?"
+title: "Weightlifter's shoulder"
 description: "Fråga om axelsmärta som inte tas på allvar, trots kortisonbehandling och tidigare bicepsoperation."
 category: "axel"
+topic: "weightlifters-shoulder"
 tags: ["gym", "styrketräning", "ac-led", "nyckelbensleden", "weightlifters-shoulder", "osteolys"]
 date: 2012-01-11
 author: "Dr. Carlos Rivero Siri"
@@ -21,26 +22,14 @@ question: |
   Har du något förslag på vad jag ska göra eller hur jag ska gå tillväga nu?
 ---
 
-Min gissning, baserat på din ålder och symtom, är att du håller på med styrketräning och drabbats av **"Weightlifter's shoulder"**.
+Min gissning är att du håller på med styrketräning och drabbats av "Weightlifter's shoulder", det vill säga en uppluckring av den yttre nyckelbensändan (osteolys).
 
-## Vad är Weightlifter's shoulder?
+Detta brukar läka ut.
 
-Detta är en uppluckring av den yttre nyckelbensändan, medicinskt kallat *distal klavikulär osteolys*. Tillståndet uppstår vid upprepad belastning av nyckelbensleden, vilket är vanligt hos personer som tränar mycket bänkpress, axelpress eller dips.
-
-## Det positiva
-
-**Weightlifter's shoulder brukar läka ut av sig själv** – men det kräver att du minskar belastningen på axeln under en period. Det faktum att kortisonsprutorna inte hjälpt tyder på att inflammationen inte är det primära problemet, utan själva benuppluckringen.
-
-## Mitt råd
-
-1. **Pausa provocerande övningar** – särskilt bänkpress och axelpress
-2. **Ge det tid** – läkningen kan ta flera månader
-3. **Begär en röntgen eller MR** – för att bekräfta diagnosen
-4. **Sök en axelspecialist** – om besvären inte förbättras efter 3–6 månaders anpassad träning
-
-Det är förståeligt att du vill få hjälp, särskilt efter tidigare axeloperation. Be din läkare om en remiss till en ortoped med axelspecialisering för en ordentlig bedömning.
-
-*Läs mer om [AC-ledsartros och relaterade tillstånd](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- Trolig diagnos: Weightlifter's shoulder (distal klavikulär osteolys)
+- Vanligt hos styrketränande
+- Brukar läka ut av sig själv
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

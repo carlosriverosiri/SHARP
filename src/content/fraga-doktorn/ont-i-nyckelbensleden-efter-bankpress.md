@@ -2,6 +2,7 @@
 title: "Ont i nyckelbensleden efter bänkpress"
 description: "Fråga om smärta i AC-leden efter styrketräning och vad man bör göra."
 category: "axel"
+topic: "weightlifters-shoulder"
 tags: ["ac-led", "styrketräning", "weightlifters-shoulder", "bänkpress"]
 date: 2017-01-27
 author: "Dr. Carlos Rivero Siri"
@@ -44,8 +45,6 @@ Båda tillstånden ger samma typ av smärta som du beskriver.
 - **Återgå gradvis** till träning när smärtan minskat
 
 Om smärtan inte förbättras efter 4–6 veckors anpassad träning rekommenderar jag ett läkarbesök för bedömning.
-
-*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

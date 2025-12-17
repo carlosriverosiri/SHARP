@@ -2,6 +2,7 @@
 title: "Kraftig smärta på ovansidan av axeln"
 description: "Fråga om plötslig axelsmärta som kommer och går, med knäckningar och hängande axel."
 category: "axel"
+topic: "weightlifters-shoulder"
 tags: ["ac-led", "nyckelbensleden", "inflammation", "weightlifters-shoulder"]
 date: 2014-11-27
 author: "Dr. Carlos Rivero Siri"
@@ -23,34 +24,17 @@ question: |
   Tacksam för svar!
 ---
 
-Jag förstår att det är svårt att vara utomlands och inte veta hur man ska få hjälp. Låt mig försöka ge dig en bild av vad som kan pågå.
+De flesta akuta axelsmärtor lägger sig inom någon eller några månader från debuten.
 
-## Vad det kan bero på
+Att du upplever att du har ont på ovansidan av axeln och att axeln hänger ned kan möjligen bero på en inflammation i nyckelbensleden. När nyckelbensleden svullnar upp så ser det ut som axeln hänger ned.
 
-De flesta akuta axelsmärtor **lägger sig inom någon eller några månader** från debuten. Det du beskriver – smärta på ovansidan av axeln och känslan av att axeln "hänger" – kan bero på en **inflammation i nyckelbensleden (AC-leden)**.
+Det finns flera olika orsaker till detta. En möjlig orsak hos lite yngre patienter är "Weightlifter's shoulder", det vill säga en slags inflammation i nyckelbensleden. Hos lite äldre patienter kan det vara artros i akromioklavikularleden (nyckelbensleden).
 
-### Varför ser axeln ut att hänga?
-
-När nyckelbensleden svullnar upp kan det *se ut* som att axeln hänger nedåt. Detta beror på svullnaden, inte på att något har gått sönder.
-
-## Möjliga orsaker
-
-Hos yngre patienter som du finns det några vanliga förklaringar:
-
-- **Weightlifter's shoulder** – en inflammation i nyckelbensleden, vanlig hos personer som tränar eller belastar axlarna mycket
-- **Överbelastning** – från upprepade rörelser eller tungt arbete
-- **AC-ledsartros** – mer ovanligt i din ålder, men kan förekomma
-
-## Mitt råd
-
-1. **Vila axeln** – undvik rörelser som provocerar smärtan
-2. **Använd smärtstillande** – receptfria antiinflammatoriska läkemedel (som ibuprofen) kan hjälpa
-3. **Sök läkare lokalt** – även utomlands finns möjlighet till röntgen och grundläggande bedömning
-4. **Ge det tid** – många sådana besvär förbättras spontant inom 1–3 månader
-
-Om besvären inte förbättras eller om du får tillgång till sjukvård, be om en röntgenundersökning av axeln för att utesluta andra orsaker.
-
-*Läs mer om [AC-ledsartros och nyckelbensleden](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- De flesta akuta axelsmärtor går över inom några månader
+- Svullnad i nyckelbensleden kan få axeln att se hängande ut
+- Hos unga kan det vara Weightlifter's shoulder
+- Hos äldre kan det vara artros i nyckelbensleden
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

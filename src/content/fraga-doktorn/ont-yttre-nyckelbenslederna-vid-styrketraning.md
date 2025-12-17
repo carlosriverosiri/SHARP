@@ -1,8 +1,9 @@
 ---
 title: "Ont i yttre nyckelbenslederna vid styrketräning"
-description: "Fråga om ömhet i båda nyckelbenslederna som förvärras vid träning, särskilt armhävningar."
+description: "Fråga om smärta och ömhet i båda nyckelbenen efter träning som gör det svårt att träna."
 category: "axel"
-tags: ["gym", "styrketräning", "ac-led", "nyckelbensleden", "weightlifters-shoulder", "bilateral"]
+topic: "weightlifters-shoulder"
+tags: ["gym", "ac-led", "nyckelbensleden", "styrketräning", "weightlifters-shoulder"]
 date: 2016-12-22
 author: "Dr. Carlos Rivero Siri"
 relatedCondition: "/sjukdomar/axel/ac-ledsartros"
@@ -21,51 +22,17 @@ question: |
   Tack på förhand!
 ---
 
-Det du beskriver – ömhet i båda nyckelbenslederna som förvärras av träning – är ett vanligt problem hos styrketränande.
+Mest sannolikt har du bara överansträngt nyckelbenslederna.
 
-## Vad kan det vara?
+Men det kan också vara "Weightlifter's shoulder" (distal klavikel osteolys), det vill säga ett slags slitage (artros) i yttre nyckelbensleden som drabbar unga styrketränande män.
 
-### Mest sannolikt: Överansträngning
+Prognosen är god vid Weightlifter's shoulder. Det brukar gå över inom 12–18 månader. Enstaka fall kan behöva opereras.
 
-Den vanligaste förklaringen är att du helt enkelt har **överansträngt nyckelbenslederna**. Vid intensiv träning med pressrörelser utsätts AC-lederna för stor belastning.
-
-### Alternativ: Weightlifter's shoulder
-
-Det kan också vara **"Weightlifter's shoulder"** (distal klavikel osteolys) – ett slags slitage i yttre nyckelbensleden som drabbar **framför allt unga styrketränande män**.
-
-### Vad är skillnaden?
-
-| Överansträngning | Weightlifter's shoulder |
-|------------------|------------------------|
-| Går över snabbt med vila | Tar längre tid (12-18 mån) |
-| Syns inte på röntgen | Kan ses på röntgen |
-| Tillfällig inflammation | Faktisk benuppluckring |
-
-## Prognosen är god
-
-**Oavsett orsak är prognosen bra.** Även vid weightlifter's shoulder brukar besvären gå över inom 12–18 månader. Endast enstaka fall behöver opereras.
-
-## Vad du bör göra
-
-### Nu direkt
-
-- **Pausa pressövningar** – bänkpress, axelpress, armhävningar, dips
-- **Vila från provocerande rörelser** tills ömmheten minskat
-- **Träna annat** – ben, rygg, biceps (ej tunga curls)
-
-### Om 2–3 veckor
-
-- **Testa försiktigt** med lätta vikter
-- **Ökar smärtan** = fortsätt vila
-- **Minskar smärtan** = öka gradvis
-
-### Om det inte går över
-
-- **Sök läkare** efter 4–6 veckor utan förbättring
-- **Röntgen** kan visa eventuella förändringar
-- **Kortisoninjektion** kan prövas vid långdragna besvär
-
-*Läs mer om [AC-ledsartros och weightlifter's shoulder](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+**Sammanfattning:**
+- Sannolikt överansträngning av nyckelbenslederna
+- Kan vara Weightlifter's shoulder (vanligt hos styrketränande)
+- God prognos – går oftast över inom 12–18 månader
+- Operation behövs sällan
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
