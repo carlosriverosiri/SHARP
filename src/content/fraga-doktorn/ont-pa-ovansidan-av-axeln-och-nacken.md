@@ -16,4 +16,7 @@ Har i perioder väldigt ont på ovansidan (mjukdelarna) av axeln. Att ta på hud
 Varit hos sjukgymnast vid flera tillfällen och kan efter besök bli besvärsfri en kort period. Svårt med sömn då ryggläge är minst smärtsamt. Är i övrigt i bra "skick" för min ålder!
 Vad kan det vara?
 
-*Det låter som om du har problem med AC-leden. Då brukar det göra ont på "knölen" som sitter på ovansidan av axeln. *
+*Det låter som om du har problem med AC-leden. Då brukar det göra ont på "knölen" som sitter på ovansidan av axeln.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

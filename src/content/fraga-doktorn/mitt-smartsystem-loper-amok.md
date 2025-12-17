@@ -23,4 +23,7 @@ Tror ni, utifrån min enkla beskrivning, att läkarens misstanke kan vara releva
 Jag tränar mkt, utifrån min rehab hos en sjukgymnast. Detta innebär att jag gör vissa övningar varje dag, gymmar varannan dag alt minst två ggr per vecka och gör på ett flexpass (stretchning) och bas/medelpass då ryggen klarar det, på Friskis & Svettis. De dagar jag inte gymmar eller går på ngt pass försöker jag promenera i alla fall 20 minuter.
 
 *Om du har en mycket uttalad stelhet och en tämligen konstant smärta i axelleden så är diagnosen frusen axel rimlig.  Man kan överväga en annan diagnos, impingement, om du inte är speciellt stel och smärtan är värst på natten och efter belastning och varierar mycket under dagen. 
-En vanlig diagnos vid kombinationen av nack och axelsmärtor är artros i AC-leden. Vid artros i AC-leden med nacksmärtor, brukar det göra betydligt ondare att röra i axelleden än i nacken. Vid kombinationen nack- och axelsmärtor är en ömmande AC-led ett vanligt fynd.*
+En vanlig diagnos vid kombinationen av nack och axelsmärtor är artros i AC-leden. Vid artros i AC-leden med nacksmärtor, brukar det göra betydligt ondare att röra i axelleden än i nacken. Vid kombinationen nack- och axelsmärtor är en ömmande AC-led ett vanligt fynd.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -24,4 +24,7 @@ Jag är väldigt rörlig både i rygg och axlar. Min reumatolog tror inte mina r
  Smärtspridning vid artros i yttre nyckelbensleden[/caption]
 
 *Vid smärtor från själva yttre nyckelbenslederna brukar dessa bli ömma. En vanlig orsak till smärtor i nyckelbenslederna är slitage av brosket. Detta går ibland att se på en vanlig röntgenundersökning eller en magnetkameraundersökning. Dessa undersökningsmetoder är dock inte helt optimala för nyckelbenslederna. En ultraljudsundersökning är sannolikt ett bättre alternativ.
-Slitage av brosket på yttre nyckelbensändan är en sjukdom med godartat förlopp, där de flesta blir bättre inom något år. Enstaka patienter kan dock behöva en titthålsoperation där man slipar bort slitaget. Be din husläkare ta en vanlig röntgen och skicka en remiss till en axelspecialist. *
+Slitage av brosket på yttre nyckelbensändan är en sjukdom med godartat förlopp, där de flesta blir bättre inom något år. Enstaka patienter kan dock behöva en titthålsoperation där man slipar bort slitaget. Be din husläkare ta en vanlig röntgen och skicka en remiss till en axelspecialist.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

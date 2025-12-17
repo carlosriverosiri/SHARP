@@ -22,5 +22,7 @@ Jag opererades för diskbråck i nacken 1995 men har varit besvärsfri länge. K
 Sjukdomen är svår att behandla med sjukgymnastik. Kortisoninjektioner kan ge en tillfällig smärtlindring, men är inte en behandling som fungerar långsiktigt. Vanligen förbättras patienterna av att de minskar belastningen av armen.
 Det är ganska vanligt att patienter med artros i nyckelbensleden även får problem med en inklämd sena, impingement.
 Denna sjukdom går utmärkt att behandla med sjukgymnastik. Vanliga symptom är smärtor på utsidan av axeln som strålar ned i armen. Patienter med impingement kan även drabbas av domningar i handen. 
-Vid en långvarig och mycket stark smärta som påtagligt försämrar din livskvalité är det vanligt att man överväger operation. 
-*
+Vid en långvarig och mycket stark smärta som påtagligt försämrar din livskvalité är det vanligt att man överväger operation.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

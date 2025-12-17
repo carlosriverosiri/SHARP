@@ -14,6 +14,9 @@ question: |
  En MR visade inflammation i nyckelbensleden och ödem. Ytterligare en kortisoninjektion gav ingen förbättring av smärta eller rörlighet. En engångsdos Arcoxia 60 mg har minskad smärtan idag. Min fråga är finns det andra diagnoser, vilka undersökningar bör göras? Jag har informerats att claviel resektion inte har så bra prognos och att de ofta kommer tillbaka, stämmer det?
 ---
 
-*Det finns naturligtvis andra sjukdomar som ger snarlika symptom. Egentligen är det inte olika radiologiska undersökningar det som är viktiga för diagnosen. Det är lätt att vilseledas av olika åldersförändringar eller anatomiska variationer som man kan se på MR. Sjukdomar som bara sitter i nyckelbensleden brukar sällan vara kombinerade med domningar eller stråla ut på framsidan av överarmen. Den typiska smärtan från nyckelbensleden strålar upp mot nacken. Att resultaten från klavikelresektioner varierar kan möjligen bero på svårigheter att ställa rätt diagnos.  *
+Det finns naturligtvis andra sjukdomar som ger snarlika symptom. Egentligen är det inte olika radiologiska undersökningar det som är viktiga för diagnosen. Det är lätt att vilseledas av olika åldersförändringar eller anatomiska variationer som man kan se på MR. Sjukdomar som bara sitter i nyckelbensleden brukar sällan vara kombinerade med domningar eller stråla ut på framsidan av överarmen. Den typiska smärtan från nyckelbensleden strålar upp mot nacken. Att resultaten från klavikelresektioner varierar kan möjligen bero på svårigheter att ställa rätt diagnos.  *
 
-*Vid typiska kliniska fynd, typisk sjukdomshistoria och en typisk röntgenbild så är en lateral klavikelresektion en operation som lyckas i mer än 85-90 % av fallen. / Carlos Rivero Siri, specialist  i orotpedi. *
+*Vid typiska kliniska fynd, typisk sjukdomshistoria och en typisk röntgenbild så är en lateral klavikelresektion en operation som lyckas i mer än 85-90 % av fallen. / Carlos Rivero Siri, specialist  i orotpedi.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

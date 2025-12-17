@@ -15,4 +15,7 @@ Har ont sedan 1 1/2år molande värk där axeln och nyckelben möts, mot nacken�
 
 Mår nu mycket bättre och jobbar , men  detta  problem kvarstår och är mycket jobbigt, tar kål på mej. Har stretchat , sjukgymnast besök men kommer ingen vart.vårdcentralen  =händer det inget på. Tacksam på svar.
 
-*Be din husläkare ta en röntgen på axel/nyckelbensled. Det låter som ganska typisk symptom på artros i nyckelbensleden.  Om du är öm över nyckelbensleden och röntgen visar en tydlig artros bör du bedömmas av en ortoped.*
+*Be din husläkare ta en röntgen på axel/nyckelbensled. Det låter som ganska typisk symptom på artros i nyckelbensleden.  Om du är öm över nyckelbensleden och röntgen visar en tydlig artros bör du bedömmas av en ortoped.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -19,4 +19,7 @@ Nu till min fråga: Går det att byta ut nyckelbenet? Det känns som att det är
 
 Tacksam för svar! C
 
-*Nej, det går inte att byta ut nyckelbenet. Det är inte ovanligt att det tar lång tid innan man ser slutresultatet efter en operation. Ibland behöver man vänta uppemot ett år. Är nyckelbensleden väldigt öm efter operationen kan du be din husläkare sätta en kortisoninjektion i nyckelbensleden. *
+*Nej, det går inte att byta ut nyckelbenet. Det är inte ovanligt att det tar lång tid innan man ser slutresultatet efter en operation. Ibland behöver man vänta uppemot ett år. Är nyckelbensleden väldigt öm efter operationen kan du be din husläkare sätta en kortisoninjektion i nyckelbensleden.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

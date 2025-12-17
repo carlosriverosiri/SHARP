@@ -13,4 +13,7 @@ question: |
  Sen för ngn månad sen råkade jag ut för en mild krock med bil och fick en mild whiplashskada, (läkare konstaterade) Nu har jag stelnacke men rörbar. till sista frågan.. nu för några dagar sen har jag fått en huggande känsla i vänster nyckelben. vad kan detta bero på ?
 ---
 
-*Smärtor över nyckelbensleden är vanligen orsakade  av artros i den yttre nyckelbensleden.  Artros i nyckelbensleden är vanligare hos individer som belastar axelleden mycket. /Carlos Rivero Siri*
+Smärtor över nyckelbensleden är vanligen orsakade  av artros i den yttre nyckelbensleden.  Artros i nyckelbensleden är vanligare hos individer som belastar axelleden mycket.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

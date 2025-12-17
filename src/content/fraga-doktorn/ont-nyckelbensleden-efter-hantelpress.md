@@ -21,4 +21,7 @@ Tränar du styrka under väldigt många år är sannolikheten hög att du utveck
 
 Artros i nyckelbensleden (att brosket slitits ut) efter långvarig styrketräning kan dels leda till att benkanterna i nyckelbensleden växer till. Det kan också leda till att benet i själva yttre nyckelbensändan luckras upp. Det senare kallas för weightlifters shoulder. 
 
-Oavsett orsak så brukar smärtorna i nyckelbensleden minska med minskad belastning av nyckelbensleden. Hur mycket man behöver minska belastningen varierar mellan olika individer.*
+Oavsett orsak så brukar smärtorna i nyckelbensleden minska med minskad belastning av nyckelbensleden. Hur mycket man behöver minska belastningen varierar mellan olika individer.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -13,4 +13,7 @@ question: |
 Har inte kunnat ta av på överkroppen på klassiskt vis ... Röntgensvar visar att citat mellersta delen av höger klavikel finns en uppklarning vilket kan utgöra en fissur utan nämnvärd felställning, ingen luxation. Slut citat. Fick antiinflammatoriska i 10 dgr som jag tycker hjälper men......är orolig då jag är fd rökare och känner obehag i höger skulderblad. Kan jag få ett råd snälla!
 ---
 
-*Det är svårt att bedöma ett röntgensvar efter en röntgenundersökning utan att se på bilderna. Det bästa är att du tar kontakt med den läkaren som beställde röntgenundersökningen av axelleden. / Carlos Rivero Siri*
+Det är svårt att bedöma ett röntgensvar efter en röntgenundersökning utan att se på bilderna. Det bästa är att du tar kontakt med den läkaren som beställde röntgenundersökningen av axelleden.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -17,8 +17,11 @@ Har inte fått någon trovärdig redogörelse av läkningsprocessen ("Det broska
 Ledbrosket nöts ner med tiden och artrosen smälter ner sin del av detta. Är prognosen är alltså fortsatt dålig, och med tiden ökande smärta även om styrkan och rörligheten är rätt OK?
 ---
 
-*Efter en operation där man fräser bort en del av yttre nyckelbensändan, så skall inte längre nyckelbenet leda mot akromion. *
+Efter en operation där man fräser bort en del av yttre nyckelbensändan, så skall inte längre nyckelbenet leda mot akromion. *
 
 *Man kan förvänta sig en förbättring vad gäller smärta och rörlighet efter den operation du beskriver. Alla patienter blir dock inte helt smärtfria.*
 
-*Normalt sett ser man den mest påtagliga effekten av operationen inom ett år. Därefter har man ytterligare en liten förbättring under följande år. *
+*Normalt sett ser man den mest påtagliga effekten av operationen inom ett år. Därefter har man ytterligare en liten förbättring under följande år.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

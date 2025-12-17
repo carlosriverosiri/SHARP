@@ -45,4 +45,7 @@ Båda tillstånden ger samma typ av smärta som du beskriver.
 
 Om smärtan inte förbättras efter 4–6 veckors anpassad träning rekommenderar jag ett läkarbesök för bedömning.
 
-*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
+*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

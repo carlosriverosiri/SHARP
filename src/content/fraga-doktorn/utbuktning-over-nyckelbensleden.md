@@ -18,4 +18,7 @@ Jag har en ständig molande värk i axeln som har börjat gå upp i nacken. Tryc
 Jag har sedan ett par veckors tid tränat endast med gummiband och tagit diklofenak men värken går inte över utan verkar istället eskalera. Vad kan det vara och vad kan man göra åt det. Vill kunna träna och leva utan värk. Tacksam för svar.
 
 *De vanligaste orsakerna till smärtor vid träning med vikter är impingement och artros i yttre nyckelbensleden. 
-Smärtan vid impingement sitter oftast på utsidan av armen, medans smärtan vid artros i yttre nyckelbensleden brukar sitta på ovansidan av axeln och ibland stråla ut mot nacken. Bägge åkommorna behandlas bäst med tålamod och en period av minskad belastning. Sjukgymnastik hjälper oftast mot impingement, men fungerar sämre vid artros i yttre nyckelbensleden. *
+Smärtan vid impingement sitter oftast på utsidan av armen, medans smärtan vid artros i yttre nyckelbensleden brukar sitta på ovansidan av axeln och ibland stråla ut mot nacken. Bägge åkommorna behandlas bäst med tålamod och en period av minskad belastning. Sjukgymnastik hjälper oftast mot impingement, men fungerar sämre vid artros i yttre nyckelbensleden.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

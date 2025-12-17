@@ -28,4 +28,7 @@ Hos en person som tränar mycket på gym kan det istället vara resultatet av de
 I ditt fall kan det vara en kombination av bägge tillstånden. 
 En mindre skada i nyckelbensleden kan på sikt leda till slitage av broskytorna om leden belastas tungt, ex. av styrketräning.
 Om du har en ömmande knöl över nyckelbensleden så är nog ändå lite slitage i nyckelbensleden en högst sannolik orsak.
-Det bästa är att du kontaktar din husläkare för att bli utredd med röntgen och remitterad till en axelspecialist.*
+Det bästa är att du kontaktar din husläkare för att bli utredd med röntgen och remitterad till en axelspecialist.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

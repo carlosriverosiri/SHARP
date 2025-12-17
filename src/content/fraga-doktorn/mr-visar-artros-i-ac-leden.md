@@ -16,4 +16,7 @@ Labrum slap borde man kunna sy fast plus fräsa ac-leden. Om axeln är i rätt l
 sakta ner om allt ligger i rätt läge???
 ---
 
-*Dina MR fynd återfinns hos många personer i normalbefolkningen som har en fullt fungerande axel. Artros i nyckelbensleden, labrum "skador" och tendinos i cuffen är så pass vanligt bland medelålders personer så att det inte går att ställa diagnos genom att titta på ett MR-svar. Om du har en viss instabilitet i axelleden, smärtor i nyckelbensleden eller smärtor från supraspinatussenan så är kan MR-svaret vara relevant. /Carlos Rivero S*
+Dina MR fynd återfinns hos många personer i normalbefolkningen som har en fullt fungerande axel. Artros i nyckelbensleden, labrum "skador" och tendinos i cuffen är så pass vanligt bland medelålders personer så att det inte går att ställa diagnos genom att titta på ett MR-svar. Om du har en viss instabilitet i axelleden, smärtor i nyckelbensleden eller smärtor från supraspinatussenan så är kan MR-svaret vara relevant.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

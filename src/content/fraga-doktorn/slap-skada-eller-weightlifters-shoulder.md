@@ -13,6 +13,9 @@ question: |
  Strålar även ner mot skulderbladet. En molande värk. Det gör ont när jag sträcker armen rakt upp och när jag ska sträcka mig efter någonting. Vad kan det vara för fel? Tacksam för svar!
 ---
 
-*Smärtans utbredningsområde talar för att den kommer från nyckelbensleden eller från ledläppen (labrum) som ligger rakt under nyckelbensleden. Vid långvariga problem hos unga vältränade individer bör man överväga diagnoserna "weightlifters shoulder" eller en SLAP skada/instabilitet.  /Carlos Rivero Siri*
+Smärtans utbredningsområde talar för att den kommer från nyckelbensleden eller från ledläppen (labrum) som ligger rakt under nyckelbensleden. Vid långvariga problem hos unga vältränade individer bör man överväga diagnoserna "weightlifters shoulder" eller en SLAP skada/instabilitet.  /Carlos Rivero Siri*
 
- *Bilden visar artros i nyckelbensleden.*
+ *Bilden visar artros i nyckelbensleden.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*

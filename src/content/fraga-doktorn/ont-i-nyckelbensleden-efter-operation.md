@@ -22,4 +22,7 @@ De hittade små metallflisor i axeln också på röntgen, kan de påverka mitt t
 *AC-leden (akromioclavicularleden) är en led mellan skulderbladet och det övriga skelettet. När denna led är sliten (AC-ledsartros) gnider ben mot ben, vilket kan göra ont. För att minska smärtan kan man vidga leden genom att slipa bort en halv centimeter av yttre nyckelbensändan. Denna operation brukar hjälpa om själva nyckelbensleden, knölen på ovansidan av axeln, ömmar innan operation.
 Smärtor i AC-leden mer än ett år efter en operation kan bero på att den nya ledspalten kollapsat. Vanligen beror detta på att själva skulderbladets position förändrats efter operation. Det kan också bero på att nyckelbenet blivit lite instabilt efter operationen.*
 
-*Långvariga starka smärtor efter en operation för AC-ledsartros är ovanligt. En utredning med magnetkameraundersökning brukar inte ge så mycket information. En vanlig slätröntgen av AC-leden med "belastning" är en bättre undersökning. Ibland kan man behöva göra en datortomografiundersökning med 3D rekonstruktion av leden. *
+*Långvariga starka smärtor efter en operation för AC-ledsartros är ovanligt. En utredning med magnetkameraundersökning brukar inte ge så mycket information. En vanlig slätröntgen av AC-leden med "belastning" är en bättre undersökning. Ibland kan man behöva göra en datortomografiundersökning med 3D rekonstruktion av leden.
+
+---
+*Dr. Carlos Rivero Siri, specialist i ortopedi*
