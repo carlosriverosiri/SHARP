@@ -2,7 +2,7 @@
 title: "Vaknade med akut smärta i axeln"
 description: "Hej, för några veckor sedan vaknade jag med akut smärta i vänster axel (jag hade varit på yoga kvällen innan där vi gjorde mycket övningar över huvude..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2015-11-22
 author: "Dr. Carlos Rivero Siri"

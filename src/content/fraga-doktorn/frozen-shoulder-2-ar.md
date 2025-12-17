@@ -2,7 +2,7 @@
 title: "Frozen shoulder i 2 år"
 description: "Hej, har haft ont i min axel i snart 2 år nu. Har nu fått diagnosen frusen skuldra. För att komma fram till den diagnosen har jag fått tre kortison sp..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "smärta"]
 date: 2016-02-10
 author: "Dr. Carlos Rivero Siri"

@@ -2,7 +2,7 @@
 title: "Jag har fått diagnosen frozen shoulder och har gjort slätröntgen"
 description: "Hej!  Jag har fått diagnosen frozen shoulder (frusen axel). Jag har gjort slätröntgen, ultraljud och magnetröntgen och de har inte hittat något på des..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2018-02-16
 author: "Dr. Carlos Rivero Siri"

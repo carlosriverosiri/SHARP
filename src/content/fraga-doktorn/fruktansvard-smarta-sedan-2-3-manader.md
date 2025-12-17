@@ -2,7 +2,7 @@
 title: "Fruktansvärd smärta sedan 2-3 månader"
 description: "Hej!  Jag har under 2-3 månader haft fruktansvärt smärta i min vänstra axel och min hand/fingrar p.g.a att jag belastade min vänstra arm innan med väl..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "smärta"]
 date: 2017-09-05
 author: "Dr. Carlos Rivero Siri"

@@ -2,7 +2,7 @@
 title: "Utredning av frozen shoulder.."
 description: "Hej!  Har varit hos sjukgymnast med min vänstra axel. Hon var osäker på vad axelproblemet berodde på och jag blev rekommenderad att kontakta VC. Varit..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2014-07-31
 author: "Dr. Carlos Rivero Siri"

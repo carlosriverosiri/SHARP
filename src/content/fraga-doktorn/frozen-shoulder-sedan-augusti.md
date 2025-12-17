@@ -2,7 +2,7 @@
 title: "Frozen shoulder sedan augusti"
 description: "Hej. Har nu haft diagnosen frozen shoulder sedan augusti.. har haft inflammation och axelsmärtor sedan först sedan maj.   Mina frågor till dig är: du..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "smärta"]
 date: 2018-01-18
 author: "Dr. Carlos Rivero Siri"

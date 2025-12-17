@@ -2,7 +2,7 @@
 title: "Ont på natten sedan 6 mån."
 description: "Hejsan! Jag har sedan januari haft ont speciellt nattetid i min högra axel. Gjordes en slätröntgen som visade inflammation och jag fick kortison i led..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2015-07-10
 author: "Dr. Carlos Rivero Siri"

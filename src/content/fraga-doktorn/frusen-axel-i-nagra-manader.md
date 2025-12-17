@@ -2,7 +2,7 @@
 title: "Frusen axel i några månader."
 description: "Hej!  Har haft ont i vänster axel ett par månader ..smärtar ner mot armbågen...är lite svullen på insidan av armbågen..smärtan är skärande om man gör..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2014-04-23
 author: "Dr. Carlos Rivero Siri"

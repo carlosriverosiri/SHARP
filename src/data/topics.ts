@@ -107,9 +107,9 @@ export const topics: Topic[] = [
     bodyPart: 'axel',
   },
   {
-    id: 'frusen-axel',
-    title: 'Frusen axel',
-    description: 'Tilltagande stelhet och smärta i axelleden (frozen shoulder)',
+    id: 'frozen-shoulder',
+    title: 'Frozen shoulder',
+    description: 'Tilltagande stelhet och smärta i axelleden (frusen axel)',
     category: 'diagnoser',
     bodyPart: 'axel',
   },

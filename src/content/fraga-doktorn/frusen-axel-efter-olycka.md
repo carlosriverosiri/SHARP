@@ -2,7 +2,7 @@
 title: "Frusen axel efter olycka"
 description: "Hej!  Föra året jag skadade jag rygg-och nacke. En brukare i rullstol föll baklänges och jag lyfte henne. Efter flera månader jag fick frusen skuldra..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel"]
 date: 2011-10-31
 author: "Dr. Carlos Rivero Siri"

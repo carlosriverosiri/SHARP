@@ -2,7 +2,7 @@
 title: "Jag har en konstaterad frozen shoulder"
 description: "Hej!  Jag har en konstaterad frozen shoulder i hö axel. Rörligheten har kommit tillbaka något men min fråga rör smärtan.  Den sitter inte direkt i axe..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "smärta"]
 date: 2018-01-16
 author: "Dr. Carlos Rivero Siri"

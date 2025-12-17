@@ -2,7 +2,7 @@
 title: "Frusen axel och golf"
 description: "Hej!  Jag har haft ont i mina båda axlar av början på året och det blir bara värre. Har svårt att ta av mig en tröja på kvällen.  Börjar bli orolig om..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2012-12-07
 author: "Dr. Carlos Rivero Siri"

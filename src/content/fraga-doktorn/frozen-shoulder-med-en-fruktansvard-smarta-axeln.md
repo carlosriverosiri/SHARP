@@ -2,7 +2,7 @@
 title: "Frozen shoulder med en fruktansvärd smärta i axeln"
 description: "Hej Jag är diabetiker sedan 23 år tillbaka typ1. Jag har nu fått ont i höger axel arm skulderblad likaså vänsteraxel och arm.  Även väldigt stel i axl..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2017-08-11
 author: "Dr. Carlos Rivero Siri"

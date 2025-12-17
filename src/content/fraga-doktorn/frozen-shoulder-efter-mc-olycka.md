@@ -2,7 +2,7 @@
 title: "Frozen shoulder efter MC-olycka"
 description: "Hej!  Har gjort slätröntgen och MR med följande utlåtande, men vad betyder det i klartext?  \"Påbyggnader på framför allt caput humerus inferiora ledyt..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel"]
 date: 2015-09-22
 author: "Dr. Carlos Rivero Siri"

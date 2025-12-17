@@ -2,7 +2,7 @@
 title: "Frozen shoulder hö arm sedan flera år"
 description: "Hej! 2011 fick jag diagnosen frosen shoulder vänster arm. Efter 3 år blev det bättre. Efter 2,5 år fick jag det också i höger arm. Smärtan är mer inte..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2017-12-07
 author: "Dr. Carlos Rivero Siri"

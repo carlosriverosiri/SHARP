@@ -2,7 +2,7 @@
 title: "Dubbelsidig frozen shoulder i 4 år"
 description: "Hej!  Är diabetiker och har dubbelsidig frusen axel. Har haft detta i snart 4 år.  Har fått svaret att det enda man kan göra är sjukgymnastik och kort..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2017-08-16
 author: "Dr. Carlos Rivero Siri"

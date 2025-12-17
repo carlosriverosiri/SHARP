@@ -2,7 +2,7 @@
 title: "Adhesiv capsulit eller impingement?"
 description: "Hej Jag har fått diagnos Adhesiv kapsulit i skulderled för en månad sedan (har diabetes typ 1). Läst att röntgen av axelled ej ska visa något? Vid den..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel"]
 date: 2013-02-08
 author: "Dr. Carlos Rivero Siri"

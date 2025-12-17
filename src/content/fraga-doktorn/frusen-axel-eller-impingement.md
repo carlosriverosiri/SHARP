@@ -2,7 +2,7 @@
 title: "Frusen axel eller impingement?"
 description: "Hej, Har haft ont i axeln sedan i maj och gick till en sjukgymnast som konstaterade att jag nog då hade inklämd sena..  värken fortsatte och jag fick..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2012-09-22
 author: "Dr. Carlos Rivero Siri"

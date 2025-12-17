@@ -2,7 +2,7 @@
 title: "Väldigt stel i axelleden"
 description: "Hej!  Jag sedan tre fyra månader kan inte lyfta min vänster arm. Jag kan knappt lyfta halva väg till axel nivå med smärta.  Jag kan inte vrida bakåt o..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2013-04-23
 author: "Dr. Carlos Rivero Siri"

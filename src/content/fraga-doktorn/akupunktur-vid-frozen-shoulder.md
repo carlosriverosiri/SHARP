@@ -2,7 +2,7 @@
 title: "Akupunktur vid frozen shoulder?"
 description: "Hej, Jag undrar varför ni inte har med akupunktur som behandlingsform? Jag har gått med frozen shoulder i ett par år.Jag arbetar i Shanghai och fick t..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "smärta"]
 date: 2017-12-02
 author: "Dr. Carlos Rivero Siri"

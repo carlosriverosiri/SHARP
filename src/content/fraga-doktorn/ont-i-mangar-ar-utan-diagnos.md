@@ -2,7 +2,7 @@
 title: "Ont i mångar år utan diagnos"
 description: "Hej! År 2006 fick jag frusen axel i vänster arm som år 2009 började gå tillbaka med hjälp av tänjning av sjukgymnastik. Samma år började besvären i hö..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2014-11-27
 author: "Dr. Carlos Rivero Siri"

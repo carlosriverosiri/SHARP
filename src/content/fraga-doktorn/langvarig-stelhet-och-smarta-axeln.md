@@ -2,7 +2,7 @@
 title: "Långvarig stelhet och smärta i axeln"
 description: "Hej! Många år med värk från axlar,armar armbågar, handleder och händer. Gått att leva med. Sedan oktober 2012 har värken från axlar eskalerat, värst i..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel"]
 date: 2017-09-08
 author: "Dr. Carlos Rivero Siri"

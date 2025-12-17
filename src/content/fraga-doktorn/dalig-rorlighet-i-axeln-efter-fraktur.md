@@ -2,7 +2,7 @@
 title: "Dålig rörlighet i axeln efter fraktur"
 description: "Hej! Jag råkade ut för en axelfraktur vid ett fall från en pall på 60 cm hög. Jag fick en  fraktur i fint läge. De såg vid ultraljud en blödning som g..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation"]
 date: 2015-01-30
 author: "Dr. Carlos Rivero Siri"

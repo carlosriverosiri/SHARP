@@ -2,7 +2,7 @@
 title: "Frozen shoulder i båda axlarna"
 description: "Hej!  Jag hade frozen shoulder i v axel för2-3 år sedan efter en dragskada ifrån min hund. Nu i mars-april började H axel krångla, kändes som om den s..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "smärta"]
 date: 2014-07-27
 author: "Dr. Carlos Rivero Siri"

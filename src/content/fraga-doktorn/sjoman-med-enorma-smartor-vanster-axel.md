@@ -2,7 +2,7 @@
 title: "Sjöman med enorma smärtor i vänster axel"
 description: "Hej, sjöman med enorma smärtor i vänster axel utan utlösande faktor, inskränkt rörelse i samtliga plan (inåtrot,utåtrot, abd flex ext).  Besvär i ett..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2017-11-30
 author: "Dr. Carlos Rivero Siri"

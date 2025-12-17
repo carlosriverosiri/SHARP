@@ -2,7 +2,7 @@
 title: "Frozen shoulder i 10 års tid"
 description: "Hej!  Har i 10 års tid gått på sjukgym efter frusen axel. Drog i trädgren under skadetiden o armen liksom försvann. Jag kan inte jobba mer än en halvt..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning"]
 date: 2017-06-15
 author: "Dr. Carlos Rivero Siri"

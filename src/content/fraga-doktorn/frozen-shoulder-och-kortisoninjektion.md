@@ -2,7 +2,7 @@
 title: "Frozen shoulder och kortisoninjektion"
 description: "Hej!  Tack för en informationsrik sida! Jag har enl min fysioterapeut frozen shoulder i vänster axel (är högerhänt), sedan 3-4 mån tillbaka.  Jag tror..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2018-03-20
 author: "Dr. Carlos Rivero Siri"

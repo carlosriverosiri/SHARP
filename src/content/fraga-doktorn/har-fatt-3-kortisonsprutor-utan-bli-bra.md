@@ -2,7 +2,7 @@
 title: "Har fått 3 kortisonsprutor utan bli bra"
 description: "Hej, jag har haft frozen shoulder sedan 5/2-2017 och har fått 3 kortisonsprutor hittills.   Jag är fortfarande kvar i fas 1 dvs. stelhet och konstant..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "smärta"]
 date: 2017-12-02
 author: "Dr. Carlos Rivero Siri"

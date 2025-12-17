@@ -2,7 +2,7 @@
 title: "Upprepade kortisoninjektioner mot frusen axel utan förbättring."
 description: "Hej!  Jag fick diagnosen frusen axel efter typiska symtomen enligt ortopeden. Jag har fått 3 kortisonsprutor utan större effekt, senast för två veckor..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "operation", "styrketräning", "smärta"]
 date: 2021-05-17
 author: "Dr. Carlos Rivero Siri"

@@ -2,7 +2,7 @@
 title: "Diabetes typ 1 och frozen shoulder"
 description: "Hej! Jag är en kvinna på 44år har diabetes typ 1 sedan 30 år. Frisk å kry. Tills dec 2014 då det började hugga i axeln sådana hugg så jag knäade. Sökt..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2015-07-05
 author: "Dr. Carlos Rivero Siri"

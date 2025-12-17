@@ -2,7 +2,7 @@
 title: "Ont i axeln efter en scapulafraktur"
 description: "Hej har nu fått 4 st kortisoninjektioner detta har dock ej hjälpt. Smärtan kvarstår värst är det vid belastning eller när man skall sova kan absolut i..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning", "smärta"]
 date: 2014-12-03
 author: "Dr. Carlos Rivero Siri"

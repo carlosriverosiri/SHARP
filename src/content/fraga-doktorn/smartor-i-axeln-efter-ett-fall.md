@@ -2,7 +2,7 @@
 title: "Smärtor i axeln efter ett fall"
 description: "Hej!  Jag föll olyckligt på Gran Canaria för ett år sedan och bröt nyckelben, handled och vid axeln. Blev opererad på Gran Canaria 2 ggr. Var sjukskri..."
 category: "axel"
-topic: "frozen-shoulder-frusen-axel"
+topic: "frozen-shoulder"
 tags: ["frozen-shoulder-frusen-axel", "styrketräning"]
 date: 2015-10-16
 author: "Dr. Carlos Rivero Siri"
