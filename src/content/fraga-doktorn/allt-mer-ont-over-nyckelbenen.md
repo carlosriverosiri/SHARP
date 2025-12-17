@@ -1,30 +1,62 @@
 ---
 title: "Allt mer ont över nyckelbenen"
-description: "Jag har senaste halvåret fått ondare och ondare precis på ovansidan av båda mina nyckelben.  På morgonen är smärtan värst och jag har svårt att ”släppa n..."
+description: "Fråga om tilltagande smärta och stelhet över båda nyckelbenslederna, hos patient med ledgångsreumatism."
 category: "axel"
-tags: ["ac-led","nyckelbensleden"]
+tags: ["ac-led", "nyckelbensleden", "reumatism", "stelhet", "bilateralt"]
 date: 2018-08-14
 author: "Dr. Carlos Rivero Siri"
 relatedCondition: "/sjukdomar/axel/ac-ledsartros"
 published: true
 question: |
-  (Frågan behöver extraheras manuellt från svaret)
+  Hej!
+
+  Jag har det senaste halvåret fått allt mer ont precis på ovansidan av båda mina nyckelben.
+
+  På morgonen är smärtan värst och jag har svårt att "släppa ner axlarna" på grund av smärta och stelhet. Jag har inga problem eller smärta när jag lyfter händerna över huvudet, men om jag sover på sidan med armen under nacken blir jag ännu stelare på morgonen. Så fort jag sitter stilla ett tag eller lutar mig på armbågarna så gör det ont och det stelnar till.
+
+  Jag har ledgångsreumatism sedan ett par år tillbaka och har tidigare haft problem med axlarna på grund av det. Men nu har jag inga reumatiska smärtor i händer, fötter eller knän, så det är konstigt om RA är anledningen till mina smärtor.
+
+  Mina "axelleder" känns bra nu, fast kanske lite "lösa". Jag har även ont och är stel i bröstryggen, men det har hjälpt när jag gått till kiropraktor. Jag är väldigt rörlig både i rygg och axlar.
+
+  Min reumatolog tror inte mina ryggsmärtor är reumatiska eftersom resten av kroppen känns ok. Vad kan det vara med mina nyckelben/axlar, och har det samband med ryggen?
+
+  Detta går ut över både sömn, dagligt liv och min dansträning...
 ---
 
-Jag har senaste halvåret fått ondare och ondare precis på ovansidan av båda mina nyckelben.
+Det låter frustrerande att ha smärtor som påverkar både sömn och ditt aktiva liv. Låt mig förklara vad som kan pågå.
 
-På morgonen är smärtan värst och jag har svårt att ”släppa ner axlarna” pga smärta och stelhet.
-Har inga problem eller smärta när jag lyfter händerna över huvudet etc, men om jag sover på sidan med armen under nacken etc blir jag ännu stelare på morgonen.
-Så fort jag sitter stilla ett tag eller lutar mig på armbågar så gör det ont och det stelnar till.
+## Vad kan det vara?
 
-Jag har Ledgångsreumarism sedan ett par år tillbaka och har tidigare haft problem med axlarna pga det, men har nu inga reumatiska smärtor i händer, fötter eller knän etc och det är konstigt om RA är anledningen till mina smärtor.
-Mina ”axelleder ” känns bra nu fast kanske lite ”lösa” Har även ont och är stel i bröstryggen, men det har hjälpt mär jag har gått till kiropraktor.
-Jag är väldigt rörlig både i rygg och axlar. Min reumatolog tror inte mina ryggsmärtor är reumatiska eftersom resten av kroppen känns ok bra. Vad kan det vara med mina nyckelben/axlar och hat det samband med ryggen ? Detta går ut över både söm dagligliv och min dansträning...
+Vid smärtor från yttre nyckelbenslederna brukar dessa bli **ömma vid tryck** precis på ovansidan av axeln. En vanlig orsak är **slitage av brosket (artros)** i nyckelbenslederna.
 
- Smärtspridning vid artros i yttre nyckelbensleden[/caption]
+### Utredning
 
-*Vid smärtor från själva yttre nyckelbenslederna brukar dessa bli ömma. En vanlig orsak till smärtor i nyckelbenslederna är slitage av brosket. Detta går ibland att se på en vanlig röntgenundersökning eller en magnetkameraundersökning. Dessa undersökningsmetoder är dock inte helt optimala för nyckelbenslederna. En ultraljudsundersökning är sannolikt ett bättre alternativ.
-Slitage av brosket på yttre nyckelbensändan är en sjukdom med godartat förlopp, där de flesta blir bättre inom något år. Enstaka patienter kan dock behöva en titthålsoperation där man slipar bort slitaget. Be din husläkare ta en vanlig röntgen och skicka en remiss till en axelspecialist.
+Artros i AC-leden kan ibland ses på:
+- **Vanlig röntgen**
+- **Magnetkameraundersökning (MR)**
+
+Dock är dessa undersökningsmetoder inte alltid optimala för just nyckelbenslederna. En **ultraljudsundersökning** kan vara ett bättre alternativ för att bedöma inflammation och förändringar i leden.
+
+## Prognosen är oftast god
+
+Slitage av brosket i yttre nyckelbensändan har vanligen ett **godartat förlopp**. De flesta blir bättre inom ungefär ett år, även utan behandling.
+
+## Behandlingsalternativ
+
+1. **Avlastning** – minska belastande aktiviteter tillfälligt
+2. **Värme/kyla** – kan lindra stelhet och smärta
+3. **Sjukgymnastik** – för att bibehålla rörlighet (även om effekten vid ren AC-ledsartros är begränsad)
+4. **Smärtstillande** – antiinflammatoriska läkemedel vid behov
+
+### Om besvären kvarstår
+
+Enstaka patienter med långvariga, kraftiga besvär kan behöva en **titthålsoperation** där man slipar bort slitaget i leden.
+
+## Mitt råd
+
+Be din husläkare ta en **vanlig röntgen** av båda axlarna och överväg en remiss till en axelspecialist för bedömning – särskilt med tanke på din reumatiska bakgrund.
+
+*Läs mer om [AC-ledsartros och behandling](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*

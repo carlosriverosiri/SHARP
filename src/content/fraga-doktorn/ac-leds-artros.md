@@ -1,17 +1,43 @@
 ---
-title: "AC-leds artros i axeln"
-description: "Hej. Har fått diagnosen AC-leds artros i axeln. Får smärta i den när jag anstränger axeln ex vid golfspel. Vad kan man göra åt det ? Mvh perka  Det bästa..."
+title: "AC-ledsartros och golf"
+description: "Fråga om behandling av AC-ledsartros som ger smärta vid golfspel."
 category: "axel"
-tags: ["golf","ac-led","nyckelbensleden"]
+tags: ["golf", "ac-led", "nyckelbensleden", "artros"]
 date: 2012-10-10
 author: "Dr. Carlos Rivero Siri"
 relatedCondition: "/sjukdomar/axel/ac-ledsartros"
 published: true
+patientName: "Perka"
 question: |
-  Hej. Har fått diagnosen AC-leds artros i axeln. Får smärta i den när jag anstränger axeln ex vid golfspel. Vad kan man göra åt det ? Mvh perka
+  Hej!
+
+  Har fått diagnosen AC-ledsartros i axeln. Får smärta i den när jag anstränger axeln, exempelvis vid golfspel.
+
+  Vad kan man göra åt det?
 ---
 
-Det bästa är att vänta något år och se om smärtan inte går över. AC-leds artros är väldigt vanligt, men de flesta får inga smärtor av AC-leds artrosen.  Om du har blivit stelare i själva axelleden så kan sjukgymnastik hjälpa. Har du normal rörlighet så har sjukgymnastik inte så stor effekt. Har du fortfarande stora problem efter något år så bör man överväga operation.
+AC-ledsartros är ett mycket vanligt tillstånd, men de flesta som har det får faktiskt inga besvär alls. Att du upplever smärta vid golf beror sannolikt på den upprepade belastningen under svingen.
+
+## Vad kan du göra?
+
+### Avvakta och anpassa
+
+Det bästa första steget är ofta att **vänta och se** om smärtan inte förbättras av sig själv. Många patienter upplever att besvären minskar över tid när kroppen anpassar sig.
+
+Under tiden kan du:
+- **Minska intensiteten** i din golfträning tillfälligt
+- **Undvika övningar** som provocerar smärtan
+- **Testa värme** före aktivitet och kyla efteråt
+
+### Sjukgymnastik
+
+Om du har blivit **stel i axelleden** kan sjukgymnastik hjälpa till att förbättra rörligheten. Har du däremot normal rörlighet har sjukgymnastik ofta begränsad effekt vid just AC-ledsartros.
+
+### Operation – vid långvariga besvär
+
+Om du fortfarande har betydande problem efter ungefär ett år kan man överväga operation. Ingreppet kallas *lateral klavikelresektion* och innebär att man tar bort en liten bit av nyckelbenet för att minska friktionen i leden.
+
+*Läs mer om [AC-ledsartros och behandlingsalternativ](/sjukdomar/axel/ac-ledsartros) på vår fördjupningssida.*
 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
