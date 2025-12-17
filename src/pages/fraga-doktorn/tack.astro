@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Tack för din fråga - Södermalms Ortopedi">
+  
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white py-20">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+      
+      <!-- Ikon -->
+      <div class="w-24 h-24 mx-auto mb-8 rounded-full bg-green-500 flex items-center justify-center">
+        <svg class="w-14 h-14 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      
+      <h1 class="text-3xl md:text-4xl font-black mb-4">Tack för din fråga!</h1>
+      
+      <p class="text-slate-300 text-lg mb-6">
+        Din fråga har skickats till Dr. Carlos Rivero Siri.
+      </p>
+      
+      <div class="bg-slate-800/50 rounded-xl p-6 mb-8 text-left">
+        <h2 class="font-bold text-white mb-3">Vad händer nu?</h2>
+        <ul class="space-y-2 text-slate-300">
+          <li class="flex items-start gap-2">
+            <span class="text-sky-400 mt-1">1.</span>
+            <span>Din fråga granskas av doktorn</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-sky-400 mt-1">2.</span>
+            <span>Ett svar skrivs och publiceras på webbplatsen</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-sky-400 mt-1">3.</span>
+            <span>Svar kan ta upp till <strong class="text-white">2 veckor</strong></span>
+          </li>
+        </ul>
+      </div>
+      
+      <p class="text-slate-400 text-sm mb-8">
+        📌 Observera: Eventuella personuppgifter tas bort innan publicering.
+        Vi svarar inte via e-post eller telefon – svaret publiceras på webbplatsen.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a 
+          href="/fraga-doktorn/"
+          class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+        >
+          Se tidigare frågor & svar
+        </a>
+        <a 
+          href="/"
+          class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+        >
+          Tillbaka till startsidan
+        </a>
+      </div>
+      
+    </div>
+  </section>
+
+</BaseLayout>
+
