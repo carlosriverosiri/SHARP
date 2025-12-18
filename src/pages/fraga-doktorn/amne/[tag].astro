@@ -32,9 +32,9 @@ const questions = allQuestions.sort((a, b) =>
 
 // Formatera taggnamn för visning
 function formatTagName(tag: string): string {
-  return tag
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, l => l.toUpperCase());
+  // Ersätt bindestreck med mellanslag och gör första bokstaven stor
+  const words = tag.replace(/-/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
 const tagTitle = formatTagName(tag);
