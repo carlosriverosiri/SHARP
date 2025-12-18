@@ -34,3 +34,5 @@ Men den kan också uppstå genom att injektionen slår ut immunförsvaret lokalt
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

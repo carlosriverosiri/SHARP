@@ -42,6 +42,3 @@ Det bästa är att du kontaktar din husläkare för att bli utredd med röntgen 
 - Kombinerat med tung styrketräning kan det leda till "Weightlifter's shoulder"
 - Ömmande knöl tyder på slitage i nyckelbensleden
 - Rekommendation: röntgen och remiss till axelspecialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

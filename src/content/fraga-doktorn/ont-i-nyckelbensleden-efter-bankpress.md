@@ -45,6 +45,3 @@ Båda tillstånden ger samma typ av smärta som du beskriver.
 - **Återgå gradvis** till träning när smärtan minskat
 
 Om smärtan inte förbättras efter 4–6 veckors anpassad träning rekommenderar jag ett läkarbesök för bedömning.
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

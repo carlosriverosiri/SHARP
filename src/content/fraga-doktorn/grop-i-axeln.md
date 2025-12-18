@@ -43,3 +43,5 @@ Vidare bör du börja med axelrehab hos en sjukgymnast.
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

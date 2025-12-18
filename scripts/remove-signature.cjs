@@ -46,3 +46,5 @@ console.log(`\n${'='.repeat(40)}`);
 console.log(`Uppdaterade: ${updated} filer`);
 console.log(`${'='.repeat(40)}\n`);
 
+
+

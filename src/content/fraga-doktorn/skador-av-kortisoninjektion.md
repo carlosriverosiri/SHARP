@@ -28,3 +28,5 @@ Risken för denna typ av skador är dock mycket liten om kortisonet sätts på r
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

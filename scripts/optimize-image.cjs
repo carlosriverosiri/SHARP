@@ -18,3 +18,5 @@ sharp(inputPath)
     console.error('❌ Fel:', err.message);
   });
 
+
+

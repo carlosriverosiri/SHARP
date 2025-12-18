@@ -29,3 +29,5 @@ Det finns dock en liten risk att smärtorna blir betydligt värre någon eller n
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

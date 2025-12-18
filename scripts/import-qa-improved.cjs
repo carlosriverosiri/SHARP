@@ -203,9 +203,6 @@ ${cleanAnswer}
 
 **Sammanfattning:**
 ${summaryPoints.slice(0, 4).map(p => '- ' + p).join('\n')}
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
 `;
 }
 
@@ -262,4 +259,6 @@ if (needsReview > 0) {
   console.log(`⚠️  Behöver manuell granskning: ${needsReview} filer`);
 }
 console.log(`${'='.repeat(50)}\n`);
+
+
 

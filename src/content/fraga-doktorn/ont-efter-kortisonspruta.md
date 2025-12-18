@@ -38,3 +38,5 @@ Många axelortopeder förespråkar kortisoninjektioner som en temporär smärtli
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

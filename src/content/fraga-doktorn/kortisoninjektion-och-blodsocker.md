@@ -35,3 +35,5 @@ Jag känner inte till några studier där man specifikt har studerat blodsockret
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

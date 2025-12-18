@@ -1,6 +1,7 @@
 ---
 title: "Morfinkrävande smärtor i axelleden"
-description: "Hej!  Jag har haft frozen shoulder i vänster axel, det tog över 3 år innan den var läkt. 2013 fick jag samma sak i höger axel. Skillnaden från vänste..."
+description: "Hej!  Jag har haft frozen shoulder i vänster axel, det tog över 3 år innan den var läkt. 2013 fick jag samma sak i höger axel.
+ Skillnaden från vänste..."
 category: "axel"
 topic: "impingement"
 tags: ["impingement", "styrketräning", "smärta"]

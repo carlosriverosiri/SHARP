@@ -125,3 +125,5 @@ node scripts/optimize-images.cjs <sökväg>
 | Diagnossida | < 100 KB | < 600 ms | < 20 |
 | Startsida | < 150 KB | < 800 ms | < 25 |
 
+
+

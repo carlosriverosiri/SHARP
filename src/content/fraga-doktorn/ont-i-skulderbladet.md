@@ -29,3 +29,5 @@ Då kan en kortisoninjektion ge en smärtlindring.
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

@@ -38,3 +38,5 @@ Vanliga smärtstillande mediciner som Alvedon, Diklofenak (NSAID) eller Citodon 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

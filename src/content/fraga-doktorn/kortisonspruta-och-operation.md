@@ -29,3 +29,5 @@ Det är inte sannolikt att kortisoninjektionen kan medföra en ökad risk för e
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

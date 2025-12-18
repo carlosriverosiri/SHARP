@@ -23,3 +23,5 @@ Biverkningarna efter en kortisoninjektion i axelleden är desamma som hos indivi
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

@@ -32,3 +32,5 @@ En strukturerad sjukgymnastisk behandling med inriktning mot att stärka rotator
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

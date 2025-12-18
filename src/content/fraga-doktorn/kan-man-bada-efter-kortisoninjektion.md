@@ -22,3 +22,5 @@ Det går bra att bada och duscha efter en kortisoninjektion.
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

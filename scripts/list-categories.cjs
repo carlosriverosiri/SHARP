@@ -29,3 +29,5 @@ sorted.forEach(([cat, count]) => {
 
 console.log(`\nTotalt ${sorted.length} kategorier\n`);
 
+
+

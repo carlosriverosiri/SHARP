@@ -36,3 +36,5 @@ Kortisonet kan under en kortare tid till viss del påverka blodtrycket. Men dose
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+

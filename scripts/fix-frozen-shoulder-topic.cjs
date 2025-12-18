@@ -22,3 +22,5 @@ files.forEach(file => {
 
 console.log(`\nTotalt uppdaterade: ${updated} filer`);
 
+
+

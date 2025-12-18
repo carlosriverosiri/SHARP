@@ -108,9 +108,6 @@ Prognosen är god. Det brukar gå över inom 12–18 månader.
 - Kan vara Weightlifter's shoulder
 - God prognos – går oftast över inom 12–18 månader
 - Operation behövs sällan
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
 ```
 
 ---
@@ -145,6 +142,7 @@ Prognosen är god. Det brukar gå över inom 12–18 månader.
 4. ❌ **TA BORT "Läs mer om..."-länkar** i svaret (finns automatiskt fördjupningsblock)
 5. ✅ **Separera ALLTID** frågan (i frontmatter) från svaret (i body)
 6. ✅ **Skapa SEO-vänlig titel och beskrivning** för varje fråga
+7. ❌ **INGEN signatur i slutet** - författarnamnet visas redan i rubriken via `author`-fältet
 
 ---
 
@@ -159,4 +157,6 @@ Prognosen är god. Det brukar gå över inom 12–18 månader.
 ---
 
 *Senast uppdaterad: 2025-12-17*
+
+
 

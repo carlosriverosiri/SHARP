@@ -31,3 +31,5 @@ Har du trots sjukgymnastisk behandling haft ont i mer än 6 månader så brukar 
 ---
 *Dr. Carlos Rivero Siri, specialist i ortopedi*
 
+
+
