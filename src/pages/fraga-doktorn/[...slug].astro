@@ -272,9 +272,12 @@ const medicalSchema = {
               <h3 class="font-bold text-slate-700 text-sm mb-3">Relaterade ämnen</h3>
               <div class="flex flex-wrap gap-2">
                 {question.data.tags.map((tag) => (
-                  <span class="bg-white border border-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs">
+                  <a 
+                    href={`/fraga-doktorn/amne/${tag}`}
+                    class="bg-white border border-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs hover:bg-sky-50 hover:border-sky-300 hover:text-sky-700 transition-colors"
+                  >
                     {tag}
-                  </span>
+                  </a>
                 ))}
               </div>
             </div>

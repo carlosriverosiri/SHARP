@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+// Hämta alla unika taggar
+export async function getStaticPaths() {
+  const questions = await getCollection('fraga-doktorn', ({ data }) => data.published !== false);
+  
+  // Samla alla unika taggar
+  const allTags = new Set<string>();
+  questions.forEach(q => {
+    q.data.tags?.forEach(tag => allTags.add(tag));
+  });
+  
+  return Array.from(allTags).map(tag => ({
+    params: { tag },
+    props: { tag }
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Hämta alla frågor med denna tagg
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published !== false && data.tags?.includes(tag)
+);
+
+// Sortera efter datum (nyast först)
+const questions = allQuestions.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Formatera taggnamn för visning
+function formatTagName(tag: string): string {
+  return tag
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, l => l.toUpperCase());
+}
+
+const tagTitle = formatTagName(tag);
+---
+
+<BaseLayout 
+  title={`Frågor om ${tagTitle} | Fråga Doktorn`}
+  description={`${questions.length} frågor och svar om ${tagTitle}. Läs Dr. Carlos Rivero Siris svar på patientfrågor.`}
+>
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-sky-600">Hem</a>
+      <span class="mx-2">/</span>
+      <a href="/fraga-doktorn" class="hover:text-sky-600">Fråga Doktorn</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-700">Ämne: {tagTitle}</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="bg-sky-100 text-sky-800 px-4 py-2 rounded-full text-sm font-medium">
+          🏷️ {tagTitle}
+        </span>
+        <span class="text-gray-500 text-sm">
+          {questions.length} {questions.length === 1 ? 'fråga' : 'frågor'}
+        </span>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        Frågor om {tagTitle}
+      </h1>
+      <p class="text-gray-600">
+        Läs patientfrågor och Dr. Carlos Rivero Siris svar om {tagTitle.toLowerCase()}.
+      </p>
+    </header>
+
+    <!-- Frågelista -->
+    <div class="space-y-4">
+      {questions.map((q) => (
+        <a 
+          href={`/fraga-doktorn/${q.slug}`}
+          class="block bg-white rounded-xl border border-gray-200 p-5 hover:border-sky-300 hover:shadow-md transition-all group"
+        >
+          <h2 class="font-semibold text-gray-900 group-hover:text-sky-700 mb-2">
+            {q.data.title}
+          </h2>
+          <p class="text-gray-600 text-sm line-clamp-2 mb-3">
+            {q.data.description || q.data.question?.substring(0, 150) + '...'}
+          </p>
+          <div class="flex items-center justify-between">
+            <div class="flex flex-wrap gap-2">
+              {q.data.tags?.slice(0, 3).map(t => (
+                <span class={`text-xs px-2 py-1 rounded-full ${t === tag ? 'bg-sky-100 text-sky-700' : 'bg-gray-100 text-gray-600'}`}>
+                  {t}
+                </span>
+              ))}
+            </div>
+            <time class="text-xs text-gray-400">
+              {new Date(q.data.date).toLocaleDateString('sv-SE')}
+            </time>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Tillbaka-länk -->
+    <div class="mt-8 pt-6 border-t">
+      <a 
+        href="/fraga-doktorn" 
+        class="text-sky-600 hover:text-sky-800 font-medium inline-flex items-center gap-2"
+      >
+        ← Tillbaka till alla frågor
+      </a>
+    </div>
+  </main>
+</BaseLayout>
+
