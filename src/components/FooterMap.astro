@@ -1,26 +1,36 @@
 ---
 // src/components/FooterMap.astro
+// Lazy-loadad karta - laddas endast när den blir synlig
 ---
 
 <section aria-labelledby="karta-rubrik" class="w-full mt-auto">
   <h2 id="karta-rubrik" class="sr-only">Karta till vår mottagning</h2>
-  <div id="map" class="w-full h-96"></div>
+  <div id="map" class="w-full h-96 bg-gray-100"></div>
 </section>
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
 <script>
-  // Ladda Leaflet och initiera kartan
-  document.addEventListener('astro:page-load', initMap);
-  document.addEventListener('DOMContentLoaded', initMap);
-  
+  // Lazy-load kartan när den blir synlig
   let mapInitialized = false;
+  let leafletCssLoaded = false;
+  
+  function loadLeafletCss() {
+    if (leafletCssLoaded) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+    link.crossOrigin = '';
+    document.head.appendChild(link);
+    leafletCssLoaded = true;
+  }
   
   function initMap() {
     if (mapInitialized) return;
     const mapEl = document.getElementById('map');
     if (!mapEl || mapEl.hasChildNodes()) return;
+    
+    // Ladda CSS först
+    loadLeafletCss();
     
     // Ladda Leaflet dynamiskt
     const script = document.createElement('script');
@@ -127,6 +137,34 @@
     };
     document.head.appendChild(script);
   }
+  
+  // Använd IntersectionObserver för lazy-loading
+  function setupLazyMap() {
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+    
+    // Om IntersectionObserver stöds, vänta tills kartan är synlig
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            initMap();
+            observer.disconnect();
+          }
+        });
+      }, { 
+        rootMargin: '200px' // Börja ladda 200px innan kartan syns
+      });
+      observer.observe(mapEl);
+    } else {
+      // Fallback: ladda direkt
+      initMap();
+    }
+  }
+  
+  // Initiera lazy-loading
+  document.addEventListener('DOMContentLoaded', setupLazyMap);
+  document.addEventListener('astro:page-load', setupLazyMap);
 </script>
 
 <style>
