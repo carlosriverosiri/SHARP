@@ -35,6 +35,12 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     
+    <!-- Preconnect för snabbare laddning av externa resurser -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+    <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
+    
     <!-- SEO Meta -->
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
