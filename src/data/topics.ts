@@ -177,6 +177,14 @@ export const topics: Topic[] = [
     bodyPart: 'axel',
   },
   {
+    id: 'overrorlighet',
+    title: 'Överrörlighet (hyperlaxitet)',
+    shortTitle: 'Överrörlighet',
+    description: 'Ökad rörlighet i axelleden som kan leda till instabilitet och smärta',
+    category: 'skador',
+    bodyPart: 'axel',
+  },
+  {
     id: 'fraktur-axel',
     title: 'Frakturer (axel/nyckelben)',
     shortTitle: 'Frakturer',
