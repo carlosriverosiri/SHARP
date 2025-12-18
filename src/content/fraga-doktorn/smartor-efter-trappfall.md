@@ -24,6 +24,3 @@ Det verkar vettigt att försöka få till en utredning av axeln.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

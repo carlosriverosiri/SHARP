@@ -38,6 +38,3 @@ Be din husläkare ta en vanlig röntgen och skicka en remiss till en axelspecial
 - De flesta blir bättre inom ett år
 - Operation (titthål) kan behövas i enstaka fall
 - Be om remiss till en axelspecialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

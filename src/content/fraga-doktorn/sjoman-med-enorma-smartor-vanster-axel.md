@@ -29,6 +29,3 @@ Efter 6 månaders oavbruten olidlig smärta kan man överväga en operation.
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

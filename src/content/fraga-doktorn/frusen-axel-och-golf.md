@@ -26,6 +26,3 @@ En diagnos i sig är inte viktigt för att kunna rehabilitera en smärtsam axel.
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

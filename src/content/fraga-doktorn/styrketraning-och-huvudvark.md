@@ -28,6 +28,3 @@ Lite beroende på hur man tränar kan man få olika typer av skador. En långvar
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

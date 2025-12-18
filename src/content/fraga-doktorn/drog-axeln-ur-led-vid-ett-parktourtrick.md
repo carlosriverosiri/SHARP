@@ -20,6 +20,3 @@ Känns den stabil bör det inte vara några problem, är den instabil bör du ko
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

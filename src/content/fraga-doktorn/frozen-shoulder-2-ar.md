@@ -28,6 +28,3 @@ Någon form av operation är alltid ett alternativ. Men detta rekommenderas norm
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

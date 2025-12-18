@@ -22,6 +22,3 @@ Vid långvarig uttalad värk i axelleden som inte förbättras av sjukgymnastik 
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

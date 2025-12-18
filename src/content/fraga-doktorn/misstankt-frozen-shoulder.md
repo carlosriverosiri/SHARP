@@ -60,6 +60,3 @@ Om sjukgymnasten inte tycker att stelheten är uttalad är diagnosen frozen shou
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

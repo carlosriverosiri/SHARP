@@ -29,6 +29,3 @@ En axelprotes är en mekanisk konstruktion med en livslängd på mellan 10-15 å
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

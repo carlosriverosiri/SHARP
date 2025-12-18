@@ -28,6 +28,3 @@ Artros i AC-leden (yttre nyckelbensleden) är relativt vanligt och behöver enda
 - Operation av AC-leden påverkar inte nyckelbensläget
 - AC-ledsartros behöver bara åtgärdas vid långvarig smärta
 - Ven-inklämningen är ett separat problem
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

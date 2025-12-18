@@ -17,6 +17,3 @@ Man får inte feber av frozen shoulder. Har du fått feber, smärtor och stelhet
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

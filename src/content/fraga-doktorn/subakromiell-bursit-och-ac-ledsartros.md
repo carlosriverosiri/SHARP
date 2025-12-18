@@ -18,6 +18,3 @@ Vid långvarig värk i axelleden (> 6 månader), som inte blir bättre efter beh
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

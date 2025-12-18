@@ -25,6 +25,3 @@ Den vanligaste diagnosen för din åldersgrupp är nog ändå impingement. , spe
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

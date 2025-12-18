@@ -27,6 +27,3 @@ Det är vanligt att smärtorna är som värst på natten vid impingement. Oftast
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -22,6 +22,3 @@ Ring vårdgarantin och fråga hur du kan göra. Enklast är nog om du går till 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

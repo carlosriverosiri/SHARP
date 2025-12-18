@@ -33,6 +33,3 @@ En mer generaliserad axelsmärta som sitter över hela axelpartiet, skulderblad 
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

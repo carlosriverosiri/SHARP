@@ -21,6 +21,3 @@ Rekommenderar att du söker dig dit. Du kan också kontakta Aleris i Oslo och bo
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

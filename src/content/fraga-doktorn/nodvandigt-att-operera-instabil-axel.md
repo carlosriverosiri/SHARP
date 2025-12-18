@@ -25,6 +25,3 @@ En fördel med att operera axeln i tidigt skede är att operationen blir enklare
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -21,6 +21,3 @@ Annars kanske det räcker med lite inflammationsdämpande medicin.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

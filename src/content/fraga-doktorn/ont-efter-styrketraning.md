@@ -17,6 +17,3 @@ Men för att kunna ställa diagnos brukar man behöva klämma och känna på axe
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -18,6 +18,3 @@ Om axelleden "hoppar och knäpper" hos en 25 åring så skulle jag kanske misst�
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

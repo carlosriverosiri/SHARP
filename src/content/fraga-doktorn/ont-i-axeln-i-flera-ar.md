@@ -23,6 +23,3 @@ Har du haft svårigheter att sova eller att använda armen under så pass lång 
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

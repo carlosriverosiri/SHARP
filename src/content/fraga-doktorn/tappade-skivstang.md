@@ -29,6 +29,3 @@ Artros i nyckelbensleden är vanligare hos individer som belastar axelleden myck
 **Sammanfattning:**
 - Smärta över nyckelbensleden orsakas oftast av artros
 - Artros är vanligare vid hög belastning av axelleden
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

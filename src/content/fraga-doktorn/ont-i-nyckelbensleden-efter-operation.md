@@ -44,6 +44,3 @@ Långvariga starka smärtor efter en operation för AC-ledsartros är ovanligt. 
 - Långvarig smärta efter AC-ledsoperation är ovanligt
 - MR ger ofta inte så mycket information
 - Bättre undersökningar: slätröntgen med belastning eller DT med 3D-rekonstruktion
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

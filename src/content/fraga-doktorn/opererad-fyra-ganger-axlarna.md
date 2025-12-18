@@ -32,6 +32,3 @@ Möjligheterna att operera på nytt är beroende av vilken typ av sjukdom du har
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

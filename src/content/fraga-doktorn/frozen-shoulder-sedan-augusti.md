@@ -23,6 +23,3 @@ Armen kan bli svullen av att du inte använder den.
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

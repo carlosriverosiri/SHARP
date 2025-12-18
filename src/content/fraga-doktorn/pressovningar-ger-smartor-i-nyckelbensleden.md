@@ -33,6 +33,3 @@ Hos personer som i många år utsatt sin axelled för tung belastning är artros
 - Sjukgymnastik hjälper om axelleden är stel
 - Du kan inte skada nyckelbensleden allvarligt genom träning
 - Artros vid långvarig styrketräning är normalt och ger sällan kroniska besvär
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -22,6 +22,3 @@ Fungerar inte sjukgymnastik så remitterar husläkaren dig till en axelspecialis
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

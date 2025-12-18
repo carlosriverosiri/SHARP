@@ -35,6 +35,3 @@ Det är sedan 1 jan 2015 fritt vårdval i Sverige. Det innebär att du kan söka
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

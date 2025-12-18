@@ -24,6 +24,3 @@ När ingen annan behandling hjälper och du lider av en stark kronisk smärta ä
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

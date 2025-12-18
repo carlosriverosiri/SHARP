@@ -36,6 +36,3 @@ Har din ledskål spruckit och ett större fragment av ledskålen saknas, behöve
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

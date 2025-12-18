@@ -27,6 +27,3 @@ Det vanliga är att man rekommenderar operation av en axel som skadats efter en 
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

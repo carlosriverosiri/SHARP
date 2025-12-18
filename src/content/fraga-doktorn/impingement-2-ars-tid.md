@@ -27,6 +27,3 @@ Vid en långvarig uttalad smärta med svårigheter att sova, sänkt livskvalité
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -27,6 +27,3 @@ Vi tar emot remisser från läkare, sjukgymnaster, naprapater och kiropraktorer.
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

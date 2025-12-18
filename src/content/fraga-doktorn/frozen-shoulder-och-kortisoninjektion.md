@@ -34,6 +34,3 @@ Det är oklart om sjukgymnastiks mobilisering förkortar sjukdomsförloppet.
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

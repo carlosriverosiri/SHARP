@@ -28,6 +28,3 @@ Att du inte har ont över yttre nyckelbensleden talar mer för impingement.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

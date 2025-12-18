@@ -22,6 +22,3 @@ Efter så pass lång tid med axelsmärtor så förefaller det rimligt att man ut
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

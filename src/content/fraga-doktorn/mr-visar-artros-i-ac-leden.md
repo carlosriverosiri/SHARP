@@ -30,6 +30,3 @@ Om du har en viss instabilitet i axelleden, sm채rtor i nyckelbensleden eller sm�
 - MR-fynd som artros, labrum-skador och tendinos 채r vanliga hos friska personer
 - Diagnos kan inte st채llas enbart p책 MR-svar
 - MR-fynden 채r relevanta om du har kliniska symtom (sm채rta, instabilitet)
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

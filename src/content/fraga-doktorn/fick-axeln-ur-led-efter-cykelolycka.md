@@ -17,6 +17,3 @@ Axelskador är vanliga hos cyklister som cyklar omkull. Om du bedömmer att risk
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

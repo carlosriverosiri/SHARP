@@ -35,6 +35,3 @@ Vid lätta till måttliga smärtor är nog det bästa att bara vänta ut självl
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

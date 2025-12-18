@@ -28,6 +28,3 @@ Har du fortfarande stora problem efter något år så bör man överväga operat
 - AC-ledsartros är vanligt men ger oftast inga besvär
 - Sjukgymnastik hjälper om du är stel i axelleden
 - Operation kan övervägas vid långvariga besvär
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

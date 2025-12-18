@@ -29,6 +29,3 @@ När axelleden är uppenbart stel med ett starkt reducerat rörelseomfång och e
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

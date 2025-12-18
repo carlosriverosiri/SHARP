@@ -22,6 +22,3 @@ Sjukdomen är självläkande, vid outhärdlig smärta kan man ibland vara tvunge
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

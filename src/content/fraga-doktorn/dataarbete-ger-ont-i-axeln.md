@@ -24,6 +24,3 @@ Du kan se om inte symptomen vid impingement eller frusen axel liknar dina sympto
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

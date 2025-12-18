@@ -22,6 +22,3 @@ I ditt fall vore det nog bra att utesluta andra diagnoser ex.  instabilitet, ba
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

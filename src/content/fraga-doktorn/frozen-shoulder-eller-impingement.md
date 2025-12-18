@@ -18,6 +18,3 @@ Om du klarar av att lirka handen till ländryggen så är diagnosen sannolikt in
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

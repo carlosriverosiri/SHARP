@@ -28,6 +28,3 @@ Den öppna operationen är tekniskt enkel att utföra, men ger några veckors l�
 - Artroskopisk teknik ger snabbare rehabilitering
 - Öppen teknik är tekniskt enklare men tar längre att återhämta sig från
 - Båda metoderna ger likvärdiga långtidsresultat
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -19,6 +19,3 @@ Prata med din husläkare så du kan få din axel röntgad och sedan  bli remitt
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

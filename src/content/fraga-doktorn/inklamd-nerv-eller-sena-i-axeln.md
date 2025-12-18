@@ -27,6 +27,3 @@ Sjukgymnastik brukar fungera bra vid impingement och mindre bra vid artros i ytt
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

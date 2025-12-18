@@ -30,6 +30,3 @@ En ny operation är sällan nödvändig.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

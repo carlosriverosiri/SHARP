@@ -30,6 +30,3 @@ Att du inte får upp handen till munnen låter dock inte så bra.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

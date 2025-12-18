@@ -27,6 +27,3 @@ Upplever du idag inte någon större svaghet i axelleden och kan lyfta armen pro
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

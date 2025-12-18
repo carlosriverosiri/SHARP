@@ -18,6 +18,3 @@ Be din husläkare remittera dig för en second opinion bedömning till en annan 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

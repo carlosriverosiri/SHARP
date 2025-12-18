@@ -19,6 +19,3 @@ Då kan en datortomografisk utredning (CT)  vara av värde.  Det är dock ganska
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

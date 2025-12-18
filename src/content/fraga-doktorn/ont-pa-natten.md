@@ -27,6 +27,3 @@ Kontakta en  sjukgymnast för att få ett bra träningsprogram.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -35,6 +35,3 @@ Det bästa är att du försöker få till ett besök hos en axelspecialist i Spa
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

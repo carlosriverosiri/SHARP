@@ -29,6 +29,3 @@ Det kan ibland ta ett eller två år innan man blir bra.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

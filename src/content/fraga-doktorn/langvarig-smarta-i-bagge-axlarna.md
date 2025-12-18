@@ -22,6 +22,3 @@ Får du en grop på framsidan av axeln vid vissa speciella rörelser och du samt
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

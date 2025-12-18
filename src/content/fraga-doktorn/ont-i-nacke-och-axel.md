@@ -29,6 +29,3 @@ Men effekten är inte alltid så långvarig. /
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

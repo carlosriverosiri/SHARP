@@ -28,6 +28,3 @@ Den förstelnade ledkapseln måste förr eller senare spräckas eller tänjas ut
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

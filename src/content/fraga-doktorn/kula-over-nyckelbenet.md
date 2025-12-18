@@ -44,6 +44,3 @@ Artros i nyckelbensleden går att operera med goda resultat.
 - Vid artros kan nyckelbensleden växa och kännas som en knöl
 - Sjukgymnastik hjälper främst om axeln är stel
 - Operation är ett alternativ med goda resultat
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

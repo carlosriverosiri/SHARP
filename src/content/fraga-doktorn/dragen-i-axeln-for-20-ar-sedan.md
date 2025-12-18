@@ -27,6 +27,3 @@ Vid långvarig kronisk värk som inte förbättras av sjukgymnastik är operatio
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

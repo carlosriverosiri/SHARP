@@ -19,6 +19,3 @@ Det är inte ovanligt att man får problem med båda axlarna samtidigt.
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -27,6 +27,3 @@ Får du betydligt bättre rörlighet efter varje gång du tagit smärtstillande 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -36,6 +36,3 @@ Vid en långvarig och mycket stark smärta som påtagligt försämrar din livskv
 - Minskad belastning brukar hjälpa
 - Impingement (inklämd sena) kan förekomma samtidigt och svarar bra på sjukgymnastik
 - Operation kan övervägas vid långvarig, stark smärta
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

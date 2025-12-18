@@ -19,6 +19,3 @@ En uttalad stelhet i axeln där man inte kan lyfta armen upp till axelhöjd, int
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

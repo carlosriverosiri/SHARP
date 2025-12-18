@@ -30,6 +30,3 @@ Det är inte ovanligt att träffa patienter som först genomgått en frusen axel
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

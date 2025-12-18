@@ -22,6 +22,3 @@ Fungerar inte långvarig rehab så är en artroskopisk operation ett bra alterna
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

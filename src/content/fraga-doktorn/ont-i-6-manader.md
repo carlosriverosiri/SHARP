@@ -22,6 +22,3 @@ Det är viktigt att du snabbt får en tid för bedömning och behandling hos en 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

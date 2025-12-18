@@ -26,6 +26,3 @@ Sannolikt kommer MR undersökningen besvara en del frågor.
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -42,6 +42,3 @@ Om du känner dig lite stel i axelleden så är det viktigt med sjukgymnastik. H
 - Besvären brukar klinga av inom ett år
 - Kortisoninjektion kan prova vid uttalade smärtor
 - Sjukgymnastik hjälper om du är stel, mindre effekt vid normal rörlighet
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

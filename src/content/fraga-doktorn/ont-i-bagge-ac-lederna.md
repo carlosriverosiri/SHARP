@@ -40,6 +40,3 @@ Jag tycker det är tveksamt att operera en led som ser helt frisk ut på röntge
 - Vid Weightlifter's shoulder syns förändringar på röntgen efter lång tid
 - Prova kortison + lokalbedövning innan operation övervägs
 - Operation är tveksamt om röntgen ser normal ut
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

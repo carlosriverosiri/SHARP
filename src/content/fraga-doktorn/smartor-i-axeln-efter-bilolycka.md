@@ -25,6 +25,3 @@ Den typen av MR-undersökning som vanligen används i Sverige är inte optimal f
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -27,6 +27,3 @@ Men resultatet är beroende på olika typer av skador som uppstått i axelleden,
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

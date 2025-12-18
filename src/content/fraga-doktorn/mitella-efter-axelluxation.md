@@ -18,6 +18,3 @@ Det finns en svensk studie som visar att mitellan inte ger bättre läkning efte
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

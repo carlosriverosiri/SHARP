@@ -24,6 +24,3 @@ Räkna med att du kan komma igång inom några veckor efter operationen.
 **Sammanfattning:**
 - Vid artroskopisk operation kan du börja belasta när smärtan tillåter
 - Räkna med att kunna börja rida igen inom några veckor
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

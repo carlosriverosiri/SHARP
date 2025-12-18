@@ -18,6 +18,3 @@ Man brukar börja med att utföra en vanlig slätröntgen. Vid mångåriga smär
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -24,6 +24,3 @@ Prata med din husläkare, se till så du får en röntgen, därefter en remiss t
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

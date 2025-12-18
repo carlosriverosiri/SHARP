@@ -22,6 +22,3 @@ Vid en långvarig kronisk mycket stark smärta kan en operation vara ett alterna
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

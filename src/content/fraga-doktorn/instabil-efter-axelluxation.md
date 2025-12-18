@@ -23,6 +23,3 @@ Man bör utesluta en rotatorcuffruptur snarast. Sannolikheten att det är en pro
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

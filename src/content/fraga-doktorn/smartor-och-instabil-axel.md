@@ -29,6 +29,3 @@ Den primära orsaken till smärtan är oftast själva instabiliteten i axelleden
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

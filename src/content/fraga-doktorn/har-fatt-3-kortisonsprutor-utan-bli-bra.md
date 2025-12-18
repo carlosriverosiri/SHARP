@@ -21,6 +21,3 @@ Har du haft frusen axel i snart 10  månader och svårt att sova, svårt att jo
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -31,6 +31,3 @@ Det finns dock en liten risk för axeln blir mer instabil efter en sådan operat
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

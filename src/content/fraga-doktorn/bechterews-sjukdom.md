@@ -30,6 +30,3 @@ Kontakta din husläkare för att få en röntgen utförd. /
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -32,6 +32,3 @@ Små skador har sannolikt inte så stor betydelse hos patienter med en låg akti
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -18,6 +18,3 @@ Det är inte ovanligt att man får skador i axelleden när axeln går ur led upp
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

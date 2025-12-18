@@ -23,6 +23,3 @@ Normalt sett utreder man långvariga axelsmärtor med en vanlig röntgenundersö
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

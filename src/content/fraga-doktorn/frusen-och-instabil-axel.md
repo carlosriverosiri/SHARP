@@ -27,6 +27,3 @@ Då är det inte frusen axel.  Men du kan lika gärna ha haft en instabilitet i 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

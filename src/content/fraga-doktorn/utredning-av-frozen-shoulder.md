@@ -22,6 +22,3 @@ Enklast är att du bokar tid hos oss så hjälper vi dig vidare. / , specialist 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -25,6 +25,3 @@ Vid instabilitet brukar inte kortisoninjektioner hjälpa.
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

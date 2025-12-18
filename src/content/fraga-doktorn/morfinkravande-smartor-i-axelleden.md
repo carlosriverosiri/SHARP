@@ -32,6 +32,3 @@ Blir du smärtfri av lokalbedövningen, under någon timme efter en sådan injek
 
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

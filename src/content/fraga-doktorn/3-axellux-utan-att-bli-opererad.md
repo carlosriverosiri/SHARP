@@ -18,6 +18,3 @@ Det finns nog ganska få axelspecialister som inte skulle rekommendera operation
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

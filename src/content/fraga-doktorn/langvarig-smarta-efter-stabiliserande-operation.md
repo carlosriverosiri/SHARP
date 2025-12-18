@@ -30,6 +30,3 @@ Stelhet och sammanväxtningar: Är du opererad med artroskpisk teknik så är de
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

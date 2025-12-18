@@ -22,6 +22,3 @@ MVH
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -27,6 +27,3 @@ Hos yngre patienter har alla överbelastningssmärtor en stark tendens att läka
 **Sammanfattning:**
 - Kortisoninjektion kan övervägas
 - Vila och avlastning rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

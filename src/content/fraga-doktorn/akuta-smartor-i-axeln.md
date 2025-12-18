@@ -29,6 +29,3 @@ Det finns en lång rad orsaker till smärtor i axelleden. Oftast är inte en ope
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

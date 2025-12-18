@@ -30,6 +30,3 @@ Detta brukar läka ut.
 - Trolig diagnos: Weightlifter's shoulder (distal klavikulär osteolys)
 - Vanligt hos styrketränande
 - Brukar läka ut av sig själv
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

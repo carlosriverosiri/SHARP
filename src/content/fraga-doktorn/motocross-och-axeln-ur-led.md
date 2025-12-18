@@ -21,6 +21,3 @@ Vanligen skadas leden av att ledkulan glider ur led. Skadorna blir större om ma
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

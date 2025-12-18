@@ -25,6 +25,3 @@ Upplever du axelleden som betydligt svagare än tidigare så bör du både komma
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

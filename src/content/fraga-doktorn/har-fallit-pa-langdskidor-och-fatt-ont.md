@@ -17,6 +17,3 @@ Tag kontakt med din husläkare/företagsläkare och be denna beställ en MR av a
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

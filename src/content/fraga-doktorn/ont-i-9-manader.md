@@ -34,6 +34,3 @@ Be någon titta på om dina skulderblad rör sig symmetriskt när du belastar de
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -31,6 +31,3 @@ En kortisoninjektion i axelleden kan då fungera bra.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

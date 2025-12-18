@@ -33,6 +33,3 @@ Normalt sett ser man den mest påtagliga effekten av operationen inom ett år. D
 - Förbättring av smärta och rörlighet kan förväntas
 - Alla blir inte helt smärtfria
 - Största förbättringen ses inom första året, sedan ytterligare förbättring
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

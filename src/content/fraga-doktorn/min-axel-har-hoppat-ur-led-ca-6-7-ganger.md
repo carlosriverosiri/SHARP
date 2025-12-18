@@ -33,6 +33,3 @@ Be din husläkare om en remiss till en axelspecialist
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

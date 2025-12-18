@@ -27,6 +27,3 @@ Vid dålig rörlighet och uttalad värk så brukar en axelprotes både kunna ge 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

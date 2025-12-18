@@ -30,6 +30,3 @@ Det tar lång tid enveten träning att för att lyckas balansera om axelleden vi
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

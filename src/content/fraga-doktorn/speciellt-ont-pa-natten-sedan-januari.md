@@ -25,6 +25,3 @@ Den smärtan kan stråla ned i hela bicepsmuskeln och biceps nedre fäste. /
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

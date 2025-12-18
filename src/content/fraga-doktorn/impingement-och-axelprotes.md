@@ -21,6 +21,3 @@ Vad gäller vänster axelled så är det väl inte osannolikt att det går att f
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

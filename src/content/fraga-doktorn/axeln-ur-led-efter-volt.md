@@ -52,6 +52,3 @@ I ditt fall rekommenderas rehabilitering och egenträning i första hand, vid et
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

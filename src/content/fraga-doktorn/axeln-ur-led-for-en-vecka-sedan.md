@@ -26,6 +26,3 @@ Får du en ny axelluxation, eller om axelleden känns instabil en lång tid efte
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

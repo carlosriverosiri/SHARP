@@ -21,6 +21,3 @@ Om du har en uttalad stelhet i axelleden, konstant molvärk och MR inte visar p�
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

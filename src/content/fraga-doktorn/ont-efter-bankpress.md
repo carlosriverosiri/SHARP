@@ -25,6 +25,3 @@ Excentrisk träning innebär att man använder lägre vikter och belastar senan 
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

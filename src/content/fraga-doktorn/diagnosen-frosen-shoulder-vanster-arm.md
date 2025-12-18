@@ -25,6 +25,3 @@ Morfintabletter är ingen hållbar lösning vid en långvarig kronisk smärta.
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

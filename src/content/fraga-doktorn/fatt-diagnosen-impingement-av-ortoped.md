@@ -31,6 +31,3 @@ Vid långvarig kronisk impingement kan en operation vara nödvändig.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

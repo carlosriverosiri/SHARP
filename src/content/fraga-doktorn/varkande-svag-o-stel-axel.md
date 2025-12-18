@@ -29,6 +29,3 @@ Eftersom du har haft ont så pass länge och verkar ha en uttalad smärta så ty
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

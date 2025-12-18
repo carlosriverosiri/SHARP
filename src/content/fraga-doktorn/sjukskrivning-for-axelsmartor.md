@@ -20,6 +20,3 @@ Hej, Du bör kontakta din husläkare för att få hjälp med en utredning (rönt
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

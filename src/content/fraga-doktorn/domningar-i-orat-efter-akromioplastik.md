@@ -21,6 +21,3 @@ Har du fått en nervskada så att huden är helt död flera månader efter opera
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

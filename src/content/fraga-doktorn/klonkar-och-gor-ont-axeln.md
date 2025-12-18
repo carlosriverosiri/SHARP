@@ -21,6 +21,3 @@ Domningar och smärtor ut i armen, nacke skulderblad är inge ovanliga symptom v
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

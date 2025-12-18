@@ -26,6 +26,3 @@ Det är sannolikt en fördel att även träna de stora muskelgrupperna i benen, 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

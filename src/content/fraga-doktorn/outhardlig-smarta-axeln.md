@@ -42,6 +42,3 @@ Enklast är att du själv ringer till oss för att boka tid.
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

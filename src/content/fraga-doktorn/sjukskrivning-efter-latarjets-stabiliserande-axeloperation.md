@@ -27,6 +27,3 @@ Normalt sett kan du återgå till tyngre arbetren redan inom några månader.
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

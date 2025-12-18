@@ -41,6 +41,3 @@ Vid kombinationen nack- och axelsmärtor är en ömmande AC-led ett vanligt fynd
 - Impingement: varierande smärta, värst nattetid och efter belastning
 - AC-ledsartros: vanligt vid kombinationen nack- och axelsmärtor
 - En ömmande AC-led är ett vanligt fynd vid dessa kombinerade besvär
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

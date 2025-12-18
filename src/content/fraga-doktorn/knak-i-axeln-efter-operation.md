@@ -25,6 +25,3 @@ Det är helt ofarligt.
 **Sammanfattning:**
 - Knak i axeln efter operation är vanligt
 - Det är ofarligt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

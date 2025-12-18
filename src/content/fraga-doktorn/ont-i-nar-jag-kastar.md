@@ -23,6 +23,3 @@ Jag tycker att du skall prata med dina föräldrar och be dem kontakta husläkar
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

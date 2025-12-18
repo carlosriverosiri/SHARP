@@ -26,6 +26,3 @@ Går axeln ur led framåt eller bakåt eller bägge delar? Frekvensen reoperatio
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

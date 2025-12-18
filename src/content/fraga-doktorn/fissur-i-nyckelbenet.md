@@ -29,6 +29,3 @@ Det bästa är att du tar kontakt med den läkare som beställde röntgenunders�
 **Sammanfattning:**
 - Röntgensvar behöver tolkas tillsammans med bilderna
 - Kontakta läkaren som beställde undersökningen för bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

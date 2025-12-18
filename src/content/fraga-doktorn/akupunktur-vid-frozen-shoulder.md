@@ -21,6 +21,3 @@ Jag saknar dock kunskaper om akupunktur och kan därför inte skriva om metoden.
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

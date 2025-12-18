@@ -28,6 +28,3 @@ Har jag huvudsakligen snörpt ihop ledkapseln på baksidan så blir nästan allt
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

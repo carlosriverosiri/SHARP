@@ -21,6 +21,3 @@ Det är dock väldigt vanligt att vissa sovpositioner gör mer ont än andra och
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

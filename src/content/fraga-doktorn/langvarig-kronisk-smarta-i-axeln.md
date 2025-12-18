@@ -27,6 +27,3 @@ Blir det inte bättre på några månaders sjukgymnastik så är det rimligt att
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

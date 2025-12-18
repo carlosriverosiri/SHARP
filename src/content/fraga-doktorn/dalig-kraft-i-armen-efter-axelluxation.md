@@ -26,6 +26,3 @@ ROTATORCUFFSKADA; Denna utreds med en magnetkameraundersökning (MR). Magnetkame
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

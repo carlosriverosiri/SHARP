@@ -21,6 +21,3 @@ Utan att exakt veta vad som gör ont så är det lite vanskligt att ge några me
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

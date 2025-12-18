@@ -35,6 +35,3 @@ Men var försiktig med att gå över 0-grader när du tränar infraspinatus. Fi
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -33,6 +33,3 @@ Lite slitage i nyckelbensleden är inte ovanligt. /
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

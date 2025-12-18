@@ -37,6 +37,3 @@ Oavsett orsak så brukar smärtorna i nyckelbensleden minska med minskad belastn
 - Artros i sig är inte skadligt, men kan göra ont
 - Smärtan är oftast övergående
 - Minskad belastning ger oftast mindre smärta
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

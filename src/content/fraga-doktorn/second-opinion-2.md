@@ -22,6 +22,3 @@ Du bör dock beställa journalkopior från de kliniker där du blivit behandlad 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -28,6 +28,3 @@ Axeldiagnostik kräver en viss erfarenhet, denna erfarenhet är svår att få f�
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

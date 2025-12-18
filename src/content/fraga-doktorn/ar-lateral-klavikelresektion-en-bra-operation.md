@@ -37,6 +37,3 @@ Vid typiska kliniska fynd, typisk sjukdomshistoria och en typisk röntgenbild s�
 - Typisk smärta från nyckelbensleden strålar mot nacken, inte ut i armen
 - Domningar tyder på att problemet inte enbart sitter i nyckelbensleden
 - Lateral klavikelresektion lyckas i 85–90 % av fallen vid rätt diagnos
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

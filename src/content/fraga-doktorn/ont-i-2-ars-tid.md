@@ -17,6 +17,3 @@ Du behöver få en ordentlig diagnos. Vänd dig till en specialist i ortopedi me
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

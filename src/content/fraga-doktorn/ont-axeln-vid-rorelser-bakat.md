@@ -26,6 +26,3 @@ Sjukgymnastik brukar framför allt förkorta sjukdomsförloppet.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

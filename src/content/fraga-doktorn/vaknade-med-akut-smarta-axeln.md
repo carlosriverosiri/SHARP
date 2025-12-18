@@ -48,6 +48,3 @@ Bägge sjukdomarna har en god prognos i din ålder.
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

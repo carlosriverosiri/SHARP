@@ -26,6 +26,3 @@ Problemet kan bl.a. härstamma från slemsäcken (bursan), senfästen eller i ny
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

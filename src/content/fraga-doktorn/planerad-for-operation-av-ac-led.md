@@ -36,6 +36,3 @@ Rehabtiden efter operationen beror på vilken typ av operation som planeras. Reh
 - Båda tillstånden kan förekomma samtidigt
 - Vid titthålsoperation kan man åtgärda båda problemen
 - Titthålskirurgi ger snabbare rehab än öppen operation
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

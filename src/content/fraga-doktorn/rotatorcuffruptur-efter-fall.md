@@ -26,6 +26,3 @@ En erfaren axelspecialist kan ställa diagnosen utan MR eller ultraljud
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

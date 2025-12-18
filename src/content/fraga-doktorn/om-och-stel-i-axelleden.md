@@ -15,6 +15,3 @@ Symptomen påminner mest om impingement. Har du uttalade smärtor som varat mer 
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

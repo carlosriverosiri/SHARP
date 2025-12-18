@@ -29,6 +29,3 @@ Ser allt bra ut så behöver man inte oroa sig.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

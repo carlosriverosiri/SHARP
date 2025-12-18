@@ -21,6 +21,3 @@ Både ledskålen och ledhuvuvudet kan få permanenta skador av långvariga axell
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

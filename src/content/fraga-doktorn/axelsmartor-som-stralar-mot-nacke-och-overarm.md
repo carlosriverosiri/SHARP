@@ -30,6 +30,3 @@ Vid långvariga besvär med smärtor både under arbetsdagen och på natten kan 
 - Smärta som strålar mot nacken tyder på artros i nyckelbensleden
 - Antiinflammatoriska läkemedel (Naproxen) kan hjälpa
 - Vid långvariga besvär dag och natt – sök remiss till ortoped
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

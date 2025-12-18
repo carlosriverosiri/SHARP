@@ -26,6 +26,3 @@ En del patienter upplever att  smärtan minskar när de fått en diagnos så de
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

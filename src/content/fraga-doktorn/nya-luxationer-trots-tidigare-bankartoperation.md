@@ -30,6 +30,3 @@ Det krävs en ganska erfaren ultraljudsundersökare för att en ultraljudsunders
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

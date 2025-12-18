@@ -25,6 +25,3 @@ Egentligen är det mer en ändring av livsstil som är nödvändig, där tränin
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

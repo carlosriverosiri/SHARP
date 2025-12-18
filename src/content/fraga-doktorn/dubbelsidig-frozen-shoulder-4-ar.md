@@ -26,6 +26,3 @@ Operationen brukar lyckas i 80-90% av fallen.
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

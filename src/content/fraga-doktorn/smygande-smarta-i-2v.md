@@ -18,6 +18,3 @@ Det låter lite som impingement. Problemen är vanligen övergående och förbä
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

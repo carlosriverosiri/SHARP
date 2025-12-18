@@ -22,6 +22,3 @@ Det är nog inte så sannolikt att du skadat axeln. Den typen av händelser som 
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

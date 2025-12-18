@@ -44,6 +44,3 @@ Vid långvariga kroniska smärtor och en påtaglig sänkning av livskvalitén ka
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

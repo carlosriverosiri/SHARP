@@ -29,6 +29,3 @@ Då brukar det göra ont på "knölen" som sitter på ovansidan av axeln.
 **Sammanfattning:**
 - Smärta på ovansidan av axeln med utstrålning mot nacken tyder på AC-ledsproblem
 - AC-leden sitter som en knöl på ovansidan av axeln
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

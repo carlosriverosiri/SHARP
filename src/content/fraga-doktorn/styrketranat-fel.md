@@ -34,6 +34,3 @@ Att inte träna rotatorcuffen är som att bygga ett hus utan grund. Om du tar ko
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

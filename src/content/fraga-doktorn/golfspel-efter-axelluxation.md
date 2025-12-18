@@ -17,6 +17,3 @@ Golf är inte en sport med hög risk för axellluxation. När du återfått rör
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

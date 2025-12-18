@@ -30,6 +30,3 @@ Be din husläkare om en remiss till en ortopedspecialist.
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

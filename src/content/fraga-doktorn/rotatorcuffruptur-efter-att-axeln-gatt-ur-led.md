@@ -25,6 +25,3 @@ De vanligaste orsakerna till dålig kraft i axelleden efter en axelluxation är 
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

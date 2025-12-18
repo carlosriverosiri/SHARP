@@ -29,6 +29,3 @@ Det bästa är nog att du tar kontakt med det sjukhus där du blev opererad för
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

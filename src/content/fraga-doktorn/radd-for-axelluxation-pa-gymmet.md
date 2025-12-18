@@ -26,6 +26,3 @@ Jag har aldrig träffat en patient som drabbats av en axelluxation när de trän
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

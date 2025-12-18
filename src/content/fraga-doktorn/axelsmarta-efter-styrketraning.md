@@ -34,6 +34,3 @@ Något förslag?
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Vila och avlastning rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

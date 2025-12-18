@@ -18,6 +18,3 @@ Du behöver än så länge ingen remiss.
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

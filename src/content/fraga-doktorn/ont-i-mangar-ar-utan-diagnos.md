@@ -31,6 +31,3 @@ Det faktum att du redan är opererad utan förbättring och att symptomen varat
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

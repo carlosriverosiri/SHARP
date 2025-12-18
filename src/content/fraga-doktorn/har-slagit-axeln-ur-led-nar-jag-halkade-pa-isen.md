@@ -22,6 +22,3 @@ MR verkar bara visa typiska förändringar som efter en axelluxation. Prognosen 
 
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

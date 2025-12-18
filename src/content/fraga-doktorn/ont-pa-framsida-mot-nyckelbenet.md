@@ -20,6 +20,3 @@ Det kan vara bra att prata med någon som tränat länge på gym, de har sannoli
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

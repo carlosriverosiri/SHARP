@@ -32,6 +32,3 @@ Man får förmoda att man uteslutit en rotatorcuffruptur med hjälp av ultraljud
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

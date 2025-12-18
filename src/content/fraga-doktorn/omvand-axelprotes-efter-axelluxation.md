@@ -41,6 +41,3 @@ Det finns alltid risker med en operation. Riskerna är större eller mindre bero
 **Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

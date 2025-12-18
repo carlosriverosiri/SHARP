@@ -31,6 +31,3 @@ Risken för att axelleden skall hoppa ur led en gång till är sannolikt inte sp
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

@@ -42,6 +42,3 @@ Du kan också ha en Bankartskada som krullat upp sig långt under ledskålen (gl
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

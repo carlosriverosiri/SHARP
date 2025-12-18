@@ -23,6 +23,3 @@ Den mest sannolika diagnosen är naturligtvis "impingement", inklämd sena. Klas
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

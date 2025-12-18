@@ -19,6 +19,3 @@ Mitt råd är att du ber en erfaren sjukgymnast bedöma och behandla axeln. Blir
 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

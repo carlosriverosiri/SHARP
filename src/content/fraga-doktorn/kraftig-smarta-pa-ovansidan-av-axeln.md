@@ -35,6 +35,3 @@ Det finns flera olika orsaker till detta. En möjlig orsak hos lite yngre patien
 - Svullnad i nyckelbensleden kan få axeln att se hängande ut
 - Hos unga kan det vara Weightlifter's shoulder
 - Hos äldre kan det vara artros i nyckelbensleden
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

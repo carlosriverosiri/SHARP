@@ -23,6 +23,3 @@ När smärtan börjar lägga sig är det dags att börja med sjukgymnastik för 
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

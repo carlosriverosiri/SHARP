@@ -19,6 +19,3 @@ Det är rimligt att du får komma till en axelspecialist. Be din husläkare att 
 
 **Sammanfattning:**
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

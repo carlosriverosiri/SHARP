@@ -30,6 +30,3 @@ Upplever du en reducerad smärta efter en sådan kortisoninjektion i axelns slem
 **Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

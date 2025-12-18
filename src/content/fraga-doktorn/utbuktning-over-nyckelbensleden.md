@@ -35,6 +35,3 @@ Bägge åkommorna behandlas bäst med tålamod och en period av minskad belastni
 - Smärta på utsidan av armen tyder på impingement
 - Behandling: minskad belastning och tålamod
 - Sjukgymnastik hjälper vid impingement, men inte lika bra vid artros
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

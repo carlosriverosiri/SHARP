@@ -20,6 +20,3 @@ Diagnosen baseras på att du har en uttalad stelhet i axelleden. Du kan inte ens
 
 **Sammanfattning:**
 - Kontakta läkare för individuell bedömning
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

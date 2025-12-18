@@ -26,6 +26,3 @@ Artros i axelleden är inte ovanligt efter axelluxationer. , specialist i ortope
 **Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*

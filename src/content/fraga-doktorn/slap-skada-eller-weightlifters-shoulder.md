@@ -31,6 +31,3 @@ Vid långvariga problem hos unga vältränade individer bör man överväga diag
 **Sammanfattning:**
 - Smärta som strålar mot örat och skulderbladet kan komma från nyckelbensleden eller labrum
 - Hos unga som tränar gym: överväg Weightlifter's shoulder eller SLAP-skada
-
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
