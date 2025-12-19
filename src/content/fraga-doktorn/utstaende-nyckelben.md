@@ -26,3 +26,4 @@ Nyckelbensleden är dock väldigt smärtkänslig, har du otur kan du drabbas av 
 - Risk för kroniskt smärttillstånd finns
 - Var försiktig med estetiska operationer i nyckelbensleden
 
+

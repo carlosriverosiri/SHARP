@@ -29,3 +29,4 @@ Det går nämligen inte att sluta träna rotatorcuffen utan att återigen bli in
 - Kräver livsstilsförändring - inte bara rehab
 - 4-5 träningspass/vecka i 6 månader
 
+

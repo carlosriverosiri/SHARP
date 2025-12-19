@@ -28,3 +28,4 @@ Vid överrörlighet så brukar sjukgymnastik ha en god effekt på axelsmärtor.
 - Sjukgymnastik rekommenderas
 - God effekt av sjukgymnastik vid överrörlighet
 
+

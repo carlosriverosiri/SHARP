@@ -30,3 +30,4 @@ Vanliga smärtstillande mediciner är ett förstahandsval.
 - Kontakta husläkare för bedömning
 - Vid långvariga besvär - träffa axelspecialist
 
+

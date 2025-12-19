@@ -2,7 +2,7 @@
 title: "SLAP-skada eller Weightlifter's shoulder?"
 description: "Fråga om plötslig axelsmärta som strålar mot örat och skulderbladet hos en gymtränande person."
 category: "axel"
-topic: "weightlifters-shoulder"
+topic: "labrumskada"
 tags: ["ac-led", "nyckelbensleden", "SLAP-skada", "weightlifters-shoulder", "gym"]
 date: 2012-11-12
 author: "Dr. Carlos Rivero Siri"

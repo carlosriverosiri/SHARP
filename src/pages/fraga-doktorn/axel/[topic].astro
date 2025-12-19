@@ -65,9 +65,12 @@ const pageDescription = `Läs ${questions.length} besvarade frågor om ${topic.t
         <span class="text-sky-400">{topic.shortTitle || topic.title}</span>
       </div>
       
-      <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase">
-        {categoryLabels[topic.category].replace(/^[^\s]+\s/, '')}
-      </span>
+      <a 
+        href={`/fraga-doktorn/axel/#${topic.category}`}
+        class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase hover:bg-sky-600/50 transition-colors"
+      >
+        {categoryLabels[topic.category]}
+      </a>
       
       <h1 class="text-2xl md:text-3xl lg:text-4xl font-black mb-3 leading-tight tracking-tight">
         {topic.title}
@@ -184,6 +187,7 @@ const pageDescription = `Läs ${questions.length} besvarade frågor om ${topic.t
   </section>
 
 </BaseLayout>
+
 
 
 

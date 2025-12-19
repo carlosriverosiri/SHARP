@@ -25,3 +25,4 @@ Biverkningarna efter en kortisoninjektion i axelleden är desamma som hos indivi
 
 
 
+

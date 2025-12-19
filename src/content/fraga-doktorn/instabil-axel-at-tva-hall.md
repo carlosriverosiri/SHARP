@@ -40,3 +40,4 @@ Därför är det oftast klokt att vara lite restriktiv med att rekommendera kiru
 - En del patienter har besvärlig period efter operation
 - Läkare är ofta restriktiva med kirurgi
 
+

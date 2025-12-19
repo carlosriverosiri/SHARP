@@ -33,3 +33,4 @@ Det brukar vara vettigt att försöka med några kortisoninjektioner i själva a
 - Vanliga orsaker: kapsulit, tendinit
 - Kortisoninjektion kan övervägas
 
+

@@ -39,3 +39,4 @@ Opererar man en patient med dålig funktion, starka smärtor och påtagligt sän
 - Patienter med stark smärta blir sällan värre av operation
 - Kontakta läkare för individuell bedömning
 
+

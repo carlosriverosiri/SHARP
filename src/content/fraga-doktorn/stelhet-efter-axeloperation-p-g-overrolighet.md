@@ -35,3 +35,4 @@ Resultatet av operationen brukar synas 6-12 månader efter operationen.
 - Stelhet är normalt 2-3 månader efter operation
 - Resultat syns efter 6-12 månader
 
+

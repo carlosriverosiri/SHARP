@@ -30,3 +30,4 @@ Vid instabilitet brukar inte kortisoninjektioner hjälpa.
 - Kortisoninjektion hjälper troligen inte vid instabilitet
 - Kontakta läkare för individuell bedömning
 
+

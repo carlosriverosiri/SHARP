@@ -29,3 +29,4 @@ Kontakta en sjukgymnast och husläkare för att få en bedömning av din axel.
 - Sjukgymnastik/träning kan hjälpa
 - Kontakta läkare för individuell bedömning
 
+

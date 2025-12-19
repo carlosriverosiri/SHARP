@@ -15,10 +15,10 @@ export type TopicCategory = 'smartlokalisation' | 'diagnoser' | 'skador' | 'ovri
 export type BodyPart = 'axel' | 'kna' | 'armbage';
 
 export const categoryLabels: Record<TopicCategory, string> = {
-  smartlokalisation: '📍 Smärtlokalisation',
-  diagnoser: '🔬 Diagnoser',
-  skador: '💥 Skador & Instabilitet',
-  ovrigt: '❓ Övrigt',
+  smartlokalisation: 'Smärtlokalisation',
+  diagnoser: 'Diagnoser',
+  skador: 'Skador & Instabilitet',
+  ovrigt: 'Övrigt',
 };
 
 export const categoryDescriptions: Record<TopicCategory, string> = {

@@ -33,3 +33,4 @@ När SC-leden börjar sticka ut så handlar det för det mesta om SC-leds artros
 - SC-leden opereras nästan aldrig
 - Vila och avlastning rekommenderas
 
+

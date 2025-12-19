@@ -34,3 +34,4 @@ Den metod som sannolikt ger bäst resultat är en steloperation av axelleden.
 - Hög frekvens misslyckade operationer vid EDS
 - Steloperation kan vara ett alternativ i svåra fall
 
+

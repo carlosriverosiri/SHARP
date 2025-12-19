@@ -43,3 +43,4 @@ En förutsättning för att sjukgymnastiken skall fungera är dock att du får r
 - Sök remiss till specialist
 - God prognos - de flesta läker ut med tiden
 
+

@@ -29,3 +29,4 @@ Undvik att medvetet dra axeln ur led då detta kan ge onödiga nötningsskador p
 - Undvik att medvetet dra axeln ur led
 - Risk för nötningsskador på ledband
 
+

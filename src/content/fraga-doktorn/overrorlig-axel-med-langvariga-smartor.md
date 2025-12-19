@@ -39,3 +39,4 @@ Prata med din sjukgymnast och fråga om hen känner till någon bra axelspeciali
 - Operation är ett alternativ om sjukgymnastik inte hjälper
 - Operationen ger bättre kontroll - inte alltid smärtfrihet
 
+

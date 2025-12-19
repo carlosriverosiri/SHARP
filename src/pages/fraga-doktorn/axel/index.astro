@@ -50,10 +50,12 @@ const pageDescription = "Läs svar på vanliga frågor om axelbesvär. Dr. Carlo
       </div>
       
       <div class="flex items-center gap-4 mb-4">
-        <div class="w-16 h-16 rounded-2xl bg-sky-600/30 flex items-center justify-center">
-          <svg class="w-8 h-8 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+        <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-sky-400">
+          <img 
+            src="/images/carlos-rivero-siri.webp" 
+            alt="Dr. Carlos Rivero Siri" 
+            class="w-full h-full object-cover"
+          />
         </div>
         <div>
           <h1 class="text-3xl md:text-4xl font-black tracking-tight">Frågor om axeln</h1>
@@ -77,7 +79,7 @@ const pageDescription = "Läs svar på vanliga frågor om axelbesvär. Dr. Carlo
         if (topicsInCategory.length === 0) return null;
         
         return (
-          <div class="mb-10">
+          <div id={categoryId} class="mb-10 scroll-mt-24">
             <div class="flex items-center gap-3 mb-4">
               <h2 class="text-xl font-bold text-slate-800">
                 {categoryLabels[categoryId]}
@@ -162,6 +164,7 @@ const pageDescription = "Läs svar på vanliga frågor om axelbesvär. Dr. Carlo
   </section>
 
 </BaseLayout>
+
 
 
 

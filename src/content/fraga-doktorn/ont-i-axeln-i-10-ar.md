@@ -43,3 +43,4 @@ Tyvärr så måste du nog göra ett val mellan en lägre aktivitetsnivå eller o
 - Upprepade luxationer gör axeln mer instabil
 - Val mellan lägre aktivitet eller operation
 
+
