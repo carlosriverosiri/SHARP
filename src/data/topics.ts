@@ -192,6 +192,14 @@ export const topics: Topic[] = [
     category: 'skador',
     bodyPart: 'axel',
   },
+  {
+    id: 'pectoralis-ruptur',
+    title: 'Pectoralis major ruptur',
+    shortTitle: 'Pectoralis ruptur',
+    description: 'Bristning av stora bröstmuskeln, vanligt vid styrketräning',
+    category: 'skador',
+    bodyPart: 'axel',
+  },
 
   // --- ÖVRIGT (Axel) ---
   {

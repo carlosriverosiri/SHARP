@@ -2,7 +2,7 @@
 title: "Pectoralis major skada"
 description: "Hej jag har sedan 2 år tillbaka haft en partiell skada av pectoralis major senan. Den bit av pectoralis major senan som närmast armen fäster från Bice..."
 category: "axel"
-topic: "ont-i-axeln"
+topic: "pectoralis-ruptur"
 tags: ["pectoralis-major-ruptur", "operation", "smärta"]
 date: 2014-07-29
 author: "Dr. Carlos Rivero Siri"
