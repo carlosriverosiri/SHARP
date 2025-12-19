@@ -32,10 +32,4 @@ Jag känner inte till några studier där man specifikt har studerat blodsockret
 - Upprepade injektioner kan påverka blodsockret mer
 - Diabetiker bör vara uppmärksamma de första dagarna
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

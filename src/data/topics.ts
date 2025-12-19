@@ -242,8 +242,100 @@ export const topics: Topic[] = [
   },
 
   // ============================================
-  // KNÄ-ÄMNEN (lägg till fler efterhand)
+  // KNÄ-ÄMNEN
   // ============================================
+  
+  // --- SMÄRTLOKALISATION (Knä) ---
+  {
+    id: 'ont-i-knat',
+    title: 'Ont i knät (allmänt)',
+    shortTitle: 'Ont i knät',
+    description: 'Generella frågor om knäsmärta där orsaken är oklar',
+    category: 'smartlokalisation',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'ont-framsidan-knat',
+    title: 'Ont på framsidan av knät',
+    shortTitle: 'Framsidan (patella)',
+    description: 'Smärta på framsidan av knät, ofta relaterat till knäskålen',
+    category: 'smartlokalisation',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'ont-insidan-knat',
+    title: 'Ont på insidan av knät',
+    shortTitle: 'Insidan (medialt)',
+    description: 'Smärta på insidan av knät',
+    category: 'smartlokalisation',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'ont-utsidan-knat',
+    title: 'Ont på utsidan av knät',
+    shortTitle: 'Utsidan (lateralt)',
+    description: 'Smärta på utsidan av knät',
+    category: 'smartlokalisation',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'ont-baksidan-knat',
+    title: 'Ont på baksidan av knät',
+    shortTitle: 'Baksidan (knäveck)',
+    description: 'Smärta i knävecket eller baksidan av knät',
+    category: 'smartlokalisation',
+    bodyPart: 'kna',
+  },
+
+  // --- DIAGNOSER (Knä) ---
+  {
+    id: 'knartros',
+    title: 'Knäartros',
+    description: 'Förslitning av brosket i knäleden',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'patellofemoral-smartsyndrom',
+    title: 'Patellofemoralt smärtsyndrom',
+    shortTitle: 'Patellofemoral smärta',
+    description: 'Smärta kring knäskålen, vanligt hos unga och aktiva',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'loparklna',
+    title: 'Löparknä (ITBS)',
+    shortTitle: 'Löparknä',
+    description: 'Smärta på utsidan av knät vid löpning (iliotibialbandsyndrom)',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'hopparklna',
+    title: 'Hopparknä (patellartendinopati)',
+    shortTitle: 'Hopparknä',
+    description: 'Smärta i patellasenan under knäskålen',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'bakercysta',
+    title: 'Bakercysta',
+    description: 'Vätskefylld cysta i knävecket',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'broskskada-kna',
+    title: 'Broskskada i knät',
+    shortTitle: 'Broskskada',
+    description: 'Skada på ledbrosket i knäleden',
+    category: 'diagnoser',
+    bodyPart: 'kna',
+  },
+
+  // --- SKADOR (Knä) ---
   {
     id: 'meniskskada',
     title: 'Meniskskada',
@@ -254,14 +346,84 @@ export const topics: Topic[] = [
   {
     id: 'korsbandsskada',
     title: 'Korsbandsskada',
+    shortTitle: 'Korsband (ACL/PCL)',
     description: 'Skada på främre eller bakre korsband',
     category: 'skador',
     bodyPart: 'kna',
   },
+  {
+    id: 'sidoledbandsskada',
+    title: 'Sidoledbandsskada',
+    shortTitle: 'Sidoledband (MCL/LCL)',
+    description: 'Skada på inre eller yttre sidoledband',
+    category: 'skador',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'knaskalen-ur-led',
+    title: 'Knäskålen ur led',
+    shortTitle: 'Patellaluxation',
+    description: 'Urledvridning av knäskålen',
+    category: 'skador',
+    bodyPart: 'kna',
+  },
+
+  // --- ÖVRIGT (Knä) ---
+  {
+    id: 'kortisoninjektion-kna',
+    title: 'Kortisoninjektion i knät',
+    shortTitle: 'Kortisoninjektion',
+    description: 'Frågor om kortisonbehandling i knät',
+    category: 'ovrigt',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'operation-kna',
+    title: 'Operation & rehabilitering (knä)',
+    shortTitle: 'Operation & rehab',
+    description: 'Frågor om knäoperationer och rehabilitering',
+    category: 'ovrigt',
+    bodyPart: 'kna',
+  },
+  {
+    id: 'knaprotes',
+    title: 'Knäprotes',
+    description: 'Frågor om knäprotesoperationer',
+    category: 'ovrigt',
+    bodyPart: 'kna',
+  },
 
   // ============================================
-  // ARMBÅGE-ÄMNEN (lägg till fler efterhand)
+  // ARMBÅGE-ÄMNEN
   // ============================================
+  
+  // --- SMÄRTLOKALISATION (Armbåge) ---
+  {
+    id: 'ont-i-armbagen',
+    title: 'Ont i armbågen (allmänt)',
+    shortTitle: 'Ont i armbågen',
+    description: 'Generella frågor om armbågssmärta där orsaken är oklar',
+    category: 'smartlokalisation',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'ont-utsidan-armbagen',
+    title: 'Ont på utsidan av armbågen',
+    shortTitle: 'Utsidan (lateralt)',
+    description: 'Smärta på utsidan av armbågen',
+    category: 'smartlokalisation',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'ont-insidan-armbagen',
+    title: 'Ont på insidan av armbågen',
+    shortTitle: 'Insidan (medialt)',
+    description: 'Smärta på insidan av armbågen',
+    category: 'smartlokalisation',
+    bodyPart: 'armbage',
+  },
+
+  // --- DIAGNOSER (Armbåge) ---
   {
     id: 'tennisarmbage',
     title: 'Tennisarmbåge',
@@ -274,6 +436,64 @@ export const topics: Topic[] = [
     title: 'Golfararmbåge',
     description: 'Smärta på insidan av armbågen (medial epikondylit)',
     category: 'diagnoser',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'armbagsledsartros',
+    title: 'Armbågsledsartros',
+    description: 'Förslitning av brosket i armbågsleden',
+    category: 'diagnoser',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'stelhet-armbage',
+    title: 'Stelhet i armbågen',
+    shortTitle: 'Stelhet',
+    description: 'Nedsatt rörlighet och stelhet i armbågsleden',
+    category: 'diagnoser',
+    bodyPart: 'armbage',
+  },
+
+  // --- SKADOR (Armbåge) ---
+  {
+    id: 'distal-bicepsruptur',
+    title: 'Distal bicepsruptur',
+    shortTitle: 'Bicepsruptur',
+    description: 'Bristning av nedre bicepssenan vid armbågen',
+    category: 'skador',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'tricepsruptur',
+    title: 'Tricepsruptur',
+    description: 'Bristning av tricepssenan',
+    category: 'skador',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'armbagsinstabilitet',
+    title: 'Armbågsinstabilitet',
+    shortTitle: 'Instabilitet',
+    description: 'Instabilitet i armbågsleden efter skada',
+    category: 'skador',
+    bodyPart: 'armbage',
+  },
+
+  // --- ÖVRIGT (Armbåge) ---
+  {
+    id: 'kortisoninjektion-armbage',
+    title: 'Kortisoninjektion i armbågen',
+    shortTitle: 'Kortisoninjektion',
+    description: 'Frågor om kortisonbehandling i armbågen',
+    category: 'ovrigt',
+    bodyPart: 'armbage',
+  },
+  {
+    id: 'operation-armbage',
+    title: 'Operation & rehabilitering (armbåge)',
+    shortTitle: 'Operation & rehab',
+    description: 'Frågor om armbågsoperationer och rehabilitering',
+    category: 'ovrigt',
     bodyPart: 'armbage',
   },
 ];

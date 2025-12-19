@@ -35,10 +35,4 @@ Vanliga smärtstillande mediciner som Alvedon, Diklofenak (NSAID) eller Citodon 
 - Kan i vissa fall pågå några dagar
 - Alvedon, Diklofenak eller Citodon kan hjälpa
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

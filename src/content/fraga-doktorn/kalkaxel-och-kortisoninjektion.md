@@ -28,10 +28,4 @@ Har du trots sjukgymnastisk behandling haft ont i mer än 6 månader så brukar 
 - Vänta 5–6 månader och se om smärtan avtar
 - Vid kvarvarande besvär efter 6 månader – överväg operation
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

@@ -26,10 +26,4 @@ Det är inte sannolikt att kortisoninjektionen kan medföra en ökad risk för e
 - Kortisonets effekt försvinner inom 1–2 månader
 - Efter flera månader = ingen ökad risk från kortisonet
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

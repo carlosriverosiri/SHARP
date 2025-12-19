@@ -19,10 +19,4 @@ Det går bra att bada och duscha efter en kortisoninjektion.
 - Ja, det är helt okej att bada och duscha
 - Inga restriktioner gällande vatten efter injektionen
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

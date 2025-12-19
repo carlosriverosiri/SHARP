@@ -24,10 +24,4 @@ Det är relativt vanligt att det gör ont i en eller två dagar efter en kortiso
 - Smärta 1–2 dagar efter injektion är vanligt
 - Brukar gå över av sig självt
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

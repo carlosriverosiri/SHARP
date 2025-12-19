@@ -31,10 +31,4 @@ Men den kan också uppstå genom att injektionen slår ut immunförsvaret lokalt
 - Kan orsakas av att lokalt immunförsvar sänks temporärt
 - Bakterier från andra infektioner kan då lättare etablera sig
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

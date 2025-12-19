@@ -41,3 +41,4 @@ Opererar man en patient med dålig funktion, starka smärtor och påtagligt sän
 
 
 
+

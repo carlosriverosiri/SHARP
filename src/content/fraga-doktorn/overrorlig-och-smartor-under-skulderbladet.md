@@ -30,3 +30,4 @@ Vid överrörlighet så brukar sjukgymnastik ha en god effekt på axelsmärtor.
 
 
 
+

@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { 
+  getTopicsByBodyPart, 
+  getAllCategories, 
+  getTopicsByCategory,
+  categoryLabels, 
+  categoryDescriptions,
+  type Topic 
+} from '../../../data/topics';
+
+// Hämta alla frågor för armbåge
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published && data.category === 'armbage'
+);
+
+// Hämta alla armbåge-ämnen
+const armbageTopics = getTopicsByBodyPart('armbage');
+
+// Räkna frågor per ämne
+function countQuestionsForTopic(topicId: string): number {
+  return allQuestions.filter(q => q.data.topic === topicId).length;
+}
+
+// Räkna frågor utan ämne
+const uncategorizedCount = allQuestions.filter(q => !q.data.topic).length;
+
+// Hämta de senaste frågorna
+const latestQuestions = allQuestions
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+
+const pageTitle = "Frågor om armbågen - Fråga Doktorn | Södermalms Ortopedi";
+const pageDescription = "Läs svar på vanliga frågor om armbågsbesvär. Dr. Carlos Rivero Siri svarar på frågor om tennisarmbåge, golfararmbåge och mer.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-amber-900 text-white pt-8 pb-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-6">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/fraga-doktorn" class="text-slate-400 hover:text-white">Fråga Doktorn</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-amber-400">Armbåge</span>
+      </div>
+      
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-400">
+          <img 
+            src="/images/carlos-rivero-siri.webp" 
+            alt="Dr. Carlos Rivero Siri" 
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight">Frågor om armbågen</h1>
+          <p class="text-amber-300 mt-1">{allQuestions.length} besvarade frågor</p>
+        </div>
+      </div>
+      
+      <p class="text-slate-300 max-w-2xl">
+        Här hittar du svar på vanliga frågor om armbågsbesvär. Välj ett ämne nedan eller 
+        <a href="/fraga-doktorn#fraga-form" class="text-amber-400 hover:text-amber-300 underline">ställ en egen fråga</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Ämnen grupperade efter kategori -->
+  <section class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      
+      {getAllCategories().map((categoryId) => {
+        const topicsInCategory = getTopicsByCategory('armbage', categoryId);
+        if (topicsInCategory.length === 0) return null;
+        
+        return (
+          <div id={categoryId} class="mb-10 scroll-mt-24">
+            <div class="flex items-center gap-3 mb-4">
+              <h2 class="text-xl font-bold text-slate-800">
+                {categoryLabels[categoryId]}
+              </h2>
+              <span class="text-sm text-slate-500">
+                {categoryDescriptions[categoryId]}
+              </span>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topicsInCategory.map((topic) => {
+                const questionCount = countQuestionsForTopic(topic.id);
+                return (
+                  <a 
+                    href={`/fraga-doktorn/armbage/${topic.id}/`}
+                    class={`block p-4 rounded-xl border transition-all ${
+                      questionCount > 0 
+                        ? 'bg-white border-slate-200 hover:border-amber-400 hover:shadow-md' 
+                        : 'bg-slate-50 border-slate-100 opacity-60'
+                    }`}
+                  >
+                    <div class="flex justify-between items-start">
+                      <h3 class="font-semibold text-slate-800">
+                        {topic.shortTitle || topic.title}
+                      </h3>
+                      {questionCount > 0 && (
+                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded-full">
+                          {questionCount}
+                        </span>
+                      )}
+                    </div>
+                    <p class="text-sm text-slate-600 mt-1 line-clamp-2">
+                      {topic.description}
+                    </p>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Visa okategoriserade frågor om det finns */}
+      {uncategorizedCount > 0 && (
+        <div class="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <p class="text-amber-800">
+            <strong>{uncategorizedCount} frågor</strong> har ännu inte kategoriserats efter ämne.
+          </p>
+        </div>
+      )}
+
+      {/* Visa meddelande om inga ämnen finns */}
+      {armbageTopics.length === 0 && (
+        <div class="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
+          <p class="text-slate-600 mb-4">Inga ämnen har skapats för armbågsfrågor ännu.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Senaste frågorna -->
+  {latestQuestions.length > 0 && (
+    <section class="bg-slate-50 py-12 border-t border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <h2 class="text-xl font-bold text-slate-800 mb-6">Senaste frågorna om armbågen</h2>
+        
+        <div class="grid gap-3">
+          {latestQuestions.map((q) => (
+            <a 
+              href={`/fraga-doktorn/${q.slug}`}
+              class="block bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-xl p-4 transition-colors"
+            >
+              <h3 class="font-bold text-slate-800 hover:text-amber-700">{q.data.title}</h3>
+              {q.data.description && (
+                <p class="text-sm text-slate-600 mt-1 line-clamp-2">{q.data.description}</p>
+              )}
+            </a>
+          ))}
+        </div>
+        
+        <div class="mt-6 text-center">
+          <a 
+            href="/fraga-doktorn"
+            class="text-amber-700 hover:text-amber-900 font-medium text-sm"
+          >
+            ← Tillbaka till alla frågor
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA om inga frågor finns -->
+  {allQuestions.length === 0 && (
+    <section class="bg-slate-50 py-12 border-t border-slate-200">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Har du en fråga om armbågen?</h2>
+        <p class="text-slate-600 mb-6">Vi har ännu inga publicerade frågor om armbågsbesvär. Bli den första att fråga!</p>
+        <a 
+          href="/fraga-doktorn#fraga-form"
+          class="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+        >
+          Ställ en fråga
+        </a>
+      </div>
+    </section>
+  )}
+
+</BaseLayout>
+

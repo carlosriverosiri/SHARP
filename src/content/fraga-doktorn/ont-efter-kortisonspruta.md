@@ -35,10 +35,4 @@ Många axelortopeder förespråkar kortisoninjektioner som en temporär smärtli
 - Osannolikt att nerv träffats – det finns inga stora nerver där
 - Starkare smärtstillande kan behövas tillfälligt
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

@@ -31,10 +31,4 @@ Men kortisoninjektionen kan lika gärna ha effekt under ett par dagar eller ett 
 - Effekt i genomsnitt 3–4 veckor
 - Varierar från några dagar till några månader
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

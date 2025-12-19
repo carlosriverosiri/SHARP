@@ -31,3 +31,4 @@ Kontakta en sjukgymnast och husläkare för att få en bedömning av din axel.
 
 
 
+

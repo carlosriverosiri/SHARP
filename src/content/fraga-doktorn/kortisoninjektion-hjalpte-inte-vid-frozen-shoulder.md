@@ -23,10 +23,4 @@ Prata med din husläkare om möjligheten att prova ett inflammationsdämpande l�
 - Diskutera inflammationsdämpande (NSAID) med din husläkare
 - Kan vara ett bra komplement till Alvedon och Citodon
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

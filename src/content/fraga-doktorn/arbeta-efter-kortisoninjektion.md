@@ -25,10 +25,4 @@ Tyvärr får 20% av patienterna en övergående stark smärta i axelleden efter 
 - 20% får övergående stark smärta i 1–2 dagar
 - Planera för eventuell vila dagen efter om möjligt
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

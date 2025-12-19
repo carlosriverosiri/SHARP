@@ -12,9 +12,9 @@ const sortedQuestions = allQuestions.sort((a, b) =>
 
 // Gruppera per kategori (vi specialiserar oss på axel, knä och armbåge)
 const categories = {
-  axel: { name: 'Axel', icon: '💪', questions: [] as typeof allQuestions },
-  kna: { name: 'Knä', icon: '🦵', questions: [] as typeof allQuestions },
-  armbage: { name: 'Armbåge', icon: '🦾', questions: [] as typeof allQuestions },
+  axel: { name: 'Axel', color: 'sky', link: '/fraga-doktorn/axel/', questions: [] as typeof allQuestions },
+  kna: { name: 'Knä', color: 'emerald', link: '/fraga-doktorn/kna/', questions: [] as typeof allQuestions },
+  armbage: { name: 'Armbåge', color: 'amber', link: '/fraga-doktorn/armbage/', questions: [] as typeof allQuestions },
 };
 
 // Fyll kategorierna
@@ -24,8 +24,8 @@ sortedQuestions.forEach(q => {
   }
 });
 
-// Filtrera bort tomma kategorier
-const activeCategories = Object.entries(categories).filter(([_, cat]) => cat.questions.length > 0);
+// Alla kategorier visas alltid (även tomma, med länk till undersida)
+const allCategories = Object.entries(categories);
 
 // Räkna totalt antal frågor
 const totalQuestions = sortedQuestions.length;
@@ -465,28 +465,84 @@ function formatDate(date: Date) {
     </div>
   </section>
 
-  <!-- Frågelista -->
+  <!-- Kategori-kort -->
   <section class="bg-white py-12">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="text-2xl font-bold text-slate-900 mb-8">Tidigare frågor & svar</h2>
+      <h2 class="text-2xl font-bold text-slate-900 mb-8">Välj kroppsdel</h2>
       
-      {activeCategories.length === 0 ? (
+      <div class="grid sm:grid-cols-3 gap-6 mb-12">
+        <!-- Axel -->
+        <a 
+          href="/fraga-doktorn/axel/"
+          class="group block bg-gradient-to-br from-sky-50 to-sky-100 border-2 border-sky-200 hover:border-sky-400 rounded-2xl p-6 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <img src="/images/Axel-icon.svg" alt="" class="w-12 h-12" />
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 group-hover:text-sky-700">Axel</h3>
+              <p class="text-sky-600 font-medium">{categories.axel.questions.length} frågor</p>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm">
+            Frågor om AC-ledsartros, impingement, frozen shoulder, instabilitet och mer.
+          </p>
+        </a>
+
+        <!-- Knä -->
+        <a 
+          href="/fraga-doktorn/kna/"
+          class="group block bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200 hover:border-emerald-400 rounded-2xl p-6 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <img src="/images/kna-icon.svg" alt="" class="w-12 h-12" />
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 group-hover:text-emerald-700">Knä</h3>
+              <p class="text-emerald-600 font-medium">{categories.kna.questions.length} frågor</p>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm">
+            Frågor om meniskskador, korsbandsskador, knäartros och mer.
+          </p>
+        </a>
+
+        <!-- Armbåge -->
+        <a 
+          href="/fraga-doktorn/armbage/"
+          class="group block bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-6 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <img src="/images/armbage-icon.svg" alt="" class="w-12 h-12" />
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 group-hover:text-amber-700">Armbåge</h3>
+              <p class="text-amber-600 font-medium">{categories.armbage.questions.length} frågor</p>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm">
+            Frågor om tennisarmbåge, golfararmbåge och mer.
+          </p>
+        </a>
+      </div>
+
+      <!-- Senaste frågorna (alla kategorier) -->
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">Senaste frågorna</h2>
+      
+      {sortedQuestions.length === 0 ? (
         <p class="text-slate-500 text-center py-12">Inga frågor publicerade ännu.</p>
       ) : (
-        <div class="space-y-8">
-          {activeCategories.map(([key, category]) => (
-            <div>
-              <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <span>{category.icon}</span>
-                {category.name}
-                <span class="text-sm font-normal text-slate-500">({category.questions.length} frågor)</span>
-              </h3>
-              <div class="grid gap-3">
-                {category.questions.map((question) => (
-                  <a 
-                    href={`/fraga-doktorn/${question.slug}`}
-                    class="block bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-xl p-4 transition-colors group"
-                  >
+        <div class="grid gap-3">
+          {sortedQuestions.slice(0, 10).map((question) => {
+            const cat = categories[question.data.category];
+            const colorClass = cat?.color || 'slate';
+            return (
+              <a 
+                href={`/fraga-doktorn/${question.slug}`}
+                class="block bg-slate-50 hover:bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all hover:shadow-md group"
+              >
+                <div class="flex items-start gap-3">
+                  <span class={`shrink-0 px-2 py-1 rounded text-xs font-bold bg-${colorClass}-100 text-${colorClass}-700`}>
+                    {cat?.name || question.data.category}
+                  </span>
+                  <div class="flex-1 min-w-0">
                     <h4 class="font-bold text-slate-800 group-hover:text-sky-700 mb-1">
                       {question.data.title}
                     </h4>
@@ -495,19 +551,12 @@ function formatDate(date: Date) {
                     )}
                     <div class="flex items-center gap-4 text-xs text-slate-500">
                       <span>{formatDate(question.data.date)}</span>
-                      {question.data.tags && question.data.tags.length > 0 && (
-                        <div class="flex gap-1">
-                          {question.data.tags.slice(0, 3).map((tag) => (
-                            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded">{tag}</span>
-                          ))}
-                        </div>
-                      )}
                     </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
         </div>
       )}
     </div>

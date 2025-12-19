@@ -20,10 +20,4 @@ Biverkningarna efter en kortisoninjektion i axelleden är desamma som hos indivi
 - Tillägg: risk för övergående blodsockerhöjning
 - Kontrollera blodsockret extra noga de första dagarna
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

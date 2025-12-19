@@ -29,10 +29,4 @@ En strukturerad sjukgymnastisk behandling med inriktning mot att stärka rotator
 - Viss smärtökning kan förekomma första dygnet
 - Sjukgymnastik är viktigt som komplement
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

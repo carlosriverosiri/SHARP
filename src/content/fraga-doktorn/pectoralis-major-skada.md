@@ -19,10 +19,14 @@ question: |
   Jag tackar så jätte mycket på förhand för svar.
 ---
 
-Gamla skador går att reparera. Resultaten är beroende på hur långt pectoralis major senan har dragits tillbaka. Rent generellt så kan man säga att resultaten av en tidig operation är bäst. Resultaten efter en operation av en kronisk pectoralis major skada är nästan likvärdiga en akut pectoralis major skada om inte pectoralis senan dragits tillbaka för mycket.Om pectoralis major senan dragits tillbaka för mycket kan man behöva sätta in ett transplantat. Då är inte resultaten lika bra. Behöver man använda ett transplantat ökar styrkan i pectoralis major signifikant, men kosmetiken blir inte alltid bättre.
+Gamla skador går att reparera. Resultaten är beroende på hur långt pectoralis major senan har dragits tillbaka. Rent generellt så kan man säga att resultaten av en tidig operation är bäst. 
 
-Komplikationsfrekvensen är relativt hög närmare 5% av patienterna drabbas av någon form av komplikation. Framför allt infektion eller blödning.  Rerupturfrekvensen är runt 5-6 %.  Du kan läsa mer om pectoralis major skadan på vår hemsida. , specialist i ortopedi.
+Resultaten efter en operation av en kronisk pectoralis major skada är nästan likvärdiga en akut pectoralis major skada om inte pectoralis senan dragits tillbaka för mycket.
+
+Om pectoralis major senan dragits tillbaka för mycket kan man behöva sätta in ett transplantat. Då är inte resultaten lika bra. Behöver man använda ett transplantat ökar styrkan i pectoralis major signifikant, men kosmetiken blir inte alltid bättre.
+
+Komplikationsfrekvensen är relativt hög närmare 5% av patienterna drabbas av någon form av komplikation. Framför allt infektion eller blödning. Rerupturfrekvensen är runt 5-6 %.  Du kan läsa mer om pectoralis major skadan på vår hemsida.
 
 **Sammanfattning:**
 - Operation kan vara aktuellt
-- Sök remiss till specialist
+- Be om en remiss till oss

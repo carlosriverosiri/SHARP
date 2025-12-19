@@ -33,10 +33,4 @@ Kortisonet kan under en kortare tid till viss del påverka blodtrycket. Men dose
 - Kortisonets påverkan på blodtrycket är begränsad
 - Kontakta läkare om besvären fortsätter
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

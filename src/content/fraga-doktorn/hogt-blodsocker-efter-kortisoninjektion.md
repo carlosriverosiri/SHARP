@@ -37,10 +37,4 @@ Jag tycker att din mor ska prata med sin husläkare vad gäller dosering av insu
 - Täta blodsockerkontroller är viktigt
 - Kontakta husläkare för råd om insulindosering
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

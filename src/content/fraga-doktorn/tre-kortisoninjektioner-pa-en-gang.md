@@ -26,10 +26,4 @@ Man brukar sätta en kortisoninjektion åt gången. Detta för att veta vilken k
 - Syftet är att identifiera vilken injektion som hjälper
 - Fråga din läkare för förtydligande
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

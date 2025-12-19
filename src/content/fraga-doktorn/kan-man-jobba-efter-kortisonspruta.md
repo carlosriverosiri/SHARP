@@ -26,10 +26,4 @@ Det finns dock en liten risk att smärtorna blir betydligt värre någon eller n
 - Liten risk för tillfälligt ökad smärta de första dagarna
 - Kortisonet verkar under flera veckor
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

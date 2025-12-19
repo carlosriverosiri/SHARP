@@ -26,10 +26,4 @@ Då kan en kortisoninjektion ge en smärtlindring.
 - Slemsäck under skulderbladet kan vara inflammerad
 - Kortisoninjektion kan ge smärtlindring i dessa fall
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 

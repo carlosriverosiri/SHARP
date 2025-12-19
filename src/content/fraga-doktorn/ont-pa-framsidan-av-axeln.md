@@ -38,10 +38,4 @@ Be att få en remiss till specialist i ortopedi.
 - Om ingen förbättring – be om remiss till axelspecialist
 - Kvinnlig axelsmärta är svårdiagnostiserad
 
----
-*Dr. Carlos Rivero Siri, specialist i ortopedi*
-
-
-
-
 
