@@ -35,3 +35,4 @@ Vid impingement/kalkaxel brukar man rekommendera operation vid långvariga (>6 m
 - Operation kan vara aktuellt vid långvariga besvär (>6 månader)
 
 
+

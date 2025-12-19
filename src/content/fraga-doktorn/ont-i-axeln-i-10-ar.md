@@ -44,3 +44,4 @@ Tyvärr så måste du nog göra ett val mellan en lägre aktivitetsnivå eller o
 - Val mellan lägre aktivitet eller operation
 
 
+

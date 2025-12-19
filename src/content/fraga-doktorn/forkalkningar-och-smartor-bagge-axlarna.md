@@ -40,3 +40,4 @@ Opererar man en patient med dålig funktion, starka smärtor och påtagligt sän
 - Kontakta läkare för individuell bedömning
 
 
+

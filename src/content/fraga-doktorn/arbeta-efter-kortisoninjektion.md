@@ -31,3 +31,4 @@ Tyvärr får 20% av patienterna en övergående stark smärta i axelleden efter 
 
 
 
+

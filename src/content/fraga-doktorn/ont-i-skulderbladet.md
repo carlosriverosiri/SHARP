@@ -32,3 +32,4 @@ Då kan en kortisoninjektion ge en smärtlindring.
 
 
 
+

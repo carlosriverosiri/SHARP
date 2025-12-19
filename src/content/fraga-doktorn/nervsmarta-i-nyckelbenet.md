@@ -31,3 +31,4 @@ Vanliga smärtstillande mediciner är ett förstahandsval.
 - Vid långvariga besvär - träffa axelspecialist
 
 
+

@@ -40,3 +40,4 @@ Prata med din sjukgymnast och fråga om hen känner till någon bra axelspeciali
 - Operationen ger bättre kontroll - inte alltid smärtfrihet
 
 
+
