@@ -35,7 +35,7 @@ Därför väljer många kirurger, helt korrekt, en försiktig inställning vid f
 
 Det är normalt att leden är lätt öm 5–6 månader postoperativt, men den ska inte vara kraftigt öm.
 
-- **Lokal smärta** (precis över leden): Talar för att utrymmet fortfarande är för trångt
+- **Lokal stark smärta** (precis över leden): Talar för att utrymmet fortfarande är för trångt
 - **Utstrålande smärta** (ut på axeln, ner i överarmen): Kan tyda på impingement eller annat nytillkommet problem
 
 ### Vad bör du göra nu?

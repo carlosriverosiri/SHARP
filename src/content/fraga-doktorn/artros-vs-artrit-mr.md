@@ -6,47 +6,34 @@ topic: "axelledsartros"
 tags: ["artros", "artrit", "MR", "diagnostik", "cystor"]
 date: 2024-05-11
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har genomfört en MR som visar artros med ett flertal små cystor i ben och även paralabrala cystor dorsalt. Jag undrar huruvida man alltid kan se skillnad på artros kontra artrit i led på MR eller om artrit kan misstas för artros?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+### Kan man se skillnad på artrit och artros?
 
-Bra fråga! Det finns skillnader, men ibland kan det vara svårt att skilja dem åt.
+Ja, i de allra flesta fall är det inga problem för en van bedömare att skilja dem åt på MR. Skillnaden ligger i vilka specifika förändringar vi ser:
 
-### Skillnader på MR
+| Tillstånd | Vad ser man på MR? |
+|-----------|-------------------|
+| **Artros** (degenerativ) | Broskskador, benutväxter (osteofyter), bencystor – tecken på mekaniskt slitage |
+| **Artrit** (inflammatorisk) | Kraftig inflammation i ledkapseln, ökad ledvätska – inga benutväxter initialt |
 
-| Fynd | Artros | Artrit |
-|------|--------|--------|
-| Brosket | Tunnare, ojämnt | Kan vara bevarat tidigt |
-| Cystor | Subkondrala (under brosket) | Erosioner vid ledkanten |
-| Synovit | Lindrig eller ingen | Uttalad, förtjockad ledkapsel |
-| Benödem | Lokalt vid belastningsytor | Mer diffust |
-| Ledvätska | Kan finnas | Ofta rikligt |
+### Varför kallas det "Osteoarthritis" på engelska?
 
-### Kan artrit misstas för artros?
+Artros kan i sig orsaka en inflammation – en "artrit" som är en följd av slitaget. Man kan alltså ha artrit som beror på artros, men också artrit som beror på helt andra medicinska orsaker (t.ex. reumatism eller infektion).
 
-Ja, särskilt i tidiga stadier. Men:
-- Artrit ger oftast mer **synovit** (inflammation i ledhinnan)
-- Artrit drabbar ofta **flera leder symmetriskt**
-- Artros är vanligare i **viktbärande leder**
+### Dina specifika MR-fynd
 
-### Dina fynd
+Det du beskriver är klassiska tecken på artros:
 
-Paralabrala cystor tyder oftare på **mekanisk orsak** (slitage, labrumskada) snarare än inflammatorisk sjukdom.
+- **Cystor i benet** – uppstår när brosket är tunnare och ledvätska pressas in i benvävnaden
+- **Paralabrala cystor dorsalt** – tyder på degeneration eller skada på labrum, ofta kopplat till artrosutveckling
 
-### Hur säkrar man diagnosen?
+### Min bedömning
 
-- **Blodprover** – CRP, SR, reumatoid faktor, anti-CCP
-- **Klinisk bild** – Morgonstelhet? Flera leder?
-- **Anamnes** – Trauma? Överbelastning?
+Dina fynd med bencystor och paralabrala cystor är typiska för en degenerativ process (artros). Vid ren inflammatorisk artrit utan koppling till slitage ser vi inte denna typ av benförändringar.
 
-**Sammanfattning:**
-- MR kan ofta skilja artros från artrit
-- Paralabrala cystor tyder på mekanisk orsak
-- Blodprover och klinisk bild behövs för säker diagnos
-- Diskutera med din läkare om osäkerhet kvarstår
-
-
+**Sammanfattning:** Man misstar sällan artrit för artros på MR – de anatomiska förändringarna vid artros är karakteristiska.
