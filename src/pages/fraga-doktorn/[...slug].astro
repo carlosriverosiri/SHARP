@@ -45,6 +45,14 @@ const categoryNames: Record<string, string> = {
 const pageTitle = `${question.data.title} - Fråga Doktorn | Södermalms Ortopedi`;
 const pageDescription = question.data.description || `${question.data.title}. Dr. Carlos Rivero Siri svarar på patientfrågor om ${categoryNames[question.data.category].toLowerCase()}.`;
 
+// Kategori-specifik OG-bild för sociala medier
+const ogImages: Record<string, string> = {
+  axel: '/images/og/fraga-doktorn-axel.svg',
+  kna: '/images/og/fraga-doktorn-kna.svg',
+  armbage: '/images/og/fraga-doktorn-armbage.svg',
+};
+const pageImage = ogImages[question.data.category] || '/images/og/fraga-doktorn-axel.svg';
+
 // Schema.org FAQPage - optimerad för Google rich snippets
 const schemaData = {
   "@context": "https://schema.org",
@@ -103,6 +111,7 @@ const medicalSchema = {
 <BaseLayout 
   title={pageTitle}
   description={pageDescription}
+  image={pageImage}
   type="article"
 >
   
