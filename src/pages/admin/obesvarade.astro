@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Hämta alla obesvarade frågor
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
+  return data.status === 'obesvarad' || data.published === false;
+});
+
+// Sortera efter datum (nyast först)
+const sortedQuestions = allQuestions.sort((a, b) => {
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+
+// Räkna
+const totalObesvarade = sortedQuestions.length;
+---
+
+<BaseLayout title="Obesvarade frågor | Admin" noindex={true}>
+  <main class="bg-slate-900 min-h-screen text-white">
+    
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold">Obesvarade frågor</h1>
+          <p class="text-slate-400 mt-1">{totalObesvarade} frågor väntar på svar</p>
+        </div>
+        <a href="/fraga-doktorn/" class="text-sky-400 hover:text-sky-300">
+          ← Tillbaka
+        </a>
+      </div>
+
+      {sortedQuestions.length === 0 ? (
+        <div class="bg-green-900/30 border border-green-700 rounded-xl p-8 text-center">
+          <div class="text-5xl mb-4">🎉</div>
+          <h2 class="text-xl font-bold text-green-400">Alla frågor är besvarade!</h2>
+        </div>
+      ) : (
+        <div class="space-y-2">
+          {sortedQuestions.map((question, index) => (
+            <div class="bg-slate-800 rounded-lg border border-slate-700 hover:border-sky-500 transition-colors">
+              <div class="p-4">
+                <div class="flex items-start gap-4">
+                  <span class="text-slate-500 font-mono text-sm w-8">{index + 1}.</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class={`text-xs px-2 py-0.5 rounded ${
+                        question.data.category === 'axel' ? 'bg-sky-900 text-sky-300' :
+                        question.data.category === 'kna' ? 'bg-emerald-900 text-emerald-300' :
+                        'bg-amber-900 text-amber-300'
+                      }`}>
+                        {question.data.category}
+                      </span>
+                      <span class="text-xs text-slate-500">
+                        {question.data.date.toLocaleDateString('sv-SE')}
+                      </span>
+                    </div>
+                    <h3 class="font-medium text-white mb-1 truncate">
+                      {question.data.title}
+                    </h3>
+                    <p class="text-sm text-slate-400 line-clamp-1">
+                      {question.data.description || 'Ingen beskrivning'}
+                    </p>
+                  </div>
+                  <div class="flex gap-2 shrink-0">
+                    <button 
+                      class="copy-btn text-xs text-slate-400 hover:text-white font-mono bg-slate-700 hover:bg-sky-600 px-3 py-1.5 rounded cursor-pointer transition-colors"
+                      data-copy={`${question.slug}.md`}
+                      title="Klicka för att kopiera"
+                    >
+                      📋 {question.slug}.md
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div class="mt-8 bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <h2 class="font-bold text-white mb-3">Arbetsflöde</h2>
+        <ol class="text-slate-300 space-y-2 text-sm">
+          <li><span class="text-sky-400 mr-2">1.</span> Kopiera filnamnet (t.ex. <code class="bg-slate-700 px-1 rounded">korsbandsskada.md</code>)</li>
+          <li><span class="text-sky-400 mr-2">2.</span> Öppna filen i Cursor: <code class="bg-slate-700 px-1 rounded">Ctrl+P</code> → klistra in</li>
+          <li><span class="text-sky-400 mr-2">3.</span> Skriv ditt svar</li>
+          <li><span class="text-sky-400 mr-2">4.</span> Säg "klar" till AI:n</li>
+          <li><span class="text-sky-400 mr-2">5.</span> Ladda om denna sida för att se uppdaterad lista</li>
+        </ol>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .copy-btn.copied {
+    background-color: #059669 !important;
+  }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy;
+      await navigator.clipboard.writeText(text);
+      
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✅ Kopierat!';
+      btn.classList.add('copied');
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  });
+</script>
+

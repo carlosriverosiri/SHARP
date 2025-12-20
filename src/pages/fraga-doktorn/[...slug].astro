@@ -185,7 +185,7 @@ const medicalSchema = {
 
           <!-- SVAR-BOX -->
           <div class="bg-white rounded-2xl border-2 border-sky-200 overflow-hidden shadow-sm">
-            <div class="bg-sky-700 px-5 py-3 flex items-center gap-3">
+            <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="bg-sky-700 px-5 py-3 flex items-center gap-3 hover:bg-sky-600 transition-colors">
               <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-sky-400">
                 <img src="/images/carlos-rivero-siri.webp" alt={question.data.author} class="w-full h-full object-cover" />
               </div>
@@ -193,7 +193,7 @@ const medicalSchema = {
                 <span class="text-white font-bold text-sm">{question.data.author}</span>
                 <span class="text-sky-200 text-xs block">svarar</span>
               </div>
-            </div>
+            </a>
             <article class="p-5 prose prose-slate max-w-none
               prose-headings:font-bold prose-headings:text-slate-900
               prose-h2:text-lg prose-h2:mt-6 prose-h2:mb-3 prose-h2:text-sky-800
@@ -249,22 +249,6 @@ const medicalSchema = {
 
         <!-- Sidebar -->
         <aside class="lg:col-span-1 space-y-6">
-          
-          <!-- Författare -->
-          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-sky-500">
-                <img src="/images/carlos-rivero-siri.webp" alt={question.data.author} class="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p class="font-bold text-slate-800">{question.data.author}</p>
-                <p class="text-xs text-slate-500">Specialist i Ortopedi</p>
-              </div>
-            </div>
-            <p class="text-sm text-slate-600">
-              Överläkare och specialist i ortopedi vid Södermalms Ortopedi i Stockholm.
-            </p>
-          </div>
 
           <!-- Tags -->
           {question.data.tags && question.data.tags.length > 0 && (
