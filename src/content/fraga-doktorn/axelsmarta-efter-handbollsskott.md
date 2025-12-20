@@ -6,51 +6,34 @@ topic: "axeln-ur-led"
 tags: ["instabilitet", "handboll", "postoperativ", "låsning"]
 date: 2024-10-10
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag var hos er för operation i januari 2023 i höger axel. Igår när jag spelade handboll och stod i mål sköt en kille ett kraftigt skott mot krysset. Jag sträckte ut min höger arm för att rädda målet. Kände inga konstigheter då, men efter matchen kändes axeln väldigt konstig – instabil, den klickar och låser sig i vissa rörelser. Det gör ont då och jag blir orolig att den ska hoppa ur led. Vad ska jag göra?
 ---
+Det är förståeligt att du blir orolig – särskilt med en tidigare operation i bagaget och en krävande sport som handboll.
 
-[UTKAST - BEHÖVER GRANSKAS]
+### Min bedömning
 
-Det du beskriver kan tyda på att du fått en ny skada i axeln, eller att den tidigare operationen påverkats.
+**Sannolikt en kraftig sträckning.** Eftersom axeln inte hoppade ur led är risken för ny allvarlig labrumskada relativt liten. Det mest troliga är en kraftig sträckning i mjukdelarna kring leden.
 
-### Vad kan ha hänt?
+### Varför klickar och låser det sig?
 
-1. **Ny labrumskada** – Den tidigare operationen kan ha gått upp
-2. **Kapselskada** – Ledkapseln kan ha töjts eller skadats
-3. **SLAP-skada** – Bicepsfästet kan ha skadats
-4. **Instabilitet** – Leden kan ha blivit instabil igen
+Att axeln klickar och känns som att den "låser sig" efter trauma är inte ovanligt. Det beror ofta på att muskelbalansen kring axeln tillfälligt rubbats. När muskulaturen inte håller ledhuvudet exakt centrerat kan senor eller ledband "snäppa" över benutskott.
 
-### Varningssignaler
+### Vad ska du göra?
 
-Det du beskriver – klickande, låsningar och känsla av instabilitet – är klassiska tecken på:
-- Återkommande instabilitet
-- Lösa kroppar i leden
-- Labrumskada
+| Steg | Åtgärd |
+|------|--------|
+| 1 | **Fysioterapi** – kontakta din sjukgymnast för axelrehab |
+| 2 | **Styrketräning** – stärk rotatorkuffen när akut smärta lagt sig |
+| 3 | **Avvakta 3–4 månader** – utvärdera om besvären kvarstår |
 
-### Vad bör du göra?
+### När ska du återkomma till oss?
 
-1. **Kontakta oss** för ett akut återbesök
-2. **Undvik belastning** tills du blivit undersökt
-3. **Ingen handboll** tills orsaken är klarlagd
+Om axeln fortfarande känns instabil efter 3–4 månaders konsekvent rehabilitering, och nästan hoppar ur led, kan det tyda på en mindre labrumskada. Då är du välkommen tillbaka för ny bedömning.
 
-### Behövs ny operation?
+**Sammanfattning:** Sannolikt en sträckning som läker med rätt träning. Fokusera på rehab – ingen operation behövs i nuläget.
 
-Det beror på vad undersökningen visar. Om den tidigare stabiliseringsoperationen gått upp kan det behövas en reoperation. Men ibland handlar det om muskelsvaghet eller annan mjukdelsskada som kan behandlas konservativt.
-
-### Nästa steg
-
-Vi behöver:
-- Klinisk undersökning
-- Eventuellt ny MR med kontrast (MR-artrografi)
-- Jämföra med tidigare bilder
-
-**Sammanfattning:**
-- Dina symptom tyder på ny skada eller att tidigare operation påverkats
-- Kontakta mottagningen för akut återbesök
-- Undvik handboll tills du blivit undersökt
-- Kan behöva ny utredning med MR
 
 
