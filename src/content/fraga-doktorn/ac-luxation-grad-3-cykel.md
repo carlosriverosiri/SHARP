@@ -2,12 +2,12 @@
 title: "AC-luxation grad 3 efter cykelolycka – operera eller träna?"
 description: "65-åring med AC-luxation grad 3 efter MTB-olycka undrar om operation eller rehabilitering är bäst."
 category: "axel"
-topic: "ac-ledsartros"
+topic: "ac-luxation"
 tags: ["ac-luxation", "cykelolycka", "operation", "rehabilitering"]
 date: 2022-05-11
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag cyklade omkull på min MTB för 3 veckor sedan och fick 6 revbensfrakturer och en AC-luxation grad 3. Avståndet mellan nyckelbenet och fästet är ca 14 mm. Nyckelbenet står rakt upp.
   
@@ -18,6 +18,9 @@ question: |
 
 Vid 65 års ålder med AC-luxation grad 3 och redan god funktion finns goda skäl att **inte operera**.
 
+Den vanligaste behandlingen vid AC-luxation grad 3 är konservativ med sjukgymnastik – upp mot 90% av patienterna förbättras. Kirurgisk behandling i det akuta skedet ger funktionellt och smärtmässigt i stort sett lika bra resultat, men innebär risker. Därför är konservativ behandling förstahandsalternativet.
+Många professionella idrottare återgår till sin sport i tävlingssammanhang redan inom en månad efter en AC-luxation grad 3.
+
 ### Din situation
 
 Du har redan:
@@ -25,35 +28,30 @@ Du har redan:
 - God styrka
 - Revbenen har läkt
 
-Detta är ett mycket bra utgångsläge. Många patienter med AC-luxation grad 3 klarar sig utmärkt utan operation.
-
-### Operation vs rehabilitering
+### Operation jämfört med rehabilitering
 
 | Faktor | Operation | Rehabilitering |
 |--------|-----------|----------------|
 | Kosmetik | Bättre | Synlig knöl kvarstår |
 | Funktion | Likvärdig | Likvärdig |
-| Återhämtning | 3–6 månader | Pågående |
+| Återhämtning | 6-9 månader | 1-3 månader |
 | Risker | Infektion, stelhet, reoperation | Inga |
 | Cykling/skidor | Ja, efter rehab | Ja, direkt |
 
 ### Min bedömning
 
-Vid din ålder och aktivitetsnivå (MTB, skidor) skulle jag **rekommendera fortsatt rehabilitering** snarare än sen operation. Skälen:
+Vid din ålder och aktivitetsnivå (MTB, skidor) rekommenderar jag **fortsatt rehabilitering** snarare än sen operation:
 
 1. Du har redan god funktion
-2. Sen operation ger sämre resultat än akut
-3. Operationsrisker ökar med ålder
-4. Kosmetiken är sällan avgörande för motionärer
+2. Återhämtningen blir mycket snabbare utan operation
+3. Kosmetiken är sällan avgörande för motionärer
 
 ### Vad du kan göra
 
-| Behandling | Syfte |
-|------------|-------|
+| Åtgärd | Syfte |
+|--------|-------|
 | Sjukgymnastik | Optimera styrka och stabilitet |
 | Gradvis återgång | Börja med lättare cykling |
 | Uppföljning | Vid ökande besvär – ny bedömning |
 
 **Sammanfattning:** Med din goda funktion rekommenderar jag rehabilitering framför sen operation. Du kommer sannolikt kunna återgå till både cykling och skidor.
-
-

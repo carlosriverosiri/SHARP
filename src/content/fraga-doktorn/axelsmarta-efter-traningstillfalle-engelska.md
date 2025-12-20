@@ -18,15 +18,10 @@ Att du har blivit opererad tidigare i axeln innebär inte automatiskt att samma 
 
 1. **Fysioterapi** – kom igång så snart som möjligt
 2. **Tålamod** – ge axeln tid att återhämta sig
-3. **Avvakta med specialist** – i detta läge leder en bedömning sannolikt inte till annan behandling än fysioterapi
+3. **Avvakta med specialist** – i detta läge leder en specialistbedömning sannolikt inte till annan behandling än fysioterapi
 
 ### När bör du söka vidare?
 
-Om smärtan kvarstår efter 4–6 veckors rehabilitering, eller om du upplever:
-- Instabilitet (axeln "hoppar ur")
-- Kraftig svaghet
-- Nattlig vilovärk
-
-...då är det rimligt att söka en ny bedömning hos axelspecialist.
+Om smärtan kvarstår efter 4–6 månaders rehabilitering, eller om du upplever:
 
 **Sammanfattning:** Träningsrelaterad smärta efter tidigare operation är vanligt och oftast ofarligt. Börja med fysioterapi och ge det tid innan du oroar dig.
