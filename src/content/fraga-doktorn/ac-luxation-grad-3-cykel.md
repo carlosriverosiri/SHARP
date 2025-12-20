@@ -30,13 +30,19 @@ Du har redan:
 
 ### Operation jämfört med rehabilitering
 
-| Faktor | Operation | Rehabilitering |
-|--------|-----------|----------------|
-| Kosmetik | Bättre | Synlig knöl kvarstår |
-| Funktion | Likvärdig | Likvärdig |
-| Återhämtning | 6-9 månader | 1-3 månader |
-| Risker | Infektion, stelhet, reoperation | Inga |
-| Cykling/skidor | Ja, efter rehab | Ja, direkt |
+**🔪 Operation**
+- Kosmetik: Bättre (ingen synlig knöl)
+- Funktion: Likvärdig
+- Återhämtning: 6–9 månader
+- Risker: Infektion, stelhet, reoperation
+- Cykling/skidor: Ja, efter rehab
+
+**💪 Rehabilitering**
+- Kosmetik: Synlig knöl kvarstår
+- Funktion: Likvärdig
+- Återhämtning: 1–3 månader
+- Risker: Inga
+- Cykling/skidor: Ja, direkt
 
 ### Min bedömning
 
@@ -48,10 +54,8 @@ Vid din ålder och aktivitetsnivå (MTB, skidor) rekommenderar jag **fortsatt re
 
 ### Vad du kan göra
 
-| Åtgärd | Syfte |
-|--------|-------|
-| Sjukgymnastik | Optimera styrka och stabilitet |
-| Gradvis återgång | Börja med lättare cykling |
-| Uppföljning | Vid ökande besvär – ny bedömning |
+- **Sjukgymnastik** – optimera styrka och stabilitet
+- **Gradvis återgång** – börja med lättare cykling
+- **Uppföljning** – vid ökande besvär, ny bedömning
 
 **Sammanfattning:** Med din goda funktion rekommenderar jag rehabilitering framför sen operation. Du kommer sannolikt kunna återgå till både cykling och skidor.
