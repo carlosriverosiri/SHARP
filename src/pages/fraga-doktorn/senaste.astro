@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Hämta alla publicerade frågor, sorterade efter datum (nyast först)
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
+  return data.published === true;
+});
+
+// Sortera efter datum, nyast först
+const sortedQuestions = allQuestions.sort((a, b) => {
+  return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+});
+
+// Visa de 50 senaste
+const recentQuestions = sortedQuestions.slice(0, 50);
+
+// Formatera datum
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('sv-SE', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }).format(date);
+}
+
+// Kategori-labels
+const categoryLabels: Record<string, string> = {
+  'axel': 'Axel',
+  'kna': 'Knä',
+  'armbage': 'Armbåge',
+};
+---
+
+<BaseLayout 
+  title="Senaste svaren | Fråga Doktorn" 
+  description="Se de senast besvarade frågorna från patienter. Hitta ditt svar här!"
+>
+  <main class="bg-gray-50 min-h-screen">
+    
+    <!-- Header -->
+    <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white py-12">
+      <div class="container mx-auto px-4 max-w-4xl">
+        <nav class="text-sm text-slate-400 mb-4">
+          <a href="/" class="hover:text-white">Hem</a>
+          <span class="mx-2">›</span>
+          <a href="/fraga-doktorn" class="hover:text-white">Fråga Doktorn</a>
+          <span class="mx-2">›</span>
+          <span class="text-white">Senaste svaren</span>
+        </nav>
+        
+        <h1 class="text-3xl md:text-4xl font-black mb-4">Senaste svaren</h1>
+        <p class="text-slate-300 text-lg">
+          Här ser du de senast besvarade frågorna. Nyast överst.
+        </p>
+        
+        <div class="mt-6 flex gap-4">
+          <a href="/sok" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Sök bland alla frågor
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lista med senaste frågor -->
+    <section class="container mx-auto px-4 py-12 max-w-4xl">
+      
+      <div class="space-y-4">
+        {recentQuestions.map((question, index) => (
+          <a 
+            href={`/fraga-doktorn/${question.slug}/`}
+            class="block bg-white rounded-xl border border-gray-200 p-5 hover:border-sky-300 hover:shadow-lg transition-all group"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-medium px-2 py-1 rounded-full bg-sky-100 text-sky-700">
+                    {categoryLabels[question.data.category] || question.data.category}
+                  </span>
+                  <span class="text-sm text-gray-500">
+                    {formatDate(question.data.date)}
+                  </span>
+                </div>
+                
+                <h2 class="text-lg font-semibold text-gray-900 group-hover:text-sky-600 transition-colors mb-2">
+                  {question.data.title}
+                </h2>
+                
+                <p class="text-gray-600 text-sm line-clamp-2">
+                  {question.data.description}
+                </p>
+              </div>
+              
+              <div class="flex-shrink-0 text-gray-400 group-hover:text-sky-500 transition-colors">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Info-ruta -->
+      <div class="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <h3 class="font-semibold text-blue-900 mb-2">Hittar du inte ditt svar?</h3>
+        <p class="text-blue-800 mb-4">
+          Svar publiceras vanligtvis inom 2 veckor. Du kan också söka på nyckelord från din fråga.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/sok" class="text-blue-600 hover:text-blue-800 underline">
+            → Sök bland alla frågor
+          </a>
+          <a href="/fraga-doktorn/axel/" class="text-blue-600 hover:text-blue-800 underline">
+            → Alla axelfrågor
+          </a>
+          <a href="/fraga-doktorn/" class="text-blue-600 hover:text-blue-800 underline">
+            → Ställ en ny fråga
+          </a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+

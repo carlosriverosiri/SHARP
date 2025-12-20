@@ -20,7 +20,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         Din fråga har skickats till Södermalms Ortopedi.
       </p>
       
-      <div class="bg-slate-800/50 rounded-xl p-6 mb-8 text-left">
+      <div class="bg-slate-800/50 rounded-xl p-6 mb-6 text-left">
         <h2 class="font-bold text-white mb-3">Vad händer nu?</h2>
         <ul class="space-y-2 text-slate-300">
           <li class="flex items-start gap-2">
@@ -37,6 +37,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </li>
         </ul>
       </div>
+
+      <div class="bg-sky-900/50 border border-sky-700 rounded-xl p-6 mb-8 text-left">
+        <h2 class="font-bold text-white mb-3">🔍 Hur hittar jag mitt svar?</h2>
+        <ul class="space-y-2 text-slate-300">
+          <li class="flex items-start gap-2">
+            <span class="text-sky-400">→</span>
+            <span>Kolla <a href="/fraga-doktorn/senaste/" class="text-sky-400 hover:text-sky-300 underline font-semibold">Senaste svaren</a> – nyast överst</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-sky-400">→</span>
+            <span>Eller <a href="/sok" class="text-sky-400 hover:text-sky-300 underline font-semibold">sök</a> på nyckelord från din fråga</span>
+          </li>
+        </ul>
+      </div>
       
       <p class="text-slate-400 text-sm mb-8">
         📌 Observera: Eventuella personuppgifter tas bort innan publicering.
@@ -45,16 +59,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a 
-          href="/fraga-doktorn/"
+          href="/fraga-doktorn/senaste/"
           class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
         >
-          Se tidigare frågor & svar
+          Se senaste svaren
         </a>
         <a 
-          href="/"
+          href="/sok"
           class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
         >
-          Tillbaka till startsidan
+          Sök bland frågor
         </a>
       </div>
       
