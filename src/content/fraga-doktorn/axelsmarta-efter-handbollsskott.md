@@ -31,7 +31,7 @@ Att axeln klickar och känns som att den "låser sig" efter trauma är inte ovan
 
 ### När ska du återkomma till oss?
 
-Om axeln fortfarande känns instabil efter 3–4 månaders konsekvent rehabilitering, och nästan hoppar ur led, kan det tyda på en mindre labrumskada. Då är du välkommen tillbaka för ny bedömning.
+Om axeln fortfarande känns instabil trots  3–4 månaders konsekvent rehabilitering, och nästan hoppar ur led, kan det tyda på en  labrumskada. Då är du välkommen tillbaka för ny bedömning.
 
 **Sammanfattning:** Sannolikt en sträckning som läker med rätt träning. Fokusera på rehab – ingen operation behövs i nuläget.
 
