@@ -6,49 +6,40 @@ topic: "labrumskada"
 tags: ["labrumskada", "skulderblad", "smärta", "MR"]
 date: 2024-05-02
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har haft ont i höger skulderblad med knäppningar och känslan av låsning i muskulaturen. Gått hos sjukgymnast i många år men inget resultat. Fick röntgen och magnetröntgen vid Carlanderska i Göteborg. De såg inget på skulderbladet men hittade en labral ruptur i axeln.
   
   Ingen behandling eller uppföljning. Nu har jag mer och mer ont. Vad kan detta vara och hur ska jag bli bättre? Hittade er sida och såg att ni är mycket kunniga inom axelskador.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Det är inte ovanligt att patienter som söker för smärta kring skulderbladet visar sig ha problem som har sitt ursprung inne i axelleden. När MR visar en labrumskada krävs noggrann klinisk bedömning för att avgöra om det är just den som orsakar dina besvär.
 
-Det är frustrerande att ha fått en diagnos men ingen behandlingsplan. Låt mig förklara.
+### Sambandet mellan skulderbladet och labrum
 
-### Labrumruptur och skulderbladssmärta
+Bakre labrum sitter fast på baksidan av skulderbladet – därför är det vanligt med smärta i skulderbladet vid skada i detta område. Knäppningar i kombination med smärta och känsla av att axeln "hoppar" kan tyda på att leden inte rör sig normalt.
 
-Labrumskador kan orsaka smärta som strålar ut mot skulderbladet. De typiska symptomen är:
-- Smärta djupt inne i axeln
-- Knäppningar och klickande
-- Känsla av instabilitet
-- Smärta vid vissa rörelser
+### Är labrumskadan orsaken?
 
-### Varför får du ingen behandling?
+Ett fynd på MR är inte alltid detsamma som orsaken till smärtan. Men vissa tecken talar för att skadan är betydelsefull:
 
-Möjliga förklaringar:
-1. **Skadan bedöms som liten** – Inte alla labrumskador behöver opereras
-2. **Osäkerhet om sambandet** – Är det verkligen labrum som orsakar din smärta?
-3. **Konservativ behandling först** – Man vill se om rehab hjälper
+- **Instabilitetskänsla** – axeln "glider" eller känns instabil vid lyft
+- **Mekaniska knäppningar** – ledhuvudet knäpper eller hoppar till  när armen förs framåt
 
-### Vad bör du göra?
+### Vad behöver göras?
 
-1. **Begär en second opinion** – Du förtjänar en tydlig plan
-2. **Sök axelspecialist** – Inte alla ortopeder är specialiserade på axlar
-3. **Ta med MR-bilderna** – Inte bara svaret
+Eftersom du testat fysioterapi i flera år utan resultat behövs:
+
+| Steg | Syfte |
+|------|-------|
+| Klinisk undersökning | Provocera fram instabilitet (t.ex. Jerks test) |
+| Uteslut artros | Labrum-op hjälper sällan om artros föreligger |
+| Eventuell operation | Labrum-sutur kan återställa stabilitet |
 
 ### Behandlingsalternativ
 
-- **Fysioterapi** – Fokus på stabilitet, inte bara stretching
-- **Kortisoninjektion** – Kan dämpa inflammation
-- **Artroskopi** – Om konservativ behandling inte hjälper
+- **Specifik fysioterapi** – fokus på stabilitet, inte bara stretching
+- **Artroskopisk labrumsutur** – om konservativ behandling inte hjälper
 
-**Sammanfattning:**
-- Labrumruptur kan förklara dina symptom
-- Du bör få en tydlig behandlingsplan
-- Sök second opinion hos axelspecialist
-- Vi kan hjälpa till med bedömning
-
-
+**Sammanfattning:** Din labrumruptur kan förklara symptomen. Du bör få en tydlig behandlingsplan – sök en specialistbedömning. Du är välkommen till oss på Södermalms Ortopedi för genomgång av MR-bilder och klinisk undersökning.
