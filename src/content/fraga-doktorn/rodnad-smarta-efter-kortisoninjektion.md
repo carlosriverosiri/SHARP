@@ -6,57 +6,47 @@ topic: "kortisoninjektion"
 tags: ["kortisoninjektion", "infektion", "flare-reaktion", "komplikation"]
 date: 2024-09-27
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har fått en kortisoninjektion i vänster axel för 2 dagar sedan. Har nu haft en sömnlös natt på grund av ökad smärta i axeln och svårt att röra armen. Ingen smärtstillande medicin hjälper och det är rött i en cirkel över injektionsstället. Kan det ha blivit en infektion?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
-
 Det du beskriver kan vara antingen en **flare-reaktion** (ofarligt) eller en **infektion** (allvarligt). Det är viktigt att skilja dessa åt.
-
-### Flare-reaktion (vanligt)
-
-En så kallad flare-reaktion eller "steroid flare" förekommer hos 2-10% av patienter efter kortisoninjektion. Symptomen inkluderar:
-- Ökad smärta 24-48 timmar efter injektionen
-- Rodnad över injektionsstället
-- Viss svullnad
-- Värme i området
-
-Flare-reaktionen beror på att kortisonkristallerna tillfälligt irriterar vävnaden. Den går över av sig själv inom 2-3 dagar.
-
-### Infektion (ovanligt men allvarligt)
-
-Infektion efter kortisoninjektion är mycket ovanligt (cirka 1 på 10 000), men kräver snabb behandling. Varningssignaler:
-- Tilltagande rodnad som **sprider sig**
-- Feber eller frossa
-- Svår smärta som blir värre för varje dag
-- Varbildning
 
 ### Hur skiljer man dem åt?
 
-| Symptom | Flare | Infektion |
-|---------|-------|-----------|
-| Smärtförlopp | Avtar efter 48-72h | Tilltar successivt |
+| Symptom | Flare-reaktion | Infektion |
+|---------|----------------|-----------|
+| Förekomst | 2-10% av injektioner | 1 av 10 000 |
+| Smärtförlopp | Peakar 24-48h, avtar sedan | Tilltar successivt |
 | Rodnad | Begränsad, avtar | Sprider sig |
 | Feber | Nej | Vanligt |
-| Varig sekretion | Nej | Kan förekomma |
+| Sjukdomskänsla | Nej | Ja |
 
-### Min rekommendation
+### Flare-reaktion (vanligast)
 
-Med tanke på att det gått 2 dagar och du har kraftig smärta med rodnad bör du:
+En så kallad "steroid flare" innebär att kortisonkristallerna tillfälligt irriterar vävnaden. Det är **ofarligt** och går över inom 2-3 dagar.
 
-1. **Söka vård idag** för bedömning – helst hos din behandlande läkare eller på akuten
-2. **Ta tempen** – feber talar för infektion
-3. **Observera rodnaden** – ringa cirkeln med penna och se om den växer
+### Infektion (ovanligt men allvarligt)
 
-Det är troligtvis en flare-reaktion, men infektion måste uteslutas.
+Infektion är extremt ovanligt men kräver snabb behandling. **Varningssignaler:**
+- Feber (>38°C) eller frossa
+- Tilltagande rodnad som **sprider sig**
+- Smärta som blir värre för varje dag
+- Påtaglig sjukdomskänsla
 
-**Sammanfattning:**
-- Flare-reaktion är vanligt och går över på 2-3 dagar
-- Infektion är ovanligt men kräver snabb behandling
-- Sök vård för att utesluta infektion
-- Feber och spridande rodnad är varningssignaler
+### Vad ska du göra?
 
+| Åtgärd | Hur |
+|--------|-----|
+| Ta tempen | Feber >38°C → sök akut |
+| Markera rodnaden | Rita cirkel med penna – växer den? |
+| Vila axeln | Undvik belastning |
+
+### Min bedömning
+
+Om du känner dig frisk i övrigt och inte har feber är det troligen en flare-reaktion som klingar av inom 1-2 dygn. **Men vid feber, frossa, sjukdomskänsla  eller spridande rodnad – sök vård akut.**
+
+**Sammanfattning:** Troligen ofarlig flare-reaktion. Sök akut om: feber, frossa, eller rodnad som sprider sig.
 
