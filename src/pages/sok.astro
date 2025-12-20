@@ -61,7 +61,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   
   .pagefind-ui__search-input {
     font-size: 1.125rem !important;
-    padding: 1rem 1.25rem !important;
+    padding: 1rem 1.25rem 1rem 3rem !important; /* Extra vänsterpadding för sökikonen */
+  }
+  
+  /* Flytta sökikonen så den inte överlappar */
+  .pagefind-ui__search-clear {
+    right: 1rem !important;
   }
   
   .pagefind-ui__result-link {
