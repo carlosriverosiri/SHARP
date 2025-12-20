@@ -19,37 +19,50 @@ question: |
 Vid 65 års ålder med AC-luxation grad 3 och redan god funktion finns goda skäl att **inte operera**.
 
 Den vanligaste behandlingen vid AC-luxation grad 3 är konservativ med sjukgymnastik – upp mot 90% av patienterna förbättras. Kirurgisk behandling i det akuta skedet ger funktionellt och smärtmässigt i stort sett lika bra resultat, men innebär risker. Därför är konservativ behandling förstahandsalternativet.
+
 Många professionella idrottare återgår till sin sport i tävlingssammanhang redan inom en månad efter en AC-luxation grad 3.
 
+---
 
-### Operation jämfört med rehabilitering
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+<div style="background: #fee2e2; border-radius: 8px; padding: 1rem;">
+<strong style="color: #991b1b; font-size: 1.1rem;">🔪 Operation</strong>
 
-**Operation**
-- Kosmetik: Bättre (ingen synlig knöl)
+- Kosmetik: **Bättre** (ingen synlig knöl)
 - Funktion: Likvärdig
-- Återhämtning: 6–9 månader
+- Återhämtning: **6–9 månader**
 - Risker: Infektion, stelhet, reoperation
 - Cykling/skidor: Ja, efter rehab
+</div>
+<div style="background: #dcfce7; border-radius: 8px; padding: 1rem;">
+<strong style="color: #166534; font-size: 1.1rem;">✅ Rehabilitering</strong>
 
-**Rehabilitering**
 - Kosmetik: Synlig knöl kvarstår
 - Funktion: Likvärdig
-- Återhämtning: 1–3 månader
-- Risker: Inga
-- Cykling/skidor: Ja, direkt
+- Återhämtning: **1–3 månader**
+- Risker: **Inga**
+- Cykling/skidor: **Ja, direkt**
+</div>
+</div>
+
+---
 
 
 
-Vid din ålder och aktivitetsnivå (MTB, skidor) rekommenderar jag **fortsatt rehabilitering** snarare än  operation:
+
 
 - Du har redan god funktion
 - Återhämtningen blir mycket snabbare utan operation
 - Kosmetiken är sällan avgörande för motionärer
+
+---
 
 ### Vad du kan göra
 
 - **Sjukgymnastik** – optimera styrka och stabilitet
 - **Gradvis återgång** – börja med lättare cykling
 - **Uppföljning** – vid ökande besvär, ny bedömning
+
+---
 
 **Sammanfattning:** Med din goda funktion rekommenderar jag rehabilitering framför sen operation. Du kommer sannolikt kunna återgå till både cykling och skidor.
