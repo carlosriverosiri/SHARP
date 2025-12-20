@@ -21,12 +21,6 @@ Vid 65 års ålder med AC-luxation grad 3 och redan god funktion finns goda skä
 Den vanligaste behandlingen vid AC-luxation grad 3 är konservativ med sjukgymnastik – upp mot 90% av patienterna förbättras. Kirurgisk behandling i det akuta skedet ger funktionellt och smärtmässigt i stort sett lika bra resultat, men innebär risker. Därför är konservativ behandling förstahandsalternativet.
 Många professionella idrottare återgår till sin sport i tävlingssammanhang redan inom en månad efter en AC-luxation grad 3.
 
-### Din situation
-
-Du har redan:
-- Full rörlighet
-- God styrka
-- Revbenen har läkt
 
 ### Operation jämfört med rehabilitering
 
@@ -44,7 +38,7 @@ Du har redan:
 - Risker: Inga
 - Cykling/skidor: Ja, direkt
 
-### Min bedömning
+
 
 Vid din ålder och aktivitetsnivå (MTB, skidor) rekommenderar jag **fortsatt rehabilitering** snarare än  operation:
 
