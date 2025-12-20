@@ -6,48 +6,34 @@ topic: "kortisoninjektion"
 tags: ["kortisoninjektion", "brosk", "impingement", "biverkningar"]
 date: 2024-08-06
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har under en period dragits med impingement-liknande symptom och en liten ruptur i supraspinatus. Som främst märks vid träning. Har kört rehab under en längre tid.
   
   Hur stor är risken för nedbrytning av ledbrosk vid kortison (subakromiellt) i axeln efter en behandling?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Som patient är det klokt att väga nyttan av en behandling mot eventuella risker, särskilt när det gäller kortison och dess påverkan på kroppens vävnader.
 
-Det korta svaret är att risken för broskskada vid en subakromiell kortisoninjektion är mycket liten.
+Min bedömning baseras på din situation med både impingement och en känd liten ruptur i supraspinatussenan:
 
-### Var injiceras kortisonet?
+Anatomins betydelse: Var hamnar kortisonet? Vid en vanlig impingement-behandling ges injektionen i slemsäcken (subakromiellt), som ligger ovanför själva axelleden. I en frisk axel når kortisonet därför aldrig ledbrosket. Men om det finns en ruptur (hål) i senan, kan vätskan passera igenom hålet och nå in i själva leden där brosket finns.
 
-Vid en **subakromiell injektion** sprutas kortisonet in i slemsäcken (bursan) som ligger ovanför rotatorcuffen – inte inne i själva axelleden där brosket finns.
+Forskning har visat att kortison kan ha en negativ effekt på broskceller, men det gäller framför allt vid:
 
-Detta är en viktig skillnad. Kortisonet kommer inte i direkt kontakt med ledbrosket.
+- Upprepade injektioner (fler än 3–4 per år)
+- Injektioner som ges direkt in i leden (intraartikulärt)
 
-### Vad säger forskningen?
+Vid en enstaka injektion är risken för mätbar broskskada i axeln lyckligtvis mycket liten, även om en del av vätskan skulle nå in i leden via din senskada.
 
-Studier visar att upprepade kortisoninjektioner *inne i* leder (intraartikulärt) på sikt kan påverka brosket negativt. Men detta gäller främst:
-- Många injektioner (>4-5 per år)
-- Injektioner direkt in i leden
-- Leder som redan har artros
+### Min rekommendation
 
-### Subakromiellt vs intraartikulärt
+Eftersom du har en känd ruptur i supraspinatus och redan genomgår rehab, bör man vara extra eftertänksam:
 
-| Injektionsställe | Risk för brosk |
-|------------------|----------------|
-| Subakromiellt (i bursan) | Mycket låg |
-| Intraartikulärt (i leden) | Något högre vid upprepade injektioner |
+Senans hälsa före brosket: Den största risken med kortison vid en senskada är faktiskt inte brosket, utan att kortisonet kan försvaga senvävnaden ytterligare och i värsta fall göra att en liten ruptur blir större.
 
-### Min bedömning
+Rehab i första hand: Eftersom du redan märker av besvären främst vid träning, är målet att stärka axelns stabilitet. Kortison kan ibland "dölja" smärtan så att man råkar belasta senan för hårt innan den läkt.
 
-En enstaka subakromiell kortisoninjektion vid impingement är en väletablerad och säker behandling. Risken för broskskada är minimal.
-
-Däremot bör man vara lite mer försiktig om du har en rotatorcuffruptur. Studier visar att upprepade injektioner kan försvaga senan ytterligare. Vid en *liten* ruptur som din är det oftast okej med en eller två injektioner som del av rehaben.
-
-**Sammanfattning:**
-- Subakromiell injektion når inte ledbrosket
-- Risken för broskskada är mycket liten vid enstaka injektion
-- Vid rotatorcuffskada: max 1-2 injektioner rekommenderas
-- Kortison är en etablerad del av impingement-behandlingen
-
+**Sammanfattning:** Risken för broskskada vid en enstaka injektion är minimal. Men med en känd senskada bör kortison användas med försiktighet. Fortsätt med rehab – kortison endast vid uttalad smärta som hindrar rehabiliteringen.
 
