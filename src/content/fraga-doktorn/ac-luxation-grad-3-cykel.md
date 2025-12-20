@@ -24,7 +24,7 @@ Många professionella idrottare återgår till sin sport i tävlingssammanhang r
 
 ---
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
 <div style="background: #fee2e2; border-radius: 8px; padding: 1rem;">
 <strong style="color: #991b1b; font-size: 1.1rem;">🔪 Operation</strong>
 
@@ -50,19 +50,8 @@ Många professionella idrottare återgår till sin sport i tävlingssammanhang r
 
 
 
+Tre goda skäl att inte operera dig:
+1. Du har redan god funktion
+2. Återhämtningen blir mycket snabbare utan operation
+3. Kosmetiken är sällan avgörande för motionärer
 
-- Du har redan god funktion
-- Återhämtningen blir mycket snabbare utan operation
-- Kosmetiken är sällan avgörande för motionärer
-
----
-
-### Vad du kan göra
-
-- **Sjukgymnastik** – optimera styrka och stabilitet
-- **Gradvis återgång** – börja med lättare cykling
-- **Uppföljning** – vid ökande besvär, ny bedömning
-
----
-
-**Sammanfattning:** Med din goda funktion rekommenderar jag rehabilitering framför sen operation. Du kommer sannolikt kunna återgå till både cykling och skidor.
