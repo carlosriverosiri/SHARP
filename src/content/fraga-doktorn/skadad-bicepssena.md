@@ -2,7 +2,7 @@
 title: "Skadad bicepssena"
 description: "Hej!  Jag har haft av bicepsmuskelns långa sena från sitt fäste. Har en grop i bicepsmuskelns övre del. En Karl Alfred muskel helt enkelt. Detta gjord..."
 category: "axel"
-topic: "ont-bicepssenan"
+topic: "proximal-bicepsruptur"
 tags: ["ont-i-bicepssenan", "smärta"]
 date: 2014-05-13
 author: "Dr. Carlos Rivero Siri"

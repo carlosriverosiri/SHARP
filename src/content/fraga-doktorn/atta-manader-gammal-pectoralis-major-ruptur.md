@@ -24,7 +24,7 @@ För mig som kirurg är det viktigt att få känna på skadan för att med fingr
 
 ### Transplantat vid behov
 
-Om det är osäkert huruvida det går att operera med eller utan transplantat brukar jag ändå förbereda för att ta transplantat. Vi tar det oftast från baksidan av låret – den så kallade semitendinosussenan.
+Om det är osäkert huruvida det går att operera med eller utan transplantat brukar jag ändå förbereda för att ta transplantat. Vi tar det från baksidan av låret – den så kallade semitendinosussenan.
 
 ### Resultat vid sen operation
 

@@ -2,9 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Hämta alla obesvarade frågor
+// Hämta alla obesvarade frågor (obesvarad, utkast, eller opublicerade)
 const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
-  return data.status === 'obesvarad' || data.published === false;
+  return data.status === 'obesvarad' || data.status === 'utkast' || data.published === false;
 });
 
 // Sortera efter datum (nyast först)

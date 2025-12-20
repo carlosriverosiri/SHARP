@@ -6,8 +6,8 @@ topic: "snapping-shoulder"
 tags: ["snapping-scapula", "skulderblad", "smärta", "ung-patient"]
 date: 2025-04-08
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "obesvarad"
+published: true
+status: "klar"
 question: |
   Jag har läst på mycket om mitt problem, även nyss på den här sidan av en person med samma problem som mig. Svaret hen fick var att problemet troligtvis var "snapping scapula".
   
@@ -16,9 +16,7 @@ question: |
   Finns det något jag kan göra åt detta?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
-
-Det du beskriver låter som snapping scapula – ett tillstånd där skulderbladet "hakar" eller "kluckar" mot revbenen när du rör axeln.
+Det du beskriver låter som snapping scapula – ett tillstånd där skulderbladet "hakar" eller "skrapar" mot revbenen när du rör axeln.
 
 ### Vad är snapping scapula?
 
@@ -37,9 +35,9 @@ De allra flesta med snapping scapula blir bättre av riktad träning för att:
 - Korrigera hållning
 
 **Steg 2 – Om sjukgymnastik inte hjälper**
-Om symptomen kvarstår efter 3–6 månaders träning kan man överväga:
+Om symptomen kvarstår efter 6-12 månaders träning kan man överväga:
 - MR-undersökning för att utesluta strukturella orsaker
-- Kortisoninjektion i bursan
+- Kortisoninjektion i bursan för att ställa diagnos
 - I sällsynta fall: artroskopisk operation för att ta bort inflammerad bursa eller benpålagringar
 
 ### Min rekommendation

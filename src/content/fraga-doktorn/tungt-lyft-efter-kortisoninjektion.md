@@ -6,15 +6,20 @@ topic: "kortisoninjektion"
 tags: ["kortisoninjektion", "belastning", "effekt"]
 date: 2025-04-09
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "obesvarad"
+published: true
+status: "klar"
 question: |
   Kan man förstöra verkan av en kortisoninjektion om man gör ett tungt lyft av misstag dygnet efter?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
-
 Nej, ett tungt lyft dagen efter en kortisoninjektion förstör inte effekten av injektionen.
+
+### Vad säger riktlinjerna?
+
+De flesta kliniska riktlinjer nämner ingen specifik begränsning efter en subakromiell injektion. Vanliga rekommendationer är:
+
+- **24–48 timmars relativ vila** – för att låta läkemedlet absorberas och minska risk för flare-up (tillfälligt ökad smärta)
+- **Undvik extrem belastning** – de första dagarna för att inte irritera vävnaden ytterligare
 
 ### Hur kortison verkar
 
@@ -26,12 +31,13 @@ Anledningen till att vi ibland rekommenderar att ta det lugnt första dygnet är
 - **Smärta efter injektionen** – Själva sticket kan ge tillfällig ömhet
 - **Flare-reaktion** – Vissa får ökad smärta första 24–48 timmarna
 
-### Risker med tungt lyft
+### Påverkas kortisonet av rörelse?
 
-Det tunga lyftet kan däremot ha förvärrat den underliggande skadan om du har en senruptur eller annan strukturell skada. Men det påverkar inte kortisonets effekt.
+I teorin skulle mycket intensiv aktivitet kunna flytta kortisonet från injektionsstället, eftersom läkemedlet rör sig med vävnaden. Men detta är spekulativt och det finns inget vetenskapligt stöd för att det skulle påverka behandlingseffekten nämnvärt.
 
 **Sammanfattning:**
 - Kortisonets effekt förstörs inte av belastning
 - Vila rekommenderas för att undvika ökad smärta, inte för att "bevara" kortisonet
+- Flare-up (tillfällig smärtökning) kan förekomma oavsett aktivitetsnivå
 - Om du har en underliggande senskada kan tungt lyft förvärra den, oavsett kortison
 

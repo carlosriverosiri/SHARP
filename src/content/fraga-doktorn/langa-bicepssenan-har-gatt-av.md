@@ -1,8 +1,9 @@
 ---
 title: "Långa bicepssenan har gått av"
-description: "Hej!  För tre veckor sedan fick jag plötsligt en grop i den över min högra biceps efter det när jag skulle vända på min klubbkamarat från mattan. Und..."
+description: "Hej!  För tre veckor sedan fick jag plötsligt en grop i den över min högra biceps efter det när jag skulle vända på min klubbkamarat från mattan.
+ Und..."
 category: "axel"
-topic: "ont-bicepssenan"
+topic: "proximal-bicepsruptur"
 tags: ["skadad-bicepssena"]
 date: 2017-12-19
 author: "Dr. Carlos Rivero Siri"
