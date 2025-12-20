@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sök | Södermalms Ortopedi" description="Sök bland alla frågor och svar, artiklar och information om axel-, knä- och armbågsbesvär.">
+  <main class="container mx-auto px-4 py-12 max-w-4xl">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Sök på sajten</h1>
+    <p class="text-lg text-gray-600 mb-8">
+      Sök bland alla frågor och svar, artiklar och information om axelbesvär.
+    </p>
+    
+    <div id="search" class="mb-12"></div>
+    
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-2">Tips för sökning</h2>
+      <ul class="text-blue-800 space-y-1">
+        <li>• Sök på diagnos: <em>frozen shoulder</em>, <em>impingement</em>, <em>kalkaxel</em></li>
+        <li>• Sök på behandling: <em>kortisoninjektion</em>, <em>operation</em>, <em>sjukgymnastik</em></li>
+        <li>• Sök på symptom: <em>nattsmärta</em>, <em>stelhet</em>, <em>svaghet</em></li>
+      </ul>
+    </div>
+  </main>
+</BaseLayout>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      showImages: false,
+      translations: {
+        placeholder: "Sök bland frågor och svar...",
+        zero_results: "Inga resultat för [SEARCH_TERM]",
+        many_results: "[COUNT] resultat för [SEARCH_TERM]",
+        one_result: "1 resultat för [SEARCH_TERM]",
+        clear_search: "Rensa",
+        load_more: "Ladda fler resultat",
+        search_label: "Sök på denna sajt",
+        filters_label: "Filter",
+        
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  .pagefind-ui {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: #1e40af;
+    --pagefind-ui-text: #1f2937;
+    --pagefind-ui-background: #ffffff;
+    --pagefind-ui-border: #e5e7eb;
+    --pagefind-ui-tag: #dbeafe;
+    --pagefind-ui-border-width: 2px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-font: inherit;
+  }
+  
+  .pagefind-ui__search-input {
+    font-size: 1.125rem !important;
+    padding: 1rem 1.25rem !important;
+  }
+  
+  .pagefind-ui__result-link {
+    font-weight: 600 !important;
+    color: #1e40af !important;
+  }
+  
+  .pagefind-ui__result-link:hover {
+    text-decoration: underline !important;
+  }
+  
+  .pagefind-ui__result-excerpt {
+    color: #4b5563 !important;
+  }
+</style>
+
