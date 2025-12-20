@@ -6,40 +6,42 @@ topic: "tennisarmbage"
 tags: ["tennisarmbåge", "lateral epicondylitis", "behandling"]
 date: 2024-03-17
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   I have lateral epicondylitis and I would like to know which is the best doctor or clinic to treat it.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+De flesta ortopedmottagningar kan ställa diagnosen, men nyckeln till framgångsrik läkning ligger i hur man ser på kroppens egen förmåga att reparera senan.
 
-Lateral epicondylitis (tennis elbow) can be treated at most orthopedic clinics, including ours.
+### Behandlingsöversikt
 
-### Treatment options we offer
+| Metod | Rekommendation |
+|-------|----------------|
+| Excentrisk träning | ✅ Bästa behandlingen |
+| Fysioterapi | ✅ Strukturerat program |
+| Stötvågsbehandling | ✅ Vid långvariga besvär |
+| PRP | Kan övervägas |
+| Kortisoninjektion | ⚠️ Undvik – försvagar senan |
+| Kirurgi | Sista utväg (efter 6–12 mån rehab) |
 
-1. **Assessment and diagnosis** – Clinical examination
-2. **Rehabilitation program** – Specific exercises
-3. **Cortisone injection** – For temporary relief
-4. **Shockwave therapy** – ESWT
-5. **PRP injection** – Platelet Rich Plasma
-6. **Surgery** – As a last resort
+### Vår syn på behandling
 
-### What to expect
+1. **Grundlig diagnos:** Smärtan sitter distinkt på yttre armbågsknölen och förvärras vid lyft med handleden mot motstånd.
 
-Most cases of lateral epicondylitis heal within 6-12 months with conservative treatment. Surgery is rarely needed.
+2. **Fokus på rehabilitering:** Tennisarmbåge är i grunden en "misslyckad läkning" i senan. Bästa medicinen är inte vila utan **rätt sorts belastning**. Vi rekommenderar excentrisk träning hos fysioterapeut – den metod som har starkast vetenskapligt stöd.
 
-### How to book
+3. **Varför vi undviker kortison:** Till skillnad från många kliniker rekommenderar vi sällan kortison. Det kan ge snabb lindring men försvagar senan och ökar risken för återfall.
 
-You can book an appointment at Södermalms Ortopedi through:
-- Our website
-- Phone
-- Self-referral (egenremiss)
+4. **Andra alternativ:** Vid långvariga besvär kan stötvågsbehandling (ESWT) eller PRP vara aktuellt. Kirurgi fungerar bra men ska endast övervägas efter 6–12 månaders rehabilitering utan resultat.
 
-**Summary:**
-- We treat lateral epicondylitis at our clinic
-- Most cases heal with conservative treatment
-- Multiple treatment options available
-- Book an appointment for assessment
+### Prognos
 
+De flesta blir bra inom ett år, men vägen dit kan vara frustrerande.
+
+### Så söker du till oss
+
+Du kan komma till Södermalms Ortopedi med **remiss** från husläkare eller fysioterapeut, eller som **privatpatient** via vår hemsida.
+
+**Sammanfattning:** Excentrisk träning är bästa behandlingen. Undvik kortison. Sök oss om besvären kvarstår trots 6 månaders strukturerad rehabilitering.
 
