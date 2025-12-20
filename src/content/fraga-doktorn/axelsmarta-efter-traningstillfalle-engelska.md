@@ -6,45 +6,27 @@ topic: "ont-i-axeln"
 tags: ["postoperativ", "träning", "återfall", "smärta"]
 date: 2024-04-23
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   I was operated for my left axel about two years back. All was under control till last Sunday. I used to do workout and from last Sunday, I am having pain in my left axel.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Att du har blivit opererad tidigare i axeln innebär inte automatiskt att samma problem har återkommit. Det är relativt vanligt att man drabbas av smärtor i samband med fysisk aktivitet – och de allra flesta sådana smärtor självläker.
 
-I understand your concern. Pain returning after two years of being symptom-free needs evaluation.
+### Min rekommendation
 
-### Possible causes
+1. **Fysioterapi** – kom igång så snart som möjligt
+2. **Tålamod** – ge axeln tid att återhämta sig
+3. **Avvakta med specialist** – i detta läge leder en bedömning sannolikt inte till annan behandling än fysioterapi
 
-1. **New injury** – Something may have happened during your workout
-2. **Overuse** – Gradual increase in training intensity
-3. **Re-tear** – If you had rotator cuff surgery, the repair could have failed
-4. **Unrelated issue** – New problem in the same shoulder
+### När bör du söka vidare?
 
-### What to do
+Om smärtan kvarstår efter 4–6 veckors rehabilitering, eller om du upplever:
+- Instabilitet (axeln "hoppar ur")
+- Kraftig svaghet
+- Nattlig vilovärk
 
-1. **Rest** – Avoid painful movements for a few days
-2. **Ice** – Apply ice if there's swelling
-3. **Pain relief** – Paracetamol or ibuprofen as needed
-4. **Monitor** – If it doesn't improve in 1-2 weeks, seek medical attention
+...då är det rimligt att söka en ny bedömning hos axelspecialist.
 
-### When to seek care immediately
-
-- Severe pain that doesn't respond to painkillers
-- Inability to move your arm
-- Visible deformity
-- Numbness or tingling
-
-### My recommendation
-
-If the pain persists beyond 2 weeks, contact your surgeon or book an appointment for evaluation. We may need new imaging to see what's happening.
-
-**Summary:**
-- Pain returning after 2 years warrants investigation
-- Rest and monitor for 1-2 weeks
-- Seek medical attention if no improvement
-- May need new MRI to assess the situation
-
-
+**Sammanfattning:** Träningsrelaterad smärta efter tidigare operation är vanligt och oftast ofarligt. Börja med fysioterapi och ge det tid innan du oroar dig.
