@@ -6,8 +6,8 @@ topic: "ont-skulderbladet"
 tags: ["skulderblad", "snapping scapula", "knaster", "asymmetri"]
 date: 2024-02-27
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Sedan jag var 14 har jag haft ett knastrande/knäppande varje gång jag rör armarna i stora rörelser eller rullar axlarna bakåt. Det låter från ovanför nyckelbenet och knastrar hela vägen ner till nedre sidan av skulderbladet.
   
@@ -16,46 +16,35 @@ question: |
   Jag har gjort både vanlig röntgen och datortomografi som inte visar något avvikande. Jag vet inte vart jag ska vända mig mer. Vad kan det vara?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Knäppningarna du beskriver låter som **snapping scapula syndrom**. Asymmetrin är lite mer svårförklarad och här är det bra om du kontaktar en sjukgymnast för att få hjälp på vägen och en preliminär diagnos.
 
-Det du beskriver låter som **snapping scapula syndrom** – men den senaste försämringen med asymmetri och svullnad behöver utredas ytterligare.
+---
 
-### Vad är snapping scapula?
+<div style="background: #e0e7ff; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #6366f1;">
+<strong style="color: #4338ca; font-size: 1.1rem;">🔍 Vad är snapping scapula?</strong>
 
-Snapping scapula innebär att skulderbladet "knäpper" eller "gnisslar" mot revbenen när du rör armen. Det kan bero på:
-- Bursit (inflammation i slemsäck)
-- Muskelimbalans
-- Benig utväxt på skulderbladet
-- Fel hållning
+Snapping scapula innebär att skulderbladet "knäpper" eller "gnisslar" mot revbenen när du rör armen. Det är ett vanligt tillstånd som ofta börjar i tonåren.
+</div>
 
-### Varför syns inget på röntgen/DT?
+---
 
-Mjukdelsproblem som bursit och muskelskador syns inte på vanlig röntgen eller DT. För att se dessa behövs **MR-undersökning**.
+<div style="background: #fef3c7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #d97706;">
+<strong style="color: #92400e; font-size: 1.1rem;">📋 Möjliga orsaker</strong>
 
-### Den plötsliga försämringen
+- **Bursit** – inflammation i slemsäck mellan skulderblad och revben
+- **Muskelimbalans** – svaghet eller stelhet i musklerna runt skulderbladet
+- **Benig utväxt** – onormal benväxt på skulderbladet
+- **Fel hållning** – posturala problem som påverkar skulderbladets rörelse
+</div>
 
-Att skuldran "sticker ut" mer och är svullen är nytt och behöver utredas. Möjliga orsaker:
-- **Serratus anterior-pares** – Nerven till en viktig muskel kan vara påverkad
-- **Bursit** – Inflammation under skulderbladet
-- **Muskelproblem** – Spasm eller skada
+---
 
-### Min rekommendation
+<div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
+<strong style="color: #1e40af; font-size: 1.1rem;">🔬 Varför syns inget på röntgen/DT?</strong>
 
-1. **MR av skulderbladsregionen** – För att se mjukdelar
-2. **Neurologisk bedömning** – Testa nervfunktionen (n. thoracicus longus)
-3. **Undersökning av axelspecialist** – Klinisk bedömning
+Mjukdelsproblem som bursit och muskelskador syns inte på vanlig röntgen eller datortomografi. För att se dessa behövs **MR-undersökning**.
+</div>
 
-### Vart ska du vända dig?
+---
 
-Begär remiss till ortoped eller axelspecialist. Beskriv att du har:
-- Långvariga knaster-besvär
-- Ny försämring med asymmetri och svullnad
-- Att röntgen/DT inte visat något
-
-**Sammanfattning:**
-- Låter som snapping scapula syndrom
-- Den nya försämringen behöver MR-undersökning
-- Nervpåverkan bör uteslutas
-- Sök remiss till ortoped/axelspecialist
-
-
+**Sammanfattning:** Dina symtom tyder på snapping scapula syndrom. Kontakta en sjukgymnast för preliminär bedömning. Om problemet kvarstår kan MR-undersökning behövas för att se mjukdelsförändringar som inte syns på röntgen eller DT.
