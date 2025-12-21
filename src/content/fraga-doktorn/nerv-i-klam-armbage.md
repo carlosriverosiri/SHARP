@@ -6,52 +6,40 @@ topic: "ulnaris"
 tags: ["ulnarisnerv", "kubitaltunnelsyndrom", "nervinklämning", "armbåge"]
 date: 2024-03-13
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har en nerv i kläm på insidan av armbågen. Har haft det i 6 veckor. Går det att göra något åt det?
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Kubitaltunnelsyndrom, även kallat ulnarisentrapment, innebär att nervus ulnaris har kommit i kläm vid armbågsleden. Typiska symtom är domningar i lillfingret och ringfingret.
 
-Ja, det går oftast att behandla. Det du beskriver låter som **kubitaltunnelsyndrom** – en inklämning av ulnarisnerven vid armbågen.
+---
 
-### Vad är kubitaltunnelsyndrom?
+### Spontanförbättring
 
-Ulnarisnerven (armbågsnerven) passerar i en trång kanal på insidan av armbågen. När nerven kläms åt kan du få:
-- Domningar i lillfinger och ringfinger
-- Stickningar som strålar ner i handen
-- Svaghet i greppet
-- Smärta vid armbågen
+I kontrollgrupper som får "vänta och se" eller enbart enkla råd ser man en spontan förbättring i ungefär **30–50%** av fallen vid lindriga till måttliga besvär. Detta stöds av flera studier som visar att många patienter förbättras utan operation.
 
-### Behandling
+**Referens:** Caliandro P et al. Treatment for ulnar neuropathy at the elbow. Cochrane Database Syst Rev. 2016. [Läs mer →](https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006839.pub4/full)
 
-#### Konservativ behandling (första steget)
-- **Undvik tryck** mot armbågens insida
-- **Nattskena** – håller armbågen lätt böjd under sömn
-- **Ergonomianpassning** – undvik att luta på armbågen
-- **Anti-inflammatoriska läkemedel**
+---
 
-#### Operation (vid utebliven förbättring)
-Om konservativ behandling inte hjälper efter 3-6 månader kan operation vara aktuellt:
-- **Dekompression** – man vidgar kanalen
-- **Nervförflyttning** – nerven flyttas till en annan plats
+### Nattlig skena
 
-### Prognos
+Konservativ behandling med nattskena som håller armbågen i neutral position (ca 30–45 grader böj) kan hjälpa upp till **80%** av patienterna med lindriga symtom att undvika operation på kort till medellång sikt. Detta genom att minska tryck och sträckning på ulnarnerven under nattsömnen.
 
-De flesta blir bättre med konservativ behandling. Vid operation är prognosen god om man opererar innan nervskadan blivit för omfattande.
+**Referens:** Shah CM et al. Outcomes of rigid night splinting and activity modification in the treatment of cubital tunnel syndrome. J Hand Surg Am. 2013;38(6):1125-30. [Läs mer →](https://pubmed.ncbi.nlm.nih.gov/23684520/)
 
-### Min rekommendation
+**Praktisk information:** Vi kan tyvärr inte hjälpa dig med en nattlig skena på kliniken – enligt riktlinjer från Region Stockholm måste du inhandla den själv. Sök efter "armbågsskydd för ulnarisinklämning" för att hitta en leverantör.
 
-Sex veckor är relativt kort tid. Jag rekommenderar:
-1. Prova konservativ behandling i ytterligare 2-3 månader
-2. Undvik att böja armbågen kraftigt under längre tid
-3. Om symptomen förvärras eller inte förbättras – sök ortoped
+---
 
-**Sammanfattning:**
-- Det låter som kubitaltunnelsyndrom (ulnarisnervinklämning)
-- Konservativ behandling hjälper ofta
-- Operation är möjlig om konservativ behandling inte räcker
-- Sex veckor är för tidigt för operation – ge det mer tid
+### Kirurgisk behandling
 
+En av de mest citerade studierna gällande behandling och resultat vid ulnarnervskompression vid armbågen är Dellon (1989), som belyser både konservativ och kirurgisk hantering.
 
+**Referens:** Dellon AL. Review of treatment results for ulnar nerve entrapment at the elbow. J Hand Surg Am. 1989;14A(4):688-700. [Läs mer →](https://pubmed.ncbi.nlm.nih.gov/2666495/)
+
+---
+
+**Sammanfattning:** Vid lindriga till måttliga besvär är spontanförbättring vanligt (30–50%). Nattlig skena kan hjälpa upp till 80% med lindriga symtom. Vid uttalade besvär eller när konservativ behandling inte hjälper kan kirurgi övervägas.
