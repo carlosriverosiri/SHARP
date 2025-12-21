@@ -2,7 +2,7 @@
 title: "Knaster i skulderblad sedan tonåren – nu sticker axeln ut"
 description: "Patient har haft knaster i skulderbladen sedan 14 års ålder. Nu sticker vänster skuldra ut och är svullen."
 category: "axel"
-topic: "ont-skulderbladet"
+topic: "snapping-scapula"
 tags: ["skulderblad", "snapping scapula", "knaster", "asymmetri"]
 date: 2024-02-27
 author: "Dr. Carlos Rivero Siri"
@@ -47,4 +47,4 @@ Mjukdelsproblem som bursit och muskelskador syns inte på vanlig röntgen eller 
 
 ---
 
-**Sammanfattning:** Dina symtom tyder på snapping scapula syndrom. Kontakta en sjukgymnast för preliminär bedömning. Om problemet kvarstår kan MR-undersökning behövas för att se mjukdelsförändringar som inte syns på röntgen eller DT.
+**Sammanfattning:** Dina symtom tyder på snapping scapula syndrom. Kontakta en sjukgymnast för preliminär bedömning. Knak och knäppningar i sig är inga allvarliga symptom. Snapping scapula behandlas i första hand med hållningskorrigering och sjukgymnastik – det är ett problem som sällan opereras.

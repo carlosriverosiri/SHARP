@@ -151,6 +151,14 @@ export const topics: Topic[] = [
     category: 'diagnoser',
     bodyPart: 'axel',
   },
+  {
+    id: 'snapping-scapula',
+    title: 'Snapping scapula',
+    shortTitle: 'Snapping scapula',
+    description: 'Knäppande eller skrapande ljud från skulderbladet mot revbenen',
+    category: 'diagnoser',
+    bodyPart: 'axel',
+  },
 
   // --- SKADOR & INSTABILITET (Axel) ---
   {
