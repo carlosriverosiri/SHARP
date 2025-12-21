@@ -1,16 +1,42 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import fs from 'fs';
+import path from 'path';
 
 // Hämta alla publicerade frågor
 const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
   return data.published === true;
 });
 
-// Sortera efter datum (nyast först) och ta de 20 senaste
-const recentQuestions = allQuestions
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-  .slice(0, 20);
+// Hämta filens faktiska ändringsdatum och sortera efter det
+const questionsWithMtime = await Promise.all(
+  allQuestions.map(async (question) => {
+    const filePath = path.join(process.cwd(), 'src', 'content', 'fraga-doktorn', `${question.slug}.md`);
+    try {
+      const stats = fs.statSync(filePath);
+      return {
+        question,
+        mtime: stats.mtime.getTime()
+      };
+    } catch {
+      // Om filen inte hittas, använd date från frontmatter som fallback
+      return {
+        question,
+        mtime: new Date(question.data.date).getTime()
+      };
+    }
+  })
+);
+
+// Sortera efter ändringsdatum (nyast först) och ta de 20 senaste
+const recentQuestions = questionsWithMtime
+  .sort((a, b) => b.mtime - a.mtime)
+  .slice(0, 20)
+  .map(item => ({
+    ...item.question,
+    lastEdited: new Date(item.mtime)
+  }));
 
 const categoryNames: Record<string, string> = {
   axel: 'Axel',
@@ -24,7 +50,7 @@ const categoryNames: Record<string, string> = {
     
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-[#024264] mb-2">Senast redigerade frågor</h1>
-      <p class="text-gray-600">Här ser du de 20 senast publicerade/redigerade frågorna för snabb preview.</p>
+      <p class="text-gray-600">Här ser du de 20 senast redigerade frågorna baserat på när filen senast ändrades.</p>
     </div>
 
     {recentQuestions.length === 0 ? (
@@ -41,7 +67,7 @@ const categoryNames: Record<string, string> = {
             <div class="flex items-start gap-4">
               <span class="text-gray-400 font-mono text-sm w-8 shrink-0">{index + 1}.</span>
               <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-1">
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
                   <span class={`text-xs px-2 py-0.5 rounded ${
                     question.data.category === 'axel' ? 'bg-sky-100 text-sky-700' :
                     question.data.category === 'kna' ? 'bg-emerald-100 text-emerald-700' :
@@ -50,7 +76,7 @@ const categoryNames: Record<string, string> = {
                     {categoryNames[question.data.category] || question.data.category}
                   </span>
                   <span class="text-xs text-gray-500">
-                    {question.data.date.toLocaleDateString('sv-SE')}
+                    Redigerad: {question.lastEdited.toLocaleDateString('sv-SE')} {question.lastEdited.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}
                   </span>
                   {question.data.status === 'klar' && (
                     <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
@@ -88,4 +114,3 @@ const categoryNames: Record<string, string> = {
     overflow: hidden;
   }
 </style>
-
