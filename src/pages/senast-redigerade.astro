@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Hämta alla publicerade frågor
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
+  return data.published === true;
+});
+
+// Sortera efter datum (nyast först) och ta de 20 senaste
+const recentQuestions = allQuestions
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 20);
+
+const categoryNames: Record<string, string> = {
+  axel: 'Axel',
+  kna: 'Knä',
+  armbage: 'Armbåge'
+};
+---
+
+<BaseLayout title="Senast redigerade frågor | Södermalms Ortopedi" noindex={true}>
+  <main class="container mx-auto px-4 py-8 max-w-4xl">
+    
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-[#024264] mb-2">Senast redigerade frågor</h1>
+      <p class="text-gray-600">Här ser du de 20 senast publicerade/redigerade frågorna för snabb preview.</p>
+    </div>
+
+    {recentQuestions.length === 0 ? (
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-8 text-center">
+        <p class="text-gray-600">Inga publicerade frågor hittades.</p>
+      </div>
+    ) : (
+      <div class="space-y-4">
+        {recentQuestions.map((question, index) => (
+          <a 
+            href={`/fraga-doktorn/${question.slug}/`}
+            class="block bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all p-4"
+          >
+            <div class="flex items-start gap-4">
+              <span class="text-gray-400 font-mono text-sm w-8 shrink-0">{index + 1}.</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class={`text-xs px-2 py-0.5 rounded ${
+                    question.data.category === 'axel' ? 'bg-sky-100 text-sky-700' :
+                    question.data.category === 'kna' ? 'bg-emerald-100 text-emerald-700' :
+                    'bg-amber-100 text-amber-700'
+                  }`}>
+                    {categoryNames[question.data.category] || question.data.category}
+                  </span>
+                  <span class="text-xs text-gray-500">
+                    {question.data.date.toLocaleDateString('sv-SE')}
+                  </span>
+                  {question.data.status === 'klar' && (
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                      ✓ Klar
+                    </span>
+                  )}
+                </div>
+                <h3 class="font-semibold text-[#024264] mb-1 hover:text-blue-600">
+                  {question.data.title}
+                </h3>
+                <p class="text-sm text-gray-600 line-clamp-2">
+                  {question.data.description || 'Ingen beskrivning'}
+                </p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-8 text-center">
+      <a href="/fraga-doktorn/" class="text-blue-600 hover:text-blue-800 font-medium">
+        ← Tillbaka till Fråga Doktorn
+      </a>
+    </div>
+
+  </main>
+</BaseLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
