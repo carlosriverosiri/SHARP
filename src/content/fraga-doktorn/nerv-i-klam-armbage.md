@@ -19,7 +19,7 @@ Kubitaltunnelsyndrom, även kallat ulnarisentrapment, innebär att nervus ulnari
 <div style="background: #dcfce7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #16a34a;">
 <strong style="color: #166534; font-size: 1.1rem;">✅ Spontanförbättring</strong>
 
-I kontrollgrupper som får "vänta och se" eller enbart enkla råd ser man en spontan förbättring i ungefär **30–50%** av fallen vid lindriga till måttliga besvär. Detta stöds av flera studier som visar att många patienter förbättras utan operation.
+Vidkonservativ behandling,  "vänta och se" eller enbart enkla råd, ser man en spontan förbättring i ungefär **30–50%** av fallen vid lindriga till måttliga besvär. Detta stöds av flera studier som visar att många patienter förbättras utan operation.
 </div>
 
 ---
@@ -34,15 +34,11 @@ Konservativ behandling med nattskena som håller armbågen i neutral position (c
 
 ---
 
-### Indikationer för kirurgi
+<div style="background: #fee2e2; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #dc2626;">
+<strong style="color: #991b1b; font-size: 1.1rem;">⚠️ Indikationer för kirurgi</strong>
 
 Den viktigaste indikationen för snabb kirurgi är när man upplever **svaghet i fingrarna eller i handen** – det vill säga när man får en motorisk påverkan på nerven. Detta är ett tecken på att nerven är mer allvarligt komprimerad och kan riskera permanent skada om man väntar för länge.
-
----
-
-### Kirurgisk behandling
-
-En av de mest citerade studierna gällande behandling och resultat vid ulnarnervskompression vid armbågen är Dellon (1989), som belyser både konservativ och kirurgisk hantering.
+</div>
 
 ---
 
@@ -56,4 +52,3 @@ En av de mest citerade studierna gällande behandling och resultat vid ulnarnerv
 
 2. **Shah CM et al.** Outcomes of rigid night splinting and activity modification in the treatment of cubital tunnel syndrome. J Hand Surg Am. 2013;38(6):1125-30. [Läs mer →](https://pubmed.ncbi.nlm.nih.gov/23684520/)
 
-3. **Dellon AL.** Review of treatment results for ulnar nerve entrapment at the elbow. J Hand Surg Am. 1989;14A(4):688-700. [Läs mer →](https://pubmed.ncbi.nlm.nih.gov/2666495/)
