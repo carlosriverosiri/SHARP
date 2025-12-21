@@ -6,50 +6,47 @@ topic: "kortisoninjektion"
 tags: ["kortisoninjektion", "blåmärke", "biverkning", "smärta"]
 date: 2024-03-11
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Var hos ortoped för 8 dagar sedan och väntar på operation av höger axel. Tre dagar innan fick jag fruktansvärd värk i vänster axel på grund av överbelastning. Fick därför en kortisonspruta i vänster axel men efter 8 dagar har jag fortfarande riktig smärta och två blåmärken – ett runt och ett lodrätt ca 6 cm långt som sitter 10 cm längre ner. Värken går ner i skuldran.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+Blåmärken efter kortisoninjektion är inte ovanligt och beror vanligtvis på att nålen träffat ett litet blodkärl. Det är helt ofarligt.
 
-Blåmärken efter kortisoninjektion är inte ovanligt och beror vanligtvis på att nålen träffat ett litet blodkärl.
+---
 
-### Varför blåmärken?
+<div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
+<strong style="color: #1e40af; font-size: 1.1rem;">Blåmärken</strong>
 
-1. **Kärlskada** – Nålen kan ha punkterat ett litet blodkärl
-2. **Blodförtunnande** – Om du tar ASA, Waran eller liknande ökar risken
-3. **Kortisons effekt** – Kortison kan göra kärlen skörare
+- **Runda blåmärken** – vanligt vid injektionsstället
+- **Lodrätt blåmärke längre ner** – blodet kan rinna längs muskelhinnor (fascia) och ge blåmärken längre ner på armen, vilket är helt normalt
 
-### Varför två blåmärken på olika ställen?
+Blåmärkena försvinner av sig själva inom några dagar till veckor.
+</div>
 
-Blodet följer vävnadsplanerna och kan "rinna" nedåt längs muskelhinnorna. Därför kan ett blåmärke dyka upp en bit från injektionsstället.
+---
 
-### Varför har smärtan inte gått över?
+<div style="background: #fef3c7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #d97706;">
+<strong style="color: #92400e; font-size: 1.1rem;">⏱️ Kortisoneffekt</strong>
 
-8 dagar är i underkant för full effekt av kortison. Men det kan finnas andra förklaringar:
-- **Flare-reaktion** som dröjer kvar
-- **Underliggande skada** som kortisonet inte kan behandla
-- **Injektion på fel ställe** – om kortisonet inte nådde rätt plats
+Kortisoneffekten kan ta **upp till 2 veckor** innan den ger full smärtlindring. Att du fortfarande har smärta efter 8 dagar är därför inte ovanligt.
 
-### Min rekommendation
+Ge kortisonet tid att verka – effekten kan komma först efter 1–2 veckor.
+</div>
 
-1. **Ge det några dagar till** – Kortisoneffekten kan dröja upp till 2 veckor
-2. **Kontakta läkaren** om smärtan inte avtar inom ytterligare en vecka
-3. **Blåmärkena** försvinner av sig själva på 1-3 veckor
+---
 
-### Varningssignaler
+<div style="background: #fce7f3; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #db2777;">
+<strong style="color: #9f1239; font-size: 1.1rem;">⚠️ När ska du söka vård?</strong>
 
-Sök vård om du får:
-- Feber
-- Tilltagande rodnad som sprider sig
-- Svullnad som ökar
+Sök vård akut om du får:
+- Feber, frossa eller sjukdomskänsla efter kortisonsprutan
+- Rodnad som sprider sig över axeln
 
-**Sammanfattning:**
-- Blåmärken efter injektion är vanligt och ofarligt
-- Blodet kan rinna längs muskelhinnor och ge blåmärken längre ner
-- Kortisoneffekten kan ta upp till 2 veckor
-- Blåmärkena försvinner av sig själva
+Dessa kan vara tecken på infektion och kräver snabb bedömning.
+</div>
 
+---
 
+**Sammanfattning:** Blåmärken efter kortisoninjektion är vanligt och ofarligt. Kortisoneffekten kan ta upp till 2 veckor. Sök vård akut vid feber, frossa, sjukdomskänsla ökande rodnad – dessa kan tyda på infektion.

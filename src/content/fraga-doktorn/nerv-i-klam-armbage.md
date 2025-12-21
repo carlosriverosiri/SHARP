@@ -19,7 +19,7 @@ Kubitaltunnelsyndrom, även kallat ulnarisentrapment, innebär att nervus ulnari
 <div style="background: #dcfce7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #16a34a;">
 <strong style="color: #166534; font-size: 1.1rem;">✅ Spontanförbättring</strong>
 
-Vidkonservativ behandling,  "vänta och se" eller enbart enkla råd, ser man en spontan förbättring i ungefär **30–50%** av fallen vid lindriga till måttliga besvär. Detta stöds av flera studier som visar att många patienter förbättras utan operation.
+Vid konservativ behandling,  "vänta och se" eller enbart enkla råd, ser man en spontan förbättring i ungefär **30–50%** av fallen vid lindriga till måttliga besvär. Detta stöds av flera studier som visar att många patienter förbättras utan operation.
 </div>
 
 ---
