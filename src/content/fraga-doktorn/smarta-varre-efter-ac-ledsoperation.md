@@ -16,18 +16,26 @@ Det är naturligtvis frustrerande när en operation, som förväntas ge snabb b�
 
 Jag förutsätter att den ursprungliga diagnosen var korrekt och att dina besvär före operationen entydigt pekade på artros i nyckelbensleden.
 
-### Varför är smärtan värre?
-
 Den vanligaste orsaken till fortsatt eller ökad smärta efter denna operation är att man har fräst bort **för lite ben** från yttre nyckelbensändan. Om utrymmet i leden fortfarande är för trångt fortsätter benytorna att skava mot varandra.
 
-### En kirurgisk balansgång
 
-Som kirurg står man inför en viktig avvägning:
 
-| Scenario | Konsekvens |
-|----------|------------|
-| För lite ben borttaget | Kvarstående smärta – men enklast att åtgärda |
-| För mycket ben borttaget | Instabilt nyckelben – kräver avancerad rekonstruktion |
+Mm. Det är vanligt att man undviker att ta för mycket ben, eftersom man inte vill riskera en instabilitet i AC-leden? Det kan ju leda till att man tar för lite ben ibland när man fräser bort ben från ytternyckelbensändan.
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+<div style="background: #fee2e2; border-radius: 8px; padding: 1rem;">
+<strong style="color: #991b1b; font-size: 1.1rem;">⚠️ För lite ben borttaget</strong>
+
+- Kvarstående smärta
+- Men enklast att åtgärda
+</div>
+<div style="background: #fef3c7; border-radius: 8px; padding: 1rem;">
+<strong style="color: #92400e; font-size: 1.1rem;">⚠️ För mycket ben borttaget</strong>
+
+- Instabilt nyckelben
+- Kräver avancerad rekonstruktion
+</div>
+</div>
 
 Därför väljer många kirurger, helt korrekt, en försiktig inställning vid första operationen.
 
