@@ -3,7 +3,7 @@ title: "Bicepstendinit i armbågen"
 description: "Hej,
  
  Jag har under senaste 8 månaderna dragits med en skada i vänster armveck/biceps. Smärtan uppstår framförallt om jag supinerar handen med motst..."
-category: "armbåge"
+category: "armbage"
 topic: "biceps-skada"
 tags: ["bicepstendinit", "distal-biceps", "armbåge", "smärta"]
 date: 2015-10-12
