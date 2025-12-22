@@ -20,7 +20,7 @@ Den vanligaste orsaken till fortsatt eller ökad smärta efter denna operation �
 
 
 
-Mm. Det är vanligt att man undviker att ta för mycket ben, eftersom man inte vill riskera en instabilitet i AC-leden? Det kan ju leda till att man tar för lite ben ibland när man fräser bort ben från ytternyckelbensändan.
+Det är vanligt att man undviker att ta för mycket ben, eftersom man inte vill riskera en instabilitet i AC-leden? Det kan ju leda till att man tar för lite ben ibland när man fräser bort ben från ytternyckelbensändan.
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
 <div style="background: #fee2e2; border-radius: 8px; padding: 1rem;">
@@ -33,7 +33,7 @@ Mm. Det är vanligt att man undviker att ta för mycket ben, eftersom man inte v
 <strong style="color: #92400e; font-size: 1.1rem;">⚠️ För mycket ben borttaget</strong>
 
 - Instabilt nyckelben
-- Kräver avancerad rekonstruktion
+- Kräver avancerad kirurgisk rekonstruktion
 </div>
 </div>
 

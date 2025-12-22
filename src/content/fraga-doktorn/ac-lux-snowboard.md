@@ -6,52 +6,60 @@ topic: "nyckelbenet-ur-led"
 tags: ["ac-luxation", "snowboard", "kosmetik", "nyckelben"]
 date: 2024-01-14
 author: "Dr. Carlos Rivero Siri"
-published: false
-status: "utkast"
+published: true
+status: "klar"
 question: |
   Jag har skadat min axel i en krasch med snowboarden där jag föll rakt mot axeln. Det har gått ca 2 veckor nu och det gör inte så ont längre. Ortopeden har sagt att det är en luxation i akromioklavikularleden grad 1-2.
   
   Jag har ett utbuktande nyckelben vid axeln. Går detta på något vis att förhindra så att det inte kommer se ut så för alltid? Ibland känns det som att det står ut mer på morgnarna och lägger sig på dagarna något.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+En AC-luxation grad 1-2 behandlas nästan alltid konservativt (utan operation).
+Ligamentskador i nyckelbensleden kan graderas i olika steg. En typ av gradering är grad 1 till 3, där grad 1 och 2 är den lindrigare formen av ledbandsskada.
 
-En AC-luxation grad 1-2 behandlas nästan alltid konservativt (utan operation), och det är bra nyheter för dig.
+---
 
-### Vad betyder grad 1-2?
+<div style="background: #dcfce7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #16a34a;">
+<strong style="color: #166534; font-size: 1.1rem;">✅ Kommer nyckelbenet se ut så permanent?</strong>
 
-- **Grad 1:** Ligamenten är töjda men intakta
-- **Grad 2:** Ligamenten är delvis skadade
+<p>Vid grad 1-2 är <strong>utbuktningen vanligtvis minimal</strong> och minskar över tid.</p>
+</div>
 
-Vid dessa grader är leden relativt stabil och läker oftast utan operation.
+---
 
-### Kommer nyckelbenet se ut så permanent?
+<div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
+<strong style="color: #1e40af; font-size: 1.1rem;">💡 Vad kan du göra?</strong>
 
-Vid grad 1-2 är **utbuktningen vanligtvis minimal** och minskar över tid. Det du märker nu är troligen:
-- Svullnad (minskar med tiden)
-- Normal variation (det kan se lite annorlunda ut beroende på tid på dygnet)
+<ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+<li><strong>Fortsätt med rehabilitering</strong> som ortopeden ordinerat</li>
+<li><strong>Ge det tid</strong> – Det kan ta 6-12 månader innan det slutliga utseendet är klart</li>
+<li><strong>Styrketräning</strong> – Starka muskler runt axeln kan dölja mindre asymmetrier</li>
+</ul>
+</div>
 
-### Varför mer på morgonen?
+---
 
-Vätska i kroppen omfördelas under natten. På morgonen kan det finnas mer vätska kring skadan som ger svullnad. Under dagen "rinner" detta nedåt och minskar.
+<div style="background: #fef3c7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #d97706;">
+<strong style="color: #92400e; font-size: 1.1rem;">❓ Om operation?</strong>
 
-### Vad kan du göra?
+<p>Vid grad 1-2 opererar endast vid:</p>
 
-1. **Fortsätt med rehabilitering** som ortopeden ordinerat
-2. **Ge det tid** – Det kan ta 6-12 månader innan det slutliga utseendet är klart
-3. **Styrketräning** – Starka muskler runt axeln kan dölja mindre asymmetrier
+<ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+<li>Kvarstående instabilitet i AC-leden</li>
+<li>Betydande smärta efter rehabilitering (3-6 månader)</li>
+</ul>
+</div>
 
-### Om operation?
+---
 
-Vid grad 1-2 opererar man normalt inte. Endast vid:
-- Kvarstående instabilitet
-- Betydande smärta efter rehabilitering
-- Grad 3+ skador
+<div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
+<strong style="color: #1e40af; font-size: 1.1rem;">📋 Sammanfattning</strong>
 
-**Sammanfattning:**
-- Grad 1-2 läker vanligtvis utan operation
-- Utbuktningen minskar ofta med tiden
-- Svullnad förklarar variation morgon/kväll
-- Ge det tid – det slutliga resultatet syns först efter flera månader
+<ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+<li>Grad 1-2 läker vanligtvis utan operation</li>
+<li>Utbuktningen minskar  med tiden</li>
+<li>Ge det tid – det slutliga resultatet syns först efter många månader</li>
+</ul>
+</div>
 
 
