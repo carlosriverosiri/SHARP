@@ -44,10 +44,10 @@ Om det verkligen var golfarmbåge (medial epikondylit) borde det ha blivit bätt
 - PRP-injektion
 - Operation (i sista hand)
 
-**Sammanfattning:**
 - Två år utan förbättring kräver ny utredning
 - Kan vara mer än "bara" golfarmbåge
 - Sök ortoped för ny bedömning och eventuellt MR
 - Det finns behandlingar som kan hjälpa
+
 
 

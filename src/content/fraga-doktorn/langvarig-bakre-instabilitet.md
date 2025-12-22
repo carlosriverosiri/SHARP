@@ -17,5 +17,4 @@ Har du stora problem efter 6 månader så kan man överväga operation.  Operat
 
 I genomsnitt så ger dock konservativ behandling lite bättre resultat än operation hos de flesta patienter. Operation av en nyckelbensled som glidit ur led brukar rekommenderas när kosmetiken är viktig eller hos individer som arbetar mycket med händerna över huvudet.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

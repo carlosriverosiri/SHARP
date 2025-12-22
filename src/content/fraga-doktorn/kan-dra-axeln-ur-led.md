@@ -23,11 +23,11 @@ Med åren blir ledkapseln allt stelare och möjligheterna för att dra axeln ur 
 
 Undvik att medvetet dra axeln ur led då detta kan ge onödiga nötningsskador på den ledbandsapparat som stabiliserar axelleden.
 
-**Sammanfattning:**
 - Smärtfria luxationer är sällan farliga
 - Ledkapseln blir stelare med åren
 - Undvik att medvetet dra axeln ur led
 - Risk för nötningsskador på ledband
+
 
 
 

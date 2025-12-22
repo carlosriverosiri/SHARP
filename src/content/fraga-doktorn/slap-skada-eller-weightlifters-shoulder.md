@@ -28,6 +28,5 @@ Smärtans utbredningsområde talar för att den kommer från nyckelbensleden ell
 
 Vid långvariga problem hos unga vältränade individer bör man överväga diagnoserna "Weightlifter's shoulder" eller en SLAP-skada/instabilitet.
 
-**Sammanfattning:**
 - Smärta som strålar mot örat och skulderbladet kan komma från nyckelbensleden eller labrum
 - Hos unga som tränar gym: överväg Weightlifter's shoulder eller SLAP-skada

@@ -26,6 +26,5 @@ Om benkanten inte är skadad så är denna operation inte nödvändig.
 
 Det bästa är nog att du tar kontakt med det sjukhus där du blev opererad för att få en ny undersökning och för att diskutera möjligheterna till en ny operation. / , specialist i ortopedi
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

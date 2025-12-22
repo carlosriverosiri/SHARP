@@ -20,5 +20,3 @@ question: |
 
 Det är nog inte så sannolikt att du skadat axeln. Den typen av händelser som du beskriver leder normalt sett inte till att axelinstabiliteten du opererat,  släpper eller går sönder.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

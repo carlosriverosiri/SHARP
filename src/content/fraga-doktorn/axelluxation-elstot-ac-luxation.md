@@ -69,3 +69,4 @@ Intressant och ovanlig skademekanism! En elstöt kan orsaka kraftig muskelkontra
 **Sammanfattning:** AC-skadan uppstod troligen vid elstöten. Med din långa historia av instabilitet är det dags att överväga stabiliseringsoperation.
 
 
+

@@ -41,7 +41,6 @@ Ja, om utredningen visar att nyckelbenet klämer på kärl eller nerver kan man 
 
 Detta är inte något vi kan hjälpa till med på Södermalms Ortopedi. Du behöver en remiss till ett större sjukhus med ortopedisk/kärlkirurgisk kompetens.
 
-**Sammanfattning:**
 - Dina symptom är inte normala och ska utredas
 - Trolig orsak: Thoracic Outlet Syndrome från felläkt nyckelben
 - Sök vård och begär remiss till större sjukhus

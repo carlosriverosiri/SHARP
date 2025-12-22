@@ -23,5 +23,4 @@ Om du har en mer omfattande skada i axelleden s책 blir det bara sv책rare och sv�
 
 De vanligaste orsakerna till d책lig kraft i axelleden efter en axelluxation 채r en axillarisnervskada (brukar l채ka med tiden) eller en rotatorcuffruptur.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

@@ -23,6 +23,5 @@ Personligen brukar jag förespråka rotatorcuffsutur, dvs att man syr fast de sk
 
 Det är en tekniskt krävande operation som i vana händer lyckas betydligt oftare än i ovana händer.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

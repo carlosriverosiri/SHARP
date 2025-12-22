@@ -25,5 +25,4 @@ Samtidigt brukar man känna att ledkulan vill glida bakåt.
 En lite ovanligare diagnos är "snapping shoulder" då brukar smärtan sitta över skulderbladen.
 Om axeln fungerar bra på jobb, du sover bra, men mest har problem vid styrketräning så är det bästa sannolikt att göra en paus i styrketräningen.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

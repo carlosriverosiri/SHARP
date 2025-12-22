@@ -28,7 +28,6 @@ Vid alla typer av stabiliseringar vid Ehler Danlos syndrom så är frekvensen mi
 
 Den metod som sannolikt ger bäst resultat är en steloperation av axelleden.
 
-**Sammanfattning:**
 - Kirurgi är sällan bästa lösningen vid EDS
 - Artificiella transplantat har dålig hållbarhet
 - Hög frekvens misslyckade operationer vid EDS

@@ -23,7 +23,6 @@ Unga träningsvana idrottare brukar oftast kunna stabilisera sin axelled genom b
 
 Det går nämligen inte att sluta träna rotatorcuffen utan att återigen bli instabil. Med 4-5 träningspass om 30 minuter per vecka bör axelleden stabiliseras inom 6 månader.
 
-**Sammanfattning:**
 - Möjlig instabilitet eller labrumskada
 - Rotatorcuffträning kan stabilisera axeln
 - Kräver livsstilsförändring - inte bara rehab

@@ -46,10 +46,10 @@ Olika kirurger har olika erfarenhet och tekniker. Vad en kirurg bedömer som irr
 - **Kortisoninjektion** – kan ge smärtlindring
 - **Smärtbehandling** – läkemedel, TENS etc.
 
-**Sammanfattning:**
 - Att muskeln inte har atrofi är positivt
 - Bedömningen av "irreparabel" varierar mellan kirurger
 - Begär en second opinion hos axelspecialist
 - Det finns alltid alternativ för smärtlindring
+
 
 

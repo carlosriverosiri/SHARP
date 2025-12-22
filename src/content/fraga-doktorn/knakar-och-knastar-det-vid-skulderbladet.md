@@ -17,5 +17,3 @@ question: |
 
 Det låter som "snapping scapula". Dvs att skulderbladets övre  kant gnider mot revbenen. Snappande scapula är ett tillstånd som oftast självläker.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

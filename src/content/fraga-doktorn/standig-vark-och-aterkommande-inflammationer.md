@@ -17,5 +17,4 @@ question: |
 
 Det är rimligt att du får komma till en axelspecialist. Be din husläkare att skicka en remiss. /
 
-**Sammanfattning:**
 - Sök remiss till specialist

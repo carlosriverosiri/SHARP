@@ -35,6 +35,5 @@ I vissa fall fungerar inte rehabiliteringen.
 
 Då är operation ett alternativ. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

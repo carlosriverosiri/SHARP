@@ -33,11 +33,9 @@ När man opererar en patient som inte har speciellt ont i axeln och axeln funger
 
 Opererar man en patient med dålig funktion, starka smärtor och påtagligt sänkt livskvalitet, så är det ganska ovanligt att patienten blir värre än de var innan operationen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt vid svår smärta
 - Tekniskt enkelt ingrepp med få komplikationer
 - Patienter med stark smärta blir sällan värre av operation
-- Kontakta läkare för individuell bedömning
 
 
 

@@ -27,6 +27,5 @@ Om pectoralis major senan dragits tillbaka för mycket kan man behöva sätta in
 
 Komplikationsfrekvensen är relativt hög närmare 5% av patienterna drabbas av någon form av komplikation. Framför allt infektion eller blödning. Rerupturfrekvensen är runt 5-6 %.  Du kan läsa mer om pectoralis major skadan på vår hemsida.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Be om en remiss till oss

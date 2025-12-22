@@ -30,7 +30,6 @@ Att du upplever att du har ont på ovansidan av axeln och att axeln hänger ned 
 
 Det finns flera olika orsaker till detta. En möjlig orsak hos lite yngre patienter är "Weightlifter's shoulder", det vill säga en slags inflammation i nyckelbensleden. Hos lite äldre patienter kan det vara artros i akromioklavikularleden (nyckelbensleden).
 
-**Sammanfattning:**
 - De flesta akuta axelsmärtor går över inom några månader
 - Svullnad i nyckelbensleden kan få axeln att se hängande ut
 - Hos unga kan det vara Weightlifter's shoulder

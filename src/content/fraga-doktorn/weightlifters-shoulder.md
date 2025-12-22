@@ -26,7 +26,6 @@ Min gissning är att du håller på med styrketräning och drabbats av "Weightli
 
 Detta brukar läka ut.
 
-**Sammanfattning:**
 - Trolig diagnos: Weightlifter's shoulder (distal klavikulär osteolys)
 - Vanligt hos styrketränande
 - Brukar läka ut av sig själv

@@ -30,7 +30,6 @@ Smärtan vid impingement sitter oftast på utsidan av armen, medan smärtan vid 
 
 Bägge åkommorna behandlas bäst med tålamod och en period av minskad belastning. Sjukgymnastik hjälper oftast mot impingement, men fungerar sämre vid artros i yttre nyckelbensleden.
 
-**Sammanfattning:**
 - Smärta på ovansidan av axeln tyder på artros i nyckelbensleden
 - Smärta på utsidan av armen tyder på impingement
 - Behandling: minskad belastning och tålamod

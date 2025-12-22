@@ -46,10 +46,10 @@ Frozen shoulder efter operation behandlas med:
 - Intensiv, försiktig rörelseträning
 - I svåra fall: kapselrelease (ny operation)
 
-**Sammanfattning:**
 - 30 graders rörlighet är för lite – något mer pågår
 - Vänta inte till efter jul, kontakta mottagningen nu
 - Postoperativ frozen shoulder är troligaste orsaken
 - Ny utredning och behandling behövs
+
 
 

@@ -21,6 +21,5 @@ Vanligen ordinerar man sjukgymnastik för att se hur pass mycket bättre du blir
 
 Vid utebliv förbättring av sjukgymnastik och kroniskt starka smärtor kan man ibland diskutera operation
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

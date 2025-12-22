@@ -23,5 +23,4 @@ Smärtor i armvecket kan ibland bero på en inflammation av biceps långa sena, 
 
 Den smärtan kan stråla ned i hela bicepsmuskeln och biceps nedre fäste. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

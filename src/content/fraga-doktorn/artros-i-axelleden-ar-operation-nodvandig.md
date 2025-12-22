@@ -32,6 +32,5 @@ När man drabbats av en smärtsam artros i själva axelleden (inte nyckelbensled
 
 Långvariga starka smärtor som gör det svårt att sova eller påtagligt sänker din livskvalitet en vanlig indikation för operation. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

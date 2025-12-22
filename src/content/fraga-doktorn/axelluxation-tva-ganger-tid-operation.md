@@ -59,3 +59,4 @@ Efter två luxationer vid 25 års ålder är operation oftast indicerad. Tidpunk
 **Sammanfattning:** Operation är motiverad efter två luxationer. Optimal tidpunkt är 4–8 veckor efter senaste luxationen.
 
 
+

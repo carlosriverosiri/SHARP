@@ -13,5 +13,3 @@ question: |
 
 Du kan ha drabbats av en inklämd bicepssena eller en liten inflammation i bicepskanalen. Undvik supination (utåtrotation) i underarmen när du tränar bicepsmuskeln. Det låter inte som en SLAP skada. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

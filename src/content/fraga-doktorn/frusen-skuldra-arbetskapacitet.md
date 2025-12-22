@@ -42,10 +42,10 @@ Normalt ska rotatorcuffen hålla kulleden centrerad i ledpannan. Om cuffen är s
 
 90 grader är en betydande begränsning men inte ovanlig efter komplicerade frozen shoulder-förlopp. Med fortsatt rehabilitering kan ytterligare förbättring ske under 6-12 månader.
 
-**Sammanfattning:**
 - Troligen mekaniskt hinder + svag rotatorcuff
 - Intensiv styrketräning kan hjälpa
 - 90 grader abduktion är inte ovanligt efter frozen shoulder
 - Fortsätt med fysioterapi och följ upp med din kirurg
+
 
 

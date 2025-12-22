@@ -44,7 +44,6 @@ Om symptomen kvarstår efter 6-12 månaders träning kan man överväga:
 
 I din ålder (17 år) skulle jag starkt rekommendera att börja med en sjukgymnast som har erfarenhet av axelproblem. Många unga med snapping scapula har muskelobalans som går att träna bort.
 
-**Sammanfattning:**
 - Snapping scapula beror oftast på muskelobalans
 - Sjukgymnastik är förstahandsbehandling
 - De flesta blir bättre utan operation

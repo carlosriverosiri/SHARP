@@ -25,7 +25,6 @@ Du har provat sjukgymnastik och genomgått en radiologisk utredning.
 
 Efter 6 månaders oavbruten olidlig smärta kan man överväga en operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

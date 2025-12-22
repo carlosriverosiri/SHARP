@@ -38,6 +38,5 @@ En del patienter har inte speciellt ont efter en massiv rotatorcuffskada. Träni
 
 Det finns alltid risker med en operation. Riskerna är större eller mindre beroende på hur pass komplicerad operationen är. Rent generellt så brukar man inte rekommendera en operation med axelprotes om du inte har några smärtor och om du upplever att du fungerar bra i din vardag, trots försvagningen i axelleden. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

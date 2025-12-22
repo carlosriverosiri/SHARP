@@ -25,5 +25,4 @@ Rupturer av själva bicepsmuskeln är ovanligt.
 Övre bicepsrupturer kan ibland vara svåra att se hos patienter som är överviktiga eller har små bicepsmuskler. 
 Jag har ändå svårt att föreställa mig att en axelspecialist förväxlar en ruptur av övre bicepssenan med en ruptur av den nedre bicepssenan.
 
-**Sammanfattning:**
 - Sök remiss till specialist

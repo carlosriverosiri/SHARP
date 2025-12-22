@@ -26,6 +26,5 @@ Denna typ av skada är ovanlig hos patienter yngre än 40 år som har drabbats a
 Om du några veckor efter axelluxationen har god kraft i axelledens utåtrotation och intåtrotation, så är det inte så sannolikt att du har en problematisk rotatorcuffskada (massiv rotatorcuffruptur).
 Mindre allvarliga skador på rotatorcuffen kan man utesluta med en magnetkameraundersökning eller ultraljudsundersökning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

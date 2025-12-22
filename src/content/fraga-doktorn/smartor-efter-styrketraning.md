@@ -27,7 +27,6 @@ Sjukgymnastik hjälper endast om du är väldigt stel i axelleden. Stelheten kan
 
 När SC-leden börjar sticka ut så handlar det för det mesta om SC-leds artros, men ibland kan det vara Tietzes sjukdom. SC-leden behandlas med uppmuntrande ord om att det går över och inflammationsdämpande mediciner. SC-leden opereras i stort sett aldrig.
 
-**Sammanfattning:**
 - Sannolikt AC-ledsartros eller weightlifters shoulder
 - God prognos - går oftast över med tiden
 - SC-leden opereras nästan aldrig

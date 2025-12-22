@@ -14,5 +14,3 @@ question: |
 
 Du är redan opererad 3 gånger. Det klokaste är nog att bara vänta och se hur det utvecklas.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

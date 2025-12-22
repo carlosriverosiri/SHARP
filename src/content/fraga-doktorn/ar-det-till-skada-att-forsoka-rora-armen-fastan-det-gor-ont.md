@@ -13,7 +13,6 @@ question: |
 
 Om du lider av en äkta frozen shoulder så har du i grund och botten en ganska frisk axel. Den tar inte skada av att användas. Bokstavligen talat, det är tvärtom. Ju mer du använder axeln, desto snabbare kommer din axel att bli bra.
 
-**Sammanfattning:**
 - Frozen shoulder skadar inte axeln - den är i grunden frisk
 - Att använda armen påskyndar läkningen
 - Det är bra att fortsätta med aktiviteter trots viss smärta

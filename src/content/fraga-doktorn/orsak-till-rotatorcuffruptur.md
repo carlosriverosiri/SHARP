@@ -25,5 +25,4 @@ Hade du en typ 3 akromion så är det relativt sannolikt.
 
 Hade du en typ 1-2 akromion så är det mindre sannolikt hos en patient i 30-års åldern. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

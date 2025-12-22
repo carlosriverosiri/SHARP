@@ -19,5 +19,4 @@ En kvinna runt 50 år drabbas annars vanligen av impingement, instabilitet eller
 
 Sök dig till en axelspecialist. /
 
-**Sammanfattning:**
 - Sök remiss till specialist

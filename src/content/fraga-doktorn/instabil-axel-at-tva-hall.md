@@ -34,7 +34,6 @@ Operationen i sig är rent kirurgiskt tekniskt krävande. En liten andel av pati
 
 Därför är det oftast klokt att vara lite restriktiv med att rekommendera kirurgi.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt vid svår instabilitet
 - Kirurgin är tekniskt krävande
 - En del patienter har besvärlig period efter operation

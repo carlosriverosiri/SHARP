@@ -26,5 +26,4 @@ På grund av en rad dödsfall i samband med kirurgi så brukar man ändå på in
 
 Då de stora kärlen i kroppen kan ligga mycket nära sternoklavikularleden.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

@@ -22,5 +22,4 @@ En normal MR på axelleden innebär inte att axelleden är frisk.
 
 Du kan se om inte symptomen vid impingement eller frusen axel liknar dina symptom.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

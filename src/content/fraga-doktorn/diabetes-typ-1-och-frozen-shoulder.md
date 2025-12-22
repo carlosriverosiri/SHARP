@@ -27,5 +27,4 @@ Frozen shoulder är en diagnos man ställer genom att undersöka rörligheten i 
 
 När axelleden är uppenbart stel med ett starkt reducerat rörelseomfång och en radiologisk utredning inte kan påvisa andra orsaker till stelheten, så ställer man diagnosen frozen shoulder. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

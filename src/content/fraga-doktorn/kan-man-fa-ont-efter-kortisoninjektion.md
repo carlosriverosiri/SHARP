@@ -17,7 +17,6 @@ Smärtan kan ibland vara väldigt intensiv och oroar då patienten, eftersom det
 
 Får du feber eller sjukdomskänsla efter en kortisoninjektion i axelleden så ska du omedelbart uppsöka en akutmottagning.
 
-**Sammanfattning:**
 - Smärta efter kortisoninjektion är vanligt och går oftast över inom ett dygn
 - Smärtan kan vara intensiv men betyder inte att något gått fel
 - Vid feber eller sjukdomskänsla: sök akut

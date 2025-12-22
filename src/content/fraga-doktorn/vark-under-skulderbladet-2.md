@@ -21,5 +21,4 @@ Det viktigaste är nog ändå att du börjar med en stukturerad sjukgymnstik.
 
 Laser, akupunktur och kortisoninjektion är egentligen inga behandlingar som kan lösa ett grundläggande problem med axelledens funktion.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

@@ -51,3 +51,4 @@ Du beskriver en klassisk situation med recidiverande instabilitet trots två Ban
 
 **Sammanfattning:** Du behöver en benblock-operation (Latarjet) – artroskopisk Bankart fungerar inte för dig.
 
+

@@ -19,5 +19,4 @@ Det senare är svårt att värdera utan att se på bilderna.
 
 Vid uttalade besvär kan man operera skadan. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Sök remiss till specialist

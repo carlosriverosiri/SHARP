@@ -23,7 +23,6 @@ Den vanligaste tekniken idag, vid isolerad artros i nyckelbensleden, är nog än
 
 Den öppna operationen är tekniskt enkel att utföra, men ger några veckors längre rehabiliteringstid än den artroskopiska tekniken. Båda operationerna är likvärdiga vad gäller resultat ett år efter operationen.
 
-**Sammanfattning:**
 - Operationen kan göras artroskopiskt (titthålskirurgi) eller öppet
 - Artroskopisk teknik ger snabbare rehabilitering
 - Öppen teknik är tekniskt enklare men tar längre att återhämta sig från

@@ -17,5 +17,3 @@ Vad gäller vänster axel så bör man fundera över diagnoserna frusen axel ell
 
 En uttalad stelhet i axeln där man inte kan lyfta armen upp till axelhöjd, inte kan nå ryggslutet med handen brukar oftast vara en frozen shoulder.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

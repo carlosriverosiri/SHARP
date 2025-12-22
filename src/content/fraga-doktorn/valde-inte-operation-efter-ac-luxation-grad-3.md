@@ -27,5 +27,3 @@ Vill du vara helt säker på att AC-leden är helt stabil så bör du kanske vä
 
 Samtidigt så läkar denna typ av skada bättre med aktivitet och belastning.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

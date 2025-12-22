@@ -50,3 +50,4 @@ Men: Först bör man utesluta rotatorkuffskada med MR eller ultraljud.
 
 **Sammanfattning:** Operation kan hjälpa – men gör MR först för att se hela bilden.
 
+

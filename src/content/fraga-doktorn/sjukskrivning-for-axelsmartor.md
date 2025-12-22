@@ -18,5 +18,4 @@ question: |
 
 Hej, Du bör kontakta din husläkare för att få hjälp med en utredning (röntgen), behandling (sjukgymnstik) och eventuell sjukskrivning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

@@ -20,7 +20,6 @@ Golfarmbåge läker alltid ut förr eller senare och ger ingen kvarstående funk
 
 Prata med en sjukgymnast om lämplig rehab. Vid mycket långvariga besvär med störd nattsömn, kronisk värk och svårigheter att arbeta kan en operation vara ett vettigt alternativ.
 
-**Sammanfattning:**
 - Sjukgymnastik ger lika goda resultat som operation på lång sikt
 - Kortisoninjektioner ger tillfällig lindring
 - Golfarmbåge läker alltid ut, ibland tar det 1-2 år

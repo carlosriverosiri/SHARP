@@ -17,6 +17,5 @@ Det beror lite på hur stor den partiella supraspinatusrupturen är,  hur ung p
 
 Det är inte ovanligt att man rekommenderar operation vad gäller partiella supraspinatusrupturer som omfattar mer än 50% av supraspinatussenans tjocklek.  , specialist i ortopedi
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

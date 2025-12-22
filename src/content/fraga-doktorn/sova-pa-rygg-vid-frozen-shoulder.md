@@ -19,5 +19,3 @@ Nej, det finns inget som tyder på att sovpositionen kan påverka förloppet vid
 
 Det är dock väldigt vanligt att vissa sovpositioner gör mer ont än andra och att det kan göra mer ont att sova på den onda axeln.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -28,6 +28,5 @@ Om du både har ont och är betydligt stelare i axelleden efter operationen så 
 
 En kortisoninjektion i axelleden kan då fungera bra.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas

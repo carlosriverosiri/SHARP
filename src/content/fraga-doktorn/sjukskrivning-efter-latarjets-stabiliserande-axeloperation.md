@@ -25,5 +25,4 @@ Den större faran är nog att du stelnar till i axeln.
 Tidig återgång till arbete fungerar bra, under förutsättningar att du sköter rehaben. 
 Normalt sett kan du återgå till tyngre arbetren redan inom några månader.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

@@ -43,7 +43,6 @@ Jag rekommenderar i första hand:
 
 Vid långvariga besvär kan röntgen, ultraljud eller MR vara relevanta undersökningar – lite beroende på symtom och hur den kliniska undersökningen ser ut. Kontakta då din husläkare för remiss till en axelspecialist.
 
-**Sammanfattning:**
 - Smärtan kan återkomma efter AC-ledsoperation, men det är ovanligt
 - Vanligaste orsaken är ett nytt problem (impingement, rotatorcuff, kalk)
 - Börja med sjukgymnastik och ha tålamod

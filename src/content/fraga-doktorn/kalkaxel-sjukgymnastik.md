@@ -48,7 +48,6 @@ Blir du inte bättre av kortisoninjektionen kan **stötvågsbehandling (ESWT)** 
 
 Men de allra flesta patienter klarar man med hjälp av en kortisonspruta och fysioterapi.
 
-**Sammanfattning:**
 - Sjukgymnastik hjälper mot symptomen men löser inte upp kalken
 - Det är i resorptionsfasen som kalken gör som mest ont
 - Kortisoninjektion + sjukgymnastik är förstahandsbehandling

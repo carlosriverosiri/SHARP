@@ -18,5 +18,4 @@ question: |
 
 Om han upplever sin axel som instabil, med upprepade urledvridningar eller instabilitetskänsla, och långvarig rehab inte hjälpt så är det rimligt att rekommendera en operation av labrumskadan.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

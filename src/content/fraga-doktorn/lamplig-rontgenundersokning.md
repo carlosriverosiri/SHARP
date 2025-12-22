@@ -15,6 +15,5 @@ question: |
 
 Man brukar börja med att utföra en vanlig slätröntgen. Vid mångåriga smärtor eller när problemen startade efter en olycka eller ett ryck så rekommenderas MR alternativt remiss till en axelspecialist.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

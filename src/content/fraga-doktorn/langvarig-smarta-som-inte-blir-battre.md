@@ -16,5 +16,4 @@ Om du redan har varit på din vårdcentral och blivit utredd och sedan gått ige
 
 Ring vår mottagning och prata med någon av vård duktiga mottagningssystrar.
 
-**Sammanfattning:**
 - Sök remiss till specialist

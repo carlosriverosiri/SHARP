@@ -33,7 +33,6 @@ Det är inte ovanligt att det tar lång tid innan man ser slutresultatet efter e
 
 Är nyckelbensleden väldigt öm efter operationen kan du be din husläkare sätta en kortisoninjektion i nyckelbensleden.
 
-**Sammanfattning:**
 - Det går inte att byta ut nyckelbenet
 - Slutresultatet efter operation kan ta upp till ett år att visa sig
 - Kortisoninjektion kan lindra om leden är öm

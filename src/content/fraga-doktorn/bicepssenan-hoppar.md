@@ -17,5 +17,4 @@ question: |
 
 Det är svårt att förklara. Boka en tid på mottagningen så jag kan undersöka axeln. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Sök remiss till specialist

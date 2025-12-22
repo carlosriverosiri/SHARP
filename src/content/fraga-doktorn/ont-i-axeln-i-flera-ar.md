@@ -19,7 +19,6 @@ Kontakta även din husläkare för att bli utredd med åtminstone en vanlig rön
 
 Har du haft svårigheter att sova eller att använda armen under så pass lång tid så bör man överväga operation om inte sjukgymnastik hjälper.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

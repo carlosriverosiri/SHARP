@@ -27,6 +27,5 @@ Men en operation för impingement innebär inte en garanti för att man förblir
 Efter ett smärtfritt intervall och nya smärtor brukar rehab och sjukgymnastik under ett par månader fungera bra. 
 En ny operation är sällan nödvändig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

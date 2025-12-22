@@ -26,7 +26,6 @@ Om knäet låser sig, svullnar kraftigt eller blir instabilt – sök vård akut
 
 Efter förlossningen kan du intensifiera rehab när relaxinnivåerna sjunker. Du är på rätt väg – 3 månader efter artroskopi är fortfarande tidigt, och det kommer förbättras.
 
-**Sammanfattning:**
 - Graviditet gör knäet extra känsligt pga relaxin
 - Prioritera vila och avlastning nu, intensifiera efter förlossning
 - Fortsätt med rörlighetsträning men undvik djupa knäböjningar

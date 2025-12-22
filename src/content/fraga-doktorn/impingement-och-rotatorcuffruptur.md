@@ -19,6 +19,5 @@ Eftersom de flesta smärttillstånd i axelleden läker utan att man behandlar de
 
 Fungerar inte sjukgymnastik så remitterar husläkaren dig till en axelspecialist.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

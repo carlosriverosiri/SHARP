@@ -48,3 +48,4 @@ Vid **50 års ålder** måste man väga in att en protes kan behöva bytas. Men:
 
 **Sammanfattning:** Börja med ny utredning – protes kan vara aktuellt om artrosen är huvudproblemet.
 
+

@@ -19,5 +19,4 @@ Lite äldre rotatorcuffskador innebär en är mer tekniskt krävande kirurgi. N�
 
 Det är en typ av kirurgi som är vanligare på en axelkirurgisk klinik än på ett universitetssjukhus.  På universitetssjukhuset prioriteras tumörer, multitrauman och allvarliga skador. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

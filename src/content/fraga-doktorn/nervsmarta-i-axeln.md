@@ -22,5 +22,4 @@ Hej Lars
 
 MVH
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

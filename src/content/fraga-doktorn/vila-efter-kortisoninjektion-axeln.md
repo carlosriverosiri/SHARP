@@ -24,6 +24,5 @@ En kortisoninjektion kan göra ganska ont dagen efter du fått den.
 För övrigt finns det egentligen inget som talar för att man måste vila en period efter en kortisoninjektionen. 
 Hos yngre patienter har alla överbelastningssmärtor en stark tendens att läka ut med rehab och vila.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas
 - Vila och avlastning rekommenderas

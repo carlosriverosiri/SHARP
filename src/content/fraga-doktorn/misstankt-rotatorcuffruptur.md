@@ -25,6 +25,5 @@ Hållfastigheten har minskat i senan och nu har den släppt från sitt fäste (r
 
 Axeldiagnostik kräver en viss erfarenhet, denna erfarenhet är svår att få för husläkaren som bara träffar ett litet antal axelpatienter per år.  Det är helt normalt att husläkaren missar diagnosen rotatorcuffruptur. Du bör mycket snabbt träffa en axelspecialist eller få en magnetkameraundersökning utförd.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

@@ -29,5 +29,4 @@ Detta kan åtgärdas med artroskopisk teknik där man går in och gör begränsa
 Operationen är begränsad, rehab går relativt snabbt, och man kan räkna med en snabb återhämtning (6-8 v.).
 Det finns dock en liten risk för axeln blir mer instabil efter en sådan operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

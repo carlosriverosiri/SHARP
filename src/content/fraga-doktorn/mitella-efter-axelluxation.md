@@ -15,6 +15,5 @@ question: |
 
 Det finns en svensk studie som visar att mitellan inte ger bättre läkning efter en axelluxation och inga studier som kan motbevisa detta.   Vissa nyligen publicerade studier  pekar snarast på att mitellan möjligen försämrar läkningen efter en axelluxation.  Det är sannolikt bra att börja med sjukgymnastik inom några veckor efter axelluxationen.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

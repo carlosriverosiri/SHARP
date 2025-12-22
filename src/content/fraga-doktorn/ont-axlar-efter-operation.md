@@ -59,3 +59,4 @@ Att få ont igen efter axeloperation är inte ovanligt och det finns flera möjl
 **Sammanfattning:** Det är värt att söka igen. Vi har fler behandlingsalternativ idag och kan ofta hjälpa även efter tidigare operationer.
 
 
+

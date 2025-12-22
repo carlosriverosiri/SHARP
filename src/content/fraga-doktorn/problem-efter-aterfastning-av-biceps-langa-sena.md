@@ -34,7 +34,6 @@ Tendinit i supraspinatussenan, artros i nyckelbensleden och impingement är inte
 
 Ibland kan det vara bra att sätta en kortisoninjektin i axelledens slemsäck eller i nyckelbensleden för att få rätt diagnos.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

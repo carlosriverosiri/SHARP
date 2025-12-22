@@ -28,6 +28,5 @@ Börja alltid med sjukgymnastik.
 
 Blir du inte bättre efter 4-5 månaders träning 4-5 ggr per vecka,  så är det dags för en MR.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

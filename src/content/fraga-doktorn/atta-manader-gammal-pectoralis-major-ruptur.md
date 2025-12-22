@@ -30,7 +30,6 @@ Om det är osäkert huruvida det går att operera med eller utan transplantat br
 
 Generellt sett är resultaten goda även vid sena operationer, framför allt vad gäller styrka och funktion. Det estetiska resultatet kan dock variera. Har du opererats flera gånger tidigare, eller haft en infektion efter tidigare operation, blir det kosmetiska resultatet ofta sämre på grund av gamla operationsärr som ibland kan vara omfattande.
 
-**Sammanfattning:**
 - Ingen bortre gräns för hur gammal skadan får vara – även flera år gamla skador kan opereras
 - Bedömning görs genom att känna på skadan för att avgöra om rekonstruktion utan transplantat är möjlig
 - Vid behov används transplantat från semitendinosussenan (baksidan av låret)

@@ -35,9 +35,9 @@ Knäprotesoperationer utförs på:
 
 Väntetiden för knäprotes varierar men ligger ofta på 3-6 månader beroende på region och klinik.
 
-**Sammanfattning:**
 - Vi utför inte knäprotesoperationer
 - Kontakta din husläkare för remiss till knäkirurg
 - Fritt vårdval gäller – du kan välja klinik
+
 
 

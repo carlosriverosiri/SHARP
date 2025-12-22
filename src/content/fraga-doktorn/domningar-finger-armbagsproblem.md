@@ -44,10 +44,10 @@ Om det visar sig vara kubitaltunnelsyndrom:
 - Konservativ behandling först (ergonomi, skena)
 - Operation om konservativ behandling inte hjälper
 
-**Sammanfattning:**
 - Ja, vi utreder armbågsproblem
 - Domningar + armbågssmärta kan tyda på ulnarisnervpåverkan
 - Neurografi behövs för att fastställa diagnos
 - Boka tid för undersökning
+
 
 

@@ -15,5 +15,4 @@ question: |
 
 Tag kontakt med din husläkare/företagsläkare och be denna beställ en MR av axelleden. Man behöver snarast utesluta att du inte drabbats av ett avslitet muskelfäste, rotatorcuffruptur.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

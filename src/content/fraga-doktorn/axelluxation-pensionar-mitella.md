@@ -39,3 +39,4 @@ Med upprepad spontan luxation bör du söka bedömning.
 
 **Sammanfattning:** Använd mitella och sök ortoped – upprepad luxation behöver utredas.
 
+

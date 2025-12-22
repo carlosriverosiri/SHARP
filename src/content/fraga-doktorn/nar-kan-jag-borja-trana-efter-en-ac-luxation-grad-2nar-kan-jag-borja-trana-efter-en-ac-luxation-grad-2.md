@@ -15,5 +15,3 @@ question: |
 
 Professionella amerikanska fotbollspelare återgår till sport inom 10 dagar efter en ac-luxation grad 1-2.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -24,5 +24,4 @@ En lytisk förändring, betyder att det finns ett område i benet utan riktigt b
 
 Vid vissa typer av tumörer (maligna) ser man sådana förändringar, men de kan också vara ofarliga tumörer (benigna) eller andra förändringar.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

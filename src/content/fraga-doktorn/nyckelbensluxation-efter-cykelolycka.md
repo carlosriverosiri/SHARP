@@ -16,5 +16,4 @@ question: |
 
 Du kan successivt börja belasta axelleden med lätta vikter. Tidig aktivitet som inte genererar några långvariga smärtor efter träningen stimulerar läkning.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

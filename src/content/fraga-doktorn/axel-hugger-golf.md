@@ -60,3 +60,4 @@ En huggande smärta vid upplyft arm som **inte blivit bättre** av Voltaren och 
 **Sammanfattning:** Tre månader utan förbättring motiverar ny bedömning. En strukturell skada kan kräva annan behandling än enbart träning.
 
 
+

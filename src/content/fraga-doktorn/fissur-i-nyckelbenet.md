@@ -26,6 +26,5 @@ Det är svårt att bedöma ett röntgensvar efter en röntgenundersökning utan 
 
 Det bästa är att du tar kontakt med den läkare som beställde röntgenundersökningen av axelleden.
 
-**Sammanfattning:**
 - Röntgensvar behöver tolkas tillsammans med bilderna
 - Kontakta läkaren som beställde undersökningen för bedömning

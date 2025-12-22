@@ -17,5 +17,4 @@ question: |
 
 Prata med din husläkare så du kan få din axel röntgad och sedan  bli remitterad till en ortopedspecialist. Det är nog bra att utesluta andra diagnoser än frozen shoulder.
 
-**Sammanfattning:**
 - Sök remiss till specialist

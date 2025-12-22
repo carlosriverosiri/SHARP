@@ -19,5 +19,3 @@ Att frakturen läker rätt brukar man märka genom minskande smärtor och mindre
 
 Är nyckelbensfrakturen nästan inte öm alls efter 3 månader så är det högst sannolikt att frakturen läker.  Tre veckor efter nyckelbensfrakturen kan man nog förvänta att frakturen rör på sig och fortfarande gör ont.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

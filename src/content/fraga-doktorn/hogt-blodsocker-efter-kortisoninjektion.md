@@ -31,7 +31,6 @@ Det är vanligt att blodsockret stiger under några dagar efter en kortisoninjek
 
 Jag tycker att din mor ska prata med sin husläkare vad gäller dosering av insulin.
 
-**Sammanfattning:**
 - Blodsockerhöjning några dagar efter injektion är vanligt vid diabetes
 - Effekten varierar och kan minska plötsligt
 - Täta blodsockerkontroller är viktigt

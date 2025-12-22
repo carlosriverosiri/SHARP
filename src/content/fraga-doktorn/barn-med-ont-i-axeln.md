@@ -23,7 +23,6 @@ Inte för att få en diagnos, utan för att man kan utesluta ett antal ovanliga 
 
 Skador i rygg, knä och fotled är inte ovanliga inom balett och konståkning, men axelsmärtor (som inte beror på en olycka), är ändå relativt ovanliga.
 
-**Sammanfattning:**
 - MR-undersökning rekommenderas
 - Kan utesluta ovanliga tillstånd
 - Axelsmärtor utan trauma är ovanligt hos barn

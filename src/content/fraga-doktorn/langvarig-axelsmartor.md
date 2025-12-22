@@ -20,6 +20,5 @@ Det bästa är nog att du får träffa en axelspecialist.  Be din husläkare om
 
 Normalt sett utreder man långvariga axelsmärtor med en vanlig röntgenundersökning och sedan en MR eller en ultraljudsundersökning. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

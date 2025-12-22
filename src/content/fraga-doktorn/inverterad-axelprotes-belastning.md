@@ -50,10 +50,10 @@ De flesta kirurger rekommenderar:
 
 Siffran "10 kg" är en rimlig utgångspunkt för dagliga aktiviteter. Vid enstaka lyft kan du gå högre, men undvik att göra det till vana.
 
-**Sammanfattning:**
 - Repetitiva lyft: max 5-10 kg
 - Enstaka lyft: upp till 15-20 kg kan tolereras
 - Håll lasten nära kroppen, undvik lyft över axelhöjd
 - Lyssna på kroppen – smärta är en varningssignal
+
 
 

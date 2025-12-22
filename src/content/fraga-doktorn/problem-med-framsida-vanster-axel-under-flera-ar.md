@@ -27,6 +27,5 @@ Det mest specifika testet för denna typ av axelsmärtor är att spruta lokalbed
 
 Upplever du en reducerad smärta efter en sådan kortisoninjektion i axelns slemsäck är sannolikheten hög att problemet kommer från en inklämning, impingement i axelleden.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

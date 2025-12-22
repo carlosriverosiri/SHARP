@@ -32,7 +32,6 @@ Artros i nyckelbensleden (att brosket slitits ut) efter långvarig styrketränin
 
 Oavsett orsak så brukar smärtorna i nyckelbensleden minska med minskad belastning av nyckelbensleden. Hur mycket man behöver minska belastningen varierar mellan olika individer.
 
-**Sammanfattning:**
 - Smärta i nyckelbensleden är vanligt vid styrketräning
 - Artros i sig är inte skadligt, men kan göra ont
 - Smärtan är oftast övergående

@@ -28,6 +28,5 @@ Den sämsta behandlingen är dock att inte behandla den alls.
 
 Den passiva behandlingen misslyckas för det mesta.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

@@ -19,6 +19,5 @@ Det är också vanligt att man opererar patienter i 70-80 års åldern för axel
 
 Det man brukar ta hänsyn till är den sk. "biologiska åldern". /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

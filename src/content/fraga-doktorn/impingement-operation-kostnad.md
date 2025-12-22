@@ -49,3 +49,4 @@ Du är välkommen att boka tid hos oss för bedömning och eventuell operation.
 Många patienter med impingement blir bra med rehabilitering. Vi gör alltid en noggrann bedömning innan vi rekommenderar operation.
 
 
+

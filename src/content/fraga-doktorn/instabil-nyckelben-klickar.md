@@ -51,10 +51,10 @@ SC-leden är normalt mycket stabil. Men hos vissa personer kan den bli instabil 
 3. **Ge det tid** – 6-12 månader
 4. **Om det inte blir bättre** – sök ortoped för bedömning
 
-**Sammanfattning:**
 - Troligen instabilitet i SC-leden
 - Vanligtvis behandlas konservativt
 - Fysioterapi och tid löser oftast problemet
 - Operation behövs sällan
+
 
 

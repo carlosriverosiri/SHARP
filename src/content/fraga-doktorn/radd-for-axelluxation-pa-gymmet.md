@@ -24,5 +24,3 @@ Men det är inte en vanlig orsak till att axeln hoppar ur led.
 Min erfarenhet är att den vanligaste orsaken till att axeln hoppar ur led på gymmet är när man tränar med fria vikter över huvudet och tappar dessa.
 Jag har aldrig träffat en patient som drabbats av en axelluxation när de tränat i en maskin.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

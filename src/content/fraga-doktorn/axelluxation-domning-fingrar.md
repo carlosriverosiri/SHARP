@@ -52,3 +52,4 @@ Domning efter axelluxation är ett viktigt symtom som bör tas på allvar.
 
 **Sammanfattning:** Domning kan gå tillbaka men bör följas upp av läkare – inte bara sjukgymnast.
 
+

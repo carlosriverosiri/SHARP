@@ -16,5 +16,3 @@ question: |
 
 Be din husläkare remittera dig för en second opinion bedömning till en annan klinik än där du blev opererad.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -24,5 +24,4 @@ Det spelar ingen roll om du är mantalsskriven i Stockholm eller i något annat 
 
 Välkommen!
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

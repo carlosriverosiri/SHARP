@@ -23,5 +23,3 @@ Vid artros i axelleden och uttalade smärtor och värk både på dagen och natte
 
 Ibland kan man förbättra situationen under några år genom ett litet titthålskirurgiskt ingrepp, men oftast är en axelprotes det bästa alternativet. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

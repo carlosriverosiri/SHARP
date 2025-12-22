@@ -23,5 +23,4 @@ Jag tycker att man skall göra en ordentlig utredning, alternativt remittera dig
 
 Morfintabletter är ingen hållbar lösning vid en långvarig kronisk smärta.
 
-**Sammanfattning:**
 - Sök remiss till specialist

@@ -20,5 +20,4 @@ Olika åldrar ger lite olika typer av skador efter ett fall. Även om symtomen �
 
 MVH
 
-**Sammanfattning:**
 - Sök remiss till specialist

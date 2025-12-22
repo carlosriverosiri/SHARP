@@ -21,5 +21,4 @@ Normalt sett så vill man nog operera en rotatorcuffruptur så fort som möjligt
 
 Men i ditt fall kan det knappast spela någon större roll om man väntar några veckor eftersom det redan gått 5 månader. / , Specialist i ortopedi.
 
-**Sammanfattning:**
 - Sök remiss till specialist

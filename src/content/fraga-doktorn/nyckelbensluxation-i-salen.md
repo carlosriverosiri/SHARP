@@ -25,5 +25,4 @@ Eftersom resultaten efter en icke-operativ behandling är väldigt goda så är 
 
 Resultaten är goda även om man opererar AC-luxen sent.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

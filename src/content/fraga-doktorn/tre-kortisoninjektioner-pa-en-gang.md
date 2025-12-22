@@ -21,7 +21,6 @@ Du har sannolikt missförstått din doktor.
 
 Man brukar sätta en kortisoninjektion åt gången. Detta för att veta vilken kortisoninjektion som faktiskt har effekt.
 
-**Sammanfattning:**
 - Normalt sätter man en injektion i taget
 - Syftet är att identifiera vilken injektion som hjälper
 - Fråga din läkare för förtydligande

@@ -18,5 +18,3 @@ Pressövningar är de övningar som brukar skapa mest problem.
 
 Det kan vara bra att prata med någon som tränat länge på gym, de har sannolikt haft perioder med axelsmärtor
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

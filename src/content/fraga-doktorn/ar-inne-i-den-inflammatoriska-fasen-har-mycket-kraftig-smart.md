@@ -17,7 +17,6 @@ Om du 5 månader efter debuten av smärtorna fortfarande är väldigt stel i axe
 
 En mobilisering i narkos kan nog de flesta ortopeder klara av. En artroskopisk operation av frozen shoulder är tekniskt krävande och bör utföras av en mycket erfaren axelspecialist.
 
-**Sammanfattning:**
 - Kortisoninjektion i axelleden kräver vana - sök ortopedmedicinsk specialist
 - Vid långvarig svår smärta (5+ månader) kan operation vara bästa alternativet
 - Operation ger ofta snabbare smärtlindring än kortisoninjektioner

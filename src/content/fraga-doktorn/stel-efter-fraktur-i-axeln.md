@@ -17,5 +17,3 @@ En komplicerad fraktur i axelleden kommer alltid att bli mer eller mindre "fell�
 
 En stelhet i axelleden, sekundär till en fraktur, får man betrakta som relativt normal de första 2-3 månaderna.  Sedan bör axelleden successivt återfå sin rörlighet under några månaders tid.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

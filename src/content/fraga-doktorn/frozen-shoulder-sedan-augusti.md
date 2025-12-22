@@ -21,5 +21,4 @@ Det är alltid bra att försöka röra på axelleden så gott det går.
 
 Armen kan bli svullen av att du inte använder den.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

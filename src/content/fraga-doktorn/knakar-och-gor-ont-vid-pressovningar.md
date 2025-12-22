@@ -17,5 +17,4 @@ När smärtorna sitter över nyckelbensleden kan det vara frågan om artros i ny
 
 Kontakta en sjukgymnast för att få tipps om hur du kan rehaba axelleden.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

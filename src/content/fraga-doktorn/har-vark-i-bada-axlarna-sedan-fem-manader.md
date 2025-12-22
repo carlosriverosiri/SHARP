@@ -21,7 +21,6 @@ Patienter med frusen axel som har haft mycket starka smärtor i mer än 6 månad
 
 Om du har artros i bägge axellederna, så har kortison sällan en långvarig effekt. Då brukar man istället ta upp diskussionen om en eventuell axelprotes med patienten.
 
-**Sammanfattning:**
 - Bilateral frozen shoulder är ovanligt - axelledsartros är vanligare
 - Vanlig röntgen räcker för diagnos - MR behövs inte
 - Vid frozen shoulder: kortisoninjektion eller operation efter 6 månader

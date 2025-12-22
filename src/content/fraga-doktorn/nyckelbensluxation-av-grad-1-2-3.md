@@ -25,6 +25,5 @@ Operation kan behövas vid en långvarig värk som påtagligt försämrar arbets
 
 Normalt sett så brukar dock värken släppa ju mer man aktiverar och använder axelleden. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

@@ -31,5 +31,4 @@ Om instabiliteten började efter en olycka där axeln gick ur led så beror den 
 
 En mer generaliserad axelsmärta som sitter över hela axelpartiet, skulderblad och nacke, talar mer för instabilitet. En smärta som sitter mer på framsida-utsida av axeln med utstrålning mot utsidan av överarmen talar mer för impingement.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

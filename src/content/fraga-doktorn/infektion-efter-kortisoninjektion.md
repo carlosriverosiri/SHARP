@@ -25,7 +25,6 @@ Dels kan infektionen uppstå genom att bakterier från huden kommer in i kroppen
 
 Men den kan också uppstå genom att injektionen slår ut immunförsvaret lokalt i injektionsstället. Då kan bakterier som kommit in i kroppen, exempelvis genom en urinvägsinfektion, lättare etablera sig.
 
-**Sammanfattning:**
 - Infektion efter kortisoninjektion är mycket ovanligt
 - Kan orsakas av bakterier från huden vid injektionstillfället
 - Kan orsakas av att lokalt immunförsvar sänks temporärt

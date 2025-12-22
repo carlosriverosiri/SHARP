@@ -20,5 +20,3 @@ Vi har inga remisskrav och handlägger regelbundet "second opinion" fall. Du k
 
 Du bör dock beställa journalkopior från de kliniker där du blivit behandlad och ta med dessa till mottagningsbesöket.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -28,6 +28,5 @@ Om du har fått diagnosen impingement, inklämd sena så brukar detta tillstånd
 
 Vid långvarig kronisk impingement kan en operation vara nödvändig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

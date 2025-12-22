@@ -25,5 +25,3 @@ Ibland kan smärtorna från inklämda senfästen, bennabbar eller en skadad bice
 
 Det kan då vara möjligt att minska smärtorna genom enklare åtgärder än att byta ut ledkulan till en axelprotes.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

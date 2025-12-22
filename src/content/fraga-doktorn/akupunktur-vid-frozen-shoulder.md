@@ -19,5 +19,3 @@ Frusen axel är en smärtsam, ofarlig och självläkande sjukdom där akupunktur
 
 Jag saknar dock kunskaper om akupunktur och kan därför inte skriva om metoden.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

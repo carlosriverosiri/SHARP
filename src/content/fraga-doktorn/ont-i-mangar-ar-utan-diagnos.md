@@ -28,6 +28,5 @@ MR är bra för "grovsortering" av axelproblem, men inte findiagnostik.
 
 Det faktum att du redan är opererad utan förbättring och att symptomen varat länge gör väl att man måste fundera på ett par mindre vanliga diagnoser. , specialist i ortopedi.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

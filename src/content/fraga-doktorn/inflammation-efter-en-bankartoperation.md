@@ -21,5 +21,4 @@ Denna smärta beror vanligen på en inflammation i axelleden. Risken för att f�
 
 Vanligen brukar man rekommendera en inflammationsdämpande medicin.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

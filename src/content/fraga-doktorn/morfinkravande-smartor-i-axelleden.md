@@ -31,5 +31,4 @@ Kortisoninjektionen i axelleden brukar vanligen sättas i axelledens slemsäck, 
 
 Blir du smärtfri av lokalbedövningen, under någon timme efter en sådan injektion, så talar detta för att du har fått en inklämning i axeln, impingement.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

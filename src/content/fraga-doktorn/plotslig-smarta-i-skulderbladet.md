@@ -18,5 +18,3 @@ En väldigt kraftig smärta som kommit plötsligt och som sitter i skulderbladet
 
 Man bör nog först och främst utesluta det man kallar för "reffered pain", dvs att orsaken sitter någon annan stans än i just axeln
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

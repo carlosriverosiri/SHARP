@@ -23,6 +23,5 @@ Det kan också vara bra att ta kontakt med husläkaren för att få hjälp med s
 
 En diagnos i sig är inte viktigt för att kunna rehabilitera en smärtsam axel. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

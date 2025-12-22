@@ -30,7 +30,6 @@ När man opererar slitage i nyckelbensleden med titthålsteknik är det vanligt 
 
 Rehabtiden efter operationen beror på vilken typ av operation som planeras. Rehab efter en titthålsoperation går betydligt snabbare än efter en öppen operation.
 
-**Sammanfattning:**
 - AC-ledsartros: smärta vid tryck på nyckelbensleden, utstrålning mot nacken
 - Impingement: smärta på utsidan av axeln och överarmen
 - Båda tillstånden kan förekomma samtidigt

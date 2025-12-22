@@ -35,5 +35,4 @@ Axeldiagnostik kan vara ganska komplicerat och är synnerligen svårt att utför
 
 Men axelledens sannolikhetslära innebär att man i första hand bör fundera på de vanligaste sjukdomarna hos en individ som tränar mycket på gym och lyfter tungt, än de ytterst sällsynta sjukdomarna.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

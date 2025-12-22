@@ -20,5 +20,3 @@ question: |
 Det du beskriver låter på pricken de vanliga symptomen patienter med frusen axel brukar uppleva.
 Sjukdomen är självläkande, vid outhärdlig smärta kan man ibland vara tvungen att operera för att minska smärtan och snabba på läkningen.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

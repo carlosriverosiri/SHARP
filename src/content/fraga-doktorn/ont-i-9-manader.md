@@ -31,6 +31,5 @@ Vid problem med senfästen brukar man generellt rekommendera excentrisk träning
 
 Be någon titta på om dina skulderblad rör sig symmetriskt när du belastar dessa.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

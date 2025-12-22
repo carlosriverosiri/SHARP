@@ -29,5 +29,3 @@ Otrosen Don Joy Sully Shoulder Stabilizer förhindrar att du lyfter armen utåt.
 
 Risken för att axelleden skall hoppa ur led en gång till är sannolikt inte speciellt stor. Rent generellt är risken för axelluxationer ganska liten hos patienter över 40 år.  Upplever du att axeln är stabil och du inte har några smärtor så är det nog onödigt att operera axeln.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

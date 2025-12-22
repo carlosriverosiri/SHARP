@@ -20,7 +20,6 @@ question: |
 
 Det är relativt vanligt att det gör ont i en eller två dagar efter en kortisoninjektion.
 
-**Sammanfattning:**
 - Smärta 1–2 dagar efter injektion är vanligt
 - Brukar gå över av sig självt
 

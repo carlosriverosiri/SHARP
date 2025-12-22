@@ -19,5 +19,4 @@ Olika doktorer tycker ibland olika. Vad som är rätt eller fel går inte alltid
 
 Vanligen skadas leden av att ledkulan glider ur led. Skadorna blir större om man har många luxationer (> 2-3) och om ledkulan ligger länge ur led.  Min erfarenhet är att just patienter som ägnar sig åt motocross kan få relativt omfattande skador på stabiliserande strukturer i axelleden av sin sport. Rehabilitering efter en stabiliserande operation tar normalt sett 5-6 månader.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

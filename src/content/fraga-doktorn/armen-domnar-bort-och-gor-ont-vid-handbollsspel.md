@@ -22,5 +22,4 @@ En av de vanligaste orsakerna är någon form av instabilitet i axelleden.
 
 Kontakta din husläkare och be att få en remiss till en axelspecialist. / , spec. ort.
 
-**Sammanfattning:**
 - Sök remiss till specialist

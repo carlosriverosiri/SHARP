@@ -24,6 +24,5 @@ Vid impingement är både sjukgymnastik och operation bra behandlingar.  Normal
 
 Det är vanligt att smärtorna är som värst på natten vid impingement. Oftast hjälper det att man ligger lite högt med några kuddar under ryggen. Man kan också pröva en "Tempur" madrass. Det finns en bra tempurvariant på Jysk som inte kostar lika mycket som orginalet.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

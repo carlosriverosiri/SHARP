@@ -29,6 +29,5 @@ Prata med en axelortoped i ditt landsting och fråga istället om det inte kan v
 
 MR bilder är dock ibland lite svåra att tolka utan att man sprutat in kontrastvätska i axelleden. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

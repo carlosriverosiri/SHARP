@@ -17,7 +17,6 @@ Den vanligaste orsaken till axelsmärtor hos väldigt unga patienter är instabi
 
 Rekommenderar att du söker dig dit. Du kan också kontakta Aleris i Oslo och boka en tid hos mig utan någon väntetid. Då blir du automatiskt utredd med magnetkameraundersökning och röntgen (www.specialist.se/eu-vard). Men då hamnar räkningen på runt 5000:- kronor och det tar minst 3 månader innan du får tillbaka dina pengar från försäkringskassan. Då jag vet att du har en duktig axelspecialist i din närhet så tycker jag nog att du skall välja denna lösning i första hand.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist
 - Kortisoninjektion kan övervägas

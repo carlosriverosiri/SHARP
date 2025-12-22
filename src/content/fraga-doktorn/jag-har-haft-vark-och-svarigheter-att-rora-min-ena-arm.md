@@ -19,7 +19,6 @@ Det mest sannolika sjukdomstillståndet är nog **impingement**. Kalkaxel sorter
 
 Frozen shoulder låter inte som en sannolik diagnos. Frusen axel ger en smärta som är konstant under alla dygnets timmar. Impingement är som "kärlkramp i axelleden" - smärtan kommer när man belastar axelleden, eller lyfter armarna högt.
 
-**Sammanfattning:**
 - Symtomen tyder på impingement snarare än frozen shoulder
 - Frozen shoulder ger konstant smärta dygnet runt
 - Impingement ger smärta vid belastning och lyft ovanför axelhöjd

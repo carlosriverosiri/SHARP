@@ -59,3 +59,4 @@ Ja, vi behandlar tennisarmbåge (lateral epicondylit).
 **Sammanfattning:** Ja, vi behandlar tennisarmbåge. Börja med sjukgymnastik – de flesta blir bra utan operation.
 
 
+

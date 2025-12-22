@@ -21,5 +21,3 @@ Det är svårt att säga vad som har hänt.
 
 Hos äldre patienter är en stor rotatorcuffruptur den vanligaste orsaken till muskelatrofi på skulderbladet, hos yngre patienter är en ledcysta eller en nervskada den vanligaste orsaken till atrofi av muskulaturen på skulderbladet. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

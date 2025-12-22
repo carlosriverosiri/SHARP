@@ -33,6 +33,5 @@ Men det kan också bero på en bristfällig finmotorisk justering av ledkulans p
 Detta leder till att rotatorcuffsenor och bicepssenan kan klämmas åt (impingement).
 Prata med din husläkare så du får en remiss till en sjukgymnast.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

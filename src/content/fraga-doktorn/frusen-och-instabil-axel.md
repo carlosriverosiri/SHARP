@@ -25,5 +25,3 @@ Känner du att att axelleden glider ur led så glider den ur led.
 
 Då är det inte frusen axel.  Men du kan lika gärna ha haft en instabilitet i axelleden som sedan utvecklats till en frusen axel.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

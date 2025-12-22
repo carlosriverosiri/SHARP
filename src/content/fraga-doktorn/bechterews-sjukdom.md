@@ -27,6 +27,5 @@ Rekommenderar att du fortsätter med sjukgymnastik och egenträning.
 
 Kontakta din husläkare för att få en röntgen utförd. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

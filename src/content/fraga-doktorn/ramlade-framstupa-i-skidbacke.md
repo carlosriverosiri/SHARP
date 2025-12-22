@@ -21,6 +21,5 @@ När man är närmare 50 år är det vanligt att kroniska axelsmärtor efter en 
 
 Möjligen behöver man göra en ultraljudsundersökning eller en MR av axelleden för att utesluta en rotatorcuffruptur
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

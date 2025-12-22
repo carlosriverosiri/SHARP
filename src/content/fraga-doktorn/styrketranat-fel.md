@@ -31,6 +31,5 @@ A  ger smärtor på utsidan av axeln. B ger smärtor över nyckelbensleden. C g
 
 Att inte träna rotatorcuffen är som att bygga ett hus utan grund. Om du tar kontakt med en mycket erfaren muskelbyggare kan du säkerligen få bättre tips än från en ortoped.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

@@ -29,5 +29,4 @@ Det går att ställa diagnosen frozen shoulder endast genom en MR undersökning.
 Men då behöver man göra en MR undersökning av bägge axlarna för att kunna jämföra ledkapselns tjocklek.
 Om din doktor känner sig osäker på diagnosen kan en magnetkameraundersökning vara en bättre än en röntgenundersökning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

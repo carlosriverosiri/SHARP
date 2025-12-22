@@ -26,5 +26,4 @@ question: |
 De vanligaste orsakerna till axelsmärtor hos individer som ägnar sig åt styrketräning är impingement eller artros i yttre nyckelbensleden.
 Att du inte har ont över yttre nyckelbensleden talar mer för impingement.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

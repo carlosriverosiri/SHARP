@@ -29,7 +29,6 @@ Det är osannolikt att kortisoninjektionen träffat en nerv. Det finns inga stö
 
 Många axelortopeder förespråkar kortisoninjektioner som en temporär smärtlindring för axelsmärtor som handläggs inom primärvården.
 
-**Sammanfattning:**
 - Kortisoninjektion kan tillfälligt förvärra smärtan
 - Smärtan går vanligen över efter 1 dygn, ibland längre
 - Osannolikt att nerv träffats – det finns inga stora nerver där

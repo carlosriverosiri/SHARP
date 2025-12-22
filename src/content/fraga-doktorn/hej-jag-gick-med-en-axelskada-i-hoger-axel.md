@@ -23,7 +23,6 @@ Vid en äkta frozen shoulder brukar man dock få en momentan smärtlindring unde
 
 Har du starka smärtor så kan jag bara rekommendera att du fullföljer den planerade behandlingen.
 
-**Sammanfattning:**
 - Smärta efter kortisonspruta betyder inte att den saknar effekt
 - Effekten kan utvärderas efter cirka en vecka
 - Kortisoninjektion i leden fungerar oftast bra vid frozen shoulder

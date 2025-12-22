@@ -26,7 +26,6 @@ En enda injektion av kortison in i axelleden har inte visat sig ge någon höjni
 
 Jag känner inte till några studier där man specifikt har studerat blodsockret efter kortisoninjektioner i axelledens slemsäck (bursa subakromiale). Men det är klokt att ändå anta att kortisoninjektionen möjligen kan höja blodsockret i 2–3 dagar efter injektionen.
 
-**Sammanfattning:**
 - Blodsockerhöjning kan ske 2–3 dagar efter injektion
 - Enstaka injektion i axelleden ger oftast ingen höjning
 - Upprepade injektioner kan påverka blodsockret mer

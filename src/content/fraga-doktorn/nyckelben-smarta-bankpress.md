@@ -41,3 +41,4 @@ Smärta vid nyckelbenet efter styrketräning beror ofta på AC-leden eller stern
 
 **Sammanfattning:** Troligen överbelastning. Vila och anpassa träningen. Sök vid kvarstående besvär.
 
+

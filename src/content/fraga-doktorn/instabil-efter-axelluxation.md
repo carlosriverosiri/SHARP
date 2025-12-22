@@ -19,7 +19,6 @@ Jag tycker att man snarast skall utföra en röntgen, och komplettera denna med 
 
 Man bör utesluta en rotatorcuffruptur snarast. Sannolikheten att det är en problematisk ruptur är kanske högst 5-10%, men om det är en problematisk ruptur så ökar bara problemen om man väntar... Att utreda själva instabiliteten är inte så bråttom. Upplever du fortsatt att axelleden är instabil om 3-4 månader så bör man kanske diskutera en stabiliserande operation.  Åker den ur led en gång till och du får svårigheter att reponera den så bör du opereras.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

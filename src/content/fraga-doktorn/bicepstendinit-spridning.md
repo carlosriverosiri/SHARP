@@ -58,3 +58,4 @@ En tendinit "sprider sig" inte i medicinsk mening, men smärtan kan påverka omg
 **Sammanfattning:** Smärtan kan sprida sig, men inflammationen gör det inte. Fokusera på att behandla grundproblemet och jobba med hela överkroppens biomekanik.
 
 
+

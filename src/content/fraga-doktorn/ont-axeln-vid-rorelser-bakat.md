@@ -23,6 +23,5 @@ Sjukgymnastik ger oftas bättre effekt på tendiniten än ingen behandling alls.
 
 Sjukgymnastik brukar framför allt förkorta sjukdomsförloppet.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

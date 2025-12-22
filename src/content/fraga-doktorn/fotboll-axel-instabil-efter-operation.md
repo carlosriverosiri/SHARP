@@ -44,10 +44,10 @@ Jag vill inte säga emot din naprapat, men symptomen du beskriver (klickande, l�
 3. **Undvik fotboll** tills du vet vad det är
 4. **Dokumentera symptomen** – När kommer låsningarna?
 
-**Sammanfattning:**
 - Symptomen tyder på möjlig ny skada, inte bara muskel
 - Den tidigare operationen kan ha påverkats
 - Sök ortoped för undersökning och eventuell MR
 - Undvik risksporter tills du vet vad det är
+
 
 

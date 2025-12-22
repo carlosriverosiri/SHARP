@@ -19,7 +19,6 @@ question: |
 
 Prata med din husläkare om möjligheten att prova ett inflammationsdämpande läkemedel.
 
-**Sammanfattning:**
 - Diskutera inflammationsdämpande (NSAID) med din husläkare
 - Kan vara ett bra komplement till Alvedon och Citodon
 

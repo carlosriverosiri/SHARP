@@ -16,5 +16,4 @@ question: |
 
 Långvarig axelsmärta kan föra axeln stelare. Kontakta en sjukgymnast så du får hjälp med ett träningsprogram.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

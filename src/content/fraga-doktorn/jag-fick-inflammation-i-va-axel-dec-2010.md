@@ -21,7 +21,6 @@ Du har rätt att bli remitterad till vilken specialistvårdsmottagning du vill i
 
 De patienter som vi vårdplanerar brukar i de allra flesta fall erhålla en specialistvårdsremiss av sitt hemlandsting.
 
-**Sammanfattning:**
 - Vid svår frozen shoulder som inte svarar på kortison bör du träffa axelspecialist
 - Du har rätt att välja vilken specialistvårdsmottagning som helst i Sverige
 - När operationsbehov fastställts gäller vårdgarantin

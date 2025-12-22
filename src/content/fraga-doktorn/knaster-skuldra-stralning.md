@@ -33,3 +33,4 @@ Knaster i skuldran är oftast ofarligt, men strålningar från nacken bör utvä
 
 **Sammanfattning:** Börja med sjukgymnast som kan bedöma om det behövs vidare utredning.
 
+

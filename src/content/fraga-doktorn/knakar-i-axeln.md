@@ -20,5 +20,3 @@ Vanligen är det ett normalt knäppande som inte är relaterat till en sjukdom. 
 
 Hos äldre individer är det ibland orsakat av en rotatorcuffruptur.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

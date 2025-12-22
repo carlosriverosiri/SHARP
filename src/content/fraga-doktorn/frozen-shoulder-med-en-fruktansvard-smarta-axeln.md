@@ -20,5 +20,4 @@ Insulinbehandlade diabetiker kan dock ha ett mer utdraget förlopp.
 
 Vid en långvarig kronisk mycket stark smärta kan en operation vara ett alternativ för att lindra smärtan och förkorta sjukdomsförloppet.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

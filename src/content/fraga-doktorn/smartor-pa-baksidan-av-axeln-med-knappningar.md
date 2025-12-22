@@ -21,5 +21,3 @@ Ljudet uppkommer genom att ett vacuum uppstår som sedan plötsligt släpper, n�
 
 Smärtor på baksidan av axeln förenat med knak och knäpp kan bero på en lite olika diagnoser som snapping shoulder, artros i AC-led och en bakre instabilitet
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

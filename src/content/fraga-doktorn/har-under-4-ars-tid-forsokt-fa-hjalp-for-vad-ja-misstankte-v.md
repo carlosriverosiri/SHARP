@@ -17,7 +17,6 @@ En utredning med MRT och vanlig slätröntgen är befogad. Du bör också träff
 
 Du kan utnyttja fritt sjukhusval och be att få bli remitterad till en axelspecialist var som helst i Sverige.
 
-**Sammanfattning:**
 - Frozen shoulder är ovanligt hos 28-åringar - andra orsaker bör uteslutas
 - MRT / ultraljud  och röntgen rekommenderas för utredning
 - Be om remiss till axelspecialist via fritt sjukhusval

@@ -15,7 +15,6 @@ question: |
 
 Biverkningarna efter en kortisoninjektion i axelleden är desamma som hos individer som inte lider av diabetes mellitus, förutom risken för en övergående förhöjning av blodsockret.
 
-**Sammanfattning:**
 - Samma biverkningar som för icke-diabetiker
 - Tillägg: risk för övergående blodsockerhöjning
 - Kontrollera blodsockret extra noga de första dagarna

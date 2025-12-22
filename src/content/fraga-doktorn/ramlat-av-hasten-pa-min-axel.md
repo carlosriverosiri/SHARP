@@ -28,5 +28,4 @@ Annars verkar axeln se bra ut, utan någon allvarlig skada.
 
 Det innebär att sannolikheten är hög att du kan förbättras av en strukturerad rehab under 3-4 månader.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

@@ -27,7 +27,6 @@ Denna typ av reaktion kan man också få vid andra typer av injektioner eller om
 
 Kortisonet kan under en kortare tid till viss del påverka blodtrycket. Men doserna kortison man ger är små och utsöndras under lång tid, så den blodtryckshöjande effekten är begränsad.
 
-**Sammanfattning:**
 - "Vasovagal reaktion" kan ge illamående och blodtrycksfall
 - Vanligare i sittande position – be om att ligga ner nästa gång
 - Kortisonets påverkan på blodtrycket är begränsad

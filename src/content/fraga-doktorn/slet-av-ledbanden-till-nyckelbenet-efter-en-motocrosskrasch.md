@@ -19,5 +19,3 @@ Efter en AC-luxation kan du börja använda axeln försiktigt de första veckorn
 
 Så länge du inte får en långvarig stark smärta av aktivitet så är det inget problem.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

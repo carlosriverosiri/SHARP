@@ -19,6 +19,5 @@ Du behöver nog träffa en axelspecialist.
 
 Det är på tok för lång tid att gå och ha ont i 3 år utan att få en bra förklaring på problemen.
 
-**Sammanfattning:**
 - 3 år med oförklarad smärta är för länge
 - Sök remiss till en axelspecialist för ordentlig utredning

@@ -35,6 +35,5 @@ En känsla av att axeln är instabil kan tala starkt för en reparation av labru
 
 Det är inte ovanligt att ha en nedsatt funktion i axelleden upp till ett år efter en operation, men de många brukar känna sig bättre redan inom 3 månader efter operationen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

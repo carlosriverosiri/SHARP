@@ -29,7 +29,6 @@ Vanligen dämpas smärtorna inom 24 timmar. Ibland kan de pågå i några dagar.
 
 Vanliga smärtstillande mediciner som Alvedon, Diklofenak (NSAID) eller Citodon brukar kunna dämpa smärtorna.
 
-**Sammanfattning:**
 - "Smärtchock" drabbar ca 25% av patienterna
 - Smärtan dämpas vanligen inom 24 timmar
 - Kan i vissa fall pågå några dagar

@@ -27,5 +27,4 @@ Vidare tyder cystan på att broskläppen (labrum) i axeln är sliten.
 Labrums funktion är att centrera ledkulan i ledskålen, detta kan sannolikt ge problem med en seninklämning.
 Eftersom du har haft ont så pass länge och verkar ha en uttalad smärta så tycker jag att det är vettigt att du träffar en axelspecialist.
 
-**Sammanfattning:**
 - Sök remiss till specialist

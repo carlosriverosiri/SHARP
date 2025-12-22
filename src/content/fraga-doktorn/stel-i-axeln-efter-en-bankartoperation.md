@@ -31,5 +31,4 @@ Här får man väga problemen med smärta och stelhet mot problemet mot en ensta
 När man väl mobiliserat axeln och rörligheten förbättras kan en titthålskirurgis operation vara enklare att utföra.
 Mitt råd till dig är att ta upp en diskussion med din kirurg eller försöka komma till en klinik som är specialiserad på axelkirurgi.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

@@ -35,3 +35,4 @@ Revision till omvänd protes kan ge bra resultat.
 
 **Sammanfattning:** Omvänd protes efter misslyckad halvprotes kan ge gott resultat, om än med lite högre risk.
 
+

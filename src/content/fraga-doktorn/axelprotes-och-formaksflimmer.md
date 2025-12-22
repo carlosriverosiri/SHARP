@@ -45,10 +45,10 @@ Narkosläkaren bedömer vad som är säkrast för dig.
 2. **Vi kontaktar din kardiolog** vid behov
 3. **Narkosläkare bedömer dig** före operation
 
-**Sammanfattning:**
 - Förmaksflimmer hindrar vanligtvis inte operation
 - Blodförtunnande medicin behöver hanteras
 - Narkosläkare gör individuell bedömning
 - Informera oss om din medicin och hjärtstatus
+
 
 

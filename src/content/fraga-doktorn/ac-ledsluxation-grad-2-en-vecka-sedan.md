@@ -22,5 +22,3 @@ Professionella fotbollspelare i NFL är i spel i genomsnitt efter 9 dagar vid en
 
 En svensk motorcrossförare på elitnivå kanske väntar en 3-4 veckor, men det är nog lite beroende på personlighet och smärttålighet vad som fungerar.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

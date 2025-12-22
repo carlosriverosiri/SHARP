@@ -26,7 +26,6 @@ Artros i nyckelbensleden, labrum-"skador" och tendinos i cuffen är så pass van
 
 Om du har en viss instabilitet i axelleden, smärtor i nyckelbensleden eller smärtor från supraspinatussenan så kan MR-svaret vara relevant.
 
-**Sammanfattning:**
 - MR-fynd som artros, labrum-skador och tendinos är vanliga hos friska personer
 - Diagnos kan inte ställas enbart på MR-svar
 - MR-fynden är relevanta om du har kliniska symtom (smärta, instabilitet)

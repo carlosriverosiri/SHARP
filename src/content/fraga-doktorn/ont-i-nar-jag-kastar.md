@@ -21,5 +21,4 @@ Svårt att säga vad det kan vara utan att veta var smärtan sitter och utan att
 
 Jag tycker att du skall prata med dina föräldrar och be dem kontakta husläkaren så ni kan få en remiss till en barnortoped.
 
-**Sammanfattning:**
 - Sök remiss till specialist

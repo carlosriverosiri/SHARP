@@ -14,5 +14,4 @@ question: |
 
 Tre månader är en ganska normal sjukskrivningstid efter en Latarjet operation,  vid ett fysiskt krävande arbete. Men det kan ta längre tid.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

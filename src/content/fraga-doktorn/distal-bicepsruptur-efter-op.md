@@ -60,3 +60,4 @@ Bra frågor! Risken för reruptur är låg om du följer instruktionerna.
 
 **Sammanfattning:** Nattsmärta är normalt. Omedvetna spänningar i sömnen river inte upp reparationen. Undvik aktivt grepp.
 
+

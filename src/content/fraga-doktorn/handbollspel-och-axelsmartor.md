@@ -28,5 +28,4 @@ En överrörlighet leder nämligen till att kraftvektorerna i axelleden förskju
 
 Det tar lång tid enveten träning att för att lyckas balansera om axelleden vid överrörlighet.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

@@ -29,7 +29,6 @@ Kom igång med sjukgymnastik så fort det går. Träna dagligen hemma. Ha tålam
 
 Vid impingement/kalkaxel brukar man rekommendera operation vid långvariga (>6 månader) starka smärtor som inte ger med sig på några månaders daglig axelträning.
 
-**Sammanfattning:**
 - Sjukgymnastik är bättre än kortisoninjektion på sikt
 - Träna dagligen hemma
 - Operation kan vara aktuellt vid långvariga besvär (>6 månader)

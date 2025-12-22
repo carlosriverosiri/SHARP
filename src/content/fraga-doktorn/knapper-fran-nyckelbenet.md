@@ -15,5 +15,4 @@ question: |
 
 Så länge det inte gör ont eller är ett problem, mer än att ljudet är obehagligt, så finns det ingen orsak att åtgärda knak och knäpp i axelleden. , specialist i ortopedi
 
-**Sammanfattning:**
 - Sök remiss till specialist

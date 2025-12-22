@@ -19,5 +19,4 @@ Det finns ingen dokumenterad rehabilitering  som gör att du kan fortsätta med 
 
 Både ledskålen och ledhuvuvudet kan få permanenta skador av långvariga axelluxationer, dessa skador gör att axlarna blir allt mer instabila.  Tyvärr så måste du nog göra ett val mellan en lägre aktivitetsnivå eller operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

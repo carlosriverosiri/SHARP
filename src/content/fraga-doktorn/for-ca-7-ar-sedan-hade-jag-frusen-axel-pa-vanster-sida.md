@@ -19,7 +19,6 @@ Den effektivaste behandlingen är nog trots allt en hög aktivitetsnivå. Stretc
 
 Gå regelbundet till en sjukgymnast för att få hjälp med träningsprogram och att mäta framgången. Frusen axel är en av de vanligaste axelsjukdomarna. En sjukgymnast med många års erfarenhet bör kunna handlägga denna sjukdom utan problem.
 
-**Sammanfattning:**
 - Daglig stretching och töjning är grunden i behandlingen
 - Hög aktivitetsnivå påskyndar förbättringen
 - En erfaren sjukgymnast kan hjälpa med träningsprogram

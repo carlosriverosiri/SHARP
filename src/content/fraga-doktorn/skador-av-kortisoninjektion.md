@@ -26,7 +26,6 @@ Risken för dessa biverkningar är mycket liten om kortisonet sätts på rätt s
 
 Man bör också undvika att ge för många kortisoninjektioner på samma ställe – vanligen rekommenderas max 3–4 injektioner per år i samma led eller slemsäck.
 
-**Sammanfattning:**
 - Kortisoninjektioner påverkar främst senor och hud, inte muskelfibrer direkt
 - Senförsvagning kan ske vid upprepade injektioner i eller nära senan
 - Hudatrofi och fettvävsatrofi är möjliga men ovanliga biverkningar

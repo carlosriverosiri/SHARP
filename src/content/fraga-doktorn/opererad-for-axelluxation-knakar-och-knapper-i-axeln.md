@@ -26,6 +26,5 @@ Ibland brukar man ta en vanlig röntgen efter en operation för att se att allti
 
 Ser allt bra ut så behöver man inte oroa sig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

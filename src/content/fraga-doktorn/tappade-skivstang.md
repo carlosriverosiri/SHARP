@@ -26,6 +26,5 @@ Smärtor över nyckelbensleden är vanligen orsakade av artros i den yttre nycke
 
 Artros i nyckelbensleden är vanligare hos individer som belastar axelleden mycket.
 
-**Sammanfattning:**
 - Smärta över nyckelbensleden orsakas oftast av artros
 - Artros är vanligare vid hög belastning av axelleden

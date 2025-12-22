@@ -27,7 +27,6 @@ Patienter som är vana att träna mycket lyckas ofta bra med att stabilisera axe
 
 Du behöver sannolikt hjälp av en erfaren sjukgymnast. Möjligen behöver du en remiss från din husläkare.
 
-**Sammanfattning:**
 - Sjukgymnastik fungerar bra vid icke-traumatisk instabilitet
 - Träningsvana personer lyckas ofta bra
 - Sök hjälp hos erfaren sjukgymnast

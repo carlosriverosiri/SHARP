@@ -23,5 +23,4 @@ Det som talar för instabilitet i vänster axel är att du har ett typiskt smär
 
 Vid instabilitet brukar inte kortisoninjektioner hjälpa.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

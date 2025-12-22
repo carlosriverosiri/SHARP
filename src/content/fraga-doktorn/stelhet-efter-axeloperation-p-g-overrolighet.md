@@ -29,7 +29,6 @@ Det är dock relativt vanligt att axelleden har en betydande stelhet 2-3 månade
 
 Resultatet av operationen brukar synas 6-12 månader efter operationen.
 
-**Sammanfattning:**
 - Sannolikt inflammation efter operationen
 - Brufen dämpar inflammationen
 - Stelhet är normalt 2-3 månader efter operation

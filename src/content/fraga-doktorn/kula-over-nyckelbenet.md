@@ -39,7 +39,6 @@ Vid artros i nyckelbensleden kan sjukgymnastik hjälpa om du stelnat till i sjä
 
 Artros i nyckelbensleden går att operera med goda resultat.
 
-**Sammanfattning:**
 - Kula/knöl vid nyckelbenet tyder på artros eller ganglion
 - Vid artros kan nyckelbensleden växa och kännas som en knöl
 - Sjukgymnastik hjälper främst om axeln är stel

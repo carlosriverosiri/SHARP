@@ -18,5 +18,3 @@ Adhesiv capusulit är ett annat namn för frusen skuldra (frozen shoulder).
 
 Diagnosen baseras på att du har en uttalad stelhet i axelleden. Du kan inte ens nå svanskotan med handen, kan knappt lyfta armen ut från sidan eller framåt.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

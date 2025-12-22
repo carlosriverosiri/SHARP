@@ -37,6 +37,5 @@ Kortisoninjektion vid postoperativ bicepssmärta fungerar så pass bra att effek
 
 Dvs kortisonet bryter ned sammanväxtningarna i bicepskanalen (sulcus bicipitis).
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas

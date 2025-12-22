@@ -38,3 +38,4 @@ Dina symtom kan passa flera diagnoser.
 
 **Sammanfattning:** Med tilltagande besvär bör du söka för ordentlig undersökning.
 
+

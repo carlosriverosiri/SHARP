@@ -41,3 +41,4 @@ Dina symtom tyder på kvarstående axelproblem efter skadan.
 
 **Sammanfattning:** 13 år efter trauma kan man fortfarande utreda och behandla. Börja med specialist.
 
+

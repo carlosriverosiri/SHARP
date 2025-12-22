@@ -33,5 +33,4 @@ Hej,
 
 Det är sedan 1 jan 2015 fritt vårdval i Sverige. Det innebär att du kan söka dig till vilken klinik du vill som har avtal med ett landsting. Vi tar emot patienter från andra delar av landet oavsett om det gäller mottagning eller operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

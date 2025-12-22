@@ -49,10 +49,10 @@ Om smärtan fortsätter öka behöver du ny bedömning.
 2. **Sök vård igen** om smärtan fortsätter öka eller du får feber
 3. **Smärtstillande** – Paracetamol och NSAID kan hjälpa
 
-**Sammanfattning:**
 - Flare-reaktioner går vanligtvis över inom 2-3 veckor
 - Ökande smärta efter 1,5 vecka bör följas upp
 - Kontakta vården om du får feber eller rodnad som sprider sig
 - De flesta fall löser sig spontant
+
 
 

@@ -35,7 +35,6 @@ Rekommenderar att du försöker med sjukgymnastik i första hand.
 
 Vid långvarig smärta som påtagligt försämrar din livskvalitet är en axelprotes ett alternativ.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

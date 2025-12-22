@@ -19,5 +19,4 @@ Men det beror också på vilken typ av operation det gäller. Finns det inga st�
 
 MVH
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

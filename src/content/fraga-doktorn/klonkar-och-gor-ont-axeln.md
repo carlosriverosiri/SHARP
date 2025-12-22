@@ -19,5 +19,3 @@ Ibland beror det på en skada på ledskålens broskläpp.
 
 Domningar och smärtor ut i armen, nacke skulderblad är inge ovanliga symptom vid en instabilitet.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

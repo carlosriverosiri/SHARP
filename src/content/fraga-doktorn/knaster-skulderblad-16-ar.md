@@ -47,10 +47,10 @@ Skulderbladet glider normalt tyst över revbenen. Ljud kan uppstå vid:
 - Om du får svaghet
 - Om det begränsar dig i sport eller aktiviteter
 
-**Sammanfattning:**
 - Snapping scapula utan smärta är ofarligt
 - Fokus på hållning och styrketräning
 - Undvik att "jaga" ljudet
 - Sök vård om smärta tillkommer
+
 
 

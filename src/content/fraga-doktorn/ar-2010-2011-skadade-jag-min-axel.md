@@ -31,6 +31,5 @@ Vad gäller labrumskador så krävs det ett tränat öga för att verkligen se d
 
 Rekommenderar att du ber att få en remiss till en axelspecialist.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

@@ -17,6 +17,5 @@ Börja belasta axeln och känn efter om den känns stabil.
 
 Känns den stabil bör det inte vara några problem, är den instabil bör du kontakta en sjukgymnast för mer rehab alternativt fundera på en stabiliserande operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

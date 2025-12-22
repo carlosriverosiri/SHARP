@@ -50,10 +50,10 @@ En Bankart-Perthes lesion med ganglioncystor och uttalade symptom som du beskriv
 - **Cystorna** – Töms ofta under samma ingrepp
 - **Rehabilitering** – Viktig både före och efter eventuell operation
 
-**Sammanfattning:**
 - Du har dokumenterad strukturell skada som kan opereras
 - Begär second opinion hos axelspecialist
 - Att inte göra något alls är inte rimligt med dina symptom
 - Det finns behandling som kan hjälpa dig
+
 
 

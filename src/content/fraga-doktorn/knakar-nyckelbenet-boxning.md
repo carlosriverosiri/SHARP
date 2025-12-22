@@ -59,3 +59,4 @@ SC-leden utsätts för krafter vid slag och blockeringar. Så länge du inte har
 **Sammanfattning:** Knakande utan smärta är normalt och ofarligt. Fortsätt boxas!
 
 
+

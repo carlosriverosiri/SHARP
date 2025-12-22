@@ -24,6 +24,5 @@ Bägge dessa sjukdomar kan behandlas med sjukgymnastik.
 
 Blir det inte bättre på några månaders sjukgymnastik så är det rimligt att man överväger om en operation med titthålsteknik (artroskopi) inte kan göra dig bättre. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

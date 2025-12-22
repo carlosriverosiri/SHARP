@@ -16,5 +16,3 @@ question: |
 
 Det är ovanligt att man opererar sternoklavikularleden. Du kan läsa mer om dessa problem på www.impingement.se
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

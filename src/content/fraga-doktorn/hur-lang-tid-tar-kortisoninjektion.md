@@ -23,7 +23,6 @@ Några patienter får därefter mer ont under något dygn efter kortisoninjektio
 
 En strukturerad sjukgymnastisk behandling med inriktning mot att stärka rotatorcuffen och rotatorcuffens hjälpmuskler runt skulderbladet är den vetenskapligt bäst dokumenterade icke-kirurgiska behandlingen mot axelsmärtor.
 
-**Sammanfattning:**
 - Lokalbedövningen ger omedelbar effekt (timmar)
 - Kortisonets effekt märks efter något dygn
 - Viss smärtökning kan förekomma första dygnet

@@ -23,5 +23,3 @@ question: |
 
 En tidigare skadad nyckelbensled blir känsligare för nya skador. Nu är det för tidigt att säga hur det kommer att bli i framtiden. Efter en AC-lux får man små skador på brosket i nyckelbensl
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

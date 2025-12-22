@@ -17,5 +17,4 @@ question: |
 
 Efter andra gången axelleden hoppat ur led brukar man rekommendera operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

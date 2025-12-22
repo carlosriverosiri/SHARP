@@ -19,6 +19,5 @@ Det du beskriver låter lite som vad som kallas för subluxation. Jag tycker att
 
 MVH
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

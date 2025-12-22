@@ -15,5 +15,3 @@ question: |
 
 Golf är inte en sport med hög risk för axellluxation. När du återfått rörligheten i axelleden och den inte gör ont kan du återgå till golv.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

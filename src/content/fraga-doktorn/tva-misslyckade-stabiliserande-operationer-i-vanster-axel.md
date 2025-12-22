@@ -24,6 +24,5 @@ MR är inte en optimal undersökning i ditt fall. En vanlig röntgenundersöknin
 
 Vi tar emot remisser från läkare, sjukgymnaster, naprapater och kiropraktorer. Du kan läsa mer om axelluxationer på vår hemsida.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

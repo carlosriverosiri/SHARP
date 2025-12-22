@@ -22,5 +22,3 @@ question: |
 
 [MANUELL GRANSKNING BEHÖVS - svaret kunde inte extraheras automatiskt]
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

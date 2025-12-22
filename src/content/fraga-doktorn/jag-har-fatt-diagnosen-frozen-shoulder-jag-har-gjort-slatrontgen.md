@@ -36,6 +36,5 @@ Rädsla för att använda armen förlänger bara sjukdomsförloppet.
 Töj på gränserna för vad axelleden tål! Värken som uppstår i axelleden efter en aktivitet är inte farligare än den träningsvärken du får efter ett motionspass.
 Med vänlig hälsning,
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

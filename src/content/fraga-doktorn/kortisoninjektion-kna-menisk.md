@@ -42,7 +42,6 @@ Det går att använda ultraljud för att sätta lokala injektioner just i den me
 
 I ditt fall – med pågående inflammation, svullnad och svårigheter att rehabilitera – kan en kortisoninjektion vara rimlig för att underlätta träningen. Boka tid för bedömning så undersöker vi knät och tar ställning.
 
-**Sammanfattning:**
 - Kortison kan ge kortsiktig lindring (4–12 veckor) i den akuta fasen
 - Mest lämpligt för äldre patienter med inflammation
 - Yngre patienter bör i första hand rehabilitera

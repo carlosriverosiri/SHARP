@@ -27,7 +27,6 @@ De flesta biverkningarna är mer obehagliga än farliga. Eventuella biverkningar
 
 Har det nu gått några dagar och du mår fint så är det osannolikt att du drabbats av en biverkning.
 
-**Sammanfattning:**
 - Kortisoninjektion i slemsäcken är ofarlig
 - Kortisonet försvinner inom 3–6 veckor
 - Biverkningar visar sig inom de första dagarna

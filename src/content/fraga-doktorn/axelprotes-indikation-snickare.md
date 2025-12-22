@@ -52,3 +52,4 @@ Ditt röntgenfynd beskriver **uttalad axelartros** (Hamada grad 4-5).
 
 **Sammanfattning:** Med dina röntgenfynd och symtom finns indikation för axelprotes. Boka tid för bedömning.
 
+

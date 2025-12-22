@@ -25,5 +25,3 @@ Problemet är att vid en AC-lux så glider  nyckelbenet ur led så fort man�
 
 Därför är det meningslöst att försöka trycka tillbaka nyckelbenet när den väl gått ur led.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

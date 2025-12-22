@@ -30,5 +30,4 @@ Risken för att drabbas av en rotatorcuffruptur efter en axelluxation hos lite �
 
 Små skador har sannolikt inte så stor betydelse hos patienter med en låg aktivitetsnivå. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

@@ -21,7 +21,6 @@ Lite yngre patienter kan ibland drabbas av skador på broskläppen (labrum), lit
 
 Den typen av MR-undersökning som vanligen används i Sverige är inte optimal för att påvisa en del mindre axelskador hos yngre patienter. Däremot fungerar MR-undersökningen bra för att utesluta allvarliga axelskador.  Att prata med patienten och undersöka axelleden är oftast viktigare än att utföra en MR undersökning.  Be din husläkare skicka en remiss till en axelspecialist inom ditt landsting.  Ha tålamod och fortsätt med sjukgymnastiken.  Sitter smärtorna runt nyckelbensleden kan denna led vara delvis skadad. Det finns en rad tänkbara diagnoser som inte alltid går att se på MR.   /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

@@ -34,5 +34,4 @@ Om du har en  smärta som inte direkt sitter i nyckebensleden (knölen på ovan
 
 J
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

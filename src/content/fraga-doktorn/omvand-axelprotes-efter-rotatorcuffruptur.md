@@ -19,5 +19,3 @@ När man får problem med flera senskador i axelleden är en "omvänd" axelprote
 Tanken med denna protes är att flytta rörelsecentrum för axelleden på ett sådant sätt att omgivande muskler får en mer optimal funktion när du vill lyfta axeln. 
 Det innebär att de omgivande muskelsenorna som inte är trasiga, rent mekaniskt ersätter de avrivna senorna.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -17,7 +17,6 @@ Vid svårigheter att lyfta armen mer än 2 veckor efter skadan bör du utredas m
 
 Starka smärtor och dålig rörlighet i mer än 2-3 veckor efter skadan talar för att det finns någon typ av skada i axelleden. Smärtor som snabbt minskar, med god funktion i axelleden talar mot en besvärlig skada.
 
-**Sammanfattning:**
 - Röntgen bör göras för att utesluta fraktur
 - MR eller ultraljud vid kvarstående besvär efter 2 veckor
 - Smärta som strålar ner i arm och fingrar kan tyda på nervpåverkan

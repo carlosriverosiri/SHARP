@@ -29,6 +29,5 @@ I enstaka fall kan man ibland se en nervinklämning (n.suprascapularis) efter en
 
 Man får förmoda att man uteslutit en rotatorcuffruptur med hjälp av ultraljudsundersökning eller MR-undersökning.  Har man väl uteslutit en rotatorcuffskada så verkar det vettigt att påbörja en sjukgymnastisk behandling. / , spec. ort.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

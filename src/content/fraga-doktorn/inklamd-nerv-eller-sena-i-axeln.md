@@ -25,5 +25,4 @@ Det vanligaste axelproblemen i samband med styrketräning är impingement och ar
 Sitter smärtorna över utsidan/framsidan av axeln talar det för impingement, är det ont över nyckelbensleden är problem med nyckelbensleden mer sannolikt. 
 Sjukgymnastik brukar fungera bra vid impingement och mindre bra vid artros i yttre nyckelbensleden.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

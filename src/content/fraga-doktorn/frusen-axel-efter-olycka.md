@@ -20,5 +20,3 @@ Det är ganska vanligt att frusen axel börjar med att man får ett plötsligt s
 
 MVH
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

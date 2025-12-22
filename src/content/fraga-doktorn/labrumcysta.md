@@ -23,5 +23,3 @@ Detta brukar man kalla för kastaraxel.
 
 Du kan läsa mer om labrumskador / SLAP-skada på impingement.se
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

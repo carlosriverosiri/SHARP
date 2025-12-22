@@ -20,6 +20,5 @@ Vid frozen shoulder brukar man oftast bara invänta läkning. Är det riktigt il
 
 När smärtan börjar lägga sig är det dags att börja med sjukgymnastik för att snabbare förbättra rörligheten. /
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

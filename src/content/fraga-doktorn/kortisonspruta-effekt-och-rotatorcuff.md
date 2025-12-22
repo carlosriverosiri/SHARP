@@ -36,7 +36,6 @@ För mindre skador som inte behöver opereras sjunker dock både sensitiviteten 
 
 **Slutsats:** Ett normalt ultraljud hos en patient med impingement-symptom och bra undersökningsförutsättningar (god bildkvalitet, erfaren undersökare) gör det mycket säkert att utesluta en kliniskt betydelsefull rotatorcuffruptur som kräver operation eller annan specifik behandling.
 
-**Sammanfattning:**
 - Kortisoneffekt börjar vanligen dag 2–4 och är maximal efter 1–2 veckor
 - Första dygnet kan smärtan vara värre (flare-reaktion)
 - Kortison bör användas försiktigt vid rotatorcuffskada – kan förvärra skadan

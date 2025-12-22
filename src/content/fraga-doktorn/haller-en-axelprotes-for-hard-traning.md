@@ -35,5 +35,4 @@ En axelprotes håller normalt i 15 år. Ungefär som en bil. Det är en mekanisk
 
 Vid artros i axelleden kan ledkulan och ledskålen bytas ut
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

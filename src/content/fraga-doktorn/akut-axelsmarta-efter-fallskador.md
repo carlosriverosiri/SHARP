@@ -53,7 +53,6 @@ Eftersom du blev bättre efter första olyckan är det mest realistiska att fort
 
 En strukturerad rehabilitering hos en sjukgymnast med axelerfarenhet är ofta det bästa första steget.
 
-**Sammanfattning:**
 - Allvarliga skador är ovanliga i din ålder
 - Du blev bättre efter första skadan – det är positivt
 - Börja med röntgen och klinisk undersökning

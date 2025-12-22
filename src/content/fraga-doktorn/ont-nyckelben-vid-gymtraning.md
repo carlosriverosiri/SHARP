@@ -53,10 +53,10 @@ Om smärtan:
 
 Då bör du uppsöka läkare för undersökning och eventuell röntgen.
 
-**Sammanfattning:**
 - Vanligt problem hos unga som styrketränar
 - Byt till hantlar och undvik armhävningar tillfälligt
 - Undvik djupa pressrörelser
 - Sök vård om det inte blir bättre på 2-4 veckor
+
 
 

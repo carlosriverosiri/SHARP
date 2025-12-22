@@ -39,5 +39,4 @@ Vid en AC-luxation grad 1-2 läker ledbanden bättre utan en operation än med e
 
 En amerikansk fotbollspelare i den högre divisionen återgår till att spela efter 1-2 veckor efter en AC-luxation grad 1-2
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

@@ -35,5 +35,3 @@ Vissa undersökningsfynd kan tala för diagnosen labrumskada.
 
 Ett sådant fynd är en känsla av en lätt instabilitet i axelleden, ett annat fynd är en minskad kraft vid vissa rotationsrörelser av överarmen.  Rivero Sir
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -19,5 +19,3 @@ När du blir smärtfri kan du försiktigt pröva dig fram genom att först minsk
 
 Utan att exakt veta vad som gör ont så är det lite vanskligt att ge några mer detaljerade råd.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

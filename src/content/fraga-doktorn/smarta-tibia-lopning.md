@@ -56,3 +56,4 @@ Med lokaliserad ömhet, avsaknad av svullnad och smärta som inte påverkar löp
 **Sammanfattning:** Med din symtombild är stressfraktur mindre sannolikt. Avvakta med bilddiagnostik om du förbättras, men MR är motiverat vid kvarstående besvär.
 
 
+

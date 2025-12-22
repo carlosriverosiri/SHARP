@@ -15,5 +15,4 @@ question: |
 
 Svårt att säga. Möjligen impingement, kanske en skada på rotatorcuff-bicepsfäste. Kontakta gärna en sjukgymnast för några tipps och råd. Har du mycket värk så prata med din husläkare./
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

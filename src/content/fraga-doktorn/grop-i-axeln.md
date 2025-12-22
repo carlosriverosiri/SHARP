@@ -34,7 +34,6 @@ Det förefaller rimligt att diskutera diagnosen "impingement".
 
 Vidare bör du börja med axelrehab hos en sjukgymnast.
 
-**Sammanfattning:**
 - Gropen kan möjligen bero på kortisoninjektionerna
 - Kortvarig effekt av kortison tyder på att smärtan kommer därifrån
 - Trolig diagnos: impingement

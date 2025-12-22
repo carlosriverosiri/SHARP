@@ -13,5 +13,4 @@ question: |
 
 Symptomen påminner mest om impingement. Har du uttalade smärtor som varat mer än 6 månader med svårigheter att sova eller arbeta så är det lämpligt att överväga operation/
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

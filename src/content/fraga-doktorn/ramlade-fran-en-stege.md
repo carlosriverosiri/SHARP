@@ -15,6 +15,5 @@ Vid akuta skador i rotatorcuffen (avslitet muskelfäste) är det vanlgit att man
 
 Är smärtorna lindriga och skadan liten så kan det gå bra med sjukgymnastik, men det beror lite på aktivitetsnivå och ålder.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

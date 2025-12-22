@@ -23,7 +23,6 @@ Det vanliga är att man vid kalkaxel börjar med egenträning och sjukgymnastik,
 
 Har du trots sjukgymnastisk behandling haft ont i mer än 6 månader så brukar man rekommendera operation.
 
-**Sammanfattning:**
 - Börja med egenträning och sjukgymnastik
 - Vänta 5–6 månader och se om smärtan avtar
 - Vid kvarvarande besvär efter 6 månader – överväg operation

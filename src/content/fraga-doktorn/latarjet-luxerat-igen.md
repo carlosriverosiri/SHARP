@@ -42,3 +42,4 @@ Ja, reoperation är möjlig efter misslyckad Latarjet.
 
 **Sammanfattning:** Reoperation är möjlig. Vi tar emot patienter från hela Sverige.
 
+

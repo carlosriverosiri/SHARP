@@ -16,5 +16,3 @@ question: |
 
 Om axelleden "hoppar och knäpper" hos en 25 åring så skulle jag kanske misstänka någon form av instabilitet. Är du över 45 så kan man fundera på r
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -21,6 +21,5 @@ Frozen shoulder är självläkande, men ibland kan tillståndet i ett senare ske
 
 Prata med din husläkare, se till så du får en röntgen, därefter en remiss till en axelspecialist.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

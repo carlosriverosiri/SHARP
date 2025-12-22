@@ -57,3 +57,4 @@ Trots den initiala försämringen brukar kortisoninjektioner ge god effekt när 
 **Sammanfattning:** Kortison-flare är vanligt och ofarligt. Smärtan brukar avta inom en vecka, därefter kommer den smärtlindrande effekten.
 
 
+

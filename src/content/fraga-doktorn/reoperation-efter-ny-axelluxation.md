@@ -17,5 +17,4 @@ Det måste man bedöma från fall till fall.
 
 Då kan en datortomografisk utredning (CT)  vara av värde.  Det är dock ganska vanligt att man rekommenderar en ny operation hos yngre patienter.  Att axeln legat ur led en längre tid och krävt reponering, talar för att en ny operation kan behövas.  Rivero
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

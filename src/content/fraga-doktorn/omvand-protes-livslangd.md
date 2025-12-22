@@ -54,3 +54,4 @@ Vid 62 års ålder och normal aktivitetsnivå är sannolikheten god att din prot
 **Sammanfattning:** De flesta patienter med omvänd axelprotes behöver aldrig byta den. Fortsätt använda axeln normalt men undvik extrem belastning.
 
 
+

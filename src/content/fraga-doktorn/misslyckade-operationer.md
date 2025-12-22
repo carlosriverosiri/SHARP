@@ -27,6 +27,5 @@ Det är inte ovanligt att träffa patienter som först genomgått en frusen axel
 
 Överrörlighet som resttillstånd efter frusen axel är ovanligt. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

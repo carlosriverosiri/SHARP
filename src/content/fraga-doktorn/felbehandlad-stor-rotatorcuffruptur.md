@@ -25,5 +25,4 @@ Det beror lite på hur skadan ser ut och vad som tidigare är gjort.
 
 Det är nog bra om du försöker få en remiss till en ortoped som är duktig på axlar.
 
-**Sammanfattning:**
 - Sök remiss till specialist

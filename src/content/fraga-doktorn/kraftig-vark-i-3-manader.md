@@ -22,6 +22,5 @@ Oavsett om man är överrörlig eller inte så är det avgörande om man själv 
 
 Den vanligaste diagnosen för din åldersgrupp är nog ändå impingement. , specialist i ortopedi och axelkirurgi
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

@@ -23,5 +23,4 @@ En operation för instabilitet i axelleden  är inte riskfri, men om axelleden u
 
 En fördel med att operera axeln i tidigt skede är att operationen blir enklare för kirurgen och resultatet blir bättre för dig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

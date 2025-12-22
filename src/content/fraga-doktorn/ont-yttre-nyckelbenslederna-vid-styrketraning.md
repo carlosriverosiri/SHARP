@@ -28,7 +28,6 @@ Men det kan också vara "Weightlifter's shoulder" (distal klavikel osteolys), de
 
 Prognosen är god vid Weightlifter's shoulder. Det brukar gå över inom 12–18 månader. Enstaka fall kan behöva opereras.
 
-**Sammanfattning:**
 - Sannolikt överansträngning av nyckelbenslederna
 - Kan vara Weightlifter's shoulder (vanligt hos styrketränande)
 - God prognos – går oftast över inom 12–18 månader

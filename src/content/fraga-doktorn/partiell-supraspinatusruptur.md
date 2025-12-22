@@ -13,5 +13,4 @@ question: |
 
 Vanligen behandlar man smärtor i axelleden med sjukgymnastik i första hand. Vid stora skador i supraspinatussenan så kan det ibland vara nödvändigt att sy fast den.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

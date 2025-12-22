@@ -18,5 +18,4 @@ Det stör mig mycket i vardagen och jag har svårt att gå/springa för det gör
 
 Mest sannolikt så är din axelled instabil. Började problemen efter en olycka så kan det vara en ledbandsskada. Men mest sannolikt är det en sk. hyperlaxitet.  Be att få en remiss till en fysioterapeut/sjukgymnast. /
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

@@ -17,6 +17,5 @@ Din son har med stor sannolikhet drabbats av en sk. Bankartskada. Dvs ett ledban
 
 MVH
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

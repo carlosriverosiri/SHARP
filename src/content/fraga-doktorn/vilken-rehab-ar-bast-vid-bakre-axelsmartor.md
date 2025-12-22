@@ -21,5 +21,4 @@ question: |
 
 Sjukgymnasterna är normalt sett betydligt bättre på att rehabövningar av axeln än jag är. Rekommenderar att du pratar med en sjukgymnast.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

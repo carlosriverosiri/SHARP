@@ -37,7 +37,6 @@ De allra flesta problematiska smärttillstånd i axelleden läker ut med tiden. 
 
 En förutsättning för att sjukgymnastiken skall fungera är dock att du får rätt diagnos. En möjlighet är naturligtvis att du får träffa en axelspecialist, om detta är vanskligt att få till kan en magnetkameraundersökning av axelleden vara ett alternativ.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

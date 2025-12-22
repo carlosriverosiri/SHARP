@@ -27,7 +27,6 @@ Har du haft långvariga problem med smärtor och dålig funktion i din vardag s�
 
 Hjälper inte detta så får du be din husläkare om hjälp för att kunna komma vidare. Möjligen en remiss till en ortopedspecialist.
 
-**Sammanfattning:**
 - Sannolikt överrörlighet eller instabilitet
 - Börja med sjukgymnastik
 - Sök remiss till specialist om det inte hjälper

@@ -23,7 +23,6 @@ Konservativ behandling (fysioterapi, kortisoninjektioner, NSAID) fungerar fortfa
 
 En studie kunde inte påvisa någon skillnad i behandlingsresultat mellan typ 2-diabetiker och icke-diabetiker vad gäller mobilisering i narkos vid frusen axel.
 
-**Sammanfattning:**
 - Typ 1-diabetiker har 4-6 gånger högre risk för frozen shoulder
 - Längre diabetesduration och högt HbA1c ökar risken
 - Bilateral frozen shoulder är vanligare hos diabetiker

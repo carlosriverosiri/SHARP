@@ -59,3 +59,4 @@ Goda nyheter: SLAP-lesioner hos patienter över 40 svarar ofta **bra på sjukgym
 **Sammanfattning:** Prognosen är god. De flesta över 40 med SLAP-lesion blir bra med träning och kan absolut springa.
 
 
+

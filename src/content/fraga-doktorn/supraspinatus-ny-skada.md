@@ -31,3 +31,4 @@ Med "nästan total ruptur" efter trauma bör operation diskuteras.
 
 **Sammanfattning:** Ja, detta bör sannolikt opereras – sök snart.
 
+

@@ -38,7 +38,6 @@ Vi brukar säga att slutresultatet efter en axeloperation börjar synas först e
 
 Fortsätt med din rehabilitering enligt plan. Om värken inte förbättras alls fram till 6-månaderskontrollen, bör vi utvärdera om det behövs ytterligare åtgärder.
 
-**Sammanfattning:**
 - Molande värk och morgonstelhet 5 månader postoperativt är normalt
 - Axeln tar upp till 12 månader att läka helt
 - Nattsmärta och morgonstelhet är vanligt i denna fas

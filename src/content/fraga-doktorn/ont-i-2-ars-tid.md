@@ -15,5 +15,4 @@ question: |
 
 Du behöver få en ordentlig diagnos. Vänd dig till en specialist i ortopedi med inriktning mot axelkirurgi.
 
-**Sammanfattning:**
 - Sök remiss till specialist

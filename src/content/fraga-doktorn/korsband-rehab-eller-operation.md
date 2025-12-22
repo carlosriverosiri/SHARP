@@ -51,10 +51,10 @@ De flesta som vill åka skidor på allvar behöver ett fungerande korsband.
 
 Om du vill åka skidor igen kommer du sannolikt behöva operation.
 
-**Sammanfattning:**
 - Inte bara elitidrottare opereras
 - Skidåkning kräver stabilt knä – de flesta behöver operation
 - Rehabilitering före operation ger bättre resultat
 - Sök second opinion om du är osäker
+
 
 

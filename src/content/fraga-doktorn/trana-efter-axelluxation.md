@@ -33,5 +33,3 @@ Rotatorcuffövningar är viktiga.
 
 Men var försiktig med att gå över 0-grader när du tränar infraspinatus. Fick du axelluxationen utan att du drabbats av en olycka så ser situationen lite annorlunda ut. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

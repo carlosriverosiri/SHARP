@@ -24,7 +24,6 @@ Hos yngre patienter är det vanligen frågan om impingement (inklämning av seno
 
 Jag rekommenderar att du tar kontakt med en sjukgymnast för att påbörja rehab. Om problemen inte går över eller smärtorna inte minskar, bör du kontakta din husläkare för vidare utredning.
 
-**Sammanfattning:**
 - Besvären kan bero på impingement (yngre) eller rotatorcuffskada (äldre)
 - Börja med sjukgymnastik och rehab
 - Kontakta husläkare om besvären inte förbättras

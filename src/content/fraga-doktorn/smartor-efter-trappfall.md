@@ -22,5 +22,4 @@ I ditt falla förefaller det rimligt att tro att du blir bättre på träning.
 
 Det verkar vettigt att försöka få till en utredning av axeln.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

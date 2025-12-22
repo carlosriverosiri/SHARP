@@ -18,5 +18,3 @@ En hög aktivitetsnivå stimulerar en starkare läkning av skadan.
 
 Kan du idrotta någorlunda fri från smärta vid 3 månader efter skadan så bör det inte vara ett problem.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

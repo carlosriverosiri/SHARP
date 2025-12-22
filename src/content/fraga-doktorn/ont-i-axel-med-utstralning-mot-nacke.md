@@ -23,11 +23,9 @@ Men det finns även andra orsaker till axelsmärtor.
 
 Kontakta en sjukgymnast och husläkare för att få en bedömning av din axel.
 
-**Sammanfattning:**
 - Kan vara problem från nyckelbensleden (AC-leden)
 - Typiskt att smärtan strålar upp mot nacken
 - Sjukgymnastik/träning kan hjälpa
-- Kontakta läkare för individuell bedömning
 
 
 

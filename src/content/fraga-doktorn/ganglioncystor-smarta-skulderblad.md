@@ -52,10 +52,10 @@ Att du har ödem kring cystorna talar för att de är aktiva och kan orsaka symp
 2. **Fysioterapi** parallellt
 3. **Utvärdering efter 6-8 veckor**
 
-**Sammanfattning:**
 - Ganglioncystor med ödem kan orsaka smärta
 - Kortisoninjektion är förstahandsbehandling
 - Oftast svarar det på konservativ behandling
 - Operation behövs sällan
+
 
 

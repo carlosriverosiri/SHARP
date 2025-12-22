@@ -15,5 +15,3 @@ question: |
 
 Det beror vanligen på hur  frakturen ser ut och hur ont det gör. Svårt att säga.  /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

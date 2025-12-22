@@ -19,5 +19,3 @@ Om du inte har några allvarliga sjukdomar, är pigg och kry för övrigt och ha
 
 Även vid hög ålder.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

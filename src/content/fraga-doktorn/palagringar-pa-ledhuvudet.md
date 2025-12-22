@@ -21,7 +21,6 @@ Vid artros i axelleden brukar pålagringar på ledhuvudet bildas i tidigt skede.
 
  Pålagringar på tuberculum majus kan bildas vid skador av rotatorcuffen. Det verkar trots allt som du har blivit bättre på senare tid. Kontakta din husläkare för att få en remiss till en sjukgymnast. Har du starka dagliga och nattliga smärtor kan det vara bra att bli bedömd av en ortopedspecialist.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

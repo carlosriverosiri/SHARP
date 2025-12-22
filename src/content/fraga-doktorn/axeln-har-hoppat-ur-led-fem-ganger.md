@@ -25,5 +25,4 @@ Om axeln började hoppa ur led efter ett fall eller någon form av trauma så ä
 
 Det vanliga är att man rekommenderar operation av en axel som skadats efter en olycka och som därefter förblir instabil.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

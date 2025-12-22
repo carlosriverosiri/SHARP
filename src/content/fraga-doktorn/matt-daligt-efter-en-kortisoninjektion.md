@@ -22,6 +22,5 @@ Kortisonet kan under en kortare tid till viss del påverka blodtrycket.
 
 Men doserna kortison man ger är små och utsöndras under lång tid, så den blodtryckshöjande effekten är begränsad.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas

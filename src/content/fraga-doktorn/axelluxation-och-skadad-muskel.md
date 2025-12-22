@@ -19,7 +19,6 @@ Instabiliteten kan sannolikt förklaras av en insufficient rotatorcuff och den l
 
 MVH
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

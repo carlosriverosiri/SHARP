@@ -21,7 +21,6 @@ Effekten av kortisonet försvinner dock inom 1–2 månader.
 
 Det är inte sannolikt att kortisoninjektionen kan medföra en ökad risk för en postoperativ infektion flera månader efter själva injektionen.
 
-**Sammanfattning:**
 - Operation inom några veckor = viss ökad risk
 - Kortisonets effekt försvinner inom 1–2 månader
 - Efter flera månader = ingen ökad risk från kortisonet

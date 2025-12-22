@@ -26,7 +26,6 @@ Du kanske ska försöka få din husläkare att skriva ut lite starkare smärtsti
 
 Om du sover dåligt så har du svårt att avleda och hantera smärtan på dagen.
 
-**Sammanfattning:**
 - Socialstyrelsens beslutsstöd finns för adhesiv kapsulit (frozen shoulder)
 - Lätt arbetsbelastning: upp till 2 veckor
 - Måttlig belastning: upp till 6 veckor

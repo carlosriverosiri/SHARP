@@ -23,6 +23,5 @@ Men då kan man utesluta en skada på rotatorcuffen och möjligen en labrumcysta
 
 Det är sannolikt en fördel att även träna de stora muskelgrupperna i benen, då sådan träning möjligen frigör ämnen som på ett positivt sätt hjälper till vid läkningen,
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

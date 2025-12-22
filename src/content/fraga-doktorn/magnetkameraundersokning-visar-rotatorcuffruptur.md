@@ -20,5 +20,4 @@ Sannolikt har 2 muskelsenor i axelleden gått av.
 Detta kan leda till en försvagning axelleden. 
 Jag rekommenderar att din husläkare remitterar dig till en axelspecialist som får bedöma om din skada kan opereras.
 
-**Sammanfattning:**
 - Sök remiss till specialist

@@ -19,5 +19,3 @@ Men det kan ha en viss smärtstillande effekt då tejpen stimulerar huden när n
 
 Du kommer dessutom kunna känna när nyckelbenet hamnar i smärtsamma ytterlägen genom att tejpen spänner i huden.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

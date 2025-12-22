@@ -19,5 +19,4 @@ Om du har mycket smärtor i själva bicepssmuskeln på framsidan av överarmen s
 Upplever du att axelleden blivit något lösare eller instabilare efter skadan så kan själva bicepssenans fästa vara skadad. 
 Så länge axeln fungerar någorlunda på arbetet och du inte har allt för mycket smärtor på natten så kan jag inte se att någon annan behandling än sjukgymnastik kan rekommenderas.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

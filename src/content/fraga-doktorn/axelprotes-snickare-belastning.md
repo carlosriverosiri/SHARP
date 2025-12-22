@@ -51,10 +51,10 @@ Många snickare kan återgå till arbete efter axelprotes, men:
 3. **Försäkringskassan** kan vara aktuell för arbetsprövning
 4. **Gradvis återgång** – börja inte med fulla arbetsdagar
 
-**Sammanfattning:**
 - Återgång till snickarjobb är ofta möjlig
 - Anpassningar kan behövas
 - Undvik repetitiva tunga lyft över axelhöjd
 - Diskutera med kirurg och arbetsgivare
+
 
 

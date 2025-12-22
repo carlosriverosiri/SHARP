@@ -55,3 +55,4 @@ question: |
 
 **Sammanfattning:** Sök second opinion hos axelkirurg med proteserfarenhet. Beslutet är individuellt.
 
+

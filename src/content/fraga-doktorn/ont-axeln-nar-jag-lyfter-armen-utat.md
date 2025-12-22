@@ -17,7 +17,6 @@ Det finns gott om studier som visar en mycket god effekt av sjukgymnastik vid de
 
 Kortisoninjektionen brukar har en övergående effekt.
 
-**Sammanfattning:**
 - Smärta vid lyft ovanför axelhöjd tyder på impingement (inklämd sena)
 - God effekt av kortisoninjektion stödjer denna diagnos
 - Sjukgymnastik har god vetenskaplig evidens vid impingement

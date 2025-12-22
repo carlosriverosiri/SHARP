@@ -19,5 +19,3 @@ question: |
 
 Du är välkommen hit för en bedömning. Vi tar emot patienter från andra landsting.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

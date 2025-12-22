@@ -15,5 +15,3 @@ Smärtlokalisationen och dygnsvariationen kan peka mot en labrumskada. Men denna
 
 Men för att kunna ställa diagnos brukar man behöva klämma och känna på axelleden när du har som mest ont. Många gånger rekommenderar jag mina patienter att hugga ved, skotta snö, arbeta hårt eller träna med vikter så de har riktigt ont i axelleden när de kommer till nybesöket.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

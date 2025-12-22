@@ -29,6 +29,5 @@ Har du mycket smärtor och sömnstörningar så är det bra att operera tidigt.
 
 Det är alltid en fördel att operera rotatorcuffrupturer i tidigt skede. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

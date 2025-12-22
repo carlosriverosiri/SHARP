@@ -18,5 +18,3 @@ question: |
 
 Det låter som om nyckelbensleden kan ha vridits lite ur led. Det är en skada som är vanlig bland cyklister, sällan opereras och förbättras av en hög aktivitetsnivå.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

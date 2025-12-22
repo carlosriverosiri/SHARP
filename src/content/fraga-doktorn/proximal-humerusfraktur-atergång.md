@@ -53,3 +53,4 @@ Proximal humerusfraktur kräver tid för läkning, särskilt vid tungt arbete.
 
 **Sammanfattning:** Räkna med 4–5 månader innan du kan lyfta barn som tidigare. Diskutera arbetsanpassning med din arbetsgivare.
 
+

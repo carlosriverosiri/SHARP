@@ -32,7 +32,6 @@ Att resultaten från klavikelresektioner varierar kan möjligen bero på svårig
 
 Vid typiska kliniska fynd, typisk sjukdomshistoria och en typisk röntgenbild så är en lateral klavikelresektion en operation som lyckas i mer än 85–90 % av fallen.
 
-**Sammanfattning:**
 - MR-fynd kan vilseleda – det är kliniken som är viktigast
 - Typisk smärta från nyckelbensleden strålar mot nacken, inte ut i armen
 - Domningar tyder på att problemet inte enbart sitter i nyckelbensleden

@@ -23,6 +23,5 @@ Får du en känsla av att axeln är på väg att glida ur led vid en viss övnin
 
 Får du en ny axelluxation, eller om axelleden känns instabil en lång tid efter den första (traumatiska) axelluxationen brukar man rekommendera operation/
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

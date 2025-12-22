@@ -18,5 +18,3 @@ question: |
 
 Det är sannolikt en fördel att komma igång med rehab så snart smärtan tillåter detta.  Börja gärna med pendelövningar och se vad axeln tål. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

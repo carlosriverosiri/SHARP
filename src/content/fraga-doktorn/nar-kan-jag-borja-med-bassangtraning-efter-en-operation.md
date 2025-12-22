@@ -14,7 +14,6 @@ question: |
 
 Badar du i ett rent badkar som fylls med vatten från det allmänna vattenledningsnätet, så kan du bada redan efter någon vecka. Du skall vara försiktigare att bada i simbassänger, pooler, badtunnor och i sjöar som kan innehålla smittämnen från andra personer. Så länge du har ett sår så är hudens barriär bruten och en smitta kan komma in i såret via badvattnet. Det är alltid tryggast att duscha.
 
-**Sammanfattning:**
 - Badkar med kranvatten: efter ca 1 vecka
 - Simbassänger, pooler och naturvatten: vänta tills såret läkt helt
 - Risk för infektion via badvattnet så länge såret är öppet

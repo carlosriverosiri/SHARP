@@ -17,7 +17,6 @@ Du bör prata med din husläkare om att ta en röntgen av axelleden och sedan f�
 
 Vid långvarig uttalad värk i axelleden som inte förbättras av sjukgymnastik och andra typer av behandlingar så är operation ett alternativ.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

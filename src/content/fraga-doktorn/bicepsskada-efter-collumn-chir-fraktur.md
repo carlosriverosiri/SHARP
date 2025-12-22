@@ -22,6 +22,5 @@ Därför kan bicepssenan skadas eller göra väldigt ont.
 
 En skadad bicepssena som inte gör ont är inget att bekymra sig för. , specialist i ortopedi.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

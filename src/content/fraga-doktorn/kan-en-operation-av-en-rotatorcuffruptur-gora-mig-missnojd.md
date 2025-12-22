@@ -24,5 +24,4 @@ Det finns idag inga vetenskapliga belägg för att en hög andel av de patienter
 
 Operationen innebär en förhållandevis lång rehabilitering. Det är inte ovanligt att det är besvärligt 1-2 månader efter operationen. Full belastning tillåts först 5 månader efter operationen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

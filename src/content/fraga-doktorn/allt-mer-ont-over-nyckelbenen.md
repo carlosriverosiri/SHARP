@@ -32,7 +32,6 @@ Slitage av brosket på yttre nyckelbensändan är en sjukdom med godartat förlo
 
 Be din husläkare ta en vanlig röntgen och skicka en remiss till en axelspecialist.
 
-**Sammanfattning:**
 - Smärta och ömhet över nyckelbensleden tyder på brosk-slitage
 - Ultraljud är ofta bättre än röntgen för att undersöka nyckelbensleden
 - De flesta blir bättre inom ett år

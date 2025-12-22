@@ -49,3 +49,4 @@ Sjukskrivningstiden beror på typ av ingrepp och arbete.
 
 **Sammanfattning:** Räkna med 1-2 veckors sjukskrivning för ditt arbete – men ta det lugnt första dagarna.
 
+

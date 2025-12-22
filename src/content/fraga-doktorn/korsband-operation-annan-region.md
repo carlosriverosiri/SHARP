@@ -67,3 +67,4 @@ Ja, det går utmärkt att opereras hos oss även om man bor i en annan region.
 **Sammanfattning:** Det går bra att opereras hos oss från Göteborg. Kontakta oss så hittar vi bästa lösningen för er.
 
 
+

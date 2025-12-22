@@ -21,6 +21,5 @@ Vad gäller skador av inre nyckelbensleden, där nyckelbenet ledar mot mot brös
 
 Dessutom finns det betydande risker med denna operation, då man operererar mycket nära kroppens största kärl.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

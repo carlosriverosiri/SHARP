@@ -34,5 +34,4 @@ Har du fått en djup intryckning av ledkulans ben "Hill-Sachsskada" kan denna gr
 Annars kommer gropen haka i ledskålens kant och underlätta att axeln hoppar ur led.
 Har din ledskål spruckit och ett större fragment av ledskålen saknas, behöver man ibland bygga upp en ny benkant med en benbit som man tar från bicepssenans fäste (Latarjets operation).
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

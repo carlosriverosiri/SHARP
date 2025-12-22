@@ -25,5 +25,3 @@ Det är också vanligt att smärtan sitter själva  bicepsmuskeln, då bicepssen
 Lider du av frusen axel så blir du oftast väldigt stel i axelleden.
 Får du betydligt bättre rörlighet efter varje gång du tagit smärtstillande så kan man fundera på en annan diagnos ex. impingement.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

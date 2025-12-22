@@ -21,6 +21,5 @@ Vid långvarig smärta kan det också vara bra att utesluta en rotatorcuffruptur
 Detta görs enklast med en ultraljudsundersökning / Magnetkameraundersökning.
 När ingen annan behandling hjälper och du lider av en stark kronisk smärta är en operation ett alternativ.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

@@ -19,6 +19,5 @@ Hej Erika,
 
 Det är viktigt att du snabbt får en tid för bedömning och behandling hos en sjukgymnast. Om kortisoninjektionen hade en god effekt under en kort tid så talar detta för att smärtorna är av samma karaktär som vid ”impingement”.  Lider du av impingement så provar man alltid sjukgymnastik innan man diskuterar någon annan typ av behandling.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

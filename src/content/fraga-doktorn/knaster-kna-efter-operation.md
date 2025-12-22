@@ -49,10 +49,10 @@ Möjligen, men inte säkert. De kan:
 3. **Undvik bröstsim** om det provocerar – crawl/ryggsim kan vara bättre
 4. **Sök vård** om du får smärta
 
-**Sammanfattning:**
 - Knakningar efter operation är vanligt och oftast ofarligt
 - Du kan fortsätta simma om det inte gör ont
 - Knakningarna kan minska men behöver inte försvinna helt
 - Smärtfria ljud är inget att oroa sig för
+
 
 

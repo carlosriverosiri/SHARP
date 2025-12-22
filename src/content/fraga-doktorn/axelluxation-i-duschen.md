@@ -25,5 +25,4 @@ Har du full styrka i "inåtrotation" och "utåtrotation" så har du åtminstone 
 
 Upplever du idag inte någon större svaghet i axelleden och kan lyfta armen problemfritt så är sannolikheten liten att du har en allvarlig axelskada efter axelluxationen.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

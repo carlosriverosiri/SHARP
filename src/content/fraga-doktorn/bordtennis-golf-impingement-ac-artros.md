@@ -39,7 +39,6 @@ Artrosen i AC-leden kan också bidra till smärtan, särskilt vid rörelser där
 
 Vid ditt ortopedbesök i maj bör du diskutera om en ultraljudsundersökning eller MR-undersökning är motiverad för att utesluta skada på rotatorcuffen. Om konservativ behandling inte hjälper och du vill återgå till bordtennis och golf, kan en artroskopisk operation vara ett alternativ med god prognos.
 
-**Sammanfattning:**
 - Kombinerad bild av impingement och AC-ledsartros
 - Kortisoninjektioner har haft begränsad effekt
 - MR / ultraljud kan vara nästa steg för att utreda rotatorcuffen

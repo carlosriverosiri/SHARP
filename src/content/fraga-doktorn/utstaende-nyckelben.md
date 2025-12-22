@@ -21,7 +21,6 @@ Vid en medfödd avvikande anatomi så är det naturligtvis inte svårt att utfö
 
 Nyckelbensleden är dock väldigt smärtkänslig, har du otur kan du drabbas av ett svårbemästrat kroniskt smärttillstånd. Just beroende på risken för smärtkomplikationer så brukar jag personligen vara lite restriktiv med operationer av nyckelbensleden.
 
-**Sammanfattning:**
 - Operation är tekniskt möjlig
 - Risk för kroniskt smärttillstånd finns
 - Var försiktig med estetiska operationer i nyckelbensleden

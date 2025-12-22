@@ -23,5 +23,4 @@ Vanligen dämpas smärtorna inom 24 timmar.
 
 Ibland kan de pågå i några dagar.  Vanliga smärtstillande mediciner som Alvedon, Diclofenac (NSAID) eller Citodon brukar kunna dämpa smärtorna.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

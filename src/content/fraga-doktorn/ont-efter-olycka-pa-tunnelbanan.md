@@ -23,5 +23,4 @@ Jag kan bara rekommendera att du ber din husläkare remittera din mor till en ax
 
 Möjligen kan det vara frågan om en eller flera avrivna senor i axelleden.
 
-**Sammanfattning:**
 - Sök remiss till specialist

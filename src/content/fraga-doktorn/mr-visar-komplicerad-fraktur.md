@@ -31,5 +31,3 @@ Sitter smärtorna i bicepsmuskeln så kan bicepssenan ha fastnat mellan två fra
 
 Detta kan ge ett besvärligt och långvarigt  smärttillstånd.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

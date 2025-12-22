@@ -47,7 +47,6 @@ Däremot så kan vi resultaten av olika behandlingar och prognosen vid olika sju
 
 I ditt fall rekommenderas rehabilitering och egenträning i första hand, vid ett långvarigt problem med instabilitet bör du träffa en ortopedspecialist.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

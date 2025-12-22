@@ -24,5 +24,4 @@ När stelheten i axeln beror på att andra faktorer skapar smärtan kan axeln do
 Det är för övrigt inte ovanligt att diabetiker opereras för frozen shoulder.
 Operationen brukar lyckas i 80-90% av fallen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

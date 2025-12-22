@@ -52,10 +52,10 @@ Sök vård om du:
 
 Eftersom du blivit bra av tidigare injektion i samma led är det sannolikt att detta är en flare som kommer gå över. Ge det 2-3 dagar.
 
-**Sammanfattning:**
 - Sannolikt en flare-reaktion
 - Går vanligtvis över på 2-3 dagar
 - Smärtstillande och vila hjälper
 - Sök vård om du får feber eller inte blir bättre
+
 
 

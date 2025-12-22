@@ -19,5 +19,3 @@ De flesta brukar gå bra att behandla med en fokuserad rehab.
 
 Om problemen började efter ett kraftigt ryck så är väl inte en labrumskada en allt för ovanlig diagnos. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

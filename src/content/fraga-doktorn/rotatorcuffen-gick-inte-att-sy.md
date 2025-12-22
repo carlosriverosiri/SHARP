@@ -21,5 +21,4 @@ Oftast klarar man sig bra om två av de tre viktiga senorna i rotatorcuffen oska
 
 Ni kan alltid använda er av fritt vårdval och söka er till en axelkirurgisk enhet i Sverige för att få en "second opinion". /
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

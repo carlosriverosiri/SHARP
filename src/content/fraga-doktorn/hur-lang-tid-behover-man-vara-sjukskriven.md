@@ -19,7 +19,6 @@ När du blivit opererad för frozen shoulder behöver du träna varje dag, flera
 
 Om du har ett arbete där du inte sitter mycket stilla så kan du relativt snabbt komma tillbaka till jobbet.
 
-**Sammanfattning:**
 - Enklare operation: några dagar till en vecka hemma
 - Frozen shoulder-operation: några dagar till veckor för träning
 - Kontorsarbete: möjligt att återgå relativt snabbt

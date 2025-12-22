@@ -16,5 +16,4 @@ question: |
 
 Jag känner inte till triggerpunktsbehandlingar. Det är relativt vanligt med övergående smärttillstånd vid styrketräning.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

@@ -21,5 +21,3 @@ Med ett enkelt kirurgiskt ingrepp kan man slipa bort artrosen.
 
 Sitter artrosen i själva axelleden (glenohumeralleden) och du är en bit upp i åren,  så kan man överväga en axelprotes.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

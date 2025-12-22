@@ -60,3 +60,4 @@ Tre veckor utan effekt är längre än förväntat, men det betyder inte att beh
 **Sammanfattning:** Om ingen effekt efter 4 veckor bör du ompröva diagnosen och överväga andra behandlingar.
 
 
+

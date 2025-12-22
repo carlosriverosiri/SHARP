@@ -20,5 +20,4 @@ question: |
 
 MR verkar bara visa typiska förändringar som efter en axelluxation. Prognosen är god. Den dåliga kraften i axeln kan bero på att du fått en sträckning av en nerv, detta brukar bli bättre med tiden.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

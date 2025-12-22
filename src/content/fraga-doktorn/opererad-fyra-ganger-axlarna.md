@@ -30,5 +30,4 @@ Jag tycker att du i första hand ändå skall överväga en ny omgång med fysio
 Fungerar inte detta är det bra om man försöker med kortisoninjektion i axelledens slemsäck (bursa) för att se om smärtorna kommer från en inklämning, impingement. 
 Möjligheterna att operera på nytt är beroende av vilken typ av sjukdom du har i axelleden.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

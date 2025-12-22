@@ -30,7 +30,6 @@ Det låter som ganska typiska symtom på artros i nyckelbensleden.
 
 Om du är öm över nyckelbensleden och röntgen visar en tydlig artros bör du bedömas av en ortoped.
 
-**Sammanfattning:**
 - Symtomen tyder på artros i nyckelbensleden
 - Be om röntgen av axel/nyckelbensled
 - Vid tydlig artros och ömhet – remiss till ortoped

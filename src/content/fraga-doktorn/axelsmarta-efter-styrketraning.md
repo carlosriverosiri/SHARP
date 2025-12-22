@@ -30,7 +30,6 @@ Vet inte vad jag ska görs näst.
 
 Något förslag?
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Vila och avlastning rekommenderas

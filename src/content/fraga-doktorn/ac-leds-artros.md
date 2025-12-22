@@ -23,7 +23,6 @@ Om du har blivit stelare i själva axelleden så kan sjukgymnastik hjälpa. Har 
 
 Har du fortfarande stora problem efter något år så bör man överväga operation.
 
-**Sammanfattning:**
 - Avvakta och se om smärtan går över (vanligt inom ett år)
 - AC-ledsartros är vanligt men ger oftast inga besvär
 - Sjukgymnastik hjälper om du är stel i axelleden

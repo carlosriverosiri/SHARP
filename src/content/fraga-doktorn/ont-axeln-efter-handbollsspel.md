@@ -20,5 +20,4 @@ question: |
 
 De flesta som håller på med en idrott, oavsett vilken, får under perioder ont av något. Att sluta med en idrott för en period av smärta låter onödigt. Rekommenderar att du kontaktar en sjukgymnast.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

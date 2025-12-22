@@ -54,3 +54,4 @@ Vid 36 år har du måttlig risk för ny luxation.
 **Sammanfattning:** Sikta på återgång efter 3 månader med ordentlig rehabilitering. Axelskydd kan användas som komplement men är ingen garanti.
 
 
+

@@ -46,10 +46,10 @@ De flesta fall av postoperativ bicepstendinit läker ut med:
 - Eventuell kortisoninjektion vid bicepssenan
 - Tid
 
-**Sammanfattning:**
 - Bicepssmärta efter axeloperation är relativt vanligt
 - Beror oftast på irritation eller ändrad belastning, inte operationsfel
 - Kontakta din läkare för uppföljning
 - Oftast läker det ut med anpassad rehabilitering
+
 
 

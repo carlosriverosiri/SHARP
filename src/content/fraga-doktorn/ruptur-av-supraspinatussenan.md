@@ -25,6 +25,5 @@ Denna risken ökar sannolikt med aktivitetsnivån.
 
 Har du fortfarande dagligen smärtor i axelleden efter en långvarig axelrehab så brukar jag rekommendera operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

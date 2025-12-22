@@ -52,3 +52,4 @@ En tibiaplåtåfraktur med dessa fynd är en allvarlig skada.
 
 **Sammanfattning:** Vid tveksamhet om behandlingen är en second opinion alltid rimlig.
 
+

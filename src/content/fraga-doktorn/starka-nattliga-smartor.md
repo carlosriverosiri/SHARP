@@ -20,6 +20,5 @@ Försökte först med självmedicinering: Iprenkur (1 vecka) sedan Voltaren salv
 
 Den mest sannolika diagnosen är naturligtvis "impingement", inklämd sena. Klassiska symtom är nattliga smärtor och svårigheter att sova samt smärtor i deltamuskeln med utstrålning mot överarmen. I detta skede är det viktigt att du träffar en sjukgymnast och kommer igång med rehabilitering. Resultaten av sjukgymnastik är mycket goda. Vi har lediga tider nästa vecka.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

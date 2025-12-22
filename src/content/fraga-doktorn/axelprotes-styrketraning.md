@@ -50,3 +50,4 @@ En viktig fråga för aktiva personer.
 
 **Sammanfattning:** Du kan fortsätta träna, men med modifierat program. Diskutera med din kirurg.
 
+

@@ -26,7 +26,6 @@ Hårda trådar: Sitter smärtan helt på framsidan av axeln kan de bero på att 
 
 Stelhet och sammanväxtningar: Är du opererad med artroskpisk teknik så är detta sällsynt. Vanligen förbättras rörligheten i axelleden successivt under de 6 första månaderna efter en operation. Vid uttalad och långvarig stelhet kan små riktade klipp i den främre ledkapseln (MGHL), lösa problemet.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Kortisoninjektion kan övervägas

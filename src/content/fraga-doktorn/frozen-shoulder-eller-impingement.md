@@ -16,5 +16,3 @@ question: |
 
 Om du klarar av att lirka handen till ländryggen så är diagnosen sannolikt inte frusen axel.  Frusen axel är en väldigt ovanlig sjukdom bland hantverkare. Impingement är desto vanligare.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

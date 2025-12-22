@@ -25,6 +25,5 @@ Det faktum att man lyckats dämpa smärtan med hjälp av kortisoninjektioner i a
 
 Någon form av operation är alltid ett alternativ. Men detta rekommenderas normalt sett bara till patienter som har en outhärdlig kronisk smärta.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Kortisoninjektion kan övervägas

@@ -21,5 +21,4 @@ En större rotatorcuffruptur förefaller vara en realistisk diagnos.
 Då skadan nu är 1 år gammal och du inte förefaller ha speciellt mycket smärtor skulle jag i första hand rekommendera sjukgymnastik. 
 Vid en större rotatorcuffskada kan du träna upp andra muskler för att hjälpa till när du lyfter och roterar i axelleden.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

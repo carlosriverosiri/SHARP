@@ -34,3 +34,4 @@ En hård knöl på ovansida axeln är oftast **AC-ledsartros** eller osteofyter.
 
 **Sammanfattning:** Troligen AC-ledsartros. Sök bedömning för diagnos och behandling.
 
+

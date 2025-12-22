@@ -17,5 +17,3 @@ question: |
 
 Det du beskriver är typiska symptom på impingement
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -25,6 +25,5 @@ Prognosen är god.
 
 De flesta förbättras med sjukgymnastik.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

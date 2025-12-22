@@ -20,5 +20,4 @@ Frågan är svår att svara på utan att ha sett röntgenbilderna.
 Rent generellt så brukar man rekommendera en axelprotes efter en fraktur av ledkulan om den del av ledkulan som ledar mot ledskålen är skadad och förlorat sin runda form (artros i axelleden). 
 När man har utvecklat artros i axelleden efter en fraktur i axelledens ledkula och har starka smärtor som ger en betydlig försämring av livskvaliteten, så kan en axelprotes vara en möjlighet.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

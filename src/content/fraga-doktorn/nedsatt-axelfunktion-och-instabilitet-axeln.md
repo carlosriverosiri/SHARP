@@ -19,5 +19,4 @@ question: |
 
 Det är fritt vårdval i Sverige och vi har inget remisskrav när du har haft långvariga starka smärtor och redan är utredd med röntgen eller magnetkameraundersökning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

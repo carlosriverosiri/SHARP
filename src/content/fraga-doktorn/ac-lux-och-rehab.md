@@ -15,5 +15,3 @@ question: |
 
 Här kan du hitta ett enkelt rehab-program för luxation i akromioklavikularleden. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -33,7 +33,6 @@ Det inte säkert att du blir helt smärtfri efter operationen. Operationen har e
 
 Prata med din sjukgymnast och fråga om hen känner till någon bra axelspecialist, som du kan be din husläkare remittera dig till.
 
-**Sammanfattning:**
 - Typiskt smärtmönster vid överrörlighet
 - Sjukgymnastik är förstahandsval
 - Operation är ett alternativ om sjukgymnastik inte hjälper

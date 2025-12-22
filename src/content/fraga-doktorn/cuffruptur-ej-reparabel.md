@@ -55,3 +55,4 @@ Vid 68 år är **omvänd axelprotes** det vanligaste alternativet om funktionen 
 **Sammanfattning:** Rehabilitering ger ofta överraskande goda resultat. Omvänd protes är ett bra alternativ om funktionen inte räcker till.
 
 
+

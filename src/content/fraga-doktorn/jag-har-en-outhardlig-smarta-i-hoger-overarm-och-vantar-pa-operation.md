@@ -24,5 +24,4 @@ I vissa fall kan man göra en mindre operation med titthålsteknik (artroskopi),
 
 Vanligen brukar man rekommendera en axelprotes.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

@@ -17,6 +17,5 @@ En viss mängd smärtor när du använder axelleden får du nog räkna med efter
 
 Om du har en uttalad värk med sömnstörningar och svårigheter att använda axelleden så bör du be om att få en ny röntgen gjord och en remiss till en ortoped.  Ibland drabbas den tidigare brutna axeln av sekundära problem som artros, impingement, bicepsskador, ärrbildningar i slemsäck och ledkapsel. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

@@ -19,6 +19,5 @@ question: |
 
 Efter så pass lång tid med axelsmärtor så förefaller det rimligt att man utreder dig ordentligt. Lämpligtvis med MR .  Det vore nog också bra om du fick träffa en specialist i ortopedi. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

@@ -61,3 +61,4 @@ Jag förstår din frustration. Att ha ont trots två operationer och intensiv be
 **Sammanfattning:** Mer operation är sällan svaret efter två misslyckade ingrepp. Du behöver en ny grundlig bedömning och sannolikt multimodal smärtbehandling.
 
 
+

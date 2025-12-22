@@ -20,5 +20,3 @@ Mest sannolikt är det frågan om impingement.
 
 Får du en grop på framsidan av axeln vid vissa speciella rörelser och du samtidigt känner att axeln vill glida ur led så kan det också vara frågan om en bakre instabilitet, men det senare är relativt ovanligt.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

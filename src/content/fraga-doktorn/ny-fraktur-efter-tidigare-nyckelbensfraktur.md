@@ -17,6 +17,5 @@ question: |
 
 Svårt att säga utan att se på röntgenbilder, men ligger frakturändarna nära varandra borde de läka fint utan operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

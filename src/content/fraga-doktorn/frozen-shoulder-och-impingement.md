@@ -24,6 +24,5 @@ Kommer du igång med att träna 4-5 ggr per dag direkt efter operationen så kom
 
 Du får inte vara rädd för smärtan.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

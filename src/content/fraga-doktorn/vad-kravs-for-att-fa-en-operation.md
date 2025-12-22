@@ -17,6 +17,5 @@ Artros i AC-leden är en relativt vanlig sjukdom hos snickare. Vid långvarig kr
 
 Artros i själva axelleden är mer ovanligt. Då är ledbrosket på ledkulan och ledskålen utslitet. Minskad belastning av axelleden är det enklaste sättet att minska smärtan. Har du fortfarande en kronisk värk, trots en sänkt aktivitetsnivå, så bör man överväga att byta ut ledkulan mot en protes. En protes har dock en begränsad hållfastighet. Det är därför en fördel att försöka vänta så länge som möjligt med denna åtgärd.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

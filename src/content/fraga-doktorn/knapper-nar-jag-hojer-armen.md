@@ -20,5 +20,3 @@ Det är däremot ganska vanligt att man känner att det knäpper och knakar i ol
 
 Vad gäller axelleden så kan knäppningar bero på artros i nyckelebensleden, rotatorcuffruptur, artros i axelleden, snapping shoulder m.m. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

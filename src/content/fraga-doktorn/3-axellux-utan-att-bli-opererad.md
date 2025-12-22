@@ -15,6 +15,5 @@ question: |
 
 Det finns nog ganska få axelspecialister som inte skulle rekommendera operation i ditt fall.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

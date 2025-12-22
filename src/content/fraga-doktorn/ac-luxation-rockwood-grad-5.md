@@ -23,7 +23,6 @@ Om detta ska åtgärdas kirurgiskt behöver man ta en sena från baksidan av lå
 
 Normalt sett ger det här en signifikant förbättrad kosmetik. Det kanske inte blir helt perfekt, men oftast blir det snyggare.
 
-**Sammanfattning:**
 - Full funktion utan smärta är ett gott resultat efter AC-luxation
 - Operation för enbart kosmetiska skäl är möjlig men inte nödvändig
 - Kirurgin innebär senrekonstruktion och fixering av nyckelbenet

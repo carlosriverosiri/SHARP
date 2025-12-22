@@ -27,7 +27,6 @@ De vanligaste orsakerna till problem efter en operation är irritation av ledkap
 
 Det brukar vara vettigt att försöka med några kortisoninjektioner i själva axelleden och i slemsäcken.
 
-**Sammanfattning:**
 - 85% blir bättre efter operation
 - 7-8% kan uppleva ökade eller oförändrade smärtor
 - Vanliga orsaker: kapsulit, tendinit

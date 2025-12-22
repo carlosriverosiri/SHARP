@@ -25,7 +25,6 @@ Effekten av behandlingen varierar mellan olika individer. I genomsnitt håller d
 
 Men kortisoninjektionen kan lika gärna ha effekt under ett par dagar eller ett par månader.
 
-**Sammanfattning:**
 - Inga större risker med kortisoninjektion
 - Kan göra ont dagen efter
 - Effekt i genomsnitt 3–4 veckor

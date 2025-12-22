@@ -36,7 +36,6 @@ Vi brukar säga att man börjar se slutresultatet ungefär ett år efter operati
 
 Om symtomen gradvist förvärras trots anpassad träning kan det dock vara värt att göra en uppföljande röntgen för att utesluta komplikationer som lossning eller felläge av protesen.
 
-**Sammanfattning:**
 - Det är normalt att gå igenom olika smärtfaser under rehabiliteringen
 - Nya symtom vid ökad belastning efter 6 månader är vanligt
 - Slutresultatet ses oftast efter cirka ett år

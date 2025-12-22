@@ -30,7 +30,6 @@ Det är ganska vanligt att patienter med artros i nyckelbensleden även får pro
 
 Vid en långvarig och mycket stark smärta som påtagligt försämrar din livskvalitet är det vanligt att man överväger operation.
 
-**Sammanfattning:**
 - AC-ledsartros är svår att behandla med sjukgymnastik
 - Kortison ger endast tillfällig lindring
 - Minskad belastning brukar hjälpa

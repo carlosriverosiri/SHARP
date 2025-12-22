@@ -15,7 +15,6 @@ Det är ingenting som kan skadas av att du aktiverar axelleden.
 
 Det är mer troligt att sjukdomen läker ut snabbare om du aktiverar både dig och axeln än om du är inaktiv.
 
-**Sammanfattning:**
 - Aktivitet skadar inte axeln vid frozen shoulder
 - Rörelse och aktivitet kan påskynda läkningen
 - Det är bättre att vara aktiv än inaktiv

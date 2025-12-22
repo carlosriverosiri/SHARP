@@ -36,5 +36,4 @@ Då kan man även se om det finns en  instabilitet i bicepssenan, skada i biceps
 
 Men då brukar man få ont i själva bicepsmuskeln på armens framsida.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

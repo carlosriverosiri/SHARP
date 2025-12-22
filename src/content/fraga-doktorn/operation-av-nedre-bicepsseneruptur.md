@@ -33,7 +33,6 @@ Biceps böjer och utåtroterar (supinerar) i armbågen. Efter en bicepsruptur ko
 
 Är du elektriker eller har ett yrke där du använder mycket skruvande rörelser kan du märka en tydlig försvagning efter en bicepsruptur.
 
-**Sammanfattning:**
 - Komplikationsfrekvens vid operation: 20–30%, men permanenta komplikationer är sällsynta (ett par procent)
 - Vanligaste komplikationen: nedsatt känsel på underarmen
 - Konservativ behandling fungerar väl för de flesta, särskilt vid kontorsarbete

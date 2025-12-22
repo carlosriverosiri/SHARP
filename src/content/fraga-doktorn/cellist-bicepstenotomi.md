@@ -54,7 +54,6 @@ Vid en bicepstenotomi klipps den långa bicepssenan av i axelleden. Senan faller
 
 Bicepstenodesis tar betydligt längre tid att rehabilitera, men minskar framför allt risken för kramper i biceps vid supinerande rörelser i armbågen.
 
-**Sammanfattning:**
 - Jag är tveksam till bicepstenotomi för en professionell cellist
 - Risk för kramper vid skruvande rörelser kan påverka ditt spel
 - Rekommenderar fortsatt konservativ behandling och minst ett års väntan

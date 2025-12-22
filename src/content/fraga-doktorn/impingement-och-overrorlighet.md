@@ -22,6 +22,5 @@ Hej Lina,
 
 Det är mer en förändring av livsstil än rehab. Dvs, att inte sluta träna rotatorcuffen. Ett tipps är att pröva börja träna rotatorcuffen med lite större vikter. Det är svårt att säga om operation är ett bra alternativ eller inte. Om sjukgymnastik och egenträning inte hjälper och man upplever att axelleden glider och hoppar och gör ont kan en kirurgisk stabilisering öka funktionen genom att instabilitetskänslan upphör. Det är dock vanligt att patienterna blir nöjda med den ökade stabililiteten, men inte helt smärtfria. Ibland när patienten själv tycker att axelleden är stabil kan det räcka med att fräsa bort lite ben och öka utrymmet för rotatorcuffens senor.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

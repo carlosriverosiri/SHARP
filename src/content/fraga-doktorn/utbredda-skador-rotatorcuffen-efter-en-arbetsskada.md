@@ -32,5 +32,4 @@ Ultraljud är nog den undersökning som snabbast och enklast kan ställa diagnos
 
 Träffsäkerheten på små rotatorcuffskador är likvärdig den man finner med magnetkameraundersökning (MR)
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

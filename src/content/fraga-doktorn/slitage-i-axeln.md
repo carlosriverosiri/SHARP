@@ -19,5 +19,4 @@ Har du artros i axelleden, är pigg och vital,  och har mycket smärtor så bru
 
 Man kan också försöka med inflammationshämmande medicin som Voltaren (NSAID)
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

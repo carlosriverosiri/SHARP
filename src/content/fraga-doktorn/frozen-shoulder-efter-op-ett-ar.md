@@ -42,3 +42,4 @@ Frozen shoulder efter operation kan ta längre tid att läka.
 
 **Sammanfattning:** Det kan ta upp till 2 år. Fortsätt rehabilitera.
 
+

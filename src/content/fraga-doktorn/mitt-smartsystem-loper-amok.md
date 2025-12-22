@@ -36,7 +36,6 @@ En vanlig diagnos vid kombinationen av nack- och axelsmärtor är artros i AC-le
 
 Vid kombinationen nack- och axelsmärtor är en ömmande AC-led ett vanligt fynd.
 
-**Sammanfattning:**
 - Frusen axel: konstant smärta + uttalad stelhet
 - Impingement: varierande smärta, värst nattetid och efter belastning
 - AC-ledsartros: vanligt vid kombinationen nack- och axelsmärtor

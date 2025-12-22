@@ -52,3 +52,4 @@ question: |
 
 **Sammanfattning:** Inget att oroa sig för. Sök bara om symtomen förändras markant.
 
+

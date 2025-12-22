@@ -22,6 +22,5 @@ Då blir axelleden svagare.
 Det är nog bra om du ser till så du blir ordentligt undersökt av din husläkare eller en axelspecialist. 
 Vanligen brukar man utreda denna typ av skada med en ultraljudsundersökning eller en magnetkameraundersökning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

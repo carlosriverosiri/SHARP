@@ -56,7 +56,6 @@ Vid en uttalad stelhet i axelleden är frozen shoulder en rimlig diagnos.
 
 Om sjukgymnasten inte tycker att stelheten är uttalad är diagnosen frozen shoulder mindre sannolik och diagnosen impingement, inklämd sena är mer sannolik.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

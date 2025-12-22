@@ -51,3 +51,4 @@ Om du inte redan gjort ultraljud för att utesluta blodpropp, bör detta göras.
 
 **Sammanfattning:** Uteslut DVT om inte gjort. Sprucken cysta läker av sig själv. Menisken kan behöva behandlas.
 
+

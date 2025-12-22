@@ -52,3 +52,4 @@ question: |
 
 **Sammanfattning:** Smärta 3 veckor efter cuff-op är helt normalt. Räkna med gradvis förbättring över 2-3 månader.
 
+

@@ -25,5 +25,4 @@ Vid en instabilitet så brukar man själv uppleva att axelleden glider eller hop
 
 Kontakta en  sjukgymnast för att få ett bra träningsprogram.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

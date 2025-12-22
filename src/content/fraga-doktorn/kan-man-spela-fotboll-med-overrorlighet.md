@@ -28,5 +28,3 @@ Prognosen är normalt sett god vid en överrörlighet i axlar/armar.
 
 Överrörlighet axlar brukar dock vara lite känsligare för långvarig tung belastning än normala axlar.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

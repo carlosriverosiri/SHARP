@@ -29,7 +29,6 @@ Lider du av överrörlighet och problemen gradvis ökat utan att du minns hur de
 
 Be din husläkare om en remiss till en axelspecialist
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

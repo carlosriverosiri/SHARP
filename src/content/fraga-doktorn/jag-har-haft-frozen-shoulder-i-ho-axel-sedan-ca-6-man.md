@@ -17,7 +17,6 @@ Börja med att be din husläkare ta en vanlig röntgen och gå sedan till en sju
 
 Om röntgen är någorlunda normal och ditt rörelseomfång liknar de i filmerna så är sannolikheten för att du fått rätt diagnos hög. Hos en diabetiker kan dock förloppet bli långvarigt.
 
-**Sammanfattning:**
 - Det finns inga specifika ortopediska hjälpmedel för frozen shoulder
 - Röntgen och sjukgymnast-bedömning rekommenderas för att följa förloppet
 - Vid diabetes kan förloppet bli längre

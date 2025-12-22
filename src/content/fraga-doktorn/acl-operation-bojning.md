@@ -53,10 +53,10 @@ Du är bara en vecka in – detta är normalt. Fokusera på:
 - Svullnadskontroll
 - Fortsätt med dina övningar
 
-**Sammanfattning:**
 - Begränsad böjning vecka 1 är normalt
 - Sträckning är viktigare än böjning tidigt
 - Böjningen kommer gradvis under 4-6 veckor
 - Fortsätt med övningarna och ha tålamod
+
 
 

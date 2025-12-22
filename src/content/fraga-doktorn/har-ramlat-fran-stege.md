@@ -15,5 +15,4 @@ question: |
 
 Man bör utesluta en rotatorcuffruptur i din axelled. Detta görs enklast med hjälp av ultraljuds- eller MR-undersökning / ir
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

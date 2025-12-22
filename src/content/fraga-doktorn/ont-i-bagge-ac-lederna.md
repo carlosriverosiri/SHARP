@@ -35,7 +35,6 @@ Min rekommendation är att man istället prövar att spruta in kortison tillsamm
 
 Jag tycker det är tveksamt att operera en led som ser helt frisk ut på röntgen.
 
-**Sammanfattning:**
 - Smärta vid militärpress tyder på AC-ledsproblem
 - Vid Weightlifter's shoulder syns förändringar på röntgen efter lång tid
 - Prova kortison + lokalbedövning innan operation övervägs

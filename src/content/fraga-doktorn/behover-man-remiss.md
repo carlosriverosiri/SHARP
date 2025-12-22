@@ -27,5 +27,4 @@ Det är inget ovanligt att axelsmärtan är segdragen och att axeln värker mån
 
 Det kan ibland ta ett eller två år innan man blir bra.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

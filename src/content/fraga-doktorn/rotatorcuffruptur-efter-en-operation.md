@@ -22,5 +22,4 @@ Personligen tycker jag att det är svårt att utifrån en magnetkameraundersökn
 
 De flesta äldre skador hamnar i en gråzon, där möjligheten att sy fast senan igen, inte med någon större säkerhet går att avgöra efter magnetkameraundersökningen.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

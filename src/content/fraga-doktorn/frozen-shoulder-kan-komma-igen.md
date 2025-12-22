@@ -51,3 +51,4 @@ Frozen shoulder efter operation kan teoretiskt återkomma, men det är **ovanlig
 
 **Sammanfattning:** Risken att få frozen shoulder igen i samma axel efter operation är låg (<5%). Fortsätt använda axlarna normalt.
 
+

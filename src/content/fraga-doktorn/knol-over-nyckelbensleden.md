@@ -37,7 +37,6 @@ Om du har en ömmande knöl över nyckelbensleden så är nog ändå lite slitag
 
 Det bästa är att du kontaktar din husläkare för att bli utredd med röntgen och remitterad till en axelspecialist.
 
-**Sammanfattning:**
 - Knöl över nyckelbensleden kan vara resultat av gammal skada
 - Kombinerat med tung styrketräning kan det leda till "Weightlifter's shoulder"
 - Ömmande knöl tyder på slitage i nyckelbensleden

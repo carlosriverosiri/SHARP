@@ -37,7 +37,6 @@ Vid uttalade smärtor kan man prova med en kortisoninjektion i själva nyckelben
 
 Om du känner dig lite stel i axelleden så är det viktigt med sjukgymnastik. Har du helt normal rörlighet så är det mer osäkert om sjukgymnastiken har någon effekt.
 
-**Sammanfattning:**
 - Diagnosen stämmer med Weightlifter's shoulder (osteolys av laterala klavikeln)
 - Besvären brukar klinga av inom ett år
 - Kortisoninjektion kan prova vid uttalade smärtor

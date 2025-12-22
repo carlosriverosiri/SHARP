@@ -19,7 +19,6 @@ Vad gäller operation av frozen shoulder så tycker jag inte att man ska operera
 
 Egentligen är det du själv som måste avgöra om du tycker att det är värt att bli opererad. Men det faktum att du anger att du är livrädd för sjukhus gör väl att man börjar fundera på om operationen verkligen är nödvändig.
 
-**Sammanfattning:**
 - Operation rekommenderas sällan om man fungerar bra i vardagen
 - Kirurgi passar bäst vid uttalade besvär
 - Sjukhusrädsla är ett skäl att överväga om operation verkligen behövs

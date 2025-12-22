@@ -26,5 +26,4 @@ Personligen brukar jag utgå från hur jag opererat.
 
 Har jag huvudsakligen snörpt ihop ledkapseln på baksidan så blir nästan alltid ett axellås med armen roterad ut från kroppen.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

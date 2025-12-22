@@ -15,5 +15,3 @@ question: |
 
 Det brukar för det mesta gå bra att reparera avslitna senor i axelleden.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

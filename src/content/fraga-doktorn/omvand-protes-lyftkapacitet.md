@@ -54,3 +54,4 @@ En omvänd axelprotes tål mer än många tror, men det finns förnuftiga gräns
 **Sammanfattning:** Du kan lyfta det mesta i vardagen utan oro. Undvik upprepade tunga lyft och extrem belastning över huvudet.
 
 
+

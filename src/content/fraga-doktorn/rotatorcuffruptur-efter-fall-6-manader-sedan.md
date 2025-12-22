@@ -25,5 +25,4 @@ Om du bara har en liten rotatorcuffruptur så är min rekommendation är att du 
 
 Blir du smärtfri av detta så är risken för en expansion av rotatorcuffskadan liten.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

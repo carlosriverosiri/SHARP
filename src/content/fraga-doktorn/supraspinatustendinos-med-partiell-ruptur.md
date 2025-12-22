@@ -29,5 +29,4 @@ Vanligen går det inte att ställa en exakt diagnos genom en MR undersökning.
 
 Fynden på MR undersökningen måste överensstämma med dina symptom.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

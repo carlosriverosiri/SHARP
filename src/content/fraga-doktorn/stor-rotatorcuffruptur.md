@@ -27,6 +27,5 @@ Kan du tänka dig att gå ned i aktivitetsnivå så behöver du sannolikt inte n
 
 Att du inte får upp handen till munnen låter dock inte så bra.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

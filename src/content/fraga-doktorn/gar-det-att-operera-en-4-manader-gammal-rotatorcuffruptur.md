@@ -24,5 +24,4 @@ Helst skall man göra detta så snabbt som möjligt för att optimera resultatet
 Även lite äldre skador (> 6 mån.) kan dock repareras. 
 Du behöver vända dig till en vårdenhet med en mycket erfaren axelkirurg, det är en tämligen tekniskt krävande operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

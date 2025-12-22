@@ -18,6 +18,5 @@ Vid starka smärtor brukar jag i första hand sätta en kortisonspruta i axelled
 Patienter som upplever situationen som mycket problematisk och svår att leva med brukar jag operera. Har du varit sjukskriven i tre månader så är min personliga uppfattning att detta är en stark operationsindikation.
 
 
-**Sammanfattning:**
 - Operation ger lika bra långtidsresultat som rehab
 - Långvarig sjukskrivning (3+ månader) är en stark operationsindikation

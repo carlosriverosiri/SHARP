@@ -25,7 +25,6 @@ Då är oftast operation ett bättre alternativ.
 
 Den primära orsaken till smärtan är oftast själva instabiliteten i axelleden, denna instabilitet ger sekundära effekter som inklämningssmärtor, bicepssmärtor, domningar och lite diffusa smärtsymptom över hela axelpartiet.  En magnetkameraundersökningen har ett begränsat diagnostiskt värde vid en instabilitet i axelleden. / ir
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

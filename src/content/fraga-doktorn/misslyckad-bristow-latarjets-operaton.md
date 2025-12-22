@@ -24,5 +24,4 @@ Om det inte var en olycka som ledde till att axeln hoppade ur led och den dessut
 
 Går axeln ur led framåt eller bakåt eller bägge delar? Frekvensen reoperationer efter en Bristow Latarjets operation är mellan 3-10 %. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

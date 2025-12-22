@@ -15,5 +15,3 @@ question: |
 
 Axelskador är vanliga hos cyklister som cyklar omkull. Om du bedömmer att risken för att cykla omkull är liten så kan du nog börja cykla så snart smärtan släpper.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

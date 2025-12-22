@@ -24,5 +24,3 @@ Ibland förvärras det av ett ryck eller överansträngning.
 
 Problemet kan bl.a. härstamma från slemsäcken (bursan), senfästen eller i nyckelbensleden
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

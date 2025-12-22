@@ -21,7 +21,6 @@ Om det känns bra så går det också bra att jobba.
 
 Det finns dock en liten risk att smärtorna blir betydligt värre någon eller några dagar efter injektionen.
 
-**Sammanfattning:**
 - Om det känns bra – okej att jobba
 - Liten risk för tillfälligt ökad smärta de första dagarna
 - Kortisonet verkar under flera veckor

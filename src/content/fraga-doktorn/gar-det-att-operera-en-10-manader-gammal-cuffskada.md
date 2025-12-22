@@ -17,5 +17,4 @@ question: |
 
 En operation är högst sannolikt möjlig att genomföra. Resultaten brukar genomgående vara goda. Dock mycket smärtor efteråt och rehabiliteringen brukar vara långvarig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

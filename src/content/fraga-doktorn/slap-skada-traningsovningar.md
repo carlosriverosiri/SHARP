@@ -51,10 +51,10 @@ Fokusera på:
 2. **Prova 3-6 månader** av strukturerad rehabilitering
 3. **Utvärdera sedan** om du kan sporta utan besvär
 
-**Sammanfattning:**
 - Labrum läker inte, men symptomen kan försvinna med träning
 - Fokus på rotatorcuff och skulderbladsmuskulatur
 - Undvik smärtsamma övningar
 - Sök fysioterapeut för individuellt program
+
 
 

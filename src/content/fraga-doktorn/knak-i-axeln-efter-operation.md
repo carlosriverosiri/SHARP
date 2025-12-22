@@ -22,6 +22,5 @@ Det är inte ovanligt att det knakar lite i axeln efter en operation.
 
 Det är helt ofarligt.
 
-**Sammanfattning:**
 - Knak i axeln efter operation är vanligt
 - Det är ofarligt

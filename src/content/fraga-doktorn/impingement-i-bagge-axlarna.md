@@ -17,5 +17,3 @@ Vid en långvarig inklämning kan man se vissa speciella förändringar i skelet
 
 Det är inte ovanligt att man får problem med båda axlarna samtidigt.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -13,5 +13,4 @@ question: |
 
 Det bästa är att du kontaktar en sjukgymnast för att komma igång med rehabövningar för axelleden. Blir det inte bättre av detta så kontaktar du din husläkare.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

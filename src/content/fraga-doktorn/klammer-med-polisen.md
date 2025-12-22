@@ -25,5 +25,4 @@ Rotatorcuffrupturer är sällsynta hos patienter yngre än 30 år. Det krävs et
 Upplever du att axeln är instabil, så det känns som om den vill glida ur led, så kan du fått en sk. labrumskada.
 Är du orolig så kan en klinisk undersökning, ultraljudsundersökning eller magnetkameraundersökning utesluta en rotatorcuffruptur.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

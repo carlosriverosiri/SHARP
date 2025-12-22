@@ -41,6 +41,5 @@ I undantagsfall har patienten så pass starka smärtor att en operation kan vara
 Sjukgymnastik och daglig egenträning brukar hos de flesta ge bra resultat redan inom 3-4 månader.
 Vid långvariga kroniska smärtor och en påtaglig sänkning av livskvalitén kan man överväga en enkel artroskopisk operation för seninklämning.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

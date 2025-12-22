@@ -77,3 +77,4 @@ Med fettinlagringar och retraktion är **fönstret för lyckad operation på vä
 **Sammanfattning:** Jag lutar åt operation p.g.a. fettinlagringarna, men respekterar om du väljer att fortsätta med yoga och observera. Diskutera noggrant med din kirurg.
 
 
+

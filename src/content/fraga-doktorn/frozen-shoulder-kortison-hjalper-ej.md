@@ -56,3 +56,4 @@ Om det strålar ner till fingrarna bör nacken utredas med MR. Detta är inte ty
 
 **Sammanfattning:** Utstrålning till fingrarna motiverar MR av nacken. Röntgen av axeln är rätt, men nacken bör undersökas.
 
+

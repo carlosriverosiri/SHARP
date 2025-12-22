@@ -26,5 +26,4 @@ Den vanliga gången är att man kontaktar sin husläkare för att få axelleden 
 
 Vanliga diagnoser hos män i medelåldern är impingement  eller rotatorcuffruptur.  Knakande är vanligare vid rotatorcuffskada än vid impingement.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

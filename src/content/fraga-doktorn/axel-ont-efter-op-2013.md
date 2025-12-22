@@ -35,3 +35,4 @@ Smärta många år efter axeloperation kan ha flera orsaker.
 
 **Sammanfattning:** Sök ny bedömning – det finns behandlingsalternativ.
 
+

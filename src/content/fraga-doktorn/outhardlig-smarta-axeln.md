@@ -40,5 +40,4 @@ Du är naturligtvis välkommen till oss.
 
 Enklast är att du själv ringer till oss för att boka tid.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

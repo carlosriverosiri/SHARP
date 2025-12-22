@@ -20,7 +20,6 @@ Fyra av fem patienter har inga problem att arbeta efter en kortisoninjektion i a
 
 Tyvärr får 20% av patienterna en övergående stark smärta i axelleden efter en injektion. Denna smärta kan hålla i sig en eller två dagar.
 
-**Sammanfattning:**
 - 80% kan arbeta utan problem efter injektionen
 - 20% får övergående stark smärta i 1–2 dagar
 - Planera för eventuell vila dagen efter om möjligt

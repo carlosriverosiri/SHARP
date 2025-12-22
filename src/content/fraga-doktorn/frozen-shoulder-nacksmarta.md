@@ -61,3 +61,4 @@ Förståelig fråga! Låt mig reda ut sambandet.
 **Sammanfattning:** Sambandet är troligen slumpmässigt. Nacksmärta som varar >2 veckor bör bedömas av läkare eller sjukgymnast.
 
 
+

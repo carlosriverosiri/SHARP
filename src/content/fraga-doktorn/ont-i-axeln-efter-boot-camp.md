@@ -31,5 +31,4 @@ Det finns naturligtvis andra orsaker till smärtor efter träning.
 
 Lite slitage i nyckelbensleden är inte ovanligt. /
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

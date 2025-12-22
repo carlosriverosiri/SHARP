@@ -19,5 +19,4 @@ Försök motionera och ta skogspromenader.
 
 Har du haft frusen axel i snart 10  månader och svårt att sova, svårt att jobba och en olidlig smärta, så är operation ett alternativ du bör diskutera med din doktor.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

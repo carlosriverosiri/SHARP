@@ -13,6 +13,5 @@ question: |
 
 Jag ger inte några specifika rekommendationer gällande övningar. Men om du söker på YouTube efter "frozen shoulder exercises" hittar du gott om träningsprogram.
 
-**Sammanfattning:**
 - Sök efter "frozen shoulder exercises" på YouTube för övningar
 - Träning och rörelse är viktigt för läkning

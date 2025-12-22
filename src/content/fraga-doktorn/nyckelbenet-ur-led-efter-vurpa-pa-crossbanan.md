@@ -22,6 +22,5 @@ Många idrottsmän kommer igång väldigt tidigt efter denna skada.
 
 Resultaten efter en operation av en enkel AC-lux.  är nästan lika bra som om man inte opererar (89% blir bra med operation, 90 % blir bra utan operation) / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

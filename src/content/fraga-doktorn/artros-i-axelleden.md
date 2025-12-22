@@ -15,5 +15,3 @@ question: |
 
 Det betyder artros i axelleden. Ledkulans glidyta är utslitet. Vanlig behandling är axelprotes eller att bara vänta och se.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

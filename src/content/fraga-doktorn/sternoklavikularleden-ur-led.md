@@ -29,6 +29,5 @@ Vid en främre urledvridning kan en operation övervägas i det akuta skedet.
 När det gått 3-4 veckor är skadan inte längre akut.
 Att inte operera en främre urledvridning av inre nyckelbensleden brukar på lång sikt ge väldigt goda resultat.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

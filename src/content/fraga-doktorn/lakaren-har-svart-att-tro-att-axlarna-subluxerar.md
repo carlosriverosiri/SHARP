@@ -21,7 +21,6 @@ Musklerna runt axelleden står nämligen för närmare 50% av axelledens stabili
 
 Egentligen är det mer en ändring av livsstil som är nödvändig, där träning av axelleden är ett normalt inslag i tillvaron.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

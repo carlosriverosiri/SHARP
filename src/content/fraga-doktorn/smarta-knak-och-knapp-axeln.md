@@ -36,5 +36,4 @@ Artros i själva axelleden kan ge smärtsamma krepitationer i axeln, men denna d
 
 Sedan finns det naturligtvis ett par andra diagnoser att överväga, men vid dessa brukar inte knak och knäpp i axeln vara ett dominerande symptom.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

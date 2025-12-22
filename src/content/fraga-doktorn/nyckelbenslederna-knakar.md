@@ -15,5 +15,3 @@ question: |
 
 Det är inget ovanligt att olika leder knakar och knäpper när man rör dessa. Om detta inte är förenligt med smärta eller instabilitetskänsla så är det helt ofarligt. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

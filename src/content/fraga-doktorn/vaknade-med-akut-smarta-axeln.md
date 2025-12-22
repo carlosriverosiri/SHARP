@@ -43,7 +43,6 @@ I tidigt skede kan det vara svårt att skilja på en impingement och en frozen s
 
 Bägge sjukdomarna har en god prognos i din ålder.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

@@ -20,5 +20,4 @@ Om dina problem med instabilitet i axelleden började efter en olycka och du eft
 
 Fungerar inte långvarig rehab så är en artroskopisk operation ett bra alternativ.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

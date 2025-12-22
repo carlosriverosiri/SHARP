@@ -20,5 +20,4 @@ Det är viktigare att komma igång med en rehab.
 När axeln börjar kännas instabil efter en våldsam olycka så är normalt sett en "labrumskada" en bra gissning. 
 Vid uttalade smärtor kan det vara svårt att få till en bra rehabilitering, vid lättare smärtor så brukar rehab fungera bra.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

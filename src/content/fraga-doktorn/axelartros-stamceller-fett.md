@@ -63,3 +63,4 @@ Vissa privata kliniker erbjuder stamcellsbehandling, men det är **inte rekommen
 **Sammanfattning:** Stamcellsbehandling för axelartros är experimentellt och inte rekommenderat som standardbehandling. Protes ger bevisad smärtlindring.
 
 
+

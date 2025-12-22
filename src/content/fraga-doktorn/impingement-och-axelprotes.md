@@ -18,6 +18,5 @@ Det är svårt att sätta in en axelprotes utan att få en betydande ärr över 
 
 Vad gäller vänster axelled så är det väl inte osannolikt att det går att förbättra funktionen med ett relativt enkelt artroskopiskt ingrepp, men det är svårt att avgöra utan att se på MR bilderna och klämma på axelleden.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

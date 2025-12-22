@@ -41,5 +41,4 @@ Det förefaller rimligt att de ev. felställningar man ser på röntgen av AC-le
 Skolios har ingen koppling till felställningar i AC-lederna.
 Det verkar vettigt att du försöker ordna en remiss för en second opinion bedömning.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

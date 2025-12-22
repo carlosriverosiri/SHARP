@@ -22,5 +22,4 @@ Der är dock sällsynt att reparationen som utfördes inte håller för detta.
 
 Det skall till ett kraftigt trauma, eller många små trauman för att det inte skall hålla.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

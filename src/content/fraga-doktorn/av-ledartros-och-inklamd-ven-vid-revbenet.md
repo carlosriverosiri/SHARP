@@ -24,7 +24,6 @@ Det går inte att operera yttre nyckelbensleden för att förändra läget på s
 
 Artros i AC-leden (yttre nyckelbensleden) är relativt vanligt och behöver endast åtgärdas vid långvarig kronisk smärta i själva AC-leden.
 
-**Sammanfattning:**
 - Operation av AC-leden påverkar inte nyckelbensläget
 - AC-ledsartros behöver bara åtgärdas vid långvarig smärta
 - Ven-inklämningen är ett separat problem

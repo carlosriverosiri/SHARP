@@ -43,3 +43,4 @@ Du har rätt att ifrågasätta – ischias efter vridtrauma i knät är osannoli
 
 **Sammanfattning:** Sök ortopedisk second opinion. Ischias förklarar sannolikt inte din knäsmärta.
 
+

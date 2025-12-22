@@ -49,7 +49,6 @@ Om du får en påtagligt nedsatt axelfunktion, med smärtor och svaghet, efter e
 
 När man är missnöjd med vården och önskar ekonomisk kompensation så brukar man vända sig till patientförsäkringen. Det bästa är att du börjar med att skriva ett brev till den läkaren du är missnöjd med och förklara varför du är missnöjd.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

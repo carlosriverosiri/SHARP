@@ -20,5 +20,4 @@ Det vanliga vid denna typ av skada är att smärtorna långsamt blir bättre und
 
 Vid sprickor i axelledens ledhuvud kan man ibland få en smärta ut i bicepsmuskeln. Denna beror på att sprickan oftast går i den trånga kanal som bicepssenan löper i.  Vanligen försvinner denna smärta inom några månader. Men i vissa fall så kan smärtan bli kronisk och bicepssenan kan fastna i kanalen.  Detta kan ge en långvarig och kronisk "bicepssmärta".  Då är det bra att träffa en axelspecialist. /
 
-**Sammanfattning:**
 - Sök remiss till specialist

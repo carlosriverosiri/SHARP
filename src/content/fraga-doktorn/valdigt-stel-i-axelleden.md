@@ -23,6 +23,5 @@ Be en sjukgymnast titta på din axel för att få en bedömning och behandling.
 
 En del patienter upplever att  smärtan minskar när de fått en diagnos så de vet vad de skall  förhålla sig till.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

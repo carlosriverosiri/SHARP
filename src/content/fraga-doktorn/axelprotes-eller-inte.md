@@ -27,5 +27,4 @@ Då kommer smärtorna sannolikt att minska.
 
 En axelprotes är en mekanisk konstruktion med en livslängd på mellan 10-15 år beroende på hur mycket man sliter på axelprotesen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

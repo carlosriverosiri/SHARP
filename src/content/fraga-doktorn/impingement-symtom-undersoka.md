@@ -34,3 +34,4 @@ Med 4 månaders besvär och ofullständig effekt av behandling är specialistbed
 
 **Sammanfattning:** Ja, efter 4 månader med delvis effekt är det värt att söka specialist.
 
+

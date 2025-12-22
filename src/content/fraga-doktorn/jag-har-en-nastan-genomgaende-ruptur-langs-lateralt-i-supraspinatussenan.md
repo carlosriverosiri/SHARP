@@ -52,6 +52,5 @@ Hos patienter med en låg aktivitetsnivå, med sjukdomar som i sig begränsar ak
 
 Hos aktiva patienter, oavsett ålder,  där ultraljudsbilden visar en tydligt fin struktur i senan, brukar vi rekommendera rotatorcuffsutur.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

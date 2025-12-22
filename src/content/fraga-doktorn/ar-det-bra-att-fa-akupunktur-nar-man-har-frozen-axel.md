@@ -17,7 +17,6 @@ Det finns också gott om studier som visar att en viss typ av akupunktur ger en 
 
 En systematisk översikt och meta-analys från 2024 visade att kombination av akupunktur och fysioterapi är bättre än fysioterapi ensamt för att minska smärta, förbättra klinisk effekt och öka rörelseomfång.
 
-**Sammanfattning:**
 - Akupunktur kan ha smärtlindrande effekt vid frozen shoulder
 - Studier visar positiva resultat, särskilt i kombination med fysioterapi
 - Effekten kan variera beroende på vilken teknik som används

@@ -28,7 +28,6 @@ Man kan förvänta sig en förbättring vad gäller smärta och rörlighet efter
 
 Normalt sett ser man den mest påtagliga effekten av operationen inom ett år. Därefter har man ytterligare en liten förbättring under följande år.
 
-**Sammanfattning:**
 - Efter operationen ska nyckelbenet inte längre leda mot akromion
 - Förbättring av smärta och rörlighet kan förväntas
 - Alla blir inte helt smärtfria

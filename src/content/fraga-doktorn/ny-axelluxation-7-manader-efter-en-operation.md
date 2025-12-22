@@ -40,5 +40,4 @@ Om din axel dessutom legat ur led en längre tid vid något av tillfällena så 
 
 Du kan också ha en Bankartskada som krullat upp sig långt under ledskålen (glenoiden) och var svår att få fram under din operation (ALPSA-skada).
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

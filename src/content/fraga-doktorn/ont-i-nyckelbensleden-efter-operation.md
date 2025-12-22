@@ -39,7 +39,6 @@ Smärtor i AC-leden mer än ett år efter en operation kan bero på att den nya 
 
 Långvariga starka smärtor efter en operation för AC-ledsartros är ovanligt. En utredning med magnetkameraundersökning brukar inte ge så mycket information. En vanlig slätröntgen av AC-leden med "belastning" är en bättre undersökning. Ibland kan man behöva göra en datortomografiundersökning med 3D-rekonstruktion av leden.
 
-**Sammanfattning:**
 - Kvarstående smärta kan bero på kollapsad ledspalt eller instabilitet
 - Långvarig smärta efter AC-ledsoperation är ovanligt
 - MR ger ofta inte så mycket information

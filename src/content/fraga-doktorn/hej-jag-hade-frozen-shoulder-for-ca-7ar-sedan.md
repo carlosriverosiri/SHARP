@@ -21,7 +21,6 @@ Om rörligheten förbättrades och smärtan minskade efter en kortisonspruta i s
 
 Gå till en sjukgymnast och begär att få både en bedömning och ett träningsprogram som du sedan följer noggrant. Du behöver komma upp i 30-50 övningspass innan du märker någon skillnad.
 
-**Sammanfattning:**
 - Symtomen tyder mer på impingement än frozen shoulder
 - Effekt av kortisonspruta i slemsäcken stödjer impingement-diagnos
 - Sjukgymnastik med träningsprogram rekommenderas

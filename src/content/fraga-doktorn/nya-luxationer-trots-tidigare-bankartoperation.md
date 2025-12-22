@@ -27,6 +27,5 @@ En vanlig röntgenundersökning kan förvisso påvisa skador både på ledhuvude
 
 Det krävs en ganska erfaren ultraljudsundersökare för att en ultraljudsundersökning skall vara någon vits. Men den kan fungera bra om axelledens ledskål ser fin ut på en vanlig röntgen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas

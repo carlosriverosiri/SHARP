@@ -52,3 +52,4 @@ Proximal humerusfraktur tar tid att läka och smärtan kan vara långvarig.
 
 **Sammanfattning:** 7 veckor är fortfarande tidig läkningsfas. Förbättringen kommer – räkna med 3-6 månader.
 
+

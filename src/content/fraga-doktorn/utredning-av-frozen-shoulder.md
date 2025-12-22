@@ -19,6 +19,5 @@ Misstänker man frozen shoulder så tycker jag att man alltid skall utreda axeln
 
 Enklast är att du bokar tid hos oss så hjälper vi dig vidare. / , specialist i ortopedi.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

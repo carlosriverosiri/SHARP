@@ -24,7 +24,6 @@ Kortisoninjektion i leden har ingen långvarig effekt och löser inte det grundl
 
 En artroskopisk operation kan, vid en uttalad impingement, ge en tillfällig smärtlindring.  /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

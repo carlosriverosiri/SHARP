@@ -29,5 +29,4 @@ Det finns flera olika tester för instabilitet, men det viktigaste är nog änd�
 
 Man brukar inte rekommendera fler än 3 st kortisoninjektioner i axelledens slemsäck.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

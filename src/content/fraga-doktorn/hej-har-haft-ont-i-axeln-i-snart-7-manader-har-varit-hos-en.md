@@ -17,7 +17,6 @@ Sätter man injektionen i själva leden så är det mycket ovanligt att patiente
 
 I tidigt stadium (mindre än 3 månader) av frozen shoulder brukar injektionen nästan alltid fungera.
 
-**Sammanfattning:**
 - Kortisoninjektion i slemsäcken kan tillfälligt ge ökad smärta
 - Smärtan går vanligen över inom några dagar till en vecka
 - Injektion i leden ger sällan försämring

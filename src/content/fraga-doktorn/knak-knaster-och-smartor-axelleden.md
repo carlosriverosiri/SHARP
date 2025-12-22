@@ -27,5 +27,3 @@ Ibland kan en lite större rotatorcuffrupt ge upphov till ett knakande ljud i ax
 Sitter smärtorna på ovansidan av axelleden är det mest sannolikt frågan om artros i nyckelbensleden. 
 Tränar du mycket på gym är det inte ovanligt med artros i axelleden.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

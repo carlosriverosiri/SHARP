@@ -27,5 +27,4 @@ Små rotatorcuffrupturer är oftast enklare att diagnosticera med en ultraljudsu
 
 Metallimplantat efter en fraktur brukar kunna avlägsnas efter ett eller två år.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

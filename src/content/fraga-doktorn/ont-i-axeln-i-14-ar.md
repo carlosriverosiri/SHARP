@@ -19,6 +19,5 @@ Operationsindikationerna för impingement är huvudsakligen en kronisk smärta s
 
 I ditt fall vore det nog bra att utesluta andra diagnoser ex.  instabilitet, bakre labrumskada och olika typer av nervinklämningar.  Det senare är dock ovanligt.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

@@ -19,5 +19,4 @@ Vanligen är smärtorna i axeln övergående och förbättras med lite vila och 
 
 Rotatorcuffproblem hos handbollsspelande flickor är inte ett speciellt ovanligt axelproblem.
 
-**Sammanfattning:**
 - Vila och avlastning rekommenderas

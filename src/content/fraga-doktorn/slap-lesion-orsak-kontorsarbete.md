@@ -58,3 +58,4 @@ Din företagsläkare gör en **korrekt bedömning**. SLAP-lesioner hos 45-åring
 **Sammanfattning:** SLAP-lesioner orsakas normalt inte av kontorsarbete. Fokusera på behandling snarare än orsak.
 
 
+

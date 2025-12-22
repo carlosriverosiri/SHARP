@@ -17,7 +17,6 @@ Våra mottagningssköterskor är duktiga på att handlägga patienter på olika 
 
 Men vill du ändå absolut komma till en specifik läkare så bör du be din husläkare skicka en remiss som är adresserad specifikt till den läkaren.
 
-**Sammanfattning:**
 - Mottagningen har flera axelspecialister
 - Sjuksköterskorna fördelar patienter baserat på behov
 - För att träffa en specifik läkare: be husläkaren skicka remiss adresserad till den läkaren

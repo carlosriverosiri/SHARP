@@ -31,6 +31,5 @@ Jag brukar rekommendera en ”hög aktivitetsnivå” för att minska smärtorna
 
 Det är oklart om sjukgymnastiks mobilisering förkortar sjukdomsförloppet.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

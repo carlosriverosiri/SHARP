@@ -23,5 +23,4 @@ Om du har full styrka och rörlighet i axelleden så bör komma igång med sjukg
 
 Upplever du axelleden som betydligt svagare än tidigare så bör du både komma igång med sjukgymnastik och dessutom kontakta din husläkare för en första bedömning.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

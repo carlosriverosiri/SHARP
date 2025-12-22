@@ -19,5 +19,4 @@ Om det känns bra så går det också bra att jobba.
 
 Det finns dock en liten risk att smärtorna blir betydligt värre någon eller några dagar efter injektionen.
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

@@ -27,6 +27,5 @@ Varje gång axelleden går ur led så kan olika delar i axelleden skadas.
 
 Be din husläkare om en remiss till en ortopedspecialist.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

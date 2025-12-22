@@ -48,3 +48,4 @@ Om du får nya instabilitetssymtom – sök din operatör.
 
 **Sammanfattning:** Troligen en muskelreaktion, inte suturskada. Fortsätt normal aktivitet.
 
+

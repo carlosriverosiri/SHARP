@@ -22,5 +22,4 @@ Efter en magnetkameraundersökning finns det en viss överdiagnostik av tidig ar
 
 Vid uttalad artros i axelleden brukar det inte vara några problem att tolka magnetkamerabilderna.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

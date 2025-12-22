@@ -52,3 +52,4 @@ Det du beskriver låter som **scapula winging** med snapping scapula-syndrom.
 
 **Sammanfattning:** Troligen muskulärt orsakat och behandlingsbart med sjukgymnastik. Sök bedömning för att bekräfta diagnosen.
 
+

@@ -23,5 +23,4 @@ Möjligen är själva belastningen av senan är viktigare än pressa senan till 
 
 Excentrisk träning innebär att man använder lägre vikter och belastar senan under den period då muskeln förlängs under rörelsen, man belastar senan "tvärtom" mot normalt.  Vid alla typer av idrottskador så måste man ha mycket tålamod och pröva sig fram för att se vilken träning som kroppen faktiskt tål.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

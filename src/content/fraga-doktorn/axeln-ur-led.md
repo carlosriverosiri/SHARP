@@ -21,5 +21,4 @@ Hej Markus,
 
 MVH
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

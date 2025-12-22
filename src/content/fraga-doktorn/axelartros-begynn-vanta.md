@@ -39,3 +39,4 @@ Två års konstant värk är lång tid.
 
 **Sammanfattning:** Med 2 års värk har du rätt till en ny bedömning och behandlingsplan.
 
+

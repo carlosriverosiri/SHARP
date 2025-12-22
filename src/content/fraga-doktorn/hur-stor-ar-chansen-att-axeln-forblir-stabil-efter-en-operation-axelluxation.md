@@ -25,5 +25,4 @@ En betydande andel av patienterna förblir stabila.
 
 Men resultatet är beroende på olika typer av skador som uppstått i axelleden, aktivitetsnivå och val av operationsmetod.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

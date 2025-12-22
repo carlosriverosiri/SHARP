@@ -30,6 +30,5 @@ Upplever du att axelleden blivit lösare, eller glider och hoppar så talar det 
 
 Om din sjukgymnast finner att du blivit svagare i utåtrotation i axelleden så talar detta för en labrumskada.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

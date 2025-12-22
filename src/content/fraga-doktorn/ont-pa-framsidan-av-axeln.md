@@ -32,7 +32,6 @@ Diagnostik av kvinnlig axelsmärta är ganska svår. Det är kvinnorna som drabb
 
 Be att få en remiss till specialist i ortopedi.
 
-**Sammanfattning:**
 - Låt dig bedömas av en erfaren sjukgymnast
 - Röntga axeln
 - Om ingen förbättring – be om remiss till axelspecialist

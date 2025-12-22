@@ -16,5 +16,4 @@ question: |
 
 Det låter lite som impingement. Problemen är vanligen övergående och förbättras med sjukgymnastik.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

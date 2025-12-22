@@ -31,5 +31,4 @@ Alla typer av instabiliteter är svårrehabiliterade när patienten har mycket s
 Sitter smärtorna huvudsakligen på utsidan av axel/överarm så kan det finnas ett inslag av sekundär impingement.
 Är det mer en smärta som sitter över axel/skulderblad/nacke så talar det mer för att själva instabiliten skapar en överansträngd muskulatur som gör ont.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

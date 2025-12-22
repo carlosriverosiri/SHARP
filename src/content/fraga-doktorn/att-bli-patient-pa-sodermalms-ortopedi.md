@@ -24,5 +24,3 @@ Du kan också kontakta din husläkare för en remiss.
 
 Men vi har inget remisstvång.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

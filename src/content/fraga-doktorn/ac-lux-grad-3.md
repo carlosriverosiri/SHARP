@@ -15,5 +15,4 @@ question: |
 
 Det handlar mest om att du tappat muskler efter olyckan och operationen. Axelleden kan inte sjunka in.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

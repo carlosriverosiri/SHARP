@@ -24,6 +24,5 @@ Ibland fungerar inte sjukgymnastik.
 
 Vid en långvarig uttalad smärta med svårigheter att sova, sänkt livskvalité och en påtaglig funktionsnedsättning brukar jag dock rekommendera operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

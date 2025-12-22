@@ -31,7 +31,6 @@ Fungerar inte hydrodilatation så är en operation, där man klipper upp ledkaps
 
 Vid lätta till måttliga smärtor är nog det bästa att bara vänta ut självläkningen.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Kortisoninjektion kan övervägas

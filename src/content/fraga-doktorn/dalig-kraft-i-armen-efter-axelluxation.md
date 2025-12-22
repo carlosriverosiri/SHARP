@@ -23,6 +23,5 @@ NERVSKADA; Nervskadan utreds med nevrofysiologi för att se omfattningen (detta 
 
 ROTATORCUFFSKADA; Denna utreds med en magnetkameraundersökning (MR). Magnetkameraundersökning av axelleden bör utföras inom en vecka.  specialist i ortopedi, axelkirurg.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

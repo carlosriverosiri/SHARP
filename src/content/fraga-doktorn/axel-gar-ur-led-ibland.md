@@ -53,3 +53,4 @@ Vid 20 års ålder och tidig insats är prognosen **god**. Med rätt träning st
 **Sammanfattning:** Sök vård. Det kan bli värre om du väntar, men det finns effektiv behandling.
 
 
+

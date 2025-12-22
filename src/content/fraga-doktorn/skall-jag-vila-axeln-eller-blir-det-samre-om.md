@@ -14,7 +14,6 @@ question: |
 
 Det finns inga vetenskapliga belägg för att axelleden förbättras av vila. Det förefaller mer rimligt att aktivera muskulaturen så du inte får andra problem när väl sjukdomen läkt ut.
 
-**Sammanfattning:**
 - Ingen evidens för att vila förbättrar frozen shoulder
 - Aktivering av muskulaturen rekommenderas
 - Undvik att bli för passiv – det kan ge andra problem

@@ -50,3 +50,4 @@ Det finns ingen strikt evidens för att vila efter kortisoninjektion är nödvä
 
 **Sammanfattning:** Det är inte farligt att arbeta, men optimalt vore 48 timmars lättare belastning. Om du måste jobba – ta pauser och lyssna på kroppen.
 
+

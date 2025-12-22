@@ -27,7 +27,6 @@ Ett annat alternativ är att fortsätta rehaba och samtidigt ändra livsstil.
 
 Dvs belasta axelleden mindre.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

@@ -24,5 +24,3 @@ Om du inte bara har otur utan får frakturer vid smärre olyckor så bör man fu
 
 Att bryta kråkutskottet kräver en väldig energi och är ganska ovanligt.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

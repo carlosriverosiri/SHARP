@@ -26,5 +26,4 @@ Det är svårt att tro att aktivitet på något sätt kan skada axelleden om du 
 
 Den förstelnade ledkapseln måste förr eller senare spräckas eller tänjas ut.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

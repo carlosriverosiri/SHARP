@@ -22,7 +22,6 @@ Ta upp frågan med din ortoped i god tid innan operationen.
 
 Axelleden kan fungera utmärkt trots en liten partiell ruptur i rotatorcuffen. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

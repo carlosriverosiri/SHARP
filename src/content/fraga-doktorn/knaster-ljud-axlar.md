@@ -46,10 +46,10 @@ Om det inte gör ont behövs ingen behandling. Men om det stör kan du prova:
 
 Ärligt talat: Inte alltid. Men om det inte gör ont är det inget att oroa sig för.
 
-**Sammanfattning:**
 - Knaster utan smärta är oftast ofarligt
 - Styrketräning och rörlighet kan hjälpa
 - Sök vård om det börjar göra ont
 - Många friska axlar knastrar
+
 
 

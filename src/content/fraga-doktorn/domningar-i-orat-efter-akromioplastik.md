@@ -19,5 +19,4 @@ En plexusblockad är dock inte orsaken till att du fått ett sovande öra. Det 
 
 Har du fått en nervskada så att huden är helt död flera månader efter operationen,  så är det tveksamt om skadan kommer att förbättras.  Har du däremot lite känsel kvar i huden så försvinner obehaget inom 3-4 månader.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

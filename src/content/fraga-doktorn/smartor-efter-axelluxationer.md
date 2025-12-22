@@ -16,5 +16,4 @@ question: |
 
 Det är inte ovanligt att man får skador i axelleden när axeln går ur led upprepade gånger.  Min rekommendation är att du ber din husläkare om en remiss till en ortoped för att diskutera om axelleden behöver opereras. /
 
-**Sammanfattning:**
 - Sök remiss till specialist

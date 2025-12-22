@@ -23,5 +23,3 @@ Dessa brukar börja spela/träna i genomsnitt inom 9 dagar efter skadan.
 
 Prognosen är således väldigt god.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

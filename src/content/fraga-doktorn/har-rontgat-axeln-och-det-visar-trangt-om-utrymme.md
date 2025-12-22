@@ -25,6 +25,5 @@ Dessa siffror stämmer bra med forskningen.
 
 Hjälper inte sjukgymnastik och du har starka smärtor både nattetid och när du arbetar så är det rimligt att ånyo diskutera möjligheterna att minska symptomen genom en operation.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

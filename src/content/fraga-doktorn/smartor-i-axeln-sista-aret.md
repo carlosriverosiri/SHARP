@@ -27,7 +27,6 @@ Det kan ibland vara svårt att ställa diagnos på en smärtfri patient.
 
 En av de vanligaste diagnoserna hos unga patienter är instabilitet i axelleden.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

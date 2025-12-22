@@ -35,7 +35,6 @@ Anledningen till att vi ibland rekommenderar att ta det lugnt första dygnet är
 
 I teorin skulle mycket intensiv aktivitet kunna flytta kortisonet från injektionsstället, eftersom läkemedlet rör sig med vävnaden. Men detta är spekulativt och det finns inget vetenskapligt stöd för att det skulle påverka behandlingseffekten nämnvärt.
 
-**Sammanfattning:**
 - Kortisonets effekt förstörs inte av belastning
 - Vila rekommenderas för att undvika ökad smärta, inte för att "bevara" kortisonet
 - Flare-up (tillfällig smärtökning) kan förekomma oavsett aktivitetsnivå

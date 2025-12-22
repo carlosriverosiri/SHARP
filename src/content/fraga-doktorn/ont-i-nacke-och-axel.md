@@ -27,5 +27,4 @@ En kortisoninjektion i axelledens slemsäck är både diagnostisk och brukar ha 
 
 Men effekten är inte alltid så långvarig. /
 
-**Sammanfattning:**
 - Kortisoninjektion kan övervägas

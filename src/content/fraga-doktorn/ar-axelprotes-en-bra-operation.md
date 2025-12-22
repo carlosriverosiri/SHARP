@@ -35,5 +35,4 @@ All kirurgi är mer eller mindre riskfylld.
 
 Fungerar axeln bra på jobbet och du sover någorlunda bra så kan det bästa vara att du väntar med en operation. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

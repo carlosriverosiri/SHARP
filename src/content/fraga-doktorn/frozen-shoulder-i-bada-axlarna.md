@@ -20,5 +20,3 @@ question: |
 
 Ring vårdgarantin och fråga hur du kan göra. Enklast är nog om du går till en privatklinik i Göteborg och ber ditt landsting om en betalningsförbindelse.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

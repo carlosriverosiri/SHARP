@@ -17,5 +17,3 @@ question: |
 
 Spela på. AC-leden är läkt. Håller för de flesta idrotter. Men du kan känna av smärtor vid kraftig belastning närmaste året efter skadan.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

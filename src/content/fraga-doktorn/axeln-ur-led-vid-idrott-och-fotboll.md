@@ -32,6 +32,5 @@ Den instabilitet som man regelbundet opererar tidigt är den instabilitet hos un
 
 Det bästa är att du försöker få till ett besök hos en axelspecialist i Spanien där du bor.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sök remiss till specialist

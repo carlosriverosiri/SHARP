@@ -26,7 +26,6 @@ Smärtor från AC-leden brukar vanligen minska med vila.
 
 Naturligtvis kan det vara artros i AC-leden – detta är vanligt om man har styrketränat i många år.
 
-**Sammanfattning:**
 - Knöl på ovansidan av axeln tyder på irritation i AC-leden
 - Smärtan brukar minska med vila
 - Artros är vanligt vid långvarig styrketräning

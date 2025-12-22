@@ -14,7 +14,6 @@ question: |
 
 Vid långvarig värk i axelleden (> 6 månader), som inte blir bättre efter behandling med både kortisoninjektioner och sjukgymnastik, bör man överväga operation. /
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

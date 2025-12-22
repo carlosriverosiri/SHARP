@@ -37,7 +37,6 @@ Både ledskålen och ledhuvudet kan få permanenta skador av långvariga axellux
 
 Tyvärr så måste du nog göra ett val mellan en lägre aktivitetsnivå eller operation.
 
-**Sammanfattning:**
 - Minskad aktivitetsnivå är alternativet till operation
 - Snabb reponering minskar skaderisken
 - Upprepade luxationer gör axeln mer instabil

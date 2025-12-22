@@ -18,5 +18,4 @@ Det finns en hög sannolikhet att en denna patient drabbats av en rotatorcuffrup
 
 Ultraljud eller magnetkameraundersökning för att utesluta en större rotatorcuffruptur.  Sannolikheten att det är någon form av rotatorcuffskada ligger är hög.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

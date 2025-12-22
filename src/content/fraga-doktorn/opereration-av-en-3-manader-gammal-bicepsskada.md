@@ -28,5 +28,4 @@ Det funktionella resultatet är utomordentligt gott utan kirurgi.
 
 Undantaget är elektriker (vilka lätt får kramper), och personer som ägnat en stor del av sin fritid åt styrketräning (estetik).
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

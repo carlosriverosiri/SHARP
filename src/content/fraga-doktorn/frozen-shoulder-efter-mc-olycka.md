@@ -25,5 +25,3 @@ Vid uttalad värk kan en axelprotes vara en möjlig behandling.
 
 Vid dålig rörlighet och uttalad värk så brukar en axelprotes både kunna ge en signifikant reduktion av smärtorna och dessutom en förbättrad rörlighet.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

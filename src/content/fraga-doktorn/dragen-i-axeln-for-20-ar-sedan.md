@@ -24,6 +24,5 @@ Allt detta kan behandlas med sjukgymnastik.
 
 Vid långvarig kronisk värk som inte förbättras av sjukgymnastik är operation ett vettigt alternativ.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Sjukgymnastik/träning kan hjälpa

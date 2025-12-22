@@ -25,7 +25,6 @@ Boka en tid hos din husläkare för en bedömning. Blir problemen långvariga (m
 
 Vanliga smärtstillande mediciner är ett förstahandsval.
 
-**Sammanfattning:**
 - Sannolikt slitage eller inflammation i nyckelbensleden
 - Kontakta husläkare för bedömning
 - Vid långvariga besvär - träffa axelspecialist

@@ -19,5 +19,4 @@ Det minskar risken för att det skall bli värre.
 
 Annars kanske det räcker med lite inflammationsdämpande medicin.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

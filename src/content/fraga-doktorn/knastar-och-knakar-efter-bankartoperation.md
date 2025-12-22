@@ -23,6 +23,5 @@ Det kan vara bra att utesluta att något ankare inte lossnat eller att du har b�
 
 Artros i axelleden är inte ovanligt efter axelluxationer. , specialist i ortopedi
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

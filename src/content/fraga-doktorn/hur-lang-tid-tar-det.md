@@ -15,6 +15,5 @@ question: |
 
 Kortisoninjektioner används både för behandling och för att säkra diagnosen. Man brukar blanda ut kortisonet med vanlig tandläkarbedövning (lokalbedövning).  Är diagnosen rätt och kortisoninjektionen träffade slemsäcken så skall du normalt sätt bli bedövad i slemsäcken och i stort sett smärtfri under någon eller några timmar. Några patienter får därefter mer ont under något dygn efter kortisoninjektionen, varefter smärtan minskar. En strukturerad sjukgymnastisk behandling med inriktning mot att stärka rotatorcuffen och rotatorcuffens hjälpmuskler runt skulderbladet är den vetenskapligt bäst dokumenterade icke-kirurgiska behandlingen mot axelsmärtor.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Kortisoninjektion kan övervägas

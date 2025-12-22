@@ -16,5 +16,4 @@ Jag har inte heller ont i axeln eller är rörelseförhindrad. Detta knak kommer
 
 Knak och knäpp i olika leder är inte ovanligt. Det är inte ovanligt att det är förknippat med en viss överrörlighet i den aktuella leden. Så länge du inte har någon smärta, funktioneinskränkning eller låsning i den aktuella leden så är det inget att oroa sig över./
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

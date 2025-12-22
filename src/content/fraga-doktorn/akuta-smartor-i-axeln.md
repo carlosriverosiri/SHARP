@@ -24,7 +24,6 @@ Hej,
 
 Det finns en lång rad orsaker till smärtor i axelleden. Oftast är inte en operation den bästa lösningen. Men om du har haft ont i åtta år och har ett krävande yrke så tycker jag att du skall träffa en axelspecialist.  MR visar normalt sätt inte så mycket i din ålder. MR är inte heller en speciellt träffsäker undersökning. Kvalietén på undersökningen varierar och kvalitén på tolkningarna varierar. Nu bygger jag en komplett axelkirurgisk mottagning på Södermalm. Under byggtiden är kostnaden för privatbetalande patienter mycket låg, men då får man också acceptera hur det ser ut. Vi har avtal med landstinget först efter 1 juni. / ir, specialist i ortopedi och axelkirurgi.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

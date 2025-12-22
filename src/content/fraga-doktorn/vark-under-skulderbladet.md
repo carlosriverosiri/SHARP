@@ -16,5 +16,3 @@ question: |
 
 Tillfällig muskelvärk i olika kroppsdelar är relativt vanligt. Tål du Voltaren så kan du pröva att ta en tablett innan du går och lägger dig.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

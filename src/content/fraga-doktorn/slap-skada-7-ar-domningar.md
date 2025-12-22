@@ -55,10 +55,10 @@ Men det betyder inte att det är hopplöst.
 - Eventuellt operation om det finns en tydlig strukturell skada
 - Smärtbehandling
 
-**Sammanfattning:**
 - Det är inte för sent att söka vård
 - Utredning behövs för att fastställa diagnos
 - Operation kan vara aktuellt beroende på fynd
 - Kronisk smärta kräver ofta multimodal behandling
+
 
 

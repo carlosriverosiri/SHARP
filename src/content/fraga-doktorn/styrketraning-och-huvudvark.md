@@ -25,6 +25,5 @@ Kronisk huvudvärk är väldigt vanligt utan att man har en allvarlig sjukdom. 
 
 Lite beroende på hur man tränar kan man få olika typer av skador. En långvarig och ensidigt träning kan lätt ge betydande problem.  Hos individer som styrketränar är dock en ombalansering av muskelgrupper kanske viktigare än sjukgymnastik.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa
 - Sök remiss till specialist

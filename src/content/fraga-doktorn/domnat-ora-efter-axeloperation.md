@@ -51,10 +51,10 @@ Vid axelkirurgi ligger patienten i en speciell position. Huvudet och halsen kan 
 3. **Kontakta kirurgen** – Informera om problemet vid återbesök
 4. **Sök vård** om det förvärras eller sprider sig
 
-**Sammanfattning:**
 - Troligen tillfällig nervpåverkan från operationsläget
 - Känseln återkommer vanligtvis inom dagar till veckor
 - Dokumentera förloppet och informera din kirurg
 - Inte farligt men bör följas upp
+
 
 

@@ -17,5 +17,4 @@ Med tanke på din ålder så är smärtorna mest sannolikt beroende av en liten 
 
 Ta kontakt med en sjukgymnast för att få hjälp med att lägga upp ett systematiskt program du kan träna efter.
 
-**Sammanfattning:**
 - Sjukgymnastik/träning kan hjälpa

@@ -23,6 +23,5 @@ Det vanligaste sättet att utesluta en rotatorcuffruptur är genom att utföra e
 
 En erfaren axelspecialist kan ställa diagnosen utan MR eller ultraljud
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

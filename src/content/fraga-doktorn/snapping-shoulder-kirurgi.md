@@ -46,7 +46,6 @@ Vid kvarstående besvär kan operation bli aktuellt. Ingreppet görs med titthå
 
 Att smärtan strålar mot nacken och armen kan tyda på att det finns mer än bara snapping – även det behöver undersökas. Eh, det är inte ovanligt att man har en knäppande axel, men egentligen inga smärtor från själva knäppningarna. 
 
-**Sammanfattning:**
 - Snapping shoulder är en klinisk diagnos (MR/röntgen behövs inte)
 - Fysioterapi med skulderstabilisering är förstahandsbehandling
 - Kortisoninjektion kan ge långvarig lindring och bekräfta diagnosen

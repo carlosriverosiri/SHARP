@@ -49,10 +49,10 @@ Om "skelettet växer ihop" (heterotop ossifikation) finns det begränsade möjli
 2. **Sök second opinion** hos högspecialiserad axelkirurg
 3. **Smärtrehabilitering** kan hjälpa dig leva bättre trots begränsning
 
-**Sammanfattning:**
 - Kronisk stelhet efter instabilitetskirurgi är svårbehandlat
 - Axelprotes bör undvikas hos unga om möjligt
 - Second opinion rekommenderas
 - Smärtrehabilitering kan förbättra livskvaliteten
+
 
 

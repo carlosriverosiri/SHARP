@@ -48,10 +48,10 @@ Ipren dämpar inflammation men behandlar inte grundorsaken. Om du har en struktu
 
 I din ålder ska en axelskada kunna läka. Att den blir värre tyder på att den inte fått rätt behandling.
 
-**Sammanfattning:**
 - 8 månader med tilltagande smärta är inte normalt
 - Du behöver bilddiagnostik (MR/ultraljud)
 - Begär remiss till ortoped
 - Dokumentera som arbetsskada
+
 
 

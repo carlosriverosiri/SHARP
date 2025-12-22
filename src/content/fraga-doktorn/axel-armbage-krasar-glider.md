@@ -51,3 +51,4 @@ Krasande leder utan smärta är vanligare än man tror.
 
 **Sammanfattning:** Troligen ofarligt, men följ utvecklingen. Sök om symtomen förvärras.
 
+

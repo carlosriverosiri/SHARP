@@ -61,7 +61,6 @@ Nattliga smärtor och domningar kan tala för att du efter operationen har fått
 
 En ny operation är nog något man helst skall undvika. Vid långvariga starka smärtor runt själva nyckelbensleden, en uttalad svaghet och en betydande sänkning av din livskvalitet, kan en ny operation vara ett alternativ. De flesta kirurger brukar fatta dessa beslut i samråd med patienten. Du är naturligtvis välkomna till oss på Södermalms ortopedi. Men jag tycker att du i första hand skall prata med den kirurg som har opererat dig.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sök remiss till specialist

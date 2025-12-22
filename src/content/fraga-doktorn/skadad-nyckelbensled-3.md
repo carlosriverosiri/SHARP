@@ -21,5 +21,4 @@ Man kan också operera ett nyckelben som hoppat ur led (AC-luxation).
 
 En operation ger inte fullt lika bra resultat vad gäller smärta och rörlighet än om man inte opererar, men det ser  snyggare ut.  Det är å andras sidan enklare och snyggare att bygga muskler runt skadan än att operera den. Mycket aktiva personer som "inte bryr sig" om skada brukar få en snabbare läkning, än en väldigt orolig individ som gärna vill invänta läkning innan axeln börjar användas.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

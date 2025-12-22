@@ -15,5 +15,3 @@ question: |
 
 Man får inte feber av frozen shoulder. Har du fått feber, smärtor och stelhet i axelleden samma dag,  så måste du ta kontakt med en läkare för att genast utesluta en infektion i axelleden.
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

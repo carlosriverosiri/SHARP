@@ -30,6 +30,5 @@ Vid hög ålder (83 år),  begränsade smärtor och en fortsatt bra livskvalit�
 
 Jag tolkar ändå MR svaret som om det är en omfattande skada av rotatorcuffen. Vid uttalad värk och dålig funktion så brukar man välja mellan ett försök att reparera den skadade rotatorcuffen eller att sätta in en omvänd axelprotes. /
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

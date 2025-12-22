@@ -70,3 +70,4 @@ Många med fysiska yrken återgår till arbete, men anpassningar kan behövas.
 **Sammanfattning:** Axelprotes vid 46 är inte optimalt men kan vara rätt beslut om smärtan är för stor. De flesta återfår god funktion och kan fortsätta arbeta och träna.
 
 
+

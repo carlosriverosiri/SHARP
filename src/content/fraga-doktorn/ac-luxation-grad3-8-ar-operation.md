@@ -47,3 +47,4 @@ Operation av kronisk AC-luxation är möjlig, även 8 år senare.
 
 **Sammanfattning:** Du har rätt att bli bedömd för operation – ta kontakt med axelspecialist.
 
+

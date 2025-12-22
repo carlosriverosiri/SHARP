@@ -53,3 +53,4 @@ Kraftig bursit efter kortisoninjektion är ovanligt. Det kan bero på:
 - Sök ortoped för bedömning
 
 
+

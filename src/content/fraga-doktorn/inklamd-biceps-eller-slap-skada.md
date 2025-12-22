@@ -25,7 +25,6 @@ En skada på bicepsankaret/SLAP brukar göra riktigt ont första året, därefte
 
 En alternativ diagnos är subluxation av bicepssenan, detta kan ett tränat öga ibland se på MR. Den överlägset vanligaste diagnosen vid smärtor i biceps är dock impingement av bicepssenan.    Stabilisera skapula genom träning av latissimus dorsi, trapetzius och rhomboideer och övrig Core stability, Stabilisera axelleden genom träning av cuff.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

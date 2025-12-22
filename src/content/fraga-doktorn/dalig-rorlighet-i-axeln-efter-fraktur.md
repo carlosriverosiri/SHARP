@@ -24,5 +24,4 @@ Har flera muskelsenor gått av så kan man behöva operera axeln och sy fast des
 
 Sannolikt kommer MR undersökningen besvara en del frågor.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas

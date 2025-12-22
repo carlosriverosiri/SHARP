@@ -48,10 +48,10 @@ Inte nödvändigtvis. Men frisöryrket är krävande för axeln. Om operationen 
 3. **Begär reoperation** om det är indicerat
 4. **Överväg second opinion** om du känner dig osäker
 
-**Sammanfattning:**
 - Reoperation är möjlig och ofta framgångsrik
 - Vänta på MR-svaret innan du oroar dig för mycket
 - Du behöver inte nödvändigtvis sluta som frisör
 - Agera snabbt – tid spelar roll vid cuffrupturer
+
 
 

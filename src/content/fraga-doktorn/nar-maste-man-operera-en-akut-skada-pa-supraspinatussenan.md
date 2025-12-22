@@ -32,5 +32,3 @@ Handläggningen får nog betraktas som helt normal. Man brukar rekommendera att 
 
 Rent tekniskt så är det få supraspinatusskador som inte går att sy fast. Men har både muskel och sena förtvinat så är sannolikheten att det skall hålla inte så stor
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

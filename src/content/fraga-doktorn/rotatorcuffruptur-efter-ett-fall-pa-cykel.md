@@ -41,7 +41,6 @@ Det viktigaste är nog att bestämma sig för om rotatorcuffskadan är så pass 
 
 En supraspinatusruptur kan både ge smärtor och en minskad styrka när man använder axeln.
 
-**Sammanfattning:**
 - Individuell bedömning krävs för att avgöra om operation är möjlig
 - Muskelförtvining kan göra reparation svårare
 - Behov av operation beror på hur problematisk skadan är

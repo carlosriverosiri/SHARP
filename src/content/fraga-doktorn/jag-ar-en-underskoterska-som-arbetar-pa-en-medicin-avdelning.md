@@ -21,7 +21,6 @@ Alla vaccin innehåller medel som stimulerar immunförsvaret. En injektion i bur
 
 Min uppfattning är att tillståndet är godartat och har samma prognos och behandling som vid frusen axel. Går inte den värsta smärtan över inom ett år får man sannolikt operera bort bursan och klippa upp ledkapseln.
 
-**Sammanfattning:**
 - SIRVA (Shoulder Injury Related to Vaccine Administration) kan uppstå om vaccin injiceras för högt
 - Tillståndet liknar frozen shoulder och har liknande prognos
 - MR kan visa ödem och bursit i tidigt skede

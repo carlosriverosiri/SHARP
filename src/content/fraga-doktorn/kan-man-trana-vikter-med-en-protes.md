@@ -18,5 +18,4 @@ Upplever du idag att axelleden fungerar bra trots artrosen s책 kanske det 채r b�
 
 En axelprotes 채r en mekanisk led som best책r av en ledkula i metall och en ledsk책l i plast. Tung belastning leder till att protesen slits ut snabbare.
 
-**Sammanfattning:**
 - Operation kan vara aktuellt

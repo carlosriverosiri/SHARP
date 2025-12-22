@@ -28,7 +28,6 @@ Din nyckelbensled kommer inte att ta allvarlig skada av att du belastar den. Dä
 
 Hos personer som i många år utsatt sin axelled för tung belastning är artros i yttre nyckelbensleden ett normalt tillstånd som vanligen inte ger några kroniska smärtor.
 
-**Sammanfattning:**
 - Vila hjälper eftersom smärtan uppkommer vid belastning
 - Sjukgymnastik hjälper om axelleden är stel
 - Du kan inte skada nyckelbensleden allvarligt genom träning

@@ -31,5 +31,3 @@ En elektriker med en bicepsskada och kramper kan man dessutom behöva operera me
 
 Kramper i bicepsmuskeln är ett tecken på att senan inte vuxit fast. /
 
-**Sammanfattning:**
-- Kontakta läkare för individuell bedömning

@@ -25,7 +25,6 @@ I ditt fall så låter det som om smärtan är relaterad till menstruationscykel
 
 Smärtans cykliska förlopp och koppling till en speciell fas i menstruationscykeln gör att du kanske ska prata med en gynekolog.
 
-**Sammanfattning:**
 - Cyklisk axelsmärta utan rörelseinskränkning kan vara refererad smärta
 - Diafragmal endometrios kan orsaka högersidig axelsmärta kopplad till mens
 - Frenicus-smärta från diafragma känns i axeln men kommer från buken

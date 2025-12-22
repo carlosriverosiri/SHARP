@@ -38,6 +38,5 @@ Du behöver också kontrollera att du inte har någon svaghet i rotatorcuffen, d
 
 En ensidig svaghet i rotatorcuffen (utåtrotation) kan ibland bero på en nervinklämning av skulderbladsnerven.
 
-**Sammanfattning:**
 - Utredning med bilddiagnostik rekommenderas
 - Sjukgymnastik/träning kan hjälpa

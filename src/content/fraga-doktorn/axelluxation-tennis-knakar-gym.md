@@ -54,3 +54,4 @@ Knakning efter axelluxation är vanligt men bör tas på allvar.
 
 **Sammanfattning:** Med kvarvarande instabilitet och knakning vid 17 års ålder bör du träffa axelspecialist för att diskutera stabiliserande operation.
 
+

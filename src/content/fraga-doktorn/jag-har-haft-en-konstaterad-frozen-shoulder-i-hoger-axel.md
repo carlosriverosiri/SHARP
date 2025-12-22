@@ -17,7 +17,6 @@ Har du en gång haft frusen axel och lider av insulinbehandlad diabetes mellitus
 
 Om du är helt frisk så är risken möjligen 10-20% att du drabbas av frusen axel i den andra axeln.
 
-**Sammanfattning:**
 - Bilateral frozen shoulder förekommer
 - Risk för den andra axeln: ca 10-20% hos friska
 - Risk vid diabetes: ca 20-40%

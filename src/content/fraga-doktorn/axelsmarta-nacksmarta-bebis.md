@@ -51,3 +51,4 @@ Kombinationen axelsmärta och nackbesvär är vanlig, särskilt vid överbelastn
 
 **Sammanfattning:** Axeloperation kan hjälpa nacken indirekt, men du behöver utredning av båda.
 
+
