@@ -16,57 +16,7 @@ question: |
   Min vänstra axel har hoppat ur led flera gånger sedan 1992 och jag har alltid fått tillbaka den själv, men denna gång var annorlunda och svårare.
 ---
 
-Intressant och ovanlig skademekanism! En elstöt kan orsaka kraftig muskelkontraktion som luxerar axeln.
-
-### AC-luxation – när uppstod den?
-
-| Scenario | Sannolikhet |
-|----------|-------------|
-| Vid axelluxationen (elstöt) | Mest troligt |
-| Vid återgång till träning | Möjligt |
-| Fanns tidigare oupptäckt | Mindre troligt |
-
-### Varför troligen vid elstöten?
-
-| Faktor | Förklaring |
-|--------|------------|
-| Kraftig muskelkontraktion | Elstöt orsakar kramper |
-| Kombinerade skador | Vanligt vid högenergitrauma |
-| Svårare att reponera | Tyder på mer omfattande skada |
-
-### Din axelinstabilitet
-
-| Observation | Betydelse |
-|-------------|-----------|
-| Återkommande luxationer sedan 1992 | Sannolikt labrumskada |
-| Svårare denna gång | Möjligen ny skada |
-| Behövde "hävstång" | Mer vävnadsskada |
-
-### Vad bör du göra?
-
-| Steg | Syfte |
-|------|-------|
-| Klinisk bedömning | Undersöka båda skadorna |
-| Röntgen | AC-leden |
-| MR eller CT | Labrumskadan |
-| Diskutera operation | Instabilitet + AC-luxation |
-
-### Behandlingsalternativ
-
-| Problem | Behandling |
-|---------|------------|
-| Axelinstabilitet | Stabiliseringsoperation (Bankart/Latarjet) |
-| AC-luxation grad II | Oftast konservativt |
-| Kombination | Kan adresseras samtidigt |
-
-### Min rekommendation
-
-1. **Läkarundersökning** – Båda skadorna behöver bedömas
-2. **Bilddiagnostik** – Röntgen AC-led + MR axel
-3. **Diskutera stabilisering** – Med 30 år av luxationer är operation rimlig
-4. **Boxning** – Avvakta tills axeln är stabil
-
-**Sammanfattning:** AC-skadan uppstod troligen vid elstöten. Med din långa historia av instabilitet är det dags att överväga stabiliseringsoperation.
+Knölen på axeln beror sannolikt på AC-ledsartros och inte på att nyckelbensleden har luxerat. AC-ledsartros kan ge en  svullnad av AC-leden som gör att leden blir mer prominent och syns mer. De flesta patienter med AC-ledsartros får inga större besvär av artrosen.  
 
 
 

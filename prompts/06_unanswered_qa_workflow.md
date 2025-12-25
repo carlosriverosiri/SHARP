@@ -219,5 +219,3 @@ npm run dev
 - Starta om dev-servern: `npm run dev`
 - Rensa cache: Ta bort `.astro/`-mappen och starta om
 
-
-

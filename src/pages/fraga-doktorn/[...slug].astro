@@ -19,6 +19,24 @@ const conditionInfo = question.data.relatedCondition
   ? getConditionInfo(question.data.relatedCondition) 
   : null;
 
+// Temporär mapping från topic till diagnosnamn (för frågor utan relatedCondition men med kända topics)
+// Notera: När diagnossidor skapas för dessa, ska relatedCondition användas istället
+const topicToDiagnosisMap: Record<string, { title: string }> = {
+  'bankartskada': { title: 'Bankartskada' },
+  'axelluxation': { title: 'Axelluxation' },
+  'axeln-ur-led': { title: 'Axeln ur led' },
+  'axelinstabilitet': { title: 'Axelinstabilitet' },
+  'instabilitet': { title: 'Axelinstabilitet' },
+};
+
+// Om det inte finns en conditionInfo men det finns ett topic som matchar, använd det
+const topicDiagnosisInfo = !conditionInfo && question.data.topic && topicToDiagnosisMap[question.data.topic]
+  ? { 
+      title: topicToDiagnosisMap[question.data.topic].title,
+      url: `/fraga-doktorn/${question.data.category}/${question.data.topic}`
+    }
+  : null;
+
 // Hämta relaterade frågor (samma kategori)
 const allQuestions = await getCollection('fraga-doktorn', ({ data }) => data.published);
 const relatedQuestions = allQuestions
@@ -40,6 +58,33 @@ const categoryNames: Record<string, string> = {
   kna: 'Knä',
   armbage: 'Armbåge',
 };
+
+// Kategori-specifika färger för taggar
+const categoryTagColors: Record<string, { bg: string; text: string; hover: string; breadcrumb: string; gradient: string }> = {
+  axel: {
+    bg: 'bg-sky-600/30',
+    text: 'text-sky-300',
+    hover: 'hover:bg-sky-600/50',
+    breadcrumb: 'text-sky-400',
+    gradient: 'to-sky-900'
+  },
+  kna: {
+    bg: 'bg-emerald-600/30',
+    text: 'text-emerald-300',
+    hover: 'hover:bg-emerald-600/50',
+    breadcrumb: 'text-emerald-400',
+    gradient: 'to-emerald-900'
+  },
+  armbage: {
+    bg: 'bg-amber-600/30',
+    text: 'text-amber-300',
+    hover: 'hover:bg-amber-600/50',
+    breadcrumb: 'text-amber-400',
+    gradient: 'to-amber-900'
+  }
+};
+
+const tagColors = categoryTagColors[question.data.category] || categoryTagColors.axel;
 
 // SEO-data
 const pageTitle = `${question.data.title} - Fråga Doktorn | Södermalms Ortopedi`;
@@ -128,20 +173,56 @@ const medicalSchema = {
   ))}
 
   <!-- Hero -->
-  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12">
+  <section class={`bg-gradient-to-br from-slate-900 via-slate-800 ${tagColors.gradient} text-white pt-8 pb-12`}>
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <!-- Breadcrumbs -->
       <div class="flex flex-wrap items-center gap-2 text-sm mb-6">
         <a href="/" class="text-slate-400 hover:text-white">Hem</a>
         <span class="text-slate-500">/</span>
         <a href="/fraga-doktorn" class="text-slate-400 hover:text-white">Fråga Doktorn</a>
-        <span class="text-slate-500">/</span>
-        <span class="text-sky-400">{categoryNames[question.data.category]}</span>
+        {conditionInfo && (
+          <>
+            <span class="text-slate-500">/</span>
+            <a href={`/fraga-doktorn/sjukdom/${question.data.relatedCondition?.split('/').pop() || ''}`} class={`${tagColors.breadcrumb} hover:text-white`}>
+              {conditionInfo.title}
+            </a>
+          </>
+        )}
+        {!conditionInfo && topicDiagnosisInfo && (
+          <>
+            <span class="text-slate-500">/</span>
+            <a href={topicDiagnosisInfo.url} class={`${tagColors.breadcrumb} hover:text-white`}>
+              {topicDiagnosisInfo.title}
+            </a>
+          </>
+        )}
+        {!conditionInfo && !topicDiagnosisInfo && (
+          <>
+            <span class="text-slate-500">/</span>
+            <span class={tagColors.breadcrumb}>{categoryNames[question.data.category]}</span>
+          </>
+        )}
       </div>
       
-      <span class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase">
-        {categoryNames[question.data.category]}
-      </span>
+      {conditionInfo ? (
+        <a 
+          href={`/fraga-doktorn/sjukdom/${question.data.relatedCondition?.split('/').pop() || ''}`}
+          class={`inline-block py-1 px-3 rounded ${tagColors.bg} ${tagColors.text} text-xs font-bold mb-3 tracking-wider uppercase ${tagColors.hover} transition-colors`}
+        >
+          {conditionInfo.title}
+        </a>
+      ) : topicDiagnosisInfo ? (
+        <a 
+          href={topicDiagnosisInfo.url}
+          class={`inline-block py-1 px-3 rounded ${tagColors.bg} ${tagColors.text} text-xs font-bold mb-3 tracking-wider uppercase ${tagColors.hover} transition-colors`}
+        >
+          {topicDiagnosisInfo.title}
+        </a>
+      ) : (
+        <span class={`inline-block py-1 px-3 rounded ${tagColors.bg} ${tagColors.text} text-xs font-bold mb-3 tracking-wider uppercase`}>
+          {categoryNames[question.data.category]}
+        </span>
+      )}
       <h1 class="text-2xl md:text-3xl lg:text-4xl font-black mb-4 leading-tight tracking-tight">
         {question.data.title}
       </h1>

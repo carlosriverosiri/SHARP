@@ -1,0 +1,8 @@
+## Prompt Library Reference
+Use these by typing @filename in chat:
+- @00_add_new_prompt.md (System: Takes raw text and saves it as a new numbered prompt)
+- @04_qa_import_guide.md (How to import old questions from WordPress)
+- @05_qa_formatting_rules.md (Rules for formatting Q&A with bullet points and colored blocks)
+- @06_unanswered_qa_workflow.md (Workflow for handling new questions)
+- @07_performance_guide.md (Performance optimization guide for new pages)
+

@@ -1,0 +1,209 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getConditionInfo, conditions } from '../../../data/conditions';
+
+// Hämta alla unika condition URLs
+export async function getStaticPaths() {
+  const questions = await getCollection('fraga-doktorn', ({ data }) => data.published !== false);
+  
+  // Samla alla unika condition URLs
+  const allConditions = new Set<string>();
+  questions.forEach(q => {
+    if (q.data.relatedCondition) {
+      allConditions.add(q.data.relatedCondition);
+    }
+  });
+  
+  // Extrahera slug från URL (t.ex. "/sjukdomar/axel/ac-ledsartros" -> "ac-ledsartros")
+  return Array.from(allConditions).map(conditionUrl => {
+    const conditionInfo = getConditionInfo(conditionUrl);
+    if (!conditionInfo) return null;
+    
+    // Extrahera sista delen av URL:en som slug
+    const slug = conditionUrl.split('/').pop() || '';
+    
+    return {
+      params: { condition: slug },
+      props: { conditionUrl, conditionInfo }
+    };
+  }).filter(Boolean);
+}
+
+const { conditionUrl, conditionInfo } = Astro.props;
+
+// Hämta alla frågor med denna condition
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
+  data.published !== false && data.relatedCondition === conditionUrl
+);
+
+// Sortera efter datum (nyast först)
+const questions = allQuestions.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Kategori-namn
+const categoryNames: Record<string, string> = {
+  axel: 'Axel',
+  kna: 'Knä',
+  armbage: 'Armbåge',
+};
+
+// Kategori-specifika färger
+const categoryColors: Record<string, { bg: string; text: string; border: string; hover: string }> = {
+  axel: {
+    bg: 'bg-sky-600/30',
+    text: 'text-sky-300',
+    border: 'border-sky-300',
+    hover: 'hover:bg-sky-600/50'
+  },
+  kna: {
+    bg: 'bg-emerald-600/30',
+    text: 'text-emerald-300',
+    border: 'border-emerald-300',
+    hover: 'hover:bg-emerald-600/50'
+  },
+  armbage: {
+    bg: 'bg-amber-600/30',
+    text: 'text-amber-300',
+    border: 'border-amber-300',
+    hover: 'hover:bg-amber-600/50'
+  }
+};
+
+// Formatera datum
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('sv-SE', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }).format(date);
+}
+
+// Bestäm kategori från URL
+const category = conditionUrl.includes('/axel/') ? 'axel' : 
+                 conditionUrl.includes('/kna/') ? 'kna' : 
+                 conditionUrl.includes('/armbage/') ? 'armbage' : 'axel';
+const colors = categoryColors[category] || categoryColors.axel;
+
+const pageTitle = `Frågor om ${conditionInfo.title} | Fråga Doktorn`;
+const pageDescription = `${questions.length} frågor och svar om ${conditionInfo.title}. Läs Dr. Carlos Rivero Siris svar på patientfrågor.`;
+---
+
+<BaseLayout 
+  title={pageTitle}
+  description={pageDescription}
+>
+  <!-- Hero -->
+  <section class={`bg-gradient-to-br from-slate-900 via-slate-800 ${category === 'axel' ? 'to-sky-900' : category === 'kna' ? 'to-emerald-900' : 'to-amber-900'} text-white pt-8 pb-12`}>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-6">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/fraga-doktorn" class="text-slate-400 hover:text-white">Fråga Doktorn</a>
+        <span class="text-slate-500">/</span>
+        <span class={colors.text}>{conditionInfo.title}</span>
+      </div>
+      
+      <span class={`inline-block py-1 px-3 rounded ${colors.bg} ${colors.text} text-xs font-bold mb-3 tracking-wider uppercase`}>
+        {conditionInfo.title}
+      </span>
+      
+      <h1 class="text-2xl md:text-3xl lg:text-4xl font-black mb-4 leading-tight tracking-tight">
+        Frågor om {conditionInfo.title}
+      </h1>
+      
+      <p class="text-slate-300 max-w-2xl mb-4">
+        {conditionInfo.shortDescription}
+      </p>
+      
+      <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {questions.length} {questions.length === 1 ? 'besvarad fråga' : 'besvarade frågor'}
+        </span>
+        <a 
+          href={conditionInfo.url}
+          class={`${colors.text} hover:text-white transition-colors inline-flex items-center gap-1`}
+        >
+          Läs mer om {conditionInfo.title}
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Innehåll -->
+  <section class="bg-white py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      
+      <!-- Frågelista -->
+      {questions.length > 0 ? (
+        <div class="space-y-4">
+          {questions.map((q) => (
+            <a 
+              href={`/fraga-doktorn/${q.slug}`}
+              class="block bg-white rounded-xl border border-gray-200 p-5 hover:border-sky-300 hover:shadow-md transition-all group"
+            >
+              <h2 class="font-semibold text-gray-900 group-hover:text-sky-700 mb-2 text-lg">
+                {q.data.title}
+              </h2>
+              {q.data.description && (
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                  {q.data.description}
+                </p>
+              )}
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <time>
+                    {formatDate(q.data.date)}
+                  </time>
+                  {q.data.category && (
+                    <span class="text-gray-400">•</span>
+                  )}
+                  {q.data.category && (
+                    <span>{categoryNames[q.data.category]}</span>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-600">Inga frågor har ännu kategoriserats under denna diagnos.</p>
+        </div>
+      )}
+
+      <!-- Tillbaka-länk -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="flex flex-wrap gap-4">
+          <a 
+            href="/fraga-doktorn" 
+            class="text-sky-600 hover:text-sky-800 font-medium inline-flex items-center gap-2"
+          >
+            ← Tillbaka till alla frågor
+          </a>
+          {categoryNames[category] && (
+            <>
+              <span class="text-gray-300">|</span>
+              <a 
+                href={`/fraga-doktorn/${category}/`}
+                class="text-sky-600 hover:text-sky-800 font-medium"
+              >
+                Alla frågor om {categoryNames[category].toLowerCase()}
+              </a>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+

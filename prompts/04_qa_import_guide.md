@@ -158,5 +158,3 @@ Prognosen är god. Det brukar gå över inom 12–18 månader.
 
 *Senast uppdaterad: 2025-12-17*
 
-
-
