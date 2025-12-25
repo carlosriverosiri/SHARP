@@ -1,0 +1,871 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AuthorCard from '../../../components/AuthorCard.astro';
+import RefLink from '../../../components/RefLink.astro';
+import RefDrawer from '../../../components/RefDrawer.astro';
+import { getCollection } from 'astro:content';
+
+// Hämta relaterade frågor om Parsonage-Turner (om det finns)
+const allQuestions = await getCollection('fraga-doktorn', ({ data }) => {
+  return data.published === true && (
+    data.topic === 'parsonage-turner' || 
+    data.tags?.includes('nervskada') ||
+    data.tags?.includes('plexusskada')
+  );
+});
+
+// Sortera efter datum och ta max 7
+const relatedQuestions = allQuestions
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 7);
+
+// FAKTA & FÖRFATTARE
+const authorName = "Dr. Carlos Rivero Siri";
+const authorUrl = "https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri";
+const authorImage = "/images/carlos-rivero-siri.webp";
+const currentDate = new Date().toISOString().split('T')[0];
+
+// SENAST MEDICINSKT GRANSKAD (uppdatera manuellt vid innehållsändringar)
+const lastMedicalReview = "25 december 2024";
+
+// INNEHÅLLSFÖRTECKNING
+const tableOfContents = [
+  { id: "symtom", title: "Symtom", icon: "1" },
+  { id: "diagnos", title: "Diagnos", icon: "2" },
+  { id: "behandling", title: "Behandling", icon: "3" },
+  { id: "sjukskrivning", title: "Sjukskrivning", icon: "4" },
+  { id: "prognos", title: "Prognos", icon: "5" },
+  { id: "faq", title: "Vanliga frågor", icon: "?" },
+];
+
+// VIDEO (sätt till null för att dölja sektionen)
+const videoUrl = null;
+const videoTitle = "Parsonage-Turner Syndrom förklarat";
+
+// REFERENSDATA
+const references = [
+  {
+    id: "1",
+    text: "van Alfen N, van Engelen BG. The clinical spectrum of neuralgic amyotrophy in 246 cases. Brain. 2006;129:438-450.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/16371410/"
+  },
+  {
+    id: "2",
+    text: "Parsonage MJ, Turner JW. Neuralgic amyotrophy; the shoulder-girdle syndrome. Lancet. 1948;1(6513):973-978.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/18866299/"
+  },
+  {
+    id: "3",
+    text: "Pan Y, et al. Hourglass-like constrictions of peripheral nerve in the upper extremity: a clinical review and pathological study. Neurosurgery. 2014;75(1):10-22.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/24618801/"
+  },
+  {
+    id: "4",
+    text: "Sneag DB, et al. MRI Findings of Neuralgic Amyotrophy. AJNR Am J Neuroradiol. 2016;37(5):946-953.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/26721771/"
+  },
+  {
+    id: "5",
+    text: "Feinberg JH, Radecki J. Parsonage-Turner syndrome. HSS J. 2010;6(2):199-205.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/21886536/"
+  },
+  {
+    id: "6",
+    text: "van Alfen N. Clinical and pathophysiological concepts of neuralgic amyotrophy. Nat Rev Neurol. 2011;7(6):315-322.",
+    url: "https://www.nature.com/articles/nrneurol.2011.62"
+  },
+  {
+    id: "7",
+    text: "Cup EH, et al. Referral of patients with neuromuscular disease to occupational therapy, physical therapy and speech therapy. Disabil Rehabil. 2007;29(9):717-726.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/17453994/"
+  },
+  {
+    id: "8",
+    text: "Tsairis P, Dyck PJ, Mulder DW. Natural history of brachial plexus neuropathy. Report on 99 patients. Arch Neurol. 1972;27(2):109-117.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/4339239/"
+  },
+  {
+    id: "9",
+    text: "Suarez GA, et al. The electrodiagnostic examination in neuralgic amyotrophy. Neurology. 1996;46:1021-1025.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/8780082/"
+  },
+  {
+    id: "10",
+    text: "Gstoettner C, et al. Surgical treatment of idiopathic neuralgic amyotrophy: a systematic review. J Neurosurg. 2020;133:1905-1913.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/32005013/"
+  },
+  {
+    id: "11",
+    text: "Fibla J, et al. Spontaneous recovery in paralytic brachial neuritis. Orthopedics. 1998;21(1):71-73.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/9474633/"
+  },
+  {
+    id: "12",
+    text: "van Eijk JJ, et al. Predicting recovery from neuralgic amyotrophy. J Peripher Nerv Syst. 2016;21(2):134-141.",
+    url: "https://pubmed.ncbi.nlm.nih.gov/27138551/"
+  }
+];
+
+// SCHEMA.ORG - MedicalWebPage
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Parsonage-Turner Syndrom - Symptom & Behandling",
+  "author": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "datePublished": "2024-12-25",
+  "dateModified": "2024-12-25",
+  "lastReviewed": "2024-12-25",
+  "reviewedBy": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "about": {
+    "@type": "MedicalCondition",
+    "name": "Parsonage-Turner Syndrome (Neuralgic Amyotrophy)",
+    "alternateName": ["Neuralgisk Amyotrofi", "Brachial Plexus Neuritis"],
+    "possibleTreatment": [
+      { "@type": "MedicalTherapy", "name": "Smärtlindring (analgetika, neuroleptika)" },
+      { "@type": "MedicalTherapy", "name": "Fysioterapi och rörelseträning" },
+      { "@type": "MedicalTherapy", "name": "Nervfrigörning (neurolys)" }
+    ]
+  }
+};
+
+// SCHEMA.ORG - FAQPage
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Är Parsonage-Turner Syndrom en stroke?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nej, Parsonage-Turner Syndrom drabbar perifera nerver i axeln/armen (plexus brachialis), inte hjärnan. Det är en inflammatorisk nervsjukdom, inte en kärlsjukdom som stroke."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kan jag träna bort svagheten vid Parsonage-Turner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nej, inte i början. Nerven måste först läka innan musklerna kan aktiveras igen. Att träna en förlamad muskel hjälper inte. Däremot är det viktigt att bibehålla rörligheten med passiva rörelser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hur lång tid tar det att bli frisk från Parsonage-Turner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Återhämtningen är långsam då nerver läker med cirka 1 mm per dag. De flesta (80-90%) återfår god funktion, men det tar i genomsnitt 18 månader."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kommer smärtan tillbaka vid Parsonage-Turner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Återfall är sällsynta men förekommer hos cirka 5-10% av patienterna. Om det sker drabbar det ofta samma eller motstående sida."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vad orsakar Parsonage-Turner Syndrom?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Orsaken är inte helt klarlagd men troligen en autoimmun reaktion. Vanliga utlösande faktorer är viral infektion, vaccination, kirurgi eller kraftig fysisk ansträngning."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout 
+  title="Parsonage-Turner Syndrom - Symptom & Behandling | Södermalms Ortopedi"
+  description="Parsonage-Turner Syndrom (neuralgisk amyotrofi) - symtom, diagnos och behandling. Extrem axelsmärta följt av muskelsvaghet. Expertinformation från Dr. Carlos Rivero Siri."
+  image="/images/carlos-rivero-siri.webp"
+  type="article"
+>
+  
+  <!-- Article-specifika meta (utöver automatiska) -->
+  <meta slot="head" property="article:author" content="Dr. Carlos Rivero Siri" />
+  <meta slot="head" property="article:published_time" content="2024-12-25" />
+  <meta slot="head" property="article:modified_time" content="2024-12-25" />
+  <meta slot="head" property="article:section" content="Axelsjukdomar" />
+  <meta slot="head" property="article:tag" content="Parsonage-Turner" />
+  <meta slot="head" property="article:tag" content="Nervskada" />
+  <meta slot="head" property="article:tag" content="Axelsmärta" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Hem", "item": "https://sodermalmsortopedi.se/" },
+      { "@type": "ListItem", "position": 2, "name": "Sjukdomar", "item": "https://sodermalmsortopedi.se/sjukdomar" },
+      { "@type": "ListItem", "position": 3, "name": "Axel", "item": "https://sodermalmsortopedi.se/sjukdomar/axel" },
+      { "@type": "ListItem", "position": 4, "name": "Parsonage-Turner Syndrom", "item": "https://sodermalmsortopedi.se/sjukdomar/axel/parsonage-turner" }
+    ]
+  })} />
+
+  <!-- KOMPAKT HERO -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-4">
+        <a href="/" class="text-slate-400 hover:text-white">Hem</a>
+        <span class="text-slate-500">/</span>
+        <a href="/sjukdomar" class="text-slate-400 hover:text-white">Sjukdomar</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-sky-400">Axel</span>
+      </div>
+      
+      <div class="grid lg:grid-cols-3 gap-8 items-end">
+        <div class="lg:col-span-2">
+          <span class="inline-block py-1 px-3 rounded bg-rose-600/30 text-rose-300 text-xs font-bold mb-3 tracking-wider uppercase">
+            Sällsynt nervsjukdom
+          </span>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight tracking-tight">
+            Parsonage-Turner Syndrom
+          </h1>
+          <p class="text-slate-300 text-base md:text-lg max-w-xl leading-relaxed">
+            Akut inflammatorisk nervsjukdom med extrem smärta följt av förlamning. God prognos: 80-90% återfår funktion<RefLink id="8" text="Naturalförlopp." url={references[7].url} />.
+          </p>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+              <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medicinskt granskad</p>
+              <a href={authorUrl} class="text-sm font-bold text-white hover:text-sky-200">{authorName}</a>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Specialist i Ortopedi &amp; Axelkirurgi</div>
+          <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-xs text-slate-300">Uppdaterad: <strong class="text-white">{lastMedicalReview}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TL;DR SAMMANFATTNING -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <div class="bg-gradient-to-r from-rose-50 to-amber-50 rounded-xl p-5 border border-rose-200">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+              Sammanfattning
+              <span class="text-xs font-normal text-slate-500 normal-case">⏱ 6 min läsning</span>
+            </h2>
+            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+              <strong>Parsonage-Turner Syndrom</strong> (neuralgisk amyotrofi) är en akut inflammatorisk nervsjukdom. 
+              Den börjar med <strong>brutal axelsmärta</strong> (VAS 8-10) i 1-4 veckor, följt av muskelsvaghet 
+              när smärtan avtar. De flesta återhämtar sig men det tar 6-24 månader.
+            </p>
+            <div class="grid sm:grid-cols-3 gap-3 text-xs">
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-rose-600 font-bold">⚡</span>
+                <span><strong>Smärta först</strong> – sedan svaghet</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-sky-600 font-bold">✓</span>
+                <span><strong>Diagnos:</strong> Klinik + EMG/MR</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span><strong>80-90%</strong> god återhämtning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Innehållsförteckning - endast mobil -->
+      <nav class="mt-4 lg:hidden">
+        <details class="bg-sky-50 rounded-lg border border-sky-200">
+          <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+            <span class="font-bold text-sky-800 text-sm uppercase tracking-wide">📑 Innehåll</span>
+            <svg class="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="px-3 pb-2 flex flex-wrap gap-2">
+            {tableOfContents.map((item) => (
+              <a href={`#${item.id}`} class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-sky-700 bg-white px-2.5 py-1 rounded-full border border-slate-200 hover:border-sky-300 transition-colors">
+                <span class="w-4 h-4 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">{item.icon}</span>
+                {item.title}
+              </a>
+            ))}
+          </div>
+        </details>
+      </nav>
+    </div>
+  </section>
+
+  <!-- VIDEO SEKTION (visas endast om videoUrl är satt) -->
+  {videoUrl && (
+    <section class="bg-slate-900 py-10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
+            <path fill="#fff" d="M9.545 15.568V8.432L15.818 12z"/>
+          </svg>
+          {videoTitle}
+        </h2>
+        <div class="aspect-video rounded-xl overflow-hidden bg-slate-800">
+          <iframe 
+            src={videoUrl}
+            title={videoTitle}
+            class="w-full h-full"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- HUVUDINNEHÅLL: 3-KOLUMN LAYOUT -->
+  <section class="bg-slate-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-12 gap-8">
+        
+        <!-- VÄNSTER SIDEBAR: SNABBFAKTA -->
+        <aside class="lg:col-span-3 order-2 lg:order-1">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Utlösande faktorer -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-amber-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Utlösande faktorer</h3>
+              </div>
+              <div class="p-4">
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  Orsaken är okänd men troligen <strong>autoimmun reaktion</strong><RefLink id="6" text="Patofysiologi." url={references[5].url} />. Vanliga triggers:
+                </p>
+                <ul class="space-y-2 text-sm text-slate-700">
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span>Viral infektion (vanligast)</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span>Vaccination</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span>Kirurgiskt ingrepp</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span>Kraftig fysisk ansträngning</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span>Graviditet/förlossning</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Patologi: Timglasförträngning -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-rose-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Patologi</h3>
+              </div>
+              <div class="p-4">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">Timglasförträngning</h4>
+                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                  "Hourglass constriction" – typisk förträngning av nerven som kan ses på MR<RefLink id="3" text="Hourglass constrictions." url={references[2].url} />.
+                </p>
+                <p class="text-xs text-slate-500 mb-2">Oftast drabbade nerver:</p>
+                <ul class="space-y-1 text-xs text-slate-600">
+                  <li class="flex gap-2">
+                    <span class="text-rose-500">→</span>
+                    <span><strong>N. suprascapularis</strong> (vanligast)</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-rose-500">→</span>
+                    <span><strong>N. axillaris</strong></span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-rose-500">→</span>
+                    <span><strong>N. thoracicus longus</strong></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- HUVUDKOLUMN -->
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-8">
+          
+          <!-- SYMTOM: De tre faserna -->
+          <article id="symtom" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">1</span>
+              Symtom – De tre faserna
+            </h2>
+            <p class="text-slate-600 mb-5 text-base leading-relaxed">
+              Sjukdomen följer ett typiskt mönster med tre distinkta faser. Sekvensen <strong>smärta → svaghet</strong> är nyckeln till diagnos<RefLink id="1" text="Kliniskt spektrum." url={references[0].url} />.
+            </p>
+            
+            <div class="grid sm:grid-cols-3 gap-3 mb-6">
+              <div class="bg-rose-50 rounded-lg p-4 border-l-3 border-l-rose-500">
+                <h3 class="font-bold text-rose-800 text-sm mb-1">Fas 1: Smärta</h3>
+                <p class="text-slate-600 text-sm">Brutal smärta (VAS 8-10), värre nattetid. Varar 1-4 veckor<RefLink id="2" text="Parsonage & Turner 1948." url={references[1].url} />.</p>
+              </div>
+              <div class="bg-amber-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-amber-800 text-sm mb-1">Fas 2: Svaghet</h3>
+                <p class="text-slate-600 text-sm">Förlamning/svaghet när smärtan avtar. "Scapula alata" vanligt.</p>
+              </div>
+              <div class="bg-green-50 rounded-lg p-4 border-l-3 border-l-green-500">
+                <h3 class="font-bold text-green-800 text-sm mb-1">Fas 3: Läkning</h3>
+                <p class="text-slate-600 text-sm">Långsam återhämtning (~1 mm/dag). Tar 6-24 månader.</p>
+              </div>
+            </div>
+
+            <!-- Smärtbeskrivning -->
+            <div class="bg-rose-50 border border-rose-200 rounded-lg p-4">
+              <h4 class="font-bold text-rose-800 text-sm mb-2">"Suicide pain"</h4>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Smärtan beskrivs ofta som den värsta patienten upplevt. <strong>Konstant</strong>, värre på natten, 
+                och <strong>ingen position lindrar</strong>. Opiater och neuroleptika kan krävas<RefLink id="5" text="Behandlingsalternativ." url={references[4].url} />.
+              </p>
+            </div>
+
+            <!-- Typiska symtom vid svaghetsfasen -->
+            <div class="mt-4">
+              <h4 class="font-bold text-slate-800 text-sm mb-2">Typiska symtom vid svaghetsfasen:</h4>
+              <ul class="space-y-1 text-sm text-slate-600">
+                <li class="flex gap-2"><span class="text-amber-500">•</span>Svårt att lyfta armen (deltoideus/supraspinatus)</li>
+                <li class="flex gap-2"><span class="text-amber-500">•</span><strong>Scapula alata</strong> ("vingscapula") vid n. thoracicus longus-skada</li>
+                <li class="flex gap-2"><span class="text-amber-500">•</span>Snabb muskelatrofi (synlig inom veckor)</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- DIAGNOS -->
+          <article id="diagnos" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm">2</span>
+              Diagnos
+            </h2>
+            
+            <div class="flex flex-col md:flex-row gap-5 mb-6">
+              <div class="flex-1">
+                <p class="text-slate-600 text-base leading-relaxed mb-4">
+                  Diagnosen baseras primärt på den <strong>typiska kliniska bilden</strong>: akut smärta som följs av svaghet<RefLink id="5" text="Diagnos och handläggning." url={references[4].url} />.
+                </p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                  <li class="flex gap-2"><span class="text-sky-500">•</span><strong>Klinisk bild:</strong> Typisk anamnes är nyckeln</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span><strong>MR axel/plexus:</strong> Denervationsödem i akutskedet<RefLink id="4" text="MRI-fynd." url={references[3].url} /></li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span><strong>EMG/Neurografi:</strong> Bekräftar nervskadan (efter 3-4 v)<RefLink id="9" text="EMG vid neuralgisk amyotrofi." url={references[8].url} /></li>
+                  <li class="flex gap-2"><span class="text-amber-500">⚠</span>Uteslut cervical radikulopati</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Differentialdiagnoser -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <h4 class="font-bold text-amber-800 text-sm mb-2">⚠ Viktiga differentialdiagnoser</h4>
+              <div class="grid sm:grid-cols-2 gap-2 text-xs text-slate-700">
+                <div class="flex gap-2"><span class="text-amber-500">•</span>Cervical radikulopati (diskbråck)</div>
+                <div class="flex gap-2"><span class="text-amber-500">•</span>Rotatorkuffruptur</div>
+                <div class="flex gap-2"><span class="text-amber-500">•</span>Frozen shoulder</div>
+                <div class="flex gap-2"><span class="text-amber-500">•</span>Tumör i plexus brachialis</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- BEHANDLING -->
+          <article id="behandling" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">3</span>
+              Behandlingsalternativ
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Behandlingen är primärt <strong>konservativ</strong> med fokus på smärtlindring och att bibehålla rörlighet. 
+              Kirurgi övervägs endast i utvalda fall med tydlig nervförträngning<RefLink id="10" text="Kirurgisk behandling." url={references[9].url} />.
+            </p>
+
+            <!-- Konservativ -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-green-800 mb-3 text-sm uppercase tracking-wide">Konservativ behandling (Förstahand)</h3>
+              <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Smärtlindring:</strong> Opiater, gabapentin kan krävas<RefLink id="5" text="Smärtbehandling." url={references[4].url} /></div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Kortison:</strong> Diskuteras i tidigt skede</div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Rörelseträning:</strong> Passiva rörelser, undvik stelhet<RefLink id="7" text="Rehab." url={references[6].url} /></div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">~</span>
+                  <div><strong>Ingen tung träning</strong> under läkningsfasen</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kirurgisk -->
+            <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+              <h3 id="kirurgisk-behandling" class="font-bold text-sky-800 mb-3 text-sm uppercase tracking-wide scroll-mt-16">Kirurgisk behandling (Sällan)</h3>
+              <div class="text-sm text-slate-700">
+                <p class="mb-2">
+                  <strong>Nervfrigörning (neurolys)</strong> kan övervägas om MR visar tydlig timglasförträngning 
+                  och ingen återhämtning skett efter 3-6 månader<RefLink id="10" text="Kirurgisk behandling." url={references[9].url} />.
+                </p>
+                <ul class="space-y-1 text-slate-600">
+                  <li>• <strong>Sen-transferering:</strong> Vid bestående förlamning efter 2 år</li>
+                  <li class="text-amber-700">⚠ Kirurgi är sällan förstahandsval – de flesta läker spontant</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- SJUKSKRIVNINGSTID -->
+          <article id="sjukskrivning" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">4</span>
+              Sjukskrivning &amp; Återgång
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Sjukskrivningen är ofta <strong>långvarig</strong> (månader) beroende på yrke och drabbade funktioner. 
+              Nerver läker långsamt (~1 mm/dag).
+            </p>
+
+            <!-- Återgångstider -->
+            <div class="space-y-3 mb-5">
+              <div class="flex items-center gap-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Kontorsarbete</h4>
+                  <p class="text-slate-600 text-sm">Möjligt tidigare, men begränsad armfunktion kan påverka</p>
+                </div>
+                <div class="text-amber-700 font-bold text-sm whitespace-nowrap">Individuellt</div>
+              </div>
+
+              <div class="flex items-center gap-4 bg-rose-50 border border-rose-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Fysiskt arbete / Idrott</h4>
+                  <p class="text-slate-600 text-sm">Ingen kontaktidrott förrän styrkan är helt normal</p>
+                </div>
+                <div class="text-rose-700 font-bold text-sm whitespace-nowrap">6-24 mån</div>
+              </div>
+            </div>
+
+            <!-- Dr. Carlos kommentar -->
+            <blockquote class="p-4 bg-slate-800 text-white rounded-lg border-l-4 border-sky-500">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+                  <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <p class="text-sm italic text-slate-200 leading-relaxed mb-2">
+                    "Parsonage-Turner är en fruktansvärd upplevelse – brutal smärta följt av förlamning. 
+                    Men det finns hopp: de allra flesta blir bra. Nyckeln är tålamod och att undvika 
+                    frozen shoulder genom passiv rörlighetsträning."
+                  </p>
+                  <p class="text-xs text-sky-300 font-medium">— Dr. Carlos Rivero Siri</p>
+                </div>
+              </div>
+            </blockquote>
+          </article>
+
+          <!-- PROGNOS -->
+          <article id="prognos" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm">5</span>
+              Prognos
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Prognosen är generellt <strong>god</strong>, men återhämtningen tar tid. 
+              Majoriteten återfår funktion inom 2 år<RefLink id="8" text="Naturalförlopp." url={references[7].url} /><RefLink id="12" text="Prediktion av återhämtning." url={references[11].url} />.
+            </p>
+
+            <div class="grid sm:grid-cols-3 gap-3 mb-5">
+              <div class="bg-green-50 rounded-lg p-4 text-center border border-green-200">
+                <p class="text-3xl font-bold text-green-700">80-90%</p>
+                <p class="text-sm text-slate-600">Återfår god funktion</p>
+              </div>
+              <div class="bg-sky-50 rounded-lg p-4 text-center border border-sky-200">
+                <p class="text-3xl font-bold text-sky-700">18 mån</p>
+                <p class="text-sm text-slate-600">Genomsnittlig läkningstid</p>
+              </div>
+              <div class="bg-amber-50 rounded-lg p-4 text-center border border-amber-200">
+                <p class="text-3xl font-bold text-amber-700">5-10%</p>
+                <p class="text-sm text-slate-600">Risk för återfall<RefLink id="1" text="Återfallsrisk." url={references[0].url} /></p>
+              </div>
+            </div>
+
+            <!-- Tidslinje -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 class="font-bold text-slate-700 text-sm mb-3">Typisk tidslinje</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center gap-3">
+                  <span class="w-20 text-rose-600 font-bold">Vecka 0-4</span>
+                  <span class="text-slate-600">Intensiv smärtfas. Fokus på smärtlindring.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-20 text-amber-600 font-bold">Månad 1-6</span>
+                  <span class="text-slate-600">Svaghetsfas. Passiv rörlighetsträning.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-20 text-sky-600 font-bold">Månad 6-12</span>
+                  <span class="text-slate-600">Gradvis återhämtning. Aktiv träning.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-20 text-green-600 font-bold">Månad 12-24</span>
+                  <span class="text-slate-600">Full återhämtning för de flesta.</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </main>
+
+        <!-- HÖGER SIDEBAR -->
+        <aside class="lg:col-span-3 order-3">
+          <div class="lg:sticky lg:top-6 space-y-4 flex flex-col lg:min-h-[820px]">
+            
+            <!-- Innehållsförteckning - endast desktop -->
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Innehåll</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a 
+                    href={`#${item.id}`} 
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
+            <!-- Röda flaggor -->
+            <div class="bg-white rounded-xl shadow-sm border border-rose-200 overflow-hidden">
+              <div class="bg-rose-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">⚠ Röda flaggor</h3>
+              </div>
+              <div class="p-4">
+                <p class="text-xs text-slate-600 mb-3">Sök vård akut vid:</p>
+                <ul class="space-y-2 text-sm text-slate-700">
+                  <li class="flex gap-2">
+                    <span class="text-rose-500 font-bold">!</span>
+                    <span>Bilateral svaghet (båda armarna)</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-rose-500 font-bold">!</span>
+                    <span>Andningssvårigheter</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-rose-500 font-bold">!</span>
+                    <span>Snabbt progredierande symtom</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-rose-500 font-bold">!</span>
+                    <span>Feber och allmänpåverkan</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Relaterade frågor & svar -->
+            {relatedQuestions.length > 0 && (
+              <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden lg:mt-auto">
+                <div class="bg-emerald-600 text-white px-4 py-3 flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 class="font-bold text-sm uppercase tracking-wide">Frågor &amp; Svar</h3>
+                </div>
+                <div class="p-4 space-y-3">
+                  <p class="text-xs text-slate-500 mb-2">Relaterade patientfrågor:</p>
+                  {relatedQuestions.map((q) => (
+                    <a 
+                      href={`/fraga-doktorn/${q.slug}/`}
+                      class="block text-sm text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 p-2 rounded-lg transition-colors border border-transparent hover:border-emerald-200"
+                    >
+                      <span class="font-medium line-clamp-2">{q.data.title}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SEKTION - KOMPAKT -->
+  <section id="faq" class="bg-white py-10 border-t border-slate-200 scroll-mt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Vanliga frågor om Parsonage-Turner Syndrom</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Är det en stroke?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            <strong>Nej.</strong> PTS drabbar perifera nerver i axeln/armen, inte hjärnan. Stroke ger ofta ansiktsförlamning och talsvårigheter – symtom som inte ses vid PTS.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Kan jag träna bort svagheten?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            <strong>Nej, inte i början.</strong> Nerven måste läka först. Fokusera på passiv rörlighetsträning för att undvika frozen shoulder.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Kommer smärtan tillbaka?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Återfall är <strong>sällsynta</strong> (5-10%)<RefLink id="1" text="Återfallsfrekvens." url={references[0].url} />. Om det sker drabbar det ofta samma eller motstående sida.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Hur lång tid tar läkningen?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Nerver läker långsamt (~1 mm/dag). De flesta (80-90%) återfår god funktion men det tar i genomsnitt <strong>18 månader</strong><RefLink id="8" text="Naturalförlopp." url={references[7].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-sky-50 open:ring-1 open:ring-sky-200 transition-all md:col-span-2 lg:col-span-2">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Kan man förebygga Parsonage-Turner?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            <strong>Nej.</strong> Orsaken är inte helt klarlagd så det finns inga kända förebyggande åtgärder. Tillståndet är vanligare hos män i 20-60 års ålder. Det finns en ärftlig form (HNPP) där återfall är vanligare.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- KOMPAKT CTA -->
+  <section class="bg-gradient-to-r from-sky-700 to-sky-800 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-center md:text-left">
+          <h2 class="text-xl font-bold text-white mb-1">Plötslig, svår axelsmärta?</h2>
+          <p class="text-sky-200 text-sm">Boka tid för ordentlig utredning hos axelspecialist.</p>
+        </div>
+        <div class="flex gap-3">
+          <a href="/boka" class="bg-white text-sky-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-50 transition shadow-lg">
+            Boka tid
+          </a>
+          <a href="/egenremiss" class="bg-sky-600 text-white border border-sky-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-500 transition">
+            Egenremiss
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KOMPAKT REFERENSER -->
+  <section class="bg-slate-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <details class="group">
+        <summary class="flex items-center gap-2 cursor-pointer text-slate-700 font-bold text-sm uppercase tracking-wide select-none">
+          <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          Visa alla {references.length} referenser
+        </summary>
+        <div class="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {references.map((ref, i) => (
+            <a href={ref.url} class="text-xs text-slate-600 hover:text-sky-700 hover:bg-white p-2 rounded transition block" target="_blank" rel="noopener noreferrer">
+              <span class="font-bold text-slate-400 mr-1">[{i + 1}]</span>
+              {ref.text}
+            </a>
+          ))}
+        </div>
+        <p class="text-xs text-slate-500 mt-4 italic">
+          Alla referenser granskade för hög medicinsk tillförlitlighet. Uppdaterad {currentDate}.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- FÖRFATTARE & REFDRAWER -->
+  <section class="py-8 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+      <AuthorCard 
+        name={authorName}
+        title="Specialist i Ortopedi & Axelkirurgi"
+        image={authorImage}
+        profileUrl={authorUrl}
+      />
+      <RefDrawer references={references} />
+    </div>
+  </section>
+
+</BaseLayout>
+
