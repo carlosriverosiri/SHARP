@@ -15,7 +15,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 ---
 
 <!-- Top Bar -->
-<div class="bg-[#023550] text-white font-medium text-center py-2 text-sm z-50 border-b border-blue-400 sticky top-0">
+<div id="top-bar" class="bg-[#023550] text-white font-medium text-center py-2 text-sm z-50 border-b border-blue-400 sticky top-0">
   {isEnglish ? (
     <span>Open to patients from all of Sweden via <a href="/en/free-choice" class="underline font-semibold text-blue-300 hover:text-white">Free Healthcare Choice</a>.</span>
   ) : (
@@ -698,13 +698,16 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
   const mobileMenu = document.getElementById('mobile-menu');
   const closeMobileMenu = document.getElementById('close-mobile-menu');
 
+  const topBar = document.getElementById('top-bar');
+
   if (mobileMenuToggle && mobileMenu && closeMobileMenu) {
     mobileMenuToggle.addEventListener('click', () => {
       mobileMenu.classList.remove('translate-x-full');
       mobileMenu.classList.add('translate-x-0');
       mobileMenu.classList.remove('hidden'); 
       mobileMenuToggle.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden'; 
+      document.body.style.overflow = 'hidden';
+      if (topBar) topBar.style.display = 'none'; // Hide top bar
     });
 
     closeMobileMenu.addEventListener('click', () => {
@@ -714,7 +717,8 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
         mobileMenu.classList.add('hidden');
       }, 300); 
       mobileMenuToggle.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = ''; 
+      document.body.style.overflow = '';
+      if (topBar) topBar.style.display = ''; // Show top bar
     });
 
     mobileMenu.querySelectorAll('a').forEach(link => {
@@ -726,6 +730,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
         }, 300);
         mobileMenuToggle.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
+        if (topBar) topBar.style.display = ''; // Show top bar
       });
     });
 
