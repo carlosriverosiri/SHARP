@@ -105,6 +105,21 @@ const references = [
     id: "15",
     text: "Yavari et al. The Incidence of Ossified Superior Transverse Scapular Ligament during Nerve Transfer through Posterior Shoulder Approach. Archives of Bone and Joint Surgery. 2019.",
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC6578474/"
+  },
+  {
+    id: "16",
+    text: "Davis et al. A retrospective review of 112 patients undergoing arthroscopic suprascapular nerve decompression. Journal of Orthopaedics. 2019.",
+    url: "https://doi.org/10.1016/j.jor.2019.11.048"
+  },
+  {
+    id: "17",
+    text: "Ludig et al. MR Imaging Evaluation of Suprascapular Nerve Entrapment. European Radiology. 2001.",
+    url: "https://doi.org/10.1007/s003300100968"
+  },
+  {
+    id: "18",
+    text: "Scalf et al. MRI Findings of 26 Patients with Parsonage-Turner Syndrome. American Journal of Roentgenology. 2007.",
+    url: "https://doi.org/10.2214/AJR.06.1136"
   }
 ];
 
@@ -603,11 +618,11 @@ const faqSchema = {
               <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
                 <h3 class="font-bold text-sky-800 mb-2 text-sm uppercase tracking-wide">MRI - Structural Assessment</h3>
                 <p class="text-sm text-slate-700 leading-relaxed mb-2">
-                  MRI is the preferred imaging modality to identify the cause and assess muscle involvement<RefLink id="1" text="MRI findings" url={references[0].url} />:
+                  MRI is the preferred imaging modality to identify the cause and assess muscle involvement<RefLink id="1" text={references[0].text} url={references[0].url} /><RefLink id="17" text={references[16].text} url={references[16].url} />:
                 </p>
                 <ul class="text-sm text-slate-600 space-y-1">
                   <li class="flex gap-2"><span class="text-sky-500">•</span>Ganglion cysts and space-occupying lesions</li>
-                  <li class="flex gap-2"><span class="text-sky-500">•</span>Muscle edema (acute denervation)</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Muscle edema on T2/STIR (early sign of denervation – more sensitive than EMG)</li>
                   <li class="flex gap-2"><span class="text-sky-500">•</span>Fatty infiltration and atrophy (chronic)</li>
                   <li class="flex gap-2"><span class="text-sky-500">•</span>Associated labral pathology</li>
                 </ul>
@@ -948,9 +963,9 @@ const faqSchema = {
               MRI is valuable in selected cases, particularly when I need to:
             </p>
             <ul class="text-slate-400 text-sm space-y-1">
-              <li class="flex gap-2"><span class="text-sky-400">•</span>Exclude Parsonage-Turner syndrome (neuralgic amyotrophy)</li>
+              <li class="flex gap-2"><span class="text-sky-400">•</span>Exclude Parsonage-Turner syndrome (neuralgic amyotrophy)<RefLink id="18" text={references[17].text} url={references[17].url} /></li>
               <li class="flex gap-2"><span class="text-sky-400">•</span>Identify compressive causes like ganglion cysts</li>
-              <li class="flex gap-2"><span class="text-sky-400">•</span>Assess muscle edema (more sensitive than EMG for early involvement)</li>
+              <li class="flex gap-2"><span class="text-sky-400">•</span>Assess muscle edema (T2-hyperintensity) – more sensitive than EMG for early involvement<RefLink id="17" text={references[16].text} url={references[16].url} /></li>
             </ul>
             <p class="text-slate-500 text-xs mt-2 italic">MRI is not mandatory when clinical findings and isolated weakness are clear.</p>
           </div>
@@ -977,7 +992,7 @@ const faqSchema = {
             </li>
             <li class="flex gap-3">
               <span class="text-amber-400 font-bold shrink-0">3.</span>
-              <span><strong class="text-white">Treatment:</strong> Early arthroscopic release for motor involvement – excellent prognosis with &gt;90–95% improvement in pain and strength according to literature</span>
+              <span><strong class="text-white">Treatment:</strong> Early arthroscopic release for motor involvement – excellent prognosis with &gt;90–95% improvement in pain and strength<RefLink id="16" text={references[15].text} url={references[15].url} /><RefLink id="11" text={references[10].text} url={references[10].url} /></span>
             </li>
           </ul>
         </div>
