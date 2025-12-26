@@ -265,23 +265,7 @@ const faqSchema = {
           </p>
         </div>
         
-        <!-- Hero Image -->
-        <div class="hidden lg:block">
-          <!-- TODO: Download this image to local assets -->
-          <figure class="rounded-xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur">
-            <img 
-              src="https://specialist.se/wp-content/uploads/nervus_suprascapularis.svg" 
-              alt={imageData.heroNerve.alt}
-              title={imageData.heroNerve.title}
-              class="w-full h-auto"
-              loading="eager"
-            />
-            <figcaption class="p-3 text-xs text-slate-300 bg-black/20">
-              {imageData.heroNerve.caption}
-            </figcaption>
-          </figure>
         </div>
-      </div>
       
       <!-- Author card -->
       <div class="mt-6 bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10 max-w-md">
@@ -467,9 +451,26 @@ const faqSchema = {
               <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">1</span>
               Etiology & Pathology
             </h2>
-            <p class="text-slate-600 mb-5 text-base leading-relaxed">
-              Suprascapular neuropathy is caused by compression or traction of the suprascapular nerve along its course from the brachial plexus to the rotator cuff muscles<RefLink id="1" text="Etiology overview" url={references[0].url} /><RefLink id="5" text="Pathology review" url={references[4].url} />.
-            </p>
+            
+            <div class="flex flex-col md:flex-row gap-6 mb-6">
+              <div class="flex-1">
+                <p class="text-slate-600 text-base leading-relaxed">
+                  Suprascapular neuropathy is caused by compression or traction of the suprascapular nerve along its course from the brachial plexus to the rotator cuff muscles<RefLink id="1" text="Etiology overview" url={references[0].url} /><RefLink id="5" text="Pathology review" url={references[4].url} />.
+                </p>
+              </div>
+              <figure class="w-full md:w-64 shrink-0 rounded-lg overflow-hidden border border-slate-200 bg-slate-800">
+                <img 
+                  src="https://specialist.se/wp-content/uploads/nervus_suprascapularis.svg" 
+                  alt={imageData.heroNerve.alt}
+                  title={imageData.heroNerve.title}
+                  class="w-full h-auto p-2"
+                  loading="lazy"
+                />
+                <figcaption class="p-2 text-xs text-slate-300 bg-slate-700">
+                  {imageData.heroNerve.caption}
+                </figcaption>
+              </figure>
+            </div>
             
             <div class="grid sm:grid-cols-2 gap-4 mb-6">
               <div class="bg-emerald-50 rounded-lg p-4 border-l-3 border-l-emerald-500">
