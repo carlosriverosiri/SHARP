@@ -1,0 +1,1030 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import AuthorCard from '../../../../components/AuthorCard.astro';
+import RefLink from '../../../../components/RefLink.astro';
+import RefDrawer from '../../../../components/RefDrawer.astro';
+
+// AUTHOR & DATE INFO
+const authorName = "Dr. Carlos Rivero Siri";
+const authorUrl = "https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri";
+const authorImage = "/images/carlos-rivero-siri.webp";
+const currentDate = new Date().toISOString().split('T')[0];
+
+// LAST MEDICAL REVIEW (update manually when content changes)
+const lastMedicalReview = "25 December 2024";
+
+// TABLE OF CONTENTS
+const tableOfContents = [
+  { id: "etiology", title: "Etiology & Pathology", icon: "1" },
+  { id: "symptoms", title: "Symptoms", icon: "2" },
+  { id: "diagnosis", title: "Diagnosis", icon: "3" },
+  { id: "treatment", title: "Treatment", icon: "4" },
+  { id: "sick-leave", title: "Sick Leave", icon: "5" },
+  { id: "return-to-sport", title: "Return to Sport", icon: "6" },
+  { id: "faq", title: "FAQ", icon: "?" },
+];
+
+// VIDEO (set to null to hide section)
+const videoUrl = null;
+const videoTitle = "Suprascapular Neuropathy Explained";
+
+// REFERENCE DATA - Matched from Zotero list
+const references = [
+  {
+    id: "1",
+    text: "Bozzi et al. Suprascapular Neuropathy around the Shoulder: A Current Concept Review. Journal of Clinical Medicine. 2020.",
+    url: "https://doi.org/10.3390/jcm9082331"
+  },
+  {
+    id: "2",
+    text: "Brzoska et al. Arm Function After Arthroscopic Decompression of the Suprascapular Nerve at the Spinoglenoid Notch and Suprascapular Notch in Volleyball Players. Orthopaedic Journal of Sports Medicine. 2023.",
+    url: "https://doi.org/10.1177/23259671221147892"
+  },
+  {
+    id: "3",
+    text: "Choi & Di Maria. Electrodiagnostic Testing for Disorders of Peripheral Nerves. Clinics in Geriatric Medicine. 2021.",
+    url: "https://doi.org/10.1016/j.cger.2021.01.010"
+  },
+  {
+    id: "4",
+    text: "Ferretti et al. Injury of the Suprascapular Nerve at the Spinoglenoid Notch. The American Journal of Sports Medicine. 1998.",
+    url: "https://doi.org/10.1177/03635465980260060401"
+  },
+  {
+    id: "5",
+    text: "Kostretzis et al. Suprascapular Nerve Pathology: A Review of the Literature. The Open Orthopaedics Journal. 2017.",
+    url: "https://doi.org/10.2174/1874325001711010140"
+  },
+  {
+    id: "6",
+    text: "Lafosse et al. Arthroscopic Release of Suprascapular Nerve Entrapment at the Suprascapular Notch: Technique and Preliminary Results. Arthroscopy. 2007.",
+    url: "https://doi.org/10.1016/j.arthro.2006.10.003"
+  },
+  {
+    id: "7",
+    text: "Lawand et al. Return to Play and Outcomes of Surgically Treated Upper Limb Nerve Entrapment in Athletes: A Systematic Review. International Orthopaedics. 2025.",
+    url: "https://doi.org/10.1007/s00264-025-06473-9"
+  },
+  {
+    id: "8",
+    text: "Leider et al. Treatment of suprascapular nerve entrapment syndrome. Orthopedic Reviews. 2021.",
+    url: "https://doi.org/10.52965/001c.25554"
+  },
+  {
+    id: "9",
+    text: "Loirat et al. A New Approach for Endoscopic Neurolysis of the Suprascapular Nerve at the Spinoglenoid Notch: A Preliminary Cadaver Study. Orthopaedics & Traumatology: Surgery & Research. 2017.",
+    url: "https://doi.org/10.1016/j.otsr.2017.04.011"
+  },
+  {
+    id: "10",
+    text: "Millett et al. Suprascapular Nerve Entrapment: Technique for Arthroscopic Release. Techniques in Shoulder and Elbow Surgery. 2006.",
+    url: "https://doi.org/10.1097/00132589-200606000-00004"
+  },
+  {
+    id: "11",
+    text: "Momaya et al. Clinical Outcomes of Suprascapular Nerve Decompression: A Systematic Review. Journal of Shoulder and Elbow Surgery. 2018.",
+    url: "https://doi.org/10.1016/j.jse.2017.09.025"
+  },
+  {
+    id: "12",
+    text: "Sandler et al. High rates of return to sport after suprascapular nerve decompression: an updated systematic review. JSES Reviews, Reports, and Techniques. 2024.",
+    url: "https://doi.org/10.1016/j.xrrt.2024.05.007"
+  },
+  {
+    id: "13",
+    text: "Vij et al. Outcomes after Minimally Invasive and Surgical Management of Suprascapular Nerve Entrapment: A Systematic Review. Orthopedic Reviews. 2022.",
+    url: "https://doi.org/10.52965/001c.37157"
+  },
+  {
+    id: "14",
+    text: "Witvrouw et al. Suprascapular neuropathy in volleyball players. British Journal of Sports Medicine. 2000.",
+    url: "https://doi.org/10.1136/bjsm.34.3.174"
+  },
+  {
+    id: "15",
+    text: "Yavari et al. The Incidence of Ossified Superior Transverse Scapular Ligament during Nerve Transfer through Posterior Shoulder Approach. Archives of Bone and Joint Surgery. 2019.",
+    url: "https://doi.org/10.22038/ABJS.2019.35118.1909"
+  }
+];
+
+// IMAGE METADATA FOR SEO
+const imageData = {
+  heroNerve: {
+    alt: "Anatomy of the suprascapular nerve showing its course from the brachial plexus through the suprascapular notch to the supraspinatus and infraspinatus muscles",
+    title: "Suprascapular nerve anatomy - course and distribution",
+    caption: "The suprascapular nerve travels through the suprascapular notch under the transverse scapular ligament to innervate the supraspinatus and infraspinatus muscles"
+  },
+  ganglionEntrapment: {
+    alt: "Illustration of suprascapular nerve entrapment by a paralabral ganglion cyst at the spinoglenoid notch",
+    title: "Ganglion cyst causing suprascapular nerve compression",
+    caption: "A ganglion cyst arising from a labral tear can compress the suprascapular nerve at the spinoglenoid notch"
+  },
+  infraspinatusAtrophy: {
+    alt: "Clinical photograph showing infraspinatus muscle atrophy in a patient with suprascapular neuropathy - visible wasting of the posterior shoulder muscle",
+    title: "Infraspinatus atrophy from suprascapular nerve compression",
+    caption: "Visible wasting of the infraspinatus muscle indicates denervation from suprascapular nerve compression at the spinoglenoid notch"
+  }
+};
+
+// SCHEMA.ORG - MedicalWebPage
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Suprascapular Neuropathy - Symptoms & Treatment",
+  "author": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "datePublished": "2024-12-25",
+  "dateModified": "2024-12-25",
+  "lastReviewed": "2024-12-25",
+  "reviewedBy": {
+    "@type": "Person",
+    "name": authorName,
+    "url": authorUrl
+  },
+  "about": {
+    "@type": "MedicalCondition",
+    "name": "Suprascapular Neuropathy",
+    "possibleTreatment": [
+      { "@type": "MedicalTherapy", "name": "Conservative treatment (activity modification, physical therapy)" },
+      { "@type": "MedicalTherapy", "name": "Arthroscopic nerve decompression" }
+    ]
+  }
+};
+
+// SCHEMA.ORG - FAQPage
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What causes suprascapular neuropathy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Suprascapular neuropathy is caused by compression or traction of the nerve. Common causes include ganglion cysts from labral tears, repetitive overhead activities (volleyball, baseball), massive rotator cuff tears, and anatomical variations like a narrow suprascapular notch or ossified transverse scapular ligament."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long is recovery after suprascapular nerve decompression?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most patients return to sedentary work within 3-4 weeks. Return to heavy manual labor typically takes 3-4 months. Athletes generally return to competitive play within 3-8 months, with 92-98% returning to sport and 88-96% reaching their previous performance level."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will my muscle recover after suprascapular nerve surgery?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "While functional outcomes are excellent with 92-98% of patients regaining normal function, only about 50% show complete recovery of infraspinatus muscle volume. However, this typically does not significantly impact daily function or sports performance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the gold standard test for suprascapular neuropathy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "EMG and nerve conduction velocity (NCV) studies remain the gold standard for confirming the diagnosis and localizing the exact site of nerve lesion. MRI is used to identify space-occupying lesions like ganglion cysts and to assess muscle edema and fatty infiltration."
+      }
+    }
+  ]
+};
+---
+
+<BaseLayout 
+  title="Suprascapular Neuropathy - Symptoms & Treatment | Expert Guide"
+  description="Suprascapular neuropathy causes deep shoulder pain and weakness in external rotation. Learn about symptoms, diagnosis with EMG/MRI, and treatment options including arthroscopic decompression."
+  image="https://specialist.se/wp-content/uploads/nervus_suprascapularis.svg"
+  type="article"
+>
+  
+  <!-- Article-specific meta -->
+  <meta slot="head" property="article:author" content="Dr. Carlos Rivero Siri" />
+  <meta slot="head" property="article:published_time" content="2024-12-25" />
+  <meta slot="head" property="article:modified_time" content="2024-12-25" />
+  <meta slot="head" property="article:section" content="Shoulder Conditions" />
+  <meta slot="head" property="article:tag" content="Suprascapular Neuropathy" />
+  <meta slot="head" property="article:tag" content="Shoulder Pain" />
+  <meta slot="head" property="article:tag" content="Nerve Entrapment" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://sodermalmsortopedi.se/en/" },
+      { "@type": "ListItem", "position": 2, "name": "Diseases", "item": "https://sodermalmsortopedi.se/en/diseases" },
+      { "@type": "ListItem", "position": 3, "name": "Shoulder", "item": "https://sodermalmsortopedi.se/en/diseases/shoulder" },
+      { "@type": "ListItem", "position": 4, "name": "Suprascapular Neuropathy", "item": "https://sodermalmsortopedi.se/en/diseases/shoulder/suprascapular-neuropathy" }
+    ]
+  })} />
+
+  <!-- HERO SECTION -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white pt-8 pb-12 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-4">
+        <a href="/en/" class="text-slate-400 hover:text-white">Home</a>
+        <span class="text-slate-500">/</span>
+        <a href="/en/diseases" class="text-slate-400 hover:text-white">Diseases</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-emerald-400">Shoulder</span>
+      </div>
+      
+      <div class="grid lg:grid-cols-3 gap-8 items-center">
+        <div class="lg:col-span-2">
+          <span class="inline-block py-1 px-3 rounded bg-emerald-600/30 text-emerald-300 text-xs font-bold mb-3 tracking-wider uppercase">
+            Shoulder Nerve Disorder
+          </span>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight tracking-tight">
+            Suprascapular Neuropathy
+          </h1>
+          <p class="text-slate-300 text-base md:text-lg max-w-xl leading-relaxed">
+            A cause of deep shoulder pain and weakness often missed or misdiagnosed. Common in overhead athletes and can be caused by ganglion cysts<RefLink id="1" text="Common etiology" url={references[0].url} />.
+          </p>
+        </div>
+        
+        <!-- Hero Image -->
+        <div class="hidden lg:block">
+          <!-- TODO: Download this image to local assets -->
+          <figure class="rounded-xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur">
+            <img 
+              src="https://specialist.se/wp-content/uploads/nervus_suprascapularis.svg" 
+              alt={imageData.heroNerve.alt}
+              title={imageData.heroNerve.title}
+              class="w-full h-auto"
+              loading="eager"
+            />
+            <figcaption class="p-3 text-xs text-slate-300 bg-black/20">
+              {imageData.heroNerve.caption}
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+      
+      <!-- Author card -->
+      <div class="mt-6 bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10 max-w-md">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-400 shrink-0">
+            <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+          </div>
+          <div>
+            <p class="text-xs text-emerald-300 uppercase tracking-wider font-bold">Medically Reviewed</p>
+            <a href={authorUrl} class="text-sm font-bold text-white hover:text-emerald-200">{authorName}</a>
+          </div>
+        </div>
+        <div class="text-xs text-slate-400">Specialist in Orthopaedics & Shoulder Surgery</div>
+        <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="text-xs text-slate-300">Updated: <strong class="text-white">{lastMedicalReview}</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TL;DR SUMMARY -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-5 border border-emerald-200">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-2 flex items-center gap-2">
+              Key Points
+              <span class="text-xs font-normal text-slate-500 normal-case">⏱ 10 min read</span>
+            </h2>
+            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+              <strong>Suprascapular neuropathy</strong> causes deep, diffuse shoulder pain and weakness in abduction/external rotation. 
+              Often caused by ganglion cysts or repetitive overhead activities. <strong>EMG is the gold standard</strong> for diagnosis, 
+              with arthroscopic decompression offering excellent outcomes when surgery is needed.
+            </p>
+            <div class="grid sm:grid-cols-3 gap-3 text-xs">
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span><strong>92-98%</strong> return to sport after surgery</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>6 months</strong> conservative trial if no cyst</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                <span class="text-teal-600 font-bold">✓</span>
+                <span><strong>3-8 months</strong> return to competition</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Table of contents - mobile only -->
+      <nav class="mt-4 lg:hidden">
+        <details class="bg-emerald-50 rounded-lg border border-emerald-200">
+          <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+            <span class="font-bold text-emerald-800 text-sm uppercase tracking-wide">📑 Contents</span>
+            <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="px-3 pb-2 flex flex-wrap gap-2">
+            {tableOfContents.map((item) => (
+              <a href={`#${item.id}`} class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-emerald-700 bg-white px-2.5 py-1 rounded-full border border-slate-200 hover:border-emerald-300 transition-colors">
+                <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">{item.icon}</span>
+                {item.title}
+              </a>
+            ))}
+          </div>
+        </details>
+      </nav>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT: 3-COLUMN LAYOUT -->
+  <section class="bg-slate-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-12 gap-8">
+        
+        <!-- LEFT SIDEBAR: QUICK FACTS -->
+        <aside class="lg:col-span-3 order-2 lg:order-1">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Ganglion Cyst Info -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-amber-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Paralabral Ganglion Cysts</h3>
+              </div>
+              <div class="p-4">
+                <!-- TODO: Download this image to local assets -->
+                <figure class="rounded-lg overflow-hidden border border-slate-200 mb-4">
+                  <img 
+                    src="https://specialist.se/wp-content/uploads/nervus_suprascapularisinklamning_ganglion.svg" 
+                    alt={imageData.ganglionEntrapment.alt}
+                    title={imageData.ganglionEntrapment.title}
+                    class="w-full h-auto"
+                    loading="lazy"
+                  />
+                  <figcaption class="p-2 text-xs text-slate-500 bg-slate-50">
+                    <strong>Nerve compression:</strong> Ganglion cyst at the spinoglenoid notch.
+                  </figcaption>
+                </figure>
+                
+                <h4 class="font-bold text-slate-800 text-sm mb-2">Most Common Cause</h4>
+                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                  Paralabral ganglion cysts are the most common space-occupying lesion causing suprascapular neuropathy<RefLink id="1" text="Common etiology" url={references[0].url} />. 
+                  These cysts typically arise from labral tears and compress the nerve at the spinoglenoid notch.
+                </p>
+                
+                <div class="space-y-2 text-xs text-slate-600 mb-3">
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>Often associated with superior labral (SLAP) tears</span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>Compress nerve at spinoglenoid notch</span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-amber-600 font-bold">•</span>
+                    <span>Cause isolated infraspinatus atrophy</span>
+                  </div>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <h5 class="font-bold text-green-800 text-xs mb-1">Treatment</h5>
+                  <p class="text-xs text-slate-600">
+                    Arthroscopic cyst decompression ± labral repair. Excellent outcomes with high return to sport rates<RefLink id="12" text="Return to sport" url={references[11].url} />.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- At-Risk Athletes -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-rose-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">At-Risk Athletes</h3>
+              </div>
+              <div class="p-4">
+                <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                  Dynamic entrapment from repetitive overhead activities is common in certain sports<RefLink id="14" text="Volleyball players" url={references[13].url} />.
+                </p>
+                <div class="space-y-2 text-xs">
+                  <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-2">
+                    <span class="text-rose-600 font-bold">🏐</span>
+                    <span><strong>Volleyball</strong> – serving & spiking</span>
+                  </div>
+                  <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-2">
+                    <span class="text-rose-600 font-bold">⚾</span>
+                    <span><strong>Baseball</strong> – pitching</span>
+                  </div>
+                  <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-2">
+                    <span class="text-rose-600 font-bold">🎾</span>
+                    <span><strong>Tennis</strong> – serving</span>
+                  </div>
+                  <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-2">
+                    <span class="text-rose-600 font-bold">🏊</span>
+                    <span><strong>Swimming</strong> – overhead strokes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- MAIN COLUMN -->
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-8">
+          
+          <!-- ETIOLOGY & PATHOLOGY -->
+          <article id="etiology" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">1</span>
+              Etiology & Pathology
+            </h2>
+            <p class="text-slate-600 mb-5 text-base leading-relaxed">
+              Suprascapular neuropathy is caused by compression or traction of the suprascapular nerve along its course from the brachial plexus to the rotator cuff muscles<RefLink id="1" text="Etiology overview" url={references[0].url} /><RefLink id="5" text="Pathology review" url={references[4].url} />.
+            </p>
+            
+            <div class="grid sm:grid-cols-2 gap-4 mb-6">
+              <div class="bg-emerald-50 rounded-lg p-4 border-l-3 border-l-emerald-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-2">Primary (Dynamic) Causes</h3>
+                <ul class="text-slate-600 text-sm space-y-1">
+                  <li>• Repetitive overhead activities</li>
+                  <li>• Volleyball, baseball, swimming<RefLink id="14" text="Athletes" url={references[13].url} /></li>
+                  <li>• Overhead laborers</li>
+                  <li>• Nerve stretch and microtrauma</li>
+                </ul>
+              </div>
+              <div class="bg-amber-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-2">Secondary (Structural) Causes</h3>
+                <ul class="text-slate-600 text-sm space-y-1">
+                  <li>• Paralabral ganglion cysts<RefLink id="1" text="Cysts" url={references[0].url} /></li>
+                  <li>• Massive rotator cuff tears</li>
+                  <li>• Fractures (scapular neck)</li>
+                  <li>• Tumors</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Anatomical Predisposition -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 class="font-bold text-slate-700 text-sm mb-2">Anatomical Predisposition</h4>
+              <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                Certain anatomical variations increase the risk of nerve entrapment<RefLink id="15" text="Anatomical variations" url={references[14].url} />:
+              </p>
+              <div class="grid sm:grid-cols-2 gap-2 text-xs">
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">⚠</span>
+                  <span>Narrow suprascapular notch</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">⚠</span>
+                  <span>Ossified superior transverse scapular ligament (~12%)<RefLink id="15" text="12% incidence" url={references[14].url} /></span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">⚠</span>
+                  <span>Type III notch (small, V-shaped)</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-amber-500 font-bold">⚠</span>
+                  <span>Hypertrophied ligament</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- SYMPTOMS -->
+          <article id="symptoms" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">2</span>
+              Symptoms & Clinical Presentation
+            </h2>
+            <p class="text-slate-600 mb-5 text-base leading-relaxed">
+              Patients typically present with insidious onset of deep, diffuse shoulder pain and progressive weakness<RefLink id="1" text="Clinical presentation" url={references[0].url} />.
+            </p>
+            
+            <div class="grid sm:grid-cols-3 gap-3 mb-6">
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Pain Character</h3>
+                <p class="text-slate-600 text-sm">Deep, dull, and diffuse. Posterior and lateral shoulder.</p>
+              </div>
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Radiation</h3>
+                <p class="text-slate-600 text-sm">May radiate to neck, arm, or scapular region.</p>
+              </div>
+              <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
+                <h3 class="font-bold text-slate-800 text-sm mb-1">Weakness</h3>
+                <p class="text-slate-600 text-sm">Abduction and external rotation weakness.</p>
+              </div>
+            </div>
+
+            <!-- Atrophy Image -->
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+              <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">Muscle Atrophy</h4>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  Visible muscle wasting is a key clinical sign. The pattern of atrophy depends on the site of nerve compression:
+                </p>
+                <ul class="space-y-2 text-sm text-slate-600">
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span><strong>Suprascapular notch:</strong> Both supraspinatus AND infraspinatus atrophy</span>
+                  </li>
+                  <li class="flex gap-2">
+                    <span class="text-amber-500 font-bold">•</span>
+                    <span><strong>Spinoglenoid notch:</strong> Isolated infraspinatus atrophy (more common with cysts)</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- TODO: Download this image to local assets -->
+              <figure class="w-full md:w-48 shrink-0 rounded-lg overflow-hidden border border-slate-200">
+                <img 
+                  src="http://res.cloudinary.com/menisk/image/upload/v1474315510/atrofi-infraspinatus_wxcidd.png" 
+                  alt={imageData.infraspinatusAtrophy.alt}
+                  title={imageData.infraspinatusAtrophy.title}
+                  class="w-full h-auto"
+                  loading="lazy"
+                />
+                <figcaption class="p-2 text-xs text-slate-500 bg-slate-50 text-center">
+                  <strong>Infraspinatus atrophy:</strong> Visible wasting of the posterior shoulder muscle.
+                </figcaption>
+              </figure>
+            </div>
+
+            <!-- Clinical warning -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <h4 class="font-bold text-amber-800 text-sm mb-2">⚠ Often Misdiagnosed</h4>
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Suprascapular neuropathy is frequently mistaken for rotator cuff disease, cervical radiculopathy, or non-specific shoulder pain. 
+                A high index of suspicion is needed, especially in overhead athletes with weakness out of proportion to pain<RefLink id="5" text="Diagnostic challenges" url={references[4].url} />.
+              </p>
+            </div>
+          </article>
+
+          <!-- DIAGNOSIS -->
+          <article id="diagnosis" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm">3</span>
+              Diagnosis
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Diagnosis relies on clinical examination, electrodiagnostic studies, and imaging<RefLink id="3" text="Electrodiagnostics" url={references[2].url} /><RefLink id="1" text="Diagnostic approach" url={references[0].url} />.
+            </p>
+
+            <!-- Clinical Tests -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-emerald-800 mb-3 text-sm uppercase tracking-wide">Clinical Examination</h3>
+              <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                <div class="bg-white rounded-lg p-3 border border-emerald-100">
+                  <h4 class="font-bold text-slate-800 text-sm mb-1">Suprascapular Stretch Test</h4>
+                  <p class="text-slate-600 text-xs">Pain when head turned away from affected side while shoulder is depressed.</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-emerald-100">
+                  <h4 class="font-bold text-slate-800 text-sm mb-1">Cross-Arm Adduction Test</h4>
+                  <p class="text-slate-600 text-xs">Pain when arm is pulled horizontally across chest (adducted).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Imaging & EMG -->
+            <div class="space-y-4">
+              <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+                <h3 class="font-bold text-sky-800 mb-2 text-sm uppercase tracking-wide">MRI - Structural Assessment</h3>
+                <p class="text-sm text-slate-700 leading-relaxed mb-2">
+                  MRI is the preferred imaging modality to identify the cause and assess muscle involvement<RefLink id="1" text="MRI findings" url={references[0].url} />:
+                </p>
+                <ul class="text-sm text-slate-600 space-y-1">
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Ganglion cysts and space-occupying lesions</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Muscle edema (acute denervation)</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Fatty infiltration and atrophy (chronic)</li>
+                  <li class="flex gap-2"><span class="text-sky-500">•</span>Associated labral pathology</li>
+                </ul>
+              </div>
+
+              <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <h3 class="font-bold text-purple-800 mb-2 text-sm uppercase tracking-wide flex items-center gap-2">
+                  <span class="text-yellow-500">⭐</span> EMG/NCV - Gold Standard
+                </h3>
+                <p class="text-sm text-slate-700 leading-relaxed">
+                  Electromyography (EMG) and nerve conduction velocity (NCV) studies remain the <strong>gold standard</strong> for confirming diagnosis and localizing the exact site of nerve lesion<RefLink id="3" text="Electrodiagnostic gold standard" url={references[2].url} />. 
+                  EMG can differentiate between suprascapular notch and spinoglenoid notch compression based on the pattern of muscle involvement.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- TREATMENT -->
+          <article id="treatment" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">4</span>
+              Treatment Options
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Treatment depends on the underlying cause. Conservative management is appropriate for dynamic entrapment without space-occupying lesions<RefLink id="8" text="Treatment algorithm" url={references[7].url} />.
+            </p>
+
+            <!-- Conservative -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-green-800 mb-3 text-sm uppercase tracking-wide">Conservative Treatment</h3>
+              <p class="text-sm text-slate-700 mb-3">
+                A <strong>6-month trial</strong> is generally recommended if no space-occupying lesion is present<RefLink id="8" text="Conservative trial" url={references[7].url} /><RefLink id="11" text="Treatment outcomes" url={references[10].url} />:
+              </p>
+              <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Activity modification:</strong> Avoid overhead movements and provocative activities</div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>NSAIDs:</strong> For pain and inflammation control</div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Physical therapy:</strong> Periscapular strengthening and flexibility</div>
+                </div>
+                <div class="flex gap-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <div><strong>Scapular mechanics:</strong> Optimize scapulothoracic rhythm</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Surgical -->
+            <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+              <h3 class="font-bold text-sky-800 mb-3 text-sm uppercase tracking-wide">Surgical Treatment</h3>
+              <p class="text-sm text-slate-700 mb-3">
+                Surgery is indicated for<RefLink id="6" text="Surgical indications" url={references[5].url} /><RefLink id="10" text="Arthroscopic technique" url={references[9].url} />:
+              </p>
+              <ul class="text-sm text-slate-600 space-y-1 mb-4">
+                <li class="flex gap-2"><span class="text-sky-500">•</span>Space-occupying lesions (ganglion cysts, tumors)</li>
+                <li class="flex gap-2"><span class="text-sky-500">•</span>Severe or progressive muscle atrophy</li>
+                <li class="flex gap-2"><span class="text-sky-500">•</span>Failure of 6-month conservative trial</li>
+              </ul>
+
+              <div class="bg-white border border-sky-200 rounded-lg p-3">
+                <h4 class="font-bold text-sky-800 text-sm mb-2">Arthroscopic Decompression – Modern Gold Standard</h4>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                  Arthroscopic nerve release offers better visualization, lower morbidity, and faster recovery compared to open approaches<RefLink id="6" text="Arthroscopic advantage" url={references[5].url} />. 
+                  The procedure involves release of the transverse scapular ligament at the suprascapular notch ± cyst decompression and labral repair at the spinoglenoid notch.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- SICK LEAVE -->
+          <article id="sick-leave" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">5</span>
+              Sick Leave & Return to Work
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Recovery timelines after surgical intervention vary based on the type of work<RefLink id="6" text="Postoperative protocol" url={references[5].url} /><RefLink id="11" text="Return to work" url={references[10].url} />.
+            </p>
+
+            <!-- Work return timeline -->
+            <div class="space-y-3 mb-5">
+              <div class="flex items-center gap-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Sedentary / Office Work</h4>
+                  <p class="text-slate-600 text-sm">Return to normal daily activities and desk work. Mean: 3 weeks (range: 2 days – 3 months)<RefLink id="6" text="Early return office" url={references[5].url} /></p>
+                </div>
+                <div class="text-green-700 font-bold text-sm whitespace-nowrap">~4 weeks</div>
+              </div>
+
+              <div class="flex items-center gap-4 bg-sky-50 border border-sky-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Light Manual Labor</h4>
+                  <p class="text-slate-600 text-sm">Active movements within painless range encouraged by week 2</p>
+                </div>
+                <div class="text-sky-700 font-bold text-sm whitespace-nowrap">2–6 weeks</div>
+              </div>
+
+              <div class="flex items-center gap-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                  <svg class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-bold text-slate-800 text-sm">Heavy Manual Labor</h4>
+                  <p class="text-slate-600 text-sm">Muscle strengthening programs begin at 6–12 weeks postop. Full return aligned with return to sport<RefLink id="11" text="Heavy labor timeline" url={references[10].url} /></p>
+                </div>
+                <div class="text-amber-700 font-bold text-sm whitespace-nowrap">3–4 months</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- RETURN TO SPORT -->
+          <article id="return-to-sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm">6</span>
+              Return to Sport (RTS)
+            </h2>
+            
+            <p class="text-slate-600 text-base leading-relaxed mb-5">
+              Return to sport outcomes after suprascapular nerve decompression are excellent<RefLink id="12" text="High return rates" url={references[11].url} /><RefLink id="7" text="Athlete outcomes" url={references[6].url} />.
+            </p>
+
+            <!-- Rehabilitation Phases -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-5">
+              <h3 class="font-bold text-emerald-800 mb-3 text-sm uppercase tracking-wide">Rehabilitation Protocol</h3>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-start gap-3 bg-white rounded-lg p-3 border border-emerald-100">
+                  <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                  <div>
+                    <strong>Week 0–2:</strong> Passive motion, Codman's exercises, isometric exercises<RefLink id="6" text="Early motion" url={references[5].url} />
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 bg-white rounded-lg p-3 border border-emerald-100">
+                  <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                  <div>
+                    <strong>Week 4–8:</strong> Strengthening programs begin (4 weeks if isolated decompression, 6 weeks if labral repair also performed)
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 bg-white rounded-lg p-3 border border-emerald-100">
+                  <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                  <div>
+                    <strong>Month 3–8:</strong> Sport-specific training and return to competition
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RTS Timeline -->
+            <div class="grid sm:grid-cols-2 gap-4 mb-5">
+              <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+                <h4 class="font-bold text-sky-800 text-sm mb-2">Return to Training</h4>
+                <p class="text-2xl font-black text-sky-700">4–8 weeks</p>
+                <p class="text-xs text-slate-600 mt-1">Non-contact, sport-specific activities</p>
+              </div>
+              <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 class="font-bold text-green-800 text-sm mb-2">Return to Competition</h4>
+                <p class="text-2xl font-black text-green-700">3–8 months</p>
+                <p class="text-xs text-slate-600 mt-1">Full contact, competitive play<RefLink id="12" text="Competition timeline" url={references[11].url} /></p>
+              </div>
+            </div>
+
+            <!-- Outcomes -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h4 class="font-bold text-green-800 text-sm mb-3 flex items-center gap-2">
+                <span class="text-green-600">✓</span> Outstanding Outcomes
+              </h4>
+              <div class="grid sm:grid-cols-3 gap-3 text-center">
+                <div class="bg-white rounded-lg p-3 border border-green-100">
+                  <p class="text-2xl font-black text-green-700">92–98%</p>
+                  <p class="text-xs text-slate-600">Return to sport<RefLink id="12" text="RTS rate" url={references[11].url} /></p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-green-100">
+                  <p class="text-2xl font-black text-emerald-700">88–96%</p>
+                  <p class="text-xs text-slate-600">Return to previous level<RefLink id="7" text="Performance level" url={references[6].url} /></p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-green-100">
+                  <p class="text-2xl font-black text-teal-700">~50%</p>
+                  <p class="text-xs text-slate-600">Complete muscle recovery</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 mt-3 italic">
+                Note: Despite excellent functional outcomes, only about 50% of patients show complete recovery of infraspinatus muscle volume. However, this typically does not significantly impact sports performance.
+              </p>
+            </div>
+
+            <!-- Conservative RTS -->
+            <div class="mt-4 bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 class="font-bold text-slate-700 text-sm mb-2">Conservative Treatment RTS</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                In cases of dynamic primary compression treated conservatively, athletes may return to competition within <strong>3 months</strong> if symptoms resolve with activity modification and physical therapy.
+              </p>
+            </div>
+          </article>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="lg:col-span-3 order-3">
+          <div class="lg:sticky lg:top-6 space-y-4 flex flex-col lg:min-h-[820px]">
+            
+            <!-- Table of Contents - desktop only -->
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-emerald-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Contents</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a 
+                    href={`#${item.id}`} 
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
+            <!-- Key Takeaway -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-slate-800 text-white px-4 py-3 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-400 shrink-0">
+                  <img src={authorImage} alt="Dr Carlos" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm">Clinical Pearl</h3>
+                </div>
+              </div>
+              <blockquote class="p-4 text-sm text-slate-700 italic leading-relaxed border-l-3 border-l-emerald-500 ml-4 my-4">
+                "Always think of suprascapular neuropathy in overhead athletes with external rotation weakness and posterior shoulder pain – especially if there's visible infraspinatus atrophy."
+              </blockquote>
+              <div class="px-4 pb-4">
+                <p class="text-sm text-slate-600">
+                  Key diagnostic clues: weakness > pain, posterior/lateral shoulder pain, atrophy patterns, and EMG confirmation<RefLink id="3" text="Diagnostic approach" url={references[2].url} />.
+                </p>
+              </div>
+            </div>
+
+            <!-- Differential Diagnosis -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden lg:mt-auto">
+              <div class="bg-rose-600 text-white px-4 py-3 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3 class="font-bold text-sm uppercase tracking-wide">Differential Diagnosis</h3>
+              </div>
+              <div class="p-4 space-y-2">
+                <p class="text-xs text-slate-500 mb-2">Consider these conditions:</p>
+                <div class="text-xs text-slate-600 space-y-1">
+                  <div class="flex gap-2 p-2 bg-slate-50 rounded">
+                    <span class="text-rose-500">•</span>
+                    <span>Rotator cuff tears</span>
+                  </div>
+                  <div class="flex gap-2 p-2 bg-slate-50 rounded">
+                    <span class="text-rose-500">•</span>
+                    <span>Cervical radiculopathy (C5-C6)</span>
+                  </div>
+                  <div class="flex gap-2 p-2 bg-slate-50 rounded">
+                    <span class="text-rose-500">•</span>
+                    <span>Parsonage-Turner syndrome</span>
+                  </div>
+                  <div class="flex gap-2 p-2 bg-slate-50 rounded">
+                    <span class="text-rose-500">•</span>
+                    <span>Thoracic outlet syndrome</span>
+                  </div>
+                  <div class="flex gap-2 p-2 bg-slate-50 rounded">
+                    <span class="text-rose-500">•</span>
+                    <span>Quadrilateral space syndrome</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section id="faq" class="bg-white py-10 border-t border-slate-200 scroll-mt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-emerald-50 open:ring-1 open:ring-emerald-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>What causes suprascapular neuropathy?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Compression or traction of the nerve, most commonly from ganglion cysts, repetitive overhead activities, massive rotator cuff tears, or anatomical variations<RefLink id="1" text="Etiology" url={references[0].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-emerald-50 open:ring-1 open:ring-emerald-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>How is it diagnosed?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            EMG/NCV studies are the gold standard for confirming diagnosis. MRI identifies structural causes like cysts and assesses muscle involvement<RefLink id="3" text="Diagnosis" url={references[2].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-emerald-50 open:ring-1 open:ring-emerald-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>When is surgery needed?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Surgery is indicated for space-occupying lesions (cysts), severe atrophy, or failure of 6 months of conservative treatment<RefLink id="6" text="Surgical indications" url={references[5].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-emerald-50 open:ring-1 open:ring-emerald-200 transition-all">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>Will my muscle recover?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            While 92-98% regain normal function, only ~50% show complete muscle volume recovery. However, this usually doesn't affect daily function or sports performance<RefLink id="12" text="Outcomes" url={references[11].url} />.
+          </div>
+        </details>
+
+        <details class="group bg-slate-50 rounded-lg cursor-pointer open:bg-emerald-50 open:ring-1 open:ring-emerald-200 transition-all md:col-span-2 lg:col-span-2">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm list-none select-none">
+            <span>How long until I can return to sports?</span>
+            <span class="transition-transform group-open:rotate-180 text-slate-400 shrink-0 ml-2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Most athletes return to competition within 3-8 months after surgery. With conservative treatment for dynamic compression, return can occur within 3 months. 92-98% return to sport, with 88-96% reaching their previous performance level<RefLink id="12" text="RTS rates" url={references[11].url} /><RefLink id="7" text="Athlete outcomes" url={references[6].url} />.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-gradient-to-r from-emerald-700 to-teal-800 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-center md:text-left">
+          <h2 class="text-xl font-bold text-white mb-1">Need Expert Assessment?</h2>
+          <p class="text-emerald-200 text-sm">Book a consultation with Dr. Carlos Rivero Siri for shoulder nerve pain.</p>
+        </div>
+        <div class="flex gap-3">
+          <a href="/en/book" class="bg-white text-emerald-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-50 transition shadow-lg">
+            Book Appointment
+          </a>
+          <a href="/en/referral" class="bg-emerald-600 text-white border border-emerald-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">
+            Self-Referral
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENCES -->
+  <section class="bg-slate-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <details class="group">
+        <summary class="flex items-center gap-2 cursor-pointer text-slate-700 font-bold text-sm uppercase tracking-wide select-none">
+          <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          View all {references.length} references
+        </summary>
+        <div class="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {references.map((ref, i) => (
+            <a href={ref.url} class="text-xs text-slate-600 hover:text-emerald-700 hover:bg-white p-2 rounded transition block" target="_blank" rel="noopener noreferrer">
+              <span class="font-bold text-slate-400 mr-1">[{i + 1}]</span>
+              {ref.text}
+            </a>
+          ))}
+        </div>
+        <p class="text-xs text-slate-500 mt-4 italic">
+          All references reviewed for high medical reliability. Updated {currentDate}.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- AUTHOR & REFDRAWER -->
+  <section class="py-8 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+      <AuthorCard 
+        name={authorName}
+        title="Specialist in Orthopaedics & Shoulder Surgery"
+        image={authorImage}
+        profileUrl={authorUrl}
+      />
+      <RefDrawer references={references} />
+    </div>
+  </section>
+
+</BaseLayout>
+
