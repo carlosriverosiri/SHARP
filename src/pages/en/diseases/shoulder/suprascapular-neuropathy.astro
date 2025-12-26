@@ -252,7 +252,7 @@ const faqSchema = {
         <span class="text-emerald-400">Shoulder</span>
       </div>
       
-      <div class="grid lg:grid-cols-3 gap-8 items-center">
+      <div class="grid lg:grid-cols-3 gap-8 items-end">
         <div class="lg:col-span-2">
           <span class="inline-block py-1 px-3 rounded bg-emerald-600/30 text-emerald-300 text-xs font-bold mb-3 tracking-wider uppercase">
             Shoulder Nerve Disorder
@@ -265,25 +265,24 @@ const faqSchema = {
           </p>
         </div>
         
-        </div>
-      
-      <!-- Author card -->
-      <div class="mt-6 bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10 max-w-md">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-400 shrink-0">
-            <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+        <!-- Author card (right side on desktop) -->
+        <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-400 shrink-0">
+              <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p class="text-xs text-emerald-300 uppercase tracking-wider font-bold">Medically Reviewed</p>
+              <a href={authorUrl} class="text-sm font-bold text-white hover:text-emerald-200">{authorName}</a>
+            </div>
           </div>
-          <div>
-            <p class="text-xs text-emerald-300 uppercase tracking-wider font-bold">Medically Reviewed</p>
-            <a href={authorUrl} class="text-sm font-bold text-white hover:text-emerald-200">{authorName}</a>
+          <div class="text-xs text-slate-400">Specialist in Orthopaedics & Shoulder Surgery</div>
+          <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-xs text-slate-300">Updated: <strong class="text-white">{lastMedicalReview}</strong></span>
           </div>
-        </div>
-        <div class="text-xs text-slate-400">Specialist in Orthopaedics & Shoulder Surgery</div>
-        <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
-          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span class="text-xs text-slate-300">Updated: <strong class="text-white">{lastMedicalReview}</strong></span>
         </div>
       </div>
     </div>
