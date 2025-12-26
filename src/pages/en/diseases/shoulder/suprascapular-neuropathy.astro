@@ -306,8 +306,8 @@ const faqSchema = {
             </h2>
             <p class="text-slate-700 text-sm leading-relaxed mb-3">
               <strong>Suprascapular neuropathy</strong> causes deep, diffuse shoulder pain and weakness in abduction/external rotation. 
-              Often caused by ganglion cysts or repetitive overhead activities. <strong>EMG is the gold standard</strong> for diagnosis, 
-              with arthroscopic decompression offering excellent outcomes when surgery is needed.
+              Often caused by ganglion cysts or repetitive overhead activities. <strong>Clinical examination is key</strong> – isolated motor weakness without sensory loss points to diagnosis. 
+              Arthroscopic decompression offers excellent outcomes when surgery is needed.
             </p>
             <div class="grid sm:grid-cols-3 gap-3 text-xs">
               <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
@@ -636,12 +636,17 @@ const faqSchema = {
 
               <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <h3 class="font-bold text-purple-800 mb-2 text-sm uppercase tracking-wide flex items-center gap-2">
-                  <span class="text-yellow-500">⭐</span> EMG/NCV - Gold Standard
+                  <span class="text-yellow-500">⭐</span> EMG/NCV - Gold Standard (in Literature)
                 </h3>
-                <p class="text-sm text-slate-700 leading-relaxed">
-                  Electromyography (EMG) and nerve conduction velocity (NCV) studies remain the <strong>gold standard</strong> for confirming diagnosis and localizing the exact site of nerve lesion<RefLink id="3" text="Electrodiagnostic gold standard" url={references[2].url} />. 
+                <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                  Electromyography (EMG) and nerve conduction velocity (NCV) studies are described in the literature as the <strong>gold standard</strong> for confirming diagnosis and localizing the exact site of nerve lesion<RefLink id="3" text={references[2].text} url={references[2].url} />. 
                   EMG can differentiate between suprascapular notch and spinoglenoid notch compression based on the pattern of muscle involvement.
                 </p>
+                <div class="bg-amber-100 border border-amber-300 rounded-lg p-3 mt-2">
+                  <p class="text-xs text-amber-900 leading-relaxed">
+                    <strong>⚠ Clinical consideration:</strong> Since the suprascapular nerve has <em>no sensory branch</em>, diagnosis is primarily clinical. When isolated motor weakness is present, waiting for EMG confirmation risks permanent muscle damage. Early intervention may be more important than confirmatory testing.
+                  </p>
+                </div>
               </div>
             </div>
           </article>
