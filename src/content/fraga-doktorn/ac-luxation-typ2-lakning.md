@@ -12,7 +12,7 @@ question: |
   Jag har urledvridning av nyckelbensleden typ 2 eller 3. Som jag uppfattat det ska ledbanden läka med tiden. Men hur kan de läka/växa samman när ändarna inte ligger stilla utan rör sig? Även om jag har armen i en armslinga så rör sig ju nyckelbenet då och då.
 ---
 
-[UTKAST - BEHÖVER GRANSKAS]
+[
 
 Utmärkt fråga! Ledbanden läker trots viss rörelse.
 

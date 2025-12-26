@@ -14,7 +14,7 @@ question: |
 
 [UTKAST - BEHÖVER GRANSKAS]
 
-AC-luxation som recidiverat två gånger är en utmanande situation.
+AC-luxation som recidiverat två gånger är en utmanande situation, 
 
 ### Operationsmetoder
 

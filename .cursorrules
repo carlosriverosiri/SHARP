@@ -5,4 +5,6 @@ Use these by typing @filename in chat:
 - @05_qa_formatting_rules.md (Rules for formatting Q&A with bullet points and colored blocks)
 - @06_unanswered_qa_workflow.md (Workflow for handling new questions)
 - @07_performance_guide.md (Performance optimization guide for new pages)
-
+- @09_new_diagnosis_page.md (Generates a full Astro page from raw notes)
+- @11_diagnosis_master_en.md (Creates the English Master Page in /en/ with Zotero matching)
+- @13_translate_to_english.md (Translates current Swedish page to English structure)

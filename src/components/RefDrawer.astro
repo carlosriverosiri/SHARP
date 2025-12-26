@@ -1,16 +1,37 @@
 ---
 // src/components/RefDrawer.astro
+interface Props {
+  lang?: 'sv' | 'en';
+}
+
+const { lang = 'sv' } = Astro.props;
+
+// Translations
+const t = {
+  sv: {
+    source: 'Källa',
+    close: 'Stäng',
+    readStudy: 'Läs hela studien'
+  },
+  en: {
+    source: 'Source',
+    close: 'Close',
+    readStudy: 'Read the full study'
+  }
+};
+
+const labels = t[lang];
 ---
 
 <div id="ref-drawer-backdrop" class="backdrop hidden"></div>
 <aside id="ref-drawer" class="drawer hidden" aria-hidden="true">
   <div class="drawer-header">
-    <span class="drawer-title">Källa</span>
-    <button id="close-drawer" aria-label="Stäng">✕</button>
+    <span class="drawer-title">{labels.source}</span>
+    <button id="close-drawer" aria-label={labels.close}>✕</button>
   </div>
   <div class="drawer-content">
     <p id="drawer-text"></p>
-    <a id="drawer-link" href="#" target="_blank" class="external-link">Läs hela studien &rarr;</a>
+    <a id="drawer-link" href="#" target="_blank" class="external-link">{labels.readStudy} &rarr;</a>
   </div>
 </aside>
 

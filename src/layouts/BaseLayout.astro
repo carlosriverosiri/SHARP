@@ -12,6 +12,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  alternateUrl?: string;
 }
 
 const { 
@@ -19,7 +20,8 @@ const {
   description = "Specialistklinik i Stockholm för knä, axel och armbåge. Vi tar emot patienter från hela Sverige via Fritt Vårdval och försäkringsbolag.",
   image = "https://sodermalmsortopedi.se/logo.svg",
   type = "website",
-  noindex = false
+  noindex = false,
+  alternateUrl
 } = Astro.props;
 
 // Generera full URL för canonical och OG
@@ -29,7 +31,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 ---
 
 <!doctype html>
-<html lang="sv">
+<html lang={Astro.url.pathname.startsWith('/en') ? 'en' : 'sv'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,7 +54,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:locale" content="sv_SE" />
+  <meta property="og:locale" content={Astro.url.pathname.startsWith('/en') ? 'en_US' : 'sv_SE'} />
     <meta property="og:site_name" content="Södermalms Ortopedi" />
     
     <!-- Twitter -->
@@ -84,7 +86,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
   <!-- ÄNDRING: Tog bort 'pt-20' eftersom headern är sticky och tar upp plats själv -->
   <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
     
-    <Header />
+    <Header alternateUrl={alternateUrl} />
         
     <slot /> 
     
