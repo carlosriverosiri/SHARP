@@ -1,4 +1,4 @@
-# Tool: Translate Page to English (@13)
+# Tool: 
 
 **Trigger:** Use this when you have an open Swedish `.astro` file (Source) and want to create its English equivalent.
 
