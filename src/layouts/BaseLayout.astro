@@ -45,6 +45,24 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="author" content="Södermalms Ortopedi" />
+    <meta name="geo.region" content="SE-AB" />
+    <meta name="geo.placename" content="Stockholm" />
+    
+    <!-- Hreflang for multilingual SEO -->
+    {Astro.url.pathname.startsWith('/en') ? (
+      <>
+        <link rel="alternate" hreflang="en" href={canonicalUrl} />
+        <link rel="alternate" hreflang="sv" href={alternateUrl ? `${siteUrl}${alternateUrl}` : siteUrl} />
+        <link rel="alternate" hreflang="x-default" href={alternateUrl ? `${siteUrl}${alternateUrl}` : siteUrl} />
+      </>
+    ) : (
+      <>
+        <link rel="alternate" hreflang="sv" href={canonicalUrl} />
+        <link rel="alternate" hreflang="en" href={alternateUrl ? `${siteUrl}${alternateUrl}` : `${siteUrl}/en/`} />
+        <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+      </>
+    )}
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
@@ -52,14 +70,21 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-  <meta property="og:locale" content={Astro.url.pathname.startsWith('/en') ? 'en_US' : 'sv_SE'} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={Astro.url.pathname.startsWith('/en') ? 'en_US' : 'sv_SE'} />
+    <meta property="og:locale:alternate" content={Astro.url.pathname.startsWith('/en') ? 'sv_SE' : 'en_US'} />
     <meta property="og:site_name" content="Södermalms Ortopedi" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@sodermalmsortopedi" />
+    <meta name="twitter:creator" content="@sodermalmsortopedi" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
     
     <!-- Fonts - Non-blocking load -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
