@@ -1,8 +1,13 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import AuthorCard from '../../../../components/AuthorCard.astro';
 import RefLink from '../../../../components/RefLink.astro';
 import RefDrawer from '../../../../components/RefDrawer.astro';
+
+// Optimized images
+import mriOedema from '../../../../assets/images/suprascapular-nerve/oedema-mr-suprascapular-nerve.png';
+import mriGanglion from '../../../../assets/images/suprascapular-nerve/ganglion-mr-suprascapular-nerve.png';
 
 // AUTHOR & DATE INFO
 const authorName = "Dr. Carlos Rivero Siri";
@@ -635,24 +640,32 @@ const faqSchema = {
                 <!-- MRI Examples -->
                 <div class="grid grid-cols-2 gap-3">
                   <figure class="rounded-lg overflow-hidden border border-sky-200 bg-sky-900">
-                    <img 
-                      src="/images/diseases/suprascapular-nerve/oedema-mr-suprascapular-nerve.png" 
+                    <Image 
+                      src={mriOedema}
                       alt="MRI showing muscle edema in supraspinatus and infraspinatus from suprascapular nerve entrapment"
                       title="Muscle edema on MRI - suprascapular nerve entrapment"
                       class="w-full h-auto"
                       loading="lazy"
+                      widths={[300, 600]}
+                      sizes="(max-width: 768px) 50vw, 300px"
+                      format="webp"
+                      quality={85}
                     />
                     <figcaption class="p-2 text-xs text-sky-100 bg-sky-900">
                       <strong>Suprascapular notch entrapment:</strong> T2-weighted MRI showing edema in both supraspinatus and infraspinatus (no atrophy yet).
                     </figcaption>
                   </figure>
                   <figure class="rounded-lg overflow-hidden border border-sky-200 bg-sky-900">
-                    <img 
-                      src="/images/diseases/suprascapular-nerve/ganglion-mr-suprascapular-nerve.png" 
+                    <Image 
+                      src={mriGanglion}
                       alt="MRI showing paralabral ganglion cyst causing infraspinatus edema"
                       title="Paralabral ganglion cyst on MRI"
                       class="w-full h-auto"
                       loading="lazy"
+                      widths={[300, 600]}
+                      sizes="(max-width: 768px) 50vw, 300px"
+                      format="webp"
+                      quality={85}
                     />
                     <figcaption class="p-2 text-xs text-sky-100 bg-sky-900">
                       <strong>Spinoglenoid notch cyst:</strong> Ganglion cyst at glenoid margin with mild infraspinatus edema (isolated involvement).
