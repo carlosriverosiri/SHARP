@@ -63,13 +63,18 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     
-    <!-- Fonts -->
+    <!-- Fonts - Non-blocking load -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
@@ -77,8 +82,8 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <link rel="manifest" href="/favicons/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
     
-    <!-- Netlify Identity Widget (för admin-inloggning) -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Netlify Identity Widget - Lazy loaded -->
+    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     
     <!-- Named slot for page-specific head content (schemas, extra meta, etc.) -->
     <slot name="head" />
