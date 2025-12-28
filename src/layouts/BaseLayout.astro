@@ -37,9 +37,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     
-    <!-- Preconnect för snabbare laddning av externa resurser -->
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
+    <!-- DNS Prefetch för lazy-loadade resurser (kartan) -->
     <link rel="dns-prefetch" href="https://unpkg.com" />
     <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
     
@@ -76,6 +74,9 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     </noscript>
 
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/images/branding/logo.svg" as="image" type="image/svg+xml" />
+    
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
