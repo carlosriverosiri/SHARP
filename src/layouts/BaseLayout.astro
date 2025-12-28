@@ -108,8 +108,17 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <link rel="manifest" href="/favicons/site.webmanifest" />
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
     
-    <!-- Netlify Identity Widget - Lazy loaded -->
-    <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Netlify Identity Widget - Only load on admin redirect -->
+    <script is:inline>
+      // Only load Netlify Identity if user came from admin or needs login redirect
+      if (window.location.hash.includes('invite_token') || 
+          window.location.hash.includes('recovery_token') ||
+          document.referrer.includes('/admin')) {
+        const script = document.createElement('script');
+        script.src = 'https://identity.netlify.com/v1/netlify-identity-widget.js';
+        document.head.appendChild(script);
+      }
+    </script>
     
     <!-- Named slot for page-specific head content (schemas, extra meta, etc.) -->
     <slot name="head" />
@@ -125,17 +134,19 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 
     <FooterMap />
 
-    <!-- Netlify Identity: Redirect till admin efter inloggning -->
+    <!-- Netlify Identity: Redirect till admin efter inloggning (endast om widget laddats) -->
     <script is:inline>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
+      window.addEventListener('load', function() {
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on("init", user => {
+            if (!user) {
+              window.netlifyIdentity.on("login", () => {
+                document.location.href = "/admin/";
+              });
+            }
+          });
+        }
+      });
     </script>
   </body>
 </html>
