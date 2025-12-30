@@ -126,6 +126,16 @@ const references = [
     id: "18",
     text: "Scalf et al. MRI Findings of 26 Patients with Parsonage-Turner Syndrome. American Journal of Roentgenology. 2007.",
     url: "https://doi.org/10.2214/AJR.06.1136"
+  },
+  {
+    id: "19",
+    text: "Vorster et al. The sensory branch distribution of the suprascapular nerve: an anatomic study. Journal of Shoulder and Elbow Surgery. 2008.",
+    url: "https://doi.org/10.1016/j.jse.2007.08.006"
+  },
+  {
+    id: "20",
+    text: "Laulund AS et al. Anatomy, Shoulder and Upper Limb, Suprascapular Nerve. StatPearls. 2022.",
+    url: "https://www.ncbi.nlm.nih.gov/books/NBK539718/"
   }
 ];
 
@@ -385,8 +395,7 @@ const faqSchema = {
                 
                 <h4 class="font-bold text-slate-800 text-sm mb-2">Ganglion Cysts as a Cause</h4>
                 <p class="text-xs text-slate-600 leading-relaxed mb-3">
-                  Paralabral ganglion cysts can cause suprascapular neuropathy by compressing the nerve<RefLink id="1" text="Common etiology" url={references[0].url} />. 
-                  These cysts typically arise from labral tears and compress the nerve at the spinoglenoid notch. 
+                  Paralabral ganglion cysts can cause suprascapular neuropathy by compressing the nerve.<RefLink id="1" text="Common etiology" url={references[0].url} /> These cysts typically arise from labral tears and compress the nerve at the spinoglenoid notch. 
                   <em class="text-slate-500">Note: Studies reporting cysts as the most common cause may reflect selection bias—patients often undergo MRI first, which detects cysts. Clinicians who perform careful clinical examination will identify many cases without cysts.</em>
                 </p>
                 
@@ -440,6 +449,55 @@ const faqSchema = {
                     <span class="text-rose-600 font-bold">🏊</span>
                     <span><strong>Swimming</strong> – overhead strokes</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nerve Anatomy -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-indigo-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">🔬 Nerve Anatomy</h3>
+              </div>
+              <div class="p-4">
+                <div class="space-y-3 text-xs text-slate-700">
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Origin</h4>
+                    <p class="text-slate-600">Upper trunk of brachial plexus (C5–C6, variable C4 contribution).<RefLink id="20" text="Anatomy" url={references[19].url} /></p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Course</h4>
+                    <p class="text-slate-600">Passes through the <em>suprascapular notch</em> (under the superior transverse scapular ligament) → supraspinous fossa → around scapular spine via <em>spinoglenoid notch</em> → infraspinous fossa.</p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Motor Innervation</h4>
+                    <ul class="space-y-1 ml-3">
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. supraspinatus</strong> – 2 branches (proximal)</span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. infraspinatus</strong> – 2–4 branches (distal)</span></li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Sensory Innervation</h4>
+                    <ul class="space-y-1 ml-3">
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Glenohumeral joint</strong> – posterior capsule (~70% of joint sensation)<RefLink id="19" text="Sensory branches" url={references[18].url} /></span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>AC joint</strong> – consistent (100% in studies)</span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Subacromial bursa</strong> – variable (medial part)</span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Coracoclavicular & coracohumeral ligaments</strong> – variable</span></li>
+                    </ul>
+                    <p class="text-slate-500 mt-2 italic">No regular cutaneous innervation (&lt;15–25%).</p>
+                  </div>
+                  
+                </div>
+                
+                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mt-4">
+                  <h5 class="font-bold text-indigo-800 text-xs mb-1">💡 Clinical Relevance</h5>
+                  <p class="text-xs text-slate-600">
+                    <strong>Proximal entrapment</strong> (suprascapular notch): affects both muscles + sensory.<br/>
+                    <strong>Distal entrapment</strong> (spinoglenoid notch): spares supraspinatus but may cause posterior shoulder pain via capsular innervation.
+                  </p>
                 </div>
               </div>
             </div>
