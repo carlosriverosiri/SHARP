@@ -8,6 +8,7 @@ import RefDrawer from '../../../../components/RefDrawer.astro';
 // Optimized images
 import mriOedema from '../../../../assets/images/suprascapular-nerve/oedema-mr-suprascapular-nerve.png';
 import mriGanglion from '../../../../assets/images/suprascapular-nerve/ganglion-mr-suprascapular-nerve.png';
+import atrofiInfraspinatus from '../../../../assets/images/suprascapular-nerve/atrofi-infraspinatus.png';
 
 // AUTHOR & DATE INFO
 const authorName = "Dr. Carlos Rivero Siri";
@@ -572,10 +573,9 @@ const faqSchema = {
                   </p>
                 </div>
               </div>
-              <!-- TODO: Download this image to local assets -->
               <figure class="w-full md:w-48 shrink-0 rounded-lg overflow-hidden border border-slate-200">
-                <img 
-                  src="https://res.cloudinary.com/menisk/image/upload/v1474315510/atrofi-infraspinatus_wxcidd.png" 
+                <Image 
+                  src={atrofiInfraspinatus}
                   alt={imageData.infraspinatusAtrophy.alt}
                   title={imageData.infraspinatusAtrophy.title}
                   class="w-full h-auto"
