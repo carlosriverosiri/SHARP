@@ -16,17 +16,24 @@ question: |
 
 Det finns en lång rad problem som kan ge smärtor på baksidan av axelleden. Att ställa en diagnos när det bara gör ont under kaströrelser och inte till vardags kan vara svårt.
 
+---
+
+<div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
+<strong style="color: #1e40af; font-size: 1.1rem;">🔍 Möjliga diagnoser vid smärtor i skulderbladet</strong>
+
+<ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+<li><strong>Impingement</strong> – inklämning av senor under axelns tak</li>
+<li><strong>Bakre labrumskada</strong> – skada på ledläppen baktill</li>
+<li><strong>Weightlifter's shoulder</strong> – uppluckring av yttre nyckelbensändan</li>
+<li><strong>N. suprascapularis-entrapment</strong> – nervinklämning (testa utåtrotationskraft!)</li>
+</ul>
+</div>
+
+---
+
 Vanligen är smärtorna i axeln övergående och förbättras med lite vila och rehab.
 
 Rotatorcuffproblem hos handbollsspelande flickor är inte ett speciellt ovanligt axelproblem.
 
----
-
-<div style="background: #fef3c7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #d97706;">
-<strong style="color: #92400e; font-size: 1.1rem;">💡 Att ha i bakhuvudet</strong>
-
-<p>Vid bakre axelsmärta hos overhead-atleter bör man alltid <strong>testa styrkan i utåtrotation</strong>. Om det finns en svaghet i utåtrotation kan det tyda på en <strong>nervinklämning av nervus suprascapularis</strong> – även om detta inte är den typiska sjukdomshistorien.</p>
-</div>
-
 - Vila och avlastning rekommenderas
-- Testa styrka i utåtrotation vid undersökning
+- Sök vård om besvären inte förbättras
