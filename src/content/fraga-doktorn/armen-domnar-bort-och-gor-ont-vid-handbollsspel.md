@@ -36,7 +36,7 @@ Dina symtom i form av en svaghet i infraspinantusmuskeln är förenliga med  **n
 <div style="background: #dbeafe; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #2563eb;">
 <strong style="color: #1e40af; font-size: 1.1rem;">🔍 Varför blir du inte starkare?</strong>
 
-<p>Om nerven som försörjer muskeln är klämd kan muskeln <strong>inte aktiveras normalt</strong> – oavsett hur mycket du tränar. Det är som att försöka ladda en telefon med en trasig sladd.</p>
+<p>Om nerven som försörjer muskeln är klämd kan muskeln <strong>inte aktiveras normalt</strong> – oavsett hur mycket du tränar. Det är som att försöka ladda en telefon med en trasig laddare.</p>
 
 <p>Vid en nervinklämning hos handbollsspelare sker ofta en <strong>dynamisk kompression</strong> av nerven vid upprepade kaströrelser.</p>
 </div>
@@ -50,11 +50,11 @@ Dina symtom i form av en svaghet i infraspinantusmuskeln är förenliga med  **n
 
 <ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
 <li><strong>Klinisk undersökning</strong> – test av utåtrotationskraft</li>
-<li><strong>MR-undersökning</strong> – för att se om det finns muskelödem eller en ganglioncysta</li>
+<li><strong>MR-undersökning</strong> – för att se om det finns muskelödem eller en labrumcysta</li>
 <li>Eventuellt <strong>EMG</strong> – för att bekräfta nervpåverkan</li>
 </ul>
 
-<p>Vid bekräftad nervinklämning kan ett enkelt artroskopiskt ingrepp (3–5 minuter) frigöra nerven med goda resultat.</p>
+<p>Vid bekräftad nervinklämning kan ett enkelt artroskopiskt ingrepp (5-15 minuter) frigöra nerven med goda resultat.</p>
 </div>
 
 ---

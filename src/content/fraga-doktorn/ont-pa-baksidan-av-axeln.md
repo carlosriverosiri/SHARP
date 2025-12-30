@@ -3,8 +3,9 @@ title: "Ont på baksidan av axeln"
 description: "Hej! Jag är en aktiv tjej som spelar handboll och på senaste tid har jag haft ont i bakre delen av mig axel (precis under skelettet). Sökte på google..."
 category: "axel"
 topic: "ont-skulderbladet"
-tags: ["ont-i-skulderbladet", "styrketräning", "smärta"]
+tags: ["ont-i-skulderbladet", "styrketräning", "smärta", "handboll"]
 date: 2016-01-28
+updated: 2024-12-30
 author: "Dr. Carlos Rivero Siri"
 published: true
 question: |
@@ -19,4 +20,13 @@ Vanligen är smärtorna i axeln övergående och förbättras med lite vila och 
 
 Rotatorcuffproblem hos handbollsspelande flickor är inte ett speciellt ovanligt axelproblem.
 
+---
+
+<div style="background: #fef3c7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #d97706;">
+<strong style="color: #92400e; font-size: 1.1rem;">💡 Att ha i bakhuvudet</strong>
+
+<p>Vid bakre axelsmärta hos overhead-atleter bör man alltid <strong>testa styrkan i utåtrotation</strong>. Om det finns en svaghet i utåtrotation kan det tyda på en <strong>nervinklämning av nervus suprascapularis</strong> – även om detta inte är den typiska sjukdomshistorien.</p>
+</div>
+
 - Vila och avlastning rekommenderas
+- Testa styrka i utåtrotation vid undersökning
