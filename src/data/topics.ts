@@ -159,6 +159,15 @@ export const topics: Topic[] = [
     category: 'diagnoser',
     bodyPart: 'axel',
   },
+  {
+    id: 'suprascapularis-inklämning',
+    title: 'Nervus suprascapularis inklämning',
+    shortTitle: 'Nervinklämning (n. suprascapularis)',
+    description: 'Inklämning av nervus suprascapularis som ger svaghet i utåtrotation och/eller abduktion',
+    category: 'diagnoser',
+    bodyPart: 'axel',
+    relatedConditionUrl: '/en/diseases/shoulder/suprascapular-neuropathy',
+  },
 
   // --- SKADOR & INSTABILITET (Axel) ---
   {

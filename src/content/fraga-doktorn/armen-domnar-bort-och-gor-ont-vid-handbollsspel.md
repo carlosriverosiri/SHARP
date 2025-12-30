@@ -17,7 +17,7 @@ question: |
   Jag har gått hos en sjukgymnast nu i tre månader och han sa att det var min baksida av axeln som var för svag. Då fick jag olika rehabövningar och jag har kört de 4-5 gånger i veckan. Men ändå blir jag inte starkare. Han förstod inte varför och kunde tyvärr inte hjälpa mig. Jag ska tillägga att jag inte har problem med rörligheten och är inte särskilt stel i axeln. Det är min infraspinatus som jag inte lyckas bli starkare i.
 ---
 
-Dina symtom är klassiska för en **nervinklämning av nervus suprascapularis** (suprascapular neuropathy). Detta är en underdiagnostiserad orsak till axelsmärta hos overhead-atleter som handbollsspelare.
+Dina symtom i form av en svaghet i infraspinantusmuskeln är förenliga med  **nervinklämning av nervus suprascapularis** (suprascapular neuropathy). Detta är en underdiagnostiserad orsak till axelsmärta hos overhead-atleter som handbollsspelare.
 
 ---
 
@@ -27,7 +27,6 @@ Dina symtom är klassiska för en **nervinklämning av nervus suprascapularis** 
 <ul style="list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
 <li><strong>Infraspinatus-svaghet som inte förbättras av träning</strong> – klassiskt tecken!</li>
 <li>Smärta vid kaströrelser (overhead-aktivitet)</li>
-<li>Domningar/obehag i axelregionen</li>
 <li>God rörlighet trots svaghet</li>
 </ul>
 </div>
