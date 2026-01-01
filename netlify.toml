@@ -5,7 +5,7 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Security headers
+# Security headers (production)
 [[headers]]
   for = "/*"
   [headers.values]
@@ -13,8 +13,17 @@
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    # Block indexing on Netlify preview domain
-    X-Robots-Tag = "noindex, nofollow"
+
+# Block indexing ONLY on Netlify preview/deploy-preview domains
+[context.deploy-preview.headers]
+  for = "/*"
+    [context.deploy-preview.headers.values]
+      X-Robots-Tag = "noindex, nofollow"
+
+[context.branch-deploy.headers]
+  for = "/*"
+    [context.branch-deploy.headers.values]
+      X-Robots-Tag = "noindex, nofollow"
 
 # Cache statiska assets (JS, CSS) - 1 år
 [[headers]]
