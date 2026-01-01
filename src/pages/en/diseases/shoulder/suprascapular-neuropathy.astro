@@ -142,6 +142,11 @@ const references = [
     id: "21",
     text: "Kijkunasathian, Chusak, Supajed Niyomkha, Patarawan Woratanarat, och Chaiyanun Vijittrakarnrung. \"The Preferable Shoulder Position Can Isolate Supraspinatus Activity Superior to the Classic Empty Can Test: An Electromyographic Study\". BMC Musculoskeletal Disorders 24, nr 1 (2023): 255.",
     url: "https://doi.org/10.1186/s12891-023-06372-3"
+  },
+  {
+    id: "22",
+    text: "Schroder, Cecilie P., Oystein Skare, Morten Stiris, Erling Gjengedal, Gisle Uppheim, och Jens Ivar Brox. \"Treatment of Labral Tears with Associated Spinoglenoid Cysts without Cyst Decompression\". JBJS 90, nr 3 (2008): 523.",
+    url: "https://doi.org/10.2106/JBJS.F.01534"
   }
 ];
 
@@ -471,8 +476,11 @@ const faqSchema = {
 
                 <div class="bg-green-50 border border-green-200 rounded-lg p-3">
                   <h5 class="font-bold text-green-800 text-xs mb-1">Treatment</h5>
-                  <p class="text-xs text-slate-600">
-                    Arthroscopic cyst decompression ± labral repair. Excellent outcomes with high return to sport rates<RefLink id="12" text="Return to sport" url={references[11].url} />.
+                  <p class="text-xs text-slate-600 mb-2">
+                    <strong>Labral repair alone</strong> is sufficient – the cyst resolves spontaneously without direct decompression.<RefLink id="22" text="No cyst decompression needed" url={references[21].url} /> Excellent outcomes with high return to sport rates.<RefLink id="12" text="Return to sport" url={references[11].url} />
+                  </p>
+                  <p class="text-[10px] text-slate-500 italic">
+                    Clinical experience: Cysts do not recur after labral repair alone. Direct cyst decompression is unnecessary.
                   </p>
                 </div>
               </div>
@@ -846,7 +854,7 @@ const faqSchema = {
                 <h4 class="font-bold text-sky-800 text-sm mb-2">Arthroscopic Decompression – Modern Gold Standard</h4>
                 <p class="text-sm text-slate-600 leading-relaxed">
                   Arthroscopic nerve release offers better visualization, lower morbidity, and faster recovery compared to open approaches<RefLink id="6" text="Arthroscopic advantage" url={references[5].url} />. 
-                  The procedure involves release of the transverse scapular ligament at the suprascapular notch ± cyst decompression and labral repair at the spinoglenoid notch.
+                  The procedure involves release of the transverse scapular ligament at the suprascapular notch. When a paralabral cyst is present at the spinoglenoid notch, labral repair alone is sufficient – the cyst resolves spontaneously.<RefLink id="22" text="No cyst decompression needed" url={references[21].url} />
                 </p>
               </div>
             </div>
@@ -1176,7 +1184,7 @@ const faqSchema = {
         
         <h3 class="text-amber-400 font-bold mb-3">Surgical Indication & Timing</h3>
         <p class="text-slate-300 leading-relaxed mb-4">
-          When isolated weakness in supraspinatus and/or infraspinatus is confirmed, I typically recommend <strong class="text-white">early arthroscopic decompression</strong> (release of the transverse scapular ligament at the suprascapular notch and/or drainage of any cyst). The procedure is minimally invasive, usually takes me <strong class="text-white">5–15 minutes</strong>, and is performed as outpatient surgery.
+          When isolated weakness in supraspinatus and/or infraspinatus is confirmed, I typically recommend <strong class="text-white">early arthroscopic decompression</strong> (release of the transverse scapular ligament at the suprascapular notch). If a paralabral cyst is present, I perform <strong class="text-white">labral repair only</strong> – the cyst resolves spontaneously without direct decompression.<RefLink id="22" text="Schroder 2008" url={references[21].url} /> The procedure is minimally invasive, usually takes me <strong class="text-white">5–15 minutes</strong>, and is performed as outpatient surgery.
         </p>
         <p class="text-slate-300 leading-relaxed mb-6">
           The rationale for early surgery is to avoid the risk of <strong class="text-white">irreversible axonal damage</strong> and permanent weakness. Waiting for clearer EMG findings or progressive atrophy is unnecessary when the procedure is so straightforward and safe.
