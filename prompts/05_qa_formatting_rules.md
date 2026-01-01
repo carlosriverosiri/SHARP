@@ -256,6 +256,31 @@ Redigera denna fråga enligt formateringsguiden:
 
 ---
 
+## Referenser och citeringar
+
+### Placering av referenser
+
+**Viktigt:** Referenser ska alltid placeras EFTER punkten, inte före.
+
+- ❌ **FEL**: `...resolves spontaneously[22].`
+- ✅ **RÄTT**: `...resolves spontaneously.[22]`
+
+**Exempel:**
+
+```markdown
+❌ FEL: The cyst resolves spontaneously without direct decompression[22]. This approach is effective.
+
+✅ RÄTT: The cyst resolves spontaneously without direct decompression.[22] This approach is effective.
+```
+
+**Detta gäller:**
+- Inline-citeringar i löpande text
+- Referenser i färgade block
+- Referenser i punktlistor
+- Alla språk (svenska, engelska, etc.)
+
+---
+
 ## Färgreferens
 
 | Färg | Hex (bakgrund) | Hex (border) | Hex (text) | Användning |
