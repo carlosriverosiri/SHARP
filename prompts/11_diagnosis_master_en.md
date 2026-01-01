@@ -33,6 +33,11 @@
 **Structure:**
 - Hero, Symptoms, Diagnosis, Treatment (Surgery vs Conservative), Return to Sport (Play vs Performance), FAQ, References.
 
+**CITATION FORMAT:**
+- Always place references AFTER the period, not before
+- ❌ WRONG: `...spontaneously[22].`
+- ✅ CORRECT: `...spontaneously.[22]`
+
 
 
 
