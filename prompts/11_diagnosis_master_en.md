@@ -38,6 +38,21 @@
 - ❌ WRONG: `...spontaneously[22].`
 - ✅ CORRECT: `...spontaneously.[22]`
 
+**CLINICAL EXPERIENCE BLOCKS:**
+- Use **indigo/purple** background for author's clinical experience, personal insights, and clinical pearls
+- Distinguish from evidence-based information (which uses other colors)
+- Format example:
+```html
+<div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+  <h5 class="font-bold text-indigo-800 text-xs mb-1">💡 Clinical Pearl</h5>
+  <p class="text-xs text-slate-600 italic">
+    In 15+ years of practice using this approach, [clinical observation/experience].
+  </p>
+</div>
+```
+- Use for: Personal clinical observations, expert opinions, practice patterns, clinical pearls
+- Icon: 💡 or 👨‍⚕️
+
 
 
 
