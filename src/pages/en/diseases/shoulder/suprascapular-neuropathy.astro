@@ -30,6 +30,7 @@ const tableOfContents = [
   { id: "return-to-sport", title: "Return to Sport", icon: "6" },
   { id: "expert", title: "Expert Perspective", icon: "💡" },
   { id: "faq", title: "FAQ", icon: "?" },
+  { id: "references", title: "References", icon: "📚" },
 ];
 
 // VIDEO (set to null to hide section)
@@ -313,7 +314,7 @@ const faqSchema = {
   <!-- TL;DR SUMMARY -->
   <section class="bg-white border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-      <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-5 border border-emerald-200">
+      <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-3 md:p-4 lg:p-5 border border-emerald-200">
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -371,13 +372,62 @@ const faqSchema = {
   </section>
 
   <!-- MAIN CONTENT: 3-COLUMN LAYOUT -->
-  <section class="bg-slate-50 py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="grid lg:grid-cols-12 gap-8">
+  <section class="bg-slate-50 py-6 md:py-10">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
+      <div class="grid lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
         
         <!-- LEFT SIDEBAR: QUICK FACTS -->
         <aside class="lg:col-span-3 order-2 lg:order-1">
           <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Nerve Anatomy -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-indigo-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">🔬 Nerve Anatomy</h3>
+              </div>
+              <div class="p-4">
+                <div class="space-y-3 text-xs text-slate-700">
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Origin</h4>
+                    <p class="text-slate-600">C5–C6 (variable C4 contribution).<RefLink id="20" text="Anatomy" url={references[19].url} /></p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Course</h4>
+                    <p class="text-slate-600">Passes through the <em>suprascapular notch</em> (under the superior transverse scapular ligament) → supraspinous fossa → around scapular spine via <em>spinoglenoid notch</em> → infraspinous fossa.</p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Motor Innervation</h4>
+                    <ul class="space-y-1 ml-3">
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. supraspinatus</strong></span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. infraspinatus</strong></span></li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 class="font-bold text-indigo-800 mb-1">Sensory Innervation</h4>
+                    <ul class="space-y-1 ml-3">
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Glenohumeral joint</strong><RefLink id="19" text="Sensory branches" url={references[18].url} /></span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>AC joint</strong></span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Subacromial bursa</strong></span></li>
+                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Coracoclavicular & coracohumeral ligaments</strong></span></li>
+                    </ul>
+                    <p class="text-slate-500 mt-2 italic">No regular skin innervation.</p>
+                  </div>
+                  
+                </div>
+                
+                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mt-4">
+                  <h5 class="font-bold text-indigo-800 text-xs mb-1">💡 Clinical Relevance</h5>
+                  <p class="text-xs text-slate-600">
+                    <strong>Proximal entrapment</strong> (suprascapular notch): affects both muscles + sensory.<br/>
+                    <strong>Distal entrapment</strong> (spinoglenoid notch): spares supraspinatus but may cause posterior shoulder pain via capsular innervation.
+                  </p>
+                </div>
+              </div>
+            </div>
             
             <!-- Ganglion Cyst Info -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -459,75 +509,52 @@ const faqSchema = {
               </div>
             </div>
 
-            <!-- Nerve Anatomy -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-indigo-600 text-white px-4 py-3">
-                <h3 class="font-bold text-sm uppercase tracking-wide">🔬 Nerve Anatomy</h3>
-              </div>
-              <div class="p-4">
-                <div class="space-y-3 text-xs text-slate-700">
-                  
-                  <div>
-                    <h4 class="font-bold text-indigo-800 mb-1">Origin</h4>
-                    <p class="text-slate-600">C5–C6 (variable C4 contribution).<RefLink id="20" text="Anatomy" url={references[19].url} /></p>
-                  </div>
-                  
-                  <div>
-                    <h4 class="font-bold text-indigo-800 mb-1">Course</h4>
-                    <p class="text-slate-600">Passes through the <em>suprascapular notch</em> (under the superior transverse scapular ligament) → supraspinous fossa → around scapular spine via <em>spinoglenoid notch</em> → infraspinous fossa.</p>
-                  </div>
-                  
-                  <div>
-                    <h4 class="font-bold text-indigo-800 mb-1">Motor Innervation</h4>
-                    <ul class="space-y-1 ml-3">
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. supraspinatus</strong></span></li>
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>M. infraspinatus</strong></span></li>
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 class="font-bold text-indigo-800 mb-1">Sensory Innervation</h4>
-                    <ul class="space-y-1 ml-3">
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Glenohumeral joint</strong><RefLink id="19" text="Sensory branches" url={references[18].url} /></span></li>
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>AC joint</strong></span></li>
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Subacromial bursa</strong></span></li>
-                      <li class="flex gap-2"><span class="text-indigo-500">•</span><span><strong>Coracoclavicular & coracohumeral ligaments</strong></span></li>
-                    </ul>
-                    <p class="text-slate-500 mt-2 italic">No regular skin innervation.</p>
-                  </div>
-                  
-                </div>
-                
-                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mt-4">
-                  <h5 class="font-bold text-indigo-800 text-xs mb-1">💡 Clinical Relevance</h5>
-                  <p class="text-xs text-slate-600">
-                    <strong>Proximal entrapment</strong> (suprascapular notch): affects both muscles + sensory.<br/>
-                    <strong>Distal entrapment</strong> (spinoglenoid notch): spares supraspinatus but may cause posterior shoulder pain via capsular innervation.
-                  </p>
-                </div>
-              </div>
-            </div>
 
           </div>
         </aside>
 
         <!-- MAIN COLUMN -->
-        <main class="lg:col-span-6 order-1 lg:order-2 space-y-8">
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-4 md:space-y-6 lg:space-y-8">
           
           <!-- ETIOLOGY & PATHOLOGY -->
-          <article id="etiology" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="etiology" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">1</span>
               Etiology & Pathology
             </h2>
             
-            <div class="flex flex-col md:flex-row gap-6 mb-6">
-              <div class="flex-1">
-                <p class="text-slate-600 text-base leading-relaxed">
-                  Suprascapular neuropathy is caused by compression or traction of the suprascapular nerve along its course from the brachial plexus to the rotator cuff muscles<RefLink id="1" text="Etiology overview" url={references[0].url} /><RefLink id="5" text="Pathology review" url={references[4].url} />.
-                </p>
+            <!-- Introduction - full width -->
+            <p class="text-slate-600 text-base leading-relaxed mb-6">
+              Suprascapular neuropathy is caused by compression or traction of the suprascapular nerve along its course from the brachial plexus to the rotator cuff muscles<RefLink id="1" text="Etiology overview" url={references[0].url} /><RefLink id="5" text="Pathology review" url={references[4].url} />.
+            </p>
+            
+            <!-- Two columns: causes + image -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+              <!-- Left column: Causes -->
+              <div class="space-y-4">
+                <div class="bg-emerald-50 rounded-lg p-4 border-l-3 border-l-emerald-500">
+                  <h3 class="font-bold text-slate-800 text-sm mb-2">Primary (Dynamic) Causes</h3>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Repetitive overhead activities</li>
+                    <li>• Volleyball, baseball, swimming<RefLink id="14" text="Athletes" url={references[13].url} /></li>
+                    <li>• Overhead laborers</li>
+                    <li>• Nerve stretch and microtrauma</li>
+                  </ul>
+                </div>
+                
+                <div class="bg-sky-50 rounded-lg p-4 border-l-3 border-l-sky-500">
+                  <h3 class="font-bold text-slate-800 text-sm mb-2">Secondary (Structural) Causes</h3>
+                  <ul class="text-slate-600 text-sm space-y-1">
+                    <li>• Paralabral ganglion cysts<RefLink id="1" text="Cysts" url={references[0].url} /></li>
+                    <li>• Massive rotator cuff tears</li>
+                    <li>• Fractures (scapular neck)</li>
+                    <li>• Tumors</li>
+                  </ul>
+                </div>
               </div>
-              <figure class="w-full md:w-64 shrink-0 rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+              
+              <!-- Right column: Image -->
+              <figure class="w-full rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
                 <img 
                   src="/images/diseases/suprascapular-entrapment/suprascapular-entrapment.svg" 
                   alt={imageData.heroNerve.alt}
@@ -541,41 +568,20 @@ const faqSchema = {
               </figure>
             </div>
             
-            <div class="grid sm:grid-cols-2 gap-4 mb-6">
-              <div class="bg-emerald-50 rounded-lg p-4 border-l-3 border-l-emerald-500">
-                <h3 class="font-bold text-slate-800 text-sm mb-2">Primary (Dynamic) Causes</h3>
-                <ul class="text-slate-600 text-sm space-y-1">
-                  <li>• Repetitive overhead activities</li>
-                  <li>• Volleyball, baseball, swimming<RefLink id="14" text="Athletes" url={references[13].url} /></li>
-                  <li>• Overhead laborers</li>
-                  <li>• Nerve stretch and microtrauma</li>
-                </ul>
-              </div>
-              <div class="bg-amber-50 rounded-lg p-4 border-l-3 border-l-amber-500">
-                <h3 class="font-bold text-slate-800 text-sm mb-2">Secondary (Structural) Causes</h3>
-                <ul class="text-slate-600 text-sm space-y-1">
-                  <li>• Paralabral ganglion cysts<RefLink id="1" text="Cysts" url={references[0].url} /></li>
-                  <li>• Massive rotator cuff tears</li>
-                  <li>• Fractures (scapular neck)</li>
-                  <li>• Tumors</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Anatomical Predisposition -->
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 class="font-bold text-slate-700 text-sm mb-2">Anatomical Predisposition</h4>
-              <p class="text-sm text-slate-600 leading-relaxed mb-3">
+            <!-- Anatomical Predisposition - full width below columns -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <h4 class="font-bold text-amber-800 text-sm mb-3">Anatomical Predisposition</h4>
+              <p class="text-sm text-slate-700 mb-3">
                 Certain anatomical variations increase the risk of nerve entrapment<RefLink id="15" text={references[14].text} url={references[14].url} />:
               </p>
-              <div class="grid sm:grid-cols-2 gap-2 text-xs">
+              <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs text-slate-700">
                 <div class="flex gap-2">
                   <span class="text-amber-500 font-bold">⚠</span>
                   <span>Narrow suprascapular notch</span>
                 </div>
                 <div class="flex gap-2">
                   <span class="text-amber-500 font-bold">⚠</span>
-                  <span>Ossified superior transverse scapular ligament (~12%)<RefLink id="15" text={references[14].text} url={references[14].url} /></span>
+                  <span>Ossified superior transverse scapular ligament (~12%)</span>
                 </div>
                 <div class="flex gap-2">
                   <span class="text-amber-500 font-bold">⚠</span>
@@ -590,7 +596,7 @@ const faqSchema = {
           </article>
 
           <!-- SYMPTOMS -->
-          <article id="symptoms" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="symptoms" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">2</span>
               Symptoms & Clinical Presentation
@@ -662,7 +668,7 @@ const faqSchema = {
           </article>
 
           <!-- DIAGNOSIS -->
-          <article id="diagnosis" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="diagnosis" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm">3</span>
               Diagnosis
@@ -810,7 +816,7 @@ const faqSchema = {
           </article>
 
           <!-- TREATMENT -->
-          <article id="treatment" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="treatment" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">4</span>
               Treatment Options
@@ -878,7 +884,7 @@ const faqSchema = {
           </article>
 
           <!-- SICK LEAVE -->
-          <article id="sick-leave" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="sick-leave" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm">5</span>
               Sick Leave & Return to Work
@@ -926,7 +932,7 @@ const faqSchema = {
           </article>
 
           <!-- RETURN TO SPORT -->
-          <article id="return-to-sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-6">
+          <article id="return-to-sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 lg:p-6 scroll-mt-6">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
               <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm">6</span>
               Return to Sport (RTS)
@@ -1111,7 +1117,7 @@ const faqSchema = {
         </div>
       </div>
       
-      <div class="bg-slate-700/50 rounded-2xl p-6 md:p-8 border border-slate-600">
+      <div class="bg-slate-700/50 rounded-2xl p-4 md:p-6 lg:p-8 border border-slate-600">
         <p class="text-slate-300 leading-relaxed mb-6">
           At Södermalms Ortopedi, we frequently see patients with suspected suprascapular nerve entrapment. Typical symptoms include deep shoulder pain, weakness in external rotation (infraspinatus) and/or abduction (supraspinatus), sometimes with visible atrophy.
         </p>
@@ -1171,7 +1177,7 @@ const faqSchema = {
         
         <h3 class="text-amber-400 font-bold mb-3">Surgical Indication & Timing</h3>
         <p class="text-slate-300 leading-relaxed mb-4">
-          When isolated weakness in supraspinatus and/or infraspinatus is confirmed, I typically recommend <strong class="text-white">early arthroscopic decompression</strong> (release of the transverse scapular ligament at the suprascapular notch and/or drainage of any cyst). The procedure is minimally invasive, usually takes me <strong class="text-white">3–5 minutes</strong>, and is performed as outpatient surgery.
+          When isolated weakness in supraspinatus and/or infraspinatus is confirmed, I typically recommend <strong class="text-white">early arthroscopic decompression</strong> (release of the transverse scapular ligament at the suprascapular notch and/or drainage of any cyst). The procedure is minimally invasive, usually takes me <strong class="text-white">5–15 minutes</strong>, and is performed as outpatient surgery.
         </p>
         <p class="text-slate-300 leading-relaxed mb-6">
           The rationale for early surgery is to avoid the risk of <strong class="text-white">irreversible axonal damage</strong> and permanent weakness. Waiting for clearer EMG findings or progressive atrophy is unnecessary when the procedure is so straightforward and safe.
@@ -1207,8 +1213,8 @@ const faqSchema = {
   </section>
 
   <!-- FAQ SECTION -->
-  <section id="faq" class="bg-white py-10 border-t border-slate-200 scroll-mt-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <section id="faq" class="bg-white py-6 md:py-10 border-t border-slate-200 scroll-mt-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
       <h2 class="text-xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1296,8 +1302,8 @@ const faqSchema = {
   </section>
 
   <!-- REFERENCES -->
-  <section class="bg-slate-100 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <section id="references" class="bg-slate-100 py-6 md:py-8 scroll-mt-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
       <details class="group">
         <summary class="flex items-center gap-2 cursor-pointer text-slate-700 font-bold text-sm uppercase tracking-wide select-none">
           <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
@@ -1319,8 +1325,8 @@ const faqSchema = {
   </section>
 
   <!-- AUTHOR & REFDRAWER -->
-  <section class="py-8 bg-white border-t border-slate-200">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+  <section class="py-6 md:py-8 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 space-y-4 md:space-y-6">
       <AuthorCard 
         name={authorName}
         title="Specialist in Orthopaedics & Shoulder Surgery"
