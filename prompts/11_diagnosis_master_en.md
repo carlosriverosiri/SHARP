@@ -53,7 +53,22 @@
 - Use for: Personal clinical observations, expert opinions, practice patterns, clinical pearls
 - Icon: 💡 or 👨‍⚕️
 
+**COLOR SCHEME FOR CONTENT BLOCKS:**
 
+Use consistent colors to signal content type:
 
+| Color | Usage | Background | Border | Heading | Example |
+|-------|-------|------------|--------|---------|---------|
+| **Indigo** | Anatomy, Clinical Pearls, Expert Experience | `bg-indigo-50` | `border-indigo-200` | `text-indigo-800` | Nerve Anatomy, 💡 Clinical Pearl |
+| **Amber** | Etiology, Risk Factors, Variants | `bg-amber-50` | `border-amber-200` | `text-amber-800` | Paralabral Ganglion Cysts, Risk Factors |
+| **Rose** | Warnings, Red Flags, Alerts | `bg-rose-50` | `border-rose-200` | `text-rose-800` | 🚨 Red Flags, At-Risk Athletes |
+| **Sky** | Diagnosis, Procedures, Investigations | `bg-sky-50` | `border-sky-200` | `text-sky-800` | MRI, EMG, 🔵 Surgical Treatment |
+| **Green/Emerald** | Treatment, Prognosis, Positive Outcomes | `bg-green-50` | `border-green-200` | `text-green-800` | ✅ Treatment, Return to Sport, Contents |
+| **Purple** | Sick Leave, Return to Work | `bg-purple-50` | `border-purple-200` | `text-purple-800` | 📅 Sick Leave & Return to Work |
+| **Slate** | Neutral Information, Background | `bg-slate-50` | `border-slate-200` | `text-slate-800` | Background info, definitions |
 
+**Block Header Colors:**
+- Large section headers (in card header): Use darker shade (e.g., `bg-indigo-600 text-white`)
+- Sub-headers within blocks: Use 800 shade (e.g., `text-indigo-800`)
+- Bullet point icons: Use 500-600 shade (e.g., `text-indigo-500`)
 
