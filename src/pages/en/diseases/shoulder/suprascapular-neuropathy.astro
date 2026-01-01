@@ -9,6 +9,7 @@ import RefDrawer from '../../../../components/RefDrawer.astro';
 import mriOedema from '../../../../assets/images/suprascapular-nerve/oedema-mr-suprascapular-nerve.png';
 import mriGanglion from '../../../../assets/images/suprascapular-nerve/ganglion-mr-suprascapular-nerve.png';
 import atrofiInfraspinatus from '../../../../assets/images/suprascapular-nerve/atrofi-infraspinatus.png';
+import supraspinatusStrengthTest from '../../../../assets/images/suprascapular-nerve/supraspinatus-muscle-strenght-test.png';
 
 // AUTHOR & DATE INFO
 const authorName = "Dr. Carlos Rivero Siri";
@@ -129,13 +130,18 @@ const references = [
   },
   {
     id: "19",
-    text: "Vorster et al. The sensory branch distribution of the suprascapular nerve: an anatomic study. Journal of Shoulder and Elbow Surgery. 2008.",
-    url: "https://doi.org/10.1016/j.jse.2007.08.006"
+    text: "Vorster, Willie, Christopher P. E. Lange, Robert J. P. Briët, m.fl. \"The Sensory Branch Distribution of the Suprascapular Nerve: An Anatomic Study\". Journal of Shoulder and Elbow Surgery 17, nr 3 (2008): 500–502.",
+    url: "https://doi.org/10.1016/j.jse.2007.10.008"
   },
   {
     id: "20",
-    text: "Laulund AS et al. Anatomy, Shoulder and Upper Limb, Suprascapular Nerve. StatPearls. 2022.",
-    url: "https://www.ncbi.nlm.nih.gov/books/NBK539718/"
+    text: "Basta, Marina, Tanisha Sanganeria, och Matthew A. Varacallo. \"Anatomy, Shoulder and Upper Limb, Suprascapular Nerve\". I StatPearls. StatPearls Publishing, 2025.",
+    url: "http://www.ncbi.nlm.nih.gov/books/NBK557880/"
+  },
+  {
+    id: "21",
+    text: "Kijkunasathian, Chusak, Supajed Niyomkha, Patarawan Woratanarat, och Chaiyanun Vijittrakarnrung. \"The Preferable Shoulder Position Can Isolate Supraspinatus Activity Superior to the Classic Empty Can Test: An Electromyographic Study\". BMC Musculoskeletal Disorders 24, nr 1 (2023): 255.",
+    url: "https://doi.org/10.1186/s12891-023-06372-3"
   }
 ];
 
@@ -600,7 +606,7 @@ const faqSchema = {
               </div>
               <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
                 <h3 class="font-bold text-slate-800 text-sm mb-1">Radiation</h3>
-                <p class="text-slate-600 text-sm">May radiate to neck, arm, or scapular region.</p>
+                <p class="text-slate-600 text-sm">Most commonly radiates to the muscles innervated by the suprascapular nerve (supraspinatus and infraspinatus muscles). Sometimes pain in the infraclavicular region.</p>
               </div>
               <div class="bg-slate-50 rounded-lg p-4 border-l-3 border-l-amber-500">
                 <h3 class="font-bold text-slate-800 text-sm mb-1">Weakness</h3>
@@ -666,17 +672,71 @@ const faqSchema = {
               Diagnosis relies on clinical examination, electrodiagnostic studies, and imaging<RefLink id="3" text="Electrodiagnostics" url={references[2].url} /><RefLink id="1" text="Diagnostic approach" url={references[0].url} />.
             </p>
 
-            <!-- Clinical Tests -->
-            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-5">
-              <h3 class="font-bold text-emerald-800 mb-3 text-sm uppercase tracking-wide">Clinical Examination</h3>
-              <div class="grid sm:grid-cols-2 gap-3 text-sm">
-                <div class="bg-white rounded-lg p-3 border border-emerald-100">
-                  <h4 class="font-bold text-slate-800 text-sm mb-1">Suprascapular Stretch Test</h4>
-                  <p class="text-slate-600 text-xs">Pain when head turned away from affected side while shoulder is depressed.</p>
+            <!-- Clinical Examination -->
+            <div class="mb-5">
+              <h3 class="font-bold text-slate-800 mb-3 text-base">Clinical Examination</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                The key diagnostic finding is <strong>pain-free weakness</strong> in the muscles innervated by the suprascapular nerve. Strength testing of supraspinatus or infraspinatus is not meaningful if it provokes pain, as the patient cannot resist adequately when in pain.
+              </p>
+              
+              <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 mb-4">
+                <!-- Supraspinatus block - order 1 on mobile and desktop -->
+                <div class="relative text-sm order-1">
+                  <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <h4 class="font-bold text-slate-800 text-sm mb-1">Supraspinatus Strength</h4>
+                    <p class="text-slate-600 text-xs">Test abduction strength in a pain-free range. Weakness indicates suprascapular notch entrapment affecting the superior branch.</p>
+                  </div>
+                  <!-- Green arrow pointing right (desktop only) -->
+                  <svg class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-8 h-8" viewBox="0 0 32 32" fill="none">
+                    <path d="M4 16 L24 16" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M18 10 L24 16 L18 22" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  </svg>
                 </div>
-                <div class="bg-white rounded-lg p-3 border border-emerald-100">
-                  <h4 class="font-bold text-slate-800 text-sm mb-1">Cross-Arm Adduction Test</h4>
-                  <p class="text-slate-600 text-xs">Pain when arm is pulled horizontally across chest (adducted).</p>
+                
+                <!-- Image - order 2 on mobile, spans both rows on desktop -->
+                <figure class="w-full md:w-64 shrink-0 rounded-lg overflow-hidden border border-emerald-200 order-2 md:row-span-2">
+                  <Image 
+                    src={supraspinatusStrengthTest}
+                    alt="Supraspinatus strength test positions from Kijkunasathian et al. 2023 showing 30°/60°/90° abduction (A), scapular plane positions (B), and full internal/external rotation (C)"
+                    title="Supraspinatus strength testing positions - Kijkunasathian et al. BMC Musculoskelet Disord 2023"
+                    class="w-full h-auto bg-white"
+                    loading="lazy"
+                  />
+                  <figcaption class="p-3 text-xs text-slate-600 bg-white">
+                    <p class="text-xs text-slate-700 mb-2 leading-relaxed">
+                      <strong>Supraspinatus test:</strong> 30° shoulder abduction combined with 30° horizontal flexion and external rotation (thumbs up) better isolates supraspinatus activity compared to the classic empty can test<RefLink id="21" text="EMG study" url="https://doi.org/10.1186/s12891-023-06372-3" />.
+                    </p>
+                    <p class="text-[10px] text-slate-500 italic">Source: Kijkunasathian et al. BMC Musculoskelet Disord 24 (2023): 255</p>
+                  </figcaption>
+                </figure>
+                
+                <!-- Infraspinatus block and image - order 3 on mobile, stays in left column on desktop -->
+                <div class="order-3 space-y-3">
+                  <div class="relative text-sm">
+                    <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                      <h4 class="font-bold text-slate-800 text-sm mb-1">Infraspinatus Strength</h4>
+                      <p class="text-slate-600 text-xs">Test external rotation strength in a pain-free position. Weakness indicates involvement of the inferior branch (spinoglenoid notch or more proximal).</p>
+                    </div>
+                    <!-- Green arrow pointing down -->
+                    <svg class="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-full w-8 h-8 z-10" viewBox="0 0 32 32" fill="none">
+                      <path d="M16 4 L16 24" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M10 18 L16 24 L22 18" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  </div>
+                  
+                  <!-- Infraspinatus test image - smaller, fits in left column -->
+                  <figure class="w-full rounded-lg overflow-hidden border border-emerald-200 bg-white mt-6">
+                    <img 
+                      src="/images/diseases/suprascapular-entrapment/infraspinatus-strenght-test.svg"
+                      alt="Infraspinatus strength test - external rotation testing in neutral position"
+                      title="Infraspinatus external rotation strength test"
+                      class="w-full h-auto"
+                      loading="lazy"
+                    />
+                    <figcaption class="p-2 text-xs text-slate-600 bg-white text-center">
+                      <strong>Infraspinatus test:</strong> External rotation strength testing in neutral position.
+                    </figcaption>
+                  </figure>
                 </div>
               </div>
             </div>
@@ -836,9 +896,9 @@ const faqSchema = {
                 </div>
                 <div class="flex-1">
                   <h4 class="font-bold text-slate-800 text-sm">Sedentary / Office Work</h4>
-                  <p class="text-slate-600 text-sm">Return to normal daily activities and desk work. Mean: 3 weeks (range: 2 days – 3 months)<RefLink id="6" text="Early return office" url={references[5].url} /></p>
+                  <p class="text-slate-600 text-sm">Return to normal daily activities and desk work. Typically within 1 week (range: 0–3 weeks)<RefLink id="6" text="Early return office" url={references[5].url} /></p>
                 </div>
-                <div class="text-green-700 font-bold text-sm whitespace-nowrap">~4 weeks</div>
+                <div class="text-green-700 font-bold text-sm whitespace-nowrap">0–3 weeks</div>
               </div>
 
               <div class="flex items-center gap-4 bg-sky-50 border border-sky-200 rounded-lg p-4">
@@ -846,8 +906,8 @@ const faqSchema = {
                   <svg class="w-6 h-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                 </div>
                 <div class="flex-1">
-                  <h4 class="font-bold text-slate-800 text-sm">Light Manual Labor</h4>
-                  <p class="text-slate-600 text-sm">Active movements within painless range encouraged by week 2</p>
+                  <h4 class="font-bold text-slate-800 text-sm">Light to Moderate Manual Labor</h4>
+                  <p class="text-slate-600 text-sm">Light manual work without heavy lifting. Active movements within painless range</p>
                 </div>
                 <div class="text-sky-700 font-bold text-sm whitespace-nowrap">2–6 weeks</div>
               </div>
@@ -858,9 +918,9 @@ const faqSchema = {
                 </div>
                 <div class="flex-1">
                   <h4 class="font-bold text-slate-800 text-sm">Heavy Manual Labor</h4>
-                  <p class="text-slate-600 text-sm">Muscle strengthening programs begin at 6–12 weeks postop. Full return aligned with return to sport<RefLink id="11" text="Heavy labor timeline" url={references[10].url} /></p>
+                  <p class="text-slate-600 text-sm">Return to heavy lifting when strength is normalized. Muscle strengthening programs begin at 6–8 weeks postop<RefLink id="11" text="Heavy labor timeline" url={references[10].url} /></p>
                 </div>
-                <div class="text-amber-700 font-bold text-sm whitespace-nowrap">3–4 months</div>
+                <div class="text-amber-700 font-bold text-sm whitespace-nowrap">6–12 weeks</div>
               </div>
             </div>
           </article>

@@ -34,3 +34,4 @@ Spontan reposition kräver försiktighet.
 **Sammanfattning:** Var försiktig minst 4-6 veckor. Överväg MR om instabilitetskänsla uppstår.
 
 
+

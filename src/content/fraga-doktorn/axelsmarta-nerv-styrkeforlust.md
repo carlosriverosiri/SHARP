@@ -34,3 +34,4 @@ Kraftförlust i triceps är ett varningstecken som bör utredas.
 **Sammanfattning:** Styrkeförlust i triceps är ett alarmsymtom – sök bedömning snarast.
 
 
+

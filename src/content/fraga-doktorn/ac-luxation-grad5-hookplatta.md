@@ -51,3 +51,4 @@ AC-luxation som recidiverat två gånger är en utmanande situation,
 **Sammanfattning:** Det finns ingen "bästa" metod – det beror på kirurgens erfarenhet och din specifika situation.
 
 
+

@@ -55,3 +55,4 @@ Vid grad 2 (och de flesta grad 3) läker ledbanden till god funktion utan operat
 **Sammanfattning:** Ledbanden behöver inte vara helt stilla för att läka. Viss rörelse är normalt och hindrar inte läkningen.
 
 
+

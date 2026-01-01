@@ -55,3 +55,4 @@ Låsningar efter trauma tyder ofta på meniskskada.
 **Sammanfattning:** Sök bedömning – låsningar efter trauma bör undersökas med MR.
 
 
+

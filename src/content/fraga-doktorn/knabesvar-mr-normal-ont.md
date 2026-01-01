@@ -35,3 +35,4 @@ Normal MR utesluter inte alla knäproblem.
 **Sammanfattning:** Du har rätt att söka ytterligare bedömning. Vi tar emot egenremisser.
 
 
+

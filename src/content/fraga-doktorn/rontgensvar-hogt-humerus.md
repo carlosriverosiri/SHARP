@@ -45,3 +45,4 @@ Låt mig förklara ditt röntgensvar.
 **Sammanfattning:** Högt humerus tyder på rotatorkuffpåverkan. AC-ledsartrosen kan bidra till smärtan.
 
 
+

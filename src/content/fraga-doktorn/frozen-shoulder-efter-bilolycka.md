@@ -42,3 +42,4 @@ Samband mellan trauma och frozen shoulder är möjligt men svårt att bevisa.
 **Sammanfattning:** Sambandet är osäkert men inte omöjligt. Fokusera på behandlingen.
 
 
+

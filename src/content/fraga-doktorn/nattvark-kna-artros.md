@@ -44,3 +44,4 @@ Isolerad nattvärk med kortvarig kortisoneffekt tyder på att diagnosen kan beh�
 **Sammanfattning:** Kortvarig effekt av kortison motiverar vidare utredning.
 
 
+

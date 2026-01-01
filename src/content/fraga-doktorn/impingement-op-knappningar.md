@@ -38,3 +38,4 @@ Knäppningar 5 veckor efter operation kan bero på läkningsprocessen.
 **Sammanfattning:** Kontakta kliniken för rådgivning om de smärtsamma knäppningarna.
 
 
+

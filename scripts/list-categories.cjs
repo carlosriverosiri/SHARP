@@ -36,3 +36,4 @@ console.log(`\nTotalt ${sorted.length} kategorier\n`);
 
 
 
+

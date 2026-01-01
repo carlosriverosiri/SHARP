@@ -48,3 +48,4 @@ Med **1,5-2 cm förkortning** och **synlig benände** finns argument för operat
 **Sammanfattning:** Du har rätt att välja. För aktiva cyklister talar mycket för operation.
 
 
+

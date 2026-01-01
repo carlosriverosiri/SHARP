@@ -51,51 +51,46 @@ const references = [
   },
   {
     id: "3",
-    text: "Pan Y, et al. Hourglass-like constrictions of peripheral nerve in the upper extremity: a clinical review and pathological study. Neurosurgery. 2014;75(1):10-22.",
-    url: "https://pubmed.ncbi.nlm.nih.gov/24618801/"
-  },
-  {
-    id: "4",
     text: "Sneag DB, et al. MRI Findings of Neuralgic Amyotrophy. AJNR Am J Neuroradiol. 2016;37(5):946-953.",
     url: "https://pubmed.ncbi.nlm.nih.gov/26721771/"
   },
   {
-    id: "5",
+    id: "4",
     text: "Feinberg JH, Radecki J. Parsonage-Turner syndrome. HSS J. 2010;6(2):199-205.",
     url: "https://pubmed.ncbi.nlm.nih.gov/21886536/"
   },
   {
-    id: "6",
+    id: "5",
     text: "van Alfen N. Clinical and pathophysiological concepts of neuralgic amyotrophy. Nat Rev Neurol. 2011;7(6):315-322.",
     url: "https://www.nature.com/articles/nrneurol.2011.62"
   },
   {
-    id: "7",
+    id: "6",
     text: "Cup EH, et al. Referral of patients with neuromuscular disease to occupational therapy, physical therapy and speech therapy: usual practice versus multidisciplinary advice. Disabil Rehabil. 2007;29(9):717-726.",
     url: "https://pubmed.ncbi.nlm.nih.gov/17453994/"
   },
   {
-    id: "8",
+    id: "7",
     text: "Tsairis P, Dyck PJ, Mulder DW. Natural history of brachial plexus neuropathy. Report on 99 patients. Arch Neurol. 1972;27(2):109-117.",
     url: "https://pubmed.ncbi.nlm.nih.gov/4339239/"
   },
   {
-    id: "9",
+    id: "8",
     text: "Suarez GA, et al. The electrodiagnostic examination in neuralgic amyotrophy. Neurology. 1996;46:1021-1025.",
     url: "https://pubmed.ncbi.nlm.nih.gov/8780082/"
   },
   {
-    id: "10",
+    id: "9",
     text: "Gstoettner C, et al. Surgical treatment of idiopathic neuralgic amyotrophy: a systematic review. J Neurosurg. 2020;133:1905-1913.",
     url: "https://pubmed.ncbi.nlm.nih.gov/32005013/"
   },
   {
-    id: "11",
+    id: "10",
     text: "Fibla J, et al. Spontaneous recovery in paralytic brachial neuritis. Orthopedics. 1998;21(1):71-73.",
     url: "https://pubmed.ncbi.nlm.nih.gov/9474633/"
   },
   {
-    id: "12",
+    id: "11",
     text: "van Eijk JJ, et al. Predicting recovery from neuralgic amyotrophy. J Peripher Nerv Syst. 2016;21(2):134-141.",
     url: "https://pubmed.ncbi.nlm.nih.gov/27138551/"
   }
@@ -127,7 +122,7 @@ const schemaData = {
       { "@type": "MedicalTherapy", "name": "Smärtlindring (analgetika, neuroleptika)" },
       { "@type": "MedicalTherapy", "name": "Kortikosteroider i akutskedet" },
       { "@type": "MedicalTherapy", "name": "Fysioterapi och rörelseträning" },
-      { "@type": "MedicalTherapy", "name": "Nervfrigörning (neurolys) vid timglasförträngning" }
+      { "@type": "MedicalTherapy", "name": "Nervfrigörning (neurolys) vid nervförträngning" }
     ]
   }
 };
@@ -373,7 +368,7 @@ const faqSchema = {
               <div class="p-4">
                 <p class="text-sm text-slate-600 leading-relaxed mb-4">
                   Orsaken är okänd men troligen <strong>autoimmun reaktion</strong>. 
-                  Vanliga triggers inkluderar<RefLink id="6" text="Patofysiologi." url={references[5].url} />:
+                  Vanliga triggers inkluderar<RefLink id="5" text="Patofysiologi." url={references[4].url} />:
                 </p>
                 <ul class="space-y-2 text-sm text-slate-700">
                   <li class="flex gap-2">
@@ -395,34 +390,6 @@ const faqSchema = {
                   <li class="flex gap-2">
                     <span class="text-amber-500 font-bold">•</span>
                     <span>Graviditet/förlossning</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Patologi Box -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-rose-600 text-white px-4 py-3">
-                <h3 class="font-bold text-sm uppercase tracking-wide">Patologi</h3>
-              </div>
-              <div class="p-4">
-                <h4 class="font-bold text-slate-800 text-sm mb-2">Timglasförträngning</h4>
-                <p class="text-xs text-slate-600 leading-relaxed mb-3">
-                  "Hourglass constriction" – en typisk förträngning av nerven som ses på MR<RefLink id="3" text="Hourglass constrictions." url={references[2].url} />. 
-                  Oftast drabbade nerver:
-                </p>
-                <ul class="space-y-1 text-xs text-slate-600">
-                  <li class="flex gap-2">
-                    <span class="text-rose-500 font-bold">→</span>
-                    <span><strong>N. suprascapularis</strong> (vanligast)</span>
-                  </li>
-                  <li class="flex gap-2">
-                    <span class="text-rose-500 font-bold">→</span>
-                    <span><strong>N. axillaris</strong></span>
-                  </li>
-                  <li class="flex gap-2">
-                    <span class="text-rose-500 font-bold">→</span>
-                    <span><strong>N. thoracicus longus</strong></span>
                   </li>
                 </ul>
               </div>
@@ -516,11 +483,11 @@ const faqSchema = {
                     </li>
                     <li class="flex gap-2">
                       <span class="text-green-600 font-bold">⏱</span>
-                      <span>Full återhämtning tar i genomsnitt <strong>18 månader</strong><RefLink id="8" text="Natural history." url={references[7].url} /></span>
+                      <span>Full återhämtning tar i genomsnitt <strong>18 månader</strong><RefLink id="7" text="Natural history." url={references[6].url} /></span>
                     </li>
                     <li class="flex gap-2">
                       <span class="text-green-600 font-bold">✓</span>
-                      <span><strong>80-90%</strong> återfår god funktion<RefLink id="11" text="Spontan återhämtning." url={references[10].url} /></span>
+                      <span><strong>80-90%</strong> återfår god funktion<RefLink id="10" text="Spontan återhämtning." url={references[9].url} /></span>
                     </li>
                   </ul>
                 </div>
@@ -537,7 +504,7 @@ const faqSchema = {
             
             <p class="text-slate-600 text-base leading-relaxed mb-5">
               Diagnosen baseras primärt på den <strong>typiska kliniska bilden</strong>: akut smärta som följs av svaghet. 
-              Bilddiagnostik och neurofysiologi bekräftar och kartlägger skadan<RefLink id="5" text="Diagnos och handläggning." url={references[4].url} />.
+              Bilddiagnostik och neurofysiologi bekräftar och kartlägger skadan<RefLink id="4" text="Diagnos och handläggning." url={references[3].url} />.
             </p>
 
             <div class="grid sm:grid-cols-3 gap-4 mb-5">
@@ -557,7 +524,7 @@ const faqSchema = {
                   </svg>
                 </div>
                 <h4 class="font-bold text-slate-800 text-sm mb-1">MR axel/plexus</h4>
-                <p class="text-xs text-slate-600">Visar denervationsödem i muskler i akutskedet<RefLink id="4" text="MRI-fynd." url={references[3].url} /></p>
+                <p class="text-xs text-slate-600">Visar denervationsödem i muskler i akutskedet<RefLink id="3" text="MRI-fynd." url={references[2].url} /></p>
               </div>
               <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
                 <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center mb-3">
@@ -566,7 +533,7 @@ const faqSchema = {
                   </svg>
                 </div>
                 <h4 class="font-bold text-slate-800 text-sm mb-1">EMG/Neurografi</h4>
-                <p class="text-xs text-slate-600">Bekräftar nervskadan. Utförs efter 3-4 veckor<RefLink id="9" text="EMG vid neuralgisk amyotrofi." url={references[8].url} /></p>
+                <p class="text-xs text-slate-600">Bekräftar nervskadan. Utförs efter 3-4 veckor<RefLink id="8" text="EMG vid neuralgisk amyotrofi." url={references[7].url} /></p>
               </div>
             </div>
 
@@ -621,7 +588,7 @@ const faqSchema = {
                   <div class="space-y-3 text-sm mb-4">
                     <div class="flex gap-2">
                       <span class="text-green-600 font-bold">✓</span>
-                      <div><strong>Smärtlindring:</strong> Opiater, gabapentin/pregabalin kan krävas<RefLink id="5" text="Behandlingsalternativ." url={references[4].url} /></div>
+                      <div><strong>Smärtlindring:</strong> Opiater, gabapentin/pregabalin kan krävas<RefLink id="4" text="Behandlingsalternativ." url={references[3].url} /></div>
                     </div>
                     <div class="flex gap-2">
                       <span class="text-green-600 font-bold">✓</span>
@@ -629,7 +596,7 @@ const faqSchema = {
                     </div>
                     <div class="flex gap-2">
                       <span class="text-green-600 font-bold">✓</span>
-                      <div><strong>Rörelseträning:</strong> Passiva rörelser för att undvika stelhet<RefLink id="7" text="Rehab vid neuromuskulär sjukdom." url={references[6].url} /></div>
+                      <div><strong>Rörelseträning:</strong> Passiva rörelser för att undvika stelhet<RefLink id="6" text="Rehab vid neuromuskulär sjukdom." url={references[5].url} /></div>
                     </div>
                     <div class="flex gap-2">
                       <span class="text-amber-500 font-bold">~</span>
@@ -652,7 +619,7 @@ const faqSchema = {
                   <div class="space-y-3 text-sm mb-4">
                     <div class="flex gap-2">
                       <span class="text-sky-600 font-bold">✓</span>
-                      <div><strong>Nervfrigörning (neurolys):</strong> Vid tydlig timglasförträngning på MR<RefLink id="10" text="Kirurgisk behandling." url={references[9].url} /></div>
+                      <div><strong>Nervfrigörning (neurolys):</strong> Vid tydlig nervförträngning på MR<RefLink id="9" text="Kirurgisk behandling." url={references[8].url} /></div>
                     </div>
                     <div class="flex gap-2">
                       <span class="text-sky-600 font-bold">✓</span>
@@ -773,13 +740,13 @@ const faqSchema = {
               <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-lg font-bold shrink-0">
                 80%
               </div>
-              <span>Återfår <strong>god funktion</strong> inom 2 år<RefLink id="8" text="Naturalförlopp." url={references[7].url} /></span>
+              <span>Återfår <strong>god funktion</strong> inom 2 år<RefLink id="7" text="Naturalförlopp." url={references[6].url} /></span>
             </div>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg font-bold shrink-0">
                 90%
               </div>
-              <span>Upplever <strong>signifikant förbättring</strong><RefLink id="12" text="Prediktion av återhämtning." url={references[11].url} /></span>
+              <span>Upplever <strong>signifikant förbättring</strong><RefLink id="11" text="Prediktion av återhämtning." url={references[10].url} /></span>
             </div>
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 rounded-full bg-amber-500 text-white flex items-center justify-center text-lg font-bold shrink-0">
@@ -939,7 +906,7 @@ const faqSchema = {
           </summary>
           <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
             Nerver läker långsamt (~1 mm/dag). De flesta (80-90%) återfår god funktion, men det tar i genomsnitt 
-            <strong>18 månader</strong><RefLink id="8" text="Naturalförlopp." url={references[7].url} />. Vissa upplever restsymtom som trötthet eller lätt nedsatt styrka.
+            <strong>18 månader</strong><RefLink id="7" text="Naturalförlopp." url={references[6].url} />. Vissa upplever restsymtom som trötthet eller lätt nedsatt styrka.
           </div>
         </details>
 
@@ -1019,7 +986,7 @@ const faqSchema = {
         image={authorImage}
         profileUrl={authorUrl}
       />
-      <RefDrawer references={references} />
+      <RefDrawer />
     </div>
   </section>
 

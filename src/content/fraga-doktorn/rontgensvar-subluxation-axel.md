@@ -54,3 +54,4 @@ Låt mig förklara röntgensvaret.
 **Sammanfattning:** Röntgen tyder på artros + möjlig cuffskada. Komplettera med ultraljud/MR.
 
 
+

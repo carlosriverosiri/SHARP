@@ -143,7 +143,7 @@ Centrala begrepp inom idrottsmedicin och ortopedi är <strong>Return to Sport (R
 <li>Återgång till thaiboxning är möjligt efter operation</li>
 <li>Ca 75–80% når samma nivå som före skadan</li>
 <li>Operation ger mer stabil led men kräver lång rehab</li>
-<li>Utan operation Behöver du modifiera din aktivitetsnivå?</li>
+<li>Utan operation Behöver du modifiera din aktivitetsnivå</li>
 </ul>
 </div>
 

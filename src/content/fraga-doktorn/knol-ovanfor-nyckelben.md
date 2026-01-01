@@ -36,3 +36,4 @@ En knöl i fossa supraclavicularis (gropen ovanför nyckelbenet) bör alltid utr
 **Sammanfattning:** Sök läkare för bedömning – knölar i denna region ska alltid undersökas.
 
 
+

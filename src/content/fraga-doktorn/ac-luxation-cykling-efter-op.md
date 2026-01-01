@@ -53,3 +53,4 @@ Cykling på trainer är en bra fråga efter AC-operation.
 **Sammanfattning:** Fråga din opererande läkare, men 4-6 veckor är ofta rimligt för lugn indoorcykling.
 
 
+

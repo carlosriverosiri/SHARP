@@ -44,3 +44,4 @@ Bra fråga! Det finns tydliga skillnader.
 **Sammanfattning:** Knäskydd skyddar mot slag, ortos stabiliserar. För löpning är träning och skor viktigare.
 
 
+

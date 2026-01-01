@@ -35,3 +35,4 @@ Vibrationsbräda är generellt **säkert** med knäproteser.
 **Sammanfattning:** Ja, du kan träna på vibrationsbräda. Börja försiktigt.
 
 
+

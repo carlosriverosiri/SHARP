@@ -56,3 +56,4 @@ Ditt MR-svar innehåller viktig information som bör tas på allvar.
 **Sammanfattning:** Du har rätt – det här bör utredas ordentligt. Insistera på remiss till axelspecialist eller neurolog.
 
 
+

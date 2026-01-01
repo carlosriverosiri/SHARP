@@ -51,3 +51,4 @@ Dina symtom tyder på akut inflammation – troligen kalkaxel eller akut bursit.
 **Sammanfattning:** Sök vård snart – en kortisoninjektion kan ge dramatisk lindring vid akut kalkaxel/bursit.
 
 
+

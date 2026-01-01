@@ -35,3 +35,4 @@ Domningar efter kortisonspruta kan ha flera orsaker.
 **Sammanfattning:** Med rotkanalsförträngning och ökade domningar bör du söka snart.
 
 
+

@@ -46,3 +46,4 @@ Vid **1 års besvär trots konservativ behandling** är kirurgi rimligt att öve
 **Sammanfattning:** Operation kan ge god lindring. Vänta inte för länge för att undvika permanent nervskada.
 
 
+

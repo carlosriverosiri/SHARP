@@ -51,3 +51,4 @@ Smärta vid pronation (vridning neråt) tyder på problem med underarmens pronat
 **Sammanfattning:** Vila är sällan rätt behandling för senbesvär – du behöver aktiv rehabilitering.
 
 
+

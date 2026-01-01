@@ -54,3 +54,4 @@ Skulderbladet glider normalt tyst över revbenen. Ljud kan uppstå vid:
 
 
 
+

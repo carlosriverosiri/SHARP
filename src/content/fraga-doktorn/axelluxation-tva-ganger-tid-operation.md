@@ -60,3 +60,4 @@ Efter två luxationer vid 25 års ålder är operation oftast indicerad. Tidpunk
 
 
 
+

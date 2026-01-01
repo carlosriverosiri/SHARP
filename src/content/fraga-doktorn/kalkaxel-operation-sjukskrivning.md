@@ -60,3 +60,4 @@ Kalkaxel (calcific tendinitis) är vanligt hos personer med repetitivt arbete.
 **Sammanfattning:** Operation ger oftast goda resultat. Sjukskrivning beror på ditt tunga arbete – räkna med minst 4 veckor.
 
 
+

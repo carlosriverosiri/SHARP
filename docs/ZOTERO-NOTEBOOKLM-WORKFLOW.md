@@ -23,6 +23,8 @@ För att extrahera strukturerad fakta:
 ### 🤖 NotebookLM Prompt (English Output)
 *Kopiera och kör denna exakt:*
 
+---
+
 > You are a research assistant for an orthopedic specialist. Analyze the uploaded documents and extract data for a medical article about **[DIAGNOSIS NAME]**.
 >
 > **CRITICAL INSTRUCTION:** Output strictly in **ENGLISH**. Do not translate into Swedish.
@@ -45,10 +47,11 @@ För att extrahera strukturerad fakta:
 >   * **Return to Play (Full contact/Competition):** [Timeframe]
 >   * **Return to Performance:** Is there data on how many return to their *previous level*? (e.g., "80% return to elite level").
 >
-> **Part 4: References & Sources (STRICT)**
-> - List the studies used for the data above.
-> - **Format:** Author (Year) - [Extract URL or DOI if present, otherwise write MISSING].
-> - **Rule:** NEVER guess a URL.
+> **Part 4: References used (Author/Year Match)**
+> - List the specific studies you used to extract this data.
+> - **Format:** Author (Year).
+> - **Note:** Do NOT try to generate URLs or DOIs here. Just provide the Author and Year so I can match it with my Zotero database later.
+"""
 
 ---
 

@@ -49,3 +49,4 @@ Normalt ska rotatorcuffen hålla kulleden centrerad i ledpannan. Om cuffen är s
 
 
 
+

@@ -52,3 +52,4 @@ Din situation är komplex med flera möjliga diagnoser.
 **Sammanfattning:** Koksaltbehandling är värt att prova vid kalkaxel, men säkerställ diagnosen först.
 
 
+

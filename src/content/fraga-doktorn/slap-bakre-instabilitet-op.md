@@ -51,3 +51,4 @@ Utmärkt fråga som visar god förståelse för problematiken.
 **Sammanfattning:** De flesta klarar sig med labrumreparation. Utvärdera efter 6–12 månader.
 
 
+

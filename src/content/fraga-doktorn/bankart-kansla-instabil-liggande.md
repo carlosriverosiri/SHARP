@@ -49,3 +49,4 @@ question: |
 **Sammanfattning:** Normalt efter 1 vecka – känslan beror på trauma och spänning, inte faktisk instabilitet.
 
 
+

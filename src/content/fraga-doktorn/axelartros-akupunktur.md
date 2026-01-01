@@ -49,3 +49,4 @@ Det är inte fel att prova akupunktur, men:
 **Sammanfattning:** Akupunktur kan provas men är ingen huvudbehandling vid svår axelartros.
 
 
+

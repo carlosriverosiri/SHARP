@@ -35,3 +35,4 @@ Generaliserad klåda och utslag efter kortisoninjektion är ovanligt men föreko
 **Sammanfattning:** Kontakta din läkare för bedömning.
 
 
+

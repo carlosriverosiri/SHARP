@@ -50,3 +50,4 @@ question: |
 **Sammanfattning:** Kortisonspruta hindrar inte operation. Vänta gärna 4-6 veckor mellan spruta och op.
 
 
+

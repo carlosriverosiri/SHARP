@@ -36,3 +36,4 @@ Smärta som involverar biceps och axel kan ha flera orsaker.
 **Sammanfattning:** Sök bedömning för att få diagnos och rätt behandling.
 
 
+

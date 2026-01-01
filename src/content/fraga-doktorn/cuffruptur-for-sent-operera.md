@@ -54,3 +54,4 @@ Tre månader är **inte** för sent att operera en cuffruptur. Jag skulle rekomm
 **Sammanfattning:** Sök second opinion. Tre månader är inte för sent – men en erfaren axelkirurg bör bedöma MR-bilderna.
 
 
+

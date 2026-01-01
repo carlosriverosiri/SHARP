@@ -49,3 +49,4 @@ Det korta svaret: **Ja, besvär kan återkomma – men inte på exakt samma sät
 **Sammanfattning:** Själva artrosen och impingement som opererades bör inte återkomma, men nya problem kan uppstå.
 
 
+

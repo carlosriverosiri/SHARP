@@ -35,3 +35,4 @@ Generellt rekommenderas **48 timmars lättare aktivitet** efter kortisoninjektio
 **Sammanfattning:** Vänta 48 timmar innan tyngre träning. Lätt rörelse dag 1 är ok.
 
 
+

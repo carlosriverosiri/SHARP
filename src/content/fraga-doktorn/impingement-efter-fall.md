@@ -49,3 +49,4 @@ Det går absolut att få impingement efter ett trauma. **Dokumentera händelsen*
 **Sammanfattning:** Impingement kan vara både degenerativt och traumatiskt – ofta en kombination.
 
 
+

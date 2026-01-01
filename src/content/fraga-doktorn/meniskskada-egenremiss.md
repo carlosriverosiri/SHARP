@@ -50,3 +50,4 @@ Med symtom sedan 2017 och försämring nu bör du:
 **Sammanfattning:** Du har full rätt att söka vård hos oss via egenremiss. Fyll i formuläret på hemsidan.
 
 
+

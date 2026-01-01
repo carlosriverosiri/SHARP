@@ -51,3 +51,4 @@ När besvären återkommer efter impingement-operation finns flera förklaringar
 **Sammanfattning:** Du behöver en ny bedömning – det kan finnas en annan diagnos.
 
 
+

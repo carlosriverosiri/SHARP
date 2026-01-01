@@ -52,3 +52,4 @@ Symtom i flera leder samtidigt kan ha gemensam orsak.
 **Sammanfattning:** Ja, du bör söka för bedömning – särskilt om besvären blivit värre.
 
 
+

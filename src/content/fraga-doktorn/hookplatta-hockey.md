@@ -35,3 +35,4 @@ question: |
 **Sammanfattning:** Vänta tills plattan är uttagen och du rehabiliterat 6-8 veckor.
 
 
+
