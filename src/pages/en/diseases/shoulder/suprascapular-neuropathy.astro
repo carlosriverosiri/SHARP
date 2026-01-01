@@ -1169,17 +1169,25 @@ const faqSchema = {
             <p class="text-slate-400 text-sm leading-relaxed mb-2">
               MRI is valuable in selected cases, particularly when I need to:
             </p>
-            <ul class="text-slate-400 text-sm space-y-1">
+            <ul class="text-slate-400 text-sm space-y-1 mb-3">
               <li class="flex gap-2"><span class="text-sky-400">•</span>Exclude Parsonage-Turner syndrome (neuralgic amyotrophy)<RefLink id="18" text={references[17].text} url={references[17].url} /></li>
               <li class="flex gap-2"><span class="text-sky-400">•</span>Identify compressive causes like ganglion cysts</li>
               <li class="flex gap-2"><span class="text-sky-400">•</span>Assess muscle edema (T2-hyperintensity) – more sensitive than EMG for early involvement<RefLink id="17" text={references[16].text} url={references[16].url} /></li>
             </ul>
-            <div class="mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-              <p class="text-amber-300 text-xs leading-relaxed">
-                <strong class="text-amber-200">Clinical pearl:</strong> Perform ultrasound examination to exclude large cysts near the transverse ligament or spinoglenoid region. MRI is often unnecessary when combined weakness is present.
-              </p>
-            </div>
+            <p class="text-slate-400 text-xs italic leading-relaxed">
+              <strong class="text-slate-300">Note on Parsonage-Turner:</strong> If weakness extends beyond supraspinatus/infraspinatus (affecting other muscle groups), this suggests neuralgic amyotrophy – a neurological condition requiring referral to a neurologist, not surgical intervention. Early EMG may help differentiate in uncertain cases.
+            </p>
           </div>
+        </div>
+        
+        <!-- Clinical Pearl - Full Width -->
+        <div class="mt-6 p-4 bg-indigo-900/50 border border-indigo-500/30 rounded-lg">
+          <h4 class="font-bold text-indigo-300 text-sm mb-2 flex items-center gap-2">
+            <span>💡</span> Clinical Pearl
+          </h4>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Perform ultrasound examination to exclude large cysts near the transverse ligament or spinoglenoid region. MRI is often unnecessary when combined weakness is present.
+          </p>
         </div>
         
         <h3 class="text-amber-400 font-bold mb-3">Surgical Indication & Timing</h3>
