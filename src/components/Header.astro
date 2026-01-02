@@ -96,14 +96,45 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
-              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 min-w-[280px]">
-                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wide mb-3">Shoulder Programs</h4>
-                <div class="space-y-2">
-                  <a href="/en/rehab/suprascapular-nerve-decompression" class="block text-sm bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg hover:bg-emerald-100 transition-colors">
-                    Suprascapular Nerve Decompression
-                  </a>
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[400px]">
+                <div class="grid grid-cols-3 gap-6">
+                  <!-- Shoulder -->
+                  <div class="group/shoulder-rehab relative">
+                    <a href="/en/rehab/shoulder/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/shoulder-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-sm">Shoulder</span>
+                    </a>
+                    <div class="hidden group-hover/shoulder-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <a href="/en/rehab/suprascapular-nerve-decompression" class="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full hover:bg-emerald-200 transition-colors w-full text-center">Nerve Decompression</a>
+                    </div>
+                  </div>
+                  <!-- Knee -->
+                  <div class="group/knee-rehab relative">
+                    <a href="/en/rehab/knee/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/knee-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/kna-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-sm">Knee</span>
+                    </a>
+                    <div class="hidden group-hover/knee-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Coming soon</span>
+                    </div>
+                  </div>
+                  <!-- Elbow -->
+                  <div class="group/elbow-rehab relative">
+                    <a href="/en/rehab/elbow/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/elbow-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-sm">Elbow</span>
+                    </a>
+                    <div class="hidden group-hover/elbow-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Coming soon</span>
+                    </div>
+                  </div>
                 </div>
-                <p class="text-xs text-gray-400 italic mt-3">More programs coming soon</p>
               </div>
             </div>
           </div>
