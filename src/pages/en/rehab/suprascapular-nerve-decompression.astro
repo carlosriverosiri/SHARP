@@ -738,8 +738,35 @@ const pageDescription = "Evidence-based postoperative rehabilitation program aft
   <style is:global>
     @media print {
       /* Hide non-essential elements */
-      header, footer, nav, .print\\:hidden, button, #main-header, #top-bar {
+      footer, .print\\:hidden, button {
         display: none !important;
+      }
+      
+      /* Hide top bar and navigation, keep only logo */
+      #top-bar,
+      #main-header nav,
+      #main-header button,
+      #main-header a[href*="tel"],
+      #main-header svg:not(img),
+      #mobile-menu-button,
+      .language-switcher {
+        display: none !important;
+      }
+      
+      /* Simplify header - just show logo */
+      #main-header {
+        background: white !important;
+        box-shadow: none !important;
+        padding: 0.3cm 0 !important;
+        border-bottom: 1px solid #ddd !important;
+      }
+      
+      #main-header .container {
+        justify-content: center !important;
+      }
+      
+      #main-header img[alt*="logo"] {
+        height: 1.5cm !important;
       }
       
       /* Also hide the global footer section, CTA, and References */
