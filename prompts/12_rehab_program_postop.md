@@ -8,11 +8,12 @@
 1. **What surgery/procedure?** (e.g., "suprascapular nerve decompression", "rotator cuff repair", "ACL reconstruction", "distal biceps repair")
 2. **What body part?** (Shoulder, Knee, Elbow, etc.)
 3. **Language?** (English, Swedish, etc.)
-4. **Key details:**
+4. **Sling/immobilization needed?** (Yes for rotator cuff repair, distal biceps repair, etc. / No for nerve decompression, simple arthroscopy)
+5. **Key details:**
    - Surgical approach (arthroscopic/open)
-   - Structures involved (muscles, ligaments, nerves)
+   - Structures involved (muscles, ligaments, nerves, tendons)
    - Typical healing timeline
-   - Special precautions (e.g., no cross-body stretch, weight-bearing restrictions)
+   - Special precautions (e.g., no cross-body stretch, weight-bearing restrictions, no active ROM)
 
 ---
 
@@ -66,8 +67,13 @@ The program must be as evidence-based as possible. Use sources in this priority 
 
 ### 1. Introduction
 - Brief explanation of the procedure
-- Expected recovery timeline (often pain relief within weeks, gradual improvement in strength and function over 3–6 months)
-- General advice (sling use, ice, pain management, when to contact healthcare)
+- Expected recovery timeline (adjust based on surgery type)
+- General advice (ice/heat, pain management, when to contact healthcare)
+
+**SLING POLICY:**
+- **If sling IS needed** (tendon repair, unstable fracture): Specify duration and removal schedule
+- **If sling NOT needed** (nerve decompression, simple arthroscopy, labral repair only): State "Sling not recommended" - no long explanation needed. Emphasize early motion to prevent stiffness
+- **When in doubt:** Ask user if sling is required for this specific surgery
 
 ### 2. Phase Division
 Recommended **3–4 phases**, for example:
