@@ -88,9 +88,25 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
           </div>
 
           <!-- Rehab -->
-          <a href="/en/rehab/" class="nav-link hover:text-blue-600">
-            Rehab
-          </a>
+          <div class="group relative">
+            <a href="/en/rehab/" class="nav-link group-hover:text-blue-600">
+              Rehab
+              <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 min-w-[280px]">
+                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wide mb-3">Shoulder Programs</h4>
+                <div class="space-y-2">
+                  <a href="/en/rehab/suprascapular-nerve-decompression" class="block text-sm bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg hover:bg-emerald-100 transition-colors">
+                    Suprascapular Nerve Decompression
+                  </a>
+                </div>
+                <p class="text-xs text-gray-400 italic mt-3">More programs coming soon</p>
+              </div>
+            </div>
+          </div>
 
           <!-- About Us -->
           <div class="group relative">
