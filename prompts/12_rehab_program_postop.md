@@ -22,27 +22,43 @@ Write a complete, patient-friendly rehabilitation program in **English** that yo
 
 ## Evidence Base
 
-The program must be as evidence-based as possible and built on:
+**PRIORITY HIERARCHY FOR SOURCES:**
 
-1. Scientific articles, reviews, and case reports from PubMed (e.g., studies on postoperative rehabilitation after suprascapular nerve decompression)
-2. Established clinical protocols from recognized shoulder surgeons/orthopedists (e.g., Rothman Orthopaedics, Denver Shoulder Surgeon, or similar)
+The program must be as evidence-based as possible. Use sources in this priority order:
 
-### Relevant Sources
+### 1. PRIMARY: PubMed/Scientific Literature (HIGHEST PRIORITY)
+- **Peer-reviewed studies** on postoperative rehabilitation for the specific surgery
+- **Systematic reviews** and meta-analyses
+- **Randomized controlled trials** (RCTs) if available
+- **Case series** and cohort studies
+- Search PubMed for: "[surgery name] rehabilitation", "[surgery name] postoperative protocol", "[surgery name] return to sport"
 
-Search for evidence-based sources specific to the surgery:
+**Examples:**
+- PMID 36515356 (novel techniques)
+- PMID 17187259 (rehabilitation in athletes)
+- Systematic reviews from JSES, AJSM, Arthroscopy, etc.
 
-- **Established protocols** from recognized surgeons/institutions (e.g., Rothman Orthopaedics, Hospital for Special Surgery, Mayo Clinic)
-- **PubMed studies** on rehabilitation after the specific procedure
-- **Professional society guidelines** (AAOS, ESSKA, ISAKOS, etc.)
-- **Textbook protocols** from sports medicine or orthopedic rehabilitation
+### 2. SECONDARY: Professional Society Guidelines
+- **AAOS** (American Academy of Orthopaedic Surgeons)
+- **ESSKA** (European Society of Sports Traumatology, Knee Surgery & Arthroscopy)
+- **ISAKOS** (International Society of Arthroscopy, Knee Surgery and Orthopaedic Sports Medicine)
+- **APTA** (American Physical Therapy Association)
 
-**Example sources (for suprascapular nerve decompression):**
-- Rothman Orthopaedics Suprascapular Nerve Decompression PT Protocol
-- Denver Shoulder Surgeon Protocol
-- Steven Chudik MD Protocol (2024)
-- PMID 36515356, PMID 17187259
+### 3. SUPPLEMENTARY: Clinical Protocols from Recognized Institutions
+- Use as examples/templates ONLY if scientific evidence is limited
+- Rothman Orthopaedics, Hospital for Special Surgery, Mayo Clinic protocols
+- Individual surgeon protocols (e.g., Steven Chudik MD, Denver Shoulder Surgeon)
 
-**Briefly cite** the most important sources inline in the program (e.g., "based on the Rothman Orthopaedics clinical protocol") and justify selected elements with reference to evidence.
+**Example search strategy (for suprascapular nerve decompression):**
+1. PubMed: "suprascapular nerve decompression rehabilitation" → PMID 36515356, PMID 17187259
+2. Systematic review: "suprascapular neuropathy outcomes" → Meta-analyses
+3. Professional guidelines: AAOS shoulder protocols
+4. Supplementary: Rothman/Denver/Chudik protocols for practical exercise descriptions
+
+**Citation approach:**
+- **Cite scientific studies** when making clinical recommendations (e.g., "Research shows that early passive ROM improves outcomes (Smith 2020, PMID xxxxx)")
+- **Reference protocols** only for practical exercise descriptions (e.g., "Exercise technique adapted from Rothman protocol")
+- Prioritize peer-reviewed evidence over individual clinical protocols
 
 ---
 
