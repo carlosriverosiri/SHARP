@@ -1,13 +1,18 @@
-# Prompt: Create Postoperative Rehabilitation Program
+# Prompt: Create Postoperative Rehabilitation Program (General Template)
 
-**Purpose:** Generate evidence-based rehabilitation program for patients after arthroscopic suprascapular nerve decompression.
+**Purpose:** Generate evidence-based rehabilitation program for patients after orthopedic surgery.
 
-**Role:** You are an experienced physiotherapist and shoulder specialist with extensive clinical experience in postoperative rehabilitation after arthroscopic (keyhole) decompression of the suprascapular nerve (suprascapular nerve entrapment). 
+**Role:** You are an experienced physiotherapist and orthopedic specialist with extensive clinical experience in postoperative rehabilitation.
 
-**Context:** 
-- The procedure is minimally invasive, heals quickly
-- Patients often have lost strength and function in the supraspinatus and especially the infraspinatus due to prior nerve compression
-- Muscle atrophy may be partially irreversible, but function typically improves significantly with rehabilitation
+**FIRST - Ask the User:**
+1. **What surgery/procedure?** (e.g., "suprascapular nerve decompression", "rotator cuff repair", "ACL reconstruction", "distal biceps repair")
+2. **What body part?** (Shoulder, Knee, Elbow, etc.)
+3. **Language?** (English, Swedish, etc.)
+4. **Key details:**
+   - Surgical approach (arthroscopic/open)
+   - Structures involved (muscles, ligaments, nerves)
+   - Typical healing timeline
+   - Special precautions (e.g., no cross-body stretch, weight-bearing restrictions)
 
 ---
 
@@ -24,23 +29,18 @@ The program must be as evidence-based as possible and built on:
 
 ### Relevant Sources
 
-Examples of relevant sources to base recommendations on or include:
+Search for evidence-based sources specific to the surgery:
 
-- **Rothman Orthopaedics** Suprascapular Nerve Decompression PT Protocol  
-  https://rothmanortho.com/files/post-op-protocols/brandon-j-erickson-md/Suprascapular%20Nerve%20Decompression%20PT%20Protocol.pdf
+- **Established protocols** from recognized surgeons/institutions (e.g., Rothman Orthopaedics, Hospital for Special Surgery, Mayo Clinic)
+- **PubMed studies** on rehabilitation after the specific procedure
+- **Professional society guidelines** (AAOS, ESSKA, ISAKOS, etc.)
+- **Textbook protocols** from sports medicine or orthopedic rehabilitation
 
-- **Denver Shoulder Surgeon** Rehabilitation Protocol for Suprascapular Nerve Decompression  
-  https://www.denvershouldersurgeon.com/pdf/suprascapular-nerve-decompression.pdf
-
-- **AAOS** Arthroscopic Suprascapular Nerve Decompression video and case (2025)  
-  https://www.aaos.org/videos/video-detail-page/?id=27323__Videos
-
-- **Steven Chudik MD** Updated protocol (2024)  
-  https://www.stevenchudikmd.com/wp-content/uploads/2024/04/Suprascapular-Nerve-Release-SH-2024.pdf
-
-- **PubMed examples:**
-  - PMID 36515356 (novel techniques including neurolysis)
-  - PMID 17187259 (rehabilitation in athletes)
+**Example sources (for suprascapular nerve decompression):**
+- Rothman Orthopaedics Suprascapular Nerve Decompression PT Protocol
+- Denver Shoulder Surgeon Protocol
+- Steven Chudik MD Protocol (2024)
+- PMID 36515356, PMID 17187259
 
 **Briefly cite** the most important sources inline in the program (e.g., "based on the Rothman Orthopaedics clinical protocol") and justify selected elements with reference to evidence.
 
@@ -69,14 +69,20 @@ Recommended **3–4 phases**, for example:
 
 ### 4. Exercise Focus Areas
 
-Particularly emphasize:
-- Early passive/assisted ROM
+Tailor exercises to the specific surgery, but generally include:
+- Early passive/assisted ROM (if tendon/ligament repair, respect healing constraints)
 - Gradual active ROM
 - Isometric exercises
-- External rotation (infraspinatus)
-- Abduction (supraspinatus)
-- Shoulder stability
-- Scapular control
+- Specific muscle activation (based on affected structures)
+- Joint stability
+- Proprioception and neuromuscular control
+- Functional movement patterns
+
+**Surgery-specific considerations:**
+- **Rotator cuff:** Respect healing phases, avoid active abduction early
+- **Nerve decompression:** Focus on affected muscles, cross-body stretch caution
+- **ACL:** Weight-bearing progression, quadriceps activation
+- **Distal biceps:** Protect flexion/supination, gradual loading
 
 ### 5. Conclusion
 - Long-term maintenance
@@ -108,27 +114,31 @@ Format them as clickable markdown links, e.g.:
 - File location: `src/pages/[language]/rehab/[program-name].astro`
 - Example: `src/pages/en/rehab/suprascapular-nerve-decompression.astro`
 
-**Use RehabLayout component:**
+**MANDATORY: Use RehabLayout component (not BaseLayout):**
 ```astro
 ---
 import RehabLayout from '../../../layouts/RehabLayout.astro';
+
+const pageTitle = "Rehabilitation After [Surgery Name] | Södermalms Ortopedi";
+const pageDescription = "Evidence-based postoperative rehabilitation program...";
 ---
 
 <RehabLayout 
-  title="..."
-  description="..."
+  title={pageTitle}
+  description={pageDescription}
   type="article"
 >
   <!-- Content here -->
 </RehabLayout>
 ```
 
-**RehabLayout includes:**
-- ✅ Print-optimized CSS for A4 PDF
-- ✅ Hides header/footer/navigation in print
-- ✅ Shows only clinic logo
-- ✅ Compact spacing (4-6 pages typical)
-- ✅ Works for all languages
+**RehabLayout automatically provides:**
+- ✅ Print-optimized CSS for A4 PDF export
+- ✅ Hides header/footer/navigation in print mode
+- ✅ Shows only clinic logo in print
+- ✅ Compact spacing (typically 4-6 pages)
+- ✅ Works for all languages (Swedish, English, etc.)
+- ✅ "Download/Print PDF" button functionality
 
 **Styling:**
 - Use Tailwind classes as normal
