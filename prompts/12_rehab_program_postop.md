@@ -155,12 +155,19 @@ const pageDescription = "Evidence-based postoperative rehabilitation program..."
 ```
 
 **RehabLayout automatically provides:**
-- ✅ Print-optimized CSS for A4 PDF export
-- ✅ Hides header/footer/navigation in print mode
-- ✅ Shows only clinic logo in print
-- ✅ Compact spacing (typically 4-6 pages)
+- ✅ Print-optimized CSS for A4 PDF export (4-6 pages typical)
+- ✅ Hides in print: header/footer/navigation/map/iframes/CTAs/references
+- ✅ Shows in print: Only clinic logo + rehab content
+- ✅ Compact spacing with proper page breaks
 - ✅ Works for all languages (Swedish, English, etc.)
 - ✅ "Download/Print PDF" button functionality
+
+**Print optimization includes:**
+- Header: Only logo (no menu, no top bar)
+- Content: All exercises and phases
+- Footer: Hidden (including map, contact info, CTAs)
+- References: Hidden from print (not needed for patient handout)
+- Styling: White backgrounds, minimal borders, compact spacing
 
 **Styling:**
 - Use Tailwind classes as normal
