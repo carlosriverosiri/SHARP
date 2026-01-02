@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Sjukdomar - Södermalms Ortopedi";
+const description = "Specialiserad behandling av ortopediska sjukdomar i axel, knä och armbåge. Expertis inom AC-ledsartros, Parsonage-Turner, distal bicepsruptur och mer.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Sjukdomar vi behandlar
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Vi är specialister på ortopediska sjukdomar i axel, knä och armbåge. Här hittar du detaljerad information om vanliga diagnoser och behandlingar.
+      </p>
+    </div>
+
+    <!-- Kategori-kort -->
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      
+      <!-- Axel -->
+      <a href="/sjukdomar/axel/" class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-blue-400">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-sky-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Axel</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Behandling av axelsjukdomar som AC-ledsartros, Parsonage-Turner och mer.
+        </p>
+        <div class="space-y-2">
+          <div class="text-sm text-blue-600 font-medium">✓ AC-ledsartros</div>
+          <div class="text-sm text-blue-600 font-medium">✓ Parsonage-Turner</div>
+          <div class="text-sm text-blue-600 font-medium">✓ Fler diagnoser →</div>
+        </div>
+      </a>
+
+      <!-- Knä -->
+      <a href="/sjukdomar/kna/" class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-emerald-400">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-emerald-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Knä</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Specialiserad behandling av knäsjukdomar och skador.
+        </p>
+        <div class="space-y-2">
+          <div class="text-sm text-emerald-600 font-medium">Information kommer snart</div>
+        </div>
+      </a>
+
+      <!-- Armbåge -->
+      <a href="/sjukdomar/armbage/" class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-amber-400">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-amber-50 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Armbåge</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Expert på armbågssjukdomar och skador.
+        </p>
+        <div class="space-y-2">
+          <div class="text-sm text-amber-600 font-medium">✓ Distal bicepsruptur</div>
+          <div class="text-sm text-amber-600 font-medium">✓ Fler diagnoser →</div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Info-sektion -->
+    <div class="mt-16 bg-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4 text-center">
+        Har du frågor om en specifik diagnos?
+      </h2>
+      <p class="text-gray-700 text-center mb-6">
+        Vi tar emot patienter från hela Sverige via Fritt Vårdval. Kontakta oss för en bedömning.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="/fraga-doktorn/" class="bg-[#024264] text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-800 transition-colors">
+          Fråga doktorn
+        </a>
+        <a href="/fritt-vardval-sverige" class="bg-white text-[#024264] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors border-2 border-[#024264]">
+          Boka tid
+        </a>
+      </div>
+    </div>
+
+  </main>
+</BaseLayout>
+

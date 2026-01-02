@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const title = "Axelsjukdomar - Södermalms Ortopedi";
+const description = "Specialiserad behandling av axelsjukdomar som AC-ledsartros, Parsonage-Turner och andra axelbesvär. Expert på axelkirurgi och konservativ behandling.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <div class="text-center mb-12">
+      <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-sky-50 flex items-center justify-center">
+        <img src="/images/icons/Axel-icon.svg" alt="Axel" class="w-24 h-24" />
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Axelsjukdomar
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Vi är specialister på axelsjukdomar och erbjuder både konservativ behandling och kirurgi vid behov.
+      </p>
+    </div>
+
+    <!-- Sjukdomskort -->
+    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+      
+      <a href="/sjukdomar/axel/ac-ledsartros" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-l-4 border-blue-500">
+        <h2 class="text-2xl font-bold text-[#024264] mb-3">AC-ledsartros</h2>
+        <p class="text-gray-600 mb-4">
+          Artros i nyckelbenets yttre led. Vanlig orsak till axelsmärta, särskilt vid lyft över axelhöjd.
+        </p>
+        <div class="text-blue-600 font-semibold">Läs mer →</div>
+      </a>
+
+      <a href="/sjukdomar/axel/parsonage-turner" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-l-4 border-sky-500">
+        <h2 class="text-2xl font-bold text-[#024264] mb-3">Parsonage-Turner</h2>
+        <p class="text-gray-600 mb-4">
+          Inflammation i axelns nervfläta som orsakar plötslig smärta följt av muskelsvaghet och atrofi.
+        </p>
+        <div class="text-blue-600 font-semibold">Läs mer →</div>
+      </a>
+
+    </div>
+
+    <!-- Kommande diagnoser -->
+    <div class="bg-gray-100 rounded-xl p-8 max-w-4xl mx-auto text-center">
+      <h3 class="text-xl font-bold text-gray-700 mb-3">Fler axeldiagnoser kommer snart</h3>
+      <p class="text-gray-600">
+        Vi arbetar kontinuerligt med att utöka informationen om axelsjukdomar på vår webbplats.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-12 text-center">
+      <a href="/fraga-doktorn/axel/" class="inline-block bg-[#024264] text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-800 transition-colors">
+        Ställ en fråga om axelbesvär
+      </a>
+    </div>
+
+  </main>
+</BaseLayout>
+

@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Om Oss - Södermalms Ortopedi";
+const description = "Möt vårt team av ortopedspecialister. Läs om vår klinik, vår expertis och vårt engagemang för högkvalitativ ortopedisk vård.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Om Södermalms Ortopedi
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        En modern specialistklinik för ortopedi i Stockholm med fokus på axel, knä och armbåge.
+      </p>
+    </div>
+
+    <!-- Kort översikt -->
+    <div class="max-w-4xl mx-auto mb-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-bold text-[#024264] mb-4">Välkommen till oss</h2>
+        <p class="text-gray-700 text-lg mb-4">
+          Södermalms Ortopedi är en specialistklinik i Stockholm som erbjuder högkvalitativ ortopedisk vård med fokus på axel, knä och armbåge.
+        </p>
+        <p class="text-gray-700 text-lg mb-4">
+          Vi tar emot patienter från hela Sverige via Fritt Vårdval och arbetar med de flesta försäkringsbolag.
+        </p>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="max-w-5xl mx-auto mb-16">
+      <h2 class="text-3xl font-bold text-[#024264] text-center mb-12">Vårt Team</h2>
+      
+      <div class="grid md:grid-cols-1 gap-8">
+        <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all group">
+          <div class="md:flex">
+            <div class="md:w-1/3 bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center p-8">
+              <div class="text-white text-center">
+                <div class="text-6xl mb-4">👨‍⚕️</div>
+                <h3 class="text-2xl font-bold">Dr. Carlos Rivero Siri</h3>
+                <p class="text-blue-100">Specialist i ortopedi</p>
+              </div>
+            </div>
+            <div class="md:w-2/3 p-8">
+              <h4 class="text-xl font-bold text-[#024264] mb-3 group-hover:text-blue-600 transition-colors">
+                Specialist i axel-, knä- och armbågskirurgi
+              </h4>
+              <p class="text-gray-700 mb-4">
+                Leg. läkare och specialist i ortopedi med särskild expertis inom axel-, knä- och armbågssjukdomar.
+              </p>
+              <div class="text-blue-600 font-semibold">Läs mer om Dr. Rivero Siri →</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Snabblänkar -->
+    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      
+      <a href="/fritt-vardval-sverige" class="bg-blue-50 rounded-xl p-6 hover:bg-blue-100 transition-colors">
+        <h3 class="text-xl font-bold text-[#024264] mb-2">📍 Kom till oss från hela Sverige</h3>
+        <p class="text-gray-700">Information om Fritt Vårdval och hur du byter till oss.</p>
+      </a>
+
+      <a href="/fraga-doktorn/" class="bg-purple-50 rounded-xl p-6 hover:bg-purple-100 transition-colors">
+        <h3 class="text-xl font-bold text-[#024264] mb-2">💬 Fråga Doktorn</h3>
+        <p class="text-gray-700">Ställ dina frågor till våra specialister.</p>
+      </a>
+
+      <a href="/vardgivare" class="bg-green-50 rounded-xl p-6 hover:bg-green-100 transition-colors">
+        <h3 class="text-xl font-bold text-[#024264] mb-2">🏥 För Vårdgivare</h3>
+        <p class="text-gray-700">Information för remitterande läkare och vårdgivare.</p>
+      </a>
+
+      <a href="/akut-remiss" class="bg-red-50 rounded-xl p-6 hover:bg-red-100 transition-colors">
+        <h3 class="text-xl font-bold text-[#024264] mb-2">⚡ Akut Remiss</h3>
+        <p class="text-gray-700">Snabb handläggning av akuta ortopediska fall.</p>
+      </a>
+
+    </div>
+
+  </main>
+</BaseLayout>
+

@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const title = "Knäsjukdomar - Södermalms Ortopedi";
+const description = "Specialiserad behandling av knäsjukdomar och skador. Information om diagnoser, behandlingar och operationer.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <div class="text-center mb-12">
+      <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-emerald-50 flex items-center justify-center">
+        <img src="/images/icons/kna-icon.svg" alt="Knä" class="w-24 h-24" />
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Knäsjukdomar
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Vi behandlar alla typer av knäsjukdomar och skador. Information om diagnoser kommer snart.
+      </p>
+    </div>
+
+    <!-- Kommande innehåll -->
+    <div class="bg-emerald-50 rounded-xl p-12 max-w-3xl mx-auto text-center">
+      <div class="text-6xl mb-4">🏗️</div>
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">
+        Information om knäsjukdomar kommer snart
+      </h2>
+      <p class="text-gray-700 mb-8">
+        Vi arbetar på att ta fram detaljerad information om de vanligaste knäsjukdomarna och deras behandling.
+      </p>
+      <a href="/fraga-doktorn/kna/" class="inline-block bg-[#024264] text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-800 transition-colors">
+        Ställ en fråga om knäbesvär
+      </a>
+    </div>
+
+  </main>
+</BaseLayout>
+

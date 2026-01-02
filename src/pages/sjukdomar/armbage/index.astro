@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+const title = "Armbågssjukdomar - Södermalms Ortopedi";
+const description = "Specialiserad behandling av armbågssjukdomar som distal bicepsruptur, tennisarmbåge och andra armbågsbesvär.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <div class="text-center mb-12">
+      <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-amber-50 flex items-center justify-center">
+        <img src="/images/icons/armbage-icon.svg" alt="Armbåge" class="w-24 h-24" />
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Armbågssjukdomar
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Expert på armbågssjukdomar och skador. Både konservativ behandling och kirurgi.
+      </p>
+    </div>
+
+    <!-- Sjukdomskort -->
+    <div class="grid md:grid-cols-1 gap-6 max-w-3xl mx-auto mb-12">
+      
+      <a href="/sjukdomar/armbage/distal-bicepsruptur" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all border-l-4 border-amber-500">
+        <h2 class="text-2xl font-bold text-[#024264] mb-3">Distal bicepsruptur</h2>
+        <p class="text-gray-600 mb-4">
+          Bristning av bicepssenan vid armbågen. Kräver vanligtvis kirurgisk behandling för optimal funktion.
+        </p>
+        <div class="text-amber-600 font-semibold">Läs mer →</div>
+      </a>
+
+    </div>
+
+    <!-- Kommande diagnoser -->
+    <div class="bg-gray-100 rounded-xl p-8 max-w-3xl mx-auto text-center">
+      <h3 class="text-xl font-bold text-gray-700 mb-3">Fler armbågsdiagnoser kommer snart</h3>
+      <p class="text-gray-600">
+        Vi arbetar kontinuerligt med att utöka informationen om armbågssjukdomar.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-12 text-center">
+      <a href="/fraga-doktorn/armbage/" class="inline-block bg-[#024264] text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-800 transition-colors">
+        Ställ en fråga om armbågsbesvär
+      </a>
+    </div>
+
+  </main>
+</BaseLayout>
+

@@ -1,0 +1,87 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Operationer - Södermalms Ortopedi";
+const description = "Information om ortopediska operationer i axel, knä och armbåge. Operationsmetoder, förlopp och återhämtning.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="container mx-auto px-4 py-12">
+    
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-[#024264] mb-4">
+        Operationer
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Information om operationsmetoder, förlopp och vad du kan förvänta dig före, under och efter operation.
+      </p>
+    </div>
+
+    <!-- Kategori-kort -->
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+      
+      <!-- Axel -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+          <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Axeloperationer</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Information om axelkirurgi och operationsmetoder.
+        </p>
+        <div class="text-center">
+          <span class="text-sm text-gray-500 italic">Information kommer snart</span>
+        </div>
+      </div>
+
+      <!-- Knä -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+          <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Knäoperationer</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Information om knäkirurgi och operationsmetoder.
+        </p>
+        <div class="text-center">
+          <span class="text-sm text-gray-500 italic">Information kommer snart</span>
+        </div>
+      </div>
+
+      <!-- Armbåge -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+          <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16" />
+        </div>
+        <h2 class="text-2xl font-bold text-[#024264] text-center mb-4">Armbågsoperationer</h2>
+        <p class="text-gray-600 text-center mb-6">
+          Information om armbågskirurgi och operationsmetoder.
+        </p>
+        <div class="text-center">
+          <span class="text-sm text-gray-500 italic">Information kommer snart</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Info -->
+    <div class="bg-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4 text-center">
+        Vill du veta mer om en operation?
+      </h2>
+      <p class="text-gray-700 text-center mb-6">
+        Kontakta oss för mer information om specifika operationer och vad som passar för just dig.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="/fraga-doktorn/" class="bg-[#024264] text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-800 transition-colors">
+          Fråga doktorn
+        </a>
+        <a href="/fritt-vardval-sverige" class="bg-white text-[#024264] px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors border-2 border-[#024264]">
+          Boka tid
+        </a>
+      </div>
+    </div>
+
+  </main>
+</BaseLayout>
+

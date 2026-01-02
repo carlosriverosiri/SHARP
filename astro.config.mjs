@@ -1,14 +1,13 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sodermalmsortopedi.se',
-  
+
   integrations: [
-    tailwind(),
     sitemap({
       i18n: {
         defaultLocale: 'sv',
@@ -20,15 +19,15 @@ export default defineConfig({
       filter: (page) => !page.includes('/admin/'),
     }),
   ],
-  
+
   // Performance optimizations
   compressHTML: true,
-  
+
   build: {
     // Inline small CSS for faster initial render
     inlineStylesheets: 'auto',
   },
-  
+
   // Image optimization defaults
   image: {
     service: {
@@ -38,13 +37,17 @@ export default defineConfig({
       },
     },
   },
-  
+
   vite: {
+    server: {
+      open: true,  // <-- Detta öppnar automatiskt i Chrome (eller default-webbläsare)
+    },
     build: {
       // Better code splitting
       cssCodeSplit: true,
       // Minify CSS
       cssMinify: true,
     },
+    plugins: [tailwindcss()],
   },
 });
