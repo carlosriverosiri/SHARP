@@ -55,3 +55,4 @@ Proximal humerusfraktur kräver tid för läkning, särskilt vid tungt arbete.
 
 
 
+

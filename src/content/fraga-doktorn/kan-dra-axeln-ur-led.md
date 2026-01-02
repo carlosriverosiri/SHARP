@@ -34,3 +34,4 @@ Undvik att medvetet dra axeln ur led då detta kan ge onödiga nötningsskador p
 
 
 
+

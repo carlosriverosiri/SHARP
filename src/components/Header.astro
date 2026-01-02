@@ -235,15 +235,57 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </div>
           </div>
 
-          <!-- Senast redigerade (tillfällig) -->
-          <a href="/senast-redigerade" class="nav-link text-orange-600 hover:text-orange-700">
-            Senast redigerade
-          </a>
-
-          <!-- Obesvarade frågor (tillfällig) -->
-          <a href="/admin/obesvarade" class="nav-link text-amber-600 hover:text-amber-700">
-            Obesvarade frågor
-          </a>
+          <!-- Operation - Mega Menu -->
+          <div class="group relative">
+            <a href="/operation/" class="nav-link group-hover:text-blue-600">
+              Operation
+              <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+                <div class="grid grid-cols-3 gap-6">
+                  <!-- Axel -->
+                  <div class="group/axel-op relative">
+                    <a href="/operation/axel/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/axel-op:scale-110 transition-transform">
+                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Axel</span>
+                    </a>
+                    <div class="hidden group-hover/axel-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Operationsprogram kommer</span>
+                    </div>
+                  </div>
+                  <!-- Knä -->
+                  <div class="group/kna-op relative">
+                    <a href="/operation/kna/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/kna-op:scale-110 transition-transform">
+                        <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Knä</span>
+                    </a>
+                    <div class="hidden group-hover/kna-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Operationsprogram kommer</span>
+                    </div>
+                  </div>
+                  <!-- Armbåge -->
+                  <div class="group/arm-op relative">
+                    <a href="/operation/armbage/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/arm-op:scale-110 transition-transform">
+                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Armbåge</span>
+                    </a>
+                    <div class="hidden group-hover/arm-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Operationsprogram kommer</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Rehab - Mega Menu -->
           <div class="group relative">
@@ -390,6 +432,11 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <li><a href="/om-oss/kvalitet-forskning/" class="dropdown-link">Kvalitet & Forskning</a></li>
                 <li><a href="/om-oss/om-kliniken-hitta-hit/" class="dropdown-link">Om Kliniken & Hitta Hit</a></li>
                 <li><a href="/om-oss/faq/" class="dropdown-link">FAQ</a></li>
+                <li class="border-t border-gray-200 mt-2 pt-2">
+                  <span class="block px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Admin</span>
+                  <a href="/senast-redigerade" class="block px-4 py-1.5 text-sm text-orange-600 hover:text-orange-700 hover:bg-orange-50 transition-colors">Det senast redigerade</a>
+                  <a href="/admin/obesvarade" class="block px-4 py-1.5 text-sm text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors">Obesvarade frågor</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -597,17 +644,40 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </div>
           </div>
 
+          <!-- Operation -->
+          <div class="mobile-accordion border-b border-slate-800">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-operation">
+              <span>Operation</span>
+              <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="menu-operation" class="mobile-accordion-content hidden pb-4">
+              <!-- Axel -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/operation/axel/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Axel
+                </a>
+              </div>
+              <!-- Knä -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/operation/kna/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Knä
+                </a>
+              </div>
+              <!-- Armbåge -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/operation/armbage/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Armbåge
+                </a>
+              </div>
+            </div>
+          </div>
+
           <!-- Rehab -->
           <div class="mobile-accordion border-b border-slate-800">
             <a href="/rehab/" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
               Rehab
-            </a>
-          </div>
-
-          <!-- Operation (placeholder) -->
-          <div class="mobile-accordion border-b border-slate-800">
-            <a href="/operation/" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
-              Operation
             </a>
           </div>
 
@@ -631,18 +701,6 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 Senaste svaren
-              </a>
-              <a href="/senast-redigerade" class="flex items-center text-orange-400 hover:text-orange-300 py-2">
-                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-                Senast redigerade
-              </a>
-              <a href="/admin/obesvarade/" class="flex items-center text-amber-400 hover:text-amber-300 py-2">
-                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                </svg>
-                Obesvarade frågor
               </a>
               <a href="/fraga-doktorn/axel/" class="block text-slate-400 hover:text-white py-1.5 mt-2">Axel-frågor</a>
               <a href="/fraga-doktorn/kna/" class="block text-slate-400 hover:text-white py-1.5">Knä-frågor</a>
@@ -678,6 +736,23 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="block text-slate-400 hover:text-white py-1.5">Dr. Carlos Rivero Siri</a>
               <a href="/vardgivare" class="block text-slate-400 hover:text-white py-1.5">För vårdgivare</a>
               <a href="/akut-remiss" class="block text-slate-400 hover:text-white py-1.5">Akut remiss</a>
+              
+              <!-- Admin Section -->
+              <div class="border-t border-slate-700 mt-3 pt-3">
+                <span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Admin</span>
+                <a href="/senast-redigerade" class="flex items-center text-orange-400 hover:text-orange-300 py-1.5">
+                  <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Det senast redigerade
+                </a>
+                <a href="/admin/obesvarade" class="flex items-center text-amber-400 hover:text-amber-300 py-1.5">
+                  <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  Obesvarade frågor
+                </a>
+              </div>
             </div>
           </div>
 

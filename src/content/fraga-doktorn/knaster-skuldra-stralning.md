@@ -35,3 +35,4 @@ Knaster i skuldran är oftast ofarligt, men strålningar från nacken bör utvä
 
 
 
+

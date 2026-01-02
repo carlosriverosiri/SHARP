@@ -44,3 +44,4 @@ Ja, reoperation är möjlig efter misslyckad Latarjet.
 
 
 
+

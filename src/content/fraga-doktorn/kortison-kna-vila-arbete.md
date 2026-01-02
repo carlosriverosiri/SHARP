@@ -52,3 +52,4 @@ Det finns ingen strikt evidens för att vila efter kortisoninjektion är nödvä
 
 
 
+
