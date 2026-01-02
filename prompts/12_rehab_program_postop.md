@@ -104,10 +104,36 @@ Format them as clickable markdown links, e.g.:
 
 ## Output Format
 
-Markdown format suitable for:
-- Printing as PDF
-- Sharing digitally
-- Publishing on website
+**Create as .astro page:**
+- File location: `src/pages/[language]/rehab/[program-name].astro`
+- Example: `src/pages/en/rehab/suprascapular-nerve-decompression.astro`
 
-Include proper headings, lists, and formatting for easy reading.
+**Use RehabLayout component:**
+```astro
+---
+import RehabLayout from '../../../layouts/RehabLayout.astro';
+---
+
+<RehabLayout 
+  title="..."
+  description="..."
+  type="article"
+>
+  <!-- Content here -->
+</RehabLayout>
+```
+
+**RehabLayout includes:**
+- ✅ Print-optimized CSS for A4 PDF
+- ✅ Hides header/footer/navigation in print
+- ✅ Shows only clinic logo
+- ✅ Compact spacing (4-6 pages typical)
+- ✅ Works for all languages
+
+**Styling:**
+- Use Tailwind classes as normal
+- Colored blocks will be simplified in print (white background, grey borders)
+- Nested blocks removed in print for compact layout
+
+Include proper headings, lists, and formatting for easy reading both online and in PDF.
 
