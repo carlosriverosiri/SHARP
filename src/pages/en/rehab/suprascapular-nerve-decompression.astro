@@ -803,13 +803,23 @@ const pageDescription = "Evidence-based postoperative rehabilitation program aft
         font-size: 9.5pt !important;
       }
       
-      /* Remove colored backgrounds - just borders */
+      /* Remove all colored backgrounds and nested blocks */
       .bg-emerald-50, .bg-sky-50, .bg-purple-50, .bg-amber-50, .bg-rose-50, .bg-slate-50,
-      .bg-white, .bg-gradient-to-r {
+      .bg-gradient-to-r {
         background: white !important;
         border: 1px solid #999 !important;
         padding: 0.2cm !important;
         margin-bottom: 0.2cm !important;
+      }
+      
+      /* Remove borders from nested blocks (boxes within boxes) */
+      div[class*="bg-"] div[class*="bg-"],
+      div[class*="border"] div[class*="border"],
+      .bg-white {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0.1cm 0 !important;
       }
       
       /* Compact lists */
