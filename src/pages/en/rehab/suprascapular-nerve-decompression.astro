@@ -738,7 +738,13 @@ const pageDescription = "Evidence-based postoperative rehabilitation program aft
   <style is:global>
     @media print {
       /* Hide non-essential elements */
-      header, footer, nav, .print\\:hidden, button {
+      header, footer, nav, .print\\:hidden, button, #main-header, #top-bar {
+        display: none !important;
+      }
+      
+      /* Also hide the global footer section */
+      body > footer,
+      footer[aria-labelledby="footer-heading"] {
         display: none !important;
       }
       
