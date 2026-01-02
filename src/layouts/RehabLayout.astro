@@ -114,23 +114,24 @@ const { title, description, image, type } = Astro.props;
         font-size: 9.5pt !important;
       }
       
-      /* Remove colored backgrounds - just borders */
+      /* Remove ALL boxes and backgrounds - plain text only */
+      div[class*="bg-"],
+      div[class*="border"],
+      div[class*="rounded"],
       .bg-emerald-50, .bg-sky-50, .bg-purple-50, .bg-amber-50, .bg-rose-50, .bg-slate-50,
-      .bg-gradient-to-r {
-        background: white !important;
-        border: 1px solid #999 !important;
-        padding: 0.2cm !important;
-        margin-bottom: 0.2cm !important;
-      }
-      
-      /* Remove borders from nested blocks (boxes within boxes) */
-      div[class*="bg-"] div[class*="bg-"],
-      div[class*="border"] div[class*="border"],
-      .bg-white {
+      .bg-white, .bg-gradient-to-r {
         background: transparent !important;
         border: none !important;
+        box-shadow: none !important;
         padding: 0 !important;
         margin: 0.1cm 0 !important;
+      }
+      
+      /* Only keep subtle spacing for phase headers */
+      h2 {
+        border-bottom: 1px solid #ccc !important;
+        padding-bottom: 0.1cm !important;
+        margin-top: 0.5cm !important;
       }
       
       /* Compact lists */
@@ -186,14 +187,33 @@ const { title, description, image, type } = Astro.props;
         margin-bottom: 0.15cm !important;
       }
       
-      /* Compact borders */
-      .border-l-4 {
-        border-left-width: 2px !important;
+      /* Remove all decorative elements */
+      .border-l-4, .border-l-3,
+      .flex.gap-3, .flex.gap-2,
+      svg:not([alt*="logo"]),
+      span.shrink-0,
+      [class*="rounded-"] {
+        display: inline !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
       
-      /* Remove excessive padding */
-      .p-4, .p-6, .px-4, .py-8 {
-        padding: 0.2cm !important;
+      /* Make icons/checkmarks simple bullets */
+      span.text-emerald-600,
+      span.text-amber-600,
+      span.text-sky-600,
+      span.text-rose-600 {
+        display: none !important;
+      }
+      
+      /* Remove all padding classes */
+      [class*="p-"],
+      [class*="px-"],
+      [class*="py-"],
+      [class*="space-y-"] {
+        padding: 0 !important;
+        margin: 0 0 0.1cm 0 !important;
       }
       
       /* Prevent orphans and widows */
