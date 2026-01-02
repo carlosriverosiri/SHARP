@@ -71,7 +71,7 @@ The program must be as evidence-based as possible. Use sources in this priority 
 - General advice (ice/heat, pain management, when to contact healthcare)
 
 **SLING POLICY:**
-- **If sling IS needed** (tendon repair, unstable fracture): Specify duration and removal schedule
+- **If sling IS needed** (tendon repair, unstable fracture, instability surgery): Specify duration and removal schedule
 - **If sling NOT needed** (nerve decompression, simple arthroscopy, labral repair only): State "Sling not recommended" - no long explanation needed. Emphasize early motion to prevent stiffness
 - **When in doubt:** Ask user if sling is required for this specific surgery
 
