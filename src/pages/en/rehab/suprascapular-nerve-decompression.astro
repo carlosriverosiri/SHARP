@@ -841,11 +841,31 @@ const pageDescription = "Evidence-based postoperative rehabilitation program aft
       /* Compact sections */
       section {
         padding: 0.2cm 0 !important;
+        margin-bottom: 0 !important;
+      }
+      
+      /* Last section should have no bottom padding */
+      section:last-of-type {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
       }
       
       .max-w-4xl {
         max-width: 100% !important;
         padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      /* Prevent orphans and widows */
+      p, li {
+        orphans: 3 !important;
+        widows: 3 !important;
+      }
+      
+      /* Compact reference section */
+      #references-section,
+      section:has(h2:contains("References")) {
+        padding-bottom: 0 !important;
       }
       
       /* Grid to single column */
