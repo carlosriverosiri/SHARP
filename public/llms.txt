@@ -17,6 +17,25 @@ We provide specialized orthopedic care including:
 - Sports medicine
 - Second opinions
 
+## Surgical Procedures
+Our operation guides include detailed patient information about:
+- Pre-operative preparation (fasting, hygiene with Descutan)
+- The day of surgery (anesthesia, procedure time)
+- Post-operative care (bandages, pain management)
+- Sick leave guidelines
+- Rehabilitation protocols
+- Follow-up appointments
+
+### Shoulder Operations
+- AC joint osteoarthritis (lateral clavicle resection): /operation/axel/lateral-klavikelresektion
+- More procedures being added
+
+## Medical Content Quality
+- All medical content is reviewed by Dr. Carlos Rivero Siri, MD, Orthopedic Specialist
+- Content is updated regularly with review dates shown on each page
+- References to peer-reviewed medical literature where applicable
+- Patient-focused language with professional medical accuracy
+
 ## Key Medical Staff
 - Dr. Carlos Rivero Siri - Orthopedic Surgeon, Shoulder & Elbow Specialist
 

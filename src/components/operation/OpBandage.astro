@@ -1,0 +1,89 @@
+---
+/**
+ * OpBandage - Bandageinformation efter operation
+ */
+interface Props {
+  stygnBorttagning?: string;  // ex: "7-10 dagar", "1 vecka"
+  visaStygn?: boolean;
+  extraInfo?: string;
+}
+
+const { 
+  stygnBorttagning = "7-10 dagar",
+  visaStygn = true,
+  extraInfo
+} = Astro.props;
+---
+
+<section id="eftervard" class="mb-12 scroll-mt-32">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+      <!-- TODO: IKON SAKNAS - Bandage/förband. Använder plaster som placeholder -->
+      <img src="/images/operation/plaster-24x24.svg" alt="" class="w-8 h-8" />
+    </div>
+    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Bandage</h2>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    
+    <div class="p-6">
+      <p class="text-slate-600 mb-6">
+        De flesta patienter avlägsnar bandaget när de tar stygnen efter {stygnBorttagning}. 
+        Vid behov kan du byta bandaget hemma eller på vårdcentralen.
+      </p>
+
+      <!-- Bandagetyper -->
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-sky-50 rounded-xl p-5 border border-sky-100">
+          <div class="w-12 h-12 rounded-full bg-sky-200 flex items-center justify-center mb-3">
+            <span class="text-2xl">🩹</span>
+          </div>
+          <h3 class="font-bold text-slate-800 mb-2">Yttre bandage</h3>
+          <p class="text-sm text-slate-600">
+            Fungerar som en blöja och absorberar den blodtillblandade artroskopivätskan som sipprar ut ur såret.
+          </p>
+        </div>
+        
+        <div class="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
+          <div class="w-12 h-12 rounded-full bg-emerald-200 flex items-center justify-center mb-3">
+            <span class="text-2xl">🏥</span>
+          </div>
+          <h3 class="font-bold text-slate-800 mb-2">Inre bandage</h3>
+          <p class="text-sm text-slate-600">
+            Håller såret helt rent de första 2 dygnen efter operationen.
+          </p>
+        </div>
+        
+        {visaStygn && (
+          <div class="bg-amber-50 rounded-xl p-5 border border-amber-100">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-200 flex items-center justify-center mb-3">
+              <img src="/images/operation/sutur-24x24.svg" alt="" class="w-8 h-8" />
+            </div>
+            <h3 class="font-bold text-slate-800 mb-2">Stygn</h3>
+            <p class="text-sm text-slate-600">
+              Hålen i huden blir sydda. Stygnen tas bort efter {stygnBorttagning}.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <!-- Tips -->
+      <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+        <h4 class="font-medium text-slate-800 mb-2">💡 Praktiska tips</h4>
+        <ul class="text-sm text-slate-600 space-y-1">
+          <li>• Du kan låta det yttre bandaget sitta orört i några dagar</li>
+          <li>• Är det yttre bandaget genomfuktigt och blodigt bör du byta detta tidigare</li>
+          <li>• Ibland rinner lite blodtillblandad artroskopivätska ur såren – det är normalt</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+

@@ -1,0 +1,135 @@
+---
+/**
+ * OpForberedelser - Förberedelser inför operation
+ * Gemensam komponent för alla operationer
+ */
+interface Props {
+  fastaTimmar?: number;
+  visaDescutan?: boolean;
+  visaRokstopp?: boolean;
+  extraInfo?: string;
+}
+
+const { 
+  fastaTimmar = 6, 
+  visaDescutan = true,
+  visaRokstopp = true,
+  extraInfo
+} = Astro.props;
+---
+
+<section id="forberedelser" class="mb-12 scroll-mt-32">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+      <img src="/images/operation/fasta-6-timmar-24x24.svg" alt="" class="w-8 h-8" />
+    </div>
+    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Förberedelser</h2>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    
+    <!-- Fasta -->
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex gap-4">
+        <div class="flex-shrink-0">
+          <img src="/images/operation/ingen-mat-24x24.svg" alt="" class="w-10 h-10" />
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 text-lg mb-2">Fasta</h3>
+          <p class="text-slate-600 mb-3">
+            Du ska <strong>inte äta eller dricka något</strong> efter 24.00 natten mot operationsdagen. 
+            Opereras du på eftermiddagen gäller <strong>{fastaTimmar} timmars fasta</strong> innan operationen.
+          </p>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+            <strong>⚠️ Viktigt:</strong> Om du har ätit eller druckit mindre än {fastaTimmar} timmar innan operation blir din operation struken.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rökstopp -->
+    {visaRokstopp && (
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex gap-4">
+          <div class="flex-shrink-0">
+            <img src="/images/operation/ingen_rokning-24x24.svg" alt="" class="w-10 h-10" />
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-lg mb-2">Rökning och snus</h3>
+            <p class="text-slate-600 mb-3">
+              Du ska <strong>inte röka eller snusa</strong> efter 24.00 natten mot operationsdagen. 
+              Opereras du på eftermiddagen gäller <strong>{fastaTimmar} timmars absolut rök-/snusstopp</strong> innan operationen.
+            </p>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+              <strong>⚠️ Obs:</strong> Om du har rökt eller snusat mindre än {fastaTimmar} timmar innan operation kan din operation bli struken.
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Mediciner -->
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex gap-4">
+        <div class="flex-shrink-0">
+          <img src="/images/operation/tablett-24x24.svg" alt="" class="w-10 h-10" />
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 text-lg mb-2">Mediciner</h3>
+          <ul class="text-slate-600 space-y-2">
+            <li class="flex items-start gap-2">
+              <span class="text-green-600 mt-1">✓</span>
+              <span>Ta alltid din <strong>blodtrycksmedicin</strong> som vanligt. Ta med dig en eventuell medicinlista.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-600 mt-1">!</span>
+              <span>Är du <strong>diabetiker</strong> ska du inte ta ditt insulin eller tabletter på operationsdagens morgon. Ta med ditt insulin/tabletter och din egen blodsockermätare.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-red-600 mt-1">⚠</span>
+              <span>Äter du någon <strong>starkare blodförtunnande medicin</strong> så måste du diskutera med en läkare om denna behövs sättas ut innan operation.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Descutan -->
+    {visaDescutan && (
+      <div class="p-6 bg-sky-50">
+        <div class="flex gap-4">
+          <div class="flex-shrink-0">
+            <!-- TODO: IKON SAKNAS - Descutan/tvättsvamp -->
+            <div class="w-10 h-10 rounded-full bg-sky-200 flex items-center justify-center text-sky-700 font-bold text-lg">
+              🧴
+            </div>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-lg mb-2">Descutan® tvättsvamp</h3>
+            <p class="text-slate-600 mb-3">
+              Duscha <strong>kvällen före</strong> samt på <strong>operationsdagens morgon</strong>, 
+              använd <strong>Descutan®</strong> som bakteriedödande tvål.
+            </p>
+            <a href="https://www.apoteket.se/produkt/descutan-tvattsvamp-4-procent-1-st-313867/" 
+               target="_blank" 
+               rel="noopener" 
+               class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-4 py-2 rounded-full hover:bg-sky-700 transition-colors">
+              <span>Köps på apoteket</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    )}
+
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+

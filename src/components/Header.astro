@@ -255,7 +255,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                       <span class="font-bold text-[#024264] text-base">Axel</span>
                     </a>
                     <div class="hidden group-hover/axel-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <span class="text-xs text-gray-400 italic">Operationsprogram kommer</span>
+                      <a href="/operation/axel/lateral-klavikelresektion" class="text-xs bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full hover:bg-orange-200 transition-colors w-full text-center">AC-ledsartros</a>
                     </div>
                   </div>
                   <!-- Knä -->
@@ -655,9 +655,16 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             <div id="menu-operation" class="mobile-accordion-content hidden pb-4">
               <!-- Axel -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/operation/axel/" class="flex items-center text-slate-300 py-2 hover:text-white">
-                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Axel
-                </a>
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-operation-axel">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Axel</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-operation-axel" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/operation/axel/" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla axeloperationer</a>
+                  <a href="/operation/axel/lateral-klavikelresektion" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC-ledsartros</a>
+                </div>
               </div>
               <!-- Knä -->
               <div class="mobile-accordion-nested ml-4">

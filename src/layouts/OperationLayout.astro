@@ -1,0 +1,341 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import MedicinskGranskad from "../components/MedicinskGranskad.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  operationsTyp?: string;        // ex: "Axeloperation", "Knäoperation"
+  kroppsdel?: string;            // ex: "axel", "knä", "armbåge" (för schema)
+  heroImage?: string;
+  ogImage?: string;              // OG-bild (1200x630) för sociala medier
+  granskadDatum?: string;        // ex: "3 januari 2026"
+  granskadDatumISO?: string;     // ISO-format: "2026-01-03"
+  operationsTid?: string;        // ex: "15-30 minuter"
+  keywords?: string[];           // SEO-nyckelord
+  faq?: Array<{question: string; answer: string}>; // FAQ för schema
+  tableOfContents?: Array<{id: string; title: string; icon: string}>; // Innehållsförteckning
+}
+
+const { 
+  title, 
+  description = "Information om operationen, förberedelser och eftervård.",
+  operationsTyp = "Axeloperation",
+  kroppsdel = "axel",
+  heroImage,
+  ogImage = "/images/og/operation-default.jpg",
+  granskadDatum = new Date().toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' }),
+  granskadDatumISO = new Date().toISOString().split('T')[0],
+  operationsTid,
+  keywords = [],
+  faq = [],
+  tableOfContents = [
+    { id: "forberedelser", title: "Förberedelser", icon: "1" },
+    { id: "operationsdagen", title: "Operationsdagen", icon: "2" },
+    { id: "eftervard", title: "Eftervård", icon: "3" },
+    { id: "sjukskrivning", title: "Sjukskrivning", icon: "4" },
+    { id: "aterbesok", title: "Återbesök", icon: "5" }
+  ]
+} = Astro.props;
+
+// Generera URL:er
+const siteUrl = "https://sodermalmsortopedi.se";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+
+// JSON-LD: MedicalProcedure Schema (för Google & AI Search)
+const medicalProcedureSchema = {
+  "@context": "https://schema.org",
+  "@type": "MedicalProcedure",
+  "name": title,
+  "description": description,
+  "url": canonicalUrl,
+  "image": fullOgImage,
+  "procedureType": "http://schema.org/SurgicalProcedure",
+  "bodyLocation": kroppsdel === "axel" ? "Shoulder" : kroppsdel === "knä" ? "Knee" : "Elbow",
+  "preparation": "Fasta 6 timmar innan operation. Duscha med Descutan kvällen före och på operationsdagens morgon.",
+  "howPerformed": "Artroskopisk kirurgi (titthålskirurgi) i narkos med lokalbedövning.",
+  "followup": "Sjukgymnastik påbörjas efter 1 vecka. Återbesök vid behov.",
+  ...(operationsTid && { "duration": operationsTid }),
+  "outcome": "De flesta patienter blir bättre efter operationen. Resultatet ses vanligen efter 3-4 månader.",
+  "risks": "Komplikationer är ovanliga. Kontakta kliniken vid feber, ökande smärta eller sårproblem.",
+  "performedBy": {
+    "@type": "Physician",
+    "name": "Dr. Carlos Rivero Siri",
+    "url": `${siteUrl}/om-oss/vart-team/dr-carlos-rivero-siri`,
+    "image": `${siteUrl}/images/team/carlos-rivero-siri.webp`,
+    "medicalSpecialty": {
+      "@type": "MedicalSpecialty",
+      "name": "Ortopedi"
+    }
+  },
+  "performingOrganization": {
+    "@type": "MedicalClinic",
+    "name": "Södermalms Ortopedi",
+    "url": siteUrl,
+    "telephone": "+46855110422",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Fatburs Brunnsgata 15-17",
+      "addressLocality": "Stockholm",
+      "postalCode": "118 28",
+      "addressCountry": "SE"
+    }
+  }
+};
+
+// JSON-LD: Article Schema (för Google News & AI)
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "headline": title,
+  "description": description,
+  "url": canonicalUrl,
+  "image": fullOgImage,
+  "datePublished": granskadDatumISO,
+  "dateModified": granskadDatumISO,
+  "author": {
+    "@type": "Person",
+    "name": "Dr. Carlos Rivero Siri",
+    "url": `${siteUrl}/om-oss/vart-team/dr-carlos-rivero-siri`,
+    "jobTitle": "Specialist i Ortopedi & Axelkirurgi"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Södermalms Ortopedi",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/images/branding/logo.svg`
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalUrl
+  },
+  "about": {
+    "@type": "MedicalCondition",
+    "name": title.replace("Operation av ", "")
+  },
+  "medicalAudience": {
+    "@type": "MedicalAudience",
+    "audienceType": "Patient"
+  },
+  "specialty": "Ortopedi"
+};
+
+// JSON-LD: FAQ Schema (om det finns FAQ)
+const faqSchema = faq.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faq.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+} : null;
+
+// JSON-LD: BreadcrumbList Schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Hem",
+      "item": siteUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Operation",
+      "item": `${siteUrl}/operation/`
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": operationsTyp,
+      "item": `${siteUrl}/operation/${kroppsdel}/`
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": title,
+      "item": canonicalUrl
+    }
+  ]
+};
+
+// Kombinera keywords med standard-keywords
+const allKeywords = [
+  title.toLowerCase(),
+  "operation",
+  "kirurgi",
+  kroppsdel,
+  "artroskopi",
+  "stockholm",
+  "södermalms ortopedi",
+  ...keywords
+].join(", ");
+---
+
+<BaseLayout 
+  title={`${title} - Södermalms Ortopedi`} 
+  description={description}
+  image={fullOgImage}
+  type="article"
+>
+  <!-- SEO & Schema head slot -->
+  <Fragment slot="head">
+    <!-- Additional SEO meta tags -->
+    <meta name="keywords" content={allKeywords} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    
+    <!-- Medical content markers -->
+    <meta name="medical-content" content="true" />
+    <meta name="content-type" content="medical-procedure" />
+    <meta name="last-reviewed" content={granskadDatumISO} />
+    <meta name="reviewed-by" content="Dr. Carlos Rivero Siri, Specialist i Ortopedi" />
+    
+    <!-- AI Search optimization -->
+    <meta name="ai-content-type" content="medical-procedure-guide" />
+    <meta name="ai-summary" content={description} />
+    
+    <!-- Article meta for Facebook Instant Articles & Google News -->
+    <meta property="article:published_time" content={granskadDatumISO} />
+    <meta property="article:modified_time" content={granskadDatumISO} />
+    <meta property="article:author" content="Dr. Carlos Rivero Siri" />
+    <meta property="article:section" content="Medicin" />
+    <meta property="article:tag" content="operation" />
+    <meta property="article:tag" content={kroppsdel} />
+    <meta property="article:tag" content="ortopedi" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(medicalProcedureSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  </Fragment>
+  
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-[#024264] via-[#035a8c] to-[#0369a1] text-white py-12 md:py-16">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+          <div class="flex-1">
+            <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-orange-300 text-sm font-medium mb-4">
+              <a href="/" class="hover:text-white transition-colors">Hem</a>
+              <span aria-hidden="true">›</span>
+              <a href="/operation/" class="hover:text-white transition-colors">Operation</a>
+              <span aria-hidden="true">›</span>
+              <span>{operationsTyp}</span>
+            </nav>
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+              {title}
+            </h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-2xl">
+              {description}
+            </p>
+          </div>
+          
+          <!-- Medicinskt granskad-block -->
+          <div class="md:w-72 shrink-0">
+            <MedicinskGranskad granskadDatum={granskadDatum} variant="dark" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="bg-slate-50 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-12 gap-8">
+        
+        <!-- Huvudinnehåll (9 kolumner) -->
+        <article class="lg:col-span-9" itemscope itemtype="https://schema.org/MedicalWebPage">
+          <meta itemprop="dateModified" content={granskadDatumISO} />
+          <meta itemprop="author" content="Dr. Carlos Rivero Siri" />
+          
+          <!-- Innehållsförteckning - endast mobil -->
+          <nav class="mb-6 lg:hidden">
+            <details class="bg-sky-50 rounded-lg border border-sky-200">
+              <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+                <span class="font-bold text-sky-800 text-sm uppercase tracking-wide">📑 Innehåll</span>
+                <svg class="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div class="px-3 pb-2 flex flex-wrap gap-2">
+                {tableOfContents.map((item) => (
+                  <a href={`#${item.id}`} class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-sky-700 bg-white px-2.5 py-1 rounded-full border border-slate-200 hover:border-sky-300 transition-colors">
+                    <span class="w-4 h-4 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">{item.icon}</span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </details>
+          </nav>
+          
+          <slot />
+        </article>
+
+        <!-- Sidebar (3 kolumner) -->
+        <aside class="lg:col-span-3">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            
+            <!-- Innehållsförteckning - endast desktop -->
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Innehåll</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a 
+                    href={`#${item.id}`} 
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Print Button -->
+  <div class="fixed bottom-6 right-6 print:hidden">
+    <button onclick="window.print()" class="bg-[#024264] text-white p-4 rounded-full shadow-lg hover:bg-blue-800 transition-colors" title="Skriv ut" aria-label="Skriv ut sidan">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Print Styles -->
+  <style>
+    @media print {
+      nav, button, .print\\:hidden {
+        display: none !important;
+      }
+      main {
+        padding: 0 !important;
+      }
+      section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</BaseLayout>

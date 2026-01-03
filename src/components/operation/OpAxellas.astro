@@ -1,0 +1,94 @@
+---
+/**
+ * OpAxellas - Information om axellås/ortos
+ * Används för operationer som kräver axellås
+ */
+interface Props {
+  typ?: 'standard' | 'bakre-instabilitet' | 'ingen';
+  antalVeckor?: number;
+  visaBild?: boolean;
+  extraInfo?: string;
+}
+
+const { 
+  typ = 'ingen',
+  antalVeckor = 0,
+  visaBild = true,
+  extraInfo
+} = Astro.props;
+
+// Axellås visas inte om typ är 'ingen'
+const visaSektion = typ !== 'ingen' && antalVeckor > 0;
+
+const typBeskrivning = {
+  'standard': 'Ett standard axellås håller armen stilla mot kroppen och förhindrar rotation.',
+  'bakre-instabilitet': 'Vid bakre instabilitet används ett speciellt axellås som håller armen i en annan position.'
+};
+---
+
+{visaSektion && (
+  <section class="mb-12">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+        <!-- TODO: IKON SAKNAS - Axellås/ortos -->
+        <span class="text-2xl">🦺</span>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Axellås</h2>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      
+      <div class="flex flex-col md:flex-row gap-6">
+        
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="px-4 py-2 bg-blue-100 rounded-full">
+              <span class="font-bold text-blue-800">{antalVeckor} veckor</span>
+            </div>
+            <span class="text-slate-500">med axellås</span>
+          </div>
+          
+          <p class="text-slate-600 mb-4">
+            {typBeskrivning[typ]}
+          </p>
+
+          <div class="space-y-3">
+            <div class="flex items-start gap-2">
+              <span class="text-green-600 mt-1">✓</span>
+              <span class="text-slate-600">Axellåset ska bäras dag och natt under behandlingstiden</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-green-600 mt-1">✓</span>
+              <span class="text-slate-600">Du kan ta av det vid dusch och vid sjukgymnastikövningar</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-amber-600 mt-1">!</span>
+              <span class="text-slate-600">Undvik att lyfta armen eller bära tungt under tiden</span>
+            </div>
+          </div>
+        </div>
+
+        {visaBild && (
+          <div class="md:w-48 flex-shrink-0">
+            <!-- TODO: BILD SAKNAS - Bild på axellås -->
+            <div class="bg-gray-100 rounded-xl h-48 flex items-center justify-center text-gray-400">
+              <div class="text-center">
+                <span class="text-4xl mb-2 block">🦺</span>
+                <span class="text-xs">Bild på {typ === 'bakre-instabilitet' ? 'bakre' : 'standard'} axellås</span>
+              </div>
+            </div>
+          </div>
+        )}
+        
+      </div>
+
+    </div>
+
+    {extraInfo && (
+      <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+        {extraInfo}
+      </div>
+    )}
+  </section>
+)}
+

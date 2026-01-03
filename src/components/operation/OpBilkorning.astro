@@ -1,0 +1,84 @@
+---
+/**
+ * OpBilkorning - Information om bilkörning efter operation
+ */
+interface Props {
+  timmarEfterNarkos?: number;
+  harAxellas?: boolean;
+  extraInfo?: string;
+}
+
+const { 
+  timmarEfterNarkos = 24,
+  harAxellas = false,
+  extraInfo
+} = Astro.props;
+---
+
+<section class="mb-12">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+      <img src="/images/operation/bil-24x24.svg" alt="" class="w-8 h-8" />
+    </div>
+    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Köra bil</h2>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+    
+    <div class="flex items-start gap-4 mb-6">
+      <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+        <span class="text-2xl">✓</span>
+      </div>
+      <div>
+        <p class="text-slate-700 text-lg">
+          Det går bra att köra bil <strong>{timmarEfterNarkos} timmar</strong> efter din operation.
+        </p>
+        <p class="text-slate-500 text-sm mt-1">
+          Då har alla mediciner du fick i samband med narkosen försvunnit ur kroppen.
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      
+      <!-- Varning: Smärtstillande -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+        <div class="flex items-start gap-3">
+          <span class="text-amber-600 text-xl">⚠️</span>
+          <div>
+            <h4 class="font-medium text-amber-800 mb-1">Smärtstillande mediciner</h4>
+            <p class="text-sm text-amber-700">
+              Vissa smärtstillande mediciner (ex. <strong>Citodon®, Tramadol</strong>) gör att du 
+              <strong>inte får köra bil</strong>. Kontrollera alltid bipacksedeln.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Varning: Axellås */}
+      {harAxellas && (
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="flex items-start gap-3">
+            <span class="text-red-600 text-xl">🚫</span>
+            <div>
+              <h4 class="font-medium text-red-800 mb-1">Axellås</h4>
+              <p class="text-sm text-red-700">
+                Om du blivit opererad och har ett <strong>axellås</strong> blir bilkörning mer problematisk. 
+                Du bör inte köra bil så länge du bär axellåset.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+

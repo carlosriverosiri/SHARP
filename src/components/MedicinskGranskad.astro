@@ -1,0 +1,53 @@
+---
+/**
+ * MedicinskGranskad - Block som visar medicinsk granskning
+ * Kan användas på sjukdomssidor, operationssidor, rehabsidor etc.
+ */
+interface Props {
+  granskadDatum: string;         // ex: "14 december 2024"
+  namn?: string;
+  titel?: string;
+  bildUrl?: string;
+  profilUrl?: string;
+  variant?: 'dark' | 'light';    // dark för mörk bakgrund, light för ljus
+}
+
+const { 
+  granskadDatum,
+  namn = "Dr. Carlos Rivero Siri",
+  titel = "Specialist i Ortopedi & Axelkirurgi",
+  bildUrl = "/images/team/carlos-rivero-siri.webp",
+  profilUrl = "/om-oss/vart-team/dr-carlos-rivero-siri",
+  variant = 'dark'
+} = Astro.props;
+
+const isDark = variant === 'dark';
+---
+
+<div class={`rounded-xl p-4 border ${isDark ? 'bg-white/10 backdrop-blur border-white/10' : 'bg-slate-50 border-slate-200'}`}>
+  <div class="flex items-center gap-3 mb-3">
+    <div class={`w-10 h-10 rounded-full overflow-hidden border-2 shrink-0 ${isDark ? 'border-sky-400' : 'border-[#024264]'}`}>
+      <img src={bildUrl} alt={namn} class="w-full h-full object-cover" />
+    </div>
+    <div>
+      <p class={`text-xs uppercase tracking-wider font-bold ${isDark ? 'text-sky-300' : 'text-sky-600'}`}>
+        Medicinskt granskad
+      </p>
+      <a href={profilUrl} class={`text-sm font-bold hover:underline ${isDark ? 'text-white hover:text-sky-200' : 'text-[#024264] hover:text-sky-700'}`}>
+        {namn}
+      </a>
+    </div>
+  </div>
+  <div class={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+    {titel}
+  </div>
+  <div class={`mt-2 pt-2 border-t flex items-center gap-2 ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
+    <svg class={`w-3.5 h-3.5 ${isDark ? 'text-sky-400' : 'text-sky-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+    <span class={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-500'}`}>
+      Uppdaterad: <strong class={isDark ? 'text-white' : 'text-slate-800'}>{granskadDatum}</strong>
+    </span>
+  </div>
+</div>
+

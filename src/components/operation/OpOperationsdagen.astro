@@ -1,0 +1,117 @@
+---
+/**
+ * OpOperationsdagen - Information om operationsdagen
+ * Vårdprocess, bedövning och operationstid
+ */
+interface Props {
+  vardprocessTid?: string;       // ex: "2-4 timmar"
+  operationsTid?: string;        // ex: "5-30 minuter"
+  bedovningstyp?: 'narkos' | 'lokalbedovning' | 'kombinerad';
+  visaLokalbedovning?: boolean;
+  extraInfo?: string;
+}
+
+const { 
+  vardprocessTid = "2-4 timmar",
+  operationsTid = "15-45 minuter",
+  bedovningstyp = 'kombinerad',
+  visaLokalbedovning = true,
+  extraInfo
+} = Astro.props;
+
+const bedovningsText = {
+  'narkos': 'Du opereras i narkos (sövs).',
+  'lokalbedovning': 'Du opereras i lokalbedövning.',
+  'kombinerad': 'Du opereras i narkos. Innan du blir sövd får du en injektion med lokalbedövning och adrenalin i axeln.'
+};
+---
+
+<section id="operationsdagen" class="mb-12 scroll-mt-32">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+      <img src="/images/operation/surgeon-24x24.svg" alt="" class="w-8 h-8" />
+    </div>
+    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Operationsdagen</h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    
+    <!-- Vårdprocessen -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <!-- TODO: IKON SAKNAS - Klocka/tid -->
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl">
+          ⏱️
+        </div>
+        <h3 class="font-bold text-slate-800 text-lg">Vårdprocessen</h3>
+      </div>
+      <p class="text-slate-600 mb-4">
+        Hela vårdprocessen för en axeloperation brukar ta mellan <strong>{vardprocessTid}</strong>. 
+        Själva operationen tar vanligen ca <strong>{operationsTid}</strong>, lite beroende på vad som skall göras.
+      </p>
+      <div class="bg-gray-50 rounded-lg p-4 text-sm text-slate-600">
+        <p class="mb-2">Den större delen av tiden tillbringar du med att vänta, både före och efter operationen.</p>
+        <p><strong>Tips:</strong> Ta med dig något att lyssna på eller läsa. Du får gärna använda din smartmobil.</p>
+      </div>
+    </div>
+
+    <!-- Bedövning -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="flex-shrink-0">
+          <img src="/images/operation/injektion-24x24.svg" alt="" class="w-10 h-10" />
+        </div>
+        <h3 class="font-bold text-slate-800 text-lg">Bedövning</h3>
+      </div>
+      <p class="text-slate-600 mb-4">
+        {bedovningsText[bedovningstyp]}
+      </p>
+      
+      {visaLokalbedovning && bedovningstyp === 'kombinerad' && (
+        <div class="space-y-3 text-sm text-slate-600">
+          <div class="flex items-start gap-2">
+            <span class="text-amber-500 mt-0.5">💉</span>
+            <span>Den injektionen brukar göra ont.</span>
+          </div>
+          <div class="bg-green-50 rounded-lg p-3 border border-green-200">
+            <p class="font-medium text-green-800 mb-1">Fördelar med lokalbedövning:</p>
+            <ul class="text-green-700 space-y-1">
+              <li>• Mindre blödning under operation</li>
+              <li>• Snabbare operation</li>
+              <li>• Mindre svullnad efter operationen</li>
+              <li>• Smärtstillande effekt som kan hålla i flera dagar</li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+
+  </div>
+
+  <!-- Kaféer i närheten -->
+  <div class="mt-6 bg-amber-50 rounded-xl border border-amber-200 p-6">
+    <h4 class="font-bold text-amber-800 mb-3 flex items-center gap-2">
+      <span>☕</span> Har du någon som hämtar dig?
+    </h4>
+    <p class="text-amber-700 text-sm mb-3">
+      Den som kommer och hämtar dig kan passa på att ta en fika i väntan på att du ringer. Våra favoriter:
+    </p>
+    <div class="grid sm:grid-cols-2 gap-3 text-sm">
+      <div class="bg-white rounded-lg p-3">
+        <p class="font-medium text-slate-800">Bageri Petrus</p>
+        <p class="text-slate-600">Swedenborgsgatan 4 – Litet konditori med väldigt goda bakverk.</p>
+      </div>
+      <div class="bg-white rounded-lg p-3">
+        <p class="font-medium text-slate-800">Baresso</p>
+        <p class="text-slate-600">Swedenborgsgatan 27 – Gott om plats med bekväma fåtöljer (WiFi). 100 m bort.</p>
+      </div>
+    </div>
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+
