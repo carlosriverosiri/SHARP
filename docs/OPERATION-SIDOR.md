@@ -39,32 +39,30 @@ src/
 Ikoner finns i `public/images/operation/`. Alla är SVG 24x24 px.
 
 ### Befintliga ikoner:
-| Fil | Användning |
-|-----|------------|
-| `fasta-6-timmar-24x24.svg` | Förberedelser (fasta) |
-| `ingen-mat-24x24.svg` | Förberedelser (fasta) |
-| `ingen_rokning-24x24.svg` | Förberedelser (rökstopp) |
-| `tablett-24x24.svg` | Mediciner, Smärtstillande |
-| `surgeon-24x24.svg` | Operationsdagen |
-| `injektion-24x24.svg` | Bedövning |
-| `plaster-24x24.svg` | Bandage (placeholder) |
-| `sutur-24x24.svg` | Stygn |
-| `forsakringskassan-24-24.svg` | Sjukskrivning |
-| `bil-24x24.svg` | Bilkörning |
-| `sjukgymnastik-24x24.svg` | Fysioterapi |
+| Fil | Användning | Storlek i kod |
+|-----|------------|---------------|
+| `fasta-6-timmar-24x24.svg` | Förberedelser (rubrik) | `w-8 h-8` |
+| `ingen-mat.svg` | Förberedelser (fasta) | `w-10 h-10` |
+| `ingen_rokning.svg` | Förberedelser (rökstopp) | `w-10 h-10` |
+| `tablett-24x24.svg` | Mediciner | `w-7 h-7` |
+| `surgeon-24x24.svg` | Operationsdagen (rubrik) | `w-8 h-8` |
+| `vardprocessen-24x24.svg` | Vårdprocessen | `w-10 h-10` |
+| `injektion-24x24.svg` | Bedövning | `w-10 h-10` |
+| `keyhole-24x24.svg` | Titthålskirurgi | `w-8 h-8` |
+| `home-24x24.svg` | Dagkirurgi/hem | `w-8 h-8` |
+| `plaster-24x24.svg` | Bandage (rubrik) | `w-8 h-8` |
+| `sutur-24x24.svg` | Stygn | `w-12 h-12` |
+| `forsakringskassan-24-24.svg` | Sjukskrivning | Varierar |
+| `bil-24x24.svg` | Bilkörning | Varierar |
+| `sjukgymnastik-24x24.svg` | Fysioterapi | Varierar |
 
-### Saknade ikoner (markerade med TODO i koden):
-- `descutan.svg` - Tvättsvamp
-- `klocka.svg` - Vårdprocesstid
-- `bandage.svg` - Förband (egen ikon)
-- `axellas.svg` - Axellås/ortos
-- `aterbesok.svg` - Återbesök/kalender
+**Viktigt:** Ikonstorlekar är justerade för visuell konsistens. Använd samma storlek för ikoner i samma kontext (t.ex. alla ikoner i fördelar-rutorna ska vara `w-8 h-8`).
 
 ---
 
 ## Var redigerar jag vad?
 
-### 🔧 Förberedelser (fasta, rökstopp, Descutan)
+### 🔧 Förberedelser (fasta, rökstopp, Descutan/Hibiwash)
 
 **Fil:** `src/components/operation/OpForberedelser.astro`
 
@@ -72,11 +70,21 @@ Ikoner finns i `public/images/operation/`. Alla är SVG 24x24 px.
 ```astro
 <OpForberedelser 
   fastaTimmar={6}           // Antal timmar fasta (default: 6)
-  visaDescutan={true}       // Visa Descutan-info (default: true)
+  visaDescutan={true}       // Visa Descutan/Hibiwash-info (default: true)
   visaRokstopp={true}       // Visa rökstoppsinfo (default: true)
   extraInfo="Egen text..."  // Lägg till extra information
 />
 ```
+
+**Layout:**
+- **Kompakt design** med minimal padding (`px-4 py-3`)
+- **Varningsblock:** Solid färg med vit text (röd för fasta, orange för rökstopp)
+- **Descutan/Hibiwash:** Visas **sida vid sida** i 2-kolumns grid på desktop, staplas på mobil
+- **Produktlänkar:** Google Shopping-sökningar (stabila, uppdateras automatiskt)
+
+**Produkter:**
+- **Descutan® tvättsvamp:** Länk till Google Shopping (`tbm=shop`)
+- **Hibiwash:** Billigare alternativ, länk till Google Shopping
 
 **Redigera standardtext:** Öppna `OpForberedelser.astro` och ändra i HTML-texten.
 
@@ -96,7 +104,11 @@ Ikoner finns i `public/images/operation/`. Alla är SVG 24x24 px.
 />
 ```
 
-**Kaféer i närheten:** Redigeras direkt i `OpOperationsdagen.astro` (rad ~85-95).
+**Ikoner:**
+- **Vårdprocessen:** `vardprocessen-24x24.svg` (w-10 h-10)
+- **Bedövning:** `injektion-24x24.svg` (w-10 h-10)
+
+**Kaféer i närheten:** Redigeras direkt i `OpOperationsdagen.astro` (rad ~92-108).
 
 ---
 
@@ -107,10 +119,13 @@ Ikoner finns i `public/images/operation/`. Alla är SVG 24x24 px.
 **Parametrar:**
 ```astro
 <OpBandage 
-  stygnBorttagning="7-10 dagar"  // När stygnen tas bort
+  stygnBorttagning="7-14 dagar"  // När stygnen tas bort
   visaStygn={true}               // Visa stygn-info
 />
 ```
+
+**Ikoner:**
+- **Stygn:** `sutur-24x24.svg` (w-12 h-12 för konsistens med andra ikoner i rutorna)
 
 ---
 
@@ -248,13 +263,28 @@ const granskadDatum = "3 januari 2026";
       <p class="text-slate-700">
         Beskriv operationen här...
       </p>
+      
+      <!-- Fördelar med artroskopi (exempel) -->
+      <div class="mt-6 grid sm:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg p-4 text-center">
+          <img src="/images/operation/keyhole-24x24.svg" alt="Titthålskirurgi" class="w-8 h-8 mx-auto mb-2" />
+          <p class="text-sm text-slate-600">Titthålskirurgi med minimal invasivitet</p>
+        </div>
+        <div class="bg-white rounded-lg p-4 text-center">
+          <p class="text-slate-600">Snabb operation (5-15 minuter)</p>
+        </div>
+        <div class="bg-white rounded-lg p-4 text-center">
+          <img src="/images/operation/home-24x24.svg" alt="Dagkirurgi" class="w-8 h-8 mx-auto mb-2" />
+          <p class="text-sm text-slate-600">Dagkirurgi - hem samma dag</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Gemensamma komponenter -->
   <OpForberedelser />
   <OpOperationsdagen operationsTid="15-30 minuter" />
-  <OpBandage stygnBorttagning="7-10 dagar" />
+  <OpBandage stygnBorttagning="7-14 dagar" />
   <OpSmarta />
   <OpSjukskrivning heltid="1 vecka" deltid="1-2 veckor" />
   <OpBilkorning />
@@ -318,6 +348,25 @@ Om du inte skickar `tableOfContents` används standard:
 
 ---
 
+## Design & Layout
+
+### Kompakt design
+Operationssidorna använder en **kompakt layout** för att minimera vertikal scrollning:
+- **Mindre padding:** `px-4 py-3` istället för `p-6`
+- **Kortare text:** `text-sm` för brödtext
+- **Grid-layout:** Produkter visas sida vid sida där det är möjligt
+
+### Varningsblock
+Viktiga varningar (t.ex. om struken operation) använder **solid färg med vit text** för maximal synlighet:
+- **Röd:** `bg-red-600 text-white` för kritiska varningar
+- **Orange:** `bg-amber-500 text-white` för viktiga påminnelser
+
+### Ikonstorlekar
+För visuell konsistens används standardiserade storlekar:
+- **Rubrik-ikoner:** `w-8 h-8` eller `w-10 h-10`
+- **Sektions-ikoner:** `w-7 h-7` (kompakt layout)
+- **Rut-ikoner:** `w-12 h-12` (fördelar, produkter)
+
 ## Tips
 
 ### Ändra text som gäller ALLA operationer
@@ -333,6 +382,11 @@ Lägg till operationsspecifikt innehåll **före** eller **efter** komponenterna
 
 ### Dölja en sektion för en specifik operation
 Importera inte komponenten, eller skicka parametrar som döljer den (t.ex. `visaDescutan={false}`).
+
+### Produktlänkar
+Använd **Google Shopping**-länkar istället för direkta apotekslänkar (som kan ändras):
+- Format: `https://www.google.se/search?hl=sv&tbm=shop&q=%22Produktnamn%22&gl=se`
+- Exempel: Descutan, Hibiwash
 
 ---
 
@@ -423,4 +477,17 @@ Lägg till länkar till sjukdomssidan, rehab och Fråga doktorn för bättre anv
 ## Exempel: Fullständig operationssida
 
 Se `src/pages/operation/axel/lateral-klavikelresektion.astro` för ett komplett exempel med SEO.
+
+---
+
+## Senaste uppdateringar
+
+### 2025 - Förbättringar
+- ✅ **Hibiwash** ersätter Hibiscrub (produkt har utgått)
+- ✅ **Google Shopping-länkar** för produkter (stabila, uppdateras automatiskt)
+- ✅ **Kompaktare layout** för OpForberedelser (mindre padding, grid-layout)
+- ✅ **Förbättrade varningsblock** (solid färg med vit text)
+- ✅ **Nya ikoner:** keyhole-24x24.svg, home-24x24.svg, vardprocessen-24x24.svg
+- ✅ **Ikonstorleksjusteringar** för visuell konsistens
+- ✅ **Descutan/Hibiwash** visas sida vid sida i grid
 

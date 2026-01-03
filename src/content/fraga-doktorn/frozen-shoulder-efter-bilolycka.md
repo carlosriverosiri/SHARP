@@ -44,3 +44,4 @@ Samband mellan trauma och frozen shoulder är möjligt men svårt att bevisa.
 
 
 
+

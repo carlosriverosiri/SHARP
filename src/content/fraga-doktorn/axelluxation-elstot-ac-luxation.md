@@ -22,3 +22,4 @@ Knölen på axeln beror sannolikt på AC-ledsartros och inte på att nyckelbensl
 
 
 
+

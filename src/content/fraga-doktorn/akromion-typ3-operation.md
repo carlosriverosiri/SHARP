@@ -53,3 +53,4 @@ Men: Först bör man utesluta rotatorkuffskada med MR eller ultraljud.
 
 
 
+

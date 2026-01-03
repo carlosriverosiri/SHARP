@@ -51,3 +51,4 @@ Det går absolut att få impingement efter ett trauma. **Dokumentera händelsen*
 
 
 
+

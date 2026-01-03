@@ -1,0 +1,62 @@
+---
+/**
+ * OpDuscha - Information om duschning och bad efter operation
+ */
+interface Props {
+  timmarEfterOp?: number;      // ex: 48
+  extraInfo?: string;
+}
+
+const { 
+  timmarEfterOp = 48,
+  extraInfo
+} = Astro.props;
+---
+
+<section id="duscha" class="mb-8 scroll-mt-32">
+  <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
+    <!-- Rubrik med ikon -->
+    <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+      <img src="/images/operation/dusch-24x24.svg" alt="" class="w-10 h-10" />
+      <h2 class="text-lg font-bold text-[#024264]">Duscha och bada</h2>
+    </div>
+
+    <!-- Huvudinfo -->
+    <div class="space-y-3 text-slate-600">
+      <p>
+        <strong>Duscha efter {timmarEfterOp} timmar.</strong> Det går bra att duscha redan efter {timmarEfterOp} timmar. 
+        Använd flytande tvål och badda försiktigt såren med tvålvatten.
+      </p>
+      
+      <p>
+        När vattnet rinner nedåt är risken för att bakterier tar sig in i såret minimal. 
+        Det är faktiskt bra att få bort gammalt blod och smuts från såren.
+      </p>
+
+      <div class="bg-amber-50 border-l-4 border-amber-400 px-3 py-2">
+        <p class="text-amber-800">
+          <strong>⚠️ Viktigt:</strong> Efter du har duschat måste du byta till ett <strong>rent bandage</strong>.
+        </p>
+      </div>
+
+      <p>
+        <strong>Bada?</strong> Vänta med att bada i badkar, pool eller hav tills såren har läkt och stygnen har tagits bort.
+      </p>
+    </div>
+
+    <!-- Alternativ -->
+    <div class="mt-4 pt-3 border-t border-gray-100">
+      <p class="text-slate-600">
+        <strong>Alternativ:</strong> Du kan också tvätta dig med tvål, vatten och en tvättduk 
+        under armarna utan att blöta ner bandaget.
+      </p>
+    </div>
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+

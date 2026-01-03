@@ -1,0 +1,216 @@
+---
+/**
+ * Kopiera Kortlänkar - Internt verktyg för klinisk användning
+ * 
+ * Sida: /copy-links
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const links = [
+  {
+    category: "Diagnoser",
+    icon: "🩺",
+    items: [
+      { name: "AC-ledsartros (yttre nyckelbensleden)", shortPath: "/d/ac" },
+      { name: "Impingement / subakromiellt syndrom", shortPath: "/d/imp" },
+      { name: "Rotatorcuffruptur", shortPath: "/d/cuff" },
+      { name: "Frusen skuldra (frozen shoulder)", shortPath: "/d/frusen" },
+      { name: "Kalkaxel", shortPath: "/d/kalk" },
+      { name: "Axelinstabilitet", shortPath: "/d/instab" },
+      { name: "SLAP-skada", shortPath: "/d/slap" },
+      { name: "Bicepstendinit", shortPath: "/d/biceps" },
+      { name: "Parsonage-Turner syndrom", shortPath: "/d/pts" },
+    ]
+  },
+  {
+    category: "Operationer",
+    icon: "🔪",
+    items: [
+      { name: "Operation av AC-ledsartros", shortPath: "/o/ac" },
+      { name: "Subakromiell dekompression", shortPath: "/o/sad" },
+      { name: "Rotatorcuffrekonstruktion", shortPath: "/o/cuff" },
+      { name: "Kalkborttagning (artroskopisk)", shortPath: "/o/kalk" },
+      { name: "Stabiliseringsoperation axel", shortPath: "/o/stab" },
+      { name: "Bicepstenodes", shortPath: "/o/biceps" },
+    ]
+  },
+  {
+    category: "Rehab",
+    icon: "🏋️",
+    items: [
+      { name: "Rehab efter AC-ledsoperation", shortPath: "/r/ac" },
+      { name: "Rehab efter subakromiell dekompression", shortPath: "/r/sad" },
+      { name: "Rehab efter rotatorcuffoperation", shortPath: "/r/cuff" },
+      { name: "Rehab vid frusen skuldra", shortPath: "/r/frusen" },
+      { name: "Rehab efter stabiliseringsoperation", shortPath: "/r/stab" },
+    ]
+  },
+  {
+    category: "Frågeformulär",
+    icon: "📋",
+    items: [
+      { name: "Frågeformulär axel (före besök)", shortPath: "/ff/axel" },
+      { name: "Frågeformulär armbåge (före besök)", shortPath: "/ff/armbage" },
+      { name: "Frågeformulär knä (före besök)", shortPath: "/ff/kna" },
+    ]
+  }
+];
+
+// Använder www. istället för https:// för att spara tecken i SMS
+// www.specialist.se/d/ac (21 tecken) vs https://specialist.se/d/ac (25 tecken)
+const baseDomain = "www.specialist.se";
+---
+
+<BaseLayout title="Kopiera kortlänkar" description="Internt verktyg för att kopiera korta länkar till patientinformation">
+  <div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="mb-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-[#024264] mb-2">
+          Kopiera kortlänkar till patientinfo
+        </h1>
+        <p class="text-slate-600">
+          Klicka på "Kopiera länk" för att kopiera en kort URL till urklipp. 
+          Perfekt för SMS till patienter.
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="search-input"
+            placeholder="Sök diagnos, operation eller rehab..."
+            class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+          />
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div 
+        id="toast" 
+        class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50"
+      >
+        ✓ Kopierad!
+      </div>
+
+      <div id="links-container" class="space-y-8">
+        {links.map((category) => (
+          <section class="category-section" data-category={category.category}>
+            <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <span>{category.icon}</span>
+              {category.category}
+            </h2>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 divide-y divide-gray-100">
+              {category.items.map((item) => (
+                <div 
+                  class="link-item flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                  data-name={item.name.toLowerCase()}
+                >
+                  <div class="flex-1 min-w-0 mr-4">
+                    <p class="font-medium text-slate-800">{item.name}</p>
+                    <p class="text-sm text-slate-500 font-mono">{baseDomain}{item.shortPath}</p>
+                  </div>
+                  <button 
+                    type="button"
+                    class="copy-btn flex-shrink-0 bg-[#024264] text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-800 active:scale-95 transition-all flex items-center gap-2"
+                    data-url={`${baseDomain}${item.shortPath}`}
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    Kopiera länk
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <div id="no-results" class="hidden text-center py-12">
+        <p class="text-slate-500 text-lg">Inga resultat hittades</p>
+      </div>
+
+      <div class="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <h3 class="font-bold text-blue-800 mb-2">💡 Tips för SMS</h3>
+        <ul class="text-blue-700 space-y-1 text-sm">
+          <li>• Korta URLs sparar tecken – SMS har max 255 tecken</li>
+          <li>• Exempel: "Hej! Här är info om din diagnos: www.specialist.se/d/ac"</li>
+          <li>• Länkarna fungerar direkt – de omdirigerar till fullständiga sidor</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toast = document.getElementById('toast');
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    
+    copyButtons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const url = btn.getAttribute('data-url');
+        
+        try {
+          await navigator.clipboard.writeText(url);
+          toast.classList.remove('translate-x-full');
+          setTimeout(() => {
+            toast.classList.add('translate-x-full');
+          }, 2000);
+          
+          const originalText = btn.innerHTML;
+          btn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Kopierad!
+          `;
+          btn.classList.remove('bg-[#024264]');
+          btn.classList.add('bg-green-600');
+          
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-green-600');
+            btn.classList.add('bg-[#024264]');
+          }, 2000);
+          
+        } catch (err) {
+          console.error('Kunde inte kopiera:', err);
+          alert('Kunde inte kopiera länken. Försök igen.');
+        }
+      });
+    });
+
+    const searchInput = document.getElementById('search-input');
+    const categorySections = document.querySelectorAll('.category-section');
+    const noResults = document.getElementById('no-results');
+    
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      let hasResults = false;
+      
+      categorySections.forEach(section => {
+        const items = section.querySelectorAll('.link-item');
+        let categoryHasResults = false;
+        
+        items.forEach(item => {
+          const name = item.getAttribute('data-name');
+          const matches = name.includes(searchTerm);
+          
+          item.style.display = matches ? 'flex' : 'none';
+          if (matches) {
+            categoryHasResults = true;
+            hasResults = true;
+          }
+        });
+        
+        section.style.display = categoryHasResults ? 'block' : 'none';
+      });
+      
+      noResults.classList.toggle('hidden', hasResults);
+    });
+  });
+</script>

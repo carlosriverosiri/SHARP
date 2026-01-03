@@ -52,3 +52,4 @@ Många patienter med impingement blir bra med rehabilitering. Vi gör alltid en 
 
 
 
+

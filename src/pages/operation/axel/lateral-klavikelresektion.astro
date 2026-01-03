@@ -8,8 +8,9 @@ import OperationLayout from "../../../layouts/OperationLayout.astro";
 import OpForberedelser from "../../../components/operation/OpForberedelser.astro";
 import OpOperationsdagen from "../../../components/operation/OpOperationsdagen.astro";
 import OpBandage from "../../../components/operation/OpBandage.astro";
+import OpDuscha from "../../../components/operation/OpDuscha.astro";
 import OpSmarta from "../../../components/operation/OpSmarta.astro";
-import OpSjukskrivning from "../../../components/operation/OpSjukskrivning.astro";
+// OpSjukskrivning ersatt med anpassad sektion nedan
 import OpBilkorning from "../../../components/operation/OpBilkorning.astro";
 import OpSjukgymnastik from "../../../components/operation/OpSjukgymnastik.astro";
 import OpAterbesok from "../../../components/operation/OpAterbesok.astro";
@@ -36,7 +37,7 @@ const keywords = [
 const faq = [
   {
     question: "Hur lång är operationen av AC-ledsartros?",
-    answer: "Själva operationen tar vanligen 5-30 minuter. Hela vårdprocessen på kliniken tar 2-4 timmar inklusive förberedelser och uppvakning."
+    answer: "Själva operationen tar vanligen 5-15 minuter. Hela vårdprocessen på kliniken tar 2-4 timmar inklusive förberedelser och uppvakning."
   },
   {
     question: "Hur länge är man sjukskriven efter AC-ledsoperation?",
@@ -56,7 +57,7 @@ const faq = [
   kroppsdel="axel"
   granskadDatum={granskadDatum}
   granskadDatumISO={granskadDatumISO}
-  operationsTid="5-30 minuter"
+  operationsTid="5-15 minuter"
   keywords={keywords}
   faq={faq}
 >
@@ -76,40 +77,34 @@ const faq = [
           Ett litet antal av de personer som drabbas får smärtor av artrosen. Vid en smärtsam artros 
           kan man genom två små hål i huden operera bort artrosen.
         </p>
-        <p class="text-sm text-slate-600 italic">
+        <p class="text-slate-600 italic mb-4">
           💡 <a href="/sjukdomar/axel/ac-ledsartros" class="text-blue-600 hover:text-blue-700 hover:underline font-medium">
             Läs mer om AC-ledsartros: symtom, diagnos och behandlingsalternativ
           </a>
         </p>
-      </div>
-
-      <div class="mt-6 bg-white rounded-xl p-6 border border-sky-200">
+        
         <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <img src="/images/operation/surgeon-24x24.svg" alt="" class="w-6 h-6" />
+          <img src="/images/operation/surgeon-24x24.svg" alt="" class="w-10 h-10" />
           Lateral klavikelresektion
         </h3>
         <p class="text-slate-600 mb-4">
           Denna operation innebär att man med <strong>artroskopisk teknik</strong> undersöker yttre 
           nyckelbensleden med en liten kamera och två små hål i huden över nyckelbensleden.
         </p>
-        <p class="text-slate-600">
-          Sedan <strong>slipar man ned 4-8 mm</strong> av yttre nyckelbensänden för att minska smärtorna.
+        <p class="text-slate-600 mb-4">
+          Sedan <strong>slipar man ned 4-6 mm</strong> av yttre nyckelbensänden för att minska smärtorna.
         </p>
-      </div>
-
-      <!-- Fördelar med artroskopi -->
-      <div class="mt-6 grid sm:grid-cols-3 gap-4">
-        <div class="bg-white rounded-lg p-4 text-center">
-          <div class="text-3xl mb-2">🔬</div>
-          <p class="text-sm text-slate-600">Titthålskirurgi med minimal invasivitet</p>
-        </div>
-        <div class="bg-white rounded-lg p-4 text-center">
-          <div class="text-3xl mb-2">⚡</div>
-          <p class="text-sm text-slate-600">Snabb operation (5-30 min)</p>
-        </div>
-        <div class="bg-white rounded-lg p-4 text-center">
-          <div class="text-3xl mb-2">🏠</div>
-          <p class="text-sm text-slate-600">Dagkirurgi - hem samma dag</p>
+        
+        <!-- Fördelar med artroskopi - som rader -->
+        <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-200">
+          <div class="flex items-center gap-2">
+            <img src="/images/operation/keyhole-24x24.svg" alt="Titthålskirurgi" class="w-10 h-10" />
+            <span class="text-slate-600">Titthålskirurgi med minimal invasivitet</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <img src="/images/operation/home-24x24.svg" alt="Dagkirurgi" class="w-10 h-10" />
+            <span class="text-slate-600">Dagkirurgi - hem samma dag</span>
+          </div>
         </div>
       </div>
     </div>
@@ -121,21 +116,17 @@ const faq = [
   
   <OpOperationsdagen 
     vardprocessTid="2-4 timmar"
-    operationsTid="5-30 minuter"
+    operationsTid="5-15 minuter"
     bedovningstyp="kombinerad"
   />
   
   <OpBandage 
-    stygnBorttagning="7-10 dagar"
+    stygnBorttagning="7-14 dagar"
   />
+  
+  <OpDuscha />
   
   <OpSmarta />
-  
-  <OpSjukskrivning 
-    heltid="1 vecka"
-    deltid="1-2 veckor"
-    kommentar="Sjukskrivningstiden varierar beroende på ditt arbete. Kontorsarbete kan ofta påbörjas tidigare."
-  />
   
   <OpBilkorning 
     timmarEfterNarkos={24}
@@ -146,6 +137,70 @@ const faq = [
     startEfter="1 vecka"
     langd="3-4 månader"
   />
+  
+  <!-- Sjukskrivningstid (anpassad sektion) -->
+  <section id="sjukskrivning" class="mb-8 scroll-mt-32">
+    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
+      <!-- Rubrik -->
+      <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+        <img src="/images/operation/forsakringskassan-24-24.svg" alt="" class="w-10 h-10" />
+        <h2 class="text-lg font-bold text-[#024264]">Sjukskrivningstid efter operation</h2>
+      </div>
+
+      <p class="text-slate-600 mb-4">
+        Vid artroskopisk distal klavikelresektion (DCR) med <strong>direkt operationsteknik</strong> är återhämtningen ofta betydligt snabbare än vad litteraturen anger för indirekta metoder.
+      </p>
+
+      <!-- Direkt operationsteknik förklaring -->
+      <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+        <h3 class="font-bold text-purple-800 mb-1 text-sm uppercase tracking-wide">Vad är direkt operationsteknik?</h3>
+        <p class="text-sm text-slate-700 leading-relaxed">
+          Vid den direkta (superiora) operationstekniken går man in med artroskopet antingen framifrån eller bakifrån i AC-leden, och använder burren från motsatt håll. Operationen sker helt inuti nyckelbensleden, vilket ger ett extremt litet operationsområde och minimalt trauma mot omgivande strukturer.
+        </p>
+      </div>
+
+      <!-- Återgångstider -->
+      <div class="space-y-2 mb-4">
+        <div class="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg p-4">
+          <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-slate-800">Kontorsarbete / Lätt arbete</h4>
+            <p class="text-slate-600 text-sm">Ofta <strong>ingen sjukskrivning</strong> – återgång inom dagar</p>
+          </div>
+          <div class="text-green-700 font-bold whitespace-nowrap">0–1 v</div>
+        </div>
+
+        <div class="flex items-center gap-3 bg-sky-50 border border-sky-200 rounded-lg p-4">
+          <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-slate-800">Måttligt fysiskt arbete</h4>
+            <p class="text-slate-600 text-sm">Lättare manuellt arbete utan tung lyft</p>
+          </div>
+          <div class="text-sky-700 font-bold whitespace-nowrap">2–4 v</div>
+        </div>
+
+        <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-slate-800">Tungt fysiskt arbete</h4>
+            <p class="text-slate-600 text-sm">Tung lyft, overhead-aktiviteter. Egna företagare återgår ofta tidigare</p>
+          </div>
+          <div class="text-amber-700 font-bold whitespace-nowrap">4–8 v</div>
+        </div>
+      </div>
+
+      <!-- Jämförelse med litteraturen -->
+      <div class="bg-slate-50 border-l-4 border-slate-400 px-3 py-2 text-sm text-slate-600">
+        <strong>📊 Jämfört med generella rekommendationer:</strong> Dessa tider är kortare än för kombinerade ingrepp (t.ex. DCR med subakromiell dekompression), där återgång till tungt arbete kan ta 6–12 veckor.
+      </div>
+    </div>
+  </section>
   
   <OpAterbesok 
     typ="standard"
@@ -162,7 +217,7 @@ const faq = [
         Komplikationer är ovanliga.
       </p>
       <div class="bg-white rounded-xl p-4">
-        <p class="text-slate-600 text-sm">
+        <p class="text-slate-600">
           <strong>Normalt ska man räkna med att det tar 3-4 månader innan man ser resultatet av operationen.</strong> 
           Ibland kan det gå snabbare, andra gånger tar det längre tid. Det är svårt att förutspå hur snabbt du 
           blir nöjd med resultatet.

@@ -55,3 +55,4 @@ Det du beskriver låter som **scapula winging** med snapping scapula-syndrom.
 
 
 
+

@@ -2,82 +2,141 @@
 /**
  * OpBandage - Bandageinformation efter operation
  */
+import bandageStygn from '../../assets/images/operation/bandage-stygn.webp';
+import bandageInre from '../../assets/images/operation/bandage-inre.webp';
+import bandageYttre from '../../assets/images/operation/bandage-yttre.webp';
+
 interface Props {
-  stygnBorttagning?: string;  // ex: "7-10 dagar", "1 vecka"
+  stygnBorttagning?: string;  // ex: "7-14 dagar", "1-2 veckor"
   visaStygn?: boolean;
   extraInfo?: string;
 }
 
 const { 
-  stygnBorttagning = "7-10 dagar",
+  stygnBorttagning = "7-14 dagar",
   visaStygn = true,
   extraInfo
 } = Astro.props;
+
+// Bilddata för bildspelet
+const bandageImages = [
+  { src: bandageStygn.src, alt: "Stygn efter operation", title: "Stygn" },
+  { src: bandageInre.src, alt: "Inre bandage", title: "Inre bandage" },
+  { src: bandageYttre.src, alt: "Yttre bandage", title: "Yttre bandage" }
+];
 ---
 
-<section id="eftervard" class="mb-12 scroll-mt-32">
-  <div class="flex items-center gap-4 mb-6">
-    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-      <!-- TODO: IKON SAKNAS - Bandage/förband. Använder plaster som placeholder -->
-      <img src="/images/operation/plaster-24x24.svg" alt="" class="w-8 h-8" />
+<section id="eftervard" class="mb-8 scroll-mt-32">
+  <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
+    <!-- Rubrik med ikon -->
+    <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+      <img src="/images/operation/plaster-24x24.svg" alt="" class="w-10 h-10" />
+      <h2 class="text-lg font-bold text-[#024264]">Bandage</h2>
     </div>
-    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Bandage</h2>
-  </div>
 
-  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-    
-    <div class="p-6">
-      <p class="text-slate-600 mb-6">
-        De flesta patienter avlägsnar bandaget när de tar stygnen efter {stygnBorttagning}. 
-        Vid behov kan du byta bandaget hemma eller på vårdcentralen.
-      </p>
-
-      <!-- Bandagetyper -->
-      <div class="grid md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-sky-50 rounded-xl p-5 border border-sky-100">
-          <div class="w-12 h-12 rounded-full bg-sky-200 flex items-center justify-center mb-3">
-            <span class="text-2xl">🩹</span>
-          </div>
-          <h3 class="font-bold text-slate-800 mb-2">Yttre bandage</h3>
-          <p class="text-sm text-slate-600">
-            Fungerar som en blöja och absorberar den blodtillblandade artroskopivätskan som sipprar ut ur såret.
-          </p>
-        </div>
-        
-        <div class="bg-emerald-50 rounded-xl p-5 border border-emerald-100">
-          <div class="w-12 h-12 rounded-full bg-emerald-200 flex items-center justify-center mb-3">
-            <span class="text-2xl">🏥</span>
-          </div>
-          <h3 class="font-bold text-slate-800 mb-2">Inre bandage</h3>
-          <p class="text-sm text-slate-600">
-            Håller såret helt rent de första 2 dygnen efter operationen.
-          </p>
-        </div>
-        
-        {visaStygn && (
-          <div class="bg-amber-50 rounded-xl p-5 border border-amber-100">
-            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-200 flex items-center justify-center mb-3">
-              <img src="/images/operation/sutur-24x24.svg" alt="" class="w-8 h-8" />
+    <!-- Bandagetyper -->
+    <div class="grid md:grid-cols-3 gap-3 mb-3">
+      <!-- Stygn -->
+      {visaStygn && (
+        <div class="bg-amber-50 rounded-lg p-3 border border-amber-100">
+          <div class="flex gap-2 items-start">
+            <button 
+              type="button"
+              id="bandage-stygn-thumbnail"
+              class="cursor-pointer group relative flex-shrink-0"
+              aria-label="Visa bild i full storlek"
+            >
+              <img 
+                src={bandageStygn.src} 
+                alt="Stygn efter operation" 
+                class="w-10 h-10 object-cover rounded border border-amber-300 group-hover:border-amber-500 transition-colors"
+              />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded flex items-center justify-center transition-colors">
+                <svg class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                </svg>
+              </div>
+            </button>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-slate-800 text-sm">Stygn</h3>
+              <p class="text-sm text-slate-500">Sydda hål i huden</p>
             </div>
-            <h3 class="font-bold text-slate-800 mb-2">Stygn</h3>
-            <p class="text-sm text-slate-600">
-              Hålen i huden blir sydda. Stygnen tas bort efter {stygnBorttagning}.
-            </p>
           </div>
-        )}
+        </div>
+      )}
+      
+      <!-- Inre bandage -->
+      <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-100">
+        <div class="flex gap-2 items-start">
+          <button 
+            type="button"
+            id="bandage-inre-thumbnail"
+            class="cursor-pointer group relative flex-shrink-0"
+            aria-label="Visa bild i full storlek"
+          >
+            <img 
+              src={bandageInre.src} 
+              alt="Inre bandage" 
+              class="w-10 h-10 object-cover rounded border border-emerald-300 group-hover:border-emerald-500 transition-colors"
+            />
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded flex items-center justify-center transition-colors">
+              <svg class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+              </svg>
+            </div>
+          </button>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-slate-800 text-sm">Inre bandage</h3>
+            <p class="text-sm text-slate-500">Håller rent 2 dygn</p>
+          </div>
+        </div>
       </div>
-
-      <!-- Tips -->
-      <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
-        <h4 class="font-medium text-slate-800 mb-2">💡 Praktiska tips</h4>
-        <ul class="text-sm text-slate-600 space-y-1">
-          <li>• Du kan låta det yttre bandaget sitta orört i några dagar</li>
-          <li>• Är det yttre bandaget genomfuktigt och blodigt bör du byta detta tidigare</li>
-          <li>• Ibland rinner lite blodtillblandad artroskopivätska ur såren – det är normalt</li>
-        </ul>
+      
+      <!-- Yttre bandage -->
+      <div class="bg-sky-50 rounded-lg p-3 border border-sky-100">
+        <div class="flex gap-2 items-start">
+          <button 
+            type="button"
+            id="bandage-yttre-thumbnail"
+            class="cursor-pointer group relative flex-shrink-0"
+            aria-label="Visa bild i full storlek"
+          >
+            <img 
+              src={bandageYttre.src} 
+              alt="Yttre bandage" 
+              class="w-10 h-10 object-cover rounded border border-sky-300 group-hover:border-sky-500 transition-colors"
+            />
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded flex items-center justify-center transition-colors">
+              <svg class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+              </svg>
+            </div>
+          </button>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-slate-800 text-sm">Yttre bandage</h3>
+            <p class="text-sm text-slate-500">Absorberar vätska</p>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Skötsel av bandage -->
+    <div class="mt-3 pt-3 border-t border-gray-100 space-y-2 text-slate-600">
+      <p>
+        <strong>När ska man byta?</strong> Om det blir väldigt blött eller slaskigt ska du byta det yttre bandaget. 
+        Det är bättre att byta än att ha en blöt massa där bakterier kan ansamlas.
+      </p>
+      <p>
+        <strong>Det inre bandaget</strong> låter du sitta kvar om du behöver byta tidigt. 
+        Det yttre bandaget kan du ersätta med vilket absorberande förband som helst från apoteket.
+      </p>
+      <p>
+        <strong>Efter ca en vecka</strong> kan du helt ta av bandaget, eller vänta tills stygnen tas bort.
+      </p>
+      <p class="text-sm text-slate-500 italic">
+        💡 Det finns inga strikta regler – använd sunt förnuft. Lite vätska de första dagarna är helt normalt.
+      </p>
+    </div>
   </div>
 
   {extraInfo && (
@@ -85,5 +144,162 @@ const {
       {extraInfo}
     </div>
   )}
+
+  <!-- Suturer - separat block -->
+  <div class="mt-6 bg-white rounded-xl shadow-md border border-gray-100 p-4">
+    <!-- Rubrik med ikon -->
+    <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+      <img src="/images/operation/sutur-24x24.svg" alt="" class="w-10 h-10" />
+      <h2 class="text-lg font-bold text-[#024264]">Suturer</h2>
+    </div>
+    
+    <p class="text-slate-700">
+      Stygn tas bort efter <strong>{stygnBorttagning}</strong> hos distriktssköterskan.
+    </p>
+  </div>
+
+  <!-- Lightbox Modal med bildspel -->
+  <div 
+    id="bandage-lightbox" 
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Bandagebilder - bildspel"
+  >
+    <button 
+      type="button"
+      id="bandage-lightbox-close"
+      class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-20"
+      aria-label="Stäng"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+    
+    <!-- Föregående knapp -->
+    <button 
+      type="button"
+      id="bandage-lightbox-prev"
+      class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20 bg-black/50 rounded-full p-2"
+      aria-label="Föregående bild"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    
+    <!-- Nästa knapp -->
+    <button 
+      type="button"
+      id="bandage-lightbox-next"
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20 bg-black/50 rounded-full p-2"
+      aria-label="Nästa bild"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+    
+    <div class="relative max-w-4xl w-full">
+      <img 
+        id="bandage-lightbox-image"
+        src=""
+        alt=""
+        class="w-full h-auto rounded-xl shadow-2xl"
+      />
+      <div class="text-white text-center mt-4">
+        <p id="bandage-lightbox-title" class="text-lg font-medium"></p>
+        <p id="bandage-lightbox-counter" class="text-sm text-gray-300 mt-1"></p>
+      </div>
+    </div>
+  </div>
 </section>
+
+<script define:vars={{ bandageStygnSrc: bandageStygn.src, bandageInreSrc: bandageInre.src, bandageYttreSrc: bandageYttre.src }}>
+  // Bildspel-lightbox för bandagebilder
+  document.addEventListener('DOMContentLoaded', () => {
+    const bandageImages = [
+      { src: bandageStygnSrc, alt: 'Stygn efter operation', title: 'Stygn' },
+      { src: bandageInreSrc, alt: 'Inre bandage', title: 'Inre bandage' },
+      { src: bandageYttreSrc, alt: 'Yttre bandage', title: 'Yttre bandage' }
+    ];
+    
+    let currentImageIndex = 0;
+    const lightbox = document.getElementById('bandage-lightbox');
+    const lightboxImage = document.getElementById('bandage-lightbox-image');
+    const lightboxTitle = document.getElementById('bandage-lightbox-title');
+    const lightboxCounter = document.getElementById('bandage-lightbox-counter');
+    const closeBtn = document.getElementById('bandage-lightbox-close');
+    const prevBtn = document.getElementById('bandage-lightbox-prev');
+    const nextBtn = document.getElementById('bandage-lightbox-next');
+    
+    // Funktion för att visa bild i lightbox
+    function showImage(index) {
+      currentImageIndex = index;
+      const image = bandageImages[index];
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt;
+      lightboxTitle.textContent = image.title;
+      lightboxCounter.textContent = `${index + 1} av ${bandageImages.length}`;
+    }
+    
+    // Funktion för att öppna lightbox
+    function openLightbox(index) {
+      showImage(index);
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Funktion för att stänga lightbox
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+    
+    // Föregående bild
+    function showPrev() {
+      const newIndex = currentImageIndex === 0 ? bandageImages.length - 1 : currentImageIndex - 1;
+      showImage(newIndex);
+    }
+    
+    // Nästa bild
+    function showNext() {
+      const newIndex = currentImageIndex === bandageImages.length - 1 ? 0 : currentImageIndex + 1;
+      showImage(newIndex);
+    }
+    
+    // Event listeners för thumbnails
+    document.getElementById('bandage-stygn-thumbnail')?.addEventListener('click', () => openLightbox(0));
+    document.getElementById('bandage-inre-thumbnail')?.addEventListener('click', () => openLightbox(1));
+    document.getElementById('bandage-yttre-thumbnail')?.addEventListener('click', () => openLightbox(2));
+    
+    // Event listeners för lightbox
+    closeBtn?.addEventListener('click', closeLightbox);
+    prevBtn?.addEventListener('click', showPrev);
+    nextBtn?.addEventListener('click', showNext);
+    
+    // Stäng vid klick utanför bilden
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+    
+    // Tangentbordsnavigation
+    document.addEventListener('keydown', (e) => {
+      if (lightbox && !lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          showPrev();
+        } else if (e.key === 'ArrowRight') {
+          showNext();
+        }
+      }
+    });
+  });
+</script>
 

@@ -45,3 +45,4 @@ Smärta och svullnad ner till handen vid frozen shoulder är **inte typiskt** oc
 
 
 
+

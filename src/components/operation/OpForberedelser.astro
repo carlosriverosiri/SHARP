@@ -3,6 +3,9 @@
  * OpForberedelser - Förberedelser inför operation
  * Gemensam komponent för alla operationer
  */
+import descutanImage from '../../assets/images/operation/descutan-tvattsvamp.jpg';
+import hibiwashImage from '../../assets/images/operation/hibiwash.webp';
+
 interface Props {
   fastaTimmar?: number;
   visaDescutan?: boolean;
@@ -18,30 +21,25 @@ const {
 } = Astro.props;
 ---
 
-<section id="forberedelser" class="mb-12 scroll-mt-32">
-  <div class="flex items-center gap-4 mb-6">
-    <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-      <img src="/images/operation/fasta-6-timmar-24x24.svg" alt="" class="w-8 h-8" />
+<section id="forberedelser" class="mb-8 scroll-mt-32">
+  <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+    <!-- Rubrik med ikon -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+      <h2 class="text-lg font-bold text-[#024264]">Förberedelser</h2>
     </div>
-    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Förberedelser</h2>
-  </div>
-
-  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
     
     <!-- Fasta -->
-    <div class="p-6 border-b border-gray-100">
-      <div class="flex gap-4">
-        <div class="flex-shrink-0">
-          <img src="/images/operation/ingen-mat-24x24.svg" alt="" class="w-10 h-10" />
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-800 text-lg mb-2">Fasta</h3>
-          <p class="text-slate-600 mb-3">
+    <div class="px-4 py-3 border-b border-gray-100">
+      <div class="flex gap-3 items-start">
+        <img src="/images/operation/ingen-mat.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-slate-800 text-base mb-1">Fasta</h3>
+          <p class="text-slate-600 mb-2">
             Du ska <strong>inte äta eller dricka något</strong> efter 24.00 natten mot operationsdagen. 
             Opereras du på eftermiddagen gäller <strong>{fastaTimmar} timmars fasta</strong> innan operationen.
           </p>
-          <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
-            <strong>⚠️ Viktigt:</strong> Om du har ätit eller druckit mindre än {fastaTimmar} timmar innan operation blir din operation struken.
+          <div class="bg-red-600 text-white rounded px-3 py-2 text-sm font-medium">
+            ⚠️ <strong>Viktigt:</strong> Om du har ätit eller druckit mindre än {fastaTimmar} timmar innan operation blir din operation struken.
           </div>
         </div>
       </div>
@@ -49,19 +47,17 @@ const {
 
     <!-- Rökstopp -->
     {visaRokstopp && (
-      <div class="p-6 border-b border-gray-100">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <img src="/images/operation/ingen_rokning-24x24.svg" alt="" class="w-10 h-10" />
-          </div>
-          <div>
-            <h3 class="font-bold text-slate-800 text-lg mb-2">Rökning och snus</h3>
-            <p class="text-slate-600 mb-3">
+      <div class="px-4 py-3 border-b border-gray-100">
+        <div class="flex gap-3 items-start">
+          <img src="/images/operation/ingen_rokning.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-slate-800 text-base mb-1">Rökning och snus</h3>
+            <p class="text-slate-600 mb-2">
               Du ska <strong>inte röka eller snusa</strong> efter 24.00 natten mot operationsdagen. 
               Opereras du på eftermiddagen gäller <strong>{fastaTimmar} timmars absolut rök-/snusstopp</strong> innan operationen.
             </p>
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
-              <strong>⚠️ Obs:</strong> Om du har rökt eller snusat mindre än {fastaTimmar} timmar innan operation kan din operation bli struken.
+            <div class="bg-amber-500 text-white rounded px-3 py-2 text-sm font-medium">
+              ⚠️ <strong>Obs:</strong> Om du har rökt eller snusat mindre än {fastaTimmar} timmar innan operation kan din operation bli struken.
             </div>
           </div>
         </div>
@@ -69,24 +65,22 @@ const {
     )}
 
     <!-- Mediciner -->
-    <div class="p-6 border-b border-gray-100">
-      <div class="flex gap-4">
-        <div class="flex-shrink-0">
-          <img src="/images/operation/tablett-24x24.svg" alt="" class="w-10 h-10" />
-        </div>
-        <div>
-          <h3 class="font-bold text-slate-800 text-lg mb-2">Mediciner</h3>
-          <ul class="text-slate-600 space-y-2">
-            <li class="flex items-start gap-2">
-              <span class="text-green-600 mt-1">✓</span>
+    <div class="px-4 py-3 border-b border-gray-100">
+      <div class="flex gap-3 items-start">
+        <img src="/images/operation/medicine.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-slate-800 text-base mb-1">Mediciner</h3>
+          <ul class="text-slate-600 space-y-1">
+            <li class="flex items-start gap-1.5">
+              <span class="text-green-600">✓</span>
               <span>Ta alltid din <strong>blodtrycksmedicin</strong> som vanligt. Ta med dig en eventuell medicinlista.</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-amber-600 mt-1">!</span>
+            <li class="flex items-start gap-1.5">
+              <span class="text-amber-600">!</span>
               <span>Är du <strong>diabetiker</strong> ska du inte ta ditt insulin eller tabletter på operationsdagens morgon. Ta med ditt insulin/tabletter och din egen blodsockermätare.</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="text-red-600 mt-1">⚠</span>
+            <li class="flex items-start gap-1.5">
+              <span class="text-red-600">⚠</span>
               <span>Äter du någon <strong>starkare blodförtunnande medicin</strong> så måste du diskutera med en läkare om denna behövs sättas ut innan operation.</span>
             </li>
           </ul>
@@ -94,32 +88,143 @@ const {
       </div>
     </div>
 
-    <!-- Descutan -->
+    <!-- Descutan / Hibiwash -->
     {visaDescutan && (
-      <div class="p-6 bg-sky-50">
-        <div class="flex gap-4">
-          <div class="flex-shrink-0">
-            <!-- TODO: IKON SAKNAS - Descutan/tvättsvamp -->
-            <div class="w-10 h-10 rounded-full bg-sky-200 flex items-center justify-center text-sky-700 font-bold text-lg">
-              🧴
+      <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+        <!-- Descutan -->
+        <div class="px-4 py-3 bg-sky-50/50">
+          <div class="flex gap-3 items-start">
+            <button 
+              type="button"
+              id="descutan-thumbnail"
+              class="cursor-pointer group relative flex-shrink-0"
+              aria-label="Visa bild i full storlek"
+            >
+              <img 
+                src={descutanImage.src} 
+                alt="Descutan tvättsvamp" 
+                class="w-12 h-12 rounded object-cover border border-sky-200 group-hover:border-sky-400 transition-colors"
+              />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                </svg>
+              </div>
+            </button>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-slate-800 mb-1">Descutan® tvättsvamp</h3>
+              <p class="text-slate-600 text-sm mb-2">
+                Duscha <strong>kvällen före</strong> samt på <strong>operationsdagens morgon</strong> med bakteriedödande tvål.
+              </p>
+              <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Descutan+tv%C3%A4ttsvamp%22&gl=se" 
+                 target="_blank" 
+                 rel="noopener" 
+                 class="inline-flex items-center gap-1.5 text-sm bg-sky-600 text-white px-3 py-1.5 rounded-full hover:bg-sky-700 transition-colors">
+                <span>Hitta & jämför priser</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
             </div>
           </div>
-          <div>
-            <h3 class="font-bold text-slate-800 text-lg mb-2">Descutan® tvättsvamp</h3>
-            <p class="text-slate-600 mb-3">
-              Duscha <strong>kvällen före</strong> samt på <strong>operationsdagens morgon</strong>, 
-              använd <strong>Descutan®</strong> som bakteriedödande tvål.
-            </p>
-            <a href="https://www.apoteket.se/produkt/descutan-tvattsvamp-4-procent-1-st-313867/" 
-               target="_blank" 
-               rel="noopener" 
-               class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-4 py-2 rounded-full hover:bg-sky-700 transition-colors">
-              <span>Köps på apoteket</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-              </svg>
-            </a>
+        </div>
+
+        <!-- Hibiwash -->
+        <div class="px-4 py-3 bg-green-50/50">
+          <div class="flex gap-3 items-start">
+            <button 
+              type="button"
+              id="hibiwash-thumbnail"
+              class="cursor-pointer group relative flex-shrink-0"
+              aria-label="Visa bild i full storlek"
+            >
+              <img 
+                src={hibiwashImage.src} 
+                alt="Hibiwash" 
+                class="w-12 h-12 rounded object-cover border border-green-200 group-hover:border-green-400 transition-colors"
+              />
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                </svg>
+              </div>
+            </button>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-slate-800 mb-1">Hibiwash – billigare alternativ</h3>
+              <p class="text-slate-600 text-sm mb-2">
+                <strong>Hibiwash</strong> fungerar lika bra som bakteriedödande tvål inför operation.
+              </p>
+              <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Hibiwash%22&gl=se" 
+                 target="_blank" 
+                 rel="noopener" 
+                 class="inline-flex items-center gap-1.5 text-sm bg-green-600 text-white px-3 py-1.5 rounded-full hover:bg-green-700 transition-colors">
+                <span>Hitta & jämför priser</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+            </div>
           </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Lightbox Modal för Descutan-bild -->
+    {visaDescutan && (
+      <div 
+        id="descutan-lightbox" 
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Descutan tvättsvamp - förstora bild"
+      >
+        <button 
+          type="button"
+          id="descutan-lightbox-close"
+          class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          aria-label="Stäng"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <div class="relative max-w-lg w-full">
+          <img 
+            src={descutanImage.src} 
+            alt="Descutan tvättsvamp - full storlek" 
+            class="w-full h-auto rounded-xl shadow-2xl"
+          />
+          <p class="text-white text-center mt-4 text-sm">Descutan® tvättsvamp – köps på apoteket</p>
+        </div>
+      </div>
+    )}
+
+    <!-- Lightbox Modal för Hibiwash-bild -->
+    {visaDescutan && (
+      <div 
+        id="hibiwash-lightbox" 
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Hibiwash - förstora bild"
+      >
+        <button 
+          type="button"
+          id="hibiwash-lightbox-close"
+          class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          aria-label="Stäng"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <div class="relative max-w-lg w-full">
+          <img 
+            src={hibiwashImage.src} 
+            alt="Hibiwash - full storlek" 
+            class="w-full h-auto rounded-xl shadow-2xl"
+          />
+          <p class="text-white text-center mt-4 text-sm">Hibiwash – billigare alternativ till Descutan</p>
         </div>
       </div>
     )}
@@ -132,4 +237,67 @@ const {
     </div>
   )}
 </section>
+
+<script>
+  // Lightbox-funktionalitet för både Descutan och Hibiwash
+  document.addEventListener('DOMContentLoaded', () => {
+    // Funktion för att hantera en lightbox
+    function setupLightbox(thumbnailId, lightboxId, closeBtnId) {
+      const thumbnail = document.getElementById(thumbnailId);
+      const lightbox = document.getElementById(lightboxId);
+      const closeBtn = document.getElementById(closeBtnId);
+
+      if (thumbnail && lightbox && closeBtn) {
+        // Öppna lightbox
+        thumbnail.addEventListener('click', () => {
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+        });
+
+        // Stäng lightbox via knapp
+        closeBtn.addEventListener('click', () => {
+          lightbox.classList.add('hidden');
+          lightbox.classList.remove('flex');
+          document.body.style.overflow = '';
+        });
+
+        // Stäng lightbox vid klick utanför bilden
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            document.body.style.overflow = '';
+          }
+        });
+      }
+    }
+
+    // Sätt upp lightbox för Descutan
+    setupLightbox('descutan-thumbnail', 'descutan-lightbox', 'descutan-lightbox-close');
+    
+    // Sätt upp lightbox för Hibiwash
+    setupLightbox('hibiwash-thumbnail', 'hibiwash-lightbox', 'hibiwash-lightbox-close');
+
+    // Stäng alla lightboxar med Escape-tangent
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const descutanLightbox = document.getElementById('descutan-lightbox');
+        const hibiwashLightbox = document.getElementById('hibiwash-lightbox');
+        
+        if (descutanLightbox && !descutanLightbox.classList.contains('hidden')) {
+          descutanLightbox.classList.add('hidden');
+          descutanLightbox.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+        
+        if (hibiwashLightbox && !hibiwashLightbox.classList.contains('hidden')) {
+          hibiwashLightbox.classList.add('hidden');
+          hibiwashLightbox.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+  });
+</script>
 

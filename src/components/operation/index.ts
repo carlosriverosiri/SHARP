@@ -13,8 +13,8 @@
  * - dusch-24x24.svg / duscha-24x24.svg
  * - fasta-6-timmar-24x24.svg
  * - forsakringskassan-24-24.svg
- * - ingen_rokning-24x24.svg
- * - ingen-mat-24x24.svg
+ * - ingen_rokning.svg
+ * - ingen-mat.svg
  * - injektion-24x24.svg
  * - plaster-24x24.svg
  * - sjukgymnastik-24x24.svg
@@ -26,6 +26,7 @@
 export { default as OpForberedelser } from './OpForberedelser.astro';
 export { default as OpOperationsdagen } from './OpOperationsdagen.astro';
 export { default as OpBandage } from './OpBandage.astro';
+export { default as OpDuscha } from './OpDuscha.astro';
 export { default as OpSmarta } from './OpSmarta.astro';
 export { default as OpSjukskrivning } from './OpSjukskrivning.astro';
 export { default as OpBilkorning } from './OpBilkorning.astro';

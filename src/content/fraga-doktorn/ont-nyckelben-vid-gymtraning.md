@@ -62,3 +62,4 @@ Då bör du uppsöka läkare för undersökning och eventuell röntgen.
 
 
 
+
