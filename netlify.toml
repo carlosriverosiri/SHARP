@@ -85,7 +85,7 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Enable Netlify's asset optimization
+# Enable Netlify's asset optimization (except images - handled by Astro)
 [build.processing]
   skip_processing = false
 [build.processing.css]
@@ -96,27 +96,13 @@
   minify = true
 [build.processing.html]
   pretty_urls = true
+
+# DISABLE Netlify's image optimization - Astro handles this better!
+# Netlify's on-the-fly Image CDN converts WebP to JPEG, which is worse.
+# Astro's <Image> component generates optimized WebP at build time.
 [build.processing.images]
-  compress = true
-  # Optimize images aggressively
-  quality = 85
-  # Preserve WebP format - don't convert to JPG
-  # Note: Netlify will optimize WebP without converting to JPG
+  compress = false
 
-# Optimize compression (Netlify handles this automatically, but we can hint)
-# Note: Netlify automatically uses Brotli when available
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Disable Netlify Image CDN completely
+[images]
+  remote_images = []
