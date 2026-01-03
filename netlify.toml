@@ -72,6 +72,13 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Cache WebP-bilder - 1 år (preserve WebP format)
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "image/webp"
+
 # HTML pages - korttidscache med revalidering
 [[headers]]
   for = "/*.html"
@@ -93,9 +100,16 @@
   compress = true
   # Optimize images aggressively
   quality = 85
+  # Preserve WebP format - don't convert to JPG
+  # Note: Netlify will optimize WebP without converting to JPG
 
 # Optimize compression (Netlify handles this automatically, but we can hint)
 # Note: Netlify automatically uses Brotli when available
+
+
+
+
+
 
 
 
