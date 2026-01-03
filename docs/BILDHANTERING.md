@@ -132,25 +132,37 @@ src/assets/images/         ← Bilder som behöver optimering (WebP, PNG, JPG)
 
 ### Affinity Photo (för fotografier och WebP)
 
+#### ⚠️ KRITISKT: Beskär till rätt storlek INNAN export!
+
+**Varför?** Astro genererar optimerade versioner baserat på **originalbildens dimensioner**, inte bara filstorleken. Om originalbilden är 2000x2000px, kommer Astro att generera stora versioner (t.ex. 142 KB) även om filstorleken är liten (32 KB).
+
+**Lösning:** Beskär/ändra storlek på bilden till max 600-800px bredd INNAN export.
+
 #### Steg 1: Förbered bilden
 1. Öppna bilden i Affinity Photo
-2. **Beskär** till rätt dimensioner (se tabellen ovan)
-3. **Justera** ljusstyrka/kontrast om nödvändigt
+2. **Ändra storlek på dokumentet:**
+   - Gå till **Document → Resize Document** (eller Transform)
+   - Sätt bredd till **max 600-800px** (behåll proportionerna)
+   - För produktbilder: 600-800px bredd
+   - För thumbnails: 200-400px bredd
+3. **Beskär** om nödvändigt (ta bort onödiga delar)
+4. **Justera** ljusstyrka/kontrast om nödvändigt
 
 #### Steg 2: Exportera som WebP
 1. Gå till **File → Export**
 2. Välj **WebP** som format
 3. **Export Settings:**
-   - **Quality:** 85% (standard, använd 90% för medicinska bilder)
+   - **Quality:** 80-85% (standard, använd 90% för medicinska bilder)
    - **Lossless:** Av (om du vill ha mindre filstorlek)
    - **Preset:** Custom
 4. Klicka **Export**
 5. **Spara i:** `src/assets/images/[mapp]/`
 
-#### Steg 3: Kontrollera filstorlek
+#### Steg 3: Kontrollera filstorlek OCH dimensioner
 - Öppna filen i Windows Explorer
 - Kontrollera att storleken är inom rekommenderade gränser
-- Om för stor: Minska kvaliteten till 80% eller minska dimensionerna
+- **Kontrollera också dimensionerna:** Högerklicka → Properties → Details → Se bredd/höjd
+- Om för stor: Minska kvaliteten till 80% eller minska dimensionerna ytterligare
 
 ### Affinity Designer (för SVG-ikoner)
 
@@ -180,12 +192,15 @@ src/assets/images/         ← Bilder som behöver optimering (WebP, PNG, JPG)
 #### Snabbguide:
 ```
 1. Öppna bild → Affinity Photo
-2. Beskär till rätt dimensioner
-3. File → Export → WebP
-4. Quality: 85%
-5. Spara i src/assets/images/[mapp]/
-6. Kontrollera filstorlek
+2. ⚠️ VIKTIGT: Document → Resize Document → Sätt bredd till max 600-800px
+3. Beskär till rätt dimensioner (om nödvändigt)
+4. File → Export → WebP
+5. Quality: 80-85%
+6. Spara i src/assets/images/[mapp]/
+7. Kontrollera filstorlek OCH dimensioner
 ```
+
+**⚠️ Kom ihåg:** Astro genererar versioner baserat på originalbildens dimensioner. En 2000x2000px bild blir stor även om filstorleken är liten!
 
 ### Affinity Designer → SVG (för ikoner)
 
@@ -407,16 +422,18 @@ import heroImage from '../../assets/images/hero.webp';
 
 1. **Förbered i Affinity Photo:**
    - Öppna originalbilden
-   - Beskär till 800x800px (eller max 1200px bredd)
+   - **⚠️ VIKTIGT:** Document → Resize Document → Sätt bredd till max 600-800px
+   - Beskär om nödvändigt
    - Justera ljusstyrka/kontrast om nödvändigt
 
 2. **Exportera:**
    - File → Export → WebP
-   - Quality: 85%
+   - Quality: 80-85%
    - Spara som `descutan-tvattsvamp.webp`
 
 3. **Kontrollera:**
    - Filstorlek: < 100 KB? ✅
+   - **Dimensioner:** Högerklicka → Properties → Details → Se bredd/höjd
    - Om större: Minska kvalitet till 80% eller dimensionerna
 
 4. **Lägg i rätt mapp:**
@@ -506,6 +523,9 @@ Kontrollera filstorleken i Windows Explorer. Om den är större än rekommendera
 ### Behöver jag optimera bilder som redan är på sidan?
 Ja, om de är större än rekommenderade gränser. Använd Squoosh.app eller liknande för att optimera.
 
+### Varför blir min bild stor trots att filstorleken är liten?
+Astro genererar optimerade versioner baserat på **originalbildens dimensioner**, inte bara filstorleken. Om originalbilden är 2000x2000px, kommer Astro att generera stora versioner även om filstorleken är liten. **Lösning:** Beskär/ändra storlek på bilden till max 600-800px bredd INNAN export.
+
 ---
 
 ## 📚 Ytterligare resurser
@@ -518,4 +538,3 @@ Ja, om de är större än rekommenderade gränser. Använd Squoosh.app eller lik
 ---
 
 *Senast uppdaterad: 3 januari 2026*
-
