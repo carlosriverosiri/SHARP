@@ -9,6 +9,22 @@
 
 ---
 
+## ⭐ Single Source of Truth
+
+**Alla kortlänkar definieras på ETT ställe:**
+
+```
+src/data/shortLinks.json
+```
+
+Denna fil används automatiskt av:
+- `astro.config.mjs` → Genererar redirects
+- `copy-links.astro` → Genererar UI
+
+**Du behöver aldrig redigera mer än EN fil för att lägga till nya länkar!**
+
+---
+
 ## Användning
 
 ### Steg-för-steg
@@ -51,6 +67,77 @@ Korta URLs använder följande prefix:
 
 ---
 
+## Lägga till nya kortlänkar
+
+### 🛠 Metod 1: Använd Link Generator (Rekommenderat)
+
+Det enklaste sättet är att använda **Link Generator-verktyget** direkt på sidan:
+
+1. **Öppna** `/copy-links`-sidan
+2. **Scrolla ner** till sektionen "🛠 Lägg till ny kortlänk"
+3. **Klicka** för att expandera formuläret
+4. **Fyll i:**
+   - **Kategori:** Välj Diagnoser, Operationer, Rehab eller Frågeformulär
+   - **Namn:** Beskrivande namn (t.ex. "AC-ledsartros")
+   - **Kortkod:** Endast suffix (t.ex. "ac" – prefix läggs till automatiskt)
+   - **Mål-URL:** Intern path (t.ex. `/sjukdomar/axel/...`) eller extern URL (t.ex. `https://...`)
+5. **Klicka "Generera JSON"**
+6. **Kopiera** JSON-blocket
+7. **Öppna** `src/data/shortLinks.json`
+8. **Klistra in** JSON-objektet i rätt kategori-array
+9. **Pusha** till GitHub
+
+**Fördelar:**
+- ✅ Prefix läggs till automatiskt
+- ✅ Extern-detektion sker automatiskt
+- ✅ Formaterad JSON med korrekt syntax
+- ✅ Inga syntaxfel
+
+### 📝 Metod 2: Manuell redigering
+
+Om du föredrar att redigera direkt i filen:
+
+Öppna `src/data/shortLinks.json` och lägg till en ny länk i rätt kategori:
+
+```json
+{
+  "Diagnoser": [
+    {
+      "name": "AC-ledsartros (yttre nyckelbensleden)",
+      "shortCode": "/d/ac",
+      "target": "/sjukdomar/axel/ac-ledsartros",
+      "isExternal": false
+    },
+    {
+      "name": "NY DIAGNOS",
+      "shortCode": "/d/nydiagnos",
+      "target": "/sjukdomar/axel/ny-diagnos-sida",
+      "isExternal": false
+    }
+  ]
+}
+```
+
+### Fält-förklaring
+
+| Fält | Beskrivning | Exempel |
+|------|-------------|---------|
+| `name` | Beskrivande namn (visas i UI) | `"Frusen skuldra"` |
+| `shortCode` | Kort URL-path (inkl. prefix) | `"/d/frusen"` |
+| `target` | Mål-URL (intern eller extern) | `"/sjukdomar/axel/..."` eller `"https://..."` |
+| `isExternal` | `true` om extern URL (börjar med `http`) | `false` / `true` |
+
+### Steg-för-steg (Manuell)
+
+1. **Öppna** `src/data/shortLinks.json`
+2. **Hitta rätt kategori** (Diagnoser, Operationer, Rehab, Frågeformulär)
+3. **Lägg till** nytt objekt med alla fält
+4. **Kontrollera** att `isExternal` är korrekt (`true` för externa URLs)
+5. **Pusha** till GitHub
+6. **Klart!** Redirect och UI uppdateras automatiskt
+
+---
+
 ## Frågeformulär (Externa URLs)
 
 Frågeformulär är speciella – de redirectar till **externa URLs** i journalsystemet.
@@ -64,22 +151,26 @@ Frågeformulär är speciella – de redirectar till **externa URLs** i journals
 
 ### Konfigurera frågeformulär
 
-I `astro.config.mjs` pekar frågeformulär till externa URLs:
+I `src/data/shortLinks.json`:
 
-```javascript
-redirects: {
-  // FRÅGEFORMULÄR - Externa URLs till journalsystemet
-  '/ff/axel': 'https://ditt-journalsystem.se/form/axel-formulär-id',
-  '/ff/armbage': 'https://ditt-journalsystem.se/form/armbage-formulär-id',
-  '/ff/kna': 'https://ditt-journalsystem.se/form/kna-formulär-id',
+```json
+{
+  "Frågeformulär": [
+    {
+      "name": "Frågeformulär axel (före besök)",
+      "shortCode": "/ff/axel",
+      "target": "https://journalsystem.se/form/axel-123",
+      "isExternal": true
+    }
+  ]
 }
 ```
 
 **För att ändra en formulär-URL:**
-1. Öppna `astro.config.mjs`
-2. Hitta raden för formuläret (t.ex. `/ff/axel`)
-3. Byt ut URL:en till den nya från journalsystemet
-4. Pusha och redeploya
+1. Öppna `src/data/shortLinks.json`
+2. Hitta formuläret i kategorin "Frågeformulär"
+3. Ändra `target` till den nya URL:en från journalsystemet
+4. Pusha till GitHub
 
 ---
 
@@ -87,136 +178,82 @@ redirects: {
 
 ### Diagnoser (`/d/`)
 
-| Kort URL | Diagnos | Full kopierad URL |
-|----------|---------|-------------------|
-| `/d/ac` | AC-ledsartros | `www.specialist.se/d/ac` |
-| `/d/imp` | Impingement | `www.specialist.se/d/imp` |
-| `/d/cuff` | Rotatorcuffruptur | `www.specialist.se/d/cuff` |
-| `/d/frusen` | Frusen skuldra | `www.specialist.se/d/frusen` |
-| `/d/kalk` | Kalkaxel | `www.specialist.se/d/kalk` |
-| `/d/instab` | Axelinstabilitet | `www.specialist.se/d/instab` |
-| `/d/slap` | SLAP-skada | `www.specialist.se/d/slap` |
-| `/d/biceps` | Bicepstendinit | `www.specialist.se/d/biceps` |
-| `/d/pts` | Parsonage-Turner syndrom | `www.specialist.se/d/pts` |
+| Kort URL | Diagnos |
+|----------|---------|
+| `/d/ac` | AC-ledsartros |
+| `/d/imp` | Impingement |
+| `/d/cuff` | Rotatorcuffruptur |
+| `/d/frusen` | Frusen skuldra |
+| `/d/kalk` | Kalkaxel |
+| `/d/instab` | Axelinstabilitet |
+| `/d/slap` | SLAP-skada |
+| `/d/biceps` | Bicepstendinit |
+| `/d/pts` | Parsonage-Turner syndrom |
 
 ### Operationer (`/o/`)
 
-| Kort URL | Operation | Full kopierad URL |
-|----------|-----------|-------------------|
-| `/o/ac` | AC-ledsresektion | `www.specialist.se/o/ac` |
-| `/o/sad` | Subakromiell dekompression | `www.specialist.se/o/sad` |
-| `/o/cuff` | Rotatorcuffrekonstruktion | `www.specialist.se/o/cuff` |
-| `/o/kalk` | Kalkborttagning | `www.specialist.se/o/kalk` |
-| `/o/stab` | Stabiliseringsoperation | `www.specialist.se/o/stab` |
-| `/o/biceps` | Bicepstenodes | `www.specialist.se/o/biceps` |
+| Kort URL | Operation |
+|----------|-----------|
+| `/o/ac` | AC-ledsresektion |
+| `/o/sad` | Subakromiell dekompression |
+| `/o/cuff` | Rotatorcuffrekonstruktion |
+| `/o/kalk` | Kalkborttagning |
+| `/o/stab` | Stabiliseringsoperation |
+| `/o/biceps` | Bicepstenodes |
 
 ### Rehab (`/r/`)
 
-| Kort URL | Rehab | Full kopierad URL |
-|----------|-------|-------------------|
-| `/r/ac` | Efter AC-ledsoperation | `www.specialist.se/r/ac` |
-| `/r/sad` | Efter subakromiell dekompression | `www.specialist.se/r/sad` |
-| `/r/cuff` | Efter rotatorcuffoperation | `www.specialist.se/r/cuff` |
-| `/r/frusen` | Vid frusen skuldra | `www.specialist.se/r/frusen` |
-| `/r/stab` | Efter stabiliseringsoperation | `www.specialist.se/r/stab` |
+| Kort URL | Rehab |
+|----------|-------|
+| `/r/ac` | Efter AC-ledsoperation |
+| `/r/sad` | Efter subakromiell dekompression |
+| `/r/cuff` | Efter rotatorcuffoperation |
+| `/r/frusen` | Vid frusen skuldra |
+| `/r/stab` | Efter stabiliseringsoperation |
 
 ### Frågeformulär (`/ff/`) - Externa
 
-| Kort URL | Formulär | Pekar till |
-|----------|----------|------------|
-| `/ff/axel` | Axel (före besök) | Journalsystemet |
-| `/ff/armbage` | Armbåge (före besök) | Journalsystemet |
-| `/ff/kna` | Knä (före besök) | Journalsystemet |
-
----
-
-## Lägga till nya kortlänkar
-
-### För diagnoser/operationer/rehab (interna sidor)
-
-#### Steg 1: Lägg till redirect i `astro.config.mjs`
-
-```javascript
-redirects: {
-  // DIAGNOSER
-  '/d/ac': '/sjukdomar/axel/ac-ledsartros',
-  '/d/nydiagnos': '/sjukdomar/axel/ny-diagnos-sida',  // <-- NY RAD
-}
-```
-
-#### Steg 2: Lägg till i länklistan
-
-Öppna `src/pages/copy-links.astro` och lägg till i `links`-arrayen:
-
-```javascript
-const links = [
-  {
-    category: "Diagnoser",
-    icon: "🩺",
-    items: [
-      { name: "AC-ledsartros", shortPath: "/d/ac" },
-      { name: "Ny diagnos", shortPath: "/d/nydiagnos" },  // <-- NY RAD
-    ]
-  },
-];
-```
-
-#### Steg 3: Redeploy
-
-Pusha ändringarna till GitHub.
-
----
-
-### För frågeformulär (externa URLs)
-
-#### Steg 1: Lägg till redirect till extern URL
-
-```javascript
-redirects: {
-  // FRÅGEFORMULÄR - Externa URLs
-  '/ff/axel': 'https://journalsystem.se/form/axel-123',
-  '/ff/nytt': 'https://journalsystem.se/form/nytt-formulär-456',  // <-- NY
-}
-```
-
-#### Steg 2: Lägg till i länklistan
-
-```javascript
-{
-  category: "Frågeformulär",
-  icon: "📋",
-  items: [
-    { name: "Frågeformulär axel", shortPath: "/ff/axel" },
-    { name: "Nytt formulär", shortPath: "/ff/nytt" },  // <-- NY RAD
-  ]
-}
-```
-
-#### Steg 3: Redeploy
+| Kort URL | Formulär |
+|----------|----------|
+| `/ff/axel` | Axel (före besök) |
+| `/ff/armbage` | Armbåge (före besök) |
+| `/ff/kna` | Knä (före besök) |
 
 ---
 
 ## Teknisk information
 
+### Arkitektur: Single Source of Truth
+
+```
+src/data/shortLinks.json    ← EN fil att redigera
+        ↓
+    ┌───┴───┐
+    ↓       ↓
+astro.config.mjs    copy-links.astro
+(genererar redirects)    (genererar UI)
+```
+
 ### Filer
 
 | Fil | Beskrivning |
 |-----|-------------|
-| `src/pages/copy-links.astro` | Själva verktygssidan |
-| `astro.config.mjs` | Redirect-konfiguration (alla kortlänkar) |
+| `src/data/shortLinks.json` | **Central datafil** - Alla kortlänkar definieras här |
+| `astro.config.mjs` | Importerar JSON och genererar redirects automatiskt |
+| `src/pages/copy-links.astro` | Importerar JSON och genererar UI automatiskt |
 | `docs/KOPIERA-LANKAR.md` | Denna dokumentation |
 
-### Hur redirects fungerar
+### Hur det fungerar
 
-**Interna sidor (diagnoser, operationer, rehab):**
-1. Patient besöker `www.specialist.se/d/ac`
-2. Astro redirectar till `/sjukdomar/axel/ac-ledsartros`
-3. Sidan på din hemsida visas
+**Vid build-tid:**
+1. `astro.config.mjs` läser `shortLinks.json`
+2. Genererar redirects-objektet dynamiskt
+3. Astro skapar redirect-regler för alla kortlänkar
 
-**Externa sidor (frågeformulär):**
-1. Patient besöker `www.specialist.se/ff/axel`
-2. Astro redirectar till `https://journalsystem.se/form/...`
-3. Journalsystemets sida visas
+**Vid runtime:**
+1. `copy-links.astro` importerar `shortLinks.json`
+2. Genererar UI med alla kategorier och länkar
+3. JavaScript hanterar kopiering och sökning
 
 ### Varför `www.` istället för `https://`?
 
@@ -225,8 +262,6 @@ redirects: {
 - **Besparing: 4 tecken per länk**
 
 Med 4000-5000 SMS/månad och potentiellt flera länkar per SMS blir detta betydande.
-
-> **Fungerar det?** Ja! Moderna webbläsare lägger automatiskt till `https://` när du skriver `www.`.
 
 ---
 
@@ -240,27 +275,34 @@ Med 4000-5000 SMS/månad och potentiellt flera länkar per SMS blir detta betyda
 
 ### Redirect fungerar inte
 
-1. Kontrollera att redirecten finns i `astro.config.mjs`
-2. Kontrollera att målsidan existerar (för interna) eller att URL:en är korrekt (för externa)
-3. Redeploy om du nyss lagt till redirecten
+1. Kontrollera att länken finns i `src/data/shortLinks.json`
+2. Kontrollera att `target` är korrekt (intern path eller extern URL)
+3. Redeploy om du nyss lagt till länken
+4. Kör `npm run build` lokalt för att testa
 
-### Frågeformulär går till fel sida
+### Länk visas inte i UI
 
-1. Öppna `astro.config.mjs`
-2. Hitta raden för formuläret (t.ex. `/ff/axel`)
-3. Kontrollera att URL:en är korrekt
-4. Om journalsystemet bytt URL – uppdatera och redeploya
+1. Kontrollera att objektet har alla obligatoriska fält (`name`, `shortCode`, `target`, `isExternal`)
+2. Kontrollera JSON-syntax (kommatecken, citattecken)
+3. Starta om dev-servern (`npm run dev`)
+
+### JSON-valideringsfel
+
+Använd en JSON-validator (t.ex. [jsonlint.com](https://jsonlint.com)) för att hitta syntaxfel.
 
 ---
 
 ## Tips
 
 - **Ha sidan öppen** i en egen flik under hela mottagningen
-- **Använd sökfunktionen** för att snabbt hitta rätt länk
+- **Använd sökfunktionen** för att snabbt hitta rätt länk (söker i både namn och shortcode)
+- **Använd Link Generator** för att skapa nya länkar utan syntaxfel
 - **Testa nya länkar** innan du skickar till patienter
 - **Uppdatera frågeformulär-URLs** om journalsystemet ändras
-- **Kortare = bättre** – varje tecken räknas i SMS!
+- **En fil = all underhåll** - redigera bara `shortLinks.json`
+- **Kortkod-regler:** Endast små bokstäver, siffror och bindestreck (t.ex. `ac-ledsartros`)
 
 ---
 
-*Senast uppdaterad: 3 januari 2026*
+*Senast uppdaterad: 3 januari 2026*  
+*Link Generator-verktyg tillagt: 3 januari 2026*

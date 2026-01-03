@@ -1,0 +1,180 @@
+{
+  "_comment": "=======================================================================",
+  "_description": "KORTLÄNKAR - Single Source of Truth",
+  "_usage": [
+    "Detta är den ENDA filen du behöver redigera för att lägga till nya kortlänkar.",
+    "Både astro.config.mjs (redirects) och copy-links.astro (UI) använder denna fil.",
+    "",
+    "STRUKTUR:",
+    "  name      = Beskrivande namn som visas i UI",
+    "  shortCode = Kort URL-path (t.ex. /d/ac)",
+    "  target    = Mål-URL (intern path eller extern https://...)",
+    "  isExternal = true om target är extern URL (journalsystem etc.)",
+    "",
+    "PREFIXER:",
+    "  /d/  = Diagnoser",
+    "  /o/  = Operationer",
+    "  /r/  = Rehab",
+    "  /ff/ = Frågeformulär (externa)",
+    "",
+    "LÄGG TILL NY LÄNK:",
+    "  1. Lägg till objekt i rätt kategori nedan",
+    "  2. Pusha till GitHub",
+    "  3. Klart! Redirect och UI uppdateras automatiskt"
+  ],
+  "_lastUpdated": "2026-01-03",
+  
+  "Diagnoser": [
+    {
+      "name": "AC-ledsartros (yttre nyckelbensleden)",
+      "shortCode": "/d/ac",
+      "target": "/sjukdomar/axel/ac-ledsartros",
+      "isExternal": false
+    },
+    {
+      "name": "Impingement / subakromiellt syndrom",
+      "shortCode": "/d/imp",
+      "target": "/sjukdomar/axel/impingement",
+      "isExternal": false
+    },
+    {
+      "name": "Rotatorcuffruptur",
+      "shortCode": "/d/cuff",
+      "target": "/sjukdomar/axel/rotatorcuffruptur",
+      "isExternal": false
+    },
+    {
+      "name": "Frusen skuldra (frozen shoulder)",
+      "shortCode": "/d/frusen",
+      "target": "/sjukdomar/axel/frusen-skuldra",
+      "isExternal": false
+    },
+    {
+      "name": "Kalkaxel",
+      "shortCode": "/d/kalk",
+      "target": "/sjukdomar/axel/kalkaxel",
+      "isExternal": false
+    },
+    {
+      "name": "Axelinstabilitet",
+      "shortCode": "/d/instab",
+      "target": "/sjukdomar/axel/axelinstabilitet",
+      "isExternal": false
+    },
+    {
+      "name": "SLAP-skada",
+      "shortCode": "/d/slap",
+      "target": "/sjukdomar/axel/slap-skada",
+      "isExternal": false
+    },
+    {
+      "name": "Bicepstendinit",
+      "shortCode": "/d/biceps",
+      "target": "/sjukdomar/axel/bicepstendinit",
+      "isExternal": false
+    },
+    {
+      "name": "Parsonage-Turner syndrom",
+      "shortCode": "/d/pts",
+      "target": "/sjukdomar/axel/parsonage-turner-syndrom",
+      "isExternal": false
+    }
+  ],
+
+  "Operationer": [
+    {
+      "name": "Operation av AC-ledsartros",
+      "shortCode": "/o/ac",
+      "target": "/operation/axel/lateral-klavikelresektion",
+      "isExternal": false
+    },
+    {
+      "name": "Subakromiell dekompression",
+      "shortCode": "/o/sad",
+      "target": "/operation/axel/subakromiell-dekompression",
+      "isExternal": false
+    },
+    {
+      "name": "Rotatorcuffrekonstruktion",
+      "shortCode": "/o/cuff",
+      "target": "/operation/axel/rotatorcuff-rekonstruktion",
+      "isExternal": false
+    },
+    {
+      "name": "Kalkborttagning (artroskopisk)",
+      "shortCode": "/o/kalk",
+      "target": "/operation/axel/kalkborttagning",
+      "isExternal": false
+    },
+    {
+      "name": "Stabiliseringsoperation axel",
+      "shortCode": "/o/stab",
+      "target": "/operation/axel/stabilisering",
+      "isExternal": false
+    },
+    {
+      "name": "Bicepstenodes",
+      "shortCode": "/o/biceps",
+      "target": "/operation/axel/bicepstenodes",
+      "isExternal": false
+    }
+  ],
+
+  "Rehab": [
+    {
+      "name": "Rehab efter AC-ledsoperation",
+      "shortCode": "/r/ac",
+      "target": "/rehab/axel/ac-ledsartros",
+      "isExternal": false
+    },
+    {
+      "name": "Rehab efter subakromiell dekompression",
+      "shortCode": "/r/sad",
+      "target": "/rehab/axel/subakromiell-dekompression",
+      "isExternal": false
+    },
+    {
+      "name": "Rehab efter rotatorcuffoperation",
+      "shortCode": "/r/cuff",
+      "target": "/rehab/axel/rotatorcuff",
+      "isExternal": false
+    },
+    {
+      "name": "Rehab vid frusen skuldra",
+      "shortCode": "/r/frusen",
+      "target": "/rehab/axel/frusen-skuldra",
+      "isExternal": false
+    },
+    {
+      "name": "Rehab efter stabiliseringsoperation",
+      "shortCode": "/r/stab",
+      "target": "/rehab/axel/stabilisering",
+      "isExternal": false
+    }
+  ],
+
+  "Frågeformulär": [
+    {
+      "name": "Frågeformulär axel (före besök)",
+      "shortCode": "/ff/axel",
+      "target": "https://exempel-journalsystem.se/form/axel-123",
+      "isExternal": true,
+      "_comment": "Byt ut target mot riktig URL från journalsystemet"
+    },
+    {
+      "name": "Frågeformulär armbåge (före besök)",
+      "shortCode": "/ff/armbage",
+      "target": "https://exempel-journalsystem.se/form/armbage-456",
+      "isExternal": true,
+      "_comment": "Byt ut target mot riktig URL från journalsystemet"
+    },
+    {
+      "name": "Frågeformulär knä (före besök)",
+      "shortCode": "/ff/kna",
+      "target": "https://exempel-journalsystem.se/form/kna-789",
+      "isExternal": true,
+      "_comment": "Byt ut target mot riktig URL från journalsystemet"
+    }
+  ]
+}
+

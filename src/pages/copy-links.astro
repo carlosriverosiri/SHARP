@@ -3,58 +3,40 @@
  * Kopiera Kortlänkar - Internt verktyg för klinisk användning
  * 
  * Sida: /copy-links
+ * Meny: Om Oss → Admin → Kopiera länkar
+ * 
+ * SINGLE SOURCE OF TRUTH:
+ * Alla länkar definieras i src/data/shortLinks.json
+ * Denna sida importerar samma JSON-fil som astro.config.mjs använder för redirects.
+ * 
+ * FÖR ATT LÄGGA TILL NYA LÄNKAR:
+ *   1. Öppna src/data/shortLinks.json
+ *   2. Lägg till ny länk i rätt kategori
+ *   3. Pusha till GitHub
+ *   4. Klart! Både redirect och denna UI uppdateras automatiskt.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const links = [
-  {
-    category: "Diagnoser",
-    icon: "🩺",
-    items: [
-      { name: "AC-ledsartros (yttre nyckelbensleden)", shortPath: "/d/ac" },
-      { name: "Impingement / subakromiellt syndrom", shortPath: "/d/imp" },
-      { name: "Rotatorcuffruptur", shortPath: "/d/cuff" },
-      { name: "Frusen skuldra (frozen shoulder)", shortPath: "/d/frusen" },
-      { name: "Kalkaxel", shortPath: "/d/kalk" },
-      { name: "Axelinstabilitet", shortPath: "/d/instab" },
-      { name: "SLAP-skada", shortPath: "/d/slap" },
-      { name: "Bicepstendinit", shortPath: "/d/biceps" },
-      { name: "Parsonage-Turner syndrom", shortPath: "/d/pts" },
-    ]
-  },
-  {
-    category: "Operationer",
-    icon: "🔪",
-    items: [
-      { name: "Operation av AC-ledsartros", shortPath: "/o/ac" },
-      { name: "Subakromiell dekompression", shortPath: "/o/sad" },
-      { name: "Rotatorcuffrekonstruktion", shortPath: "/o/cuff" },
-      { name: "Kalkborttagning (artroskopisk)", shortPath: "/o/kalk" },
-      { name: "Stabiliseringsoperation axel", shortPath: "/o/stab" },
-      { name: "Bicepstenodes", shortPath: "/o/biceps" },
-    ]
-  },
-  {
-    category: "Rehab",
-    icon: "🏋️",
-    items: [
-      { name: "Rehab efter AC-ledsoperation", shortPath: "/r/ac" },
-      { name: "Rehab efter subakromiell dekompression", shortPath: "/r/sad" },
-      { name: "Rehab efter rotatorcuffoperation", shortPath: "/r/cuff" },
-      { name: "Rehab vid frusen skuldra", shortPath: "/r/frusen" },
-      { name: "Rehab efter stabiliseringsoperation", shortPath: "/r/stab" },
-    ]
-  },
-  {
-    category: "Frågeformulär",
-    icon: "📋",
-    items: [
-      { name: "Frågeformulär axel (före besök)", shortPath: "/ff/axel" },
-      { name: "Frågeformulär armbåge (före besök)", shortPath: "/ff/armbage" },
-      { name: "Frågeformulär knä (före besök)", shortPath: "/ff/kna" },
-    ]
-  }
-];
+// Importera kortlänkar från central JSON-fil (Single Source of Truth)
+import shortLinksData from '../data/shortLinks.json';
+
+// Ikoner för varje kategori
+const categoryIcons: Record<string, string> = {
+  "Diagnoser": "🩺",
+  "Operationer": "🔪",
+  "Rehab": "🏋️",
+  "Frågeformulär": "📋"
+};
+
+// Filtrera bort metadata-nycklar (börjar med "_") och bygg länklista för UI
+const categories = Object.entries(shortLinksData)
+  .filter(([key]) => !key.startsWith('_'))
+  .map(([categoryName, items]) => ({
+    category: categoryName,
+    icon: categoryIcons[categoryName] || "📄",
+    items: (items as Array<{name: string; shortCode: string; target: string; isExternal: boolean}>)
+      .filter(item => item.shortCode && item.name)  // Filtrera bort eventuella ogiltiga objekt
+  }));
 
 // Använder www. istället för https:// för att spara tecken i SMS
 // www.specialist.se/d/ac (21 tecken) vs https://specialist.se/d/ac (25 tecken)
@@ -64,6 +46,8 @@ const baseDomain = "www.specialist.se";
 <BaseLayout title="Kopiera kortlänkar" description="Internt verktyg för att kopiera korta länkar till patientinformation">
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-4xl mx-auto px-4">
+      
+      <!-- Header -->
       <div class="mb-8">
         <h1 class="text-2xl md:text-3xl font-bold text-[#024264] mb-2">
           Kopiera kortlänkar till patientinfo
@@ -74,6 +58,7 @@ const baseDomain = "www.specialist.se";
         </p>
       </div>
 
+      <!-- Sökfält -->
       <div class="mb-6">
         <div class="relative">
           <input 
@@ -88,6 +73,7 @@ const baseDomain = "www.specialist.se";
         </div>
       </div>
 
+      <!-- Toast-notifikation för kopierad länk -->
       <div 
         id="toast" 
         class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50"
@@ -95,27 +81,37 @@ const baseDomain = "www.specialist.se";
         ✓ Kopierad!
       </div>
 
+      <!-- Länkkategorier - Genereras dynamiskt från shortLinks.json -->
       <div id="links-container" class="space-y-8">
-        {links.map((category) => (
-          <section class="category-section" data-category={category.category}>
+        {categories.map((cat) => (
+          <section class="category-section" data-category={cat.category}>
             <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <span>{category.icon}</span>
-              {category.category}
+              <span>{cat.icon}</span>
+              {cat.category}
+              {cat.category === "Frågeformulär" && (
+                <span class="text-xs font-normal text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">Externa</span>
+              )}
             </h2>
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 divide-y divide-gray-100">
-              {category.items.map((item) => (
+              {cat.items.map((item) => (
                 <div 
                   class="link-item flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
                   data-name={item.name.toLowerCase()}
+                  data-shortcode={item.shortCode}
                 >
                   <div class="flex-1 min-w-0 mr-4">
-                    <p class="font-medium text-slate-800">{item.name}</p>
-                    <p class="text-sm text-slate-500 font-mono">{baseDomain}{item.shortPath}</p>
+                    <p class="font-medium text-slate-800">
+                      {item.name}
+                      {item.isExternal && (
+                        <span class="ml-2 text-xs text-orange-500" title="Extern länk (journalsystem)">↗</span>
+                      )}
+                    </p>
+                    <p class="text-sm text-slate-500 font-mono">{baseDomain}{item.shortCode}</p>
                   </div>
                   <button 
                     type="button"
                     class="copy-btn flex-shrink-0 bg-[#024264] text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-800 active:scale-95 transition-all flex items-center gap-2"
-                    data-url={`${baseDomain}${item.shortPath}`}
+                    data-url={`${baseDomain}${item.shortCode}`}
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
@@ -129,38 +125,235 @@ const baseDomain = "www.specialist.se";
         ))}
       </div>
 
+      <!-- Meddelande när inga resultat hittas -->
       <div id="no-results" class="hidden text-center py-12">
         <p class="text-slate-500 text-lg">Inga resultat hittades</p>
       </div>
 
+      <!-- Tips-sektion -->
       <div class="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-6">
         <h3 class="font-bold text-blue-800 mb-2">💡 Tips för SMS</h3>
         <ul class="text-blue-700 space-y-1 text-sm">
           <li>• Korta URLs sparar tecken – SMS har max 255 tecken</li>
           <li>• Exempel: "Hej! Här är info om din diagnos: www.specialist.se/d/ac"</li>
           <li>• Länkarna fungerar direkt – de omdirigerar till fullständiga sidor</li>
+          <li>• Externa formulär (📋) går till journalsystemet automatiskt</li>
         </ul>
       </div>
+
+      <!-- Info om Single Source of Truth (för utvecklare) -->
+      <div class="mt-4 text-xs text-slate-400 text-center">
+        Länkar definieras i <code class="bg-slate-100 px-1 rounded">src/data/shortLinks.json</code>
+      </div>
+
+      <!-- ================================================================
+           LINK GENERATOR - Admin-verktyg för att skapa nya kortlänkar
+           ================================================================ -->
+      <details class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200">
+        <summary class="px-6 py-4 cursor-pointer font-bold text-slate-700 hover:bg-gray-50 rounded-xl flex items-center gap-2">
+          🛠 Lägg till ny kortlänk
+        </summary>
+        
+        <div class="px-6 pb-6 border-t border-gray-100 pt-4">
+          <!-- Enkel guide -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p class="text-sm text-blue-800 font-medium mb-2">📋 Så här gör du:</p>
+            <ol class="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+              <li>Välj kategori (Diagnoser, Operationer, etc.)</li>
+              <li>Skriv namnet på länken</li>
+              <li>Kortkoden fylls i automatiskt (du kan ändra den)</li>
+              <li>Skriv dit länken ska gå</li>
+              <li>Klicka "Generera" och kopiera</li>
+            </ol>
+          </div>
+          
+          <!-- Formulär -->
+          <div class="space-y-4">
+            
+            <!-- Steg 1: Kategori -->
+            <div>
+              <label for="gen-category" class="block text-sm font-medium text-slate-700 mb-1">
+                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mr-2">Steg 1</span>
+                Välj kategori
+              </label>
+              <div class="flex items-center gap-3">
+                <select 
+                  id="gen-category" 
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+                >
+                  <option value="Diagnoser" data-prefix="/d/">🩺 Diagnoser</option>
+                  <option value="Operationer" data-prefix="/o/">🔪 Operationer</option>
+                  <option value="Rehab" data-prefix="/r/">🏋️ Rehab</option>
+                  <option value="Frågeformulär" data-prefix="/ff/">📋 Frågeformulär</option>
+                </select>
+                <!-- Prefix-feedback -->
+                <span id="prefix-display" class="text-base font-mono bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-bold">/d/</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Detta bestämmer vilken typ av länk det blir</p>
+            </div>
+            
+            <!-- Steg 2: Namn -->
+            <div>
+              <label for="gen-name" class="block text-sm font-medium text-slate-700 mb-1">
+                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mr-2">Steg 2</span>
+                Vad ska länken heta?
+              </label>
+              <input 
+                type="text" 
+                id="gen-name" 
+                placeholder="Exempel: AC-ledsartros (yttre nyckelbensleden)"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+              />
+              <p class="text-xs text-slate-400 mt-1">Detta är det namn som syns i listan</p>
+            </div>
+            
+            <!-- Steg 3: Kortkod (auto-genererad) -->
+            <div>
+              <label for="gen-shortcode" class="block text-sm font-medium text-slate-700 mb-1">
+                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mr-2">Steg 3</span>
+                Kortkod (fylls i automatiskt)
+              </label>
+              <div class="flex items-center gap-2">
+                <span id="prefix-inline" class="text-base font-mono text-slate-500 font-bold">/d/</span>
+                <input 
+                  type="text" 
+                  id="gen-shortcode" 
+                  placeholder="ac"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-base"
+                />
+                <button 
+                  type="button"
+                  id="auto-fill-btn"
+                  class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-slate-600"
+                  title="Fyll i automatiskt från namnet"
+                >
+                  Auto
+                </button>
+              </div>
+              <div class="mt-2 p-2 bg-slate-50 rounded border border-slate-200">
+                <p class="text-xs text-slate-500 mb-1">Så här ser länken ut:</p>
+                <p class="text-sm font-mono text-slate-700 font-bold">
+                  www.specialist.se<span id="shortcode-preview" class="text-blue-600">/d/ac</span>
+                </p>
+              </div>
+            </div>
+            
+            <!-- Steg 4: Target URL -->
+            <div>
+              <label for="gen-target" class="block text-sm font-medium text-slate-700 mb-1">
+                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs mr-2">Steg 4</span>
+                Vart ska länken gå?
+              </label>
+              <input 
+                type="text" 
+                id="gen-target" 
+                placeholder="Exempel: /sjukdomar/axel/ac-ledsartros"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
+              />
+              <div class="mt-2 space-y-1">
+                <p class="text-xs text-slate-500">💡 Exempel på intern sida:</p>
+                <p class="text-xs font-mono text-slate-400 bg-slate-50 p-1 rounded">/sjukdomar/axel/ac-ledsartros</p>
+                <p class="text-xs text-slate-500 mt-2">💡 Exempel på extern sida (journalsystem):</p>
+                <p class="text-xs font-mono text-slate-400 bg-slate-50 p-1 rounded">https://journalsystem.se/form/axel-123</p>
+              </div>
+            </div>
+            
+            <!-- Förhandsvisning (uppdateras live) -->
+            <div id="live-preview" class="hidden p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p class="text-xs text-green-700 font-medium mb-1">✅ Förhandsvisning:</p>
+              <p class="text-sm text-green-800">
+                <span id="preview-name" class="font-semibold"></span> → 
+                <span id="preview-url" class="font-mono"></span>
+              </p>
+            </div>
+            
+            <!-- Generera-knapp -->
+            <button 
+              type="button" 
+              id="generate-btn"
+              class="w-full bg-[#024264] text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              Generera och kopiera
+            </button>
+          </div>
+          
+          <!-- Output-sektion (dold tills JSON genereras) -->
+          <div id="output-section" class="hidden mt-6">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-3">
+              <p class="text-green-800 text-sm font-bold mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Klart! Nu gör du så här:
+              </p>
+              <ol class="text-green-700 text-sm space-y-1 list-decimal list-inside ml-2">
+                <li>Klicka på knappen "Kopiera" här nedan</li>
+                <li>Öppna filen <code class="bg-green-100 px-1 rounded font-mono text-xs">src/data/shortLinks.json</code></li>
+                <li>Hitta kategorin <strong id="output-category-name"></strong> i filen</li>
+                <li>Klistra in det kopierade blocket längst ner i den kategorins lista</li>
+                <li>Spara filen och pusha till GitHub</li>
+              </ol>
+            </div>
+            
+            <!-- JSON-output -->
+            <div class="relative">
+              <pre id="json-output" class="bg-slate-800 text-green-400 p-4 rounded-lg text-sm font-mono overflow-x-auto pb-12"></pre>
+              <button 
+                type="button"
+                id="copy-json-btn"
+                class="absolute bottom-2 right-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center gap-2 shadow-lg"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                Kopiera
+              </button>
+            </div>
+          </div>
+          
+          <!-- Felmeddelande -->
+          <div id="error-message" class="hidden mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-red-800 text-sm font-medium flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span id="error-text">Fyll i alla fält</span>
+            </p>
+          </div>
+        </div>
+      </details>
+
     </div>
   </div>
 </BaseLayout>
 
 <script>
+  /**
+   * Client-side JavaScript för kopiera-funktionalitet och sökfilter
+   */
   document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
     const copyButtons = document.querySelectorAll('.copy-btn');
     
+    // Kopiera-funktionalitet för alla knappar
     copyButtons.forEach(btn => {
       btn.addEventListener('click', async () => {
         const url = btn.getAttribute('data-url');
         
         try {
+          // Kopiera URL till urklipp
           await navigator.clipboard.writeText(url);
+          
+          // Visa toast-notifikation
           toast.classList.remove('translate-x-full');
           setTimeout(() => {
             toast.classList.add('translate-x-full');
           }, 2000);
           
+          // Ändra knapptext tillfälligt
           const originalText = btn.innerHTML;
           btn.innerHTML = `
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,6 +364,7 @@ const baseDomain = "www.specialist.se";
           btn.classList.remove('bg-[#024264]');
           btn.classList.add('bg-green-600');
           
+          // Återställ knappen efter 2 sekunder
           setTimeout(() => {
             btn.innerHTML = originalText;
             btn.classList.remove('bg-green-600');
@@ -184,12 +378,14 @@ const baseDomain = "www.specialist.se";
       });
     });
 
-    const searchInput = document.getElementById('search-input');
+    // Sökfunktionalitet
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const categorySections = document.querySelectorAll('.category-section');
     const noResults = document.getElementById('no-results');
     
     searchInput.addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase().trim();
+      const target = e.target as HTMLInputElement;
+      const searchTerm = target.value.toLowerCase().trim();
       let hasResults = false;
       
       categorySections.forEach(section => {
@@ -197,20 +393,261 @@ const baseDomain = "www.specialist.se";
         let categoryHasResults = false;
         
         items.forEach(item => {
-          const name = item.getAttribute('data-name');
-          const matches = name.includes(searchTerm);
+          const element = item as HTMLElement;
+          const name = element.getAttribute('data-name') || '';
+          const shortCode = element.getAttribute('data-shortcode') || '';
           
-          item.style.display = matches ? 'flex' : 'none';
+          // Sök i både namn och shortcode
+          const matches = name.includes(searchTerm) || shortCode.includes(searchTerm);
+          
+          element.style.display = matches ? 'flex' : 'none';
           if (matches) {
             categoryHasResults = true;
             hasResults = true;
           }
         });
         
-        section.style.display = categoryHasResults ? 'block' : 'none';
+        // Visa/dölj hela kategorin
+        (section as HTMLElement).style.display = categoryHasResults ? 'block' : 'none';
       });
       
-      noResults.classList.toggle('hidden', hasResults);
+      // Visa meddelande om inga resultat
+      noResults?.classList.toggle('hidden', hasResults);
+    });
+
+    // ================================================================
+    // LINK GENERATOR - Logik för att generera JSON
+    // ================================================================
+    
+    // Prefix-mappning för varje kategori
+    const prefixMap: Record<string, string> = {
+      'Diagnoser': '/d/',
+      'Operationer': '/o/',
+      'Rehab': '/r/',
+      'Frågeformulär': '/ff/'
+    };
+    
+    // Hämta DOM-element
+    const categorySelect = document.getElementById('gen-category') as HTMLSelectElement;
+    const prefixDisplay = document.getElementById('prefix-display') as HTMLSpanElement;
+    const prefixInline = document.getElementById('prefix-inline') as HTMLSpanElement;
+    const shortcodePreview = document.getElementById('shortcode-preview') as HTMLSpanElement;
+    const nameInput = document.getElementById('gen-name') as HTMLInputElement;
+    const shortcodeInput = document.getElementById('gen-shortcode') as HTMLInputElement;
+    const targetInput = document.getElementById('gen-target') as HTMLInputElement;
+    const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+    const outputSection = document.getElementById('output-section') as HTMLDivElement;
+    const jsonOutput = document.getElementById('json-output') as HTMLPreElement;
+    const copyJsonBtn = document.getElementById('copy-json-btn') as HTMLButtonElement;
+    const errorMessage = document.getElementById('error-message') as HTMLDivElement;
+    const errorText = document.getElementById('error-text') as HTMLSpanElement;
+    
+    // Hjälpfunktion: Generera kortkod från namn
+    function generateShortcodeFromName(name: string): string {
+      if (!name) return '';
+      
+      // Ta bort specialtecken, gör små bokstäver, ersätt mellanslag med bindestreck
+      return name
+        .toLowerCase()
+        .replace(/[åäö]/g, (char) => {
+          const map: Record<string, string> = { 'å': 'a', 'ä': 'a', 'ö': 'o' };
+          return map[char] || char;
+        })
+        .replace(/[^a-z0-9\s-]/g, '')  // Ta bort specialtecken
+        .replace(/\s+/g, '-')           // Mellanslag till bindestreck
+        .replace(/-+/g, '-')           // Flera bindestreck till ett
+        .replace(/^-|-$/g, '');         // Ta bort bindestreck i början/slutet
+    }
+    
+    // Uppdatera prefix-visning när kategori ändras
+    categorySelect?.addEventListener('change', () => {
+      const prefix = prefixMap[categorySelect.value] || '/d/';
+      prefixDisplay.textContent = prefix;
+      prefixInline.textContent = prefix;
+      updateShortcodePreview();
+      updateLivePreview();
+    });
+    
+    // Auto-fill kortkod från namn
+    const autoFillBtn = document.getElementById('auto-fill-btn') as HTMLButtonElement;
+    autoFillBtn?.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (name) {
+        const suggestedCode = generateShortcodeFromName(name);
+        shortcodeInput.value = suggestedCode;
+        updateShortcodePreview();
+        updateLivePreview();
+        
+        // Feedback
+        autoFillBtn.textContent = '✓';
+        autoFillBtn.classList.remove('bg-gray-100');
+        autoFillBtn.classList.add('bg-green-100', 'text-green-700');
+        setTimeout(() => {
+          autoFillBtn.textContent = 'Auto';
+          autoFillBtn.classList.remove('bg-green-100', 'text-green-700');
+          autoFillBtn.classList.add('bg-gray-100');
+        }, 1500);
+      }
+    });
+    
+    // Auto-fill när namn ändras (om kortkod är tom)
+    nameInput?.addEventListener('input', () => {
+      if (!shortcodeInput.value.trim()) {
+        const suggestedCode = generateShortcodeFromName(nameInput.value);
+        shortcodeInput.value = suggestedCode;
+      }
+      updateShortcodePreview();
+      updateLivePreview();
+    });
+    
+    // Uppdatera förhandsvisning av kortkod
+    shortcodeInput?.addEventListener('input', () => {
+      updateShortcodePreview();
+      updateLivePreview();
+    });
+    
+    // Uppdatera live-förhandsvisning när target ändras
+    targetInput?.addEventListener('input', updateLivePreview);
+    
+    function updateShortcodePreview() {
+      const prefix = prefixMap[categorySelect.value] || '/d/';
+      const code = shortcodeInput.value.trim().toLowerCase().replace(/^\//, '');
+      shortcodePreview.textContent = prefix + (code || 'xxx');
+    }
+    
+    // Live-förhandsvisning av hela länken
+    const livePreview = document.getElementById('live-preview') as HTMLDivElement;
+    const previewName = document.getElementById('preview-name') as HTMLSpanElement;
+    const previewUrl = document.getElementById('preview-url') as HTMLSpanElement;
+    
+    function updateLivePreview() {
+      const name = nameInput.value.trim();
+      const prefix = prefixMap[categorySelect.value] || '/d/';
+      const code = shortcodeInput.value.trim().toLowerCase().replace(/^\//, '');
+      const target = targetInput.value.trim();
+      
+      if (name && code && target) {
+        previewName.textContent = name;
+        previewUrl.textContent = `www.specialist.se${prefix}${code}`;
+        livePreview.classList.remove('hidden');
+      } else {
+        livePreview.classList.add('hidden');
+      }
+    }
+    
+    // Generera JSON när knappen klickas
+    generateBtn?.addEventListener('click', () => {
+      // Dölj tidigare meddelanden
+      outputSection.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+      
+      // Hämta värden
+      const category = categorySelect.value;
+      const name = nameInput.value.trim();
+      const shortcodeSuffix = shortcodeInput.value.trim().toLowerCase().replace(/^\//, '');
+      const target = targetInput.value.trim();
+      
+      // Validera - Tydliga felmeddelanden
+      if (!name) {
+        errorText.textContent = '❌ Du måste skriva ett namn (steg 2)';
+        errorMessage.classList.remove('hidden');
+        nameInput.focus();
+        return;
+      }
+      
+      if (!shortcodeSuffix) {
+        errorText.textContent = '❌ Du måste skriva en kortkod (steg 3). Klicka på "Auto" för att fylla i automatiskt!';
+        errorMessage.classList.remove('hidden');
+        shortcodeInput.focus();
+        return;
+      }
+      
+      if (!target) {
+        errorText.textContent = '❌ Du måste skriva vart länken ska gå (steg 4)';
+        errorMessage.classList.remove('hidden');
+        targetInput.focus();
+        return;
+      }
+      
+      // Validera kortkod (endast bokstäver, siffror, bindestreck)
+      if (!/^[a-z0-9-]+$/.test(shortcodeSuffix)) {
+        errorText.textContent = '❌ Kortkod får endast innehålla små bokstäver (a-z), siffror (0-9) och bindestreck (-). Klicka på "Auto" för att generera en korrekt kortkod!';
+        errorMessage.classList.remove('hidden');
+        shortcodeInput.focus();
+        return;
+      }
+      
+      // Bygg fullständig shortCode med prefix
+      const prefix = prefixMap[category] || '/d/';
+      const shortCode = prefix + shortcodeSuffix;
+      
+      // Avgör om det är extern URL
+      const isExternal = target.startsWith('http://') || target.startsWith('https://');
+      
+      // Skapa JSON-objekt
+      const linkObject = {
+        name: name,
+        shortCode: shortCode,
+        target: target,
+        isExternal: isExternal
+      };
+      
+      // Formatera JSON med indrag (2 spaces) och trailing comma
+      const jsonString = JSON.stringify(linkObject, null, 2)
+        .replace(/^{/, '    {')           // Indentera första raden
+        .replace(/\n/g, '\n    ')         // Indentera alla rader
+        .replace(/    }$/, '    },');     // Lägg till trailing comma
+      
+      // Visa output
+      jsonOutput.textContent = jsonString;
+      
+      // Sätt kategori-namn i instruktionerna
+      const outputCategoryName = document.getElementById('output-category-name') as HTMLStrongElement;
+      if (outputCategoryName) {
+        outputCategoryName.textContent = `"${category}"`;
+      }
+      
+      outputSection.classList.remove('hidden');
+      
+      // Scrolla till output
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    
+    // Kopiera JSON till urklipp
+    copyJsonBtn?.addEventListener('click', async () => {
+      const jsonText = jsonOutput.textContent || '';
+      
+      try {
+        await navigator.clipboard.writeText(jsonText);
+        
+        // Visa feedback
+        const originalText = copyJsonBtn.innerHTML;
+        copyJsonBtn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          Kopierad!
+        `;
+        copyJsonBtn.classList.remove('bg-slate-700');
+        copyJsonBtn.classList.add('bg-green-600');
+        
+        // Visa toast också
+        toast?.classList.remove('translate-x-full');
+        setTimeout(() => {
+          toast?.classList.add('translate-x-full');
+        }, 2000);
+        
+        // Återställ knappen
+        setTimeout(() => {
+          copyJsonBtn.innerHTML = originalText;
+          copyJsonBtn.classList.remove('bg-green-600');
+          copyJsonBtn.classList.add('bg-slate-700');
+        }, 2000);
+        
+      } catch (err) {
+        console.error('Kunde inte kopiera:', err);
+        alert('Kunde inte kopiera. Markera och kopiera manuellt.');
+      }
     });
   });
 </script>
