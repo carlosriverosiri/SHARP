@@ -18,6 +18,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "pagefind": "^1.4.0"
+    "pagefind": "^1.4.0",
+    "terser": "^5.44.1"
   }
 }
