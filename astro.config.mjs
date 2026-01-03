@@ -61,7 +61,12 @@ export default defineConfig({
   build: {
     // Inline small CSS for faster initial render
     inlineStylesheets: 'auto',
+    // Minify HTML output
+    assets: '_astro',
   },
+  
+  // Output configuration
+  output: 'static',
 
   // Image optimization defaults
   image: {
@@ -73,15 +78,27 @@ export default defineConfig({
     },
   },
 
+  // Vite optimizations
   vite: {
     server: {
       open: true,  // Öppnar automatiskt i Chrome (eller default-webbläsare)
     },
     build: {
+      // Minify CSS and JS
+      cssMinify: true,
+      minify: 'terser',
       // Better code splitting
       cssCodeSplit: true,
-      // Minify CSS
-      cssMinify: true,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Separate vendor chunks for better caching
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
     plugins: [tailwindcss()],
   },

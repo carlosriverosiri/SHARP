@@ -91,6 +91,11 @@
   pretty_urls = true
 [build.processing.images]
   compress = true
+  # Optimize images aggressively
+  quality = 85
+
+# Optimize compression (Netlify handles this automatically, but we can hint)
+# Note: Netlify automatically uses Brotli when available
 
 
 

@@ -71,27 +71,37 @@ Korta URLs använder följande prefix:
 
 ### 🛠 Metod 1: Använd Link Generator (Rekommenderat)
 
-Det enklaste sättet är att använda **Link Generator-verktyget** direkt på sidan:
+Det enklaste sättet är att använda **Link Generator-verktyget** direkt på sidan. Verktyget är designat för att vara så enkelt som möjligt:
 
 1. **Öppna** `/copy-links`-sidan
 2. **Scrolla ner** till sektionen "🛠 Lägg till ny kortlänk"
 3. **Klicka** för att expandera formuläret
-4. **Fyll i:**
-   - **Kategori:** Välj Diagnoser, Operationer, Rehab eller Frågeformulär
-   - **Namn:** Beskrivande namn (t.ex. "AC-ledsartros")
-   - **Kortkod:** Endast suffix (t.ex. "ac" – prefix läggs till automatiskt)
-   - **Mål-URL:** Intern path (t.ex. `/sjukdomar/axel/...`) eller extern URL (t.ex. `https://...`)
-5. **Klicka "Generera JSON"**
-6. **Kopiera** JSON-blocket
-7. **Öppna** `src/data/shortLinks.json`
-8. **Klistra in** JSON-objektet i rätt kategori-array
-9. **Pusha** till GitHub
+4. **Följ stegen:**
+   - **Steg 1:** Välj kategori (Diagnoser, Operationer, Rehab eller Frågeformulär)
+   - **Steg 2:** Skriv namnet på länken (t.ex. "AC-ledsartros")
+     - 💡 **Tips:** Kortkoden fylls i automatiskt när du skriver namnet!
+   - **Steg 3:** Kortkod (fylls i automatiskt, men du kan ändra den)
+     - 💡 **Tips:** Klicka på "Auto"-knappen om du vill generera om kortkoden
+     - 💡 **Tips:** Du ser en förhandsvisning av hur länken kommer se ut
+   - **Steg 4:** Skriv vart länken ska gå
+     - Intern sida: `/sjukdomar/axel/ac-ledsartros`
+     - Extern URL: `https://journalsystem.se/form/axel-123`
+5. **Klicka "Generera och kopiera"**
+6. **Följ instruktionerna** som visas (steg-för-steg)
+7. **Kopiera** JSON-blocket
+8. **Öppna** `src/data/shortLinks.json`
+9. **Klistra in** JSON-objektet i rätt kategori-array
+10. **Pusha** till GitHub
 
-**Fördelar:**
-- ✅ Prefix läggs till automatiskt
-- ✅ Extern-detektion sker automatiskt
-- ✅ Formaterad JSON med korrekt syntax
-- ✅ Inga syntaxfel
+**Smart funktioner:**
+- ✅ **Automatisk kortkod-generering** – Skriv namnet, få kortkoden automatiskt
+- ✅ **Auto-fill-knapp** – Generera kortkod från namn med ett klick
+- ✅ **Live-förhandsvisning** – Se hur länken ser ut medan du skriver
+- ✅ **Prefix läggs till automatiskt** – Du behöver bara skriva suffix (t.ex. "ac" blir "/d/ac")
+- ✅ **Extern-detektion** – Systemet ser automatiskt om det är extern URL
+- ✅ **Formaterad JSON** – Korrekt syntax, redo att klistra in
+- ✅ **Stegvis guide** – Varje steg är numrerat och tydligt
+- ✅ **Tydliga felmeddelanden** – Om något saknas, får du exakt besked om vad
 
 ### 📝 Metod 2: Manuell redigering
 
@@ -294,15 +304,26 @@ Använd en JSON-validator (t.ex. [jsonlint.com](https://jsonlint.com)) för att 
 
 ## Tips
 
+### För daglig användning
 - **Ha sidan öppen** i en egen flik under hela mottagningen
 - **Använd sökfunktionen** för att snabbt hitta rätt länk (söker i både namn och shortcode)
-- **Använd Link Generator** för att skapa nya länkar utan syntaxfel
 - **Testa nya länkar** innan du skickar till patienter
 - **Uppdatera frågeformulär-URLs** om journalsystemet ändras
-- **En fil = all underhåll** - redigera bara `shortLinks.json`
-- **Kortkod-regler:** Endast små bokstäver, siffror och bindestreck (t.ex. `ac-ledsartros`)
+
+### För att lägga till nya länkar
+- **Använd Link Generator** – Det är det enklaste sättet!
+- **Lita på automatiken** – Kortkoden genereras automatiskt från namnet
+- **Använd "Auto"-knappen** om du vill generera om kortkoden
+- **Kolla förhandsvisningen** – Se hur länken ser ut innan du genererar
+- **En fil = all underhåll** – redigera bara `shortLinks.json`
+
+### Tekniska regler
+- **Kortkod-regler:** Endast små bokstäver (a-z), siffror (0-9) och bindestreck (-)
+- **Exempel:** `ac-ledsartros`, `impingement`, `rotatorcuff-ruptur`
+- **Åäö konverteras automatiskt** till aao när du använder Auto-funktionen
 
 ---
 
 *Senast uppdaterad: 3 januari 2026*  
-*Link Generator-verktyg tillagt: 3 januari 2026*
+*Link Generator-verktyg tillagt: 3 januari 2026*  
+*Automatisk kortkod-generering och förbättringar: 3 januari 2026*
