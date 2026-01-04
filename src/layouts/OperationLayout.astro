@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import MedicinskGranskad from "../components/MedicinskGranskad.astro";
 import PWAInstallBanner from "../components/PWAInstallBanner.astro";
+import PWAInstallBanner from "../components/PWAInstallBanner.astro";
 
 interface Props {
   title: string;
@@ -190,7 +191,7 @@ const allKeywords = [
   type="article"
 >
   <!-- PWA Install Banner (endast på operations-/rehabsidor) -->
-  <PWAInstallBanner customText="Spara denna operationsinformation på hemskärmen för snabb åtkomst inför din operation." />
+  <PWAInstallBanner />
 
   <!-- SEO & Schema head slot -->
   <Fragment slot="head">

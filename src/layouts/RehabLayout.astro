@@ -14,7 +14,7 @@ const { title, description, image, type } = Astro.props;
 
 <BaseLayout title={title} description={description} image={image} type={type}>
   <!-- PWA Install Banner (endast på operations-/rehabsidor) -->
-  <PWAInstallBanner customText="Spara detta rehabprogram på hemskärmen för snabb åtkomst under din rehabilitering." />
+  <PWAInstallBanner />
 
   <slot />
   
