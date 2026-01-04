@@ -2,8 +2,7 @@
 /**
  * OpSmarta - Smärta och smärtstillande efter operation
  * 
- * OBS: Inga exakta doseringar visas - endast styrka (t.ex. 500 mg)
- * Patienten hänvisas till 1177 för dosering
+ * Kollapserbara sektioner för varje medicin (klicka på + för att expandera)
  */
 interface Props {
   visaAlvedon?: boolean;
@@ -61,163 +60,197 @@ const {
       Du kan hämta ut detta recept fyra gånger. Behöver du ett nytt recept kontaktar du oss.
     </p>
 
-    <!-- Mediciner -->
-    <div class="space-y-3 mb-4">
+    <!-- Mediciner - Kollapserbara -->
+    <div class="space-y-2 mb-4">
+      
       <!-- Naproxen -->
-      <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
-        <div class="flex items-start justify-between mb-2">
-          <h3 class="font-semibold text-orange-900 text-base">Naproxen 500 mg</h3>
+      <details class="bg-orange-50 rounded-lg border border-orange-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-orange-200 flex items-center justify-center text-orange-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-orange-200 flex items-center justify-center text-orange-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-orange-900">Naproxen 500 mg</h3>
+          </div>
           <a 
             href="https://www.fass.se/LIF/searchresult?query=naproxen" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="text-xs text-orange-700 hover:text-orange-900 underline flex items-center gap-1"
-            title="Läs mer på FASS"
+            class="text-xs text-orange-700 hover:text-orange-900 underline"
+            onclick="event.stopPropagation()"
           >
             FASS ↗
           </a>
-        </div>
-        <p class="text-sm text-orange-800 mb-2">
-          Inflammationen och svullnaden efter en operation dämpas av att du tar inflammationsdämpande (NSAID) tabletter. 
-          Du bör ta dessa mediciner under <strong>5-10 dagar</strong> efter operationen. 
-          Detta gör att smärtorna snabbare släpper och påskyndar rehabiliteringen.
-        </p>
-        <p class="text-sm text-orange-800 mb-2">
-          Har du mycket smärtor under rehabiliteringen kan du ta en eller flera nya 10 dagars kurer med Naproxen. 
-          För att inte få problem med magen kan det vara lämpligt att göra en veckas uppehåll mellan dessa kurer.
-        </p>
-        <div class="bg-orange-100 border border-orange-300 rounded px-3 py-2 mt-2">
-          <p class="text-xs text-orange-900 font-medium">
-            ⚠️ Har du problem med magsår, äter blodförtunnande läkemedel eller om du är överkänslig mot 
-            inflammationsdämpande mediciner (NSAID) skall du inte ta Naproxen.
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-orange-800 mb-2">
+            Inflammationen och svullnaden efter en operation dämpas av att du tar inflammationsdämpande (NSAID) tabletter. 
+            Du bör ta dessa mediciner under <strong>5-10 dagar</strong> efter operationen. 
+            Detta gör att smärtorna snabbare släpper och påskyndar rehabiliteringen.
+          </p>
+          <p class="text-sm text-orange-800 mb-2">
+            Har du mycket smärtor under rehabiliteringen kan du ta en eller flera nya 10 dagars kurer med Naproxen. 
+            För att inte få problem med magen kan det vara lämpligt att göra en veckas uppehåll mellan dessa kurer.
+          </p>
+          <div class="bg-orange-100 border border-orange-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-orange-900 font-medium">
+              ⚠️ Har du problem med magsår, äter blodförtunnande läkemedel eller om du är överkänslig mot 
+              inflammationsdämpande mediciner (NSAID) skall du inte ta Naproxen.
+            </p>
+          </div>
+          <p class="text-sm text-orange-800 mt-2">
+            Naproxen går utmärkt att kombinera med Citodon eller Alvedon.
           </p>
         </div>
-        <p class="text-sm text-orange-800 mt-2">
-          Naproxen går utmärkt att kombinera med Citodon eller Alvedon.
-        </p>
-      </div>
+      </details>
 
+      <!-- Citodon -->
       {visaCitodon && (
-        <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-amber-900 text-base">Citodon <span class="font-normal text-sm">(recept)</span></h3>
+        <details class="bg-amber-50 rounded-lg border border-amber-200 group">
+          <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm group-open:hidden">+</span>
+              <span class="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm hidden group-open:flex">−</span>
+              <h3 class="font-semibold text-amber-900">Citodon <span class="font-normal text-sm">(recept)</span></h3>
+            </div>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=citodon" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-xs text-amber-700 hover:text-amber-900 underline flex items-center gap-1"
-              title="Läs mer på FASS"
+              class="text-xs text-amber-700 hover:text-amber-900 underline"
+              onclick="event.stopPropagation()"
             >
               FASS ↗
             </a>
-          </div>
-          <p class="text-sm text-amber-800 mb-2">
-            Citodon innehåller kodein och paracetamol. 
-            Citodon är ett rent smärtstillande läkemedel som omvandlas till morfin i kroppen. 
-            Morfin kan göra dig dåsig, trött och illamående.
-          </p>
-          <div class="bg-amber-100 border border-amber-300 rounded px-3 py-2 mt-2">
-            <p class="text-xs text-amber-900 font-medium">
-              ⚠️ Upplever du att biverkningarna av Citodon är värre än att ha ont så kan det vara bra att prova med Alvedon istället för Citodon.
+          </summary>
+          <div class="px-4 pb-4 pt-0">
+            <p class="text-sm text-amber-800 mb-2">
+              Citodon innehåller kodein och paracetamol. 
+              Citodon är ett rent smärtstillande läkemedel som omvandlas till morfin i kroppen. 
+              Morfin kan göra dig dåsig, trött och illamående.
             </p>
-            <p class="text-xs text-amber-900 font-medium mt-1">
-              🚗 Du bör <strong>inte köra bil</strong> om du tar denna medicin.
+            <div class="bg-amber-100 border border-amber-300 rounded px-3 py-2 mt-2">
+              <p class="text-xs text-amber-900 font-medium">
+                ⚠️ Upplever du att biverkningarna av Citodon är värre än att ha ont så kan det vara bra att prova med Alvedon istället för Citodon.
+              </p>
+              <p class="text-xs text-amber-900 font-medium mt-1">
+                🚗 Du bör <strong>inte köra bil</strong> om du tar denna medicin.
+              </p>
+            </div>
+            <p class="text-sm text-amber-800 mt-2">
+              Citodon får kombineras med Naproxen. 
+              <strong>Du får inte kombinera Citodon med Alvedon</strong> eller andra mediciner som innehåller paracetamol.
             </p>
           </div>
-          <p class="text-sm text-amber-800 mt-2">
-            Citodon får kombineras med Naproxen. 
-            <strong>Du får inte kombinera Citodon med Alvedon</strong> eller andra mediciner som innehåller paracetamol.
-          </p>
-        </div>
+        </details>
       )}
 
+      <!-- Alvedon -->
       {visaAlvedon && (
-        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-blue-900 text-base">Alvedon 500 mg</h3>
+        <details class="bg-blue-50 rounded-lg border border-blue-200 group">
+          <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm group-open:hidden">+</span>
+              <span class="w-6 h-6 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm hidden group-open:flex">−</span>
+              <h3 class="font-semibold text-blue-900">Alvedon 500 mg</h3>
+            </div>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=alvedon" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-xs text-blue-700 hover:text-blue-900 underline flex items-center gap-1"
-              title="Läs mer på FASS"
+              class="text-xs text-blue-700 hover:text-blue-900 underline"
+              onclick="event.stopPropagation()"
             >
               FASS ↗
             </a>
-          </div>
-          <p class="text-sm text-blue-800">
-            Alvedon är ett alternativ till Citodon om du upplever biverkningar. 
-            Alvedon kan kombineras med Naproxen.
-          </p>
-          <div class="bg-blue-100 border border-blue-300 rounded px-3 py-2 mt-2">
-            <p class="text-xs text-blue-900 font-medium">
-              ⚠️ <strong>Du får inte kombinera Alvedon med Citodon</strong> eller andra mediciner som innehåller paracetamol.
+          </summary>
+          <div class="px-4 pb-4 pt-0">
+            <p class="text-sm text-blue-800">
+              Alvedon är ett alternativ till Citodon om du upplever biverkningar. 
+              Alvedon kan kombineras med Naproxen.
             </p>
+            <div class="bg-blue-100 border border-blue-300 rounded px-3 py-2 mt-2">
+              <p class="text-xs text-blue-900 font-medium">
+                ⚠️ <strong>Du får inte kombinera Alvedon med Citodon</strong> eller andra mediciner som innehåller paracetamol.
+              </p>
+            </div>
           </div>
-        </div>
+        </details>
       )}
 
-      {/* CELEBRA - Magskonande alternativ till Naproxen */}
+      <!-- Celebra -->
       {visaCelebra && (
-        <div class="bg-teal-50 rounded-lg p-4 border border-teal-200">
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-teal-900 text-base">Celebra (Celecoxib) <span class="font-normal text-sm">(recept)</span></h3>
+        <details class="bg-teal-50 rounded-lg border border-teal-200 group">
+          <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-teal-200 flex items-center justify-center text-teal-700 font-bold text-sm group-open:hidden">+</span>
+              <span class="w-6 h-6 rounded-full bg-teal-200 flex items-center justify-center text-teal-700 font-bold text-sm hidden group-open:flex">−</span>
+              <h3 class="font-semibold text-teal-900">Celebra 200 mg <span class="font-normal text-sm">(recept)</span></h3>
+            </div>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=celebra" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-xs text-teal-700 hover:text-teal-900 underline flex items-center gap-1"
-              title="Läs mer på FASS"
+              class="text-xs text-teal-700 hover:text-teal-900 underline"
+              onclick="event.stopPropagation()"
             >
               FASS ↗
             </a>
-          </div>
-          <p class="text-sm text-teal-800 mb-2">
-            Celebra är ett inflammationsdämpande läkemedel (NSAID) som liknar Naproxen, men är <strong>mycket snällare mot magen</strong>. 
-            Har du problem med magen skriver vi ofta ut Celebra istället för Naproxen.
-          </p>
-          <p class="text-sm text-teal-800 mb-2">
-            Celebra används ofta i kombination med Omeprazol för extra magskydd.
-          </p>
-          <div class="bg-teal-100 border border-teal-300 rounded px-3 py-2 mt-2">
-            <p class="text-xs text-teal-900 font-medium">
-              ⚠️ Du ska inte ta Celebra om du är allergisk mot inflammationsdämpande mediciner (NSAID). 
-              Om du vet att du tål Ipren så är det vanligtvis ingen fara att ta Celebra.
+          </summary>
+          <div class="px-4 pb-4 pt-0">
+            <p class="text-sm text-teal-800 mb-2">
+              Celebra är ett inflammationsdämpande läkemedel (NSAID) som liknar Naproxen, men är <strong>mycket snällare mot magen</strong>. 
+              Har du problem med magen skriver vi ofta ut Celebra istället för Naproxen.
             </p>
+            <p class="text-sm text-teal-800 mb-2">
+              Celebra används ofta i kombination med Omeprazol för extra magskydd.
+            </p>
+            <div class="bg-teal-100 border border-teal-300 rounded px-3 py-2 mt-2">
+              <p class="text-xs text-teal-900 font-medium">
+                ⚠️ Du ska inte ta Celebra om du är allergisk mot inflammationsdämpande mediciner (NSAID). 
+                Om du vet att du tål Ipren så är det vanligtvis ingen fara att ta Celebra.
+              </p>
+            </div>
           </div>
-        </div>
+        </details>
       )}
 
-      {/* OMEPRAZOL - Magskydd vid NSAID-behandling */}
+      <!-- Omeprazol -->
       {visaOmeprazol && (
-        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg <span class="font-normal text-sm">(recept)</span></h3>
+        <details class="bg-purple-50 rounded-lg border border-purple-200 group">
+          <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 font-bold text-sm group-open:hidden">+</span>
+              <span class="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 font-bold text-sm hidden group-open:flex">−</span>
+              <h3 class="font-semibold text-purple-900">Omeprazol 20 mg <span class="font-normal text-sm">(recept)</span></h3>
+            </div>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=omeprazol" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-xs text-purple-700 hover:text-purple-900 underline flex items-center gap-1"
-              title="Läs mer på FASS"
+              class="text-xs text-purple-700 hover:text-purple-900 underline"
+              onclick="event.stopPropagation()"
             >
               FASS ↗
             </a>
-          </div>
-          <p class="text-sm text-purple-800 mb-2">
-            Omeprazol är en magsårsmedicin (syrahämmare) som skyddar magen när du tar inflammationsdämpande mediciner. 
-            Vi skriver ut Omeprazol till patienter som behöver NSAID men har känslig mage eller tidigare haft magbesvär.
-          </p>
-          <p class="text-sm text-purple-800 mb-2">
-            Omeprazol kan kombineras med både Naproxen och Celebra. 
-            Helst använder vi <strong>Celebra + Omeprazol</strong> för patienter med magproblem, eftersom Celebra är snällare mot magen än Naproxen.
-          </p>
-          <div class="bg-purple-100 border border-purple-300 rounded px-3 py-2 mt-2">
-            <p class="text-xs text-purple-900 font-medium">
-              💊 Ta Omeprazol på morgonen, helst 30 minuter före frukost.
+          </summary>
+          <div class="px-4 pb-4 pt-0">
+            <p class="text-sm text-purple-800 mb-2">
+              Omeprazol är en magsårsmedicin (syrahämmare) som skyddar magen när du tar inflammationsdämpande mediciner. 
+              Vi skriver ut Omeprazol till patienter som behöver NSAID men har känslig mage eller tidigare haft magbesvär.
             </p>
+            <p class="text-sm text-purple-800 mb-2">
+              Omeprazol kan kombineras med både Naproxen och Celebra. 
+              Helst använder vi <strong>Celebra + Omeprazol</strong> för patienter med magproblem, eftersom Celebra är snällare mot magen än Naproxen.
+            </p>
+            <div class="bg-purple-100 border border-purple-300 rounded px-3 py-2 mt-2">
+              <p class="text-xs text-purple-900 font-medium">
+                💊 Ta Omeprazol på morgonen, helst 30 minuter före frukost.
+              </p>
+            </div>
           </div>
-        </div>
+        </details>
       )}
+
     </div>
   </div>
 
@@ -227,3 +260,13 @@ const {
     </div>
   )}
 </section>
+
+<style>
+  /* Ta bort standard-markören för details/summary */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details summary::marker {
+    display: none;
+  }
+</style>
