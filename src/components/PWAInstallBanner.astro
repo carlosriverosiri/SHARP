@@ -1,285 +1,85 @@
 ---
 /**
- * PWAInstallBanner - Installationsbanner för PWA
+ * PWA Install Banner
  * 
- * Minimal och ren banner för iOS och Android.
- * Designad för operations- och rehabsidor där patienter ofta vill ha snabb åtkomst.
- * 
- * Design:
- * - Ljusblå bakgrund (#EBF8FF) för att skilja från toppbannern (#023550)
- * - Mörkblå text (#024264) för kontrast
- * - RELATIVE position (inte fixed) - tar plats i dokumentflödet
- * - Minimal text för bättre iOS-upplevelse – ingen distraktion
- * 
- * FIXAR:
- * 1. Text nära krysset - flex layout med gap
- * 2. Vit banner ovanför - relative position, ingen body padding manipulation
- * 3. Print-ikon försvinner inte - ingen body padding manipulation
- * 
- * Används i: OperationLayout.astro, RehabLayout.astro
+ * Visar banner för att uppmana patienter att spara sidan på hemskärmen.
+ * Endast synlig på mobil.
  */
-
-interface Props {
-  /** Anpassad text för bannern (används endast om pathname-detektering misslyckas) */
-  customText?: string;
-}
-
-const { customText } = Astro.props;
-
-// Detektera sida-typ från pathname för dynamisk text
-// Minimal text - ingen parentes, ingen pil/emoji-instruktion
-const pathname = Astro.url.pathname;
-let defaultText = "Spara denna information på hemskärmen.";
-
-if (pathname.includes('/operation/')) {
-  defaultText = "Spara denna operationsinformation på hemskärmen.";
-} else if (pathname.includes('/rehab/')) {
-  defaultText = "Spara denna rehab-information på hemskärmen.";
-}
 ---
 
-<!-- 
-  PWA Install Banner
-  Dold som default, visas via JavaScript efter plattformsdetektering
-  RELATIVE position - tar plats i dokumentflödet, ingen body padding manipulation
--->
 <div 
   id="pwa-install-banner" 
-  class="hidden bg-[#EBF8FF] text-[#024264] border-b-4 border-[#024264] print:hidden"
-  role="alert"
-  aria-live="polite"
+  class="fixed top-0 left-0 right-0 z-50 bg-[#EBF8FF] border-b-4 border-[#024264] transition-all duration-300 ease-in-out"
+  style="display: none;"
 >
-  <div class="container mx-auto px-4 py-3">
-    <!-- Flex layout: text till vänster, X till höger med gap -->
-    <div class="flex items-center justify-between gap-4">
-      
-      <!-- Text (flex-1 för att ta tillgänglig plats, pr-2 för extra avstånd) -->
-      <p 
-        id="pwa-banner-text" 
-        class="flex-1 text-base md:text-lg font-bold text-[#024264] pr-2"
-      >
-        {defaultText}
-      </p>
-      
-      <!-- Android: Installationsknapp (visas endast på Android) -->
-      <button 
-        id="pwa-install-btn"
-        class="hidden shrink-0 bg-[#024264] text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-[#023550] transition-colors whitespace-nowrap"
-        aria-label="Lägg till på hemskärmen"
-      >
-        Lägg till
-      </button>
-      
-      <!-- Stäng-knapp (X) - shrink-0 så den inte krymper -->
-      <button 
-        id="pwa-dismiss-btn"
-        class="shrink-0 p-2 hover:bg-[#024264]/10 rounded-full transition-colors text-[#024264] hover:text-red-600"
-        aria-label="Stäng banner"
-      >
-        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-      
-    </div>
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+    <p class="flex-1 pr-2 font-bold text-base md:text-lg text-[#024264]">
+      Spara denna kallelse på hemskärmen för snabb åtkomst inför operationen.
+    </p>
+    
+    <button 
+      id="pwa-dismiss-btn"
+      type="button"
+      class="shrink-0 p-2 text-[#024264] hover:text-red-600 transition-colors"
+      aria-label="Stäng"
+    >
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
   </div>
 </div>
 
 <script>
   /**
-   * PWA Installation Banner Script
-   * 
-   * Hanterar:
-   * - Service Worker registrering
-   * - beforeinstallprompt för Android
-   * - iOS-detektering (ingen extra text/instruktioner)
-   * - localStorage för dismiss-state (per sida)
-   * 
-   * VIKTIGT: Ingen body padding manipulation - bannern tar plats i dokumentflödet
+   * PWA Install Banner
+   * Visar banner endast på mobil och hanterar dismiss via localStorage
    */
   
-  // ============================================================================
-  // KONFIGURATION
-  // ============================================================================
-  const pathname = window.location.pathname;
-  const STORAGE_KEY = `pwa-banner-dismissed-${pathname}`;
-  const DISMISS_DURATION_DAYS = 7;
-  
-  // ============================================================================
-  // DOM ELEMENT REFERENSER
-  // ============================================================================
-  const banner = document.getElementById('pwa-install-banner');
-  const installBtn = document.getElementById('pwa-install-btn');
-  const dismissBtn = document.getElementById('pwa-dismiss-btn');
-  
-  // ============================================================================
-  // STATE
-  // ============================================================================
-  let deferredPrompt: any = null;
-  
-  // ============================================================================
-  // HJÄLPFUNKTIONER
-  // ============================================================================
-  
-  function isIOS(): boolean {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-  }
-  
-  function isAndroid(): boolean {
-    return /Android/.test(navigator.userAgent);
-  }
-  
-  /**
-   * Kontrollera om enheten är en mobil (telefon/surfplatta)
-   * Bannern ska ENDAST visas på mobila enheter, inte på PC/Mac
-   */
   function isMobile(): boolean {
-    // Kontrollera touch-stöd + skärmbredd + user agent
-    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const isAndroid = /android/i.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth <= 1024;
-    const mobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    return (isAndroid || isIOS) && hasTouch && isSmallScreen;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('pwa-install-banner');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
     
-    // Måste vara mobilenhet enligt user agent OCH ha liten skärm
-    // (undviker tablets i desktop-läge och desktop Chrome med touch)
-    return mobileUserAgent && (hasTouchScreen || isSmallScreen);
-  }
-  
-  function isStandalone(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (navigator as any).standalone === true;
-  }
-  
-  function isDismissed(): boolean {
-    const dismissedAt = localStorage.getItem(STORAGE_KEY);
-    if (!dismissedAt) return false;
-    
-    const dismissDate = new Date(dismissedAt);
-    const now = new Date();
-    const daysSinceDismiss = (now.getTime() - dismissDate.getTime()) / (1000 * 60 * 60 * 24);
-    
-    return daysSinceDismiss < DISMISS_DURATION_DAYS;
-  }
-  
-  function saveDismiss(): void {
-    localStorage.setItem(STORAGE_KEY, new Date().toISOString());
-  }
-  
-  /**
-   * Visa bannern - enkel toggle, ingen body manipulation
-   */
-  function showBanner(): void {
-    if (banner) {
-      banner.classList.remove('hidden');
-    }
-  }
-  
-  /**
-   * Göm bannern - enkel toggle, ingen body manipulation
-   */
-  function hideBanner(): void {
-    if (banner) {
-      banner.classList.add('hidden');
-    }
-  }
-  
-  // ============================================================================
-  // SERVICE WORKER REGISTRERING
-  // ============================================================================
-  
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((registration) => {
-          console.log('[PWA] Service Worker registered:', registration.scope);
-          
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                }
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error('[PWA] Service Worker registration failed:', error);
-        });
-    });
-  }
-  
-  // ============================================================================
-  // BEFOREINSTALLPROMPT (Android)
-  // ============================================================================
-  
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    console.log('[PWA] beforeinstallprompt captured');
-    
-    // VIKTIGT: Visa endast på mobil, inte på PC/Mac
-    if (!isDismissed() && !isStandalone() && isMobile()) {
-      if (installBtn) {
-        installBtn.classList.remove('hidden');
+    if (!banner || !dismissBtn) return;
+
+    // Kolla om användaren har stängt bannern (per sida)
+    const pathname = window.location.pathname;
+    const dismissKey = `pwa-banner-dismissed-${pathname}`;
+    const isDismissed = localStorage.getItem(dismissKey) === 'true';
+
+    function showBanner() {
+      if (isMobile() && !isDismissed) {
+        banner.style.display = 'block';
+        document.body.style.paddingTop = banner.offsetHeight + 'px';
       }
-      showBanner();
     }
-  });
-  
-  // ============================================================================
-  // INSTALLATIONSKNAPP CLICK (Android)
-  // ============================================================================
-  
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        console.log('[PWA] No deferred prompt available');
-        return;
-      }
+
+    function hideBanner() {
+      banner.style.transition = 'opacity 0.3s ease-in-out, height 0.3s ease-in-out';
+      banner.style.opacity = '0';
+      banner.style.height = '0';
+      banner.style.overflow = 'hidden';
       
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('[PWA] User response:', outcome);
-      
-      deferredPrompt = null;
-      hideBanner();
-      
-      if (outcome === 'accepted') {
-        console.log('[PWA] App installed');
-      } else {
-        saveDismiss();
-      }
-    });
-  }
-  
-  // ============================================================================
-  // iOS HANTERING
-  // ============================================================================
-  
-  // VIKTIGT: Visa endast på mobil iOS, inte på iPad i desktop-läge
-  if (isIOS() && isMobile() && !isStandalone() && !isDismissed()) {
+      setTimeout(() => {
+        banner.style.display = 'none';
+        localStorage.setItem(dismissKey, 'true');
+        document.body.style.paddingTop = '';
+      }, 300);
+    }
+
+    dismissBtn.addEventListener('click', hideBanner);
+    
+    // Visa banner om det är mobil och inte stängd
     showBanner();
-  }
-  
-  // ============================================================================
-  // DISMISS KNAPP
-  // ============================================================================
-  
-  if (dismissBtn) {
-    dismissBtn.addEventListener('click', () => {
-      hideBanner();
-      saveDismiss();
-    });
-  }
-  
-  // ============================================================================
-  // APPINSTALLED EVENT
-  // ============================================================================
-  
-  window.addEventListener('appinstalled', () => {
-    console.log('[PWA] App installed successfully');
-    hideBanner();
-    deferredPrompt = null;
   });
 </script>

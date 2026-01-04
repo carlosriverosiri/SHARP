@@ -1,0 +1,292 @@
+---
+/**
+ * KALLELSE FÖR OPERATION
+ * =======================
+ * Informationssida för patienter med instruktioner inför operation.
+ * 
+ * Skapad: 2026-01-04
+ * Kortlänk: www.specialist.se/i/kallelse
+ * 
+ * Denna sida innehåller:
+ * - Operationsinformation
+ * - Kontaktinformation
+ * - Förberedelser
+ * - Efteroperationens information
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PWAInstallBanner from '../../components/PWAInstallBanner.astro';
+
+const pageTitle = "Kallelse för Operation | Södermalms Ortopedi";
+const pageDescription = "Instruktioner och information inför din operation hos Södermalms Ortopedi. Förberedelser, kontaktinformation och viktiga detaljer.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <PWAInstallBanner client:load />
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-[#024264] mb-4">
+        Kallelse för Operation
+      </h1>
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+        <p class="text-blue-800 font-medium">
+          Din operationsdag hos <strong>Spec. ortopedi Carlos Rivero Siri</strong> kommer anges i ditt bokningsSMS.
+        </p>
+      </div>
+    </div>
+
+    <!-- Hälsodeklaration -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">Hälsodeklaration</h2>
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-4">
+        <p class="text-slate-700">
+          Du har tidigare fyllt i ett digitalt frågeformulär om din sjukdom i din axel, knä eller armbåge. 
+          Inför operationen måste du fylla i ett annat frågeformulär, en <strong>hälsodeklaration</strong>, 
+          för att vi skall kunna ge dig en trygg och säker narkos. 
+          Du hittar länken till hälsodeklarationen i ditt bokningsSMS som anger operationsdagen.
+        </p>
+        <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+          <p class="text-sky-800 font-medium mb-2">
+            📋 Du kan fylla i frågeformuläret här:
+          </p>
+          <a href="https://www.specialist.se/hd" class="text-sky-700 hover:text-sky-900 underline font-semibold">
+            www.specialist.se/hd
+          </a>
+        </div>
+        <p class="text-slate-700">
+          Hälsodeklarationen ligger till grund för din narkos under operation så att narkosläkaren ska kunna välja rätt anestesimetod. 
+          Var noga med att fylla i korrekt information angående bl.a. vikt och läkemedel.
+        </p>
+      </div>
+    </section>
+
+    <!-- Kontaktinformation -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">Kontaktinformation</h2>
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg mb-4">
+          <p class="text-amber-800 font-semibold mb-2">
+            ⚠️ Viktigt: Ring oss tre vardagar innan operationsdagen
+          </p>
+          <p class="text-amber-700 text-sm">
+            Exempel: Ska du opereras en tisdag, ring oss på torsdag veckan innan.
+          </p>
+        </div>
+        <div class="space-y-3">
+          <p class="text-slate-700">
+            Ring <strong>08-55 11 04 22</strong>. Tryck alternativ 2 och följ instruktionerna. 
+            Du kommer att få ange namn, personnummer och telefonnummer, varpå vi sedan kommer att ringa till dig med din ankomsttid till operationen.
+          </p>
+          <p class="text-slate-700 font-medium">
+            Det är av största vikt att du ringer oss tre vardagar före utsatt operationsdag, 
+            annars kommer vi att erbjuda en annan patient din operationstid.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Avgifter och betalning -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">Avgifter och betalning</h2>
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-4">
+        <p class="text-slate-700">
+          För våra patienter från Region Stockholm gäller frikort och samma avgifter som offentliga sjukhus, 
+          detta enligt Region Stockholms riktlinjer. Vi har inte möjlighet att ta emot kontant betalning, 
+          men det går alldeles utmärkt att betala med bank-, betalkort eller faktura.
+        </p>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p class="text-red-800 text-sm">
+            <strong>Uteblivet besök eller sen avbokning</strong> debiteras med 400 kr. Frikort gäller då inte. 
+            Enligt Region Stockholms riktlinjer måste om-/avbokning ske senast 24 timmar före utsatt tid. 
+            Ev av- eller ombokning ska ske till <strong>08-55110422</strong>.
+          </p>
+        </div>
+        <p class="text-slate-700">
+          <strong>Boka i god tid</strong> en tid till sjukgymnast/fysioterapeut ca en vecka efter din planerade operation.
+        </p>
+      </div>
+    </section>
+
+    <!-- Förberedelser -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">Förberedelser</h2>
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-6">
+        
+        <!-- Blodtryck -->
+        <div>
+          <h3 class="font-bold text-slate-800 mb-2">Blodtryck</h3>
+          <p class="text-slate-700 text-sm">
+            Du bör kontrollera ditt blodtryck inför operationen. Värdet bör ej vara äldre än 1 månad. 
+            För mätning - Gå till din vårdcentral eller apotek.
+          </p>
+          <p class="text-slate-700 text-sm mt-2">
+            Om insättning eller justering av blodtrycksmedicin, kontakta mottagningen för information på <strong>08-55110422</strong>.
+          </p>
+        </div>
+
+        <!-- Fasta -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Fasta</h3>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p class="text-red-800 font-medium text-sm">
+              ⚠️ Du ska inte äta eller dricka något på <strong>6 timmar</strong> innan du kommer till kliniken.
+            </p>
+          </div>
+          <p class="text-slate-700 text-sm mt-2">
+            Under en sövning måste magsäcken vara tom, annars kan matrester hamna i lungorna. 
+            Av säkerhetsskäl gäller samma rutin även om du ska opereras i lokalbedövning.
+          </p>
+        </div>
+
+        <!-- Tobak -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Tobak</h3>
+          <p class="text-slate-700 text-sm">
+            Du får inte röka eller snusa minst <strong>24 timmar</strong> före operationen.
+          </p>
+        </div>
+
+        <!-- Duschning -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Duschning</h3>
+          <p class="text-slate-700 text-sm">
+            Duscha hela kroppen och tvätta håret med <strong>DesCutan®-tvål</strong> (köps på apoteket), 
+            kvällen före samt på operationsdagens morgon. Undvik DesCutan-tvål i underlivet. 
+            När du har duschat ska du byta till rena kläder och rena sängkläder. 
+            Använd inte deoderant, hårbalsam/-inpackning, hudlotion eller parfym.
+          </p>
+        </div>
+
+        <!-- Smink/smycken -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Smink/smycken</h3>
+          <p class="text-slate-700 text-sm">
+            Använd inte smink. Ta bort nagellack och piercing. Lämna ringar/smycken/klocka hemma. 
+            Gel- och akrylnaglar får sitta.
+          </p>
+        </div>
+
+        <!-- Småsår -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Småsår</h3>
+          <p class="text-slate-700 text-sm">
+            Om du har ett litet sår/finne/bett på eller i närheten av det område du ska operera - 
+            maila ett foto till kliniken på <a href="mailto:info@sodermalmsortopedi.se" class="text-blue-600 hover:underline">info@sodermalmsortopedi.se</a>
+          </p>
+        </div>
+
+        <!-- Mediciner -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Mediciner</h3>
+          <p class="text-slate-700 text-sm">
+            Står du på blodförtunnande läkemedel (t.ex. Waran, Eliquis, Trombyl) ska sätta ut dessa inför operationen, 
+            pga blödningsrisk. Du får instruktioner om detta. Kontakta mottagningen för närmare information. 
+            Ev. astmamediciner och kortisonmediciner tar du som vanligt på operationsdagen.
+          </p>
+        </div>
+
+        <!-- Diabetiker -->
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="font-bold text-slate-800 mb-2">Diabetiker</h3>
+          <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <p class="text-amber-800 font-medium text-sm">
+              Är du diabetiker ska du <strong>INTE</strong> ta ditt insulin eller tabletter på operationsdagens morgon. 
+              Ta med ditt insulin/tabletter och din egen blodsockermätare.
+            </p>
+          </div>
+        </div>
+
+        <!-- Varning -->
+        <div class="border-t border-gray-200 pt-4">
+          <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+            <p class="text-red-800 font-semibold">
+              ⚠️ Om ovanstående instruktioner inte efterföljs riskerar du att din operation blir inställd.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-slate-700 text-sm">
+          Du kommer att träffa opererande läkare och narkosläkare strax före operationen.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- Efter operationen -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-[#024264] mb-4">Efter operationen</h2>
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-4">
+        
+        <p class="text-slate-700">
+          Operation är <strong>dagkirurgi</strong> och innebär att du går hem samma dag som du opereras. 
+          Du stanna någon timme på uppvakningsavdelningen och bli erbjuden en smörgås och något att dricka. 
+          På uppvakningsavdelningen kan du använda din mobiltelefon. Innan du går hem träffar du din läkare.
+        </p>
+
+        <!-- Hemresa -->
+        <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+          <h3 class="font-bold text-sky-800 mb-2">Hemresa</h3>
+          <p class="text-sky-700 text-sm">
+            Narkos- och bedövningsmedel gör att du inte får köra bil på ett dygn. 
+            Man är ofta lite påverkad av narkosen även efter operationen och bör därför undvika kommunaltrafiken. 
+            Har Du ingen som kan hämta dig och bor i Stockholms län kan du få en sjukresa hem 
+            (gäller ej privata- och försäkringspatienter). 
+            <a href="https://www.sjukresor.regionstockholm.se" target="_blank" rel="noopener noreferrer" class="underline hover:text-sky-900">
+              www.sjukresor.regionstockholm.se
+            </a>
+          </p>
+        </div>
+
+        <!-- Smärtstillande -->
+        <div>
+          <h3 class="font-bold text-slate-800 mb-2">Smärtstillande</h3>
+          <p class="text-slate-700 text-sm">
+            Du får e-recept på smärtstillande tabletter, bekräftelse på detta skickas till din mobiltelefon. 
+            Medicinerna hämtas efter operationen. Ta dessa innan det gör ont.
+          </p>
+        </div>
+
+        <!-- Sjukskrivning -->
+        <div>
+          <h3 class="font-bold text-slate-800 mb-2">Sjukskrivning</h3>
+          <p class="text-slate-700 text-sm">
+            Ditt eventuella Läkarintyg för sjukpenning skickas direkt till försäkringskassans hemsida: 
+            <a href="https://www.forsakringskassan.se" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+              www.forsakringskassan.se
+            </a>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="mb-8">
+      <div class="bg-gray-50 rounded-lg border border-gray-200 p-6">
+        <h2 class="text-xl font-bold text-[#024264] mb-4">Kontakt</h2>
+        <p class="text-slate-700 mb-4">
+          Vid frågor vänligen ring Södermalms Ortopedis mottagning på <strong>08-55110422</strong>.
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-600">
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">Adress</p>
+            <p>Södermalms Ortopedi<br>Fatburs Brunnsgata 17<br>118 28 Stockholm</p>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 mb-1">Telefon</p>
+            <p>08-551 104 22</p>
+            <p class="font-semibold text-slate-800 mb-1 mt-3">Fax</p>
+            <p>08-551 104 24</p>
+            <p class="font-semibold text-slate-800 mb-1 mt-3">E-post</p>
+            <p><a href="mailto:info@sodermalmsortopedi.se" class="text-blue-600 hover:underline">info@sodermalmsortopedi.se</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+

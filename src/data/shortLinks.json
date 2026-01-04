@@ -185,6 +185,20 @@
       "target": "/info/recept-policy",
       "isExternal": false,
       "_comment": "Dedikerad sida för klinikens receptpolicy - för administrativ personal och patienter"
+    },
+    {
+      "name": "Kallelse för Operation",
+      "shortCode": "/i/kallelse",
+      "target": "/info/kallelse-operation",
+      "isExternal": false,
+      "_comment": "Kallelse för operation - vanliga patienter (Region Stockholm, privatbetalande)"
+    },
+    {
+      "name": "Kallelse för Operation - Försäkringspatient",
+      "shortCode": "/i/kallelse-forsakring",
+      "target": "/info/kallelse-operation-forsakring",
+      "isExternal": false,
+      "_comment": "Kallelse för operation - försäkringspatienter"
     }
   ]
 }
