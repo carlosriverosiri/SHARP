@@ -1,6 +1,6 @@
 ---
 /**
- * OpSmarta - Smärtstillande efter operation
+ * OpSmarta - Smärta och smärtstillande efter operation
  * 
  * OBS: Inga exakta doseringar visas - endast styrka (t.ex. 500 mg)
  * Patienten hänvisas till 1177 för dosering
@@ -8,16 +8,16 @@
 interface Props {
   visaAlvedon?: boolean;
   visaCitodon?: boolean;
-  visaOmeprazol?: boolean;  // Förberett för framtida användning
-  visaCelebra?: boolean;    // Förberett för framtida användning
+  visaOmeprazol?: boolean;
+  visaCelebra?: boolean;
   extraInfo?: string;
 }
 
 const { 
   visaAlvedon = true,
   visaCitodon = true,
-  visaOmeprazol = false,    // Aktivera när innehåll är klart
-  visaCelebra = false,      // Aktivera när innehåll är klart
+  visaOmeprazol = true,
+  visaCelebra = true,
   extraInfo
 } = Astro.props;
 ---
@@ -28,7 +28,16 @@ const {
     <!-- Rubrik med ikon -->
     <div class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
       <img src="/images/operation/medicine.svg" alt="" class="w-10 h-10" />
-      <h2 class="text-lg font-bold text-[#024264]">Smärtstillande</h2>
+      <h2 class="text-lg font-bold text-[#024264]">Smärta och smärtstillande</h2>
+    </div>
+
+    <!-- Normal smärta efter operation -->
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4">
+      <p class="text-slate-700">
+        Det är helt normalt att det gör ont när du belastar axelleden de <strong>3 första månaderna</strong> efter operationen. 
+        Du bör vara beredd på lite knäpp och knak i axeln, samt skärande och huggande smärtor efter en operation. 
+        Dessa plötsliga smärtor är vanliga, men ofarliga efter en operation i axelleden.
+      </p>
     </div>
 
     <!-- E-recept information -->
@@ -148,29 +157,7 @@ const {
         </div>
       )}
 
-      {/* OMEPRAZOL - Förberett för framtida innehåll */}
-      {visaOmeprazol && (
-        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
-          <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg</h3>
-            <a 
-              href="https://www.fass.se/LIF/searchresult?query=omeprazol" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="text-xs text-purple-700 hover:text-purple-900 underline flex items-center gap-1"
-              title="Läs mer på FASS"
-            >
-              FASS ↗
-            </a>
-          </div>
-          <p class="text-sm text-purple-800">
-            {/* TODO: Lägg till information om Omeprazol */}
-            Information kommer snart.
-          </p>
-        </div>
-      )}
-
-      {/* CELEBRA - Förberett för framtida innehåll */}
+      {/* CELEBRA - TODO: Lägg till fullständig information */}
       {visaCelebra && (
         <div class="bg-teal-50 rounded-lg p-4 border border-teal-200">
           <div class="flex items-start justify-between mb-2">
@@ -185,9 +172,29 @@ const {
               FASS ↗
             </a>
           </div>
-          <p class="text-sm text-teal-800">
-            {/* TODO: Lägg till information om Celebra */}
-            Information kommer snart.
+          <p class="text-sm text-teal-800 italic">
+            📝 TODO: Information om Celebra kommer att läggas till.
+          </p>
+        </div>
+      )}
+
+      {/* OMEPRAZOL - TODO: Lägg till fullständig information */}
+      {visaOmeprazol && (
+        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg</h3>
+            <a 
+              href="https://www.fass.se/LIF/searchresult?query=omeprazol" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs text-purple-700 hover:text-purple-900 underline flex items-center gap-1"
+              title="Läs mer på FASS"
+            >
+              FASS ↗
+            </a>
+          </div>
+          <p class="text-sm text-purple-800 italic">
+            📝 TODO: Information om Omeprazol kommer att läggas till.
           </p>
         </div>
       )}
