@@ -95,82 +95,134 @@ const {
       </div>
     </div>
 
-    <!-- Descutan / Hibiwash -->
+    <!-- Tvätt inför operation -->
     {visaDescutan && (
-      <div class="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
-        <!-- Descutan -->
-        <div class="pb-4 mb-4 border-b border-gray-200 md:p-5 md:border-0 md:mb-0 md:bg-sky-50/50">
-          <div class="flex gap-3 items-start">
-            <button 
-              type="button"
-              id="descutan-thumbnail"
-              class="cursor-pointer group relative flex-shrink-0"
-              aria-label="Visa bild i full storlek"
-            >
-              <Image 
-                src={descutanImage} 
-                alt="Descutan tvättsvamp" 
-                width={48}
-                height={48}
-                loading="lazy"
-                class="w-12 h-12 rounded object-cover border border-sky-200 group-hover:border-sky-400 transition-colors"
-              />
-            </button>
-            <div class="flex-1">
-              <h3 class="font-semibold text-slate-800 mb-1">Descutan® tvättsvamp</h3>
-              <p class="text-slate-600 text-sm mb-2">
-                Duscha <strong>kvällen före</strong> samt på <strong>operationsdagens morgon</strong> med bakteriedödande tvål.
-              </p>
-              <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Descutan+tv%C3%A4ttsvamp%22&gl=se" 
-                 target="_blank" 
-                 rel="noopener" 
-                 class="inline-flex items-center gap-1.5 text-sm bg-sky-600 text-white px-3 py-1.5 rounded-full hover:bg-sky-700 transition-colors">
-                <span>Hitta & jämför priser</span>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                </svg>
-              </a>
+      <div class="pb-4 mb-4 border-b border-gray-200 md:p-5 md:border-b md:border-gray-100 md:mb-0">
+        <div class="flex gap-3 items-start">
+          <img src="/images/operation/dusch-24x24.svg" alt="" class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-800 mb-2">Tvätt inför operation</h3>
+            
+            <p class="text-slate-600 mb-3">
+              Duscha <strong>hela kroppen</strong> och tvätta håret med bakteriedödande tvål 
+              <strong>kvällen före</strong> samt på <strong>operationsdagens morgon</strong>.
+            </p>
+            
+            <!-- Viktiga instruktioner -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">
+              <p class="text-amber-800 text-sm font-medium mb-2">⚠️ Viktigt att tänka på:</p>
+              <ul class="text-amber-700 text-sm space-y-1">
+                <li>• <strong>Undvik</strong> DesCutan/Hibiwash i underlivet</li>
+                <li>• Byt till <strong>rena kläder</strong> och <strong>rena sängkläder</strong> efter kvällsduschen</li>
+                <li>• Använd <strong>inte</strong> deodorant, hårbalsam, hudlotion eller parfym</li>
+              </ul>
             </div>
-          </div>
-        </div>
-
-        <!-- Hibiwash -->
-        <div class="md:p-5 md:bg-green-50/50">
-          <div class="flex gap-3 items-start">
-            <button 
-              type="button"
-              id="hibiwash-thumbnail"
-              class="cursor-pointer group relative flex-shrink-0"
-              aria-label="Visa bild i full storlek"
-            >
-              <Image 
-                src={hibiwashImage} 
-                alt="Hibiwash" 
-                width={48}
-                height={48}
-                loading="lazy"
-                class="w-12 h-12 rounded object-cover border border-green-200 group-hover:border-green-400 transition-colors"
-              />
-            </button>
-            <div class="flex-1">
-              <h3 class="font-semibold text-slate-800 mb-1">Hibiwash – billigare alternativ</h3>
-              <p class="text-slate-600 text-sm mb-2">
-                <strong>Hibiwash</strong> fungerar lika bra som bakteriedödande tvål inför operation.
-              </p>
-              <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Hibiwash%22&gl=se" 
-                 target="_blank" 
-                 rel="noopener" 
-                 class="inline-flex items-center gap-1.5 text-sm bg-green-600 text-white px-3 py-1.5 rounded-full hover:bg-green-700 transition-colors">
-                <span>Hitta & jämför priser</span>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                </svg>
-              </a>
+            
+            <!-- Produkter -->
+            <div class="grid sm:grid-cols-2 gap-3">
+              <!-- Descutan -->
+              <div class="bg-sky-50 rounded-lg p-3 border border-sky-100">
+                <div class="flex gap-2 items-start">
+                  <button 
+                    type="button"
+                    id="descutan-thumbnail"
+                    class="cursor-pointer group relative flex-shrink-0"
+                    aria-label="Visa bild i full storlek"
+                  >
+                    <Image 
+                      src={descutanImage} 
+                      alt="Descutan tvättsvamp" 
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      class="w-10 h-10 rounded object-cover border border-sky-200 group-hover:border-sky-400 transition-colors"
+                    />
+                  </button>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold text-slate-800 text-sm">Descutan®</h4>
+                    <p class="text-slate-600 text-xs mb-2">Tvättsvamp med klorhexidin</p>
+                    <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Descutan+tv%C3%A4ttsvamp%22&gl=se" 
+                       target="_blank" 
+                       rel="noopener" 
+                       class="inline-flex items-center gap-1 text-xs bg-sky-600 text-white px-2 py-1 rounded-full hover:bg-sky-700 transition-colors">
+                      <span>Köp på apotek</span>
+                      <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Hibiwash -->
+              <div class="bg-green-50 rounded-lg p-3 border border-green-100">
+                <div class="flex gap-2 items-start">
+                  <button 
+                    type="button"
+                    id="hibiwash-thumbnail"
+                    class="cursor-pointer group relative flex-shrink-0"
+                    aria-label="Visa bild i full storlek"
+                  >
+                    <Image 
+                      src={hibiwashImage} 
+                      alt="Hibiwash" 
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      class="w-10 h-10 rounded object-cover border border-green-200 group-hover:border-green-400 transition-colors"
+                    />
+                  </button>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold text-slate-800 text-sm">Hibiwash</h4>
+                    <p class="text-slate-600 text-xs mb-2">Billigare alternativ</p>
+                    <a href="https://www.google.se/search?hl=sv&tbm=shop&q=%22Hibiwash%22&gl=se" 
+                       target="_blank" 
+                       rel="noopener" 
+                       class="inline-flex items-center gap-1 text-xs bg-green-600 text-white px-2 py-1 rounded-full hover:bg-green-700 transition-colors">
+                      <span>Köp på apotek</span>
+                      <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     )}
+    
+    <!-- Smink, smycken och småsår -->
+    <div class="md:p-5">
+      <div class="flex gap-3 items-start">
+        <span class="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 flex items-center justify-center text-xl">💍</span>
+        <div class="flex-1">
+          <h3 class="font-semibold text-slate-800 mb-2">Smink, smycken och småsår</h3>
+          <ul class="text-slate-600 space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-red-500">✕</span>
+              <span>Använd <strong>inte smink</strong>. Ta bort nagellack och piercing.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-red-500">✕</span>
+              <span>Lämna ringar, smycken och klocka <strong>hemma</strong>.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-green-600">✓</span>
+              <span>Gel- och akrylnaglar får sitta kvar.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-600">!</span>
+              <span>
+                Har du ett <strong>sår, finne eller bett</strong> nära operationsområdet? 
+                Maila ett foto till <a href="mailto:info@sodermalmsortopedi.se" class="text-blue-600 hover:underline">info@sodermalmsortopedi.se</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
   </div>
 
