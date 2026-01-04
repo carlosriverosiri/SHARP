@@ -78,7 +78,7 @@ Det enklaste sättet är att använda **Link Generator-verktyget** direkt på si
 2. **Scrolla ner** till sektionen "🛠 Lägg till ny kortlänk"
 3. **Klicka** för att expandera formuläret
 4. **Följ stegen:**
-   - **Steg 1:** Välj kategori (Diagnoser, Operationer, Rehab eller Frågeformulär)
+   - **Steg 1:** Välj kategori (Diagnoser, Operationer, Rehab, Frågeformulär eller Info)
    - **Steg 2:** Skriv namnet på länken (t.ex. "AC-ledsartros")
      - 💡 **Tips:** Kortkoden fylls i automatiskt när du skriver namnet!
    - **Steg 3:** Kortkod (fylls i automatiskt, men du kan ändra den)
@@ -141,7 +141,7 @@ Om du föredrar att redigera direkt i filen:
 ### Steg-för-steg (Manuell)
 
 1. **Öppna** `src/data/shortLinks.json`
-2. **Hitta rätt kategori** (Diagnoser, Operationer, Rehab, Frågeformulär)
+2. **Hitta rätt kategori** (Diagnoser, Operationer, Rehab, Frågeformulär, Info)
 3. **Lägg till** nytt objekt med alla fält
 4. **Kontrollera** att `isExternal` är korrekt (`true` för externa URLs)
 5. **Pusha** till GitHub
