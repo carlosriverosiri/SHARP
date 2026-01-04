@@ -45,7 +45,7 @@ const bandageImages = [
             <button 
               type="button"
               id="bandage-stygn-thumbnail"
-              class="cursor-pointer group relative flex-shrink-0"
+              class="cursor-pointer group relative shrink-0"
               aria-label="Visa bild i full storlek"
             >
               <img 
@@ -77,7 +77,7 @@ const bandageImages = [
           <button 
             type="button"
             id="bandage-inre-thumbnail"
-            class="cursor-pointer group relative flex-shrink-0"
+            class="cursor-pointer group relative shrink-0"
             aria-label="Visa bild i full storlek"
           >
             <img 
@@ -108,7 +108,7 @@ const bandageImages = [
           <button 
             type="button"
             id="bandage-yttre-thumbnail"
-            class="cursor-pointer group relative flex-shrink-0"
+            class="cursor-pointer group relative shrink-0"
             aria-label="Visa bild i full storlek"
           >
             <img 
@@ -137,18 +137,15 @@ const bandageImages = [
     <!-- Skötsel av bandage -->
     <div class="mt-3 pt-3 border-t border-gray-100 space-y-2 text-slate-600">
       <p>
-        <strong>När ska man byta?</strong> Om det blir väldigt blött eller slaskigt ska du byta det yttre bandaget. 
+        Om det blir väldigt blött eller slaskigt ska du byta det yttre bandaget. 
         Det är bättre att byta än att ha en blöt massa där bakterier kan ansamlas.
       </p>
       <p>
         <strong>Det inre bandaget</strong> låter du sitta kvar om du behöver byta tidigt. 
-        Det yttre bandaget kan du ersätta med vilket absorberande förband som helst från apoteket.
+        <strong>Det yttre bandaget</strong> kan du ersätta med vilket absorberande förband som helst från apoteket.
       </p>
       <p>
-        <strong>Efter ca en vecka</strong> kan du helt ta av bandaget, eller vänta tills stygnen tas bort.
-      </p>
-      <p class="text-sm text-slate-500 italic">
-        💡 Det finns inga strikta regler – använd sunt förnuft. Lite vätska de första dagarna är helt normalt.
+        Efter ca en vecka kan du helt ta av bandaget, eller vänta tills stygnen tas bort.
       </p>
     </div>
   </div>
@@ -158,6 +155,23 @@ const bandageImages = [
       {extraInfo}
     </div>
   )}
+
+  <!-- Blåmärken/Hematom - separat block -->
+  <div class="mt-6 bg-white rounded-xl shadow-md border border-gray-100 p-4">
+    <!-- Rubrik -->
+    <h2 class="text-lg font-bold text-[#024264] mb-3">Blåmärken (Hematom)</h2>
+    
+    <div class="space-y-2 text-slate-700">
+      <p>
+        När man byter bandage kan man ibland se ett större eller mindre blåmärke i operationsområdet. 
+        Det är helt normalt eftersom det blöder när man blir opererad.
+      </p>
+      <p>
+        Dessa blåmärken är ofarliga. Men undantagsvis kan de bli ganska stora och ibland vandra neråt mot underarmen. 
+        Risk för blåmärken i över- eller underarm ökar naturligtvis om du står på blodförtunnande medicin.
+      </p>
+    </div>
+  </div>
 
   <!-- Suturer - separat block -->
   <div class="mt-6 bg-white rounded-xl shadow-md border border-gray-100 p-4">
