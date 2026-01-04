@@ -22,17 +22,18 @@ const {
 } = Astro.props;
 ---
 
-<section id="forberedelser" class="mb-8 scroll-mt-32">
-  <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+<!-- Mobil: ta bort rundade hörn/shadow, minimal padding för text närmare kant -->
+<section id="forberedelser" class="mb-6 sm:mb-8 scroll-mt-32">
+  <div class="bg-white sm:rounded-xl sm:shadow-md sm:border sm:border-gray-100 overflow-hidden">
     <!-- Rubrik med ikon -->
-    <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+    <div class="flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gray-100">
       <h2 class="text-lg font-bold text-[#024264]">Förberedelser</h2>
     </div>
     
     <!-- Fasta -->
-    <div class="px-4 py-3 border-b border-gray-100">
-      <div class="flex gap-3 items-start">
-        <img src="/images/operation/ingen-mat.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+    <div class="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gray-100">
+      <div class="flex gap-2.5 sm:gap-3 items-start">
+        <img src="/images/operation/ingen-mat.svg" alt="" class="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 mt-0.5" />
         <div class="flex-1 min-w-0">
           <h3 class="font-semibold text-slate-800 text-base mb-1">Fasta</h3>
           <p class="text-slate-600 mb-2">
@@ -48,9 +49,9 @@ const {
 
     <!-- Rökstopp -->
     {visaRokstopp && (
-      <div class="px-4 py-3 border-b border-gray-100">
-        <div class="flex gap-3 items-start">
-          <img src="/images/operation/ingen_rokning.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+      <div class="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gray-100">
+        <div class="flex gap-2.5 sm:gap-3 items-start">
+          <img src="/images/operation/ingen_rokning.svg" alt="" class="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 mt-0.5" />
           <div class="flex-1 min-w-0">
             <h3 class="font-semibold text-slate-800 text-base mb-1">Rökning och snus</h3>
             <p class="text-slate-600 mb-2">
@@ -66,9 +67,9 @@ const {
     )}
 
     <!-- Mediciner -->
-    <div class="px-4 py-3 border-b border-gray-100">
-      <div class="flex gap-3 items-start">
-        <img src="/images/operation/medicine.svg" alt="" class="w-10 h-10 flex-shrink-0 mt-0.5" />
+    <div class="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gray-100">
+      <div class="flex gap-2.5 sm:gap-3 items-start">
+        <img src="/images/operation/medicine.svg" alt="" class="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 mt-0.5" />
         <div class="flex-1 min-w-0">
           <h3 class="font-semibold text-slate-800 text-base mb-1">Mediciner</h3>
           <ul class="text-slate-600 space-y-1">
@@ -93,8 +94,8 @@ const {
     {visaDescutan && (
       <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
         <!-- Descutan -->
-        <div class="px-4 py-3 bg-sky-50/50">
-          <div class="flex gap-3 items-start">
+        <div class="px-3 sm:px-4 py-2.5 sm:py-3 bg-sky-50/50">
+          <div class="flex gap-2.5 sm:gap-3 items-start">
             <button 
               type="button"
               id="descutan-thumbnail"
@@ -134,8 +135,8 @@ const {
         </div>
 
         <!-- Hibiwash -->
-        <div class="px-4 py-3 bg-green-50/50">
-          <div class="flex gap-3 items-start">
+        <div class="px-3 sm:px-4 py-2.5 sm:py-3 bg-green-50/50">
+          <div class="flex gap-2.5 sm:gap-3 items-start">
             <button 
               type="button"
               id="hibiwash-thumbnail"

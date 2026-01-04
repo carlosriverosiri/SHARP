@@ -26,16 +26,17 @@ const bandageImages = [
 ];
 ---
 
-<section id="eftervard" class="mb-8 scroll-mt-32">
-  <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
+<!-- Mobil: ta bort rundade hörn/shadow, minimal padding -->
+<section id="eftervard" class="mb-6 sm:mb-8 scroll-mt-32">
+  <div class="bg-white sm:rounded-xl sm:shadow-md sm:border sm:border-gray-100 p-3 sm:p-4">
     <!-- Rubrik med ikon -->
-    <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
-      <img src="/images/operation/plaster-24x24.svg" alt="" class="w-10 h-10" />
+    <div class="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3 pb-2.5 sm:pb-3 border-b border-gray-100">
+      <img src="/images/operation/plaster-24x24.svg" alt="" class="w-8 h-8 sm:w-10 sm:h-10" />
       <h2 class="text-lg font-bold text-[#024264]">Bandage</h2>
     </div>
 
     <!-- Bandagetyper -->
-    <div class="grid md:grid-cols-3 gap-3 mb-3">
+    <div class="grid md:grid-cols-3 gap-2 sm:gap-3 mb-2.5 sm:mb-3">
       <!-- Stygn -->
       {visaStygn && (
         <div class="bg-amber-50 rounded-lg p-3 border border-amber-100">
