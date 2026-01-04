@@ -61,6 +61,7 @@ Korta URLs använder följande prefix:
 | `/o/` | Operationer | `www.specialist.se/o/ac` → Operation AC-led |
 | `/r/` | Rehab | `www.specialist.se/r/ac` → Rehab efter AC-op |
 | `/ff/` | Frågeformulär | `www.specialist.se/ff/axel` → Externt frågeformulär |
+| `/i/` | Info (policy, riktlinjer) | `www.specialist.se/i/recept` → Policy receptändringar |
 
 > **OBS:** `www.` används istället för `https://` för att spara 4 tecken per länk.  
 > Båda fungerar – webbläsaren lägger automatiskt till `https://`.
@@ -307,6 +308,27 @@ Använd en JSON-validator (t.ex. [jsonlint.com](https://jsonlint.com)) för att 
 ### För daglig användning
 - **Ha sidan öppen** i en egen flik under hela mottagningen
 - **Använd sökfunktionen** för att snabbt hitta rätt länk (söker i både namn och shortcode)
+- **Testa nya länkar** innan du skickar till patienter
+- **Uppdatera frågeformulär-URLs** om journalsystemet ändras
+
+### För att lägga till nya länkar
+- **Använd Link Generator** – Det är det enklaste sättet!
+- **Lita på automatiken** – Kortkoden genereras automatiskt från namnet
+- **Använd "Auto"-knappen** om du vill generera om kortkoden
+- **Kolla förhandsvisningen** – Se hur länken ser ut innan du genererar
+- **En fil = all underhåll** – redigera bara `shortLinks.json`
+
+### Tekniska regler
+- **Kortkod-regler:** Endast små bokstäver (a-z), siffror (0-9) och bindestreck (-)
+- **Exempel:** `ac-ledsartros`, `impingement`, `rotatorcuff-ruptur`
+- **Åäö konverteras automatiskt** till aao när du använder Auto-funktionen
+
+---
+
+*Senast uppdaterad: 3 januari 2026*  
+*Link Generator-verktyg tillagt: 3 januari 2026*  
+*Automatisk kortkod-generering och förbättringar: 3 januari 2026*
+
 - **Testa nya länkar** innan du skickar till patienter
 - **Uppdatera frågeformulär-URLs** om journalsystemet ändras
 

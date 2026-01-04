@@ -16,13 +16,14 @@
     "  /o/  = Operationer",
     "  /r/  = Rehab",
     "  /ff/ = Frågeformulär (externa)",
+    "  /i/  = Info (administrativa riktlinjer, patientinfo etc.)",
     "",
     "LÄGG TILL NY LÄNK:",
     "  1. Lägg till objekt i rätt kategori nedan",
     "  2. Pusha till GitHub",
     "  3. Klart! Redirect och UI uppdateras automatiskt"
   ],
-  "_lastUpdated": "2026-01-03",
+  "_lastUpdated": "2026-01-04",
   
   "Diagnoser": [
     {
@@ -175,6 +176,15 @@
       "isExternal": true,
       "_comment": "Byt ut target mot riktig URL från journalsystemet"
     }
+  ],
+
+  "Info": [
+    {
+      "name": "Policy: Restnoterade läkemedel & förpackningsbyten",
+      "shortCode": "/i/recept",
+      "target": "/operation/axel/lateral-klavikelresektion#recept-policy",
+      "isExternal": false,
+      "_comment": "Länk till klinikens policy om receptändringar - för administrativ personal"
+    }
   ]
 }
-
