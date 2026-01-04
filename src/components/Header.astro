@@ -485,28 +485,24 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
     <a href={searchUrl} class="icon-button" aria-label={isEnglish ? "Search" : "Sök"}>
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
     </a>
-    <!-- Mobile Language Switcher -->
+    <!-- Mobile Language Switcher - Flagga fyller hela cirkeln, ingen grön bakgrund -->
     {isEnglish ? (
-      <a href={switchToSwedish} class="icon-button" aria-label="Svenska" title="Svenska">
-        <span class="w-5 h-5 rounded-full overflow-hidden inline-flex items-center justify-center">
-          <svg viewBox="0 0 32 32" class="w-full h-full">
-            <rect fill="#006AA7" width="32" height="32"/>
-            <rect fill="#FECC00" x="10" y="0" width="4" height="32"/>
-            <rect fill="#FECC00" x="0" y="14" width="32" height="4"/>
-          </svg>
-        </span>
+      <a href={switchToSwedish} class="w-10 h-10 rounded-full overflow-hidden inline-flex items-center justify-center shadow-sm border border-gray-200 hover:scale-105 transition-transform" aria-label="Svenska" title="Svenska">
+        <svg viewBox="0 0 32 32" class="w-full h-full">
+          <rect fill="#006AA7" width="32" height="32"/>
+          <rect fill="#FECC00" x="10" y="0" width="4" height="32"/>
+          <rect fill="#FECC00" x="0" y="14" width="32" height="4"/>
+        </svg>
       </a>
     ) : (
-      <a href={switchToEnglish} class="icon-button" aria-label="English" title="English">
-        <span class="w-5 h-5 rounded-full overflow-hidden inline-flex items-center justify-center">
-          <svg viewBox="0 0 32 32" class="w-full h-full">
-            <rect fill="#012169" width="32" height="32"/>
-            <path d="M0,0 L32,32 M32,0 L0,32" stroke="#fff" stroke-width="4"/>
-            <path d="M0,0 L32,32 M32,0 L0,32" stroke="#C8102E" stroke-width="2"/>
-            <path d="M16,0 V32 M0,16 H32" stroke="#fff" stroke-width="8"/>
-            <path d="M16,0 V32 M0,16 H32" stroke="#C8102E" stroke-width="4"/>
-          </svg>
-        </span>
+      <a href={switchToEnglish} class="w-10 h-10 rounded-full overflow-hidden inline-flex items-center justify-center shadow-sm border border-gray-200 hover:scale-105 transition-transform" aria-label="English" title="English">
+        <svg viewBox="0 0 32 32" class="w-full h-full">
+          <rect fill="#012169" width="32" height="32"/>
+          <path d="M0,0 L32,32 M32,0 L0,32" stroke="#fff" stroke-width="4"/>
+          <path d="M0,0 L32,32 M32,0 L0,32" stroke="#C8102E" stroke-width="2"/>
+          <path d="M16,0 V32 M0,16 H32" stroke="#fff" stroke-width="8"/>
+          <path d="M16,0 V32 M0,16 H32" stroke="#C8102E" stroke-width="4"/>
+        </svg>
       </a>
     )}
   </div>
@@ -1046,6 +1042,13 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
           } else {
             targetContent.classList.remove('hidden');
             icon?.classList.add('rotate-180');
+          }
+        }
+      });
+    });
+  }
+</script>
+
           }
         }
       });
