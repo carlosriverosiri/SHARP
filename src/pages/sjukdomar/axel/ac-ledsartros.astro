@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import AuthorCard from '../../../components/AuthorCard.astro';
 import RefLink from '../../../components/RefLink.astro';
 import RefDrawer from '../../../components/RefDrawer.astro';
 import { Image } from 'astro:assets';
@@ -1175,26 +1174,6 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- KOMPAKT CTA -->
-  <section class="bg-gradient-to-r from-sky-700 to-sky-800 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="text-center md:text-left">
-          <h2 class="text-xl font-bold text-white mb-1">Behöver du expertbedömning?</h2>
-          <p class="text-sky-200 text-sm">Boka tid hos Dr. Carlos Rivero Siri för axelsmärta.</p>
-        </div>
-        <div class="flex gap-3">
-          <a href="/boka" class="bg-white text-sky-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-50 transition shadow-lg">
-            Boka tid
-          </a>
-          <a href="/egenremiss" class="bg-sky-600 text-white border border-sky-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-sky-500 transition">
-            Egenremiss
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- KOMPAKT REFERENSER -->
   <section class="bg-slate-100 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
@@ -1218,15 +1197,9 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- FÖRFATTARE & REFDRAWER -->
+  <!-- REFDRAWER -->
   <section class="py-8 bg-white border-t border-slate-200">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
-      <AuthorCard 
-        name={authorName}
-        title="Specialist i Ortopedi & Axelkirurgi"
-        image={authorImage}
-        profileUrl={authorUrl}
-      />
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <RefDrawer references={references} />
     </div>
   </section>
