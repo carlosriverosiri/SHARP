@@ -86,7 +86,7 @@ export default defineConfig({
     build: {
       // Minify CSS and JS
       cssMinify: true,
-      minify: 'terser',
+      // terser disabled
       // Better code splitting
       cssCodeSplit: true,
       rollupOptions: {
