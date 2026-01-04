@@ -1,17 +1,15 @@
----
+﻿---
 /**
- * OpSmarta - Smärtstillande efter operation
+ * OpSmarta - SmÃ¤rtstillande efter operation
  */
 interface Props {
   visaAlvedon?: boolean;
-  visaIpren?: boolean;
   visaCitodon?: boolean;
   extraInfo?: string;
 }
 
 const { 
   visaAlvedon = true,
-  visaIpren = true,
   visaCitodon = true,
   extraInfo
 } = Astro.props;
@@ -21,40 +19,130 @@ const {
 <section class="mb-8">
   <div class="md:bg-white md:rounded-xl md:shadow-md md:border md:border-gray-100 md:p-5">
     <!-- Rubrik med ikon -->
-    <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+    <div class="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
       <img src="/images/operation/medicine.svg" alt="" class="w-10 h-10" />
-      <h2 class="text-lg font-bold text-[#024264]">Smärtstillande</h2>
+      <h2 class="text-lg font-bold text-[#024264]">SmÃ¤rtstillande</h2>
     </div>
 
-    <p class="text-slate-600 mb-3">
-      Ta smärtstillande <strong>regelbundet de första dagarna</strong> – vänta inte tills det gör ont.
+    <!-- E-recept information -->
+    <div class="bg-blue-50 border-l-4 border-blue-500 px-4 py-3 mb-4 rounded-r-lg">
+      <h3 class="font-semibold text-blue-900 mb-2">ðŸ“‹ Recept skickas elektroniskt</h3>
+      <p class="text-sm text-blue-800 mb-2">
+        Det Ã¤r <strong>viktigt</strong> att du berÃ¤ttar fÃ¶r operatÃ¶ren vilka mediciner du eventuellt inte tÃ¥l. 
+        Du fÃ¥r receptet elektroniskt via "e-recept" och dÃ¤refter kan det hÃ¤mtas pÃ¥ apoteket.
+      </p>
+      <p class="text-sm text-blue-800 font-medium">
+        âš ï¸ Det Ã¤r viktigt att du tar smÃ¤rtstillande medicin <strong>regelbundet fÃ¶rsta dagen</strong>.
+      </p>
+    </div>
+
+    <p class="text-slate-700 mb-4">
+      I fÃ¶rsta hand anvÃ¤nder du <strong>Naproxen</strong> som smÃ¤rtstillande. 
+      Har du mycket smÃ¤rtor tar du bÃ¥de Naproxen och Citodon. 
+      Du kan hÃ¤mta ut detta recept fyra gÃ¥nger. BehÃ¶ver du ett nytt recept kontaktar du oss.
     </p>
 
-    <div class="grid md:grid-cols-3 gap-3 mb-3">
-      {visaAlvedon && (
-        <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
-          <h3 class="font-semibold text-blue-800">Alvedon®</h3>
-          <p class="text-sm text-blue-700">1g × 4/dygn (max 4g)</p>
+    <!-- Mediciner -->
+    <div class="space-y-3 mb-4">
+      <!-- Naproxen -->
+      <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
+        <div class="flex items-start justify-between mb-2">
+          <h3 class="font-semibold text-orange-900 text-base">Naproxen 500 mg</h3>
+          <a 
+            href="https://www.fass.se/LIF/searchresult?query=naproxen" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-xs text-orange-700 hover:text-orange-900 underline flex items-center gap-1"
+            title="LÃ¤s mer pÃ¥ FASS"
+          >
+            FASS â†—
+          </a>
         </div>
-      )}
-      
-      {visaIpren && (
-        <div class="bg-green-50 rounded-lg p-3 border border-green-100">
-          <h3 class="font-semibold text-green-800">Ipren®</h3>
-          <p class="text-sm text-green-700">400mg × 3/dygn. Med mat.</p>
+        <p class="text-sm text-orange-800 mb-2">
+          Inflammationen och svullnaden efter en operation dÃ¤mpas av att du tar inflammationsdÃ¤mpande (NSAID) tabletter. 
+          Du bÃ¶r ta dessa mediciner under <strong>5-10 dagar</strong> efter operationen. 
+          Detta gÃ¶r att smÃ¤rtorna snabbare slÃ¤pper och pÃ¥skyndar rehabiliteringen.
+        </p>
+        <p class="text-sm text-orange-800 mb-2">
+          <strong>Dosering:</strong> 1 tablett 2 gÃ¥nger per dygn i samband med mÃ¥ltid.
+        </p>
+        <p class="text-sm text-orange-800 mb-2">
+          Har du mycket smÃ¤rtor under rehabiliteringen kan du ta en eller flera nya 10 dagars kurer med Naproxen. 
+          FÃ¶r att inte fÃ¥ problem med magen kan det vara lÃ¤mpligt att gÃ¶ra en veckas uppehÃ¥ll mellan dessa kurer.
+        </p>
+        <div class="bg-orange-100 border border-orange-300 rounded px-3 py-2 mt-2">
+          <p class="text-xs text-orange-900 font-medium">
+            âš ï¸ Har du problem med magsÃ¥r, Ã¤ter blodfÃ¶rtunnande lÃ¤kemedel eller om du Ã¤r Ã¶verkÃ¤nslig mot 
+            inflammationsdÃ¤mpande mediciner (NSAID) skall du inte ta Naproxen.
+          </p>
         </div>
-      )}
-      
-      {visaCitodon && (
-        <div class="bg-amber-50 rounded-lg p-3 border border-amber-100">
-          <h3 class="font-semibold text-amber-800">Citodon® <span class="font-normal">(recept)</span></h3>
-          <p class="text-sm text-amber-700">Max 8 tabl/dygn. Ej bil!</p>
-        </div>
-      )}
-    </div>
+        <p class="text-sm text-orange-800 mt-2">
+          Naproxen gÃ¥r utmÃ¤rkt att kombinera med Citodon eller Alvedon.
+        </p>
+      </div>
 
-    <div class="bg-rose-50 border-l-4 border-rose-400 px-3 py-2 text-sm text-rose-700">
-      <strong>⚠️</strong> Kombinera ej Alvedon med andra paracetamolläkemedel. Citodon = ingen bilkörning.
+      {visaCitodon && (
+        <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-semibold text-amber-900 text-base">Citodon <span class="font-normal text-sm">(recept)</span></h3>
+            <a 
+              href="https://www.fass.se/LIF/searchresult?query=citodon" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs text-amber-700 hover:text-amber-900 underline flex items-center gap-1"
+              title="LÃ¤s mer pÃ¥ FASS"
+            >
+              FASS â†—
+            </a>
+          </div>
+          <p class="text-sm text-amber-800 mb-2">
+            Citodon innehÃ¥ller kodein och paracetamol. 
+            Citodon Ã¤r ett rent smÃ¤rtstillande lÃ¤kemedel som omvandlas till morfin i kroppen. 
+            Morfin kan gÃ¶ra dig dÃ¥sig, trÃ¶tt och illamÃ¥ende.
+          </p>
+          <p class="text-sm text-amber-800 mb-2">
+            <strong>Dosering:</strong> 1â€“2 tabletter 4 gÃ¥nger per dygn.
+          </p>
+          <div class="bg-amber-100 border border-amber-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-amber-900 font-medium">
+              âš ï¸ Upplever du att biverkningarna av Citodon Ã¤r vÃ¤rre Ã¤n att ha ont sÃ¥ kan det vara bra att prova med Alvedon istÃ¤llet fÃ¶r Citodon.
+            </p>
+            <p class="text-xs text-amber-900 font-medium mt-1">
+              ðŸš— Du bÃ¶r <strong>inte kÃ¶ra bil</strong> om du tar denna medicin.
+            </p>
+          </div>
+          <p class="text-sm text-amber-800 mt-2">
+            Citodon fÃ¥r kombineras med Naproxen. 
+            <strong>Du fÃ¥r inte kombinera Citodon med Alvedon</strong> eller andra mediciner som innehÃ¥ller paracetamol.
+          </p>
+        </div>
+      )}
+
+      {visaAlvedon && (
+        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-semibold text-blue-900 text-base">Alvedon</h3>
+            <a 
+              href="https://www.fass.se/LIF/searchresult?query=alvedon" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs text-blue-700 hover:text-blue-900 underline flex items-center gap-1"
+              title="LÃ¤s mer pÃ¥ FASS"
+            >
+              FASS â†—
+            </a>
+          </div>
+          <p class="text-sm text-blue-800">
+            Alvedon Ã¤r ett alternativ till Citodon om du upplever biverkningar. 
+            Alvedon kan kombineras med Naproxen.
+          </p>
+          <div class="bg-blue-100 border border-blue-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-blue-900 font-medium">
+              âš ï¸ <strong>Du fÃ¥r inte kombinera Alvedon med Citodon</strong> eller andra mediciner som innehÃ¥ller paracetamol.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   </div>
 
@@ -64,4 +152,3 @@ const {
     </div>
   )}
 </section>
-
