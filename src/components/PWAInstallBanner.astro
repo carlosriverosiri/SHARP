@@ -2,19 +2,21 @@
 /**
  * PWAInstallBanner - Installationsbanner för PWA
  * 
- * Visar en banner som uppmanar användaren att lägga till sidan på hemskärmen.
+ * Minimal och ren banner för iOS och Android.
  * Designad för operations- och rehabsidor där patienter ofta vill ha snabb åtkomst.
  * 
  * Design:
  * - Ljusblå bakgrund (#EBF8FF) för att skilja från toppbannern (#023550)
  * - Mörkblå text (#024264) för kontrast
- * - Positionerad under toppbannern (top-[var(--top-bar-height)] eller mt-12)
+ * - Positionerad under toppbannern (top: 36px)
+ * - Minimal text för bättre iOS-upplevelse – ingen distraktion
  * 
  * Funktioner:
  * - Detekterar Android vs iOS automatiskt
  * - Dynamisk text baserat på pathname (operation vs rehab)
  * - Sparar dismiss-val i localStorage (per sida)
  * - Registrerar service worker
+ * - Smooth dismiss-animation (height:0, opacity:0)
  * 
  * Används i: OperationLayout.astro, RehabLayout.astro
  */
@@ -27,6 +29,7 @@ interface Props {
 const { customText } = Astro.props;
 
 // Detektera sida-typ från pathname för dynamisk text
+// Minimal text - ingen parentes, ingen pil/emoji-instruktion
 const pathname = Astro.url.pathname;
 let defaultText = "Spara denna information på hemskärmen.";
 
@@ -40,48 +43,39 @@ if (pathname.includes('/operation/')) {
 <!-- 
   PWA Install Banner
   Dold som default, visas via JavaScript efter plattformsdetektering
-  Positionerad under toppbannern (toppbanner är ~36px, så vi använder top-[36px])
+  Positionerad under toppbannern (toppbanner är ~36px)
 -->
 <div 
   id="pwa-install-banner" 
-  class="hidden fixed left-0 right-0 z-[9999] bg-[#EBF8FF] text-[#024264] border-b-4 border-[#024264] shadow-md print:hidden"
+  class="hidden fixed left-0 right-0 z-[9999] bg-[#EBF8FF] text-[#024264] border-b-4 border-[#024264] print:hidden transition-all duration-300 ease-in-out"
   style="top: 36px;"
   role="alert"
   aria-live="polite"
 >
-  <div class="container mx-auto px-4 py-3">
-    <div class="flex items-center justify-between gap-3">
+  <div class="container mx-auto px-6 py-4">
+    <div class="flex justify-center items-center gap-4 relative">
       
-      <!-- Text till vänster -->
+      <!-- Centrerad text -->
       <p 
         id="pwa-banner-text" 
-        class="text-base font-medium leading-tight flex-1 min-w-0"
+        class="text-base md:text-lg font-bold text-[#024264] text-center"
       >
         {defaultText}
       </p>
       
-      <!-- Android: Installationsknapp i mitten -->
+      <!-- Android: Installationsknapp till höger -->
       <button 
         id="pwa-install-btn"
-        class="hidden shrink-0 bg-[#024264] text-white font-bold text-sm px-4 py-2 rounded-full hover:bg-[#023550] transition-colors whitespace-nowrap"
+        class="hidden absolute right-0 bg-[#024264] text-white rounded-full px-6 py-2 font-medium hover:bg-[#023550] transition-colors whitespace-nowrap"
         aria-label="Lägg till på hemskärmen"
       >
-        Lägg till
+        Lägg till på hemskärmen
       </button>
       
-      <!-- iOS: Emoji-instruktioner till höger -->
-      <div id="pwa-ios-hint" class="hidden shrink-0 text-sm font-medium text-[#024264] whitespace-nowrap">
-        <span>Dela</span>
-        <span class="inline-block mx-1">↓</span>
-        <span>→</span>
-        <span class="inline-block mx-1">➕</span>
-        <span>Hemskärm</span>
-      </div>
-      
-      <!-- Stäng-knapp till höger -->
+      <!-- Stäng-knapp (X) högst upp till höger -->
       <button 
         id="pwa-dismiss-btn"
-        class="shrink-0 p-1.5 hover:bg-[#024264]/10 rounded-full transition-colors text-[#024264] hover:text-red-600"
+        class="absolute top-0 right-0 p-1.5 hover:bg-[#024264]/10 rounded-full transition-colors text-[#024264] hover:text-red-600"
         aria-label="Stäng banner"
       >
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,8 +94,9 @@ if (pathname.includes('/operation/')) {
    * Hanterar:
    * - Service Worker registrering
    * - beforeinstallprompt för Android
-   * - iOS-detektering och instruktioner
+   * - iOS-detektering (ingen extra text/instruktioner)
    * - localStorage för dismiss-state (per sida)
+   * - Smooth dismiss-animation
    */
   
   // ============================================================================
@@ -116,9 +111,7 @@ if (pathname.includes('/operation/')) {
   // DOM ELEMENT REFERENSER
   // ============================================================================
   const banner = document.getElementById('pwa-install-banner');
-  const bannerText = document.getElementById('pwa-banner-text');
   const installBtn = document.getElementById('pwa-install-btn');
-  const iosHint = document.getElementById('pwa-ios-hint');
   const dismissBtn = document.getElementById('pwa-dismiss-btn');
   
   // ============================================================================
@@ -179,33 +172,45 @@ if (pathname.includes('/operation/')) {
   function showBanner(): void {
     if (banner) {
       banner.classList.remove('hidden');
+      // Återställ height och opacity för att visa bannern
+      banner.style.height = '';
+      banner.style.opacity = '1';
+      banner.style.overflow = '';
       // Lägg till padding-top på body så innehållet inte hamnar under bannern
-      // Toppbanner (36px) + PWA banner (~60px) = ~96px
-      document.body.style.paddingTop = '96px';
+      // Toppbanner (36px) + PWA banner (~72px) = ~108px
+      document.body.style.paddingTop = '108px';
     }
   }
   
   /**
-   * Göm bannern
+   * Göm bannern med smooth animation
+   * Använder height:0, opacity:0, overflow:hidden för att helt dölja elementet
    */
   function hideBanner(): void {
     if (banner) {
-      banner.classList.add('hidden');
-      // Återställ padding (endast toppbanner kvar)
-      document.body.style.paddingTop = '36px';
-    }
-  }
-  
-  /**
-   * Uppdatera text för iOS med instruktioner
-   */
-  function updateTextForIOS(): void {
-    if (bannerText) {
-      const currentText = bannerText.textContent || '';
-      // Lägg till iOS-instruktioner om de inte redan finns
-      if (!currentText.includes('Dela')) {
-        bannerText.textContent = `${currentText} (Dela ↓ → Lägg till på hemskärmen ➕)`;
-      }
+      // Starta animation
+      banner.style.height = `${banner.offsetHeight}px`;
+      banner.style.opacity = '1';
+      banner.style.overflow = 'hidden';
+      
+      // Trigger reflow för att säkerställa att height är satt
+      banner.offsetHeight;
+      
+      // Anima till 0
+      requestAnimationFrame(() => {
+        banner.style.height = '0';
+        banner.style.opacity = '0';
+        
+        // När animationen är klar, dölj helt och återställ padding
+        setTimeout(() => {
+          banner.classList.add('hidden');
+          banner.style.height = '';
+          banner.style.opacity = '';
+          banner.style.overflow = '';
+          // Återställ padding (endast toppbanner kvar)
+          document.body.style.paddingTop = '36px';
+        }, 300); // Matchar transition-duration
+      });
     }
   }
   
@@ -295,14 +300,10 @@ if (pathname.includes('/operation/')) {
   // ============================================================================
   // iOS HANTERING
   // ============================================================================
+  // Minimal text - ingen extra instruktioner, ingen parentes, ingen pil/emoji
+  // iOS-användare vet redan hur man lägger till på hemskärmen
   
   if (isIOS() && !isStandalone() && !isDismissed()) {
-    // Visa iOS-specifika instruktioner
-    if (iosHint) {
-      iosHint.classList.remove('hidden');
-    }
-    // Uppdatera text med iOS-instruktioner
-    updateTextForIOS();
     showBanner();
   }
   
@@ -329,8 +330,8 @@ if (pathname.includes('/operation/')) {
 </script>
 
 <style>
-  /* Animation för bannern */
-  #pwa-install-banner {
+  /* Animation för bannern vid visning */
+  #pwa-install-banner:not(.hidden) {
     animation: slideDown 0.3s ease-out;
   }
   
