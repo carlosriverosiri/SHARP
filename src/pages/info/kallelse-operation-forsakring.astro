@@ -15,6 +15,7 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PWAInstallBanner from '../../components/PWAInstallBanner.astro';
+import OpForberedelser from '../../components/operation/OpForberedelser.astro';
 
 const pageTitle = "Kallelse för Operation - Försäkringspatient | Södermalms Ortopedi";
 const pageDescription = "Instruktioner och information inför din operation hos Södermalms Ortopedi för försäkringspatienter. Förberedelser, kontaktinformation och viktiga detaljer.";
@@ -105,106 +106,32 @@ const pageDescription = "Instruktioner och information inför din operation hos 
       </div>
     </section>
 
-    <!-- Förberedelser -->
+    <!-- Blodtryck -->
     <section class="mb-8">
-      <h2 class="text-2xl font-bold text-[#024264] mb-4">Förberedelser</h2>
-      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-6">
-        
-        <!-- Blodtryck -->
-        <div>
-          <h3 class="font-bold text-slate-800 mb-2">Blodtryck</h3>
-          <p class="text-slate-700 text-sm">
-            Om insättning eller justering av blodtrycksmedicin, kontakta mottagningen för information på <strong>08-55110422</strong>.
-          </p>
-        </div>
-
-        <!-- Fasta -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Fasta</h3>
-          <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p class="text-red-800 font-medium text-sm">
-              ⚠️ Du ska inte äta eller dricka något på <strong>6 timmar</strong> innan du kommer till kliniken.
-            </p>
-          </div>
-          <p class="text-slate-700 text-sm mt-2">
-            Under en sövning måste magsäcken vara tom, annars kan matrester hamna i lungorna. 
-            Av säkerhetsskäl gäller samma rutin även om du ska opereras i lokalbedövning.
-          </p>
-        </div>
-
-        <!-- Tobak -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Tobak</h3>
-          <p class="text-slate-700 text-sm">
-            Du får inte röka eller snusa minst <strong>24 timmar</strong> före operationen.
-          </p>
-        </div>
-
-        <!-- Duschning -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Duschning</h3>
-          <p class="text-slate-700 text-sm">
-            Duscha hela kroppen och tvätta håret med <strong>DesCutan®-tvål</strong> (köps på apoteket), 
-            kvällen före samt på operationsdagens morgon. Undvik DesCutan-tvål i underlivet. 
-            När du har duschat ska du byta till rena kläder och rena sängkläder. 
-            Använd inte deoderant, hårbalsam/-inpackning, hudlotion eller parfym.
-          </p>
-        </div>
-
-        <!-- Smink/smycken -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Smink/smycken</h3>
-          <p class="text-slate-700 text-sm">
-            Använd inte smink. Ta bort nagellack och piercing. Lämna ringar/smycken/klocka hemma. 
-            Gel- och akrylnaglar får sitta.
-          </p>
-        </div>
-
-        <!-- Småsår -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Småsår</h3>
-          <p class="text-slate-700 text-sm">
-            Om du har ett litet sår/finne/bett på eller i närheten av det område du ska operera - 
-            maila ett foto till kliniken på <a href="mailto:info@sodermalmsortopedi.se" class="text-blue-600 hover:underline">info@sodermalmsortopedi.se</a>
-          </p>
-        </div>
-
-        <!-- Mediciner -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Mediciner</h3>
-          <p class="text-slate-700 text-sm">
-            Står du på blodförtunnande läkemedel (t.ex. Waran, Eliquis, Trombyl) ska sätta ut dessa inför operationen, 
-            pga blödningsrisk. Du får instruktioner om detta. Kontakta mottagningen för närmare information. 
-            Ev. astmamediciner och kortisonmediciner tar du som vanligt på operationsdagen.
-          </p>
-        </div>
-
-        <!-- Diabetiker -->
-        <div class="border-t border-gray-200 pt-4">
-          <h3 class="font-bold text-slate-800 mb-2">Diabetiker</h3>
-          <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
-            <p class="text-amber-800 font-medium text-sm">
-              Är du diabetiker ska du <strong>INTE</strong> ta ditt insulin eller tabletter på operationsdagens morgon. 
-              Ta med ditt insulin/tabletter och din egen blodsockermätare.
-            </p>
-          </div>
-        </div>
-
-        <!-- Varning -->
-        <div class="border-t border-gray-200 pt-4">
-          <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
-            <p class="text-red-800 font-semibold">
-              ⚠️ Om ovanstående instruktioner inte efterföljs riskerar du att din operation blir inställd.
-            </p>
-          </div>
-        </div>
-
+      <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <h3 class="font-bold text-slate-800 text-lg mb-2">Blodtryck</h3>
         <p class="text-slate-700 text-sm">
-          Du kommer att träffa opererande läkare och narkosläkare strax före operationen.
+          Om insättning eller justering av blodtrycksmedicin, kontakta mottagningen för information på <strong>08-55110422</strong>.
         </p>
-
       </div>
     </section>
+
+    <!-- Förberedelser -->
+    <OpForberedelser 
+      fastaTimmar={6}
+      visaDescutan={true}
+      visaRokstopp={true}
+      extraInfo={
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+          <p class="text-red-800 font-semibold mb-2">
+            ⚠️ Om ovanstående instruktioner inte efterföljs riskerar du att din operation blir inställd.
+          </p>
+          <p class="text-red-700 text-sm">
+            Du kommer att träffa opererande läkare och narkosläkare strax före operationen.
+          </p>
+        </div>
+      }
+    />
 
     <!-- Efter operationen -->
     <section class="mb-8">
