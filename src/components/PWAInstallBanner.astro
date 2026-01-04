@@ -8,15 +8,13 @@
  * Design:
  * - Ljusblå bakgrund (#EBF8FF) för att skilja från toppbannern (#023550)
  * - Mörkblå text (#024264) för kontrast
- * - Positionerad under toppbannern (top: 36px)
+ * - RELATIVE position (inte fixed) - tar plats i dokumentflödet
  * - Minimal text för bättre iOS-upplevelse – ingen distraktion
  * 
- * Funktioner:
- * - Detekterar Android vs iOS automatiskt
- * - Dynamisk text baserat på pathname (operation vs rehab)
- * - Sparar dismiss-val i localStorage (per sida)
- * - Registrerar service worker
- * - Smooth dismiss-animation (height:0, opacity:0)
+ * FIXAR:
+ * 1. Text nära krysset - flex layout med gap
+ * 2. Vit banner ovanför - relative position, ingen body padding manipulation
+ * 3. Print-ikon försvinner inte - ingen body padding manipulation
  * 
  * Används i: OperationLayout.astro, RehabLayout.astro
  */
@@ -43,43 +41,43 @@ if (pathname.includes('/operation/')) {
 <!-- 
   PWA Install Banner
   Dold som default, visas via JavaScript efter plattformsdetektering
-  Positionerad under toppbannern (toppbanner är ~36px)
+  RELATIVE position - tar plats i dokumentflödet, ingen body padding manipulation
 -->
 <div 
   id="pwa-install-banner" 
-  class="hidden fixed left-0 right-0 z-[9999] bg-[#EBF8FF] text-[#024264] border-b-4 border-[#024264] print:hidden transition-all duration-300 ease-in-out"
-  style="top: 36px;"
+  class="hidden bg-[#EBF8FF] text-[#024264] border-b-4 border-[#024264] print:hidden"
   role="alert"
   aria-live="polite"
 >
-  <div class="container mx-auto px-6 py-4">
-    <div class="flex justify-center items-center gap-4 relative">
+  <div class="container mx-auto px-4 py-3">
+    <!-- Flex layout: text till vänster, X till höger med gap -->
+    <div class="flex items-center justify-between gap-4">
       
-      <!-- Centrerad text -->
+      <!-- Text (flex-1 för att ta tillgänglig plats, pr-2 för extra avstånd) -->
       <p 
         id="pwa-banner-text" 
-        class="text-base md:text-lg font-bold text-[#024264] text-center"
+        class="flex-1 text-base md:text-lg font-bold text-[#024264] pr-2"
       >
         {defaultText}
       </p>
       
-      <!-- Android: Installationsknapp till höger -->
+      <!-- Android: Installationsknapp (visas endast på Android) -->
       <button 
         id="pwa-install-btn"
-        class="hidden absolute right-0 bg-[#024264] text-white rounded-full px-6 py-2 font-medium hover:bg-[#023550] transition-colors whitespace-nowrap"
+        class="hidden shrink-0 bg-[#024264] text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-[#023550] transition-colors whitespace-nowrap"
         aria-label="Lägg till på hemskärmen"
       >
-        Lägg till på hemskärmen
+        Lägg till
       </button>
       
-      <!-- Stäng-knapp (X) högst upp till höger -->
+      <!-- Stäng-knapp (X) - shrink-0 så den inte krymper -->
       <button 
         id="pwa-dismiss-btn"
-        class="absolute top-0 right-0 p-1.5 hover:bg-[#024264]/10 rounded-full transition-colors text-[#024264] hover:text-red-600"
+        class="shrink-0 p-2 hover:bg-[#024264]/10 rounded-full transition-colors text-[#024264] hover:text-red-600"
         aria-label="Stäng banner"
       >
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
       
@@ -96,16 +94,16 @@ if (pathname.includes('/operation/')) {
    * - beforeinstallprompt för Android
    * - iOS-detektering (ingen extra text/instruktioner)
    * - localStorage för dismiss-state (per sida)
-   * - Smooth dismiss-animation
+   * 
+   * VIKTIGT: Ingen body padding manipulation - bannern tar plats i dokumentflödet
    */
   
   // ============================================================================
   // KONFIGURATION
   // ============================================================================
-  // Använd pathname som del av storage key för per-sida dismiss
   const pathname = window.location.pathname;
   const STORAGE_KEY = `pwa-banner-dismissed-${pathname}`;
-  const DISMISS_DURATION_DAYS = 7; // Visa bannern igen efter 7 dagar
+  const DISMISS_DURATION_DAYS = 7;
   
   // ============================================================================
   // DOM ELEMENT REFERENSER
@@ -123,31 +121,19 @@ if (pathname.includes('/operation/')) {
   // HJÄLPFUNKTIONER
   // ============================================================================
   
-  /**
-   * Detektera om användaren är på iOS (iPhone/iPad)
-   */
   function isIOS(): boolean {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
   }
   
-  /**
-   * Detektera om användaren är på Android
-   */
   function isAndroid(): boolean {
     return /Android/.test(navigator.userAgent);
   }
   
-  /**
-   * Detektera om appen redan är installerad (standalone mode)
-   */
   function isStandalone(): boolean {
     return window.matchMedia('(display-mode: standalone)').matches ||
            (navigator as any).standalone === true;
   }
   
-  /**
-   * Kolla om bannern har blivit dismiss:ad nyligen (per sida)
-   */
   function isDismissed(): boolean {
     const dismissedAt = localStorage.getItem(STORAGE_KEY);
     if (!dismissedAt) return false;
@@ -159,58 +145,25 @@ if (pathname.includes('/operation/')) {
     return daysSinceDismiss < DISMISS_DURATION_DAYS;
   }
   
-  /**
-   * Spara dismiss-state (per sida)
-   */
   function saveDismiss(): void {
     localStorage.setItem(STORAGE_KEY, new Date().toISOString());
   }
   
   /**
-   * Visa bannern
+   * Visa bannern - enkel toggle, ingen body manipulation
    */
   function showBanner(): void {
     if (banner) {
       banner.classList.remove('hidden');
-      // Återställ height och opacity för att visa bannern
-      banner.style.height = '';
-      banner.style.opacity = '1';
-      banner.style.overflow = '';
-      // Lägg till padding-top på body så innehållet inte hamnar under bannern
-      // Toppbanner (36px) + PWA banner (~72px) = ~108px
-      document.body.style.paddingTop = '108px';
     }
   }
   
   /**
-   * Göm bannern med smooth animation
-   * Använder height:0, opacity:0, overflow:hidden för att helt dölja elementet
+   * Göm bannern - enkel toggle, ingen body manipulation
    */
   function hideBanner(): void {
     if (banner) {
-      // Starta animation
-      banner.style.height = `${banner.offsetHeight}px`;
-      banner.style.opacity = '1';
-      banner.style.overflow = 'hidden';
-      
-      // Trigger reflow för att säkerställa att height är satt
-      banner.offsetHeight;
-      
-      // Anima till 0
-      requestAnimationFrame(() => {
-        banner.style.height = '0';
-        banner.style.opacity = '0';
-        
-        // När animationen är klar, dölj helt och återställ padding
-        setTimeout(() => {
-          banner.classList.add('hidden');
-          banner.style.height = '';
-          banner.style.opacity = '';
-          banner.style.overflow = '';
-          // Återställ padding (endast toppbanner kvar)
-          document.body.style.paddingTop = '36px';
-        }, 300); // Matchar transition-duration
-      });
+      banner.classList.add('hidden');
     }
   }
   
@@ -224,13 +177,11 @@ if (pathname.includes('/operation/')) {
         .then((registration) => {
           console.log('[PWA] Service Worker registered:', registration.scope);
           
-          // Lyssna på uppdateringar
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Ny version tillgänglig - skicka skipWaiting
                   newWorker.postMessage({ type: 'SKIP_WAITING' });
                 }
               });
@@ -248,14 +199,10 @@ if (pathname.includes('/operation/')) {
   // ============================================================================
   
   window.addEventListener('beforeinstallprompt', (e) => {
-    // Förhindra Chrome från att visa sin egen prompt automatiskt
     e.preventDefault();
-    
-    // Spara eventet för att använda senare
     deferredPrompt = e;
     console.log('[PWA] beforeinstallprompt captured');
     
-    // Visa vår banner om den inte är dismiss:ad och appen inte är installerad
     if (!isDismissed() && !isStandalone()) {
       if (installBtn) {
         installBtn.classList.remove('hidden');
@@ -275,20 +222,13 @@ if (pathname.includes('/operation/')) {
         return;
       }
       
-      // Visa installationsprompten
       deferredPrompt.prompt();
-      
-      // Vänta på användarens val
       const { outcome } = await deferredPrompt.userChoice;
       console.log('[PWA] User response:', outcome);
       
-      // Rensa prompten oavsett val
       deferredPrompt = null;
-      
-      // Göm bannern
       hideBanner();
       
-      // Spara att användaren har interagerat
       if (outcome === 'accepted') {
         console.log('[PWA] App installed');
       } else {
@@ -300,8 +240,6 @@ if (pathname.includes('/operation/')) {
   // ============================================================================
   // iOS HANTERING
   // ============================================================================
-  // Minimal text - ingen extra instruktioner, ingen parentes, ingen pil/emoji
-  // iOS-användare vet redan hur man lägger till på hemskärmen
   
   if (isIOS() && !isStandalone() && !isDismissed()) {
     showBanner();
@@ -328,21 +266,3 @@ if (pathname.includes('/operation/')) {
     deferredPrompt = null;
   });
 </script>
-
-<style>
-  /* Animation för bannern vid visning */
-  #pwa-install-banner:not(.hidden) {
-    animation: slideDown 0.3s ease-out;
-  }
-  
-  @keyframes slideDown {
-    from {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-</style>
