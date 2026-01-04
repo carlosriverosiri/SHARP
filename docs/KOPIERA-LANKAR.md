@@ -230,6 +230,14 @@ I `src/data/shortLinks.json`:
 | `/ff/armbage` | Armbåge (före besök) |
 | `/ff/kna` | Knä (före besök) |
 
+### Info (`/i/`) - Patientinformation & Riktlinjer
+
+| Kort URL | Information |
+|----------|-------------|
+| `/i/recept` | Policy: Restnoterade läkemedel & förpackningsbyten |
+| `/i/kallelse` | Kallelse för Operation (vanliga patienter) |
+| `/i/kallelse-forsakring` | Kallelse för Operation (försäkringspatienter) |
+
 ---
 
 ## Teknisk information
