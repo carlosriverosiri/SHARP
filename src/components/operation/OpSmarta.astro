@@ -157,11 +157,11 @@ const {
         </div>
       )}
 
-      {/* CELEBRA - TODO: Lägg till fullständig information */}
+      {/* CELEBRA - Magskonande alternativ till Naproxen */}
       {visaCelebra && (
         <div class="bg-teal-50 rounded-lg p-4 border border-teal-200">
           <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-teal-900 text-base">Celebra (Celecoxib)</h3>
+            <h3 class="font-semibold text-teal-900 text-base">Celebra (Celecoxib) <span class="font-normal text-sm">(recept)</span></h3>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=celebra" 
               target="_blank" 
@@ -172,17 +172,27 @@ const {
               FASS ↗
             </a>
           </div>
-          <p class="text-sm text-teal-800 italic">
-            📝 TODO: Information om Celebra kommer att läggas till.
+          <p class="text-sm text-teal-800 mb-2">
+            Celebra är ett inflammationsdämpande läkemedel (NSAID) som liknar Naproxen, men är <strong>mycket snällare mot magen</strong>. 
+            Har du problem med magen skriver vi ofta ut Celebra istället för Naproxen.
           </p>
+          <p class="text-sm text-teal-800 mb-2">
+            Celebra används ofta i kombination med Omeprazol för extra magskydd.
+          </p>
+          <div class="bg-teal-100 border border-teal-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-teal-900 font-medium">
+              ⚠️ Du ska inte ta Celebra om du är allergisk mot inflammationsdämpande mediciner (NSAID). 
+              Om du vet att du tål Ipren så är det vanligtvis ingen fara att ta Celebra.
+            </p>
+          </div>
         </div>
       )}
 
-      {/* OMEPRAZOL - TODO: Lägg till fullständig information */}
+      {/* OMEPRAZOL - Magskydd vid NSAID-behandling */}
       {visaOmeprazol && (
         <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
           <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg</h3>
+            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg <span class="font-normal text-sm">(recept)</span></h3>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=omeprazol" 
               target="_blank" 
@@ -193,9 +203,19 @@ const {
               FASS ↗
             </a>
           </div>
-          <p class="text-sm text-purple-800 italic">
-            📝 TODO: Information om Omeprazol kommer att läggas till.
+          <p class="text-sm text-purple-800 mb-2">
+            Omeprazol är en magsårsmedicin (syrahämmare) som skyddar magen när du tar inflammationsdämpande mediciner. 
+            Vi skriver ut Omeprazol till patienter som behöver NSAID men har känslig mage eller tidigare haft magbesvär.
           </p>
+          <p class="text-sm text-purple-800 mb-2">
+            Omeprazol kan kombineras med både Naproxen och Celebra. 
+            Helst använder vi <strong>Celebra + Omeprazol</strong> för patienter med magproblem, eftersom Celebra är snällare mot magen än Naproxen.
+          </p>
+          <div class="bg-purple-100 border border-purple-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-purple-900 font-medium">
+              💊 Ta Omeprazol på morgonen, helst 30 minuter före frukost.
+            </p>
+          </div>
         </div>
       )}
     </div>
