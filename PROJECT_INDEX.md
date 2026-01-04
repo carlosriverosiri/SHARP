@@ -1,274 +1,186 @@
 # Projektindexering - Södermalms Ortopedi
 
+**Senast uppdaterad:** 2026-01-04
+
 ## 📋 Översikt
-Detta är en Astro-webbplats för Södermalms Ortopedi, byggd med Tailwind CSS och TypeScript. Projektet använder en komponentbaserad arkitektur med återanvändbara komponenter och layouts.
+Astro-webbplats för Södermalms Ortopedi med Tailwind CSS och TypeScript. Komponentbaserad arkitektur med modulära system för operationer, diagnoser och Fråga Doktorn.
 
 ---
 
-## 🎨 Designsystem & Tailwind-färger
+## 🏗️ Huvudsystem
 
-### Primära varumärkesfärger
-- **Mörkblå (Header/Banner)**: `#023550` - Används i toppbanner
-- **Mörkblå (Navigation)**: `#024264` - Används för navigationstexter och länkar
-- **Ljusblå (Header-bakgrund)**: `#EBF8FF` - Används som header-bakgrund
+### 1. Operationssystem
+Modulärt system för operationsbeskrivningar med återanvändbara komponenter.
 
-### Sky-färger (Primär accentfärg)
-- `sky-50` - Ljus bakgrund (t.ex. sektioner, kort)
-- `sky-100` - Ljusare accent
-- `sky-200` - Border/outline
-- `sky-400` - Border accent
-- `sky-600` - Sekundär accent
-- `sky-700` - Primär accent (hero-sektioner, knappar, rubriker)
-- `sky-800` - Mörkare accent (hover-states, footer)
+**Layout:** `src/layouts/OperationLayout.astro`
+- JSON-LD strukturerad data (MedicalProcedure, FAQPage)
+- SEO-optimering (OG, Twitter Cards)
+- Innehållsförteckning (sticky sidebar på desktop)
+- Medicinsk granskning-block
 
-### Gråfärger (Text & bakgrunder)
-- `gray-50` - Ljus bakgrund
-- `gray-100` - Mycket ljus bakgrund
-- `gray-200` - Borders, divider
-- `gray-300` - Ljusare borders
-- `gray-400` - Sekundär text
-- `gray-500` - Mellantext
-- `gray-600` - Sekundär text
-- `gray-700` - Primär text
-- `gray-800` - Mörk text, footer-bakgrund
-- `gray-900` - Mycket mörk text
+**Komponenter:** `src/components/operation/`
+| Komponent | Funktion |
+|-----------|----------|
+| `OpForberedelser.astro` | Fasta, rökning, mediciner, Descutan/Hibiwash |
+| `OpOperationsdagen.astro` | Vårdprocessen, bedövning |
+| `OpBandage.astro` | Bandage-instruktioner med bilder |
+| `OpDuscha.astro` | Dusch/bad-instruktioner |
+| `OpSmarta.astro` | Smärtlindring |
+| `OpSjukskrivning.astro` | Sjukskrivningstider |
+| `OpBilkorning.astro` | Bilkörningsregler |
+| `OpSjukgymnastik.astro` | Rehabilitering |
+| `OpAxellas.astro` | Axelläs/mitella |
+| `OpAterbesok.astro` | Återbesöksinformation |
+| `OpRelateratInnehall.astro` | Länkar till relaterat innehåll |
+
+**Operationssidor:** `src/pages/operation/`
+- `/operation/axel/lateral-klavikelresektion` - AC-ledsartros operation
+
+**Ikoner:** `public/images/operation/` (20+ SVG-filer)
+**Bilder:** `src/assets/images/operation/` (WebP-bilder)
+
+**Dokumentation:** `docs/OPERATION-SIDOR.md`
+
+---
+
+### 2. Kortlänkssystem
+System för korta SMS-vänliga länkar till patientinformation.
+
+**Single Source of Truth:** `src/data/shortLinks.json`
+
+**Admin-verktyg:** `src/pages/copy-links.astro`
+- Sök och kopiera kortlänkar
+- Link Generator för nya länkar
+
+**Prefix-struktur:**
+| Prefix | Kategori |
+|--------|----------|
+| `/d/` | Diagnoser |
+| `/o/` | Operationer |
+| `/r/` | Rehab |
+| `/ff/` | Frågeformulär |
+
+**Dokumentation:** `docs/KOPIERA-LANKAR.md`
+
+---
+
+### 3. Fråga Doktorn
+Innehållssamling med 649 frågor och svar.
+
+**Innehåll:** `src/content/fraga-doktorn/*.md`
+**Konfiguration:** `src/content/config.ts`
+
+**Sidor:**
+- `/fraga-doktorn/` - Översikt
+- `/fraga-doktorn/axel/` - Axelfrågor
+- `/fraga-doktorn/kna/` - Knäfrågor  
+- `/fraga-doktorn/armbage/` - Armbågsfrågor
+
+---
+
+### 4. Sjukdomssidor
+Diagnosinformation med referenser och FAQ.
+
+**Sidor:** `src/pages/sjukdomar/`
+- `/sjukdomar/axel/ac-ledsartros`
+- `/sjukdomar/axel/biceps-*`
+- `/sjukdomar/axel/frusen-skuldra`
+- `/sjukdomar/axel/impingement`
+- `/sjukdomar/axel/instabilitet`
+- `/sjukdomar/axel/kalkaxel`
+- `/sjukdomar/axel/pts` (Parsonage-Turner)
+- `/sjukdomar/axel/rotatorcuff`
+- `/sjukdomar/axel/slap-skada`
+
+**Komponenter:**
+- `RefLink.astro` - Referenslänkar med tooltip
+- `RefDrawer.astro` - Referenslåda
+
+---
+
+## 🧩 Grundkomponenter
+
+### Header.astro
+**Plats:** `src/components/Header.astro`
+
+**Struktur:**
+- Toppbanner (`#023550`) - Fritt Vårdval-länk
+- Huvudheader (`#EBF8FF`) - Logo + navigation
+- Mobilmeny (slide-in)
+
+**Menyer:**
+- Sjukdomar → Axel, Knä, Armbåge
+- **Operation** → AC-ledsartros (nytt!)
+- Rehab → Axel, Knä, Armbåge
+- Fråga Doktorn → Axel, Knä, Armbåge
+- Om oss → Team, Kontakt, **Admin** (nytt!)
+
+**Admin-undermeny:**
+- Senast redigerade
+- Obesvarade frågor
+- Kopiera länkar
+
+### footer.astro
+4-kolumns footer med kontaktinfo, adress, patientlänkar.
+
+### Övriga komponenter
+- `FooterMap.astro` - Google Maps
+- `PhoneModal.astro` - Telefonmodal
+- `MedicinskGranskad.astro` - Granskningsblock
+- `SEO.astro` - SEO-metablock
+- `AuthorCard.astro` - Författarkort
+
+---
+
+## 📐 Layouts
+
+| Layout | Användning |
+|--------|------------|
+| `BaseLayout.astro` | Standard för de flesta sidor |
+| `OperationLayout.astro` | Operationssidor med TOC |
+| `RehabLayout.astro` | Rehabprogram |
+
+---
+
+## 📄 Statiska sidor
+
+| Sida | Route | Status |
+|------|-------|--------|
+| Startsida | `/` | ✅ |
+| Akut remiss | `/akut-remiss` | ✅ |
+| Fritt vårdval | `/fritt-vardval-sverige` | ✅ |
+| Patientavgifter | `/patientavgifter` | ✅ |
+| Privatpatient | `/privatpatient-tre-val` | ✅ |
+| Försäkringsbolag | `/vara-forsakringsbolag` | ✅ |
+| Vårdgivare | `/vardgivare` | ✅ |
+| Om oss | `/om-oss` | ✅ |
+| Kopiera länkar | `/copy-links` | ✅ |
+| Senast redigerade | `/senast-redigerade` | ✅ |
+| Sök | `/sok` | ✅ |
+
+---
+
+## 🎨 Designsystem
+
+### Primärfärger
+- `#023550` - Toppbanner
+- `#024264` - Navigationstext, rubriker
+- `#EBF8FF` - Header-bakgrund
 
 ### Accentfärger
-
-#### Amber (Varningar/Alert)
-- `amber-50` - Ljus bakgrund för varningar
-- `amber-500` - Border accent
-- `amber-600` - Primär amber (knappar)
-- `amber-700` - Hover-state
-- `amber-800` - Text i varningar
-
-#### Grön (Success/Positiv)
-- `green-100` - Ljus bakgrund
-- `green-500` - Primär grön (ikon-knappar)
-- `green-600` - Hover-state
-- `green-700` - Text/badges
-
-#### Röd (Fel/Varning)
-- `red-100` - Ljus bakgrund
-- `red-700` - Text/badges
-
-#### Gul (Stjärnor/Betyg)
-- `yellow-400` - Stjärnor i recensioner
+- `sky-700` - Primär accent (hero, knappar)
+- `amber-*` - Varningar
+- `green-*` - Success
+- `red-*` - Fel/varning
 
 ### Typografi
-- **Font-familj**: Inter (Google Fonts)
-- **Vikter**: 400 (normal), 500 (medium), 600 (semibold), 700 (bold), 800 (extrabold)
+- **Font:** Inter (Google Fonts)
+- **H1:** `text-4xl md:text-6xl font-bold`
+- **H2:** `text-3xl md:text-4xl font-bold`
+- **Body:** `text-base` eller `text-lg`
 
-### Spacing & Layout
-- Container: `max-w-6xl` eller `max-w-7xl` med `mx-auto`
-- Padding: `px-6` (mobil), `px-4` (komponenter)
-- Gap: `gap-4`, `gap-8` för grid-layouts
-- Rounded corners: `rounded-full` (knappar), `rounded-2xl` (kort), `rounded-lg` (mindre element)
-
----
-
-## 🧩 Komponenter
-
-### 1. Header.astro
-**Plats**: `src/components/Header.astro`
-
-**Funktionalitet**:
-- Sticky header med två delar:
-  - Toppbanner (`#023550`) - Sticky `top-0`
-  - Huvudheader (`#EBF8FF`) - Sticky `top-[36px]`
-- Desktop-navigation med dropdown-menyer
-- Mobilmeny (slide-in från höger)
-- Mobil ikoner (telefon, e-post, karta) - alltid synliga på mobil
-
-**Struktur**:
-- Toppbanner med länk till "Fritt Vårdval"
-- Logo (`/logo.svg`)
-- Desktop-menyer: Sjukdomar, Rehab, Fråga Doktorn, Patient, Om Oss
-- Mobil hamburger-meny
-- JavaScript för mobilmeny-toggle
-
-**Färger**:
-- Banner: `bg-[#023550]` med `text-white`
-- Header: `bg-[#EBF8FF]`
-- Navigation: `text-[#024264]` med `hover:text-blue-700`
-- Dropdown: `bg-[#EBF8FF]` med `hover:bg-blue-200`
-
-### 2. footer.astro
-**Plats**: `src/components/footer.astro`
-
-**Funktionalitet**:
-- Footer med 4 kolumner (2 på mobil, 4 på desktop)
-- Kontaktinformation
-- Adressinformation
-- Länkar till patient-sidor
-- Copyright-notis
-
-**Färger**:
-- Bakgrund: `bg-gray-800`
-- Text: `text-gray-300`, `text-gray-400`
-- Rubriker: `text-white`
-
-### 3. FooterMap.astro
-**Plats**: `src/components/FooterMap.astro`
-
-**Funktionalitet**:
-- Google Maps iframe
-- Visar Södermalms Ortopedi på Fatburs Brunnsgata
-- Höjd: `h-96` (384px)
-
-### 4. PhoneModal.astro
-**Plats**: `src/components/PhoneModal.astro`
-
-**Funktionalitet**:
-- Dialog-modal för telefoninformation
-- Visar telefonnummer och öppettider
-- Stängs med X-knapp eller klick utanför
-- Använder HTML5 `<dialog>` element
-
-**Styling**:
-- `max-w-sm` med `rounded-lg`
-- Backdrop blur: `backdrop:bg-black/50 backdrop:backdrop-blur-sm`
-
----
-
-## 📐 Layout
-
-### BaseLayout.astro
-**Plats**: `src/layouts/BaseLayout.astro`
-
-**Funktionalitet**:
-- Grundlayout för alla sidor
-- Importerar global CSS
-- Inkluderar Header och Footer
-- Dynamiska brödsmulor (visas inte på startsidan)
-- Google Maps-sektion (inkluderad direkt i layouten)
-- Font: Inter från Google Fonts
-- Favicon och manifest-länkar
-
-**Struktur**:
-```html
-<html>
-  <head>
-    - Meta tags
-    - Google Fonts (Inter)
-    - Favicon länkar
-  </head>
-  <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col pt-20">
-    <Header />
-    {Breadcrumbs (conditional)}
-    <slot /> <!-- Sidans innehåll -->
-    <Google Maps section>
-    <Footer />
-  </body>
-</html>
-```
-
-**Brödsmulor-logik**:
-- Delar upp URL-sökväg i segment
-- Formaterar segment (bindestreck → mellanslag, kapitalisering)
-- Visas inte på startsidan (`pathname === ''`)
-
----
-
-## 📄 Sidor
-
-### 1. index.astro (Startsida)
-**Sektioner**:
-- Hero (`bg-sky-700`) - Stor rubrik med CTA-knappar
-- Akut skada-banner (`bg-amber-50`) - Varning med telefonnummer
-- Fyra vägar till vård (`bg-gray-50`) - Grid med 4 kort
-- Expertis (`bg-white`) - 3 kort (Axel, Knä, Armbåge)
-- Patientinformation (`bg-sky-50`) - 2 kort
-- Recensioner (`bg-white`) - 3 testimonial-kort
-- Förtroende (`bg-sky-50`) - CTA-sektion
-
-**Färger**:
-- Hero: `bg-sky-700 text-white`
-- Knappar: `bg-white text-sky-700` eller `bg-transparent border-2 border-white`
-- Kort: `bg-white` med `shadow-lg`
-
-### 2. akut-remiss.astro
-**Struktur**:
-- Hero med SVG-illustration (Vespa-olycka)
-- Två kolumner: Information + Viktiga noteringar
-- Digital remissuppladdning: 2 kolumner (Dator vs Mobil)
-- Tidslinje-infografik (4 steg)
-- JavaScript för kopiera-lösenord funktionalitet
-
-**Färger**:
-- Hero: `bg-sky-700`
-- Info-boxar: `bg-blue-50` med `border-blue-200` eller `border-blue-500`
-- Varningar: `bg-amber-50` med `border-amber-500`
-
-### 3. fritt-vardval-sverige.astro
-**Funktionalitet**:
-- Interaktiv tab-sektion (4 tabs)
-- Process-steg (3 steg med pilar)
-- Jämförelse: Fritt Vårdval vs Vårdgaranti
-- Tidslinje för vårdgaranti (90 + 90 dagar)
-- JavaScript för tab-funktionalitet
-
-**Färger**:
-- Tabs: `bg-sky-600` (aktiv), `bg-white border-sky-600` (inaktiv)
-- Process-steg: `bg-white border-sky-200`
-- Jämförelse: `bg-sky-50`
-
-### 4. patientavgifter.astro
-**Struktur**:
-- Header med Region Stockholm-logo
-- Högkostnadsskydd-information
-- Prislista med badges (Frikort gäller/Frikort gäller ej)
-
-**Färger**:
-- Header: `bg-sky-800 text-white`
-- Badges: `bg-green-100 text-green-700` (frikort) eller `bg-red-100 text-red-700` (ej frikort)
-
-### 5. privatpatient-tre-val.astro
-**Struktur**:
-- Header med prisinformation
-- 3 kort (Axel, Knä, Armbåge) med ikoner
-- Varje kort har CTA-knapp
-
-**Färger**:
-- Kort: `bg-white border-gray-200`
-- Ikon-bakgrund: `bg-sky-50`
-- Knappar: `bg-sky-700 text-white`
-
-### 6. vara-forsakringsbolag.astro
-**Status**: Tom fil
-
-### 7. vardgivare.astro
-**Status**: Tom fil
-
----
-
-## 🎯 Designmönster & Best Practices
-
-### Knappar
-- Primär: `bg-sky-700 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-sky-800`
-- Sekundär: `bg-white text-sky-700 border-2 border-white rounded-full`
-- Ikon-knappar (mobil): `icon-button` class (definierad i global.css)
-
-### Kort
-- Standard: `bg-white p-8 rounded-2xl shadow-lg`
-- Hover: `hover:shadow-xl transition duration-300`
-- Flex-col för jämn höjd: `flex flex-col flex-grow`
-
-### Sektioner
-- Alternerande bakgrunder: `bg-white` och `bg-gray-50` eller `bg-sky-50`
-- Container: `max-w-6xl mx-auto px-6`
-- Padding: `py-20` (desktop), `py-12` (mobil)
-
-### Grid-layouts
-- 1 kolumn mobil: `grid-cols-1`
-- 2 kolumner tablet: `md:grid-cols-2`
-- 3-4 kolumner desktop: `lg:grid-cols-3` eller `lg:grid-cols-4`
-
-### Typografi
-- H1: `text-4xl md:text-6xl font-bold`
-- H2: `text-3xl md:text-4xl font-bold`
-- H3: `text-2xl font-bold`
-- Body: `text-lg` eller `text-base`
+### Innehållsförteckning
+- Färg: `bg-sky-700` (konsekvent över hela sidan)
 
 ---
 
@@ -276,82 +188,132 @@ Detta är en Astro-webbplats för Södermalms Ortopedi, byggd med Tailwind CSS o
 
 ```
 SHARP/
-├── public/                    # Statiska filer
-│   ├── logo.svg
-│   ├── favicon.*
-│   └── ...
+├── public/
+│   ├── favicons/           # Favicon-filer
+│   ├── images/
+│   │   ├── branding/       # Logo, QR-koder
+│   │   ├── diseases/       # Sjukdomsillustrationer
+│   │   ├── icons/          # Generella ikoner
+│   │   ├── og/             # Open Graph-bilder
+│   │   ├── operation/      # Operationsikoner (SVG)
+│   │   └── team/           # Teamfoton
+│   ├── video/              # Videofiler
+│   ├── llms.txt            # AI-sökoptimering
+│   └── robots.txt
+│
 ├── src/
-│   ├── components/           # Återanvändbara komponenter
-│   │   ├── Header.astro
-│   │   ├── footer.astro
-│   │   ├── FooterMap.astro
-│   │   └── PhoneModal.astro
-│   ├── layouts/              # Layout-mallar
-│   │   └── BaseLayout.astro
-│   ├── pages/                # Sidor (routes)
-│   │   ├── index.astro
-│   │   ├── akut-remiss.astro
-│   │   ├── fritt-vardval-sverige.astro
-│   │   ├── patientavgifter.astro
-│   │   ├── privatpatient-tre-val.astro
-│   │   ├── vara-forsakringsbolag.astro (tom)
-│   │   └── vardgivare.astro (tom)
+│   ├── assets/images/      # Optimerade bilder (WebP)
+│   │   └── operation/      # Descutan, Hibiwash, bandage
+│   │
+│   ├── components/
+│   │   ├── operation/      # Operationskomponenter
+│   │   └── *.astro         # Grundkomponenter
+│   │
+│   ├── content/
+│   │   ├── config.ts       # Innehållskonfiguration
+│   │   └── fraga-doktorn/  # 649 markdown-filer
+│   │
+│   ├── data/
+│   │   ├── shortLinks.json # Kortlänkar (SSOT)
+│   │   ├── conditions.ts   # Diagnosdata
+│   │   └── topics.ts       # Ämnesdata
+│   │
+│   ├── layouts/
+│   │   ├── BaseLayout.astro
+│   │   ├── OperationLayout.astro
+│   │   └── RehabLayout.astro
+│   │
+│   ├── pages/
+│   │   ├── d/              # Diagnosredirects
+│   │   ├── en/             # Engelska sidor
+│   │   ├── fraga-doktorn/  # Fråga Doktorn-sidor
+│   │   ├── o/              # Operationsredirects
+│   │   ├── om-oss/         # Om oss-sidor
+│   │   ├── operation/      # Operationssidor
+│   │   ├── r/              # Rehabredirects
+│   │   ├── rehab/          # Rehabsidor
+│   │   └── sjukdomar/      # Sjukdomssidor
+│   │
 │   └── styles/
-│       └── global.css        # Globala stilar
-├── astro.config.mjs          # Astro-konfiguration
-├── tailwind.config.mjs       # Tailwind-konfiguration
-├── tsconfig.json             # TypeScript-konfiguration
-└── package.json              # Dependencies
+│       └── global.css
+│
+├── docs/                   # Intern dokumentation
+│   ├── BILDHANTERING.md    # Bildoptimering
+│   ├── CHANGELOG.md
+│   ├── CHECKLIST.md
+│   ├── KOPIERA-LANKAR.md   # Kortlänkssystem
+│   ├── OPERATION-SIDOR.md  # Operationssystem
+│   └── ...
+│
+├── prompts/                # AI-prompts för innehåll
+│
+├── astro.config.mjs        # Astro + redirects
+├── netlify.toml            # Netlify-konfiguration
+├── tailwind.config.mjs
+└── package.json
 ```
 
 ---
 
 ## 🔧 Teknisk Stack
 
-- **Framework**: Astro 5.15.5
-- **Styling**: Tailwind CSS 3.4.18
-- **Integration**: @astrojs/tailwind 6.0.2
-- **TypeScript**: Strict mode
-- **Font**: Inter (Google Fonts)
+- **Framework:** Astro 5.x
+- **Styling:** Tailwind CSS 4.x
+- **TypeScript:** Strict mode
+- **Font:** Inter (Google Fonts)
+- **Hosting:** Netlify
+- **Bildoptimering:** Astro Image (Sharp)
+- **Sökning:** Pagefind
 
 ---
 
-## 🎨 Färgschema Sammanfattning
+## ⚙️ Konfiguration
 
-### Primärpalett
-- **Mörkblå**: `#023550`, `#024264`
-- **Ljusblå**: `#EBF8FF`
-- **Sky**: `sky-50` → `sky-800`
+### astro.config.mjs
+- Dynamiska redirects från `shortLinks.json`
+- Sitemap med i18n (sv/en)
+- Sharp bildoptimering
+- HTML-komprimering
 
-### Accentpalett
-- **Amber**: Varningar, akuta meddelanden
-- **Grön**: Success, frikort-badges
-- **Röd**: Fel, varningar
-- **Gul**: Stjärnor, betyg
-
-### Neutralpalett
-- **Grå**: `gray-50` → `gray-900` (text, bakgrunder, borders)
+### netlify.toml
+- Cache-headers för statiska assets (1 år)
+- WebP-specifika headers
+- Astro-bildoptimering (Netlify Image CDN avstängt)
 
 ---
 
-## 📝 Noteringar
+## 📝 Dokumentation
 
-1. **Custom färger**: Projektet använder både Tailwind-standardfärger och custom hex-färger (`#023550`, `#024264`, `#EBF8FF`)
-2. **Responsiv design**: Mobil-first approach med `md:` och `lg:` breakpoints
-3. **Accessibility**: ARIA-labels, semantic HTML, screen reader-only text (`sr-only`)
-4. **JavaScript**: Inline scripts i komponenter för interaktivitet (mobilmeny, tabs, modaler)
-5. **Maps**: Google Maps iframe inkluderad både i BaseLayout och som separat komponent
+| Dokument | Innehåll |
+|----------|----------|
+| `docs/OPERATION-SIDOR.md` | Hur man skapar/redigerar operationssidor |
+| `docs/KOPIERA-LANKAR.md` | Kortlänkssystemet och Link Generator |
+| `docs/BILDHANTERING.md` | Bildformat, storlekar, optimering |
+| `docs/CHECKLIST.md` | Checklista för nya sidor |
+| `README.md` | Snabbstart och deployment |
 
 ---
 
-## 🚀 Nästa Steg / Förbättringar
+## 🚀 Vanliga uppgifter
 
-1. Fyll i tomma sidor: `vara-forsakringsbolag.astro` och `vardgivare.astro`
-2. Överväg att flytta custom hex-färger till `tailwind.config.mjs` för bättre återanvändning
-3. Överväg att extrahera JavaScript till separata filer för bättre maintainability
-4. Lägg till TypeScript-typer för props i komponenter
+### Lägga till ny operation
+1. Skapa sida i `src/pages/operation/[kroppsdel]/`
+2. Importera komponenter från `src/components/operation/`
+3. Lägg till i Header.astro (meny)
+4. Lägg till kortlänk i `src/data/shortLinks.json`
 
+### Lägga till ny kortlänk
+1. Öppna `/copy-links` i webbläsaren
+2. Använd Link Generator längst ner
+3. Kopiera JSON och lägg till i `shortLinks.json`
+4. Pusha till GitHub
 
+### Lägga till ny diagnossida
+1. Skapa sida i `src/pages/sjukdomar/[kroppsdel]/`
+2. Använd `BaseLayout` eller skapa specifik layout
+3. Lägg till i Header.astro (meny)
+4. Lägg till kortlänk
 
+---
 
-
+*Dokument underhålls manuellt. Uppdatera vid större förändringar.*
