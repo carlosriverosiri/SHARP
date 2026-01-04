@@ -45,7 +45,7 @@ Ikoner finns i `public/images/operation/`. Alla är SVG 24x24 px.
 | `ingen-mat.svg` | Förberedelser (fasta) | `w-10 h-10` |
 | `ingen_rokning.svg` | Förberedelser (rökstopp) | `w-10 h-10` |
 | `tablett-24x24.svg` | Mediciner | `w-7 h-7` |
-| `surgeon-24x24.svg` | Operationsdagen (rubrik) | `w-8 h-8` |
+| `surgeon.svg` | Operationsdagen (rubrik) | `w-8 h-8` |
 | `vardprocessen-24x24.svg` | Vårdprocessen | `w-10 h-10` |
 | `injektion-24x24.svg` | Bedövning | `w-10 h-10` |
 | `keyhole-24x24.svg` | Titthålskirurgi | `w-8 h-8` |

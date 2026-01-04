@@ -18,7 +18,7 @@
  * - injektion-24x24.svg
  * - plaster-24x24.svg
  * - sjukgymnastik-24x24.svg
- * - surgeon-24x24.svg
+ * - surgeon.svg
  * - sutur-24x24.svg
  * - tablett-24x24.svg
  */
@@ -33,4 +33,5 @@ export { default as OpBilkorning } from './OpBilkorning.astro';
 export { default as OpSjukgymnastik } from './OpSjukgymnastik.astro';
 export { default as OpAxellas } from './OpAxellas.astro';
 export { default as OpAterbesok } from './OpAterbesok.astro';
+
 
