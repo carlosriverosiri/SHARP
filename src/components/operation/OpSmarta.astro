@@ -60,27 +60,6 @@ const {
       Du kan hämta ut detta recept fyra gånger. Behöver du ett nytt recept kontaktar du oss.
     </p>
 
-    <!-- Information om förpackningsstorlekar -->
-    <div class="bg-slate-50 border-l-4 border-slate-400 px-4 py-3 mb-4 rounded-r-lg">
-      <h3 class="font-semibold text-slate-900 mb-2">💊 Om medicinen är slut på apoteket – vad gör jag?</h3>
-      <div class="text-sm text-slate-700 space-y-2">
-        <p>
-          Om apoteket bara har större förpackningar (t.ex. 56 tabletter när receptet säger 50) kan du ändå hämta ut den större förpackningen. 
-          Prisskillnaden är minimal och enligt Läkemedelsverkets riktlinjer är detta helt i sin ordning.
-        </p>
-        <p>
-          <strong>Alternativt</strong> kan apoteket plocka ut exakt antal tabletter ur förpackningen (t.ex. ta bort 6 tabletter ur en 56-förpackning för att ge dig 50).
-        </p>
-        <p>
-          <strong>Du kan hämta ut alla tabletter på en gång</strong> om du vill (t.ex. 200 tabletter direkt istället för 50 × 4 gånger). 
-          Läkemedelsförmånen täcker dock bara det första uttaget, men eftersom de flesta inte når högkostnadsskyddet spelar detta sällan någon roll.
-        </p>
-        <p class="text-xs text-slate-600 italic mt-2">
-          Dessa regler är desamma som för pappersrecept – ingenting har förändrats sedan 30 år tillbaka.
-        </p>
-      </div>
-    </div>
-
     <!-- Mediciner - Kollapserbara -->
     <div class="space-y-2 mb-4">
       
@@ -271,6 +250,66 @@ const {
           </div>
         </details>
       )}
+
+      <!-- Policy gällande restnoterade läkemedel och förpackningsbyten -->
+      <details class="bg-slate-50 rounded-lg border border-slate-200 group">
+        <summary class="flex items-center gap-3 p-4 cursor-pointer list-none">
+          <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-sm group-open:hidden">+</span>
+          <span class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-sm hidden group-open:flex">−</span>
+          <h3 class="font-semibold text-slate-900">Policy gällande restnoterade läkemedel och förpackningsbyten</h3>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <div class="text-sm text-slate-700 space-y-3">
+            <p>
+              Det råder ofta brist på specifika förpackningsstorlekar på apoteken (t.ex. Citodon 56 st vs 50 st). 
+              Vi på Södermalms Ortopedi har en strikt policy att <strong>inte utfärda nya recept enbart för att justera förpackningsstorlek</strong>.
+            </p>
+
+            <div class="bg-slate-100 border border-slate-300 rounded px-3 py-2">
+              <h4 class="font-semibold text-slate-900 mb-2">Varför skriver vi inte bara ett nytt recept?</h4>
+              <p class="mb-2">
+                När ett recept väl är utfärdat ligger det kvar elektroniskt. Om vi skriver ett nytt recept för att matcha en annan förpackning, 
+                ligger det gamla receptet fortfarande kvar som giltigt. Detta innebär en risk för <strong>dubbelförskrivning av narkotikaklassade läkemedel</strong>, 
+                vilket är en allvarlig patientsäkerhetsrisk.
+              </p>
+              <p>
+                Det går inte att makulera ett recept digitalt. För att ta bort det gamla receptet krävs en personlig telefonkontakt med ett apotek. 
+                Denna administrativa process tar tid som måste ägnas åt patientbesök och operationer.
+              </p>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 px-3 py-2 rounded-r">
+              <h4 class="font-semibold text-blue-900 mb-2">Apoteket har skyldighet att lösa detta</h4>
+              <p class="mb-2">
+                Läkemedelsverket har gett apoteken mandat att lösa dessa situationer direkt, utan att belasta vården. 
+                Om ditt apotek hävdar att de inte kan expediera din medicin, visa dem följande instruktioner baserade på Läkemedelsverkets föreskrifter och besked:
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-blue-800">
+                <li>
+                  <strong>Om receptet är på 56 tabletter, men bara 50 finns:</strong> Farmaceuten har rätt att byta till 50 tabletter 
+                  (eller likvärdigt generika som Altermol/Panocod) utan läkarkontakt.
+                </li>
+                <li>
+                  <strong>Om receptet är på 50 tabletter, men bara 56 finns:</strong> Farmaceuten ska bryta förpackningen och plocka bort 6 tabletter. 
+                  Detta är särskilt påkallat vid narkotikaklassade läkemedel (som Citodon) för att mängden ska stämma.
+                </li>
+                <li>
+                  <strong>Om receptet har flera uttag (iterering):</strong> Om du t.ex. har 56 tabletter med 2 uttag (totalt 112 st) och endast förpackningar om 105 st finns, 
+                  får farmaceuten slå ihop uttagen och lämna ut 105 tabletter direkt.
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 px-3 py-2 rounded-r">
+              <h4 class="font-semibold text-amber-900 mb-2">Din åtgärd som patient</h4>
+              <p class="text-amber-800">
+                Om apoteket saknar din storlek: <strong>Be dem använda sina lagliga möjligheter att byta storlek, bryta förpackning eller byta till likvärdigt preparat</strong>. 
+                Vi har inte möjlighet att hantera dessa lagerfrågor.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
 
     </div>
   </div>
