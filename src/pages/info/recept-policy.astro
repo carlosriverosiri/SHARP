@@ -23,6 +23,34 @@ import slaIhopUttag from '../../assets/images/info/sla-ihop-uttag.webp';
 
 const pageTitle = "Receptpolicy & förpackningsbyten";
 const pageDescription = "Information om hur vi hanterar restnoterade läkemedel och förpackningsbyten. Apotekets lösningar när din medicin är slut i lager.";
+
+// Bilddata för lightbox
+const galleryImages = [
+  { 
+    id: 0, 
+    src: problemBild, 
+    alt: "Patient får inte hjälp när medicinen är slut i lager",
+    caption: "Problemet: Apoteket säger att medicinen är slut och att du behöver ett nytt recept – men det stämmer inte."
+  },
+  { 
+    id: 1, 
+    src: bytaStorlek, 
+    alt: "Byta storlek på förpackning",
+    caption: "Lösning: Apoteket kan ge dig två mindre förpackningar istället för en stor."
+  },
+  { 
+    id: 2, 
+    src: brytaForpackning, 
+    alt: "Bryta en större förpackning och ta bort tabletter",
+    caption: "Lösning: Apoteket kan öppna en större förpackning och räkna ut exakt antal tabletter."
+  },
+  { 
+    id: 3, 
+    src: slaIhopUttag, 
+    alt: "Slå ihop flera uttag till ett",
+    caption: "Lösning: Apoteket kan slå ihop flera uttag så du får alla tabletter på en gång."
+  }
+];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -46,15 +74,23 @@ const pageDescription = "Information om hur vi hanterar restnoterade läkemedel 
     <!-- Problemet: Medicin slut i lager -->
     <section class="mb-10">
       <div class="md:flex md:items-center md:gap-8 bg-slate-50 rounded-xl p-6 border border-slate-200">
-        <div class="md:w-1/3 mb-4 md:mb-0">
-          <Image 
-            src={problemBild} 
-            alt="Patient får inte hjälp när medicinen är slut i lager" 
-            class="rounded-lg shadow-md w-full"
-            loading="eager"
-          />
+        <div class="md:w-1/4 mb-4 md:mb-0">
+          <button 
+            type="button"
+            class="gallery-thumb cursor-pointer hover:opacity-90 transition-opacity block w-full"
+            data-index="0"
+            aria-label="Visa bild i större format"
+          >
+            <Image 
+              src={problemBild} 
+              alt="Patient får inte hjälp när medicinen är slut i lager" 
+              class="rounded-lg shadow-md w-full aspect-square object-cover"
+              loading="eager"
+            />
+            <p class="text-xs text-slate-500 mt-2 text-center">Klicka för att förstora</p>
+          </button>
         </div>
-        <div class="md:w-2/3">
+        <div class="md:w-3/4">
           <h2 class="text-xl font-bold text-slate-800 mb-3">När din medicin är slut på apoteket</h2>
           <p class="text-slate-600 mb-3">
             Ibland är den exakta förpackningsstorleken eller varumärket vi skrivit ut <strong>tillfälligt slut på apoteket</strong>. 
@@ -96,12 +132,20 @@ const pageDescription = "Information om hur vi hanterar restnoterade läkemedel 
         <div class="bg-blue-50 rounded-xl p-6 border border-blue-200">
           <div class="md:flex md:items-center md:gap-6">
             <div class="md:w-1/4 mb-4 md:mb-0">
-              <Image 
-                src={bytaStorlek} 
-                alt="Byta storlek på förpackning" 
-                class="rounded-lg shadow-sm w-full"
-                loading="lazy"
-              />
+              <button 
+                type="button"
+                class="gallery-thumb cursor-pointer hover:opacity-90 transition-opacity block w-full"
+                data-index="1"
+                aria-label="Visa bild i större format"
+              >
+                <Image 
+                  src={bytaStorlek} 
+                  alt="Byta storlek på förpackning" 
+                  class="rounded-lg shadow-sm w-full aspect-square object-cover"
+                  loading="lazy"
+                />
+                <p class="text-xs text-blue-600 mt-2 text-center">Klicka för att förstora</p>
+              </button>
             </div>
             <div class="md:w-3/4">
               <h3 class="text-lg font-bold text-blue-800 mb-2">Byta storlek på förpackning</h3>
@@ -118,12 +162,20 @@ const pageDescription = "Information om hur vi hanterar restnoterade läkemedel 
         <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-200">
           <div class="md:flex md:items-center md:gap-6 md:flex-row-reverse">
             <div class="md:w-1/4 mb-4 md:mb-0">
-              <Image 
-                src={brytaForpackning} 
-                alt="Bryta en större förpackning och ta bort tabletter" 
-                class="rounded-lg shadow-sm w-full"
-                loading="lazy"
-              />
+              <button 
+                type="button"
+                class="gallery-thumb cursor-pointer hover:opacity-90 transition-opacity block w-full"
+                data-index="2"
+                aria-label="Visa bild i större format"
+              >
+                <Image 
+                  src={brytaForpackning} 
+                  alt="Bryta en större förpackning och ta bort tabletter" 
+                  class="rounded-lg shadow-sm w-full aspect-square object-cover"
+                  loading="lazy"
+                />
+                <p class="text-xs text-emerald-600 mt-2 text-center">Klicka för att förstora</p>
+              </button>
             </div>
             <div class="md:w-3/4">
               <h3 class="text-lg font-bold text-emerald-800 mb-2">Bryta förpackning</h3>
@@ -140,12 +192,20 @@ const pageDescription = "Information om hur vi hanterar restnoterade läkemedel 
         <div class="bg-purple-50 rounded-xl p-6 border border-purple-200">
           <div class="md:flex md:items-center md:gap-6">
             <div class="md:w-1/4 mb-4 md:mb-0">
-              <Image 
-                src={slaIhopUttag} 
-                alt="Slå ihop flera uttag till ett" 
-                class="rounded-lg shadow-sm w-full"
-                loading="lazy"
-              />
+              <button 
+                type="button"
+                class="gallery-thumb cursor-pointer hover:opacity-90 transition-opacity block w-full"
+                data-index="3"
+                aria-label="Visa bild i större format"
+              >
+                <Image 
+                  src={slaIhopUttag} 
+                  alt="Slå ihop flera uttag till ett" 
+                  class="rounded-lg shadow-sm w-full aspect-square object-cover"
+                  loading="lazy"
+                />
+                <p class="text-xs text-purple-600 mt-2 text-center">Klicka för att förstora</p>
+              </button>
             </div>
             <div class="md:w-3/4">
               <h3 class="text-lg font-bold text-purple-800 mb-2">Slå ihop uttag</h3>
@@ -214,4 +274,161 @@ const pageDescription = "Information om hur vi hanterar restnoterade läkemedel 
     </div>
 
   </main>
+
+  <!-- ============================================
+       LIGHTBOX / BILDVISARE
+       Visar bilder i fullskärm med bildtext och navigation
+       ============================================ -->
+  <div 
+    id="lightbox" 
+    class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Bildvisare"
+  >
+    <!-- Stäng-knapp -->
+    <button 
+      id="lightbox-close" 
+      type="button"
+      class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+      aria-label="Stäng bildvisare"
+    >
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <!-- Föregående-knapp -->
+    <button 
+      id="lightbox-prev" 
+      type="button"
+      class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
+      aria-label="Föregående bild"
+    >
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <!-- Nästa-knapp -->
+    <button 
+      id="lightbox-next" 
+      type="button"
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
+      aria-label="Nästa bild"
+    >
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+
+    <!-- Bildcontainer -->
+    <div class="max-w-4xl w-full text-center">
+      <img 
+        id="lightbox-image" 
+        src="" 
+        alt="" 
+        class="max-h-[70vh] mx-auto rounded-lg shadow-2xl"
+      />
+      <!-- Bildtext -->
+      <div class="mt-4 bg-black/70 rounded-lg px-6 py-4 mx-auto max-w-2xl">
+        <p id="lightbox-caption" class="text-white text-lg"></p>
+        <p id="lightbox-counter" class="text-gray-400 text-sm mt-2"></p>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
+
+<script define:vars={{ galleryImages }}>
+  // Bilddata för lightbox (kommer från Astro)
+  const images = galleryImages;
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const closeBtn = document.getElementById('lightbox-close');
+    const prevBtn = document.getElementById('lightbox-prev');
+    const nextBtn = document.getElementById('lightbox-next');
+    const thumbs = document.querySelectorAll('.gallery-thumb');
+    
+    let currentIndex = 0;
+    
+    // Öppna lightbox
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Stäng lightbox
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+    
+    // Uppdatera lightbox-innehåll
+    function updateLightbox() {
+      const img = images[currentIndex];
+      // Hämta den faktiska bildens src från thumbnailsens img-element
+      const thumbImg = thumbs[currentIndex].querySelector('img');
+      lightboxImage.src = thumbImg.src;
+      lightboxImage.alt = img.alt;
+      lightboxCaption.textContent = img.caption;
+      lightboxCounter.textContent = `Bild ${currentIndex + 1} av ${images.length}`;
+    }
+    
+    // Visa föregående bild
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateLightbox();
+    }
+    
+    // Visa nästa bild
+    function showNext() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateLightbox();
+    }
+    
+    // Event listeners för thumbnails
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const index = parseInt(thumb.dataset.index, 10);
+        openLightbox(index);
+      });
+    });
+    
+    // Event listeners för lightbox-knappar
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    
+    // Stäng vid klick utanför bilden
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+    
+    // Tangentbordsnavigation
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('hidden')) return;
+      
+      switch (e.key) {
+        case 'Escape':
+          closeLightbox();
+          break;
+        case 'ArrowLeft':
+          showPrev();
+          break;
+        case 'ArrowRight':
+          showNext();
+          break;
+      }
+    });
+  });
+</script>
