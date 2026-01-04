@@ -33,5 +33,6 @@ export { default as OpBilkorning } from './OpBilkorning.astro';
 export { default as OpSjukgymnastik } from './OpSjukgymnastik.astro';
 export { default as OpAxellas } from './OpAxellas.astro';
 export { default as OpAterbesok } from './OpAterbesok.astro';
+export { default as OpKomplikationer } from './OpKomplikationer.astro';
 
 

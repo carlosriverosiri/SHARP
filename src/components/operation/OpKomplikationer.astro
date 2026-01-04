@@ -1,0 +1,236 @@
+---
+/**
+ * OpKomplikationer - Allmänna komplikationer efter operation
+ * 
+ * Visar information om vanliga komplikationer med kollapserbara sektioner
+ */
+interface Props {
+  extraInfo?: string;
+}
+
+const { extraInfo } = Astro.props;
+---
+
+<section id="komplikationer" class="mb-12 scroll-mt-32">
+  <div class="flex items-center gap-4 mb-6">
+    <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+      <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+    </div>
+    <h2 class="text-2xl md:text-3xl font-bold text-[#024264]">Komplikationer</h2>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+    <p class="text-slate-600 mb-6">
+      Följande komplikationer kan uppstå efter en axeloperation. De flesta är vanliga och ofarliga, 
+      men vissa kräver snabb kontakt med vården.
+    </p>
+
+    <div class="space-y-3">
+      
+      <!-- Feber -->
+      <details class="bg-blue-50 rounded-lg border border-blue-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-blue-900">Feber</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-blue-800 mb-2">
+            De första 2 dagarna efter operation kan du ibland få en lätt feber, på upp till 38,0 grader. 
+            Stiger febern ytterligare eller inte går ned bör du kontakta oss.
+          </p>
+          <p class="text-sm text-blue-800">
+            Känner du dig <strong>"allmänt sjuk"</strong> någon eller några dagar efter operationen bör du kontakta läkare. 
+            Det är normalt att det ibland kan göra väldigt ont efter en operation, men du skall inte få hög feber eller känna dig sjuk.
+          </p>
+        </div>
+      </details>
+
+      <!-- Stelhet -->
+      <details class="bg-amber-50 rounded-lg border border-amber-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-amber-900">Stelhet</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-amber-800 mb-2">
+            Detta är den <strong>vanligaste komplikationen</strong> efter en axeloperation. Omkring 5 % av patienterna drabbas av detta. 
+            En vanlig orsak är sammanväxningar.
+          </p>
+          <p class="text-sm text-amber-800 mb-2">
+            Det finns flera goda behandlingsmetoder mot detta, men det kan ta en lång tid innan axeln blir bra. 
+            Får du mycket smärtor under sjukgymnastiken så kan du minska belastningen under träningen, men fortsätta att töja. 
+            Du bör aldrig helt sluta att töja och tänja axelleden.
+          </p>
+          <p class="text-sm text-amber-800 mb-2">
+            Ibland kan en kortisoninjektion vara nödvändig för att dämpa inflammationen så att du kan träna bättre.
+          </p>
+          <p class="text-sm text-amber-800 font-medium">
+            ⚠️ Det är mycket viktigt att du sköter din rehabilitering även om du blir smärtfri direkt efter operationen.
+          </p>
+        </div>
+      </details>
+
+      <!-- Överträning -->
+      <details class="bg-purple-50 rounded-lg border border-purple-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-purple-900">Överträning</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-purple-800 mb-2">
+            Långvariga axelsmärtor ger lätt en försvagning av muskulaturen i axelleden. 
+            När du sedan efter operationen påbörjar din rehabilitering så kan det ibland gå lite för fort.
+          </p>
+          <p class="text-sm text-purple-800">
+            Då börjar axelledens muskler och senfästen att värka. Detta är en övergångsfas som beror på att muskulaturen belastas mer när rörelseomfånget i axelleden ökar. 
+            Om du minskar belastningen och tränar mindre styrka, men fortsätter att töja och tänja så minskar smärtorna.
+          </p>
+        </div>
+      </details>
+
+      <!-- Smärtor över nyckelbensleden -->
+      <details class="bg-teal-50 rounded-lg border border-teal-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-teal-200 flex items-center justify-center text-teal-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-teal-200 flex items-center justify-center text-teal-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-teal-900">Smärtor över nyckelbensleden</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-teal-800 mb-2">
+            I de allra flesta fall är det onödigt att operera nyckelbensleden även om röntgen visar att den har slitage.
+          </p>
+          <p class="text-sm text-teal-800">
+            I samband med rehabiliteringen kan dock nyckelbensleden ibland börja värka om den har lite slitage. 
+            Normalt sett försvinner dessa smärtor. Försvinner de inte kan det vara nödvändigt att, med ett mycket litet ingrepp, 
+            slipa ner lite av nyckelbenets ände.
+          </p>
+        </div>
+      </details>
+
+      <!-- Infektion -->
+      <details class="bg-red-50 rounded-lg border border-red-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-red-900">Infektion</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-red-800 mb-2">
+            Det är mycket ovanligt med infektioner efter en operation för inklämd sena. 
+            Men får du hög feber några dagar efter operationen måste infektion ("blodförgiftning") uteslutas.
+          </p>
+          <p class="text-sm text-red-800 mb-2">
+            En infektion i axelleden utvecklas normalt sett mycket långsamt och feber är relativt ovanligt. 
+            Blodproverna brukar i början inte visa speciellt mycket och det vanligaste symtomet är att det rinner ur såret en lång tid efter operationen (<strong>>5 dagar</strong>).
+          </p>
+          <p class="text-sm text-red-800 mb-2">
+            Patienterna kan känna sig frusna och ha en allmän sjukdomskänsla utan att ha feber.
+          </p>
+          <div class="bg-red-100 border border-red-300 rounded px-3 py-2 mt-2">
+            <p class="text-xs text-red-900 font-medium">
+              ⚠️ Det är viktigt att tidigt börja behandla en misstänkt axelinfektion med antibiotika. 
+              Behandlingen skall normalt pågå i minst 3-4 veckor.
+            </p>
+            <p class="text-xs text-red-900 font-medium mt-1">
+              Lider du av insulinbehandlad diabetes eller om du tar mediciner som sätter ned immunförsvaret ökar risken för infektion.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <!-- Blödning -->
+      <details class="bg-pink-50 rounded-lg border border-pink-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-pink-200 flex items-center justify-center text-pink-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-pink-200 flex items-center justify-center text-pink-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-pink-900">Blödning</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-pink-800 mb-2">
+            Det är relativt vanlig att det kommer ut blodtillblandad vätska under en eller två dagar efter en artroskopisk axeloperation. 
+            Det är bara bra att denna vätska rinner ut ur såret.
+          </p>
+          <p class="text-sm text-pink-800 mb-2">
+            Direkta blödningar med tjockt blod är dock relativt ovanliga.
+          </p>
+          <p class="text-sm text-pink-800">
+            Det är inte ovanligt att du ser ett blåmärke över överarmen någon vecka efter operationen.
+          </p>
+        </div>
+      </details>
+
+      <!-- Nervskador -->
+      <details class="bg-indigo-50 rounded-lg border border-indigo-200 group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm group-open:hidden">+</span>
+            <span class="w-6 h-6 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm hidden group-open:flex">−</span>
+            <h3 class="font-semibold text-indigo-900">Nervskador</h3>
+          </div>
+        </summary>
+        <div class="px-4 pb-4 pt-0">
+          <p class="text-sm text-indigo-800">
+            Det är ytterst ovanligt att nerver skärs av eller skadas i samband med en artroskopisk operation. 
+            Ibland kan dock en liten hudnerv skadas i det område man sticker in artroskopet eller instrumenten. 
+            Men detta ger sällan några bestående men.
+          </p>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- Misstänkt infektion - viktig varningsbox -->
+    <div class="mt-6 bg-red-50 border-l-4 border-red-500 rounded-r-lg p-4">
+      <h3 class="font-bold text-red-900 mb-2 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        Misstänkt infektion – när ska du kontakta oss?
+      </h3>
+      <p class="text-sm text-red-800 mb-2">
+        Skulle du få problem med uttalad trötthet, feber eller sjukdomskänsla under första månaden efter operation, 
+        kontaktar du mottagningen dagtid eller ta dig till närmaste akutmottagning.
+      </p>
+      <p class="text-sm text-red-800 font-medium">
+        📱 På kvällar och helger kan du i nödfall kontakta din kirurg om du har en misstänkt infektion. 
+        Mobilnumret finns i journalen. <strong>Skicka alltid ett SMS innan du ringer.</strong> 
+        Där skall framgå personnummer, namn, eventuell feber eller frossa och vilka symptom du har.
+      </p>
+    </div>
+
+  </div>
+
+  {extraInfo && (
+    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      {extraInfo}
+    </div>
+  )}
+</section>
+
+<style>
+  /* Ta bort standard-markören för details/summary */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details summary::marker {
+    display: none;
+  }
+</style>
+
