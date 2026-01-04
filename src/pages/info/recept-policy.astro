@@ -1,0 +1,145 @@
+---
+/**
+ * Dedikerad sida för receptpolicy
+ * 
+ * Kortlänk: /i/recept → www.specialist.se/i/recept
+ * 
+ * Denna sida innehåller klinikens policy gällande:
+ * - Restnoterade läkemedel
+ * - Förpackningsbyten
+ * - Varför vi inte utfärdar nya recept för storleksändringar
+ * - Apotekets skyldigheter enligt Läkemedelsverket
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Policy: Restnoterade läkemedel & förpackningsbyten" 
+  description="Södermalms Ortopedis policy gällande receptändringar vid restnoterade läkemedel och förpackningsbyten på apotek."
+>
+  <div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-3xl mx-auto px-4">
+      
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-[#024264]">
+              Policy gällande restnoterade läkemedel och förpackningsbyten
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">Södermalms Ortopedi</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Huvudinnehåll -->
+      <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+        
+        <!-- Sammanfattning -->
+        <div class="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <p class="text-slate-700">
+            Det råder ofta brist på specifika förpackningsstorlekar på apoteken (t.ex. Citodon 56 st vs 50 st). 
+            Vi på Södermalms Ortopedi har en strikt policy att <strong>inte utfärda nya recept enbart för att justera förpackningsstorlek</strong>.
+          </p>
+        </div>
+
+        <div class="p-6 space-y-6">
+          
+          <!-- Varför -->
+          <section>
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="text-amber-500">⚠️</span>
+              Varför skriver vi inte bara ett nytt recept?
+            </h2>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
+              <p class="text-amber-900">
+                När ett recept väl är utfärdat ligger det kvar elektroniskt. Om vi skriver ett nytt recept för att matcha en annan förpackning, 
+                ligger det gamla receptet fortfarande kvar som giltigt. Detta innebär en risk för <strong>dubbelförskrivning av narkotikaklassade läkemedel</strong>, 
+                vilket är en allvarlig patientsäkerhetsrisk.
+              </p>
+              <p class="text-amber-900">
+                Det går inte att makulera ett recept digitalt. För att ta bort det gamla receptet krävs en personlig telefonkontakt med ett apotek. 
+                Denna administrativa process tar tid som måste ägnas åt patientbesök och operationer.
+              </p>
+            </div>
+          </section>
+
+          <!-- Apotekets skyldighet -->
+          <section>
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="text-blue-500">💊</span>
+              Apoteket har skyldighet att lösa detta
+            </h2>
+            <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-4 space-y-3">
+              <p class="text-blue-900">
+                Läkemedelsverket har gett apoteken mandat att lösa dessa situationer direkt, utan att belasta vården. 
+                Om ditt apotek hävdar att de inte kan expediera din medicin, visa dem följande instruktioner baserade på Läkemedelsverkets föreskrifter:
+              </p>
+              
+              <ul class="space-y-3 text-blue-800">
+                <li class="flex gap-3">
+                  <span class="font-bold text-blue-600 shrink-0">1.</span>
+                  <div>
+                    <strong>Om receptet är på 56 tabletter, men bara 50 finns:</strong><br>
+                    Farmaceuten har rätt att byta till 50 tabletter (eller likvärdigt generika som Altermol/Panocod) utan läkarkontakt.
+                  </div>
+                </li>
+                <li class="flex gap-3">
+                  <span class="font-bold text-blue-600 shrink-0">2.</span>
+                  <div>
+                    <strong>Om receptet är på 50 tabletter, men bara 56 finns:</strong><br>
+                    Farmaceuten ska bryta förpackningen och plocka bort 6 tabletter. 
+                    Detta är särskilt påkallat vid narkotikaklassade läkemedel (som Citodon) för att mängden ska stämma.
+                  </div>
+                </li>
+                <li class="flex gap-3">
+                  <span class="font-bold text-blue-600 shrink-0">3.</span>
+                  <div>
+                    <strong>Om receptet har flera uttag (iterering):</strong><br>
+                    Om du t.ex. har 56 tabletter med 2 uttag (totalt 112 st) och endast förpackningar om 105 st finns, 
+                    får farmaceuten slå ihop uttagen och lämna ut 105 tabletter direkt.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Din åtgärd -->
+          <section>
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span class="text-green-500">✅</span>
+              Din åtgärd som patient
+            </h2>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p class="text-green-900">
+                Om apoteket saknar din storlek: <strong>Be dem använda sina lagliga möjligheter att byta storlek, bryta förpackning eller byta till likvärdigt preparat</strong>. 
+                Vi har inte möjlighet att hantera dessa lagerfrågor.
+              </p>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- Tillbaka-länk -->
+      <div class="mt-6 text-center">
+        <a 
+          href="javascript:history.back()" 
+          class="text-[#024264] hover:underline text-sm inline-flex items-center gap-1"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Tillbaka
+        </a>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+

@@ -182,9 +182,9 @@
     {
       "name": "Policy: Restnoterade läkemedel & förpackningsbyten",
       "shortCode": "/i/recept",
-      "target": "/operation/axel/lateral-klavikelresektion#recept-policy",
+      "target": "/info/recept-policy",
       "isExternal": false,
-      "_comment": "Länk till klinikens policy om receptändringar - för administrativ personal"
+      "_comment": "Dedikerad sida för klinikens receptpolicy - för administrativ personal och patienter"
     }
   ]
 }
