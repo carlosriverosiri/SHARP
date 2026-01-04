@@ -1,16 +1,23 @@
 ---
 /**
  * OpSmarta - Smärtstillande efter operation
+ * 
+ * OBS: Inga exakta doseringar visas - endast styrka (t.ex. 500 mg)
+ * Patienten hänvisas till 1177 för dosering
  */
 interface Props {
   visaAlvedon?: boolean;
   visaCitodon?: boolean;
+  visaOmeprazol?: boolean;  // Förberett för framtida användning
+  visaCelebra?: boolean;    // Förberett för framtida användning
   extraInfo?: string;
 }
 
 const { 
   visaAlvedon = true,
   visaCitodon = true,
+  visaOmeprazol = false,    // Aktivera när innehåll är klart
+  visaCelebra = false,      // Aktivera när innehåll är klart
   extraInfo
 } = Astro.props;
 ---
@@ -30,6 +37,9 @@ const {
       <p class="text-sm text-blue-800 mb-2">
         Det är <strong>viktigt</strong> att du berättar för operatören vilka mediciner du eventuellt inte tål. 
         Du får receptet elektroniskt via "e-recept" och därefter kan det hämtas på apoteket.
+      </p>
+      <p class="text-sm text-blue-800 mb-2">
+        📱 <strong>Receptet hittar du på <a href="https://www.1177.se/e-tjanster-pa-1177/recept/" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-900">1177.se</a></strong> under "Läkemedel" → "Recept".
       </p>
       <p class="text-sm text-blue-800 font-medium">
         ⚠️ Det är viktigt att du tar smärtstillande medicin <strong>regelbundet första dagen</strong>.
@@ -62,9 +72,6 @@ const {
           Inflammationen och svullnaden efter en operation dämpas av att du tar inflammationsdämpande (NSAID) tabletter. 
           Du bör ta dessa mediciner under <strong>5-10 dagar</strong> efter operationen. 
           Detta gör att smärtorna snabbare släpper och påskyndar rehabiliteringen.
-        </p>
-        <p class="text-sm text-orange-800 mb-2">
-          <strong>Dosering:</strong> 1 tablett 2 gånger per dygn i samband med måltid.
         </p>
         <p class="text-sm text-orange-800 mb-2">
           Har du mycket smärtor under rehabiliteringen kan du ta en eller flera nya 10 dagars kurer med Naproxen. 
@@ -100,9 +107,6 @@ const {
             Citodon är ett rent smärtstillande läkemedel som omvandlas till morfin i kroppen. 
             Morfin kan göra dig dåsig, trött och illamående.
           </p>
-          <p class="text-sm text-amber-800 mb-2">
-            <strong>Dosering:</strong> 1–2 tabletter 4 gånger per dygn.
-          </p>
           <div class="bg-amber-100 border border-amber-300 rounded px-3 py-2 mt-2">
             <p class="text-xs text-amber-900 font-medium">
               ⚠️ Upplever du att biverkningarna av Citodon är värre än att ha ont så kan det vara bra att prova med Alvedon istället för Citodon.
@@ -121,7 +125,7 @@ const {
       {visaAlvedon && (
         <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
           <div class="flex items-start justify-between mb-2">
-            <h3 class="font-semibold text-blue-900 text-base">Alvedon</h3>
+            <h3 class="font-semibold text-blue-900 text-base">Alvedon 500 mg</h3>
             <a 
               href="https://www.fass.se/LIF/searchresult?query=alvedon" 
               target="_blank" 
@@ -141,6 +145,50 @@ const {
               ⚠️ <strong>Du får inte kombinera Alvedon med Citodon</strong> eller andra mediciner som innehåller paracetamol.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* OMEPRAZOL - Förberett för framtida innehåll */}
+      {visaOmeprazol && (
+        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-semibold text-purple-900 text-base">Omeprazol 20 mg</h3>
+            <a 
+              href="https://www.fass.se/LIF/searchresult?query=omeprazol" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs text-purple-700 hover:text-purple-900 underline flex items-center gap-1"
+              title="Läs mer på FASS"
+            >
+              FASS ↗
+            </a>
+          </div>
+          <p class="text-sm text-purple-800">
+            {/* TODO: Lägg till information om Omeprazol */}
+            Information kommer snart.
+          </p>
+        </div>
+      )}
+
+      {/* CELEBRA - Förberett för framtida innehåll */}
+      {visaCelebra && (
+        <div class="bg-teal-50 rounded-lg p-4 border border-teal-200">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-semibold text-teal-900 text-base">Celebra (Celecoxib)</h3>
+            <a 
+              href="https://www.fass.se/LIF/searchresult?query=celebra" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs text-teal-700 hover:text-teal-900 underline flex items-center gap-1"
+              title="Läs mer på FASS"
+            >
+              FASS ↗
+            </a>
+          </div>
+          <p class="text-sm text-teal-800">
+            {/* TODO: Lägg till information om Celebra */}
+            Information kommer snart.
+          </p>
         </div>
       )}
     </div>
