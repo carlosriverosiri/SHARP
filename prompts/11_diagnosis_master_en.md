@@ -48,19 +48,128 @@
 - ✅ CORRECT: `...spontaneously.[22]`
 
 **CLINICAL EXPERIENCE BLOCKS:**
-- Use **indigo/purple** background for author's clinical experience, personal insights, and clinical pearls
-- Distinguish from evidence-based information (which uses other colors)
-- Format example:
-```html
-<div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
-  <h5 class="font-bold text-indigo-800 text-xs mb-1">💡 Clinical Pearl</h5>
-  <p class="text-xs text-slate-600 italic">
-    In 15+ years of practice using this approach, [clinical observation/experience].
-  </p>
-</div>
-```
-- Use for: Personal clinical observations, expert opinions, practice patterns, clinical pearls
+- Use **indigo/purple** background for small clinical pearls within sections
+- Use for: Personal clinical observations, expert opinions, practice patterns
 - Icon: 💡 or 👨‍⚕️
+
+**EXPERT PERSPECTIVE SECTION (REQUIRED):**
+
+Every diagnosis page MUST include a dedicated "Expert Perspective" section near the end (before FAQ). This is a large, prominent block with dark background where the author shares their personal clinical approach.
+
+**Structure:**
+```html
+<!-- EXPERT PERSPECTIVE SECTION -->
+<section id="expert" class="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 py-12">
+  <div class="max-w-[1500px] mx-auto px-4 sm:px-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-14 h-14 rounded-full bg-amber-500/20 flex items-center justify-center">
+        <span class="text-3xl">💡</span>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-white">Expert Perspective</h2>
+        <p class="text-slate-400">My approach to [DIAGNOSIS NAME]</p>
+      </div>
+    </div>
+    
+    <!-- Main content card -->
+    <div class="bg-slate-800/50 backdrop-blur rounded-2xl border border-slate-700 p-6 md:p-8">
+      
+      <!-- Opening paragraph -->
+      <p class="text-slate-300 text-base leading-relaxed mb-6">
+        At Södermalms Ortopedi, we frequently see patients with [condition]. 
+        [Brief overview of typical presentation and what makes this diagnosis interesting/challenging.]
+      </p>
+      
+      <!-- My Diagnostic Approach -->
+      <h3 class="text-lg font-bold text-amber-400 mb-3">My Diagnostic Approach</h3>
+      <p class="text-slate-300 leading-relaxed mb-6">
+        My management is primarily based on [key clinical finding/approach]. 
+        [Explain what you prioritize and why - this may differ from standard textbook approaches.]
+      </p>
+      
+      <!-- A Question I Always Ask (optional but recommended) -->
+      <div class="bg-slate-700/50 rounded-xl p-5 mb-6 border-l-4 border-indigo-500">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">💤</span>
+          <div>
+            <h4 class="font-bold text-indigo-400 mb-2">A Question I Always Ask</h4>
+            <p class="text-white italic mb-3">
+              "[Your signature question that helps with diagnosis]"
+            </p>
+            <p class="text-slate-400 text-sm">
+              [Explain why you ask this and what insight it provides. 
+              Note if this is personal experience vs. literature-based.]
+              <strong class="text-slate-300">Not described in literature</strong> – but worth asking about.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Investigations grid (EMG, MRI, etc.) -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-slate-700/30 rounded-xl p-5 border border-slate-600">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-sky-400">⚡</span>
+            <h4 class="font-bold text-sky-400">EMG/Nerve Conduction Studies</h4>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            [Your approach to this investigation - when you use it, limitations, what it changes in your management.]
+          </p>
+        </div>
+        <div class="bg-slate-700/30 rounded-xl p-5 border border-slate-600">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-sky-400">🖼</span>
+            <h4 class="font-bold text-sky-400">MRI</h4>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            [When you order MRI, what you look for, and how it influences your decisions.]
+          </p>
+        </div>
+      </div>
+      
+      <!-- Clinical Pearl -->
+      <div class="bg-indigo-900/30 rounded-xl p-5 border border-indigo-700">
+        <h4 class="font-bold text-indigo-300 mb-2 flex items-center gap-2">
+          <span>💡</span> Clinical Pearl
+        </h4>
+        <p class="text-slate-300 text-sm italic">
+          [A practical tip from your clinical experience that isn't commonly taught.]
+        </p>
+      </div>
+      
+      <!-- Surgical Indication & Timing (if applicable) -->
+      <h3 class="text-lg font-bold text-emerald-400 mt-8 mb-3">Surgical Indication & Timing</h3>
+      <p class="text-slate-300 leading-relaxed mb-4">
+        [Your criteria for recommending surgery. Be specific about timing, indications, and your rationale.]
+      </p>
+      
+      <!-- Summary list -->
+      <div class="bg-slate-700/30 rounded-xl p-5 border border-slate-600">
+        <h4 class="font-bold text-slate-200 mb-3">Summary</h4>
+        <ol class="space-y-2 text-slate-300 text-sm">
+          <li class="flex gap-2"><span class="text-emerald-400 font-bold">1.</span> [First key point]</li>
+          <li class="flex gap-2"><span class="text-emerald-400 font-bold">2.</span> [Second key point]</li>
+          <li class="flex gap-2"><span class="text-emerald-400 font-bold">3.</span> [Third key point]</li>
+        </ol>
+      </div>
+      
+    </div>
+    
+    <!-- Author attribution -->
+    <div class="flex items-center gap-4 mt-6">
+      <img src="/images/team/carlos-rivero-siri.webp" alt="Dr. Carlos Rivero Siri" class="w-12 h-12 rounded-full border-2 border-sky-400" />
+      <div>
+        <p class="font-bold text-white">Dr. Carlos Rivero Siri</p>
+        <p class="text-slate-400 text-sm">Specialist in Orthopaedics & Shoulder Surgery</p>
+      </div>
+    </div>
+    
+  </div>
+</section>
+```
+
+**Note:** This section uses placeholder text in brackets [like this]. The AI should generate relevant dummy content based on the diagnosis, which the author will then customize with their personal clinical experience.
 
 **COLOR SCHEME FOR CONTENT BLOCKS:**
 
