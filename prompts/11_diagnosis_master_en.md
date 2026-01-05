@@ -83,7 +83,14 @@ Use consistent colors to signal content type:
 
 **TRANSLATION WORKFLOW & CONSISTENCY:**
 
-The workflow is: **English first → Swedish → Other languages**
+**Translation Priority Order:**
+1. **English → Swedish/Spanish/Other** (primary workflow)
+2. **Swedish → English** (when English version doesn't exist yet)
+3. **Swedish → Spanish/Other** (fallback if no English version exists)
+
+**Source Language Detection:**
+- If `/en/diseases/[bodypart]/[diagnosis].astro` exists → use English as source
+- If only `/sjukdomar/[bodypart]/[diagnosis].astro` exists → use Swedish as source
 
 When translating, maintain consistent terminology:
 
@@ -105,8 +112,19 @@ When translating, maintain consistent terminology:
 | Red Flags | Varningssignaler | Rose color |
 | At-Risk | Riskgrupper | |
 
-**Section IDs:** Keep English IDs even in Swedish pages for consistency:
-- `id="symptoms"` (not `id="symtom"`)
-- `id="treatment"` (not `id="behandling"`)
-- `id="faq"` (not `id="fragor"`)
+**Section IDs:** Keep English IDs even in translated pages for consistency:
+- `id="symptoms"` (not `id="symtom"` or `id="sintomas"`)
+- `id="treatment"` (not `id="behandling"` or `id="tratamiento"`)
+- `id="faq"` (not `id="fragor"` or `id="preguntas"`)
+
+**File Paths by Language:**
+| Language | Path | Example |
+|----------|------|---------|
+| English | `src/pages/en/diseases/[bodypart]/` | `/en/diseases/shoulder/ac-joint-osteoarthritis.astro` |
+| Swedish | `src/pages/sjukdomar/[bodypart]/` | `/sjukdomar/axel/ac-ledsartros.astro` |
+| Spanish | `src/pages/es/enfermedades/[bodypart]/` | `/es/enfermedades/hombro/artrosis-ac.astro` |
+
+**Translation Prompts:**
+- Use `@13_translate_to_english.md` for Swedish → English
+- Use this prompt (`@11`) for English → Swedish/Spanish/Other
 
