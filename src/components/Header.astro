@@ -35,7 +35,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
       {isEnglish ? (
         <!-- ==================== ENGLISH MENU ==================== -->
         <>
-          <!-- Diseases -->
+          <!-- Diseases - Mega Menu -->
           <div class="group relative">
             <a href="/en/diseases/" class="nav-link group-hover:text-blue-600">
               Diseases
@@ -44,27 +44,29 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
-              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[400px]">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
                   <div class="group/shoulder relative">
                     <a href="/en/diseases/shoulder/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/shoulder:scale-110 transition-transform">
-                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/shoulder:scale-110 transition-transform">
+                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Shoulder</span>
+                      <span class="font-bold text-[#024264] text-base">Shoulder</span>
                     </a>
                     <div class="hidden group-hover/shoulder:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <a href="/en/diseases/shoulder/suprascapular-neuropathy" class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full hover:bg-blue-200 transition-colors w-full text-center">Suprascapular Neuropathy</a>
+                      <a href="/en/diseases/shoulder/ac-joint-arthritis" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">AC Joint Arthritis</a>
+                      <a href="/en/diseases/shoulder/suprascapular-neuropathy" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">Suprascapular Neuropathy</a>
+                      <a href="/en/diseases/shoulder/parsonage-turner" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">Parsonage-Turner</a>
                     </div>
                   </div>
                   <!-- Knee -->
                   <div class="group/knee relative">
                     <a href="/en/diseases/knee/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/knee:scale-110 transition-transform">
-                        <img src="/images/icons/kna-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/knee:scale-110 transition-transform">
+                        <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Knee</span>
+                      <span class="font-bold text-[#024264] text-base">Knee</span>
                     </a>
                     <div class="hidden group-hover/knee:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
                       <span class="text-xs text-gray-400 italic">Coming soon</span>
@@ -73,13 +75,13 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   <!-- Elbow -->
                   <div class="group/elbow relative">
                     <a href="/en/diseases/elbow/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/elbow:scale-110 transition-transform">
-                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/elbow:scale-110 transition-transform">
+                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Elbow</span>
+                      <span class="font-bold text-[#024264] text-base">Elbow</span>
                     </a>
                     <div class="hidden group-hover/elbow:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <span class="text-xs text-gray-400 italic">Coming soon</span>
+                      <a href="/en/diseases/elbow/distal-biceps-rupture" class="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-200 transition-colors w-full text-center">Distal Biceps Rupture</a>
                     </div>
                   </div>
                 </div>
@@ -87,7 +89,59 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </div>
           </div>
 
-          <!-- Rehab -->
+          <!-- Surgery - Mega Menu -->
+          <div class="group relative">
+            <a href="/en/surgery/" class="nav-link group-hover:text-blue-600">
+              Surgery
+              <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+                <div class="grid grid-cols-3 gap-6">
+                  <!-- Shoulder -->
+                  <div class="group/shoulder-op relative">
+                    <a href="/en/surgery/shoulder/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/shoulder-op:scale-110 transition-transform">
+                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Shoulder</span>
+                    </a>
+                    <div class="hidden group-hover/shoulder-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <a href="/en/surgery/shoulder/lateral-clavicle-resection" class="text-xs bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full hover:bg-orange-200 transition-colors w-full text-center">AC Joint Arthritis</a>
+                    </div>
+                  </div>
+                  <!-- Knee -->
+                  <div class="group/knee-op relative">
+                    <a href="/en/surgery/knee/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/knee-op:scale-110 transition-transform">
+                        <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Knee</span>
+                    </a>
+                    <div class="hidden group-hover/knee-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Surgery programs coming</span>
+                    </div>
+                  </div>
+                  <!-- Elbow -->
+                  <div class="group/elbow-op relative">
+                    <a href="/en/surgery/elbow/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                      <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/elbow-op:scale-110 transition-transform">
+                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                      </div>
+                      <span class="font-bold text-[#024264] text-base">Elbow</span>
+                    </a>
+                    <div class="hidden group-hover/elbow-op:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                      <span class="text-xs text-gray-400 italic">Surgery programs coming</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rehab - Mega Menu -->
           <div class="group relative">
             <a href="/en/rehab/" class="nav-link group-hover:text-blue-600">
               Rehab
@@ -96,46 +150,116 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
-              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[400px]">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
                   <div class="group/shoulder-rehab relative">
                     <a href="/en/rehab/shoulder/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/shoulder-rehab:scale-110 transition-transform">
-                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/shoulder-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Shoulder</span>
+                      <span class="font-bold text-[#024264] text-base">Shoulder</span>
                     </a>
                     <div class="hidden group-hover/shoulder-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <a href="/en/rehab/suprascapular-nerve-decompression" class="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full hover:bg-emerald-200 transition-colors w-full text-center">Nerve Decompression</a>
+                      <a href="/en/rehab/suprascapular-nerve-decompression" class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full hover:bg-emerald-200 transition-colors w-full text-center">Nerve Decompression</a>
                     </div>
                   </div>
                   <!-- Knee -->
                   <div class="group/knee-rehab relative">
                     <a href="/en/rehab/knee/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/knee-rehab:scale-110 transition-transform">
-                        <img src="/images/icons/kna-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/knee-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Knee</span>
+                      <span class="font-bold text-[#024264] text-base">Knee</span>
                     </a>
                     <div class="hidden group-hover/knee-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <span class="text-xs text-gray-400 italic">Coming soon</span>
+                      <span class="text-xs text-gray-400 italic">Rehab programs coming</span>
                     </div>
                   </div>
                   <!-- Elbow -->
                   <div class="group/elbow-rehab relative">
                     <a href="/en/rehab/elbow/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
-                      <div class="w-16 h-16 mb-2 rounded-full bg-emerald-50 flex items-center justify-center overflow-hidden group-hover/elbow-rehab:scale-110 transition-transform">
-                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-12 h-12 object-contain" />
+                      <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/elbow-rehab:scale-110 transition-transform">
+                        <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
-                      <span class="font-bold text-[#024264] text-sm">Elbow</span>
+                      <span class="font-bold text-[#024264] text-base">Elbow</span>
                     </a>
                     <div class="hidden group-hover/elbow-rehab:flex flex-col items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <span class="text-xs text-gray-400 italic">Coming soon</span>
+                      <span class="text-xs text-gray-400 italic">Rehab programs coming</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Ask the Doctor - Mega Menu -->
+          <div class="group relative">
+            <a href="/en/ask-the-doctor/" class="nav-link group-hover:text-blue-600">
+              Ask the Doctor
+              <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+              <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
+                <div class="grid grid-cols-3 gap-6">
+                  <!-- Shoulder -->
+                  <a href="/en/ask-the-doctor/shoulder/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/shoulder-qa">
+                    <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/shoulder-qa:scale-110 transition-transform">
+                      <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                    </div>
+                    <span class="font-bold text-[#024264] text-base">Shoulder</span>
+                  </a>
+                  <!-- Knee -->
+                  <a href="/en/ask-the-doctor/knee/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/knee-qa">
+                    <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/knee-qa:scale-110 transition-transform">
+                      <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                    </div>
+                    <span class="font-bold text-[#024264] text-base">Knee</span>
+                  </a>
+                  <!-- Elbow -->
+                  <a href="/en/ask-the-doctor/elbow/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/elbow-qa">
+                    <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/elbow-qa:scale-110 transition-transform">
+                      <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
+                    </div>
+                    <span class="font-bold text-[#024264] text-base">Elbow</span>
+                  </a>
+                </div>
+                <!-- Action buttons -->
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-2">
+                  <a href="/en/ask-the-doctor/#question-form" class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-3 py-2 rounded-full hover:bg-sky-700 transition-colors font-medium">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Ask a Question
+                  </a>
+                  <a href="/en/ask-the-doctor/latest/" class="inline-flex items-center gap-2 text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors font-medium">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Latest Answers
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient -->
+          <div class="group relative">
+            <a href="/en/patient/" class="nav-link group-hover:text-blue-600">
+              Patient
+              <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </a>
+            <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+              <ul class="dropdown-menu min-w-[260px]">
+                <li><a href="/en/patient/visit-us/" class="dropdown-link">Visit Us from All of Sweden</a></li>
+                <li><a href="/en/patient/referral-waiting-time/" class="dropdown-link">Referral & Waiting Time</a></li>
+                <li><a href="/en/patient/insurance-payment/" class="dropdown-link">Insurance & Payment</a></li>
+                <li><a href="/en/patient/book-reschedule/" class="dropdown-link">Book & Reschedule</a></li>
+              </ul>
             </div>
           </div>
 
@@ -148,18 +272,17 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </a>
             <div class="absolute top-full right-0 pt-2 hidden group-hover:block z-50">
-              <ul class="dropdown-menu min-w-[200px]">
-                <li><a href="/en/about/team/" class="dropdown-link">Our Team</a></li>
-                <li><a href="/en/about/dr-carlos-rivero-siri" class="dropdown-link">Dr. Carlos Rivero Siri</a></li>
-                <li><a href="/en/about/clinic/" class="dropdown-link">About the Clinic</a></li>
+              <ul class="dropdown-menu min-w-[240px]">
+                <li>
+                  <a href="/en/about/our-team/" class="dropdown-link font-medium">Our Team</a>
+                  <a href="/en/about/our-team/dr-carlos-rivero-siri" class="block px-4 py-1.5 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-blue-200 ml-4 transition-colors">Dr. Carlos Rivero Siri</a>
+                </li>
+                <li><a href="/en/about/quality-research/" class="dropdown-link">Quality & Research</a></li>
+                <li><a href="/en/about/clinic-directions/" class="dropdown-link">About the Clinic & Directions</a></li>
+                <li><a href="/en/about/faq/" class="dropdown-link">FAQ</a></li>
               </ul>
             </div>
           </div>
-
-          <!-- Contact -->
-          <a href="/en/contact/" class="nav-link hover:text-blue-600">
-            Contact
-          </a>
 
           <!-- Search -->
           <a href="/en/search" class="nav-link hover:text-blue-600" aria-label="Search">
@@ -536,47 +659,188 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
         <>
           <!-- Diseases -->
           <div class="mobile-accordion border-b border-slate-800">
-            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-diseases">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-diseases-en">
               <span>Diseases</span>
               <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div id="menu-diseases" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
-              <a href="/en/diseases/shoulder/" class="block text-slate-300 hover:text-white py-1.5">Shoulder</a>
-              <a href="/en/diseases/shoulder/suprascapular-neuropathy" class="block text-slate-400 hover:text-white py-1.5 text-sm pl-4">• Suprascapular Neuropathy</a>
-              <a href="/en/diseases/knee/" class="block text-slate-300 hover:text-white py-1.5">Knee</a>
-              <a href="/en/diseases/elbow/" class="block text-slate-300 hover:text-white py-1.5">Elbow</a>
+            <div id="menu-diseases-en" class="mobile-accordion-content hidden pb-4">
+              <!-- Shoulder -->
+              <div class="mobile-accordion-nested ml-4">
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-shoulder-en">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Shoulder</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/en/diseases/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder conditions</a>
+                  <a href="/en/diseases/shoulder/ac-joint-arthritis" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC Joint Arthritis</a>
+                  <a href="/en/diseases/shoulder/suprascapular-neuropathy" class="block text-slate-400 hover:text-white py-1.5 text-sm">Suprascapular Neuropathy</a>
+                  <a href="/en/diseases/shoulder/parsonage-turner" class="block text-slate-400 hover:text-white py-1.5 text-sm">Parsonage-Turner</a>
+                </div>
+              </div>
+              <!-- Knee -->
+              <div class="mobile-accordion-nested ml-4">
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-knee-en">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Knee</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-knee-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/en/diseases/knee/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All knee conditions</a>
+                </div>
+              </div>
+              <!-- Elbow -->
+              <div class="mobile-accordion-nested ml-4">
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-elbow-en">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Elbow</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-elbow-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/en/diseases/elbow/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All elbow conditions</a>
+                  <a href="/en/diseases/elbow/distal-biceps-rupture" class="block text-slate-400 hover:text-white py-1.5 text-sm">Distal Biceps Rupture</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Surgery -->
+          <div class="mobile-accordion border-b border-slate-800">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-surgery-en">
+              <span>Surgery</span>
+              <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="menu-surgery-en" class="mobile-accordion-content hidden pb-4">
+              <!-- Shoulder -->
+              <div class="mobile-accordion-nested ml-4">
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-surgery-shoulder-en">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Shoulder</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-surgery-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/en/surgery/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder surgeries</a>
+                  <a href="/en/surgery/shoulder/lateral-clavicle-resection" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC Joint Arthritis</a>
+                </div>
+              </div>
+              <!-- Knee -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/en/surgery/knee/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Knee
+                </a>
+              </div>
+              <!-- Elbow -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/en/surgery/elbow/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Elbow
+                </a>
+              </div>
             </div>
           </div>
 
           <!-- Rehab -->
           <div class="mobile-accordion border-b border-slate-800">
-            <a href="/en/rehab/" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
-              Rehab
-            </a>
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-rehab-en">
+              <span>Rehab</span>
+              <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="menu-rehab-en" class="mobile-accordion-content hidden pb-4">
+              <!-- Shoulder -->
+              <div class="mobile-accordion-nested ml-4">
+                <button class="mobile-accordion-trigger w-full flex items-center justify-between text-slate-300 py-2" data-target="menu-rehab-shoulder-en">
+                  <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Shoulder</span>
+                  <svg class="mobile-accordion-icon w-4 h-4 text-slate-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+                <div id="menu-rehab-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
+                  <a href="/en/rehab/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder rehab</a>
+                  <a href="/en/rehab/suprascapular-nerve-decompression" class="block text-slate-400 hover:text-white py-1.5 text-sm">Nerve Decompression</a>
+                </div>
+              </div>
+              <!-- Knee -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/en/rehab/knee/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Knee
+                </a>
+              </div>
+              <!-- Elbow -->
+              <div class="mobile-accordion-nested ml-4">
+                <a href="/en/rehab/elbow/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Elbow
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ask the Doctor -->
+          <div class="mobile-accordion border-b border-slate-800">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-askdoctor-en">
+              <span>Ask the Doctor</span>
+              <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="menu-askdoctor-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
+              <a href="/en/ask-the-doctor/#question-form" class="flex items-center text-sky-400 hover:text-sky-300 py-2 font-medium">
+                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Ask a Question
+              </a>
+              <a href="/en/ask-the-doctor/latest/" class="flex items-center text-slate-300 hover:text-white py-2">
+                <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Latest Answers
+              </a>
+              <a href="/en/ask-the-doctor/shoulder/" class="block text-slate-400 hover:text-white py-1.5 mt-2">Shoulder Questions</a>
+              <a href="/en/ask-the-doctor/knee/" class="block text-slate-400 hover:text-white py-1.5">Knee Questions</a>
+              <a href="/en/ask-the-doctor/elbow/" class="block text-slate-400 hover:text-white py-1.5">Elbow Questions</a>
+            </div>
+          </div>
+
+          <!-- Patient -->
+          <div class="mobile-accordion border-b border-slate-800">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-patient-en">
+              <span>Patient</span>
+              <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="menu-patient-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
+              <a href="/en/free-choice" class="block text-slate-400 hover:text-white py-1.5">Free Healthcare Choice Sweden</a>
+              <a href="/en/patient/insurance-payment/" class="block text-slate-400 hover:text-white py-1.5">Insurance & Payment</a>
+              <a href="/en/patient/referral-waiting-time/" class="block text-slate-400 hover:text-white py-1.5">Referral & Waiting Time</a>
+              <a href="/en/patient/book-reschedule/" class="block text-slate-400 hover:text-white py-1.5">Book & Reschedule</a>
+            </div>
           </div>
 
           <!-- About Us -->
           <div class="mobile-accordion border-b border-slate-800">
-            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-about">
+            <button class="mobile-accordion-trigger w-full flex items-center justify-between text-lg font-bold text-white py-4" data-target="menu-about-en">
               <span>About Us</span>
               <svg class="mobile-accordion-icon w-5 h-5 text-slate-500 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div id="menu-about" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
-              <a href="/en/about/team/" class="block text-slate-400 hover:text-white py-1.5">Our Team</a>
-              <a href="/en/about/dr-carlos-rivero-siri" class="block text-slate-400 hover:text-white py-1.5">Dr. Carlos Rivero Siri</a>
-              <a href="/en/about/clinic/" class="block text-slate-400 hover:text-white py-1.5">About the Clinic</a>
+            <div id="menu-about-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
+              <a href="/en/about/our-team/dr-carlos-rivero-siri" class="block text-slate-400 hover:text-white py-1.5">Dr. Carlos Rivero Siri</a>
+              <a href="/en/about/our-team/" class="block text-slate-400 hover:text-white py-1.5">Our Team</a>
+              <a href="/en/about/quality-research/" class="block text-slate-400 hover:text-white py-1.5">Quality & Research</a>
+              <a href="/en/about/clinic-directions/" class="block text-slate-400 hover:text-white py-1.5">About the Clinic & Directions</a>
+              <a href="/en/about/faq/" class="block text-slate-400 hover:text-white py-1.5">FAQ</a>
             </div>
-          </div>
-
-          <!-- Contact -->
-          <div class="mobile-accordion border-b border-slate-800">
-            <a href="/en/contact/" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
-              Contact
-            </a>
           </div>
 
           <!-- Language Switch -->
@@ -957,6 +1221,43 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
   
   .group\/elbow-rehab:hover .group-hover\/elbow-rehab\:flex {
     display: flex !important;
+  }
+  
+  /* English menu group hovers */
+  .group\/shoulder-op:hover .group-hover\/shoulder-op\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  .group\/shoulder-op:hover .group-hover\/shoulder-op\:flex {
+    display: flex !important;
+  }
+  
+  .group\/knee-op:hover .group-hover\/knee-op\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  .group\/knee-op:hover .group-hover\/knee-op\:flex {
+    display: flex !important;
+  }
+  
+  .group\/elbow-op:hover .group-hover\/elbow-op\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  .group\/elbow-op:hover .group-hover\/elbow-op\:flex {
+    display: flex !important;
+  }
+  
+  .group\/shoulder-qa:hover .group-hover\/shoulder-qa\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  .group\/knee-qa:hover .group-hover\/knee-qa\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  .group\/elbow-qa:hover .group-hover\/elbow-qa\:scale-110 {
+    transform: scale(1.1);
   }
   
   /* Dropdown menu styles */
