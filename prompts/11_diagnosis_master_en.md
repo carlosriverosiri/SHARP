@@ -33,6 +33,15 @@
 **Structure:**
 - Hero, Symptoms, Diagnosis, Treatment (Surgery vs Conservative), Return to Sport (Play vs Performance), FAQ, References.
 
+**PAGE LAYOUT:**
+- **Container:** `max-w-[1500px]` (NOT max-w-7xl)
+- **3-column grid:** `lg:grid-cols-12`
+  - Left sidebar: `lg:col-span-3` - Quick facts, variants, related conditions
+  - Main content: `lg:col-span-6` - Primary content sections
+  - Right sidebar: `lg:col-span-3` - **Contents**, **FAQ/Q&A**, author info
+- **Contents block header:** `bg-sky-700 text-white` (blue)
+- **FAQ/Q&A block header:** `bg-emerald-600 text-white` (green) - ALWAYS in right sidebar
+
 **CITATION FORMAT:**
 - Always place references AFTER the period, not before
 - ❌ WRONG: `...spontaneously[22].`
@@ -62,8 +71,8 @@ Use consistent colors to signal content type:
 | **Indigo** | Anatomy, Clinical Pearls, Expert Experience | `bg-indigo-50` | `border-indigo-200` | `text-indigo-800` | Nerve Anatomy, 💡 Clinical Pearl |
 | **Amber** | Etiology, Risk Factors, Variants | `bg-amber-50` | `border-amber-200` | `text-amber-800` | Paralabral Ganglion Cysts, Risk Factors |
 | **Rose** | Warnings, Red Flags, Alerts | `bg-rose-50` | `border-rose-200` | `text-rose-800` | 🚨 Red Flags, At-Risk Athletes |
-| **Sky** | Diagnosis, Procedures, Investigations | `bg-sky-50` | `border-sky-200` | `text-sky-800` | MRI, EMG, 🔵 Surgical Treatment |
-| **Green/Emerald** | Treatment, Prognosis, Positive Outcomes | `bg-green-50` | `border-green-200` | `text-green-800` | ✅ Treatment, Return to Sport, Contents |
+| **Sky** | Diagnosis, Investigations, Contents header | `bg-sky-50` | `border-sky-200` | `text-sky-800` | MRI, EMG, Contents (header: `bg-sky-700`) |
+| **Green/Emerald** | Treatment, Surgery, Prognosis, FAQ, Positive | `bg-green-50` | `border-green-200` | `text-green-800` | ✅ Surgical Treatment, FAQ (header: `bg-emerald-600`) |
 | **Purple** | Sick Leave, Return to Work | `bg-purple-50` | `border-purple-200` | `text-purple-800` | 📅 Sick Leave & Return to Work |
 | **Slate** | Neutral Information, Background | `bg-slate-50` | `border-slate-200` | `text-slate-800` | Background info, definitions |
 
@@ -71,4 +80,33 @@ Use consistent colors to signal content type:
 - Large section headers (in card header): Use darker shade (e.g., `bg-indigo-600 text-white`)
 - Sub-headers within blocks: Use 800 shade (e.g., `text-indigo-800`)
 - Bullet point icons: Use 500-600 shade (e.g., `text-indigo-500`)
+
+**TRANSLATION WORKFLOW & CONSISTENCY:**
+
+The workflow is: **English first → Swedish → Other languages**
+
+When translating, maintain consistent terminology:
+
+| English | Swedish | Notes |
+|---------|---------|-------|
+| Contents | Innehåll | Table of contents |
+| FAQ / Questions & Answers | Frågor & Svar | Right sidebar |
+| Symptoms | Symtom | |
+| Diagnosis | Diagnos | |
+| Treatment | Behandling | |
+| Surgical Treatment | Kirurgisk behandling | Green color |
+| Conservative Treatment | Konservativ behandling | |
+| Sick Leave | Sjukskrivning | Purple color |
+| Return to Sport | Återgång till sport | |
+| Prognosis | Prognos | |
+| References | Referenser | |
+| Clinical Pearl | Klinisk erfarenhet | Indigo color |
+| Expert Perspective | Expertperspektiv | |
+| Red Flags | Varningssignaler | Rose color |
+| At-Risk | Riskgrupper | |
+
+**Section IDs:** Keep English IDs even in Swedish pages for consistency:
+- `id="symptoms"` (not `id="symtom"`)
+- `id="treatment"` (not `id="behandling"`)
+- `id="faq"` (not `id="fragor"`)
 
