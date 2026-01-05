@@ -994,6 +994,26 @@ const faqSchema = {
         <aside class="lg:col-span-3 order-3">
           <div class="lg:sticky lg:top-6 space-y-4 flex flex-col lg:min-h-[820px]">
             
+            <!-- Table of Contents - desktop only -->
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Contents</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a 
+                    href={`#${item.id}`} 
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
             <!-- At-Risk Athletes -->
             <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 md:overflow-hidden">
               <div class="bg-rose-600 text-white px-4 py-3">
@@ -1023,26 +1043,6 @@ const faqSchema = {
                 </div>
               </div>
             </div>
-            
-            <!-- Table of Contents - desktop only -->
-            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="bg-emerald-700 px-4 py-2.5">
-                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Contents</h3>
-              </div>
-              <div class="p-2">
-                {tableOfContents.map((item) => (
-                  <a 
-                    href={`#${item.id}`} 
-                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 py-1.5 px-2 rounded transition-colors"
-                  >
-                    <span class="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
-                      {item.icon}
-                    </span>
-                    {item.title}
-                  </a>
-                ))}
-              </div>
-            </nav>
 
             <!-- Key Takeaway -->
             <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 md:overflow-hidden">
