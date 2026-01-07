@@ -58,3 +58,4 @@ Inte nödvändigtvis. Men frisöryrket är krävande för axeln. Om operationen 
 
 
 
+

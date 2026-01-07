@@ -54,3 +54,4 @@ Smärta vid pronation (vridning neråt) tyder på problem med underarmens pronat
 
 
 
+

@@ -38,3 +38,4 @@ Vibrationsbräda är generellt **säkert** med knäproteser.
 
 
 
+

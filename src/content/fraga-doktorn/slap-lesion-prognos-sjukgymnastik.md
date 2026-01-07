@@ -63,3 +63,4 @@ Goda nyheter: SLAP-lesioner hos patienter över 40 svarar ofta **bra på sjukgym
 
 
 
+

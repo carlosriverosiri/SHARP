@@ -38,3 +38,4 @@ Generellt rekommenderas **48 timmars lättare aktivitet** efter kortisoninjektio
 
 
 
+

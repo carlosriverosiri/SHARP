@@ -54,3 +54,4 @@ Dina symtom tyder på akut inflammation – troligen kalkaxel eller akut bursit.
 
 
 
+
