@@ -236,4 +236,3 @@ When translating, maintain consistent terminology:
 **Translation Prompts:**
 - Use `@13_translate_to_english.md` for Swedish → English
 - Use this prompt (`@11`) for English → Swedish/Spanish/Other
-

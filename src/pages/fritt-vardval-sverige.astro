@@ -36,28 +36,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
-            padding: 1.5rem;
-            border: 1px solid #D1D5DB; 
-            border-radius: 0.5rem; 
-            background-color: white;
+            padding: 2rem 1.5rem;
+            border: 2px solid #E0F2FE; 
+            border-radius: 0.75rem; 
+            background: linear-gradient(to bottom, #F0F9FF 0%, #FFFFFF 20%);
             height: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        .process-arrow {
+        .process-step:hover {
+            border-color: #0284C7;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+        .process-step-number {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.25rem; 
-            line-height: 2.5rem; 
-            color: #9CA3AF; 
+            width: 4.5rem;
+            height: 4.5rem;
+            border-radius: 50%;
+            background-color: #0284C7;
+            color: white;
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.3);
             flex-shrink: 0;
-            margin: 1rem 0;
-        }
-        @media (min-width: 768px) {
-            .process-arrow {
-                margin: 0 1rem;
-            }
         }
         /* Vi behåller kropps-stilarna som gäller för just denna sida */
         body {
@@ -94,34 +101,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <h2 class="text-2xl font-semibold text-gray-900">Hur fungerar det?</h2>
                 <p>Processen är enklare än många tror. Din rätt att välja vård i hela landet är lagstadgad.</p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-stretch">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                     
                     <div class="process-step">
-                        <span class="text-4xl mb-2">1</span>
-                        <h3 class="text-lg font-semibold mb-1">Få en Remiss</h3>
-                        <p class="text-sm text-gray-600">En remiss från din husläkare, naprapat, kiropraktor eller fysioterapeut är giltig i hela landet.</p>
-                    </div>
-
-                    <div class="process-arrow rotate-90 md:rotate-0">
-                        <span class="hidden md:inline">&rarr;</span>
-                        <span class="inline md:hidden">&darr;</span>
+                        <div class="process-step-number">1</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Få en Remiss</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">En remiss från din husläkare, naprapat, kiropraktor eller fysioterapeut är giltig i hela landet.</p>
                     </div>
 
                     <div class="process-step">
-                        <span class="text-4xl mb-2">2</span>
-                        <h3 class="text-lg font-semibold mb-1">Välj Oss</h3>
-                        <p class="text-sm text-gray-600">Kontakta oss och meddela att du vill använda din remiss hos oss, med stöd av Patientlagen.</p>
-                    </div>
-
-                    <div class="process-arrow rotate-90 md:rotate-0">
-                        <span class="hidden md:inline">&rarr;</span>
-                        <span class="inline md:hidden">&darr;</span>
+                        <div class="process-step-number">2</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Välj Oss</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">Kontakta oss och meddela att du vill använda din remiss hos oss, med stöd av Patientlagen.</p>
                     </div>
 
                     <div class="process-step">
-                        <span class="text-4xl mb-2">3</span>
-                        <h3 class="text-lg font-semibold mb-1">Boka Din Tid</h3>
-                        <p class="text-sm text-gray-600">Vi hjälper dig att boka en tid för bedömning och eventuell operation, snabbt och smidigt.</p>
+                        <div class="process-step-number">3</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Boka Din Tid</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">Vi hjälper dig att boka en tid för bedömning och eventuell operation, snabbt och smidigt.</p>
                     </div>
                 </div>
             </div>
@@ -191,20 +188,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 
                 <div class="grid md:grid-cols-2 gap-6">
                     
-                    <div class="flex flex-col items-center p-1">
-                        <div class="relative flex-grow w-full bg-white p-6 rounded-xl shadow-lg border-2 border-sky-200 hover:shadow-xl hover:border-sky-400 transition-all duration-300">
-                            <div class="flex items-center justify-center w-12 h-12 bg-sky-600 text-white font-bold text-xl rounded-full mb-4">90</div>
-                            <h5 class="text-xl font-bold text-gray-900 mb-2">Dagar: Specialistbesök</h5>
-                            <p class="text-gray-700">Om du får en remiss till specialiserad vård ska du få ett första besök inom <strong class="font-bold">90 dagar</strong>.</p>
-                        </div>
+                    <div class="process-step">
+                        <div class="process-step-number">90</div>
+                        <h5 class="text-xl font-bold text-gray-900 mb-2">Dagar: Specialistbesök</h5>
+                        <p class="text-sm text-gray-600 leading-relaxed">Om du får en remiss till specialiserad vård ska du få ett första besök inom <strong class="font-bold text-gray-900">90 dagar</strong>.</p>
                     </div>
 
-                    <div class="flex flex-col items-center p-1">
-                        <div class="relative flex-grow w-full bg-white p-6 rounded-xl shadow-lg border-2 border-sky-200 hover:shadow-xl hover:border-sky-400 transition-all duration-300">
-                            <div class="flex items-center justify-center w-12 h-12 bg-sky-600 text-white font-bold text-xl rounded-full mb-4">90</div>
-                            <h5 class="text-xl font-bold text-gray-900 mb-2">Dagar: Behandling</h5>
-                            <p class="text-gray-700">Om det beslutas om behandling (t.ex. operation) ska den påbörjas inom <strong class="font-bold">90 dagar</strong>.</p>
-                        </div>
+                    <div class="process-step">
+                        <div class="process-step-number">90</div>
+                        <h5 class="text-xl font-bold text-gray-900 mb-2">Dagar: Behandling</h5>
+                        <p class="text-sm text-gray-600 leading-relaxed">Om det beslutas om behandling (t.ex. operation) ska den påbörjas inom <strong class="font-bold text-gray-900">90 dagar</strong>.</p>
                     </div>
                 </div>
             </div>
