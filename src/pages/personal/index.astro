@@ -37,6 +37,8 @@ if (Astro.request.method === 'POST') {
       const password = formData.get('password')?.toString() || '';
       const email = formData.get('email')?.toString() || '';
       
+      console.log('📧 Försöker logga in:', { email, hasPassword: !!password });
+      
       const result = await loggaIn(Astro.cookies, password, email, Astro.request);
       
       if (result.success) {
@@ -67,6 +69,7 @@ if (Astro.request.method === 'POST') {
       }
     }
   } catch (e) {
+    console.error('❌ Inloggningsfel:', e);
     errorMessage = 'Ett fel uppstod. Försök igen.';
   }
 }

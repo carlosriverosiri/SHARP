@@ -14,6 +14,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
+// Logga miljövariabler (utan att visa hela nyckeln)
+console.log('🔧 Supabase config:', {
+  url: supabaseUrl || 'SAKNAS',
+  keyPrefix: supabaseAnonKey ? supabaseAnonKey.substring(0, 20) + '...' : 'SAKNAS'
+});
+
 // Kontrollera att miljövariabler finns
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️ Supabase miljövariabler saknas. Konfigurerar du .env?');

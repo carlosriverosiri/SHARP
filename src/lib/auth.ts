@@ -210,15 +210,19 @@ async function supabaseLoggaIn(
     return { success: false, error: 'E-post och lösenord krävs' };
   }
 
+  console.log('🔐 Försöker logga in med:', email);
+
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password: losenord
     });
 
+    console.log('📡 Supabase svar:', { data: data ? 'finns' : 'null', error: error?.message });
+
     if (error) {
       // Logga misslyckat inloggningsförsök (utan lösenord!)
-      console.warn(`Misslyckat inloggningsförsök för ${email}`);
+      console.warn(`❌ Misslyckat inloggningsförsök för ${email}:`, error.message);
       return { success: false, error: 'Fel e-post eller lösenord' };
     }
 
