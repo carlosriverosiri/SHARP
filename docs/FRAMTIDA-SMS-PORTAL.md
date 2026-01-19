@@ -20,7 +20,7 @@ Istället för att förklara eller copy-pasta långa webbadresser ska personalen
 4. Klicka "Skicka"
 
 **Viktigt:** Envägs-SMS – patienten kan INTE svara.
-
+När jag kör kommandot "close folder" så får jag upp det här. Jag klickar på "save all", men ingenting händer.
 ---
 
 ## Prompt för att generera SMS-portalen
@@ -54,7 +54,7 @@ Patienten ska INTE kunna svara på SMS:et (envägs-kommunikation).
 
 ### 2. Startsida - SMS-sändning (efter inloggning)
 Layout i två kolumner:
-
+Jag antar att jag måste logga ut från det projekt jag skriver på nu innan jag kan börja med ett nytt projekt. Och hur gör jag då? Ska jag börja från början? Ska jag bara stänga det här projektet som jag jobbar med nu?
 **Vänster kolumn - Mallkategorier:**
 - Accordion/lista med kategorier:
   - "Policyer & regler"
@@ -228,4 +228,5 @@ Generera fullständig, körbar kod för alla filer. Börja med app.py.
 ---
 
 *Dokumentet skapades 2026-01-07 som underlag för framtida implementation.*
+
 

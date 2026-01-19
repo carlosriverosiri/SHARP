@@ -59,3 +59,4 @@ Vid grad 2 (och de flesta grad 3) läker ledbanden till god funktion utan operat
 
 
 
+

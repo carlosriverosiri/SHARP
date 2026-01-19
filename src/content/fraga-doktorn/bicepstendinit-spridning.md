@@ -63,3 +63,4 @@ En tendinit "sprider sig" inte i medicinsk mening, men smärtan kan påverka omg
 
 
 
+

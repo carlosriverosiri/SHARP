@@ -40,3 +40,4 @@ En knöl i fossa supraclavicularis (gropen ovanför nyckelbenet) bör alltid utr
 
 
 
+

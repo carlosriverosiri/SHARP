@@ -59,3 +59,4 @@ I din ålder ska en axelskada kunna läka. Att den blir värre tyder på att den
 
 
 
+

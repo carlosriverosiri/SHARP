@@ -56,3 +56,4 @@ Kombinationen axelsmärta och nackbesvär är vanlig, särskilt vid överbelastn
 
 
 
+

@@ -57,3 +57,4 @@ Proximal humerusfraktur tar tid att läka och smärtan kan vara långvarig.
 
 
 
+

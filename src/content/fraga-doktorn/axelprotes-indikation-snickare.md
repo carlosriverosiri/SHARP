@@ -57,3 +57,4 @@ Ditt röntgenfynd beskriver **uttalad axelartros** (Hamada grad 4-5).
 
 
 
+

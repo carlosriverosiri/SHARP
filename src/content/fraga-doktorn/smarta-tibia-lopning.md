@@ -61,3 +61,4 @@ Med lokaliserad ömhet, avsaknad av svullnad och smärta som inte påverkar löp
 
 
 
+

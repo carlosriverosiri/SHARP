@@ -44,3 +44,4 @@ Med upprepad spontan luxation bör du söka bedömning.
 
 
 
+
