@@ -20,7 +20,8 @@ const SESSION_DURATION_SECONDS = 60 * 60; // 1 timme (sliding timeout)
 const SESSION_SECRET = import.meta.env.PERSONAL_SESSION_SECRET || 'default-session-secret';
 
 // Aktivera Supabase-auth genom att sätta denna till 'true'
-const USE_SUPABASE = import.meta.env.USE_SUPABASE_AUTH === 'true';
+// TEMPORÄRT HÅRDKODAT - återställ till import.meta.env.USE_SUPABASE_AUTH === 'true' senare
+const USE_SUPABASE = true;
 
 // ============================================
 // TYPER
