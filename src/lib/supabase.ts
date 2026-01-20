@@ -8,38 +8,44 @@
  * - SMS-statistik
  */
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Miljövariabler (ställs in i .env)
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// Miljövariabler (ställs in i .env eller Netlify)
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Logga miljövariabler (utan att visa hela nyckeln)
-console.log('🔧 Supabase config:', {
-  url: supabaseUrl || 'SAKNAS',
-  keyPrefix: supabaseAnonKey ? supabaseAnonKey.substring(0, 20) + '...' : 'SAKNAS'
-});
+// Flagga för om Supabase är korrekt konfigurerat
+export const supabaseKonfigurerad = !!(supabaseUrl && supabaseAnonKey);
 
-// Kontrollera att miljövariabler finns
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase miljövariabler saknas. Konfigurerar du .env?');
+// Skapa Supabase-klient (eller en dummy om ej konfigurerad)
+let _supabase: SupabaseClient;
+
+try {
+  if (supabaseKonfigurerad) {
+    _supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
+    console.log('✅ Supabase klient initierad');
+  } else {
+    // Skapa en dummy-klient för att undvika bygge-fel
+    _supabase = createClient('https://placeholder.supabase.co', 'placeholder-key', {
+      auth: { persistSession: false },
+    });
+    console.warn('⚠️ Supabase miljövariabler saknas - använder placeholder');
+  }
+} catch (error) {
+  console.error('❌ Kunde inte skapa Supabase-klient:', error);
+  // Fallback dummy-klient
+  _supabase = createClient('https://placeholder.supabase.co', 'placeholder-key', {
+    auth: { persistSession: false },
+  });
 }
 
-// Skapa Supabase-klient
-export const supabase = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || '',
-  {
-    auth: {
-      // Spara session i cookies (för SSR)
-      persistSession: true,
-      // Automatisk token-refresh
-      autoRefreshToken: true,
-      // Upptäck session-ändringar
-      detectSessionInUrl: true,
-    },
-  }
-);
+export const supabase = _supabase;
 
 /**
  * Typedefinitioner för våra databas-tabeller
