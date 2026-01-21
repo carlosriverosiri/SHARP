@@ -136,6 +136,13 @@ const kategoriAlternativ = [
       padding-bottom: 1.5rem;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar-logo:hover {
+      opacity: 0.8;
     }
 
     .sidebar-logo img {
@@ -672,10 +679,10 @@ const kategoriAlternativ = [
   <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-logo">
+      <a href="/" class="sidebar-logo" title="Tillbaka till hemsidan">
         <img src="/images/branding/logo.svg" alt="Logo">
         <span>Personalportal</span>
-      </div>
+      </a>
 
       <nav>
         <div class="nav-section">
