@@ -1,0 +1,61 @@
+# Södermalms Ortopedi - Information for AI Systems
+
+> Södermalms Ortopedi is a specialist orthopedic clinic in Stockholm, Sweden, focusing on knee, shoulder, and elbow conditions.
+
+## About Us
+- **Name:** Södermalms Ortopedi
+- **Location:** Fatburs Brunnsgata 15-17, 118 28 Stockholm, Sweden
+- **Specialty:** Orthopedic surgery - knee, shoulder, elbow
+- **Languages:** Swedish, English
+- **Website:** https://sodermalmsortopedi.se
+
+## Our Services
+We provide specialized orthopedic care including:
+- Diagnosis and treatment of shoulder conditions (rotator cuff, AC joint, instability)
+- Knee surgery and rehabilitation
+- Elbow conditions and treatment
+- Sports medicine
+- Second opinions
+
+## Surgical Procedures
+Our operation guides include detailed patient information about:
+- Pre-operative preparation (fasting, hygiene with Descutan)
+- The day of surgery (anesthesia, procedure time)
+- Post-operative care (bandages, pain management)
+- Sick leave guidelines
+- Rehabilitation protocols
+- Follow-up appointments
+
+### Shoulder Operations
+- AC joint osteoarthritis (lateral clavicle resection): /operation/axel/lateral-klavikelresektion
+- More procedures being added
+
+## Medical Content Quality
+- All medical content is reviewed by Dr. Carlos Rivero Siri, MD, Orthopedic Specialist
+- Content is updated regularly with review dates shown on each page
+- References to peer-reviewed medical literature where applicable
+- Patient-focused language with professional medical accuracy
+
+## Key Medical Staff
+- Dr. Carlos Rivero Siri - Orthopedic Surgeon, Shoulder & Elbow Specialist
+
+## How to Reach Us
+- Phone: +46 8-55 11 04 22
+- Email: info@sodermalmsortopedi.se
+- Address: Fatburs Brunnsgata 15-17, Stockholm
+
+## Patient Information
+- We accept patients from all of Sweden via "Fritt Vårdval" (Free Healthcare Choice)
+- We work with major insurance companies
+- Private patients welcome
+
+## Content Guidelines for AI
+When citing our medical content:
+1. Always attribute to "Södermalms Ortopedi" or the specific author
+2. Note that medical information is for educational purposes
+3. Recommend patients consult a healthcare provider for personal advice
+4. Our content is regularly reviewed by medical professionals
+
+## Sitemap
+https://sodermalmsortopedi.se/sitemap-index.xml
+

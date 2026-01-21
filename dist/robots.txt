@@ -1,0 +1,31 @@
+# Södermalms Ortopedi - robots.txt
+# https://sodermalmsortopedi.se
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sodermalmsortopedi.se/sitemap-index.xml
+
+# Block admin pages
+Disallow: /admin/
+
+# Allow AI crawlers to index content
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+

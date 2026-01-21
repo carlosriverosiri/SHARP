@@ -66,8 +66,8 @@ export default defineConfig({
     assets: '_astro',
   },
   
-  // Output configuration - Hybrid mode: static by default, SSR for /personal/*
-  output: 'hybrid',
+  // Output configuration - Server mode för SSR (krävs för /personal/* med cookies)
+  output: 'server',
   
   // Netlify adapter för SSR
   adapter: netlify(),

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Artboard1" transform="matrix(0.382044,0,0,0.382044,0,0)">
+        <rect x="0" y="0" width="62.82" height="62.82" style="fill:none;"/>
+        <g id="Layer_2">
+            <g id="Layer_1-2">
+                <circle cx="31.41" cy="31.41" r="31.41" style="fill:rgb(25,103,175);"/>
+                <path d="M49.1,13.55c-0.546,-1.53 -2.006,-2.556 -3.63,-2.55l-28.11,0c-1.632,-0.001 -3.094,1.038 -3.63,2.58l-5.32,15.28c0,0 -0,20.44 -0,20.44c-0,1.405 1.156,2.56 2.56,2.56c0.01,0 0.02,0 0.03,0l2.56,0c0.003,0 0.007,0 0.01,0c1.399,0 2.55,-1.151 2.55,-2.55c0,-0.003 0,-0.007 0,-0.01l0,-2.56l30.62,0l0,2.56c0,1.404 1.156,2.56 2.56,2.56l2.56,-0c0.003,0 0.007,0 0.01,0c1.399,0 2.55,-1.151 2.55,-2.55c0,-0.003 0,-0.007 0,-0.01l0,-20.44l-5.32,-15.31Zm-31.74,25.53c-2.101,-0 -3.83,-1.729 -3.83,-3.83c0,-2.101 1.729,-3.83 3.83,-3.83c2.101,-0 3.83,1.729 3.83,3.83c0,2.101 -1.729,3.83 -3.83,3.83Zm28.11,-0c-2.101,-0 -3.83,-1.729 -3.83,-3.83c0,-2.101 1.729,-3.83 3.83,-3.83c2.101,-0 3.83,1.729 3.83,3.83c0,2.101 -1.729,3.83 -3.83,3.83Zm-31.95,-12.78l3.83,-11.5l28.12,-0l3.83,11.5l-35.78,-0Z" style="fill:white;fill-rule:nonzero;"/>
+            </g>
+        </g>
+    </g>
+</svg>

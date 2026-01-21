@@ -1,0 +1,89 @@
+{
+  "$ref": "#/definitions/fraga-doktorn",
+  "definitions": {
+    "fraga-doktorn": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "axel",
+            "kna",
+            "armbage",
+            "annat"
+          ]
+        },
+        "topic": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "author": {
+          "type": "string",
+          "default": "Dr. Carlos Rivero Siri"
+        },
+        "relatedCondition": {
+          "type": "string"
+        },
+        "published": {
+          "type": "boolean",
+          "default": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "obesvarad",
+            "utkast",
+            "klar"
+          ]
+        },
+        "question": {
+          "type": "string"
+        },
+        "patientName": {
+          "type": "string"
+        },
+        "patientAge": {
+          "type": "number"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "category",
+        "date",
+        "question"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
