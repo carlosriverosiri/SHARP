@@ -318,10 +318,14 @@ export async function skickaMagicLink(email: string): Promise<{ success: boolean
   }
 
   try {
+    // Använd produktions-URL om tillgänglig, annars fallback
+    const siteUrl = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://sodermalm.netlify.app';
+    const redirectUrl = `${siteUrl}/personal/oversikt`;
+    
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${import.meta.env.SITE || 'http://localhost:4321'}/personal/oversikt`
+        emailRedirectTo: redirectUrl
       }
     });
 
@@ -348,8 +352,15 @@ export async function skickaAterställningslank(email: string): Promise<{ succes
   }
 
   try {
+    // Använd produktions-URL om tillgänglig, annars fallback
+    const siteUrl = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://sodermalm.netlify.app';
+    const redirectUrl = `${siteUrl}/personal/aterstall-losenord`;
+    
+    console.log('📧 Skickar återställningslänk till:', email);
+    console.log('🔗 Redirect URL:', redirectUrl);
+    
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${import.meta.env.SITE || 'http://localhost:4321'}/personal/aterstall-losenord`
+      redirectTo: redirectUrl
     });
 
     if (error) {
