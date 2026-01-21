@@ -66,10 +66,10 @@ export default defineConfig({
     assets: '_astro',
   },
   
-  // Output configuration - Server mode för SSR (krävs för /personal/* med cookies)
-  output: 'server',
+  // Output configuration - Static by default, SSR för sidor med prerender = false
+  output: 'static',
   
-  // Netlify adapter för SSR
+  // Netlify adapter för SSR (krävs för sidor med prerender = false)
   adapter: netlify(),
 
   // Image optimization defaults
