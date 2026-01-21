@@ -270,8 +270,57 @@ CREATE TABLE IF NOT EXISTS schema_version (
 );
 
 INSERT INTO schema_version (version, description) VALUES
-  (1, 'Initial schema: audit_logg, sms_statistik, sms_rate_limit, sms_mallar')
+  (1, 'Initial schema: audit_logg, sms_statistik, sms_rate_limit, sms_mallar'),
+  (2, 'Resurser: dokument, länkar, instruktionsvideor')
 ON CONFLICT (version) DO NOTHING;
+
+
+-- ============================================
+-- TABELL: Resurser
+-- Dokument, länkar och instruktionsvideor för personal
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS resurser (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  titel TEXT NOT NULL,
+  url TEXT,                                    -- För länkar/videos
+  fil_namn TEXT,                               -- För uppladdade dokument
+  fil_storlek INTEGER,                         -- Filstorlek i bytes
+  kategori TEXT NOT NULL DEFAULT 'Övrigt',
+  beskrivning TEXT,
+  typ TEXT CHECK (typ IN ('länk', 'dokument', 'video')) NOT NULL,
+  skapad_av UUID REFERENCES auth.users(id),
+  skapad_vid TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Kommentarer
+COMMENT ON TABLE resurser IS 'Dokument, länkar och instruktionsvideor för personalens kunskapsbank';
+COMMENT ON COLUMN resurser.typ IS 'länk = vanlig URL, dokument = uppladdat fil, video = YouTube/Vimeo';
+COMMENT ON COLUMN resurser.kategori IS 'T.ex. Journalsystem, Region Stockholm, Rutiner, Onboarding';
+
+-- Index
+CREATE INDEX IF NOT EXISTS idx_resurser_kategori ON resurser(kategori);
+CREATE INDEX IF NOT EXISTS idx_resurser_typ ON resurser(typ);
+CREATE INDEX IF NOT EXISTS idx_resurser_skapad ON resurser(skapad_vid);
+
+-- Row Level Security
+ALTER TABLE resurser ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Inloggade användare kan läsa
+CREATE POLICY "Inloggade kan läsa resurser" ON resurser
+  FOR SELECT TO authenticated USING (true);
+
+-- Policy: Inloggade användare kan skapa
+CREATE POLICY "Inloggade kan skapa resurser" ON resurser
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+-- Policy: Inloggade användare kan uppdatera
+CREATE POLICY "Inloggade kan uppdatera resurser" ON resurser
+  FOR UPDATE TO authenticated USING (true);
+
+-- Policy: Inloggade användare kan ta bort
+CREATE POLICY "Inloggade kan ta bort resurser" ON resurser
+  FOR DELETE TO authenticated USING (true);
 
 
 -- ============================================
