@@ -9,7 +9,7 @@
  */
 
 import type { AstroCookies } from 'astro';
-import { supabase, loggaHandelse } from './supabase';
+import { supabase, loggaHandelse, supabaseKonfigurerad } from './supabase';
 
 // ============================================
 // KONFIGURATION
@@ -211,6 +211,12 @@ async function supabaseLoggaIn(
     return { success: false, error: 'E-post och lösenord krävs' };
   }
 
+  // Kontrollera om Supabase är korrekt konfigurerad
+  if (!supabaseKonfigurerad) {
+    console.error('❌ Supabase är inte korrekt konfigurerad - saknar API-nycklar');
+    return { success: false, error: 'Systemfel: Supabase är inte konfigurerat. Kontakta admin.' };
+  }
+
   console.log('🔐 Försöker logga in med:', email);
 
   try {
@@ -219,34 +225,58 @@ async function supabaseLoggaIn(
       password: losenord
     });
 
-    console.log('📡 Supabase svar:', { data: data ? 'finns' : 'null', error: error?.message });
+    console.log('📡 Supabase svar:', { 
+      hasData: !!data, 
+      hasSession: !!data?.session,
+      hasUser: !!data?.user,
+      error: error?.message,
+      errorCode: error?.status 
+    });
 
     if (error) {
-      // Logga misslyckat inloggningsförsök (utan lösenord!)
+      // Ge mer specifika felmeddelanden baserat på feltyp
+      let errorMsg = 'Fel e-post eller lösenord';
+      
+      if (error.message.includes('Invalid login credentials') || error.status === 400) {
+        errorMsg = 'Fel e-post eller lösenord. Kontrollera att kontot finns i Supabase.';
+      } else if (error.message.includes('Email not confirmed')) {
+        errorMsg = 'E-posten är inte bekräftad. Kontrollera din inkorg eller kontakta admin.';
+      } else if (error.message.includes('network') || error.message.includes('fetch')) {
+        errorMsg = 'Kunde inte ansluta till Supabase. Kontrollera internetanslutning.';
+      } else {
+        errorMsg = `Inloggningsfel: ${error.message}`;
+      }
+      
       console.warn(`❌ Misslyckat inloggningsförsök för ${email}:`, error.message);
-      return { success: false, error: 'Fel e-post eller lösenord' };
+      return { success: false, error: errorMsg };
     }
 
-    if (data.session) {
+    if (data?.session) {
       // Spara tokens i cookies
       sparaSupabaseSession(cookies, data.session.access_token, data.session.refresh_token);
       
       // Logga lyckad inloggning
-      await loggaHandelse(
-        data.user.id, 
-        data.user.email || '', 
-        'INLOGGNING', 
-        {}, 
-        request
-      );
+      try {
+        await loggaHandelse(
+          data.user.id, 
+          data.user.email || '', 
+          'INLOGGNING', 
+          {}, 
+          request
+        );
+      } catch (logError) {
+        // Ignorera loggningsfel - inloggningen ska fortfarande fungera
+        console.warn('Kunde inte logga händelse:', logError);
+      }
       
       return { success: true };
     }
 
-    return { success: false, error: 'Inloggning misslyckades' };
-  } catch (err) {
+    return { success: false, error: 'Inloggning misslyckades - ingen session skapad' };
+  } catch (err: any) {
     console.error('Inloggningsfel:', err);
-    return { success: false, error: 'Ett fel uppstod. Försök igen.' };
+    const errorMsg = err?.message || 'Ett oväntat fel uppstod';
+    return { success: false, error: `Systemfel: ${errorMsg}` };
   }
 }
 
