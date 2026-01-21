@@ -36,19 +36,19 @@ const galleryImages = [
     id: 1, 
     src: bytaStorlek, 
     alt: "Byta storlek på förpackning",
-    caption: "Lösning: Apoteket kan ge dig två mindre förpackningar istället för en stor."
+    caption: "Lösning: Apoteket kan ge dig två mindre förpackningar istället för en stor. Du betalar för varje förpackning."
   },
   { 
     id: 2, 
     src: brytaForpackning, 
     alt: "Bryta en större förpackning och ta bort tabletter",
-    caption: "Lösning: Apoteket kan öppna en större förpackning och räkna ut exakt antal tabletter."
+    caption: "Lösning: Apoteket kan öppna en större förpackning och räkna ut exakt antal tabletter. Du betalar normalt för hela förpackningen."
   },
   { 
     id: 3, 
     src: slaIhopUttag, 
     alt: "Slå ihop flera uttag till ett",
-    caption: "Lösning: Apoteket kan slå ihop flera uttag så du får alla tabletter på en gång."
+    caption: "Lösning: Apoteket kan slå ihop flera uttag. OBS: Endast första uttaget räknas normalt mot högkostnadsskyddet."
   }
 ];
 ---
@@ -161,7 +161,7 @@ const galleryImages = [
               <p class="text-blue-900">
                 Om receptet säger 100 tabletter men apoteket bara har 50-pack, 
                 <strong>får apoteket ge dig två 50-pack istället</strong>. 
-                Du betalar samma pris som för ett 100-pack.
+                Du betalar priset för varje förpackning separat, och högkostnadsskyddet gäller som vanligt på det totala beloppet.
               </p>
             </div>
           </div>
@@ -191,7 +191,7 @@ const galleryImages = [
               <p class="text-emerald-900">
                 Om receptet säger 30 tabletter men apoteket bara har 100-pack, 
                 <strong>får apoteket öppna förpackningen och räkna ut 30 tabletter</strong>. 
-                Du betalar bara för det du får.
+                Du betalar normalt för hela förpackningen (100-packet), men högkostnadsskyddet gäller.
               </p>
             </div>
           </div>
@@ -218,10 +218,13 @@ const galleryImages = [
             </div>
             <div class="md:w-3/4">
               <h3 class="text-lg font-bold text-purple-800 mb-2">Slå ihop uttag</h3>
-              <p class="text-purple-900">
-                Om du har flera uttag kvar på receptet och vill hämta ut allt på en gång, 
+              <p class="text-purple-900 mb-2">
+                Om du har flera uttag (iterationer) kvar på receptet och vill hämta ut mer på en gång, 
                 <strong>kan apoteket slå ihop uttagen</strong>. 
                 Du måste ge ditt samtycke.
+              </p>
+              <p class="text-purple-800 text-sm">
+                <strong>OBS:</strong> Endast det första uttaget räknas normalt mot högkostnadsskyddet för perioden. Efterföljande uttag som hämtas samtidigt kan räknas som förskottsuttag med andra prisregler.
               </p>
             </div>
           </div>
