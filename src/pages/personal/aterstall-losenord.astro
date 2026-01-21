@@ -5,6 +5,9 @@
  * Denna sida hanterar lösenordsåterställning från Supabase
  */
 
+// SSR för denna sida (krävs för cookies och Supabase auth)
+export const prerender = false;
+
 import { supabase } from '../../lib/supabase';
 import { arInloggad } from '../../lib/auth';
 
