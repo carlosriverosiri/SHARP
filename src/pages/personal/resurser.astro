@@ -71,23 +71,16 @@ if (Astro.request.method === 'POST') {
   }
 }
 
-// Hämta alla resurser grupperade per kategori
+// Hämta alla resurser
 const { data: resurser, error } = await supabaseAdmin
   .from('resurser')
   .select('*')
-  .order('kategori', { ascending: true })
   .order('skapad_vid', { ascending: false });
 
-// Gruppera per kategori
-const kategorier: Record<string, typeof resurser> = {};
-if (resurser) {
-  for (const resurs of resurser) {
-    if (!kategorier[resurs.kategori]) {
-      kategorier[resurs.kategori] = [];
-    }
-    kategorier[resurs.kategori].push(resurs);
-  }
-}
+// Gruppera per TYP (dokument, länk, video)
+const dokument = resurser?.filter(r => r.typ === 'dokument') || [];
+const lankar = resurser?.filter(r => r.typ === 'länk') || [];
+const videor = resurser?.filter(r => r.typ === 'video') || [];
 
 // Fördefinierade kategorier
 const kategoriAlternativ = [
@@ -98,23 +91,6 @@ const kategoriAlternativ = [
   'Utbildning',
   'Övrigt'
 ];
-
-// Ikoner per kategori
-const kategoriIkoner: Record<string, string> = {
-  'Journalsystem': '🎬',
-  'Region Stockholm': '🏥',
-  'Rutiner & Policyer': '📋',
-  'Onboarding': '👋',
-  'Utbildning': '📚',
-  'Övrigt': '📁'
-};
-
-// Ikon per typ
-function getTypIkon(typ: string, url?: string) {
-  if (typ === 'video') return '▶️';
-  if (typ === 'dokument') return '📄';
-  return '🔗';
-}
 ---
 <!DOCTYPE html>
 <html lang="sv">
@@ -542,12 +518,152 @@ function getTypIkon(typ: string, url?: string) {
       display: none;
     }
 
+    /* 3-kolumns layout */
+    .columns-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .column {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column-header {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 2px solid;
+    }
+
+    .column-header.dokument {
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
+      border-color: #f59e0b;
+    }
+
+    .column-header.lankar {
+      background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+      border-color: #3b82f6;
+    }
+
+    .column-header.videor {
+      background: linear-gradient(135deg, #fce7f3 0%, #fdf2f8 100%);
+      border-color: #ec4899;
+    }
+
+    .column-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .column-header .count {
+      margin-left: auto;
+      background: white;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .column-content {
+      padding: 0.75rem;
+      flex: 1;
+      overflow-y: auto;
+      max-height: calc(100vh - 280px);
+    }
+
+    .column-empty {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #94a3b8;
+    }
+
+    .column-empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.5;
+    }
+
+    .resource-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .resource-card:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .resource-card a {
+      color: #1e293b;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .resource-card a:hover {
+      color: #0284c7;
+    }
+
+    .resource-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
+    .resource-kategori {
+      font-size: 0.7rem;
+      background: #e2e8f0;
+      color: #64748b;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+    }
+
+    .resource-delete {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      transition: all 0.2s;
+    }
+
+    .resource-delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    @media (max-width: 1200px) {
+      .columns-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         display: none;
       }
       .main-content {
         margin-left: 0;
+      }
+      .columns-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -619,61 +735,134 @@ function getTypIkon(typ: string, url?: string) {
         </div>
       )}
 
-      {Object.keys(kategorier).length === 0 ? (
-        <div class="kategori-section">
-          <div class="empty-state">
-            <div class="empty-state-icon">📭</div>
-            <h3>Inga resurser än</h3>
-            <p>Klicka på "Lägg till länk" eller "Ladda upp dokument" för att komma igång.</p>
+      <!-- 3-kolumns layout -->
+      <div class="columns-grid">
+        <!-- DOKUMENT -->
+        <div class="column">
+          <div class="column-header dokument">
+            <span style="font-size: 1.5rem;">📄</span>
+            <h2>Dokument</h2>
+            <span class="count">{dokument.length}</span>
           </div>
-        </div>
-      ) : (
-        Object.entries(kategorier).map(([kategori, items]) => (
-          <div class="kategori-section">
-            <div class="kategori-header">
-              <span class="kategori-ikon">{kategoriIkoner[kategori] || '📁'}</span>
-              <h2>{kategori}</h2>
-            </div>
-            <div class="resurs-lista">
-              {items?.map((resurs) => (
-                <div class="resurs-item">
-                  <div class="resurs-info">
-                    <span class="resurs-ikon">{getTypIkon(resurs.typ, resurs.url)}</span>
-                    <div>
-                      <div class="resurs-titel">
-                        {resurs.typ === 'dokument' ? (
-                          <a href={`${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/dokument/${resurs.fil_namn}`} target="_blank" rel="noopener">
-                            {resurs.titel}
-                          </a>
-                        ) : (
-                          <a href={resurs.url} target="_blank" rel="noopener">
-                            {resurs.titel}
-                          </a>
-                        )}
-                      </div>
-                      {resurs.beskrivning && (
-                        <div class="resurs-beskrivning">{resurs.beskrivning}</div>
-                      )}
-                    </div>
-                  </div>
-                  <div class="resurs-actions">
+          <div class="column-content">
+            {dokument.length === 0 ? (
+              <div class="column-empty">
+                <div class="column-empty-icon">📄</div>
+                <p>Inga dokument än</p>
+                <p style="font-size: 0.75rem; margin-top: 0.5rem;">Ladda upp PDF:er, Word-dokument m.m.</p>
+              </div>
+            ) : (
+              dokument.map((resurs) => (
+                <div class="resource-card">
+                  <a href={`${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/dokument/${resurs.fil_namn}`} target="_blank" rel="noopener">
+                    {resurs.titel}
+                  </a>
+                  {resurs.beskrivning && (
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
+                  )}
+                  <div class="resource-meta">
+                    <span class="resource-kategori">{resurs.kategori}</span>
                     <form method="POST" style="display: inline;">
                       <input type="hidden" name="action" value="ta-bort">
                       <input type="hidden" name="id" value={resurs.id}>
                       <input type="hidden" name="fil_namn" value={resurs.fil_namn || ''}>
-                      <button type="submit" class="btn btn-danger" onclick="return confirm('Är du säker på att du vill ta bort denna resurs?')">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort detta dokument?')">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
                       </button>
                     </form>
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
           </div>
-        ))
-      )}
+        </div>
+
+        <!-- LÄNKAR -->
+        <div class="column">
+          <div class="column-header lankar">
+            <span style="font-size: 1.5rem;">🔗</span>
+            <h2>Länkar</h2>
+            <span class="count">{lankar.length}</span>
+          </div>
+          <div class="column-content">
+            {lankar.length === 0 ? (
+              <div class="column-empty">
+                <div class="column-empty-icon">🔗</div>
+                <p>Inga länkar än</p>
+                <p style="font-size: 0.75rem; margin-top: 0.5rem;">Lägg till länkar till Region Stockholm, rutiner m.m.</p>
+              </div>
+            ) : (
+              lankar.map((resurs) => (
+                <div class="resource-card">
+                  <a href={resurs.url} target="_blank" rel="noopener">
+                    {resurs.titel}
+                  </a>
+                  {resurs.beskrivning && (
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
+                  )}
+                  <div class="resource-meta">
+                    <span class="resource-kategori">{resurs.kategori}</span>
+                    <form method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="ta-bort">
+                      <input type="hidden" name="id" value={resurs.id}>
+                      <input type="hidden" name="fil_namn" value="">
+                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort denna länk?')">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <!-- INSTRUKTIONSVIDEOR -->
+        <div class="column">
+          <div class="column-header videor">
+            <span style="font-size: 1.5rem;">▶️</span>
+            <h2>Instruktionsvideor</h2>
+            <span class="count">{videor.length}</span>
+          </div>
+          <div class="column-content">
+            {videor.length === 0 ? (
+              <div class="column-empty">
+                <div class="column-empty-icon">🎬</div>
+                <p>Inga videor än</p>
+                <p style="font-size: 0.75rem; margin-top: 0.5rem;">Lägg till YouTube-länkar för utbildning och onboarding</p>
+              </div>
+            ) : (
+              videor.map((resurs) => (
+                <div class="resource-card">
+                  <a href={resurs.url} target="_blank" rel="noopener">
+                    {resurs.titel}
+                  </a>
+                  {resurs.beskrivning && (
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
+                  )}
+                  <div class="resource-meta">
+                    <span class="resource-kategori">{resurs.kategori}</span>
+                    <form method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="ta-bort">
+                      <input type="hidden" name="id" value={resurs.id}>
+                      <input type="hidden" name="fil_namn" value="">
+                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort denna video?')">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
