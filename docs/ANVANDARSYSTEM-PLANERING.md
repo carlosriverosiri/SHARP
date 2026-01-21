@@ -112,12 +112,12 @@ netlifyIdentity.logout();
 ```javascript
 // Inloggning
 const { user, error } = await supabase.auth.signInWithPassword({
-  email: 'personal@klinik.se',
-  password: 'lösenord'
+  email: 'user@example.com',  // Ersätt med riktig e-post
+  password: '********'        // Ersätt med riktigt lösenord
 });
 
 // Glömt lösenord
-await supabase.auth.resetPasswordForEmail('personal@klinik.se');
+await supabase.auth.resetPasswordForEmail('user@example.com');
 
 // Logga ut
 await supabase.auth.signOut();
