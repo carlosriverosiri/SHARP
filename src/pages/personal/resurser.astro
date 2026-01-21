@@ -3,7 +3,7 @@
 export const prerender = false;
 
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
-import { supabase } from '../../lib/supabase';
+import { supabaseAdmin } from '../../lib/supabase';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
@@ -32,7 +32,7 @@ if (Astro.request.method === 'POST') {
       typ = 'video';
     }
 
-    const { error } = await supabase.from('resurser').insert({
+    const { error } = await supabaseAdmin.from('resurser').insert({
       titel,
       url,
       kategori,
@@ -56,10 +56,10 @@ if (Astro.request.method === 'POST') {
 
     // Ta bort fil från storage om det finns
     if (filNamn) {
-      await supabase.storage.from('dokument').remove([filNamn]);
+      await supabaseAdmin.storage.from('dokument').remove([filNamn]);
     }
 
-    const { error } = await supabase.from('resurser').delete().eq('id', id);
+    const { error } = await supabaseAdmin.from('resurser').delete().eq('id', id);
 
     if (error) {
       meddelande = 'Kunde inte ta bort resursen: ' + error.message;
@@ -72,7 +72,7 @@ if (Astro.request.method === 'POST') {
 }
 
 // Hämta alla resurser grupperade per kategori
-const { data: resurser, error } = await supabase
+const { data: resurser, error } = await supabaseAdmin
   .from('resurser')
   .select('*')
   .order('kategori', { ascending: true })

@@ -13,6 +13,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 // Miljövariabler (ställs in i .env eller Netlify)
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseServiceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 // Flagga för om Supabase är korrekt konfigurerat
 export const supabaseKonfigurerad = !!(supabaseUrl && supabaseAnonKey);
@@ -46,6 +47,27 @@ try {
 }
 
 export const supabase = _supabase;
+
+// Admin-klient för server-side operationer (bypasses RLS)
+let _supabaseAdmin: SupabaseClient;
+
+try {
+  if (supabaseUrl && supabaseServiceKey) {
+    _supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { persistSession: false },
+    });
+    console.log('✅ Supabase admin-klient initierad');
+  } else {
+    // Fallback till vanlig klient
+    _supabaseAdmin = _supabase;
+    console.warn('⚠️ Service role key saknas - admin-klient använder anon key');
+  }
+} catch (error) {
+  console.error('❌ Kunde inte skapa admin-klient:', error);
+  _supabaseAdmin = _supabase;
+}
+
+export const supabaseAdmin = _supabaseAdmin;
 
 /**
  * Typedefinitioner för våra databas-tabeller
