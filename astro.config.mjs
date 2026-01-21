@@ -1,6 +1,7 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import netlify from '@astrojs/netlify';
 import tailwindcss from '@tailwindcss/vite';
 import { readFileSync } from 'fs';
 
@@ -65,8 +66,11 @@ export default defineConfig({
     assets: '_astro',
   },
   
-  // Output configuration
-  output: 'static',
+  // Output configuration - Hybrid mode: static by default, SSR for /personal/*
+  output: 'hybrid',
+  
+  // Netlify adapter för SSR
+  adapter: netlify(),
 
   // Image optimization defaults
   image: {
