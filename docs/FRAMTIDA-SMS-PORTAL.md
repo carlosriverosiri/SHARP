@@ -1,8 +1,8 @@
 # 📱 SMS-portal för patientkommunikation
 
-> **Status:** Delvis implementerat  
+> **Status:** ✅ Implementerat  
 > **Personalportal:** ✅ Klar  
-> **SMS-funktionalitet:** ⏳ Planerad  
+> **SMS-funktionalitet:** ✅ Klar (via 46elks)  
 > **Senast uppdaterad:** 2026-01-22
 
 ---
@@ -27,7 +27,9 @@
 ✅ /personal/                → Inloggningssida
 ✅ /personal/oversikt        → Dashboard med alla verktyg
 ✅ /personal/resurser        → Dokument, länkar, instruktionsvideor
+✅ /personal/lankar-sms      → Kopiera länkar & Skicka SMS
 ✅ /personal/aterstall-losenord → Lösenordsåterställning
+✅ /api/sms/skicka           → API-endpoint för SMS (46elks)
 ```
 
 **Autentisering:**
@@ -43,7 +45,7 @@
 
 ---
 
-## ⏳ Vad som ÅTERSTÅR: SMS-funktionalitet
+## ✅ SMS-funktionalitet (Implementerad)
 
 ### Bakgrund och syfte
 
@@ -212,32 +214,29 @@ CREATE TABLE sms_rate_limit (
 
 ---
 
-## Nästa steg för SMS-implementation
+## ✅ Implementation (Slutförd 2026-01-22)
 
-### Fas 1: Förberedelse (1 timme)
-- [ ] Skapa konto hos 46elks eller Sinch
-- [ ] Hämta API-nycklar
-- [ ] Lägga till miljövariabler i Netlify
+### Fas 1: Förberedelse
+- [x] Skapa konto hos 46elks ✓
+- [x] Hämta API-nycklar ✓
+- [x] Lägga till miljövariabler (ELKS_API_USER, ELKS_API_PASSWORD)
 
-### Fas 2: Backend (2-3 timmar)
-- [ ] Skapa `/personal/sms` sida
-- [ ] Implementera `/api/sms/skicka` endpoint
-- [ ] Rate limiting med befintlig Supabase-tabell
-- [ ] GDPR-säker loggning
+### Fas 2: Backend
+- [x] Skapa `/personal/lankar-sms` sida ✓
+- [x] Implementera `/api/sms/skicka` endpoint ✓
+- [x] Rate limiting (30 SMS/timme per användare) ✓
+- [x] GDPR-säker loggning (ingen telefonnummer-lagring) ✓
 
-### Fas 3: Frontend (2-3 timmar)
-- [ ] Mallväljare (kategorier + mallar)
-- [ ] Telefonnummer-fält med validering
-- [ ] Förhandsgranskning
-- [ ] Teckenräknare
-- [ ] Bekräftelsemeddelande
+### Fas 3: Frontend
+- [x] Kombinerad vy: länkar + SMS i 2-kolumnslayout ✓
+- [x] Mallväljare (kategorier + fördefinierade texter) ✓
+- [x] Telefonnummer-fält med +46-prefix ✓
+- [x] Teckenräknare med visuell varning vid >160 tecken ✓
+- [x] Kostnadsindikator (antal SMS) ✓
 
-### Fas 4: Test & Deploy (1 timme)
-- [ ] Testa lokalt
-- [ ] Pusha till Netlify
+### Fas 4: Deploy
+- [ ] Lägg till miljövariabler i Netlify
 - [ ] Testa i produktion
-
-**Total tid:** ~6-8 timmar
 
 ---
 

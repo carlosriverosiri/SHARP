@@ -1,0 +1,1077 @@
+---
+/**
+ * Kopiera Länkar & Skicka SMS - Personalverktyg
+ * 
+ * Sida: /personal/lankar-sms
+ * Kräver: Inloggning
+ * 
+ * Kombinerar:
+ * - Kopiera kortlänkar till patientinfo
+ * - Skicka SMS med fördefinierade mallar via 46elks
+ */
+export const prerender = false;
+
+import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+
+// Kontrollera inloggning
+if (!await arInloggad(Astro.cookies)) {
+  return Astro.redirect('/personal/');
+}
+
+const anvandare = await hamtaAnvandare(Astro.cookies);
+
+// Importera kortlänkar från central JSON-fil
+import shortLinksData from '../../data/shortLinks.json';
+
+// Ikoner för varje kategori
+const categoryIcons: Record<string, string> = {
+  "Diagnoser": "🩺",
+  "Operationer": "🔪",
+  "Rehab": "🏋️",
+  "Frågeformulär": "📋",
+  "Info": "ℹ️"
+};
+
+// SMS-mallar per kategori
+const smsMallar: Record<string, string> = {
+  "Diagnoser": "Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi",
+  "Operationer": "Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi",
+  "Rehab": "Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi",
+  "Frågeformulär": "Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi",
+  "Info": "Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi"
+};
+
+// Filtrera bort metadata-nycklar och bygg länklista
+const categories = Object.entries(shortLinksData)
+  .filter(([key]) => !key.startsWith('_'))
+  .map(([categoryName, items]) => ({
+    category: categoryName,
+    icon: categoryIcons[categoryName] || "📄",
+    smsMall: smsMallar[categoryName] || "Hej! Se denna länk: {länk} /Södermalms Ortopedi",
+    items: (items as Array<{name: string; shortCode: string; target: string; isExternal: boolean}>)
+      .filter(item => item.shortCode && item.name)
+  }));
+
+const baseDomain = "www.specialist.se";
+
+// Kontrollera om 46elks är konfigurerat
+const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_API_PASSWORD);
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Länkar & SMS | Personalportal</title>
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+    }
+    
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #024264 0%, #01334d 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 50;
+    }
+    
+    .sidebar-logo {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: block;
+    }
+    
+    .sidebar-logo img {
+      height: 40px;
+      filter: brightness(0) invert(1);
+    }
+    
+    .sidebar nav {
+      flex: 1;
+      padding: 1rem 0;
+      overflow-y: auto;
+    }
+    
+    .nav-section { margin-bottom: 1.5rem; }
+    .nav-section-title {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.5);
+      font-weight: 600;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    
+    .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
+    .nav-link.active { background: rgba(255,255,255,0.15); color: white; font-weight: 500; }
+    .nav-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+    
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .user-details { font-size: 0.8rem; }
+    .user-email { display: block; color: white; font-weight: 500; }
+    .user-role { color: rgba(255,255,255,0.6); }
+    
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 0.5rem 0;
+    }
+    
+    .logout-btn:hover { color: white; }
+    
+    /* Main content */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 2rem;
+    }
+    
+    .page-header {
+      margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-subtitle {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    
+    /* Two-column layout */
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    
+    @media (max-width: 1200px) {
+      .two-columns {
+        grid-template-columns: 1fr;
+      }
+      .sms-panel {
+        position: static !important;
+      }
+    }
+    
+    /* Links column */
+    .links-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .search-box {
+      position: relative;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 3rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+    
+    .search-box svg {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: #94a3b8;
+    }
+    
+    .category-section h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .links-list {
+      background: white;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+    
+    .link-item {
+      display: flex;
+      align-items: center;
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    
+    .link-item:last-child { border-bottom: none; }
+    .link-item:hover { background: #f8fafc; }
+    .link-item.selected { background: #e0f2fe; }
+    
+    .link-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .link-name {
+      font-weight: 500;
+      color: #1e293b;
+      margin-bottom: 0.125rem;
+    }
+    
+    .link-url {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-family: monospace;
+    }
+    
+    .link-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .btn svg { width: 16px; height: 16px; }
+    
+    .btn-copy {
+      background: #024264;
+      color: white;
+    }
+    .btn-copy:hover { background: #01334d; }
+    .btn-copy.copied { background: #16a34a; }
+    
+    .btn-sms {
+      background: #0ea5e9;
+      color: white;
+    }
+    .btn-sms:hover { background: #0284c7; }
+    
+    /* SMS Panel */
+    .sms-panel {
+      background: white;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      position: sticky;
+      top: 2rem;
+    }
+    
+    .sms-header {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: white;
+      padding: 1.25rem;
+    }
+    
+    .sms-header h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .sms-header p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+    
+    .sms-body {
+      padding: 1.25rem;
+    }
+    
+    .sms-field {
+      margin-bottom: 1rem;
+    }
+    
+    .sms-field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 0.375rem;
+    }
+    
+    .sms-field input,
+    .sms-field textarea,
+    .sms-field select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    
+    .sms-field input:focus,
+    .sms-field textarea:focus,
+    .sms-field select:focus {
+      outline: none;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+    
+    .sms-field textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    
+    /* Character counter */
+    .char-counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+    
+    .char-count {
+      font-weight: 600;
+    }
+    
+    .char-count.warning { color: #f59e0b; }
+    .char-count.danger { color: #ef4444; }
+    
+    .char-bar {
+      flex: 1;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin-left: 1rem;
+      overflow: hidden;
+    }
+    
+    .char-bar-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    
+    .char-bar-fill.warning { background: #f59e0b; }
+    .char-bar-fill.danger { background: #ef4444; }
+    
+    .sms-cost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: #f1f5f9;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    
+    .sms-cost.multiple {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .btn-send {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-send:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+    
+    .btn-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-send svg { width: 20px; height: 20px; }
+    
+    /* Messages */
+    .message {
+      padding: 0.875rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    
+    .message.warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #16a34a;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateX(calc(100% + 2rem));
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+    
+    .toast.show { transform: translateX(0); }
+    
+    /* Phone input styling */
+    .phone-input-wrapper {
+      position: relative;
+    }
+    
+    .phone-prefix {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-weight: 500;
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+    
+    .phone-input {
+      padding-left: 3rem !important;
+    }
+    
+    /* Empty state */
+    .empty-sms {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #64748b;
+    }
+    
+    .empty-sms-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .link-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="/" class="sidebar-logo" title="Tillbaka till hemsidan">
+        <img src="/images/branding/logo.svg" alt="Logo">
+      </a>
+
+      <nav>
+        <div class="nav-section">
+          <div class="nav-section-title">Verktyg</div>
+          <a href="/personal/oversikt" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Översikt
+          </a>
+          <a href="/personal/lankar-sms" class="nav-link active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Länkar & SMS
+          </a>
+          <a href="/personal/resurser" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            Resurser
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Administration</div>
+          <a href="/admin/obesvarade" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Obesvarade frågor
+          </a>
+          <a href="/senast-redigerade" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Senast redigerade
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        {anvandare && (
+          <div class="user-info">
+            <div class="user-avatar">
+              {anvandare.email.charAt(0).toUpperCase()}
+            </div>
+            <div class="user-details">
+              <span class="user-email">{anvandare.email}</span>
+              <span class="user-role">{anvandare.roll === 'admin' ? 'Administratör' : 'Personal'}</span>
+            </div>
+          </div>
+        )}
+        <a href="/personal/oversikt?logout=true" class="logout-btn">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Logga ut
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">📎 Kopiera länkar & Skicka SMS</h1>
+        <p class="page-subtitle">Välj en länk till vänster för att kopiera eller skicka som SMS till patient</p>
+      </div>
+
+      {!elksConfigured && (
+        <div class="message warning">
+          ⚠️ SMS-funktionen är inte konfigurerad. Lägg till 46elks API-nycklar i miljövariablerna för att aktivera.
+        </div>
+      )}
+
+      <div class="two-columns">
+        <!-- Links column -->
+        <div class="links-column">
+          <div class="search-box">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input 
+              type="text" 
+              id="search-input"
+              placeholder="Sök diagnos, operation eller rehab..."
+            />
+          </div>
+
+          {categories.map((cat) => (
+            <section class="category-section" data-category={cat.category}>
+              <h2>
+                <span>{cat.icon}</span>
+                {cat.category}
+              </h2>
+              <div class="links-list">
+                {cat.items.map((item) => (
+                  <div 
+                    class="link-item"
+                    data-name={item.name}
+                    data-url={`${baseDomain}${item.shortCode}`}
+                    data-category={cat.category}
+                    data-template={cat.smsMall}
+                  >
+                    <div class="link-info">
+                      <div class="link-name">{item.name}</div>
+                      <div class="link-url">{baseDomain}{item.shortCode}</div>
+                    </div>
+                    <div class="link-actions">
+                      <button 
+                        type="button" 
+                        class="btn btn-copy"
+                        data-url={`${baseDomain}${item.shortCode}`}
+                        title="Kopiera länk"
+                      >
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Kopiera
+                      </button>
+                      {elksConfigured && (
+                        <button 
+                          type="button" 
+                          class="btn btn-sms"
+                          title="Fyll i SMS"
+                        >
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                          </svg>
+                          SMS
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          <div id="no-results" class="message warning" style="display: none;">
+            Inga resultat hittades för din sökning.
+          </div>
+        </div>
+
+        <!-- SMS Panel -->
+        <div class="sms-panel">
+          <div class="sms-header">
+            <h2>
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              Skicka SMS
+            </h2>
+            <p>via 46elks (~0,35 kr/SMS)</p>
+          </div>
+
+          <div class="sms-body">
+            <div id="sms-message-area"></div>
+
+            {elksConfigured ? (
+              <form id="sms-form">
+                <div class="sms-field">
+                  <label for="sms-phone">📞 Mobilnummer</label>
+                  <div class="phone-input-wrapper">
+                    <span class="phone-prefix">+46</span>
+                    <input 
+                      type="tel" 
+                      id="sms-phone" 
+                      class="phone-input"
+                      placeholder="701234567"
+                      pattern="[0-9]{9}"
+                      maxlength="10"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="sms-field">
+                  <label for="sms-category">📁 Kategori</label>
+                  <select id="sms-category">
+                    {categories.map((cat) => (
+                      <option value={cat.category} data-template={cat.smsMall}>
+                        {cat.icon} {cat.category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div class="sms-field">
+                  <label for="sms-text">💬 Meddelande</label>
+                  <textarea 
+                    id="sms-text" 
+                    placeholder="Välj en länk till vänster eller skriv eget meddelande..."
+                  ></textarea>
+                  <div class="char-counter">
+                    <span class="char-count" id="char-count">0/160</span>
+                    <span class="sms-cost" id="sms-cost">1 SMS</span>
+                    <div class="char-bar">
+                      <div class="char-bar-fill" id="char-bar-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-send" id="send-btn" disabled>
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                  </svg>
+                  Skicka SMS
+                </button>
+              </form>
+            ) : (
+              <div class="empty-sms">
+                <div class="empty-sms-icon">🔧</div>
+                <p><strong>SMS ej konfigurerat</strong></p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+                  Lägg till miljövariablerna:<br>
+                  <code style="font-size: 0.8rem; background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">ELKS_API_USER</code><br>
+                  <code style="font-size: 0.8rem; background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">ELKS_API_PASSWORD</code>
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">✓ Kopierad!</div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toast = document.getElementById('toast');
+      const searchInput = document.getElementById('search-input') as HTMLInputElement;
+      const categorySections = document.querySelectorAll('.category-section');
+      const noResults = document.getElementById('no-results');
+      
+      // SMS elements
+      const smsForm = document.getElementById('sms-form') as HTMLFormElement;
+      const smsPhone = document.getElementById('sms-phone') as HTMLInputElement;
+      const smsCategory = document.getElementById('sms-category') as HTMLSelectElement;
+      const smsText = document.getElementById('sms-text') as HTMLTextAreaElement;
+      const charCount = document.getElementById('char-count');
+      const smsCost = document.getElementById('sms-cost');
+      const charBarFill = document.getElementById('char-bar-fill');
+      const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+      const messageArea = document.getElementById('sms-message-area');
+
+      // Show toast
+      function showToast(text: string, isError = false) {
+        if (!toast) return;
+        toast.textContent = text;
+        toast.style.background = isError ? '#ef4444' : '#16a34a';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // Copy functionality
+      document.querySelectorAll('.btn-copy').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const url = btn.getAttribute('data-url');
+          if (!url) return;
+          
+          try {
+            await navigator.clipboard.writeText(url);
+            btn.classList.add('copied');
+            btn.innerHTML = `
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              Kopierad!
+            `;
+            showToast('✓ Länk kopierad!');
+            
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              btn.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                Kopiera
+              `;
+            }, 2000);
+          } catch (err) {
+            showToast('Kunde inte kopiera', true);
+          }
+        });
+      });
+
+      // SMS button click - fill SMS form
+      document.querySelectorAll('.btn-sms').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const linkItem = btn.closest('.link-item') as HTMLElement;
+          if (!linkItem) return;
+          
+          const name = linkItem.dataset.name || '';
+          const url = linkItem.dataset.url || '';
+          const category = linkItem.dataset.category || '';
+          const template = linkItem.dataset.template || '';
+          
+          // Update category select
+          if (smsCategory) {
+            smsCategory.value = category;
+          }
+          
+          // Fill in the message using template
+          const message = template
+            .replace('{namn}', name)
+            .replace('{länk}', url);
+          
+          if (smsText) {
+            smsText.value = message;
+            updateCharCounter();
+          }
+          
+          // Focus phone field
+          if (smsPhone) {
+            smsPhone.focus();
+          }
+          
+          // Highlight selected item
+          document.querySelectorAll('.link-item').forEach(item => item.classList.remove('selected'));
+          linkItem.classList.add('selected');
+        });
+      });
+
+      // Link item click (entire row)
+      document.querySelectorAll('.link-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('.btn')) return; // Ignore if button clicked
+          
+          // Find and click the SMS button if it exists
+          const smsBtn = item.querySelector('.btn-sms') as HTMLButtonElement;
+          if (smsBtn) {
+            smsBtn.click();
+          }
+        });
+      });
+
+      // Search functionality
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          const term = searchInput.value.toLowerCase().trim();
+          let hasResults = false;
+          
+          categorySections.forEach(section => {
+            const items = section.querySelectorAll('.link-item');
+            let categoryHasResults = false;
+            
+            items.forEach(item => {
+              const el = item as HTMLElement;
+              const name = (el.dataset.name || '').toLowerCase();
+              const url = (el.dataset.url || '').toLowerCase();
+              const matches = name.includes(term) || url.includes(term);
+              
+              el.style.display = matches ? 'flex' : 'none';
+              if (matches) {
+                categoryHasResults = true;
+                hasResults = true;
+              }
+            });
+            
+            (section as HTMLElement).style.display = categoryHasResults ? 'block' : 'none';
+          });
+          
+          if (noResults) {
+            noResults.style.display = hasResults ? 'none' : 'block';
+          }
+        });
+      }
+
+      // Character counter
+      function updateCharCounter() {
+        if (!smsText || !charCount || !smsCost || !charBarFill || !sendBtn) return;
+        
+        const length = smsText.value.length;
+        const smsCount = length === 0 ? 1 : Math.ceil(length / 160);
+        const percent = Math.min((length / 160) * 100, 100);
+        
+        charCount.textContent = `${length}/160`;
+        smsCost.textContent = `${smsCount} SMS${smsCount > 1 ? ' (~' + (smsCount * 0.35).toFixed(2) + ' kr)' : ''}`;
+        charBarFill.style.width = `${percent}%`;
+        
+        // Color coding
+        charCount.classList.remove('warning', 'danger');
+        charBarFill.classList.remove('warning', 'danger');
+        smsCost.classList.remove('multiple');
+        
+        if (length > 306) {
+          charCount.classList.add('danger');
+          charBarFill.classList.add('danger');
+          smsCost.classList.add('multiple');
+        } else if (length > 160) {
+          charCount.classList.add('warning');
+          charBarFill.classList.add('warning');
+          smsCost.classList.add('multiple');
+        }
+        
+        // Enable/disable send button
+        const phoneValid = smsPhone && /^[0-9]{9,10}$/.test(smsPhone.value.replace(/\s/g, ''));
+        sendBtn.disabled = !(length > 0 && phoneValid);
+      }
+
+      if (smsText) {
+        smsText.addEventListener('input', updateCharCounter);
+      }
+      
+      if (smsPhone) {
+        smsPhone.addEventListener('input', () => {
+          // Remove non-digits and leading zero
+          let value = smsPhone.value.replace(/\D/g, '');
+          if (value.startsWith('0')) {
+            value = value.substring(1);
+          }
+          smsPhone.value = value;
+          updateCharCounter();
+        });
+      }
+
+      // Form submission
+      if (smsForm) {
+        smsForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          if (!smsPhone || !smsText || !sendBtn) return;
+          
+          const phone = '+46' + smsPhone.value.replace(/\D/g, '');
+          const message = smsText.value;
+          
+          if (!message || phone.length < 12) {
+            showToast('Fyll i telefonnummer och meddelande', true);
+            return;
+          }
+          
+          sendBtn.disabled = true;
+          sendBtn.innerHTML = `
+            <svg class="animate-spin" fill="none" viewBox="0 0 24 24" width="20" height="20">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
+              <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            Skickar...
+          `;
+          
+          try {
+            const response = await fetch('/api/sms/skicka', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ phone, message })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+              showToast('✓ SMS skickat!');
+              smsPhone.value = '';
+              smsText.value = '';
+              updateCharCounter();
+              document.querySelectorAll('.link-item').forEach(item => item.classList.remove('selected'));
+              
+              if (messageArea) {
+                messageArea.innerHTML = `
+                  <div class="message success">
+                    ✓ SMS skickat till ${phone.substring(0, 6)}***
+                  </div>
+                `;
+                setTimeout(() => { messageArea.innerHTML = ''; }, 5000);
+              }
+            } else {
+              throw new Error(result.error || 'Kunde inte skicka SMS');
+            }
+          } catch (err: any) {
+            showToast(err.message || 'Fel vid sändning', true);
+            if (messageArea) {
+              messageArea.innerHTML = `
+                <div class="message error">
+                  ❌ ${err.message || 'Kunde inte skicka SMS'}
+                </div>
+              `;
+            }
+          } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = `
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+              </svg>
+              Skicka SMS
+            `;
+            updateCharCounter();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
