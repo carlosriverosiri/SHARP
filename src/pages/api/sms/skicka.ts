@@ -9,6 +9,9 @@
  * - ELKS_API_PASSWORD (API-lösenord från 46elks)
  */
 
+// Krävs för att API-routen ska fungera som serverless function
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 
