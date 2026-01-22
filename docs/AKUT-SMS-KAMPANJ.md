@@ -23,9 +23,11 @@ Ett system för att snabbt kontakta patienter på väntelistan och fylla lediga 
 **Flöde:**
 ```
 Inställd operation → Personal skapar kampanj → SMS till ~10 patienter →
-Patient klickar länk → Svarar JA/NEJ på webbsida → Personal ser svar i realtid →
-Ringer patient som svarat JA
+Patient klickar länk → Svarar JA → Får bekräftelse-SMS + personal notifieras →
+Personal ringer patient → Bokar in
 ```
+
+**Viktigt:** Först till kvarn-princip. Den första som svarar JA får tiden.
 
 ---
 
@@ -42,18 +44,18 @@ Ringer patient som svarat JA
 
 ### Effekt av samtycke
 
-Med detta samtycke får kliniken en tydlig juridisk grund (GDPR Art. 9(2)(a)) för att:
-- Skicka SMS om bokningar
-- Kontakta patienter vid lediga tider
-- Inkludera information om vilken typ av operation det gäller
+| Med samtycke | Utan samtycke |
+|--------------|---------------|
+| Tydliga SMS med namn, datum, operationstyp | Vaga SMS utan hälsoinformation |
+| Tydlig juridisk grund (GDPR Art. 9(2)(a)) | Berättigat intresse (osäkrare) |
 
 ---
 
 ## 3. Två SMS-modeller
 
-### Modell A: Vag formulering (utan samtycke)
+Personal väljer automatiskt rätt mall baserat på om patienten har godkänt SMS-kommunikation.
 
-För patienter som **inte** har godkänt SMS-kommunikation om operationer:
+### Modell A: Vag formulering (utan samtycke)
 
 ```
 Hej! En tid har blivit ledig hos Södermalms Ortopedi imorgon.
@@ -65,16 +67,7 @@ OBS: Först till kvarn!
 /Södermalms Ortopedi
 ```
 
-**Egenskaper:**
-- Ingen hälsoinformation
-- Nämner inte operation eller diagnos
-- ~140 tecken = 1 SMS (~0,35 kr)
-
----
-
 ### Modell B: Tydlig formulering (med samtycke)
-
-För patienter som **har** godkänt SMS-kommunikation:
 
 ```
 Hej Anna! En operationstid för din axeloperation har blivit 
@@ -87,19 +80,60 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 /Södermalms Ortopedi
 ```
 
-**Egenskaper:**
-- Personligt (namn)
-- Specifik information (datum, tid, operationstyp)
-- Bättre för patienten att förstå vad det gäller
-- ~220 tecken = 2 SMS (~0,70 kr)
+---
+
+## 4. Automatiska SMS-svar
+
+### 4.1 När patient svarar JA (första patienten)
+
+Patienten får omedelbart ett bekräftelse-SMS:
+
+```
+Tack för att du kan komma med kort varsel!
+Vi bokar nu in dig och ringer upp dig inom kort.
+/Södermalms Ortopedi
+```
+
+### 4.2 När tiden är fylld
+
+Alla patienter som **inte svarat ännu** får automatiskt:
+
+```
+Hej! Tiden vi frågade om har nu blivit bokad.
+Din ordinarie tid kvarstår.
+/Södermalms Ortopedi
+```
+
+Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få tiden.
+
+### 4.3 Sammanfattning SMS-flöde
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  STEG 1: Kampanj skapas                                          │
+│  → 10 patienter får första SMS                                   │
+├──────────────────────────────────────────────────────────────────┤
+│  STEG 2: Patient 1 svarar JA                                     │
+│  → Patient 1 får bekräftelse-SMS                                 │
+│  → Vald personal får notifikations-SMS                           │
+│  → Kampanj markeras som "fylld"                                  │
+├──────────────────────────────────────────────────────────────────┤
+│  STEG 3: Kampanj "fylld"                                         │
+│  → Patient 2-10 (som ej svarat) får "tiden tagen"-SMS            │
+│  → Patient som redan svarat NEJ får inget mer                    │
+├──────────────────────────────────────────────────────────────────┤
+│  STEG 4: Personal ringer                                         │
+│  → Bekräftar bokning med patient 1                               │
+└──────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 4. Svarssida för patient
+## 5. Svarssida för patient
 
 **URL:** `specialist.se/s/[unik-kod]`
 
-### Steg 1: Patienten ser förfrågan
+### Steg 1: Aktiv kampanj
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -129,7 +163,7 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Steg 2: Efter JA-svar
+### Steg 2a: Efter JA-svar (första patienten)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -138,11 +172,24 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 │                                                                 │
 │  Du har svarat JA till tiden tisdag 28/1 kl 08:00.             │
 │                                                                 │
-│  📞 Vi ringer dig inom kort för att bekräfta.                  │
-│                                                                 │
-│  ⚠️ Detta är inte en slutgiltig bokning ännu.                  │
+│  Vi bokar nu in dig och ringer upp dig inom kort.              │
 │                                                                 │
 │  Vid frågor: 08-123 45 67                                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Steg 2b: Om tiden redan är tagen
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│              ⏰ Tiden är redan bokad                            │
+│                                                                 │
+│  Tyvärr hann en annan patient före.                            │
+│  Din ordinarie tid kvarstår.                                    │
+│                                                                 │
+│  Tack för att du ville komma med kort varsel!                  │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -162,114 +209,200 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 
 ---
 
-## 5. Dashboard för personal
+## 6. Dashboard för personal
 
 **URL:** `/personal/akut-sms`
 
-### Skapa kampanj
+### 6.1 Skapa kampanj
 
-Personal fyller i:
-- Datum och tid för den lediga tiden
-- Operationstyp (valfritt, endast om patienten har samtycke)
-- Lista med mottagare (namn + telefon)
-- Notifikationsinställningar
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  🚨 Skapa akut SMS-kampanj                                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Ledig tid                                                      │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ Datum: [28 jan 2026 ▼]    Tid: [08:00 ▼]               │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Operationstyp (valfritt, visas endast för patienter med       │
+│  samtycke):                                                     │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ [ Axeloperation                                    ▼ ] │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Mottagare (klistra in från väntelista):                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ Anna Andersson, 0701234567, ✓samtycke                   │   │
+│  │ Karl Karlsson, 0709876543, ✗samtycke                    │   │
+│  │ ...                                                      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  📱 Notifiera personal vid JA-svar:                            │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ ☑️ Maria Sköterska (073-111 22 33)                      │   │
+│  │ ☑️ Dr. Carlito (070-444 55 66)                          │   │
+│  │ ☐ Anna Reception (070-777 88 99)                        │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────┐     │
+│  │           🚀 Skicka kampanj (~10 SMS)                 │     │
+│  └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-### Realtidsvy av svar
+### 6.2 Realtidsvy av svar
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  🚨 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  Status: ⏳ Väntar på svar                                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  📊 Skickade: 10    ✅ JA: 2    ❌ NEJ: 3    ⏳ Väntar: 5      │
+│  📊 Skickade: 10    ✅ JA: 0    ❌ NEJ: 3    ⏳ Väntar: 7      │
 │                                                                 │
+│  Mottagare:                                                     │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ ✅ Anna Andersson      JA     14:35  ← RING HENNE!      │   │
-│  │ ✅ Karl Karlsson       JA     14:42  ← Reserv           │   │
 │  │ ❌ Erik Eriksson       NEJ    14:38                      │   │
 │  │ ❌ Lisa Larsson        NEJ    14:45                      │   │
 │  │ ❌ Olle Olsson         NEJ    14:51                      │   │
+│  │ ⏳ Anna Andersson      -      (ej svarat)               │   │
+│  │ ⏳ Karl Karlsson       -      (ej svarat)               │   │
 │  │ ⏳ Maria Månsson       -      (ej svarat)               │   │
 │  │ ⏳ Per Persson         -      (ej svarat)               │   │
 │  │ ...                                                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
+│  📱 Notifierar: Maria Sköterska, Dr. Carlito                   │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Notifikationer
+### 6.3 När någon svarar JA
 
-| Typ | Beskrivning |
-|-----|-------------|
-| **På sidan** | Ljud + visuell notis när någon svarar JA |
-| **SMS till personal** | Valfritt - välj vilken mobil som ska notifieras |
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  🚨 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  Status: ✅ FYLLD                                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  🎉 Anna Andersson svarade JA kl 14:52!                 │   │
+│  │                                                          │   │
+│  │  📞 Ring henne: 070-123 45 67                           │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  📊 Skickade: 10    ✅ JA: 1    ❌ NEJ: 3    ⏳ Avslutat: 6    │
+│                                                                 │
+│  Övriga patienter har fått SMS om att tiden är bokad.          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 6. GDPR och juridik
+## 7. Personalregister för notifikationer
 
-### Sammanfattning
+Varje personal registrerar sitt mobilnummer i sin profil.
 
-| Aspekt | Med samtycke | Utan samtycke |
-|--------|--------------|---------------|
-| **SMS-innehåll** | Tydlig info (namn, op-typ, tid) | Vag info (bara "en tid") |
-| **Juridisk grund** | GDPR Art. 9(2)(a) - Uttryckligt samtycke | Berättigat intresse (osäkrare) |
-| **Risk** | Låg | Medel |
+### Hantering i `/personal/profil`
 
-### Krav oavsett samtycke
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  👤 Min profil                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Namn: Maria Sköterska                                          │
+│  E-post: maria@kliniken.se                                      │
+│                                                                 │
+│  📱 Mobilnummer för SMS-notifikationer:                        │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ 073-111 22 33                                            │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ☑️ Jag vill kunna ta emot akut-notifikationer                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Varför detta är viktigt
+
+- **Sjuksköterskan** som skickar kampanjen behöver veta när någon svarar JA
+- **Läkaren** som har mottagning behöver veta så hen inte sätter in någon annan patient på den "tomma" tiden
+- **Flera kan väljas** - alla relevanta får notifikation
+
+---
+
+## 8. GDPR och juridik
+
+### Krav
 
 | Krav | Åtgärd |
 |------|--------|
-| **Dataminimering** | Lagra inte mer än nödvändigt |
+| **Dataminimering** | Lagra endast nödvändig information |
 | **Kort lagringstid** | Auto-radera kampanjer efter 7 dagar |
 | **Säkerhet** | Endast inloggad, behörig personal |
 | **Spårbarhet** | Logga vem som skapat kampanjer |
 | **Tredjepartsavtal** | 46elks har standard-DPA |
 
-### Vad som lagras i databasen
+### Vad som lagras
 
-| Data | Lagras | Kommentar |
-|------|--------|-----------|
-| Patientnamn | Ja | För identifiering |
-| Telefonnummer (hashat) | Ja | Förhindra dubbletter |
-| Telefonnummer (klartext) | Nej | Raderas efter sändning |
-| Operationstyp | Endast med samtycke | Annars utelämnas |
-| Svar (ja/nej) | Ja | |
-| Svars-tidpunkt | Ja | |
+| Data | Lagras | Radering |
+|------|--------|----------|
+| Patientnamn | Ja | Efter 7 dagar |
+| Telefonnummer (hashat) | Ja | Efter 7 dagar |
+| Telefonnummer (klartext) | Nej | Raderas direkt efter sändning |
+| Svar (ja/nej) | Ja | Efter 7 dagar |
+| Svars-tidpunkt | Ja | Efter 7 dagar |
 
 ---
 
-## 7. Teknisk implementation
+## 9. Teknisk implementation
 
 ### Nya filer
 
 ```
 src/pages/
 ├── personal/
-│   └── akut-sms.astro          ← Dashboard för personal
+│   ├── akut-sms.astro          ← Dashboard för personal
+│   └── profil.astro            ← Personalens profilsida
 ├── s/
 │   └── [kod].astro             ← Svarssida för patient
 └── api/
     └── kampanj/
         ├── skapa.ts            ← Skapa kampanj + skicka SMS
         ├── status.ts           ← Hämta status (för polling)
-        └── svar.ts             ← Registrera patientsvar
+        ├── svar.ts             ← Registrera patientsvar
+        └── avsluta.ts          ← Markera fylld + skicka "tiden tagen"-SMS
 ```
 
 ### Databas (Supabase)
 
 ```sql
+-- Personal med mobilnummer
+ALTER TABLE profiles ADD COLUMN mobilnummer TEXT;
+ALTER TABLE profiles ADD COLUMN vill_ha_notifikationer BOOLEAN DEFAULT false;
+
 -- Kampanjer
 CREATE TABLE sms_kampanjer (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  titel TEXT NOT NULL,
   datum DATE NOT NULL,
   tid TIME NOT NULL,
-  operation_typ TEXT,              -- NULL om inget samtycke
+  operation_typ TEXT,
   skapad_av UUID REFERENCES auth.users(id),
   skapad_vid TIMESTAMPTZ DEFAULT NOW(),
-  status TEXT DEFAULT 'aktiv',     -- 'aktiv', 'fylld', 'avslutad'
-  notifiera_telefon TEXT           -- För SMS-notis till personal
+  status TEXT DEFAULT 'aktiv',        -- 'aktiv', 'fylld', 'avslutad'
+  fylld_av_patient UUID,              -- Vem som fick tiden
+  fylld_vid TIMESTAMPTZ
+);
+
+-- Personal som ska notifieras
+CREATE TABLE sms_kampanj_notifieringar (
+  kampanj_id UUID REFERENCES sms_kampanjer(id) ON DELETE CASCADE,
+  personal_id UUID REFERENCES auth.users(id),
+  notifierad_vid TIMESTAMPTZ,
+  PRIMARY KEY (kampanj_id, personal_id)
 );
 
 -- Mottagare
@@ -277,57 +410,54 @@ CREATE TABLE sms_kampanj_mottagare (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   kampanj_id UUID REFERENCES sms_kampanjer(id) ON DELETE CASCADE,
   namn TEXT NOT NULL,
-  telefon_masked TEXT NOT NULL,    -- "070-123****"
+  telefon_hash TEXT NOT NULL,
+  telefon_masked TEXT NOT NULL,       -- "070-123****"
   unik_kod TEXT UNIQUE NOT NULL,
   har_samtycke BOOLEAN DEFAULT false,
   skickad_vid TIMESTAMPTZ,
-  svar TEXT,                       -- 'ja', 'nej', NULL
-  svar_vid TIMESTAMPTZ
+  svar TEXT,                          -- 'ja', 'nej', NULL
+  svar_vid TIMESTAMPTZ,
+  notifierad_om_fylld BOOLEAN DEFAULT false
 );
 
--- Auto-radera efter 7 dagar (cron job eller Supabase scheduled function)
+-- Index för snabb lookup
+CREATE INDEX idx_mottagare_unik_kod ON sms_kampanj_mottagare(unik_kod);
+
+-- Auto-radera efter 7 dagar via Supabase scheduled function
 ```
 
 ---
 
-## 8. Kostnad
+## 10. Kostnad
 
-| Scenario | SMS-kostnad |
-|----------|-------------|
-| 10 patienter (vag SMS, 1 SMS var) | ~3,50 kr |
-| 10 patienter (tydlig SMS, 2 SMS var) | ~7,00 kr |
-| + SMS-notis till personal | +0,35 kr |
+**Uppskattad kostnad per kampanj (10 patienter):** ~15-20 kr
+
+Inkluderar:
+- Första SMS till alla patienter
+- Bekräftelse-SMS till den som svarar JA
+- "Tiden tagen"-SMS till de som ej svarat
+- Notifikations-SMS till personal
 
 **Jämförelse:**
-- Kampanjkostnad: ~7 kr
+- Kampanjkostnad: ~20 kr
 - Inställd operation: ~10 000 kr
-- **ROI: ~1400x**
+- **ROI: ~500x**
 
 ---
 
-## 9. Framtida förbättringar
-
-Möjliga tillägg efter första versionen:
-
-- [ ] Spara "patientlistor" för återanvändning
-- [ ] Integration med väntelista (om tillgänglig i journalsystem)
-- [ ] Statistik: Hur ofta fylls tider? Svarsfrekvens?
-- [ ] E-postnotifikation som alternativ till SMS-notis
-
----
-
-## 10. Nästa steg
+## 11. Nästa steg
 
 1. ✅ Specifikation klar (detta dokument)
 2. ⬜ Lägg till samtyckesfråga i hälsodeklarationen
-3. ⬜ Skapa databastabeller i Supabase
-4. ⬜ Bygga `/personal/akut-sms` (dashboard)
-5. ⬜ Bygga `/s/[kod]` (svarssida)
-6. ⬜ Bygga API-endpoints
-7. ⬜ Testa i produktion
-8. ⬜ Utbilda personal
+3. ⬜ Lägg till mobilnummer-fält i personalprofil
+4. ⬜ Skapa databastabeller i Supabase
+5. ⬜ Bygga `/personal/akut-sms` (dashboard)
+6. ⬜ Bygga `/s/[kod]` (svarssida)
+7. ⬜ Bygga API-endpoints
+8. ⬜ Testa i produktion
+9. ⬜ Utbilda personal
 
-**Uppskattad tid för implementation:** 4-6 timmar
+**Uppskattad tid för implementation:** 6-8 timmar
 
 ---
 
