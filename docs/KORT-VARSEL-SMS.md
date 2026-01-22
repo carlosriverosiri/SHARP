@@ -283,6 +283,10 @@ Innan patienten kan svara JA måste de bekräfta en fråga. Dessutom visas en **
 │  Vi noterar att du inte kan komma denna gång.                  │
 │  Din ordinarie tid kvarstår.                                    │
 │                                                                 │
+│  💡 Ångrar du dig?                                              │
+│  Ring oss på 08-123 45 67 så länge tiden fortfarande är        │
+│  ledig - först till kvarn gäller!                              │
+│                                                                 │
 │  Vi återkommer vid nya kortvarseltider!                        │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -324,6 +328,20 @@ Din ordinarie tid kvarstår.
 Vi återkommer vid nästa lediga tid!
 /Södermalms Ortopedi
 ```
+
+### 6.4 Ångra NEJ-svar
+
+**Notering:** Det skickas inget SMS när patient svarar NEJ - de ser bara bekräftelsen på webbsidan med information om att de kan ringa om de ångrar sig.
+
+#### När kan patient ångra sig?
+
+| Situation | Kan ångra sig? |
+|-----------|---------------|
+| Svarat NEJ, tiden fortfarande ledig | ✅ Ja - ring kliniken |
+| Svarat NEJ, någon annan svarat JA men ej bekräftad | ✅ Ja - kan bli reserv |
+| "Tiden bokad"-SMS har gått ut | ❌ Nej - för sent |
+
+**Princip:** Tiden är inte slutgiltigt bokad förrän personal har ringt och bekräftat med patienten som svarade JA. Fram till dess kan NEJ-svarare ringa och "ta tillbaka" sitt svar.
 
 ---
 
