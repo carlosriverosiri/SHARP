@@ -1,0 +1,670 @@
+---
+/**
+ * Patientsvarssida för kort varsel
+ * URL: /s/[unik-kod]
+ * 
+ * Publik sida (ingen auth) - säkerheten ligger i den unika koden.
+ */
+
+export const prerender = false;
+
+import { createClient } from '@supabase/supabase-js';
+
+const { kod } = Astro.params;
+
+// Använd service role för att kunna läsa utan auth
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || '';
+const SUPABASE_SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+// Hämta mottagare och kampanjinfo
+let mottagare: any = null;
+let kampanj: any = null;
+let felmeddelande = '';
+let dagarTillOp = 0;
+
+if (kod && kod.length >= 12) {
+  const { data, error } = await supabaseAdmin
+    .from('sms_kampanj_mottagare')
+    .select(`
+      id,
+      namn,
+      har_samtycke,
+      svar,
+      svar_ordning,
+      kampanj:kampanj_id (
+        id,
+        datum,
+        tidsblock,
+        antal_platser,
+        antal_fyllda,
+        operation_typ,
+        status,
+        sista_svarstid
+      )
+    `)
+    .eq('unik_kod', kod)
+    .single();
+
+  if (error || !data) {
+    felmeddelande = 'Denna länk är ogiltig eller har upphört att gälla.';
+  } else {
+    mottagare = data;
+    kampanj = data.kampanj;
+
+    // Beräkna dagar till operation (utan exakt tid, använd morgon som referens)
+    if (kampanj) {
+      const opDatum = new Date(`${kampanj.datum}T08:00:00`);
+      const nu = new Date();
+      dagarTillOp = Math.ceil((opDatum.getTime() - nu.getTime()) / (1000 * 60 * 60 * 24));
+    }
+  }
+} else {
+  felmeddelande = 'Ogiltig länk.';
+}
+
+// Formatera datum med tidsblock
+function formateraDatum(datum: string, tidsblock?: string | null): string {
+  const d = new Date(`${datum}T08:00:00`);
+  const dagar = ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'];
+  const manader = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+  
+  const dagNamn = dagar[d.getDay()];
+  const datumStr = `${d.getDate()} ${manader[d.getMonth()]}`;
+  
+  // Tidsblock-text
+  let tidsInfo = '';
+  if (tidsblock === 'formiddag') {
+    tidsInfo = ', förmiddag';
+  } else if (tidsblock === 'eftermiddag') {
+    tidsInfo = ', eftermiddag';
+  }
+  
+  if (dagarTillOp === 1) {
+    return `Imorgon ${dagNamn} ${datumStr}${tidsInfo}`;
+  } else if (dagarTillOp === 0) {
+    return `Idag ${dagNamn} ${datumStr}${tidsInfo}`;
+  } else {
+    return `${dagNamn.charAt(0).toUpperCase() + dagNamn.slice(1)} ${datumStr}${tidsInfo} (om ${dagarTillOp} dagar)`;
+  }
+}
+
+// Formatera antal platser
+function formateraPlatser(antal: number, fyllda: number): string {
+  const kvar = antal - fyllda;
+  if (antal === 1) {
+    return 'En ledig operationsplats';
+  } else if (kvar === 1) {
+    return `1 plats kvar av ${antal}`;
+  } else {
+    return `${kvar} lediga platser av ${antal}`;
+  }
+}
+
+// Kontrollera om kampanjen är avslutad
+const kampanjAvslutad = kampanj?.status === 'avslutad';
+const kampanjFylld = kampanj?.status === 'fylld';
+
+// Kontrollera om tidsgränsen passerat
+let tidsgransPasserad = false;
+if (kampanj?.sista_svarstid) {
+  tidsgransPasserad = new Date() > new Date(kampanj.sista_svarstid);
+}
+
+// Patientens namn (förnamn)
+const fornamn = mottagare?.namn?.split(' ')[0] || '';
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Ledig tid | Södermalms Ortopedi</title>
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+    
+    .header {
+      background: #0284c7;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .header img {
+      height: 40px;
+      margin-bottom: 0.5rem;
+      filter: brightness(0) invert(1);
+    }
+    
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .content {
+      padding: 1.5rem;
+    }
+    
+    .greeting {
+      font-size: 1.125rem;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+    
+    .time-box {
+      background: #f0f9ff;
+      border: 2px solid #0284c7;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .time-box .icon {
+      font-size: 1.5rem;
+    }
+    
+    .time-box .text {
+      font-weight: 600;
+      color: #0369a1;
+    }
+    
+    .operation-type {
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    
+    .section-title {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.75rem;
+    }
+    
+    .checkbox-group {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    
+    .checkbox-label input {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: 0.125rem;
+      accent-color: #0284c7;
+    }
+    
+    .checkbox-text {
+      color: #374151;
+      line-height: 1.5;
+    }
+    
+    .warning-box {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .warning-box.danger {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+    
+    .warning-box .title {
+      font-weight: 600;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .warning-box.danger .title {
+      color: #dc2626;
+    }
+    
+    .warning-box p {
+      color: #78350f;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    
+    .warning-box.danger p {
+      color: #991b1b;
+    }
+    
+    .info-box {
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .info-box .title {
+      font-weight: 600;
+      color: #166534;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .info-box p {
+      color: #14532d;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-yes {
+      background: #22c55e;
+      color: white;
+    }
+    
+    .btn-yes:hover:not(:disabled) {
+      background: #16a34a;
+    }
+    
+    .btn-yes:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+    }
+    
+    .btn-no {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    
+    .btn-no:hover {
+      background: #e2e8f0;
+    }
+    
+    .first-come {
+      text-align: center;
+      padding: 0.75rem;
+      background: #fef3c7;
+      border-radius: 0.5rem;
+      color: #92400e;
+      font-size: 0.875rem;
+    }
+    
+    /* Resultat-sidor */
+    .result-container {
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+    
+    .result-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .result-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+    
+    .result-text {
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .contact-info {
+      background: #f8fafc;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .contact-info a {
+      color: #0284c7;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #0284c7;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Error */
+    .error-container {
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+    
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi">
+      <h1>Ledig operationstid</h1>
+    </div>
+    
+    {felmeddelande ? (
+      <!-- Fel -->
+      <div class="error-container">
+        <div class="error-icon">❌</div>
+        <h2 class="result-title">Länken fungerar inte</h2>
+        <p class="result-text">{felmeddelande}</p>
+        <div class="contact-info">
+          Vid frågor, ring <a href="tel:+4681234567">08-123 45 67</a>
+        </div>
+      </div>
+    ) : mottagare?.svar ? (
+      <!-- Redan svarat -->
+      <div class="result-container">
+        <div class="result-icon">
+          {mottagare.svar === 'ja' && mottagare.svar_ordning === 1 ? '✅' : 
+           mottagare.svar === 'reserv' || (mottagare.svar === 'ja' && mottagare.svar_ordning === 2) ? '⏰' : '👍'}
+        </div>
+        <h2 class="result-title">
+          {mottagare.svar === 'ja' && mottagare.svar_ordning === 1 ? 'Du har tackat ja!' : 
+           mottagare.svar === 'reserv' || (mottagare.svar === 'ja' && mottagare.svar_ordning === 2) ? 'Du är reserv' : 
+           'Tack för ditt svar!'}
+        </h2>
+        <p class="result-text">
+          {mottagare.svar === 'ja' && mottagare.svar_ordning === 1 
+            ? 'Vi ringer upp dig inom kort för att bekräfta bokningen.' 
+            : mottagare.svar === 'reserv' || (mottagare.svar === 'ja' && mottagare.svar_ordning === 2)
+            ? 'En annan patient hann precis före. Om den tiden inte fungerar för dem kontaktar vi dig!'
+            : 'Vi noterar att du inte kan komma denna gång. Din ordinarie tid kvarstår.'}
+        </p>
+        <div class="contact-info">
+          Vid frågor, ring <a href="tel:+4681234567">08-123 45 67</a>
+        </div>
+      </div>
+    ) : kampanjAvslutad || tidsgransPasserad ? (
+      <!-- Kampanj avslutad -->
+      <div class="result-container">
+        <div class="result-icon">⏰</div>
+        <h2 class="result-title">Denna förfrågan är avslutad</h2>
+        <p class="result-text">
+          Tiden är nu bokad.<br>
+          Din ordinarie tid kvarstår.
+        </p>
+        <p class="result-text" style="font-size: 0.875rem;">
+          Vi återkommer om nya kortvarseltider uppstår!
+        </p>
+      </div>
+    ) : (
+      <!-- Svarssidan -->
+      <div class="content" id="question-form">
+        <p class="greeting">Hej{fornamn ? ` ${fornamn}` : ''}!</p>
+        <p style="color: #64748b; margin-bottom: 1rem;">En operationstid har blivit ledig:</p>
+        
+        <div class="time-box">
+          <span class="icon">📅</span>
+          <div>
+            <div class="text">{kampanj && formateraDatum(kampanj.datum, kampanj.tidsblock)}</div>
+            {kampanj?.antal_platser > 1 && (
+              <div class="operation-type">
+                {formateraPlatser(kampanj.antal_platser, kampanj.antal_fyllda || 0)}
+              </div>
+            )}
+            {kampanj?.operation_typ && mottagare?.har_samtycke && (
+              <div class="operation-type">{kampanj.operation_typ}</div>
+            )}
+          </div>
+        </div>
+        
+        <p class="section-title">Innan du svarar, bekräfta följande:</p>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="preop-checkbox">
+            <span class="checkbox-text">
+              Jag har inga öppna sår eller pågående infektioner i området som ska opereras.
+            </span>
+          </label>
+        </div>
+        
+        {dagarTillOp <= 1 ? (
+          <!-- Imorgon eller idag - stark varning -->
+          <div class="warning-box danger">
+            <div class="title">⚠️ OBS: Tar du blodförtunnande medicin?</div>
+            <p>
+              Då hinner du troligen inte sätta ut den i tid.<br>
+              <strong>Kontakta oss på 08-123 45 67 innan du svarar JA.</strong>
+            </p>
+          </div>
+        ) : dagarTillOp === 2 ? (
+          <!-- 2 dagar - informativ -->
+          <div class="warning-box">
+            <div class="title">💊 Tar du blodförtunnande medicin?</div>
+            <p>
+              När vi ringer dig får du instruktioner om hur du ska göra.
+              Vanligtvis sätts blodförtunnande ut ca 2 dagar innan.
+            </p>
+          </div>
+        ) : null}
+        
+        <div class="buttons">
+          <button type="button" class="btn btn-yes" id="btn-yes" disabled>
+            ✅ JA, jag kan komma!
+          </button>
+          <button type="button" class="btn btn-no" id="btn-no">
+            ❌ NEJ
+          </button>
+        </div>
+        
+        <div class="first-come">
+          ⚠️ Flera patienter har fått denna förfrågan. Först till kvarn!
+        </div>
+      </div>
+      
+      <!-- Loading -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Registrerar ditt svar...</p>
+      </div>
+      
+      <!-- Resultat JA -->
+      <div class="result-container" id="result-yes" style="display: none;">
+        <div class="result-icon">✅</div>
+        <h2 class="result-title">Tack!</h2>
+        <p class="result-text">
+          Du har svarat JA till {kampanj && formateraDatum(kampanj.datum, kampanj.tidsblock).replace(/^Imorgon |^Idag /, '')}.
+        </p>
+        <p class="result-text">
+          Vi bokar nu in dig och ringer upp dig inom kort.
+        </p>
+        <div class="contact-info">
+          Vid frågor: <a href="tel:+4681234567">08-123 45 67</a>
+        </div>
+      </div>
+      
+      <!-- Resultat Reserv -->
+      <div class="result-container" id="result-reserve" style="display: none;">
+        <div class="result-icon">⏰</div>
+        <h2 class="result-title">Du är reserv</h2>
+        <p class="result-text">
+          Tack för din snabba respons!<br>
+          En annan patient hann precis före denna gång.
+        </p>
+        <p class="result-text" style="font-size: 0.875rem;">
+          Eftersom du svarade snabbt har vi noterat att du är alert.
+          Om denna tid mot förmodan inte fungerar för den andra patienten kontaktar vi dig i första hand.
+        </p>
+        <p class="result-text" style="font-size: 0.875rem;">
+          Vi skickar en ny förfrågan så fort nästa tid dyker upp!
+        </p>
+      </div>
+      
+      <!-- Resultat NEJ -->
+      <div class="result-container" id="result-no" style="display: none;">
+        <div class="result-icon">👍</div>
+        <h2 class="result-title">Tack för ditt svar!</h2>
+        <p class="result-text">
+          Vi noterar att du inte kan komma denna gång.<br>
+          Din ordinarie tid kvarstår.
+        </p>
+        <div class="info-box">
+          <div class="title">💡 Ångrar du dig?</div>
+          <p>
+            Ring oss på <a href="tel:+4681234567" style="color: #166534;">08-123 45 67</a> så länge tiden fortfarande är ledig - först till kvarn gäller!
+          </p>
+        </div>
+        <p class="result-text" style="font-size: 0.875rem;">
+          Vi återkommer vid nya kortvarseltider!
+        </p>
+      </div>
+      
+      <!-- Fel vid svar -->
+      <div class="result-container" id="result-error" style="display: none;">
+        <div class="result-icon">❌</div>
+        <h2 class="result-title">Något gick fel</h2>
+        <p class="result-text" id="error-message">
+          Kunde inte registrera ditt svar. Försök igen eller ring oss.
+        </p>
+        <div class="contact-info">
+          Ring <a href="tel:+4681234567">08-123 45 67</a>
+        </div>
+      </div>
+    )}
+  </div>
+  
+  <script define:vars={{ kod }}>
+    const checkbox = document.getElementById('preop-checkbox');
+    const btnYes = document.getElementById('btn-yes');
+    const btnNo = document.getElementById('btn-no');
+    const form = document.getElementById('question-form');
+    const loading = document.getElementById('loading');
+    
+    // Aktivera JA-knappen när checkbox är ikryssad
+    if (checkbox && btnYes) {
+      checkbox.addEventListener('change', () => {
+        btnYes.disabled = !checkbox.checked;
+      });
+    }
+    
+    async function submitAnswer(svar) {
+      if (form) form.style.display = 'none';
+      if (loading) loading.style.display = 'block';
+      
+      try {
+        const response = await fetch('/api/kampanj/svar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            kod: kod,
+            svar: svar,
+            bekraftatPreop: checkbox?.checked || false,
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (loading) loading.style.display = 'none';
+        
+        if (data.success) {
+          if (svar === 'ja') {
+            if (data.status === 'first') {
+              document.getElementById('result-yes').style.display = 'block';
+            } else {
+              document.getElementById('result-reserve').style.display = 'block';
+            }
+          } else {
+            document.getElementById('result-no').style.display = 'block';
+          }
+        } else {
+          document.getElementById('error-message').textContent = data.error || 'Kunde inte registrera svar.';
+          document.getElementById('result-error').style.display = 'block';
+        }
+      } catch (error) {
+        if (loading) loading.style.display = 'none';
+        document.getElementById('result-error').style.display = 'block';
+      }
+    }
+    
+    if (btnYes) {
+      btnYes.addEventListener('click', () => submitAnswer('ja'));
+    }
+    
+    if (btnNo) {
+      btnNo.addEventListener('click', () => submitAnswer('nej'));
+    }
+  </script>
+</body>
+</html>

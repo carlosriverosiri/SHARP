@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Netlify Functions configuration
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Security headers (production)
 [[headers]]
   for = "/*"

@@ -1,0 +1,1052 @@
+---
+/**
+ * Dashboard för Kort varsel SMS
+ * URL: /personal/kort-varsel
+ */
+
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { hamtaAnvandare } from '../../lib/auth';
+import { supabase } from '../../lib/supabase';
+
+const anvandare = await hamtaAnvandare(Astro.cookies);
+
+// Hämta all personal för notifieringslistan
+const { data: personal } = await supabase
+  .from('profiles')
+  .select('id, email, mobilnummer, vill_ha_notifikationer')
+  .order('email');
+
+// Hämta aktiva och senaste kampanjer
+const { data: kampanjer } = await supabase
+  .from('sms_kampanjer')
+  .select('*')
+  .order('skapad_vid', { ascending: false })
+  .limit(20);
+
+// Hämta statistik
+const { data: statistik } = await supabase
+  .from('kort_varsel_statistik')
+  .select('*')
+  .single();
+---
+
+<BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-kampanjer">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
+              ← Tillbaka
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">📱 Kort varsel SMS</h1>
+          </div>
+          <div class="text-sm text-gray-500">
+            Inloggad som {anvandare?.email}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Flikar -->
+      <div class="mb-6 border-b border-gray-200">
+        <nav class="flex gap-6" role="tablist">
+          <button 
+            id="tab-pool"
+            class="tab-button pb-3 px-1 text-sm font-medium border-b-2 border-sky-500 text-sky-600"
+            data-tab="pool"
+          >
+            👥 Patientpool
+          </button>
+          <button 
+            id="tab-kampanj"
+            class="tab-button pb-3 px-1 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+            data-tab="kampanj"
+          >
+            📤 Skapa kampanj
+          </button>
+          <button 
+            id="tab-historik"
+            class="tab-button pb-3 px-1 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+            data-tab="historik"
+          >
+            📋 Kampanjhistorik
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========== PATIENTPOOL-VY ========== -->
+      <div id="panel-pool" class="tab-panel">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          
+          <!-- Statistik-kort -->
+          <div class="lg:col-span-4 grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+              <div class="text-2xl font-bold text-sky-600" id="stat-tillgangliga">-</div>
+              <div class="text-sm text-gray-500">Tillgängliga</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+              <div class="text-2xl font-bold text-yellow-600" id="stat-reserv">-</div>
+              <div class="text-sm text-gray-500">⭐ Reserv</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+              <div class="text-2xl font-bold text-red-600" id="stat-nej">-</div>
+              <div class="text-sm text-gray-500">❌ Tackat NEJ</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+              <div class="text-2xl font-bold text-green-600" id="stat-bokade">-</div>
+              <div class="text-sm text-gray-500">✅ Bokade</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4 text-center">
+              <div class="text-2xl font-bold text-gray-600" id="stat-totalt">-</div>
+              <div class="text-sm text-gray-500">Totalt</div>
+            </div>
+          </div>
+
+          <!-- Lägg till patienter -->
+          <div class="lg:col-span-4 bg-white rounded-xl shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">➕ Lägg till patienter</h3>
+            <div class="flex gap-4">
+              <textarea 
+                id="nya-patienter"
+                rows="3"
+                placeholder="Anna Andersson, 0701234567, ja
+Karl Karlsson, 0709876543, nej"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 font-mono text-sm"
+              ></textarea>
+              <button 
+                id="btn-lagg-till"
+                class="px-6 py-2 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-700 transition-colors self-start"
+              >
+                Lägg till
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - en patient per rad
+            </p>
+          </div>
+
+          <!-- Tillgängliga + Reserv -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Tillgängliga -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">✅ Tillgängliga</h3>
+                <button id="btn-valj-alla" class="text-sm text-sky-600 hover:underline">Välj alla</button>
+              </div>
+              <div id="lista-tillgangliga" class="space-y-2 max-h-80 overflow-y-auto">
+                <p class="text-gray-400 italic text-sm">Laddar...</p>
+              </div>
+              <div class="mt-4 pt-4 border-t flex items-center justify-between">
+                <span id="valda-count" class="text-sm text-gray-500">0 valda</span>
+                <button 
+                  id="btn-skapa-fran-pool"
+                  disabled
+                  class="px-4 py-2 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                >
+                  📤 Skapa kampanj med valda
+                </button>
+              </div>
+            </div>
+
+            <!-- Reserv -->
+            <div class="bg-yellow-50 rounded-xl shadow-sm border border-yellow-200 p-6">
+              <h3 class="text-lg font-semibold text-yellow-800 mb-4">⭐ Reserv (prioriteras!)</h3>
+              <div id="lista-reserv" class="space-y-2 max-h-40 overflow-y-auto">
+                <p class="text-yellow-600 italic text-sm">Inga reservpatienter</p>
+              </div>
+              <p class="text-xs text-yellow-700 mt-3">
+                Dessa svarade JA men fick ej plats. Läggs automatiskt först i kön!
+              </p>
+            </div>
+          </div>
+
+          <!-- NEJ + Bokade -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- NEJ -->
+            <div class="bg-red-50 rounded-xl shadow-sm border border-red-200 p-6">
+              <h3 class="text-lg font-semibold text-red-800 mb-4">❌ Tackat NEJ</h3>
+              <div id="lista-nej" class="space-y-2 max-h-60 overflow-y-auto">
+                <p class="text-red-400 italic text-sm">Inga NEJ-svar</p>
+              </div>
+              <p class="text-xs text-red-700 mt-3">
+                Uppdatera i journalsystemet och klicka "Hanterad" eller "Ta bort"
+              </p>
+            </div>
+
+            <!-- Bokade -->
+            <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-6">
+              <h3 class="text-lg font-semibold text-green-800 mb-4">✅ Bokade</h3>
+              <div id="lista-bokade" class="space-y-2 max-h-40 overflow-y-auto">
+                <p class="text-green-600 italic text-sm">Inga bokade patienter</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ========== SKAPA KAMPANJ-VY ========== -->
+      <div id="panel-kampanj" class="tab-panel hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Vänster kolumn: Skapa kampanj -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <span class="text-2xl">📤</span>
+              Skapa ny kampanj
+            </h2>
+
+            <form id="kampanj-form" class="space-y-6">
+              <!-- Datum och antal platser -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Datum för operationen *
+                  </label>
+                  <input 
+                    type="date" 
+                    name="datum" 
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  >
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Antal lediga platser *
+                  </label>
+                  <div class="flex gap-2">
+                    <label class="flex-1">
+                      <input type="radio" name="antalPlatser" value="1" checked class="sr-only peer">
+                      <div class="text-center py-2 px-4 border-2 border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:text-sky-700 font-medium transition-colors">
+                        1
+                      </div>
+                    </label>
+                    <label class="flex-1">
+                      <input type="radio" name="antalPlatser" value="2" class="sr-only peer">
+                      <div class="text-center py-2 px-4 border-2 border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:text-sky-700 font-medium transition-colors">
+                        2
+                      </div>
+                    </label>
+                    <label class="flex-1">
+                      <input type="radio" name="antalPlatser" value="3" class="sr-only peer">
+                      <div class="text-center py-2 px-4 border-2 border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:text-sky-700 font-medium transition-colors">
+                        3
+                      </div>
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Hur många patienter söker ni?
+                  </p>
+                </div>
+              </div>
+
+              <!-- Tidsblock och operationstyp -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Tidsblock (valfritt)
+                  </label>
+                  <div class="flex gap-2">
+                    <label class="flex-1">
+                      <input type="radio" name="tidsblock" value="" checked class="sr-only peer">
+                      <div class="text-center py-2 px-3 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 text-sm transition-colors">
+                        Ingen info
+                      </div>
+                    </label>
+                    <label class="flex-1">
+                      <input type="radio" name="tidsblock" value="formiddag" class="sr-only peer">
+                      <div class="text-center py-2 px-3 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 text-sm transition-colors">
+                        Förmiddag
+                      </div>
+                    </label>
+                    <label class="flex-1">
+                      <input type="radio" name="tidsblock" value="eftermiddag" class="sr-only peer">
+                      <div class="text-center py-2 px-3 border border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 text-sm transition-colors">
+                        Eftermiddag
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Operationstyp (valfritt)
+                  </label>
+                  <input 
+                    type="text" 
+                    name="operationTyp" 
+                    placeholder="T.ex. Knäartroskopi"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  >
+                  <p class="text-xs text-gray-500 mt-1">
+                    Visas endast för patienter med samtycke
+                  </p>
+                </div>
+              </div>
+
+              <!-- Mottagare -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Mottagare (en per rad) *
+                </label>
+                <textarea 
+                  name="mottagare" 
+                  rows="6"
+                  required
+                  placeholder="Anna Andersson, 0701234567, ja
+Karl Karlsson, 0709876543, nej
+Erik Eriksson, 0701111111, ja"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 font-mono text-sm"
+                ></textarea>
+                <p class="text-xs text-gray-500 mt-1">
+                  Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - Samtycke = godkänt SMS i hälsodeklarationen
+                </p>
+              </div>
+
+              <!-- Utskicksmetod -->
+              <div class="bg-gray-50 rounded-lg p-4">
+                <label class="block text-sm font-medium text-gray-700 mb-3">
+                  Utskicksmetod
+                </label>
+                <div class="space-y-3">
+                  <label class="flex items-start gap-3 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="utskicksmetod" 
+                      value="direkt"
+                      checked
+                      class="mt-1"
+                    >
+                    <div>
+                      <div class="font-medium text-gray-900">Skicka alla direkt</div>
+                      <div class="text-sm text-gray-500">Alla patienter får SMS samtidigt</div>
+                    </div>
+                  </label>
+                  <label class="flex items-start gap-3 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="utskicksmetod" 
+                      value="gradvis"
+                      class="mt-1"
+                    >
+                    <div>
+                      <div class="font-medium text-gray-900">Skicka gradvis (en i taget)</div>
+                      <div class="text-sm text-gray-500">
+                        Väntar mellan varje SMS - stoppar automatiskt när alla platser är fyllda
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <div id="intervall-section" class="mt-4 hidden">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Intervall mellan SMS
+                  </label>
+                  <div class="flex items-center gap-2">
+                    <select 
+                      name="intervall" 
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    >
+                      <option value="5">5 minuter</option>
+                      <option value="10" selected>10 minuter</option>
+                      <option value="15">15 minuter</option>
+                      <option value="20">20 minuter</option>
+                      <option value="30">30 minuter</option>
+                      <option value="45">45 minuter</option>
+                      <option value="60">60 minuter (1 timme)</option>
+                    </select>
+                    <span class="text-sm text-gray-500">mellan varje SMS</span>
+                  </div>
+                  <p id="tid-berakning" class="text-sm text-sky-600 mt-2"></p>
+                </div>
+              </div>
+
+              <!-- Tidsgräns -->
+              <div>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="harTidsGrans" class="rounded">
+                  <span class="text-sm font-medium text-gray-700">
+                    Sätt sista svarstid
+                  </span>
+                </label>
+                <div id="tidsgrans-section" class="mt-3 hidden">
+                  <div class="grid grid-cols-2 gap-4">
+                    <input 
+                      type="date" 
+                      name="tidsgransDatum"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    >
+                    <input 
+                      type="time" 
+                      name="tidsgransTid"
+                      value="18:00"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    >
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Efter denna tid kan patienter inte längre svara
+                  </p>
+                </div>
+              </div>
+
+              <!-- Notifiera personal -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Notifiera vid JA-svar
+                </label>
+                <div class="space-y-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                  {personal?.filter(p => p.mobilnummer && p.vill_ha_notifikationer).map(p => (
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        name="notifiera" 
+                        value={p.id}
+                        checked={p.id === anvandare?.id}
+                        class="rounded"
+                      >
+                      <span class="text-sm text-gray-700">{p.email}</span>
+                    </label>
+                  ))}
+                  {!personal?.some(p => p.mobilnummer && p.vill_ha_notifikationer) && (
+                    <p class="text-sm text-gray-500 italic">
+                      Ingen personal har registrerat mobilnummer. 
+                      <a href="/personal/profil" class="text-sky-600 hover:underline">Lägg till i din profil</a>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="flex items-center justify-between pt-4 border-t">
+                <div id="mottagare-count" class="text-sm text-gray-500">
+                  0 mottagare
+                </div>
+                <button 
+                  type="submit"
+                  class="px-6 py-3 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2"
+                >
+                  <span>🚀</span>
+                  Skapa kampanj
+                </button>
+              </div>
+            </form>
+
+            <!-- Resultat -->
+            <div id="result" class="hidden mt-6 p-4 rounded-lg"></div>
+          </div>
+        </div>
+
+        <!-- Höger kolumn: Aktiva kampanjer & statistik -->
+        <div class="space-y-6">
+          
+          <!-- Aktiva kampanjer -->
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+              Aktiva kampanjer
+            </h3>
+            
+            <div id="aktiva-kampanjer" class="space-y-3">
+              {kampanjer?.filter(k => k.status === 'aktiv' || k.status === 'fylld').length === 0 && (
+                <p class="text-gray-500 text-sm italic">Inga aktiva kampanjer</p>
+              )}
+              {kampanjer?.filter(k => k.status === 'aktiv' || k.status === 'fylld').map(k => (
+                <a 
+                  href={`/personal/kort-varsel?id=${k.id}`}
+                  class="block p-3 border border-gray-200 rounded-lg hover:border-sky-300 hover:bg-sky-50 transition-colors"
+                >
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-medium text-gray-900">
+                        {new Date(`${k.datum}T${k.tid}`).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' })} kl {k.tid.slice(0, 5)}
+                      </div>
+                      {k.operation_typ && (
+                        <div class="text-sm text-gray-500">{k.operation_typ}</div>
+                      )}
+                    </div>
+                    <span class={`px-2 py-1 text-xs font-medium rounded-full ${
+                      k.status === 'fylld' 
+                        ? 'bg-yellow-100 text-yellow-800' 
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {k.status === 'fylld' ? '🎉 Fylld' : '⏳ Väntar'}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Statistik -->
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📊 Statistik (30 dagar)
+            </h3>
+            
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Kampanjer</span>
+                <span class="font-semibold">{statistik?.kampanjer_30_dagar || 0}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Fyllda via SMS</span>
+                <span class="font-semibold text-green-600">{statistik?.fyllda_via_sms || 0}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">SMS skickade</span>
+                <span class="font-semibold">{statistik?.totalt_sms_skickade || 0}</span>
+              </div>
+              {statistik?.fyllda_via_sms > 0 && statistik?.totalt_sms_skickade > 0 && (
+                <div class="pt-3 border-t">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">SMS per fylld tid</span>
+                    <span class="font-semibold text-sky-600">
+                      {(statistik.totalt_sms_skickade / statistik.fyllda_via_sms).toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Senaste kampanjer -->
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              🕐 Senaste kampanjer
+            </h3>
+            
+            <div class="space-y-2">
+              {kampanjer?.slice(0, 5).map(k => (
+                <a 
+                  href={`/personal/kort-varsel?id=${k.id}`}
+                  class="block p-2 rounded hover:bg-gray-50 transition-colors"
+                >
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">
+                      {new Date(k.skapad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
+                    </span>
+                    <span class={`px-2 py-0.5 text-xs rounded-full ${
+                      k.utfall === 'fylld_via_sms' ? 'bg-green-100 text-green-700' :
+                      k.utfall === 'fylld_manuellt' ? 'bg-blue-100 text-blue-700' :
+                      k.utfall === 'misslyckad' ? 'bg-red-100 text-red-700' :
+                      k.status === 'aktiv' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>
+                      {k.utfall === 'fylld_via_sms' ? '✓ SMS' :
+                       k.utfall === 'fylld_manuellt' ? '✓ Manuell' :
+                       k.utfall === 'misslyckad' ? '✗ Misslyckad' :
+                       k.status === 'aktiv' ? 'Aktiv' :
+                       k.status === 'fylld' ? 'Fylld' : 'Avslutad'}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+      </div> <!-- Stäng panel-kampanj -->
+
+      <!-- ========== HISTORIK-VY ========== -->
+      <div id="panel-historik" class="tab-panel hidden">
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">📋 Kampanjhistorik</h2>
+          
+          <div class="space-y-4">
+            {kampanjer?.map(k => (
+              <div class="border border-gray-200 rounded-lg p-4 hover:border-sky-300 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="font-medium text-gray-900">
+                      {new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' })}
+                      {k.tidsblock && ` (${k.tidsblock === 'formiddag' ? 'förmiddag' : 'eftermiddag'})`}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                      Skapad {new Date(k.skapad_vid).toLocaleDateString('sv-SE')}
+                      {k.operation_typ && ` • ${k.operation_typ}`}
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class={`px-3 py-1 text-sm font-medium rounded-full ${
+                      k.utfall === 'fylld_via_sms' ? 'bg-green-100 text-green-700' :
+                      k.utfall === 'fylld_manuellt' ? 'bg-blue-100 text-blue-700' :
+                      k.utfall === 'misslyckad' ? 'bg-red-100 text-red-700' :
+                      k.status === 'aktiv' ? 'bg-yellow-100 text-yellow-700' :
+                      k.status === 'fylld' ? 'bg-green-100 text-green-700' :
+                      'bg-gray-100 text-gray-600'
+                    }`}>
+                      {k.utfall === 'fylld_via_sms' ? '✅ Fylld via SMS' :
+                       k.utfall === 'fylld_manuellt' ? '✅ Fylld manuellt' :
+                       k.utfall === 'misslyckad' ? '❌ Misslyckad' :
+                       k.status === 'aktiv' ? '⏳ Aktiv' :
+                       k.status === 'fylld' ? '✅ Fylld' : 'Avslutad'}
+                    </span>
+                    <a 
+                      href={`/personal/kort-varsel?id=${k.id}`}
+                      class="text-sky-600 hover:underline text-sm"
+                    >
+                      Visa →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {!kampanjer?.length && (
+              <p class="text-gray-500 italic text-center py-8">Inga kampanjer ännu</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ========== FLIKHANTERING ==========
+    const tabs = document.querySelectorAll('.tab-button');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetPanel = tab.getAttribute('data-tab');
+        
+        // Uppdatera flikar
+        tabs.forEach(t => {
+          t.classList.remove('border-sky-500', 'text-sky-600');
+          t.classList.add('border-transparent', 'text-gray-500');
+        });
+        tab.classList.remove('border-transparent', 'text-gray-500');
+        tab.classList.add('border-sky-500', 'text-sky-600');
+        
+        // Visa rätt panel
+        panels.forEach(p => p.classList.add('hidden'));
+        document.getElementById(`panel-${targetPanel}`)?.classList.remove('hidden');
+      });
+    });
+
+    // ========== PATIENTPOOL ==========
+    let valdaPatienter: Set<string> = new Set();
+
+    async function laddaPatientpool() {
+      try {
+        const response = await fetch('/api/pool/lista');
+        const data = await response.json();
+        
+        if (data.success) {
+          // Uppdatera statistik
+          document.getElementById('stat-tillgangliga')!.textContent = data.statistik.tillgangliga;
+          document.getElementById('stat-reserv')!.textContent = data.statistik.reserv;
+          document.getElementById('stat-nej')!.textContent = data.statistik.nej;
+          document.getElementById('stat-bokade')!.textContent = data.statistik.bokade;
+          document.getElementById('stat-totalt')!.textContent = data.statistik.totalt;
+          
+          // Rendera listor
+          renderaPatientlista('lista-tillgangliga', data.patienter.tillgangliga, true);
+          renderaPatientlista('lista-reserv', data.patienter.reserv, true, 'reserv');
+          renderaPatientlista('lista-nej', data.patienter.nej, false, 'nej');
+          renderaPatientlista('lista-bokade', data.patienter.bokade, false, 'bokad');
+        }
+      } catch (error) {
+        console.error('Kunde inte ladda patientpool:', error);
+      }
+    }
+
+    function renderaPatientlista(containerId: string, patienter: any[], selectable: boolean, type?: string) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      if (!patienter || patienter.length === 0) {
+        const emptyMessages: Record<string, string> = {
+          'lista-tillgangliga': 'Inga tillgängliga patienter. Lägg till ovan!',
+          'lista-reserv': 'Inga reservpatienter',
+          'lista-nej': 'Inga NEJ-svar',
+          'lista-bokade': 'Inga bokade patienter',
+        };
+        container.innerHTML = `<p class="text-gray-400 italic text-sm">${emptyMessages[containerId] || 'Inga patienter'}</p>`;
+        return;
+      }
+      
+      container.innerHTML = patienter.map(p => {
+        const dagarKvar = Math.ceil((new Date(p.utgar_vid).getTime() - Date.now()) / (1000*60*60*24));
+        
+        if (type === 'nej') {
+          return `
+            <div class="flex items-center justify-between p-2 bg-white rounded border border-red-100">
+              <div>
+                <div class="font-medium text-gray-900">${p.namn}</div>
+                <div class="text-xs text-gray-500">${p.telefon_masked}</div>
+              </div>
+              <div class="flex items-center gap-2">
+                ${!p.hanterad_i_journal ? `
+                  <button 
+                    onclick="markeraHanterad('${p.id}')"
+                    class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200"
+                  >✓ Hanterad</button>
+                ` : '<span class="text-xs text-green-600">✓</span>'}
+                <button 
+                  onclick="taBortPatient('${p.id}')"
+                  class="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded"
+                >🗑️</button>
+              </div>
+            </div>
+          `;
+        }
+        
+        if (type === 'bokad') {
+          return `
+            <div class="flex items-center justify-between p-2 bg-white rounded border border-green-100">
+              <div>
+                <div class="font-medium text-gray-900">${p.namn}</div>
+                <div class="text-xs text-gray-500">
+                  ${p.bokad_datum ? new Date(p.bokad_datum).toLocaleDateString('sv-SE') : ''}
+                  ${p.bokad_tidsblock ? ` (${p.bokad_tidsblock})` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Tillgängliga och Reserv
+        return `
+          <label class="flex items-center gap-3 p-2 bg-white rounded border ${type === 'reserv' ? 'border-yellow-200' : 'border-gray-100'} hover:border-sky-300 cursor-pointer">
+            ${selectable ? `
+              <input 
+                type="checkbox" 
+                value="${p.id}" 
+                class="patient-checkbox rounded"
+                ${valdaPatienter.has(p.id) ? 'checked' : ''}
+              >
+            ` : ''}
+            <div class="flex-1">
+              <div class="font-medium text-gray-900">${p.namn}</div>
+              <div class="text-xs text-gray-500">
+                ${p.telefon_masked}
+                ${p.har_samtycke ? ' • ✓ samtycke' : ''}
+              </div>
+            </div>
+            <div class="text-xs text-gray-400">${dagarKvar}d kvar</div>
+          </label>
+        `;
+      }).join('');
+      
+      // Lägg till event listeners för checkboxar
+      if (selectable) {
+        container.querySelectorAll('.patient-checkbox').forEach(cb => {
+          cb.addEventListener('change', (e) => {
+            const id = (e.target as HTMLInputElement).value;
+            if ((e.target as HTMLInputElement).checked) {
+              valdaPatienter.add(id);
+            } else {
+              valdaPatienter.delete(id);
+            }
+            uppdateraValdaCount();
+          });
+        });
+      }
+    }
+
+    function uppdateraValdaCount() {
+      const count = valdaPatienter.size;
+      document.getElementById('valda-count')!.textContent = `${count} valda`;
+      const btn = document.getElementById('btn-skapa-fran-pool') as HTMLButtonElement;
+      btn.disabled = count === 0;
+    }
+
+    // Välj alla
+    document.getElementById('btn-valj-alla')?.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('#lista-tillgangliga .patient-checkbox') as NodeListOf<HTMLInputElement>;
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+        if (!allChecked) {
+          valdaPatienter.add(cb.value);
+        } else {
+          valdaPatienter.delete(cb.value);
+        }
+      });
+      
+      // Inkludera reserv också
+      const reservCheckboxes = document.querySelectorAll('#lista-reserv .patient-checkbox') as NodeListOf<HTMLInputElement>;
+      reservCheckboxes.forEach(cb => {
+        cb.checked = !allChecked;
+        if (!allChecked) {
+          valdaPatienter.add(cb.value);
+        } else {
+          valdaPatienter.delete(cb.value);
+        }
+      });
+      
+      uppdateraValdaCount();
+    });
+
+    // Lägg till patienter
+    document.getElementById('btn-lagg-till')?.addEventListener('click', async () => {
+      const textarea = document.getElementById('nya-patienter') as HTMLTextAreaElement;
+      const text = textarea.value.trim();
+      
+      if (!text) return;
+      
+      const lines = text.split('\n').filter(l => l.trim());
+      const patienter = lines.map(line => {
+        const parts = line.split(',').map(p => p.trim());
+        let telefon = parts[1]?.replace(/\s/g, '') || '';
+        if (telefon.startsWith('0')) {
+          telefon = '+46' + telefon.slice(1);
+        }
+        return {
+          namn: parts[0] || '',
+          telefon: telefon,
+          harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
+        };
+      }).filter(p => p.namn && p.telefon);
+      
+      if (patienter.length === 0) {
+        alert('Inga giltiga patienter hittades');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/pool/lagg-till', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patienter })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          textarea.value = '';
+          laddaPatientpool();
+        } else {
+          alert(data.error || 'Kunde inte lägga till patienter');
+        }
+      } catch (error) {
+        alert('Något gick fel');
+      }
+    });
+
+    // Markera hanterad
+    async function markeraHanterad(patientId: string) {
+      await fetch('/api/pool/uppdatera', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patientId, action: 'markera_hanterad' })
+      });
+      laddaPatientpool();
+    }
+
+    // Ta bort patient
+    async function taBortPatient(patientId: string) {
+      if (!confirm('Ta bort patienten från listan?')) return;
+      
+      await fetch('/api/pool/ta-bort', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patientId })
+      });
+      laddaPatientpool();
+    }
+
+    // Skapa kampanj från pool
+    document.getElementById('btn-skapa-fran-pool')?.addEventListener('click', () => {
+      // Byt till kampanj-fliken och fyll i valda patienter
+      document.getElementById('tab-kampanj')?.click();
+      
+      // TODO: Fylla i patientlistan i kampanjformuläret
+      alert(`Skapa kampanj med ${valdaPatienter.size} valda patienter\n\nDenna funktion är under utveckling.`);
+    });
+
+    // Gör funktioner globala för onclick
+    (window as any).markeraHanterad = markeraHanterad;
+    (window as any).taBortPatient = taBortPatient;
+
+    // Ladda patientpool vid start
+    laddaPatientpool();
+
+    // ========== KAMPANJFORMULÄR ==========
+    // Visa/dölj intervall-sektion
+    document.querySelectorAll('input[name="utskicksmetod"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const section = document.getElementById('intervall-section');
+        if ((e.target as HTMLInputElement).value === 'gradvis') {
+          section?.classList.remove('hidden');
+          updateTidBerakning();
+        } else {
+          section?.classList.add('hidden');
+        }
+      });
+    });
+
+    // Visa/dölj tidsgräns
+    document.querySelector('input[name="harTidsGrans"]')?.addEventListener('change', (e) => {
+      const section = document.getElementById('tidsgrans-section');
+      if ((e.target as HTMLInputElement).checked) {
+        section?.classList.remove('hidden');
+        // Sätt default till imorgon
+        const idag = new Date();
+        idag.setDate(idag.getDate());
+        (document.querySelector('input[name="tidsgransDatum"]') as HTMLInputElement).value = 
+          idag.toISOString().split('T')[0];
+      } else {
+        section?.classList.add('hidden');
+      }
+    });
+
+    // Räkna mottagare och uppdatera tid-beräkning
+    const mottagareTextarea = document.querySelector('textarea[name="mottagare"]') as HTMLTextAreaElement;
+    const mottagareCount = document.getElementById('mottagare-count');
+    const intervallSelect = document.querySelector('select[name="intervall"]') as HTMLSelectElement;
+
+    function parseMottagare() {
+      const text = mottagareTextarea?.value || '';
+      const lines = text.trim().split('\n').filter(l => l.trim());
+      return lines.map(line => {
+        const parts = line.split(',').map(p => p.trim());
+        return {
+          namn: parts[0] || '',
+          telefon: parts[1]?.replace(/\s/g, '') || '',
+          harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
+        };
+      }).filter(m => m.namn && m.telefon);
+    }
+
+    function updateMottagareCount() {
+      const mottagare = parseMottagare();
+      if (mottagareCount) {
+        mottagareCount.textContent = `${mottagare.length} mottagare`;
+      }
+      updateTidBerakning();
+    }
+
+    function updateTidBerakning() {
+      const mottagare = parseMottagare();
+      const intervall = parseInt(intervallSelect?.value || '10');
+      const totalTid = mottagare.length * intervall;
+      
+      const tidBerakning = document.getElementById('tid-berakning');
+      if (tidBerakning && mottagare.length > 0) {
+        const timmar = Math.floor(totalTid / 60);
+        const minuter = totalTid % 60;
+        const tidStr = timmar > 0 
+          ? `${timmar}h ${minuter}min` 
+          : `${minuter} min`;
+        tidBerakning.textContent = `💡 ${mottagare.length} patienter × ${intervall} min = ~${tidStr} totalt (om ingen svarar JA)`;
+      }
+    }
+
+    mottagareTextarea?.addEventListener('input', updateMottagareCount);
+    intervallSelect?.addEventListener('change', updateTidBerakning);
+
+    // Formulärsubmit
+    document.getElementById('kampanj-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const form = e.target as HTMLFormElement;
+      const formData = new FormData(form);
+      const result = document.getElementById('result');
+      
+      const mottagare = parseMottagare();
+      if (mottagare.length === 0) {
+        if (result) {
+          result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+          result.textContent = 'Lägg till minst en mottagare';
+          result.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Formatera telefonnummer
+      const mottagareMedTelefon = mottagare.map(m => {
+        let telefon = m.telefon.replace(/\D/g, '');
+        if (telefon.startsWith('0')) {
+          telefon = '+46' + telefon.slice(1);
+        } else if (!telefon.startsWith('+')) {
+          telefon = '+46' + telefon;
+        }
+        return { ...m, telefon };
+      });
+
+      const utskicksmetod = formData.get('utskicksmetod');
+      const intervall = utskicksmetod === 'gradvis' ? parseInt(formData.get('intervall') as string) : 0;
+
+      // Tidsgräns
+      let sistaVarstid = null;
+      if (formData.get('harTidsGrans')) {
+        const datum = formData.get('tidsgransDatum');
+        const tid = formData.get('tidsgransTid') || '18:00';
+        if (datum) {
+          sistaVarstid = `${datum}T${tid}:00`;
+        }
+      }
+
+      // Notifiera personal
+      const notifiera = Array.from(form.querySelectorAll('input[name="notifiera"]:checked'))
+        .map((el: any) => el.value);
+
+      // Hämta antal platser och tidsblock
+      const antalPlatserValue = formData.get('antalPlatser');
+      const antalPlatser = antalPlatserValue ? parseInt(antalPlatserValue as string) : 1;
+      const tidsblock = formData.get('tidsblock') || null;
+
+      const body = {
+        datum: formData.get('datum'),
+        antalPlatser,
+        tidsblock,
+        operationTyp: formData.get('operationTyp') || null,
+        mottagare: mottagareMedTelefon,
+        batchIntervallMinuter: intervall,
+        sistaVarstid,
+        notifieraPersonal: notifiera,
+      };
+
+      try {
+        const response = await fetch('/api/kampanj/skapa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await response.json();
+
+        if (result) {
+          if (data.success) {
+            result.className = 'mt-6 p-4 rounded-lg bg-green-50 border border-green-200 text-green-800';
+            result.innerHTML = `
+              <div class="font-semibold">✅ Kampanj skapad!</div>
+              <div class="text-sm mt-1">
+                ${data.antalSkickade} av ${data.antalMottagare} SMS skickade
+                ${data.gradvisUtskick ? ' (gradvis utskick aktiverat)' : ''}
+              </div>
+              <a href="/personal/kort-varsel?id=${data.kampanjId}" class="text-green-700 underline text-sm mt-2 inline-block">
+                Visa kampanj →
+              </a>
+            `;
+            form.reset();
+            updateMottagareCount();
+          } else {
+            result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+            result.textContent = data.error || 'Något gick fel';
+          }
+          result.classList.remove('hidden');
+        }
+      } catch (error) {
+        if (result) {
+          result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+          result.textContent = 'Kunde inte skapa kampanj. Försök igen.';
+          result.classList.remove('hidden');
+        }
+      }
+    });
+
+    // Initial count
+    updateMottagareCount();
+  </script>
+</BaseLayout>

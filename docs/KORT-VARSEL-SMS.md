@@ -1,8 +1,18 @@
 # 📱 Kort varsel SMS - Specifikation
 
-> **Status:** 📋 Planerad  
+> **Status:** 🚧 Under implementation  
 > **Prioritet:** Hög  
 > **Senast uppdaterad:** 2026-01-22
+
+---
+
+## Ändringshistorik
+
+| Datum | Ändring |
+|-------|---------|
+| 2026-01-22 | **Patientpool:** Ny modell med persistent patientlista, reservhantering, NEJ-spårning |
+| 2026-01-22 | **Ny modell:** Stöd för 1-3 platser per kampanj + tidsblock istället för exakt klockslag |
+| 2026-01-22 | Implementation påbörjad: Dashboard, svarssida, API:er, databas-schema |
 
 ---
 
@@ -22,12 +32,167 @@ Ett system för att snabbt kontakta patienter på väntelistan och fylla lediga 
 
 **Flöde:**
 ```
-Inställd operation → Personal skapar kampanj → SMS skickas (gradvis eller direkt) →
+Inställd operation → Personal skapar kampanj (1-3 platser) → SMS skickas →
 Patient klickar länk → Bekräftar pre-op fråga → Svarar JA →
-Får bekräftelse-SMS + personal notifieras → Personal ringer patient → Bokar in
+Får bekräftelse + personal notifieras → Personal ringer patient → Bokar in
 ```
 
-**Princip:** Först till kvarn. Den första som svarar JA får tiden. Nummer två blir reserv.
+**Princip:** Först till kvarn. De första N som svarar JA får platserna. Övriga blir reserv.
+
+### Flera platser per kampanj
+
+Systemet stödjer 1-3 lediga platser per kampanj:
+
+| Antal platser | Användningsfall |
+|---------------|-----------------|
+| **1 plats** | Standard - en patient ställde in |
+| **2-3 platser** | Flera avbokningar samma dag, eller planerat "lucka-i-programmet" |
+
+**Tidsblock istället för exakt tid:** Eftersom operationsordningen bestäms sent och patienter ofta reserverar hela dagen, anger vi valfritt tidsblock (förmiddag/eftermiddag) istället för exakt klockslag.
+
+---
+
+## 1b. Patientpool (ny modell)
+
+Istället för att mata in patienter manuellt för varje kampanj finns en **persistent patientpool** där alla kort varsel-patienter samlas.
+
+### Översikt
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📱 Kort varsel - Patientpool                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │ + Lägg till patienter (namn, telefon, samtycke)           │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  Tillgängliga (8)   ⭐ Reserv (2)   ❌ NEJ (4)   ✅ Bokade (1) │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Patientstatus
+
+| Status | Beskrivning | Åtgärd |
+|--------|-------------|--------|
+| **Tillgänglig** | Redo att kontaktas | Kan väljas till kampanj |
+| **Kontaktad** | Fått SMS, ej svarat | Väntar på svar |
+| **⭐ Reserv** | Svarade JA men fick ej plats | Prioriteras i nästa kampanj! |
+| **❌ NEJ** | Tackade nej | Uppdatera journalsystemet, ta bort |
+| **✅ Bokad** | Fick en tid | Visas som referens |
+
+### Tillgängliga patienter
+
+```
+┌─ Tillgängliga (8) ────────────────────────────────────────────┐
+│ ☐ Anna Andersson     070-1** ****    ← 5 dagar kvar          │
+│ ☐ Karl Karlsson      070-9** ****    ← 3 dagar kvar          │
+│ ☐ Lisa Larsson       070-2** ****    ← 6 dagar kvar          │
+│ ...                                                           │
+│                                                                │
+│ [☑️ Välj alla]  [📤 Skapa kampanj med valda]                  │
+└────────────────────────────────────────────────────────────────┘
+```
+
+**"Dagar kvar":** Patienter raderas automatiskt efter 7 dagar (GDPR).
+
+### Reservlista (prioriteras!)
+
+Patienter som svarade JA men inte fick plats (någon annan hann före):
+
+```
+┌─ ⭐ Reserv (2) ────────────────────────────────────────────────┐
+│ ⭐ Erik Eriksson     svarade JA 22/1   ← Prioritera!          │
+│ ⭐ Maria Månsson     svarade JA 22/1   ← Prioritera!          │
+│                                                                │
+│ 💡 Dessa har visat att de är motiverade och snabba.           │
+│    Läggs automatiskt först i kön vid nästa kampanj.           │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### NEJ-lista (uppdatera journalsystemet)
+
+Patienter som tackat nej måste markeras i journalsystemet:
+
+```
+┌─ ❌ Tackat NEJ (4) ────────────────────────────────────────────┐
+│ Per Persson       nej 22/1   [✓ Hanterad] [🗑️ Ta bort]       │
+│ Sara Svensson     nej 22/1   [✓ Hanterad] [🗑️ Ta bort]       │
+│ Olle Olsson       nej 21/1   [✓ Hanterad] [🗑️ Ta bort]       │
+│                                                                │
+│ 💡 Klicka "Hanterad" när du uppdaterat journalsystemet.       │
+│    Patienten tas bort från listan (eller auto-raderas).       │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### Bokade (referens)
+
+```
+┌─ ✅ Bokade (1) ────────────────────────────────────────────────┐
+│ Anna Andersson    bokad tis 28/1 förmiddag                    │
+│                                                                │
+│ 💡 Visas som referens. Tas bort automatiskt efter op-datum.   │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### Arbetsflöde med patientpool
+
+```
+1. Personal lägger till patienter från journalsystemet
+   (namn, telefon, samtycke - en gång)
+        ↓
+2. Avbokning inkommer
+        ↓
+3. Personal väljer patienter från poolen + skapar kampanj
+        ↓
+4. Patienter svarar:
+   - JA (får plats) → Status: Bokad
+   - JA (ej plats)  → Status: Reserv ⭐
+   - NEJ            → Status: NEJ ❌
+   - Ej svarat      → Tillbaka till Tillgänglig
+        ↓
+5. Vid nästa avbokning: Reserv ⭐ prioriteras automatiskt
+        ↓
+6. NEJ-patienter: Uppdatera journal → Markera hanterad → Ta bort
+        ↓
+7. Auto-radering efter 7 dagar (GDPR)
+```
+
+### Fördelar
+
+| Utan pool (nuvarande) | Med pool |
+|----------------------|----------|
+| Mata in alla patienter varje gång | Mata in en gång, återanvänd |
+| Vet inte vem som tackat NEJ | Tydlig NEJ-lista för journaluppdatering |
+| Reservpatienter "försvinner" | Reserv prioriteras automatiskt |
+| Manuell hantering | Automatisk statusuppdatering |
+
+---
+
+## 1c. Manuellt intervall för SMS-utskick
+
+Personal kan välja intervall mellan SMS manuellt:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Intervall mellan SMS:                                          │
+│                                                                 │
+│  (•) Automatiskt (rekommenderas baserat på deadline)           │
+│      💡 Just nu: 10 min (operation om 2 dagar)                 │
+│                                                                 │
+│  ( ) Manuellt:                                                  │
+│      [ 5 ] [10 ] [15 ] [20 ] [30 ] [45 ] [60 ] minuter         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+| Intervall | Användningsfall |
+|-----------|-----------------|
+| **5 min** | Mycket bråttom, få timmar kvar |
+| **10 min** | Standard, 1-2 dagar |
+| **15-20 min** | Gott om tid, 2-3 dagar |
+| **30-60 min** | Låg stress, 3+ dagar |
 
 ---
 
@@ -58,20 +223,28 @@ Personal väljer automatiskt rätt mall baserat på om patienten har godkänt SM
 ### Modell A: Vag formulering (utan samtycke)
 
 ```
-Hej! En tid har blivit ledig hos Södermalms Ortopedi imorgon.
-Kan du komma med kort varsel?
+Hej! Vi har en ledig operationsplats hos Södermalms Ortopedi 
+tis 28/1.
 
+Kan du komma med kort varsel?
 Svara här: specialist.se/s/x7k9m2
 
 OBS: Först till kvarn!
 /Södermalms Ortopedi
 ```
 
+**Med flera platser:**
+```
+Hej! Vi har 2 lediga operationsplatser hos Södermalms Ortopedi 
+tis 28/1 (förmiddag).
+...
+```
+
 ### Modell B: Tydlig formulering (med samtycke)
 
 ```
-Hej Anna! En operationstid för din axeloperation har blivit 
-ledig imorgon tis 28/1 kl 08:00.
+Hej Anna! Vi har en ledig operationsplats för axeloperation 
+tis 28/1 (förmiddag).
 
 Kan du komma med kort varsel?
 Svara här: specialist.se/s/x7k9m2
@@ -79,6 +252,27 @@ Svara här: specialist.se/s/x7k9m2
 OBS: Först till kvarn - flera har fått denna förfrågan!
 /Södermalms Ortopedi
 ```
+
+**Med flera platser:**
+```
+Hej Anna! Vi har 2 lediga operationsplatser för axeloperation 
+tis 28/1 (förmiddag).
+...
+```
+
+### Dynamisk text
+
+| Antal platser | Text i SMS |
+|---------------|------------|
+| 1 | "en ledig operationsplats" |
+| 2 | "2 lediga operationsplatser" |
+| 3 | "3 lediga operationsplatser" |
+
+| Tidsblock | Text i SMS |
+|-----------|------------|
+| Inget | "tis 28/1" |
+| Förmiddag | "tis 28/1 (förmiddag)" |
+| Eftermiddag | "tis 28/1 (eftermiddag)" |
 
 ---
 
@@ -967,19 +1161,95 @@ Med gradvis utskick kan kostnaden bli lägre om någon svarar snabbt.
 
 ## 13. Nästa steg
 
-1. ✅ Specifikation klar (detta dokument)
-2. ⬜ Lägg till samtyckesfråga i hälsodeklarationen
-3. ⬜ Lägg till mobilnummer-fält i personalprofil
-4. ⬜ Skapa databastabeller i Supabase
-5. ⬜ Bygga `/personal/kort-varsel` (dashboard med statistik)
-6. ⬜ Bygga `/s/[kod]` (svarssida med pre-op bekräftelse)
-7. ⬜ Bygga API-endpoints (inkl. atomär svar-funktion)
-8. ⬜ Lägga till header-indikator för aktiv kampanj
-9. ⬜ Testa i produktion
-10. ⬜ Utbilda personal
+### Fas 1: Grundsystem (✅ Klart)
 
-**Uppskattad tid för implementation:** 10-12 timmar
+1. ✅ Specifikation klar (detta dokument)
+2. ✅ Databasschema designat (`docs/KORT-VARSEL-SCHEMA.sql`)
+3. ✅ Bygga `/personal/kort-varsel` (dashboard)
+4. ✅ Bygga `/s/[kod]` (svarssida med pre-op bekräftelse)
+5. ✅ Bygga API-endpoints (skapa, svar, status, avsluta, lista)
+6. ✅ Atomär SQL-funktion för race conditions
+7. ✅ Gradvis SMS-utskick via Netlify Scheduled Functions
+8. ✅ Header-indikator för aktiv kampanj
+9. ✅ Personalprofil med mobilnummer
+
+### Fas 2: Patientpool (⬜ Planerad)
+
+| Uppgift | Beskrivning |
+|---------|-------------|
+| ⬜ Patientpool-tabell | Ny tabell `kort_varsel_patienter` med krypterade telefonnummer |
+| ⬜ Krypterad lagring | AES-256 för telefonnummer istället för hash (7 dagars livstid) |
+| ⬜ Pool-dashboard | Ny vy med Tillgängliga / Reserv / NEJ / Bokade |
+| ⬜ NEJ-hantering | "Markera som hanterad" + koppling till journalsystem |
+| ⬜ Reserv-prioritering | Automatiskt först i kön vid nästa kampanj |
+| ⬜ Manuellt intervall | Dropdown: 5/10/15/20/30/45/60 min |
+| ⬜ Auto-radering | Cron-jobb för att radera patienter efter 7 dagar |
+| ⬜ Välj från pool | Checkbox-lista + "Skapa kampanj med valda" |
+
+### Fas 3: Integration och test
+
+| Uppgift | Beskrivning |
+|---------|-------------|
+| ⬜ Samtyckesfråga | Lägg till i hälsodeklarationen (externt system) |
+| ⬜ Databas-migrering | Köra SQL i Supabase |
+| ⬜ KortVarselIndikator | Lägga till i BaseLayout |
+| ⬜ Produktion | Testa med riktig personal |
+| ⬜ Utbildning | Visa personal hur systemet fungerar |
+
+### Databasändringar för patientpool
+
+```sql
+-- NY TABELL: Patientpool (persistent, 7 dagar)
+CREATE TABLE kort_varsel_patienter (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- Patientinfo
+  namn TEXT NOT NULL,
+  telefon_krypterad TEXT NOT NULL,    -- AES-256 (ej hash!)
+  telefon_masked TEXT NOT NULL,       -- "070-1** ****" för visning
+  har_samtycke BOOLEAN DEFAULT false,
+  
+  -- Status
+  status TEXT DEFAULT 'tillganglig' 
+    CHECK (status IN ('tillganglig', 'kontaktad', 'reserv', 'nej', 'bokad')),
+  
+  -- Spårning
+  tillagd_vid TIMESTAMPTZ DEFAULT NOW(),
+  tillagd_av UUID REFERENCES auth.users(id),
+  senast_kontaktad TIMESTAMPTZ,
+  
+  -- NEJ-hantering
+  tackade_nej_vid TIMESTAMPTZ,
+  hanterad_i_journal BOOLEAN DEFAULT false,
+  
+  -- Bokad (om status = 'bokad')
+  bokad_datum DATE,
+  bokad_tidsblock TEXT,
+  
+  -- GDPR: Auto-radering
+  utgar_vid TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
+);
+
+-- Funktion för auto-radering
+CREATE OR REPLACE FUNCTION rensa_utgangna_patienter()
+RETURNS void AS $$
+BEGIN
+  DELETE FROM kort_varsel_patienter 
+  WHERE utgar_vid < NOW();
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### Prioriteringsordning vid kampanj
+
+```
+1. ⭐ Reservpatienter (svarade JA men fick ej plats) - FÖRST
+2. Tillgängliga (aldrig kontaktade) - sorterat på tillagd_vid
+3. Kontaktade (fått SMS men ej svarat) - SIST
+```
 
 ---
 
-*Specifikation skapad 2026-01-22*
+*Specifikation skapad 2026-01-22*  
+*Implementation påbörjad 2026-01-22*  
+*Patientpool-modell tillagd 2026-01-22*
