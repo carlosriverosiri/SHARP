@@ -1,4 +1,4 @@
-# 🚨 Akut SMS-kampanj - Specifikation
+# 📱 Kort varsel SMS - Specifikation
 
 > **Status:** 📋 Planerad  
 > **Prioritet:** Hög  
@@ -27,7 +27,7 @@ Patient klickar länk → Svarar JA → Får bekräftelse-SMS + personal notifie
 Personal ringer patient → Bokar in
 ```
 
-**Viktigt:** Först till kvarn-princip. Den första som svarar JA får tiden.
+**Princip:** Först till kvarn. Den första som svarar JA får tiden. Nummer två blir reserv.
 
 ---
 
@@ -94,36 +94,59 @@ Vi bokar nu in dig och ringer upp dig inom kort.
 /Södermalms Ortopedi
 ```
 
-### 4.2 När tiden är fylld
+### 4.2 När patient svarar JA (nummer 2 eller senare = reserv)
+
+```
+Tack för att du vill komma med kort varsel!
+Tyvärr hann en annan patient före dig denna gång.
+
+Om denna tid mot förmodan inte skulle fungera 
+kontaktar vi dig i första hand.
+
+Vi återkommer även vid nya kortvarseltider!
+/Södermalms Ortopedi
+```
+
+### 4.3 När tiden är fylld - till de som ej svarat
 
 Alla patienter som **inte svarat ännu** får automatiskt:
 
 ```
 Hej! Tiden vi frågade om har nu blivit bokad.
 Din ordinarie tid kvarstår.
+
+Vi återkommer om nya kortvarseltider uppstår!
 /Södermalms Ortopedi
 ```
 
-Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få tiden.
+Detta:
+- Förhindrar att patienter svarar JA i onödan
+- Uppmuntrar dem att svara snabbt nästa gång
+- Håller dem engagerade för framtida förfrågningar
 
-### 4.3 Sammanfattning SMS-flöde
+### 4.4 Sammanfattning SMS-flöde
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │  STEG 1: Kampanj skapas                                          │
 │  → 10 patienter får första SMS                                   │
 ├──────────────────────────────────────────────────────────────────┤
-│  STEG 2: Patient 1 svarar JA                                     │
-│  → Patient 1 får bekräftelse-SMS                                 │
+│  STEG 2: Anna svarar JA (första)                                 │
+│  → Anna får bekräftelse-SMS                                      │
 │  → Vald personal får notifikations-SMS                           │
 │  → Kampanj markeras som "fylld"                                  │
 ├──────────────────────────────────────────────────────────────────┤
-│  STEG 3: Kampanj "fylld"                                         │
-│  → Patient 2-10 (som ej svarat) får "tiden tagen"-SMS            │
-│  → Patient som redan svarat NEJ får inget mer                    │
+│  STEG 3: Karl svarar JA (andra = reserv)                         │
+│  → Karl får "reserv"-SMS                                         │
+│  → Karl markeras som reserv i systemet                           │
 ├──────────────────────────────────────────────────────────────────┤
-│  STEG 4: Personal ringer                                         │
-│  → Bekräftar bokning med patient 1                               │
+│  STEG 4: Kampanj "fylld"                                         │
+│  → Övriga (som ej svarat) får "tiden tagen"-SMS                  │
+│  → De som redan svarat NEJ får inget mer                         │
+├──────────────────────────────────────────────────────────────────┤
+│  STEG 5: Personal ringer Anna                                    │
+│  → Anna kan → Bokar in                                           │
+│  → Anna kan INTE → Ringer Karl (reserv)                          │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -179,17 +202,36 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Steg 2b: Om tiden redan är tagen
+### Steg 2b: Efter JA-svar (reserv)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│              ⏰ Tiden är redan bokad                            │
+│                       ⏰ Du är reserv                           │
 │                                                                 │
-│  Tyvärr hann en annan patient före.                            │
+│  Tack för att du vill komma med kort varsel!                   │
+│                                                                 │
+│  Tyvärr hann en annan patient före dig denna gång.             │
+│                                                                 │
+│  Om denna tid mot förmodan inte skulle fungera                 │
+│  kontaktar vi dig i första hand.                               │
+│                                                                 │
+│  Vi återkommer även vid nya kortvarseltider!                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Steg 2c: Om kampanjen är avslutad
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│              ⏰ Denna förfrågan är avslutad                     │
+│                                                                 │
+│  Tiden är nu bokad.                                             │
 │  Din ordinarie tid kvarstår.                                    │
 │                                                                 │
-│  Tack för att du ville komma med kort varsel!                  │
+│  Vi återkommer om nya kortvarseltider uppstår!                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -204,6 +246,8 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 │  Vi noterar att du inte kan komma denna gång.                  │
 │  Din ordinarie tid kvarstår.                                    │
 │                                                                 │
+│  Vi återkommer vid nya kortvarseltider!                        │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -211,13 +255,13 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 
 ## 6. Dashboard för personal
 
-**URL:** `/personal/akut-sms`
+**URL:** `/personal/kort-varsel`
 
 ### 6.1 Skapa kampanj
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  🚨 Skapa akut SMS-kampanj                                      │
+│  📱 Skapa kort varsel-kampanj                                   │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Ledig tid                                                      │
@@ -256,7 +300,7 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  🚨 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
 │  Status: ⏳ Väntar på svar                                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
@@ -283,7 +327,7 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  🚨 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
 │  Status: ✅ FYLLD                                               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
@@ -293,7 +337,19 @@ Detta förhindrar att patienter svarar JA i onödan och förväntar sig att få 
 │  │  📞 Ring henne: 070-123 45 67                           │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  📊 Skickade: 10    ✅ JA: 1    ❌ NEJ: 3    ⏳ Avslutat: 6    │
+│  📊 Skickade: 10    ✅ JA: 1    🔄 Reserv: 1    ❌ NEJ: 3      │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ ✅ Anna Andersson      JA     14:52  ← RING HENNE!      │   │
+│  │ 🔄 Karl Karlsson       JA     14:55  ← Reserv           │   │
+│  │ ❌ Erik Eriksson       NEJ    14:38                      │   │
+│  │ ...                                                      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Om Anna inte kan: ┌────────────────────────────────────────┐  │
+│                    │ 📞 Ring reserv: Karl Karlsson          │  │
+│                    │    070-987 65 43                        │  │
+│                    └────────────────────────────────────────┘  │
 │                                                                 │
 │  Övriga patienter har fått SMS om att tiden är bokad.          │
 │                                                                 │
@@ -321,7 +377,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 │  │ 073-111 22 33                                            │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  ☑️ Jag vill kunna ta emot akut-notifikationer                 │
+│  ☑️ Jag vill kunna ta emot kort varsel-notifikationer          │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -353,7 +409,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 | Patientnamn | Ja | Efter 7 dagar |
 | Telefonnummer (hashat) | Ja | Efter 7 dagar |
 | Telefonnummer (klartext) | Nej | Raderas direkt efter sändning |
-| Svar (ja/nej) | Ja | Efter 7 dagar |
+| Svar (ja/nej/reserv) | Ja | Efter 7 dagar |
 | Svars-tidpunkt | Ja | Efter 7 dagar |
 
 ---
@@ -365,7 +421,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 ```
 src/pages/
 ├── personal/
-│   ├── akut-sms.astro          ← Dashboard för personal
+│   ├── kort-varsel.astro       ← Dashboard för personal
 │   └── profil.astro            ← Personalens profilsida
 ├── s/
 │   └── [kod].astro             ← Svarssida för patient
@@ -393,7 +449,8 @@ CREATE TABLE sms_kampanjer (
   skapad_av UUID REFERENCES auth.users(id),
   skapad_vid TIMESTAMPTZ DEFAULT NOW(),
   status TEXT DEFAULT 'aktiv',        -- 'aktiv', 'fylld', 'avslutad'
-  fylld_av_patient UUID,              -- Vem som fick tiden
+  fylld_av_patient UUID,              -- Första JA
+  reserv_patient UUID,                -- Andra JA (reserv)
   fylld_vid TIMESTAMPTZ
 );
 
@@ -415,7 +472,8 @@ CREATE TABLE sms_kampanj_mottagare (
   unik_kod TEXT UNIQUE NOT NULL,
   har_samtycke BOOLEAN DEFAULT false,
   skickad_vid TIMESTAMPTZ,
-  svar TEXT,                          -- 'ja', 'nej', NULL
+  svar TEXT,                          -- 'ja', 'nej', 'reserv', NULL
+  svar_ordning INTEGER,               -- 1 = första JA, 2 = reserv, osv
   svar_vid TIMESTAMPTZ,
   notifierad_om_fylld BOOLEAN DEFAULT false
 );
@@ -435,13 +493,11 @@ CREATE INDEX idx_mottagare_unik_kod ON sms_kampanj_mottagare(unik_kod);
 Inkluderar:
 - Första SMS till alla patienter
 - Bekräftelse-SMS till den som svarar JA
+- Reserv-SMS till eventuell nummer 2
 - "Tiden tagen"-SMS till de som ej svarat
 - Notifikations-SMS till personal
 
-**Jämförelse:**
-- Kampanjkostnad: ~20 kr
-- Inställd operation: ~10 000 kr
-- **ROI: ~500x**
+**Jämförelse:** Kampanjkostnad ~20 kr vs inställd operation ~10 000 kr
 
 ---
 
@@ -451,7 +507,7 @@ Inkluderar:
 2. ⬜ Lägg till samtyckesfråga i hälsodeklarationen
 3. ⬜ Lägg till mobilnummer-fält i personalprofil
 4. ⬜ Skapa databastabeller i Supabase
-5. ⬜ Bygga `/personal/akut-sms` (dashboard)
+5. ⬜ Bygga `/personal/kort-varsel` (dashboard)
 6. ⬜ Bygga `/s/[kod]` (svarssida)
 7. ⬜ Bygga API-endpoints
 8. ⬜ Testa i produktion
