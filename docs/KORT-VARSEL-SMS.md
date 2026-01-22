@@ -374,6 +374,13 @@ Vi återkommer vid nästa lediga tid!
 │  │ ...                                                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
+│  Sortering (valfritt - påverkar vem som får SMS först):        │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ ☐ Stark smärta först                                    │   │
+│  │ ☐ Sjukskrivna först                                     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│  (Kräver att info finns i inklistrade data)                    │
+│                                                                 │
 │  Utskicksmetod:                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ ○ Skicka alla direkt                                    │   │
@@ -394,6 +401,8 @@ Vi återkommer vid nästa lediga tid!
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+**Notering om sortering:** Detta är inte medicinsk prioritering utan praktiska faktorer. Patienter med stark smärta eller sjukskrivning har ofta mest att vinna på en snabbare operation.
 
 ### 7.2 Realtidsvy av svar
 
@@ -459,9 +468,80 @@ Vi återkommer vid nästa lediga tid!
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+### 7.4 Statistik (aggregerad)
+
+Enkel statistik för att följa upp och förbättra systemet. **Ej personbaserad** - endast aggregerade siffror.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📊 Statistik - Kort varsel                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Totalt (senaste 30 dagarna):                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Kampanjer skapade:     12                              │   │
+│  │  Kampanjer fyllda:      10  (83% fyllnadsgrad)          │   │
+│  │  SMS skickade:          87                              │   │
+│  │  Uppskattad besparing:  ~100 000 kr                     │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Respons:                                                       │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Mediantid till första JA:     8 min                    │   │
+│  │  Svarsfrekvens (inom 30 min):  45%                      │   │
+│  │  Andel JA:                     32%                      │   │
+│  │  Andel NEJ:                    28%                      │   │
+│  │  Ingen respons:                40%                      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Notering:** Statistiken lagras aggregerat och innehåller inga personuppgifter. Används för att optimera systemet (t.ex. batch-storlek, intervall).
+
 ---
 
-## 8. Personalregister för notifikationer
+## 8. Indikator på hemsidan (Aktiv kampanj)
+
+En liten röd indikator visas i hörnet av hemsidan när det finns en **pågående, ofylld** kort varsel-kampanj. Detta gör att kollegor som inte skapat kampanjen ändå ser att det pågår en förfrågan.
+
+### Varför detta behövs
+
+- Läkare A skapar kampanj för en ledig tid
+- Läkare B har mottagning och ser den "tomma" tiden i schemat
+- Utan indikator: B kanske bokar in en ny patient → dubbelbokad tid
+- Med indikator: B ser röda ikonen → vet att tiden kanske fylls
+
+### Utseende
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  [Header - Södermalms Ortopedi]                    🔴 [👤]     │
+│                                                    ↑            │
+│                                        Röd prick = aktiv        │
+│                                        kampanj pågår            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Beteende
+
+| Status | Indikator |
+|--------|-----------|
+| Ingen aktiv kampanj | Ingen ikon visas |
+| Pågående kampanj (ej fylld) | 🔴 Röd prick (pulserar) |
+| Kampanj fylld men ej bekräftad | 🟡 Gul prick |
+| Klick på ikonen | Går till `/personal/kort-varsel` |
+
+### Implementation
+
+Lägg till en liten komponent i headern som:
+1. Pollar `/api/kampanj/aktiv` var 30:e sekund (endast om inloggad)
+2. Visar röd/gul prick om det finns aktiv kampanj
+3. Klickbar - tar användaren till dashboard
+
+---
+
+## 9. Personalregister för notifikationer
 
 Varje personal registrerar sitt mobilnummer i sin profil.
 
@@ -493,7 +573,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 
 ---
 
-## 9. GDPR och juridik
+## 10. GDPR och juridik
 
 ### Krav
 
@@ -517,7 +597,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 
 ---
 
-## 10. Teknisk implementation
+## 11. Teknisk implementation
 
 ### Nya filer
 
@@ -533,7 +613,9 @@ src/pages/
         ├── skapa.ts            ← Skapa kampanj + skicka SMS
         ├── status.ts           ← Hämta status (för polling)
         ├── svar.ts             ← Registrera patientsvar (atomär)
-        └── nasta-batch.ts      ← Skicka nästa batch (cron/manuellt)
+        ├── nasta-batch.ts      ← Skicka nästa batch (cron/manuellt)
+        ├── aktiv.ts            ← Finns aktiv kampanj? (för header-indikator)
+        └── statistik.ts        ← Aggregerad statistik
 ```
 
 ### Databas (Supabase)
@@ -651,7 +733,7 @@ $$ LANGUAGE plpgsql;
 
 ---
 
-## 11. Kostnad
+## 12. Kostnad
 
 **Uppskattad kostnad per kampanj:** ~10-20 kr
 
@@ -661,19 +743,20 @@ Med gradvis utskick kan kostnaden bli lägre om någon svarar snabbt.
 
 ---
 
-## 12. Nästa steg
+## 13. Nästa steg
 
 1. ✅ Specifikation klar (detta dokument)
 2. ⬜ Lägg till samtyckesfråga i hälsodeklarationen
 3. ⬜ Lägg till mobilnummer-fält i personalprofil
 4. ⬜ Skapa databastabeller i Supabase
-5. ⬜ Bygga `/personal/kort-varsel` (dashboard)
+5. ⬜ Bygga `/personal/kort-varsel` (dashboard med statistik)
 6. ⬜ Bygga `/s/[kod]` (svarssida med pre-op bekräftelse)
 7. ⬜ Bygga API-endpoints (inkl. atomär svar-funktion)
-8. ⬜ Testa i produktion
-9. ⬜ Utbilda personal
+8. ⬜ Lägga till header-indikator för aktiv kampanj
+9. ⬜ Testa i produktion
+10. ⬜ Utbilda personal
 
-**Uppskattad tid för implementation:** 8-10 timmar
+**Uppskattad tid för implementation:** 10-12 timmar
 
 ---
 
