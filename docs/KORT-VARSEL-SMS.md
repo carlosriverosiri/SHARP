@@ -468,7 +468,48 @@ Vi återkommer vid nästa lediga tid!
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 7.4 Avsluta kampanj manuellt
+### 7.4 Automatisk stängning (tidsgräns)
+
+Om operationen är nästa dag vill man inte att någon svarar JA klockan 24:00 - personal kan inte agera på det. Därför kan man sätta en **sista svarstid**.
+
+#### Inställning vid kampanjskapande
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⏰ Sista svarstid (valfritt):                                  │
+│                                                                 │
+│  Operation: imorgon 28/1 kl 08:00                              │
+│                                                                 │
+│  ○ Ingen tidsgräns (patienter kan svara när som helst)         │
+│  ● Stäng kampanjen automatiskt kl: [18:00 ▼]                   │
+│                                                                 │
+│  💡 Rekommendation: Sätt tidsgräns om operationen är           │
+│     inom 24 timmar.                                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Beteende vid tidsgräns
+
+| Situation | Vad händer |
+|-----------|------------|
+| Klockan passerar tidsgränsen | Kampanjen stängs automatiskt |
+| Ingen har svarat JA | Status: "misslyckad" |
+| Patient försöker svara efter stängning | Ser "Denna förfrågan är avslutad" |
+
+#### Automatisk föreslagen tidsgräns
+
+| Dagar till operation | Föreslagen tidsgräns |
+|---------------------|----------------------|
+| 1 dag (imorgon) | 18:00 samma dag |
+| 2 dagar | 20:00 dagen innan |
+| 3+ dagar | Ingen (valfritt) |
+
+**Notering:** Personal kan alltid stänga kampanjen manuellt innan tidsgränsen.
+
+---
+
+### 7.5 Avsluta kampanj manuellt
 
 Ibland behöver man avsluta en kampanj manuellt - antingen för att tiden fylldes på annat sätt, eller för att ge upp efter att ha provat tillräckligt.
 
@@ -508,7 +549,7 @@ Ibland behöver man avsluta en kampanj manuellt - antingen för att tiden fyllde
 | **Misslyckad** | Ingen svarade JA, tiden förblev tom | `misslyckad` |
 | **Avbruten** | Kampanjen avbröts innan alla svar kom in | `avbruten` |
 
-### 7.5 Skicka till fler patienter
+### 7.6 Skicka till fler patienter
 
 Om första batchen inte ger resultat kan man utöka kampanjen:
 
@@ -536,7 +577,7 @@ Om första batchen inte ger resultat kan man utöka kampanjen:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 7.6 Bekräfta efter uppringning
+### 7.7 Bekräfta efter uppringning
 
 När personal har ringt patienten som svarade JA:
 
@@ -568,7 +609,7 @@ När personal har ringt patienten som svarade JA:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 7.7 Statistik (aggregerad)
+### 7.8 Statistik (aggregerad)
 
 Enkel statistik för att följa upp och förbättra systemet. **Ej personbaserad** - endast aggregerade siffror.
 
@@ -748,8 +789,10 @@ CREATE TABLE sms_kampanjer (
   skapad_av UUID REFERENCES auth.users(id),
   skapad_vid TIMESTAMPTZ DEFAULT NOW(),
   status TEXT DEFAULT 'aktiv',        -- 'aktiv', 'fylld', 'avslutad'
+  -- Tidsgräns
+  sista_svarstid TIMESTAMPTZ,         -- NULL = ingen tidsgräns
   -- Utfall (för statistik)
-  utfall TEXT,                        -- 'fylld_via_sms', 'fylld_manuellt', 'misslyckad', 'avbruten'
+  utfall TEXT,                        -- 'fylld_via_sms', 'fylld_manuellt', 'misslyckad', 'avbruten', 'timeout'
   fylld_av_patient UUID,              -- Första JA
   reserv_patient UUID,                -- Andra JA (reserv)
   fylld_vid TIMESTAMPTZ,
