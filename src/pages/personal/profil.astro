@@ -123,7 +123,7 @@ function formateraNummer(nummer: string | null): string {
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
-      <div class="max-w-3xl mx-auto px-4 py-4">
+      <div class="max-w-5xl mx-auto px-4 py-4">
         <div class="flex items-center gap-4">
           <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
             ← Tillbaka
@@ -133,79 +133,98 @@ function formateraNummer(nummer: string | null): string {
       </div>
     </header>
 
-    <main class="max-w-3xl mx-auto px-4 py-8">
-      <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+    <main class="max-w-5xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Profil-header -->
-        <div class="bg-gradient-to-r from-sky-500 to-sky-600 px-6 py-8 text-white">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-              👤
+        <!-- Vänster kolumn: Formulär -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+            
+            <!-- Profil-header -->
+            <div class="bg-gradient-to-r from-sky-500 to-sky-600 px-6 py-8 text-white">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+                  👤
+                </div>
+                <div>
+                  <h2 class="text-xl font-semibold">{anvandare?.email}</h2>
+                  <p class="text-sky-100">
+                    {anvandare?.roll === 'admin' ? 'Administratör' : 'Personal'}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div>
-              <h2 class="text-xl font-semibold">{anvandare?.email}</h2>
-              <p class="text-sky-100">
-                {anvandare?.roll === 'admin' ? 'Administratör' : 'Personal'}
-              </p>
-            </div>
+
+            <!-- Formulär -->
+            <form method="POST" class="p-6 space-y-6">
+              
+              {felmeddelande && (
+                <div class="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-center gap-2">
+                  <span>❌</span>
+                  {felmeddelande}
+                </div>
+              )}
+              
+              {framgangsmeddelande && (
+                <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 flex items-center gap-2">
+                  <span>✅</span>
+                  {framgangsmeddelande}
+                </div>
+              )}
+
+              <!-- Mobilnummer -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  📱 Mobilnummer för SMS-notifikationer
+                </label>
+                <input 
+                  type="tel" 
+                  name="mobilnummer" 
+                  value={formateraNummer(profil?.mobilnummer)}
+                  placeholder="070-123 45 67"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-lg"
+                >
+                <p class="text-sm text-gray-500 mt-2">
+                  Används för att få SMS när en patient svarar JA på kort varsel-förfrågningar.
+                </p>
+              </div>
+
+              <!-- Notifikationsinställningar -->
+              <div class="bg-gray-50 rounded-lg p-4">
+                <label class="flex items-start gap-3 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="villHaNotifikationer" 
+                    checked={profil?.vill_ha_notifikationer}
+                    class="mt-1 rounded"
+                  >
+                  <div>
+                    <div class="font-medium text-gray-900">
+                      Jag vill ta emot kort varsel-notifikationer
+                    </div>
+                    <div class="text-sm text-gray-500 mt-1">
+                      När denna är aktiverad kan du väljas som mottagare när kollegor skapar kampanjer.
+                      Du får då SMS direkt när en patient svarar JA.
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Spara-knapp -->
+              <div class="pt-4 border-t">
+                <button 
+                  type="submit"
+                  class="w-full px-6 py-3 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition-colors"
+                >
+                  Spara ändringar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
-        <!-- Formulär -->
-        <form method="POST" class="p-6 space-y-6">
-          
-          {felmeddelande && (
-            <div class="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 flex items-center gap-2">
-              <span>❌</span>
-              {felmeddelande}
-            </div>
-          )}
-          
-          {framgangsmeddelande && (
-            <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 flex items-center gap-2">
-              <span>✅</span>
-              {framgangsmeddelande}
-            </div>
-          )}
-
-          <!-- Mobilnummer -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              📱 Mobilnummer för SMS-notifikationer
-            </label>
-            <input 
-              type="tel" 
-              name="mobilnummer" 
-              value={formateraNummer(profil?.mobilnummer)}
-              placeholder="070-123 45 67"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-lg"
-            >
-            <p class="text-sm text-gray-500 mt-2">
-              Används för att få SMS när en patient svarar JA på kort varsel-förfrågningar.
-            </p>
-          </div>
-
-          <!-- Notifikationsinställningar -->
-          <div class="bg-gray-50 rounded-lg p-4">
-            <label class="flex items-start gap-3 cursor-pointer">
-              <input 
-                type="checkbox" 
-                name="villHaNotifikationer" 
-                checked={profil?.vill_ha_notifikationer}
-                class="mt-1 rounded"
-              >
-              <div>
-                <div class="font-medium text-gray-900">
-                  Jag vill ta emot kort varsel-notifikationer
-                </div>
-                <div class="text-sm text-gray-500 mt-1">
-                  När denna är aktiverad kan du väljas som mottagare när kollegor skapar kampanjer.
-                  Du får då SMS direkt när en patient svarar JA.
-                </div>
-              </div>
-            </label>
-          </div>
-
+        <!-- Höger kolumn: Info -->
+        <div class="lg:col-span-1 space-y-6">
           <!-- Hur det fungerar -->
           <div class="bg-sky-50 border border-sky-100 rounded-lg p-4">
             <h3 class="font-medium text-sky-900 mb-2">ℹ️ Så fungerar notifikationer</h3>
@@ -214,7 +233,7 @@ function formateraNummer(nummer: string | null): string {
               <li>Du väljs som mottagare av notifikationer</li>
               <li>SMS skickas till patienterna</li>
               <li>När en patient svarar JA får du ett SMS:
-                <div class="ml-5 mt-1 p-2 bg-white rounded border border-sky-200 font-mono text-xs">
+                <div class="mt-1 p-2 bg-white rounded border border-sky-200 font-mono text-xs">
                   🎉 KORT VARSEL: Anna svarade JA!<br>
                   Tid: tis 28/1 kl 08:00<br>
                   Gå till personalportalen...
@@ -224,36 +243,37 @@ function formateraNummer(nummer: string | null): string {
             </ol>
           </div>
 
-          <!-- Spara-knapp -->
-          <div class="pt-4 border-t">
-            <button 
-              type="submit"
-              class="w-full px-6 py-3 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition-colors"
-            >
-              Spara ändringar
-            </button>
+          <!-- Snabblänkar -->
+          <div class="bg-white rounded-lg border p-4">
+            <h3 class="font-medium text-gray-900 mb-3">⚡ Snabblänkar</h3>
+            <div class="space-y-2">
+              <a 
+                href="/personal/kort-varsel" 
+                class="block p-3 rounded-lg border border-gray-200 hover:border-sky-300 hover:bg-sky-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="text-lg">📱</span>
+                  <div>
+                    <div class="font-medium text-gray-900 text-sm">Kort varsel SMS</div>
+                    <div class="text-xs text-gray-500">Skapa kampanjer</div>
+                  </div>
+                </div>
+              </a>
+              <a 
+                href="/personal/lankar-sms" 
+                class="block p-3 rounded-lg border border-gray-200 hover:border-sky-300 hover:bg-sky-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="text-lg">📎</span>
+                  <div>
+                    <div class="font-medium text-gray-900 text-sm">Länkar & SMS</div>
+                    <div class="text-xs text-gray-500">Skicka info till patienter</div>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
-        </form>
-      </div>
-
-      <!-- Snabblänkar -->
-      <div class="mt-8 grid grid-cols-2 gap-4">
-        <a 
-          href="/personal/kort-varsel" 
-          class="p-4 bg-white rounded-lg border border-gray-200 hover:border-sky-300 hover:bg-sky-50 transition-colors"
-        >
-          <div class="text-lg mb-1">📱</div>
-          <div class="font-medium text-gray-900">Kort varsel SMS</div>
-          <div class="text-sm text-gray-500">Skapa och hantera kampanjer</div>
-        </a>
-        <a 
-          href="/personal/lankar-sms" 
-          class="p-4 bg-white rounded-lg border border-gray-200 hover:border-sky-300 hover:bg-sky-50 transition-colors"
-        >
-          <div class="text-lg mb-1">📎</div>
-          <div class="font-medium text-gray-900">Länkar & SMS</div>
-          <div class="text-sm text-gray-500">Skicka info till patienter</div>
-        </a>
+        </div>
       </div>
     </main>
   </div>
