@@ -117,13 +117,31 @@ Om man vill ha helt separat system - se prompten längre ner.
 
 ## SMS-API val
 
-| Leverantör | Pris/SMS | Fördelar | Nackdelar |
-|------------|----------|----------|-----------|
-| **46elks** | ~0,39 kr | Svenskt, enkelt API, bra support | Endast Sverige |
-| **Sinch** | ~0,50 kr | Globalt, tillförlitligt | Mer komplex setup |
-| **Twilio** | ~0,60 kr | Mycket dokumentation | USA-baserat |
+> **Volym:** ~1000 SMS/månad  
+> **Målgrupp:** Endast svenska mobilnummer (+46)
 
-**Rekommendation:** 46elks för svenska telefonnummer.
+| Leverantör | Pris/SMS | 1000 SMS/mån | Fördelar | Nackdelar |
+|------------|----------|--------------|----------|-----------|
+| **46elks** 🏆 | ~0,35 kr | **~350 kr** | Svenskt, enklast API, svensk support | Endast Norden |
+| Sinch | ~0,40 kr | ~400 kr | Svenskt ursprung, tillförlitligt | Mer komplex |
+| TextMagic | ~0,55 kr | ~550 kr | Enkel webpanel | Dyrare |
+| Twilio | ~0,85 kr | ~850 kr | Mycket dokumentation | USA-baserat, dyrt |
+
+### ✅ Rekommendation: 46elks
+
+**Varför 46elks?**
+- 🇸🇪 Svenskt företag (Göteborg) - enkel kontakt vid problem
+- 💰 Billigast för svenska nummer
+- 📖 Dokumentation på svenska
+- 🔒 GDPR-compliance inbyggt (data lagras i Sverige)
+- 🚀 Enklaste API:et - perfekt för mindre projekt
+- 💳 Ingen månadsavgift - betala bara för det du skickar
+
+**Kom igång:**
+1. Skapa konto på [46elks.se](https://46elks.se)
+2. Ladda på kredit (minsta insättning ~100 kr)
+3. Hämta API-nycklar från dashboard
+4. Klar att skicka!
 
 ---
 
@@ -238,10 +256,19 @@ CREATE TABLE sms_rate_limit (
 
 | Post | Kostnad |
 |------|---------|
-| 46elks SMS | ~0,39 kr/SMS |
+| 46elks SMS | ~0,35 kr/SMS |
 | Supabase | Gratis (nuvarande användning) |
 | Netlify hosting | Gratis (nuvarande plan) |
-| **Månadskostnad (100 SMS)** | **~40 kr** |
+
+### Månadsberäkning
+
+| Volym | SMS-kostnad | Total |
+|-------|-------------|-------|
+| 100 SMS | ~35 kr | **~35 kr/mån** |
+| 500 SMS | ~175 kr | **~175 kr/mån** |
+| 1000 SMS | ~350 kr | **~350 kr/mån** |
+
+> 💡 **Jämförelse:** Att manuellt ringa/mejla samma information tar betydligt längre tid och kostar mer i arbetstid.
 
 ---
 
