@@ -22,9 +22,9 @@ Ett system för att snabbt kontakta patienter på väntelistan och fylla lediga 
 
 **Flöde:**
 ```
-Inställd operation → Personal skapar kampanj → SMS till ~10 patienter →
-Patient klickar länk → Svarar JA → Får bekräftelse-SMS + personal notifieras →
-Personal ringer patient → Bokar in
+Inställd operation → Personal skapar kampanj → SMS skickas (gradvis eller direkt) →
+Patient klickar länk → Bekräftar pre-op fråga → Svarar JA →
+Får bekräftelse-SMS + personal notifieras → Personal ringer patient → Bokar in
 ```
 
 **Princip:** Först till kvarn. Den första som svarar JA får tiden. Nummer två blir reserv.
@@ -82,71 +82,40 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 
 ---
 
-## 4. Automatiska SMS-svar
+## 4. Gradvis SMS-utskick (Batchning)
 
-### 4.1 När patient svarar JA (första patienten)
+De flesta som är intresserade svarar inom 10-15 minuter. Istället för att skicka alla SMS samtidigt kan man välja att skicka gradvis.
 
-Patienten får omedelbart ett bekräftelse-SMS:
-
-```
-Tack för att du kan komma med kort varsel!
-Vi bokar nu in dig och ringer upp dig inom kort.
-/Södermalms Ortopedi
-```
-
-### 4.2 När patient svarar JA (nummer 2 eller senare = reserv)
+### Inställningar vid kampanjskapande
 
 ```
-Tack för att du vill komma med kort varsel!
-Tyvärr hann en annan patient före dig denna gång.
+Utskicksmetod:
+○ Skicka alla direkt (standard)
+● Skicka gradvis
 
-Om denna tid mot förmodan inte skulle fungera 
-kontaktar vi dig i första hand.
-
-Vi återkommer även vid nya kortvarseltider!
-/Södermalms Ortopedi
+   Intervall: [10 ▼] minuter mellan varje batch
+   Antal per batch: [3 ▼] patienter
+   
+   → 10 patienter = ~30 min totalt
 ```
 
-### 4.3 När tiden är fylld - till de som ej svarat
+### Fördelar
 
-Alla patienter som **inte svarat ännu** får automatiskt:
+- **Mindre "slöseri"** - Om patient 1 svarar JA på 5 min, behöver kanske patient 4-10 aldrig få SMS
+- **Minskad FOMO** - Färre får "tiden tagen"-SMS
+- **Lägre kostnad** - Färre SMS skickas totalt
 
-```
-Hej! Tiden vi frågade om har nu blivit bokad.
-Din ordinarie tid kvarstår.
-
-Vi återkommer om nya kortvarseltider uppstår!
-/Södermalms Ortopedi
-```
-
-Detta:
-- Förhindrar att patienter svarar JA i onödan
-- Uppmuntrar dem att svara snabbt nästa gång
-- Håller dem engagerade för framtida förfrågningar
-
-### 4.4 Sammanfattning SMS-flöde
+### Flöde med gradvis utskick
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  STEG 1: Kampanj skapas                                          │
-│  → 10 patienter får första SMS                                   │
+│  00:00  Batch 1: Patient 1-3 får SMS                             │
+│  00:10  Batch 2: Patient 4-6 får SMS (om ingen svarat JA)        │
+│  00:20  Batch 3: Patient 7-9 får SMS (om ingen svarat JA)        │
+│  00:30  Batch 4: Patient 10 får SMS (om ingen svarat JA)         │
 ├──────────────────────────────────────────────────────────────────┤
-│  STEG 2: Anna svarar JA (första)                                 │
-│  → Anna får bekräftelse-SMS                                      │
-│  → Vald personal får notifikations-SMS                           │
-│  → Kampanj markeras som "fylld"                                  │
-├──────────────────────────────────────────────────────────────────┤
-│  STEG 3: Karl svarar JA (andra = reserv)                         │
-│  → Karl får "reserv"-SMS                                         │
-│  → Karl markeras som reserv i systemet                           │
-├──────────────────────────────────────────────────────────────────┤
-│  STEG 4: Kampanj "fylld"                                         │
-│  → Övriga (som ej svarat) får "tiden tagen"-SMS                  │
-│  → De som redan svarat NEJ får inget mer                         │
-├──────────────────────────────────────────────────────────────────┤
-│  STEG 5: Personal ringer Anna                                    │
-│  → Anna kan → Bokar in                                           │
-│  → Anna kan INTE → Ringer Karl (reserv)                          │
+│  Om någon svarar JA → Stoppa automatiskt nästa batch             │
+│  Resterande patienter får aldrig något SMS                       │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -156,7 +125,11 @@ Detta:
 
 **URL:** `specialist.se/s/[unik-kod]`
 
-### Steg 1: Aktiv kampanj
+> **Säkerhet:** Koden ska vara minst 16 tecken (UUID v4 eller slumpsträng) - inte sekventiella ID:n.
+
+### Steg 1: Pre-op bekräftelse
+
+Innan patienten kan svara JA måste de bekräfta:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -173,18 +146,28 @@ Detta:
 │  │  📅  Tisdag 28 januari 2026, kl 08:00                   │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  Kan du komma med kort varsel?                                 │
+│  Innan du svarar, bekräfta följande:                           │
+│                                                                 │
+│  ☐ Jag har inga öppna sår eller pågående infektioner          │
+│    i området som ska opereras.                                  │
+│                                                                 │
+│  ⚠️ OBS: Om du tar blodförtunnande medicin och den erbjudna   │
+│  tiden är imorgon, kontakta oss innan du svarar JA.            │
 │                                                                 │
 │  ┌───────────────────────┐    ┌───────────────────────┐        │
 │  │    ✅ JA, jag kan     │    │    ❌ NEJ, jag kan    │        │
 │  │       komma!          │    │       inte            │        │
 │  └───────────────────────┘    └───────────────────────┘        │
+│         (aktiveras när                                          │
+│          rutan kryssas)                                         │
 │                                                                 │
 │  ⚠️ Flera patienter har fått denna förfrågan.                  │
 │  Först till kvarn!                                              │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+**Notering:** JA-knappen är grå/inaktiv tills checkboxen kryssas i.
 
 ### Steg 2a: Efter JA-svar (första patienten)
 
@@ -209,14 +192,14 @@ Detta:
 │                                                                 │
 │                       ⏰ Du är reserv                           │
 │                                                                 │
-│  Tack för att du vill komma med kort varsel!                   │
+│  Tack för din snabba respons!                                  │
+│  En annan patient hann precis före denna gång.                 │
 │                                                                 │
-│  Tyvärr hann en annan patient före dig denna gång.             │
+│  Eftersom du svarade snabbt har vi noterat att du är alert.   │
+│  Om denna tid mot förmodan inte fungerar för den andra         │
+│  patienten kontaktar vi dig i första hand.                     │
 │                                                                 │
-│  Om denna tid mot förmodan inte skulle fungera                 │
-│  kontaktar vi dig i första hand.                               │
-│                                                                 │
-│  Vi återkommer även vid nya kortvarseltider!                   │
+│  Vi skickar en ny förfrågan så fort nästa tid dyker upp!       │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -253,11 +236,48 @@ Detta:
 
 ---
 
-## 6. Dashboard för personal
+## 6. Automatiska SMS-svar
+
+### 6.1 När patient svarar JA (första patienten)
+
+```
+Tack för att du kan komma med kort varsel!
+Vi bokar nu in dig och ringer upp dig inom kort.
+/Södermalms Ortopedi
+```
+
+### 6.2 När patient svarar JA (reserv)
+
+```
+Tack för din snabba respons!
+En annan patient hann precis före denna gång.
+
+Eftersom du svarade snabbt har vi noterat dig.
+Om tiden inte fungerar för den andre kontaktar vi dig först!
+
+Vi återkommer vid nästa lediga tid.
+/Södermalms Ortopedi
+```
+
+### 6.3 När tiden är fylld - till de som ej svarat
+
+Alla patienter som **inte svarat ännu** får automatiskt:
+
+```
+Hej! Tiden vi frågade om har nu blivit bokad.
+Din ordinarie tid kvarstår.
+
+Vi återkommer vid nästa lediga tid!
+/Södermalms Ortopedi
+```
+
+---
+
+## 7. Dashboard för personal
 
 **URL:** `/personal/kort-varsel`
 
-### 6.1 Skapa kampanj
+### 7.1 Skapa kampanj
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -269,8 +289,7 @@ Detta:
 │  │ Datum: [28 jan 2026 ▼]    Tid: [08:00 ▼]               │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  Operationstyp (valfritt, visas endast för patienter med       │
-│  samtycke):                                                     │
+│  Operationstyp (valfritt):                                      │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ [ Axeloperation                                    ▼ ] │   │
 │  └─────────────────────────────────────────────────────────┘   │
@@ -279,7 +298,15 @@ Detta:
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ Anna Andersson, 0701234567, ✓samtycke                   │   │
 │  │ Karl Karlsson, 0709876543, ✗samtycke                    │   │
+│  │ Erik Eriksson, 0701111111, ✓samtycke                    │   │
 │  │ ...                                                      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Utskicksmetod:                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ ○ Skicka alla direkt                                    │   │
+│  │ ● Skicka gradvis                                        │   │
+│  │   Intervall: [10 ▼] min   Antal per batch: [3 ▼]       │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  📱 Notifiera personal vid JA-svar:                            │
@@ -290,31 +317,34 @@ Detta:
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  ┌───────────────────────────────────────────────────────┐     │
-│  │           🚀 Skicka kampanj (~10 SMS)                 │     │
+│  │           🚀 Skicka kampanj                           │     │
 │  └───────────────────────────────────────────────────────┘     │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 6.2 Realtidsvy av svar
+### 7.2 Realtidsvy av svar
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
 │  Status: ⏳ Väntar på svar                                      │
+│  Utskick: Gradvis (3 st var 10:e min)                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  📊 Skickade: 10    ✅ JA: 0    ❌ NEJ: 3    ⏳ Väntar: 7      │
+│  📊 Skickade: 6/10    ✅ JA: 0    ❌ NEJ: 2    ⏳ Väntar: 4    │
+│      Nästa batch om: 4:32                                       │
 │                                                                 │
 │  Mottagare:                                                     │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │ ❌ Erik Eriksson       NEJ    14:38                      │   │
-│  │ ❌ Lisa Larsson        NEJ    14:45                      │   │
-│  │ ❌ Olle Olsson         NEJ    14:51                      │   │
-│  │ ⏳ Anna Andersson      -      (ej svarat)               │   │
-│  │ ⏳ Karl Karlsson       -      (ej svarat)               │   │
-│  │ ⏳ Maria Månsson       -      (ej svarat)               │   │
-│  │ ⏳ Per Persson         -      (ej svarat)               │   │
+│  │ ✉️ Anna Andersson      skickat  14:30  (ej svarat)      │   │
+│  │ ❌ Karl Karlsson       NEJ      14:35                    │   │
+│  │ ❌ Erik Eriksson       NEJ      14:38                    │   │
+│  │ ✉️ Lisa Larsson        skickat  14:40  (ej svarat)      │   │
+│  │ ✉️ Maria Månsson       skickat  14:40  (ej svarat)      │   │
+│  │ ✉️ Olle Olsson         skickat  14:40  (ej svarat)      │   │
+│  │ ⏸️ Per Persson         väntar   (batch 3)               │   │
+│  │ ⏸️ Sara Svensson       väntar   (batch 3)               │   │
 │  │ ...                                                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
@@ -323,7 +353,7 @@ Detta:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 6.3 När någon svarar JA
+### 7.3 När någon svarar JA
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -337,12 +367,15 @@ Detta:
 │  │  📞 Ring henne: 070-123 45 67                           │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  📊 Skickade: 10    ✅ JA: 1    🔄 Reserv: 1    ❌ NEJ: 3      │
+│  📊 Skickade: 6/10    ✅ JA: 1    🔄 Reserv: 1    ❌ NEJ: 2   │
+│      ⏸️ Batch 3-4 stoppade automatiskt                         │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ ✅ Anna Andersson      JA     14:52  ← RING HENNE!      │   │
 │  │ 🔄 Karl Karlsson       JA     14:55  ← Reserv           │   │
 │  │ ❌ Erik Eriksson       NEJ    14:38                      │   │
+│  │ ⏹️ Per Persson         -      (aldrig skickat)          │   │
+│  │ ⏹️ Sara Svensson       -      (aldrig skickat)          │   │
 │  │ ...                                                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
@@ -351,14 +384,12 @@ Detta:
 │                    │    070-987 65 43                        │  │
 │                    └────────────────────────────────────────┘  │
 │                                                                 │
-│  Övriga patienter har fått SMS om att tiden är bokad.          │
-│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 7. Personalregister för notifikationer
+## 8. Personalregister för notifikationer
 
 Varje personal registrerar sitt mobilnummer i sin profil.
 
@@ -390,7 +421,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 
 ---
 
-## 8. GDPR och juridik
+## 9. GDPR och juridik
 
 ### Krav
 
@@ -414,7 +445,7 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 
 ---
 
-## 9. Teknisk implementation
+## 10. Teknisk implementation
 
 ### Nya filer
 
@@ -429,8 +460,8 @@ src/pages/
     └── kampanj/
         ├── skapa.ts            ← Skapa kampanj + skicka SMS
         ├── status.ts           ← Hämta status (för polling)
-        ├── svar.ts             ← Registrera patientsvar
-        └── avsluta.ts          ← Markera fylld + skicka "tiden tagen"-SMS
+        ├── svar.ts             ← Registrera patientsvar (atomär)
+        └── nasta-batch.ts      ← Skicka nästa batch (cron/manuellt)
 ```
 
 ### Databas (Supabase)
@@ -451,7 +482,11 @@ CREATE TABLE sms_kampanjer (
   status TEXT DEFAULT 'aktiv',        -- 'aktiv', 'fylld', 'avslutad'
   fylld_av_patient UUID,              -- Första JA
   reserv_patient UUID,                -- Andra JA (reserv)
-  fylld_vid TIMESTAMPTZ
+  fylld_vid TIMESTAMPTZ,
+  -- Batchning
+  batch_storlek INTEGER DEFAULT 10,   -- Alla om 10
+  batch_intervall INTEGER DEFAULT 0,  -- 0 = skicka alla direkt
+  nasta_batch_vid TIMESTAMPTZ
 );
 
 -- Personal som ska notifieras
@@ -469,51 +504,104 @@ CREATE TABLE sms_kampanj_mottagare (
   namn TEXT NOT NULL,
   telefon_hash TEXT NOT NULL,
   telefon_masked TEXT NOT NULL,       -- "070-123****"
-  unik_kod TEXT UNIQUE NOT NULL,
+  unik_kod TEXT UNIQUE NOT NULL,      -- Minst 16 tecken!
   har_samtycke BOOLEAN DEFAULT false,
-  skickad_vid TIMESTAMPTZ,
+  batch_nummer INTEGER DEFAULT 1,     -- Vilken batch
+  skickad_vid TIMESTAMPTZ,            -- NULL = ej skickat ännu
   svar TEXT,                          -- 'ja', 'nej', 'reserv', NULL
-  svar_ordning INTEGER,               -- 1 = första JA, 2 = reserv, osv
+  svar_ordning INTEGER,               -- 1 = första JA, 2 = reserv
   svar_vid TIMESTAMPTZ,
+  bekraftat_preop BOOLEAN DEFAULT false,
   notifierad_om_fylld BOOLEAN DEFAULT false
 );
 
--- Index för snabb lookup
+-- Index
 CREATE INDEX idx_mottagare_unik_kod ON sms_kampanj_mottagare(unik_kod);
+CREATE INDEX idx_kampanj_status ON sms_kampanjer(status);
+
+-- ATOMÄR FUNKTION: Förhindrar race conditions
+-- Returnerar 'first', 'reserve', eller 'already_filled'
+CREATE OR REPLACE FUNCTION registrera_ja_svar(
+  p_unik_kod TEXT,
+  p_bekraftat_preop BOOLEAN
+) RETURNS TEXT AS $$
+DECLARE
+  v_kampanj_id UUID;
+  v_mottagare_id UUID;
+  v_status TEXT;
+  v_result TEXT;
+BEGIN
+  -- Hämta mottagare och kampanj
+  SELECT m.id, m.kampanj_id, k.status
+  INTO v_mottagare_id, v_kampanj_id, v_status
+  FROM sms_kampanj_mottagare m
+  JOIN sms_kampanjer k ON k.id = m.kampanj_id
+  WHERE m.unik_kod = p_unik_kod
+  FOR UPDATE;  -- Lås raden
+  
+  IF v_status = 'fylld' OR v_status = 'avslutad' THEN
+    -- Redan fylld, men registrera som reserv om möjligt
+    UPDATE sms_kampanj_mottagare
+    SET svar = 'reserv', svar_vid = NOW(), 
+        svar_ordning = 2, bekraftat_preop = p_bekraftat_preop
+    WHERE id = v_mottagare_id AND svar IS NULL;
+    
+    RETURN 'reserve';
+  END IF;
+  
+  -- Försök markera kampanjen som fylld (atomärt)
+  UPDATE sms_kampanjer
+  SET status = 'fylld', fylld_av_patient = v_mottagare_id, fylld_vid = NOW()
+  WHERE id = v_kampanj_id AND status = 'aktiv';
+  
+  IF FOUND THEN
+    -- Vi var först!
+    UPDATE sms_kampanj_mottagare
+    SET svar = 'ja', svar_vid = NOW(), 
+        svar_ordning = 1, bekraftat_preop = p_bekraftat_preop
+    WHERE id = v_mottagare_id;
+    
+    RETURN 'first';
+  ELSE
+    -- Någon annan hann före
+    UPDATE sms_kampanj_mottagare
+    SET svar = 'reserv', svar_vid = NOW(), 
+        svar_ordning = 2, bekraftat_preop = p_bekraftat_preop
+    WHERE id = v_mottagare_id;
+    
+    RETURN 'reserve';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Auto-radera efter 7 dagar via Supabase scheduled function
 ```
 
 ---
 
-## 10. Kostnad
+## 11. Kostnad
 
-**Uppskattad kostnad per kampanj (10 patienter):** ~15-20 kr
+**Uppskattad kostnad per kampanj:** ~10-20 kr
 
-Inkluderar:
-- Första SMS till alla patienter
-- Bekräftelse-SMS till den som svarar JA
-- Reserv-SMS till eventuell nummer 2
-- "Tiden tagen"-SMS till de som ej svarat
-- Notifikations-SMS till personal
+Med gradvis utskick kan kostnaden bli lägre om någon svarar snabbt.
 
-**Jämförelse:** Kampanjkostnad ~20 kr vs inställd operation ~10 000 kr
+**Jämförelse:** Kampanjkostnad ~15 kr vs inställd operation ~10 000 kr
 
 ---
 
-## 11. Nästa steg
+## 12. Nästa steg
 
 1. ✅ Specifikation klar (detta dokument)
 2. ⬜ Lägg till samtyckesfråga i hälsodeklarationen
 3. ⬜ Lägg till mobilnummer-fält i personalprofil
 4. ⬜ Skapa databastabeller i Supabase
 5. ⬜ Bygga `/personal/kort-varsel` (dashboard)
-6. ⬜ Bygga `/s/[kod]` (svarssida)
-7. ⬜ Bygga API-endpoints
+6. ⬜ Bygga `/s/[kod]` (svarssida med pre-op bekräftelse)
+7. ⬜ Bygga API-endpoints (inkl. atomär svar-funktion)
 8. ⬜ Testa i produktion
 9. ⬜ Utbilda personal
 
-**Uppskattad tid för implementation:** 6-8 timmar
+**Uppskattad tid för implementation:** 8-10 timmar
 
 ---
 
