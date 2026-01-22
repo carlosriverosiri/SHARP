@@ -607,6 +607,86 @@ WHERE utgar_vid > NOW();  -- Endast aktiva (ej utgångna)
 
 
 -- ============================================
+-- STEG 18: Läkare-tabell
+-- ============================================
+-- 
+-- Fast lista av läkare för konsistens i UI.
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS lakare (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  namn TEXT NOT NULL UNIQUE,           -- "Dr. Siri", "Dr. Lindberg"
+  kortnamn TEXT,                       -- "Siri", "Lindberg" (för kompakt visning)
+  aktiv BOOLEAN DEFAULT true,
+  skapad_vid TIMESTAMPTZ DEFAULT NOW()
+);
+
+COMMENT ON TABLE lakare IS 'Lista av läkare som kan ha patienter/operera';
+
+-- Lägg till några standardläkare (justera efter behov)
+INSERT INTO lakare (namn, kortnamn) VALUES 
+  ('Dr. Siri', 'Siri'),
+  ('Dr. Lindberg', 'Lindberg')
+ON CONFLICT (namn) DO NOTHING;
+
+-- RLS
+ALTER TABLE lakare ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Alla kan läsa läkare" ON lakare;
+CREATE POLICY "Alla kan läsa läkare" ON lakare
+  FOR SELECT TO authenticated USING (true);
+
+
+-- ============================================
+-- STEG 19: Lägg till läkare-kolumner i patientpool
+-- ============================================
+
+-- Läkare som patienten tillhör
+ALTER TABLE kort_varsel_patienter 
+  ADD COLUMN IF NOT EXISTS lakare TEXT;
+
+-- Om patienten kan acceptera annan läkare
+ALTER TABLE kort_varsel_patienter 
+  ADD COLUMN IF NOT EXISTS flexibel_lakare BOOLEAN DEFAULT false;
+
+COMMENT ON COLUMN kort_varsel_patienter.lakare IS 'Vilken läkare patienten tillhör';
+COMMENT ON COLUMN kort_varsel_patienter.flexibel_lakare IS 'True om patienten kan acceptera annan läkare';
+
+-- Index för filtrering på läkare
+CREATE INDEX IF NOT EXISTS idx_pool_lakare ON kort_varsel_patienter(lakare);
+
+
+-- ============================================
+-- STEG 20: Lägg till läkare i kampanjer
+-- ============================================
+
+-- Vilken läkare som opererar för denna kampanj
+ALTER TABLE sms_kampanjer 
+  ADD COLUMN IF NOT EXISTS lakare TEXT;
+
+COMMENT ON COLUMN sms_kampanjer.lakare IS 'Vilken läkare som opererar (visas i SMS)';
+
+
+-- ============================================
+-- STEG 21: Uppdaterad patientpool-statistik
+-- ============================================
+
+CREATE OR REPLACE VIEW patientpool_statistik AS
+SELECT 
+  COUNT(*) FILTER (WHERE status = 'tillganglig') as tillgangliga,
+  COUNT(*) FILTER (WHERE status = 'kontaktad') as kontaktade,
+  COUNT(*) FILTER (WHERE status = 'reserv') as reserv,
+  COUNT(*) FILTER (WHERE status = 'nej') as tackade_nej,
+  COUNT(*) FILTER (WHERE status = 'nej' AND NOT hanterad_i_journal) as nej_ej_hanterade,
+  COUNT(*) FILTER (WHERE status = 'bokad') as bokade,
+  COUNT(*) as totalt,
+  -- Statistik per läkare
+  COUNT(DISTINCT lakare) as antal_lakare
+FROM kort_varsel_patienter
+WHERE utgar_vid > NOW();  -- Endast aktiva (ej utgångna)
+
+
+-- ============================================
 -- KLART!
 -- ============================================
 -- 

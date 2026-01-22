@@ -124,6 +124,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     antalPlatser?: number;
     tidsblock?: 'formiddag' | 'eftermiddag';
     operationTyp?: string;
+    lakare?: string;                    // Opererande läkare
     mottagare?: Mottagare[];           // Manuell input
     patientIds?: string[];              // Från patientpool
     batchIntervallMinuter: number;
@@ -202,6 +203,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         datum: body.datum,
         tidsblock: body.tidsblock || null,
         operation_typ: body.operationTyp || null,
+        lakare: body.lakare || null,
         antal_platser: antalPlatser,
         antal_fyllda: 0,
         skapad_av: anvandare.id,
@@ -270,6 +272,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const platsText = antalPlatser === 1 
       ? 'en ledig operationsplats' 
       : `${antalPlatser} lediga operationsplatser`;
+    
+    // Läkartext för SMS
+    const lakareText = body.lakare ? ` hos ${body.lakare}` : '';
 
     for (const m of attSkickaTill) {
       // Hämta originalnumret från mottagarlistan (vi har bara hashat version i db)
@@ -278,11 +283,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       // Skapa SMS-text baserat på samtycke
       let smsText: string;
       if (m.har_samtycke && body.operationTyp) {
-        // Modell B: Tydlig formulering (med samtycke)
-        smsText = `Hej ${m.namn.split(' ')[0]}! Vi har ${platsText} för ${body.operationTyp.toLowerCase()} ${datumFormaterat}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${m.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
+        // Modell B: Tydlig formulering (med samtycke + läkare)
+        smsText = `Hej ${m.namn.split(' ')[0]}! Vi har ${platsText} för ${body.operationTyp.toLowerCase()}${lakareText} ${datumFormaterat}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${m.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
       } else {
-        // Modell A: Vag formulering (utan samtycke)
-        smsText = `Hej! Vi har ${platsText} hos Södermalms Ortopedi ${datumFormaterat}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${m.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
+        // Modell A: Vag formulering (utan samtycke, men med läkare om angiven)
+        smsText = `Hej! Vi har ${platsText}${lakareText} på Södermalms Ortopedi ${datumFormaterat}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${m.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
       }
 
       const skickades = await skickaSMS(originalMottagare.telefon, smsText);

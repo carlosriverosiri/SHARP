@@ -23,6 +23,8 @@ interface PatientInput {
   namn: string;
   telefon: string;
   harSamtycke: boolean;
+  lakare?: string;
+  flexibelLakare?: boolean;
 }
 
 // Kryptera telefonnummer med AES-256
@@ -102,6 +104,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         telefon_krypterad: krypteraTelefon(telefonFormaterad),
         telefon_masked: maskeraTelefon(telefonFormaterad),
         har_samtycke: p.harSamtycke,
+        lakare: p.lakare || null,
+        flexibel_lakare: p.flexibelLakare || false,
         status: 'tillganglig',
         tillagd_av: anvandare?.id || null,
         utgar_vid: utgarVid.toISOString(),

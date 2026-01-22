@@ -12,6 +12,13 @@ import { supabaseAdmin } from '../../lib/supabase';
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
 
+// Hämta läkare
+const { data: lakare } = await supabaseAdmin
+  .from('lakare')
+  .select('id, namn, kortnamn')
+  .eq('aktiv', true)
+  .order('namn');
+
 // Hämta all personal för notifieringslistan
 const { data: personal } = await supabaseAdmin
   .from('profiles')
@@ -110,6 +117,29 @@ const { data: statistik } = await supabaseAdmin
           <!-- Lägg till patienter -->
           <div class="lg:col-span-4 bg-white rounded-xl shadow-sm border p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">➕ Lägg till patienter</h3>
+            
+            <!-- Läkare och flexibel -->
+            <div class="flex gap-4 mb-4">
+              <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Läkare *</label>
+                <select 
+                  id="patient-lakare"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                >
+                  <option value="">-- Välj läkare --</option>
+                  {lakare?.map(l => (
+                    <option value={l.namn}>{l.namn}</option>
+                  ))}
+                </select>
+              </div>
+              <div class="flex items-end pb-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="patient-flexibel" class="rounded" />
+                  <span class="text-sm text-gray-700">Flexibel (kan acceptera annan läkare)</span>
+                </label>
+              </div>
+            </div>
+            
             <div class="flex gap-4">
               <textarea 
                 id="nya-patienter"
@@ -126,8 +156,28 @@ Karl Karlsson, 0709876543, nej"
               </button>
             </div>
             <p class="text-xs text-gray-500 mt-2">
-              Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - en patient per rad
+              Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - en patient per rad. Läkare och flexibel gäller alla patienter du lägger till.
             </p>
+          </div>
+          
+          <!-- Filtrera på läkare -->
+          <div class="lg:col-span-4 bg-white rounded-lg shadow-sm border p-4">
+            <div class="flex items-center gap-4">
+              <label class="text-sm font-medium text-gray-700">Filtrera patientpool:</label>
+              <select 
+                id="filter-lakare"
+                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="">Alla läkare</option>
+                {lakare?.map(l => (
+                  <option value={l.namn}>{l.namn}</option>
+                ))}
+              </select>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="filter-inkludera-flexibla" checked class="rounded" />
+                <span class="text-sm text-gray-700">Inkludera flexibla patienter</span>
+              </label>
+            </div>
           </div>
 
           <!-- Tillgängliga + Reserv -->
@@ -244,6 +294,26 @@ Karl Karlsson, 0709876543, nej"
                     Hur många patienter söker ni?
                   </p>
                 </div>
+              </div>
+
+              <!-- Läkare (VIKTIGT!) -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Opererande läkare *
+                </label>
+                <select 
+                  name="lakare"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">-- Välj läkare --</option>
+                  {lakare?.map(l => (
+                    <option value={l.namn}>{l.namn}</option>
+                  ))}
+                </select>
+                <p class="text-xs text-gray-500 mt-1">
+                  Visas i SMS:et så patienten vet vem som opererar
+                </p>
               </div>
 
               <!-- Tidsblock och operationstyp -->
@@ -790,9 +860,19 @@ Erik Eriksson, 0701111111, ja"
     // Lägg till patienter
     document.getElementById('btn-lagg-till')?.addEventListener('click', async () => {
       const textarea = document.getElementById('nya-patienter') as HTMLTextAreaElement;
+      const lakareSelect = document.getElementById('patient-lakare') as HTMLSelectElement;
+      const flexibelCheckbox = document.getElementById('patient-flexibel') as HTMLInputElement;
+      
       const text = textarea.value.trim();
+      const lakare = lakareSelect.value;
+      const flexibelLakare = flexibelCheckbox.checked;
       
       if (!text) return;
+      
+      if (!lakare) {
+        alert('Välj vilken läkare patienterna tillhör');
+        return;
+      }
       
       const lines = text.split('\n').filter(l => l.trim());
       const patienter = lines.map(line => {
@@ -804,7 +884,9 @@ Erik Eriksson, 0701111111, ja"
         return {
           namn: parts[0] || '',
           telefon: telefon,
-          harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
+          harSamtycke: (parts[2] || '').toLowerCase() === 'ja',
+          lakare: lakare,
+          flexibelLakare: flexibelLakare
         };
       }).filter(p => p.namn && p.telefon);
       
