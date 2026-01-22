@@ -606,23 +606,27 @@ const kategoriAlternativ = [
       padding: 0.75rem;
       margin-bottom: 0.5rem;
       transition: all 0.2s;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+      color: inherit;
     }
 
     .resource-card:hover {
       background: #f1f5f9;
-      border-color: #cbd5e1;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .resource-card a {
+    .resource-card .resource-title {
       color: #1e293b;
-      text-decoration: none;
       font-weight: 500;
       font-size: 0.9rem;
-      display: block;
       margin-bottom: 0.25rem;
     }
 
-    .resource-card a:hover {
+    .resource-card:hover .resource-title {
       color: #0284c7;
     }
 
@@ -760,27 +764,20 @@ const kategoriAlternativ = [
               </div>
             ) : (
               dokument.map((resurs) => (
-                <div class="resource-card">
-                  <a href={`${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/dokument/${resurs.fil_namn}`} target="_blank" rel="noopener">
-                    {resurs.titel}
-                  </a>
+                <a 
+                  href={`${import.meta.env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/dokument/${resurs.fil_namn}`} 
+                  target="_blank" 
+                  rel="noopener"
+                  class="resource-card"
+                >
+                  <div class="resource-title">{resurs.titel}</div>
                   {resurs.beskrivning && (
                     <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
                   )}
                   <div class="resource-meta">
                     <span class="resource-kategori">{resurs.kategori}</span>
-                    <form method="POST" style="display: inline;">
-                      <input type="hidden" name="action" value="ta-bort">
-                      <input type="hidden" name="id" value={resurs.id}>
-                      <input type="hidden" name="fil_namn" value={resurs.fil_namn || ''}>
-                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort detta dokument?')">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                      </button>
-                    </form>
                   </div>
-                </div>
+                </a>
               ))
             )}
           </div>
@@ -802,27 +799,20 @@ const kategoriAlternativ = [
               </div>
             ) : (
               lankar.map((resurs) => (
-                <div class="resource-card">
-                  <a href={resurs.url} target="_blank" rel="noopener">
-                    {resurs.titel}
-                  </a>
+                <a 
+                  href={resurs.url} 
+                  target="_blank" 
+                  rel="noopener"
+                  class="resource-card"
+                >
+                  <div class="resource-title">{resurs.titel}</div>
                   {resurs.beskrivning && (
                     <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
                   )}
                   <div class="resource-meta">
                     <span class="resource-kategori">{resurs.kategori}</span>
-                    <form method="POST" style="display: inline;">
-                      <input type="hidden" name="action" value="ta-bort">
-                      <input type="hidden" name="id" value={resurs.id}>
-                      <input type="hidden" name="fil_namn" value="">
-                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort denna länk?')">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                      </button>
-                    </form>
                   </div>
-                </div>
+                </a>
               ))
             )}
           </div>
@@ -844,27 +834,20 @@ const kategoriAlternativ = [
               </div>
             ) : (
               videor.map((resurs) => (
-                <div class="resource-card">
-                  <a href={resurs.url} target="_blank" rel="noopener">
-                    {resurs.titel}
-                  </a>
+                <a 
+                  href={resurs.url} 
+                  target="_blank" 
+                  rel="noopener"
+                  class="resource-card"
+                >
+                  <div class="resource-title">{resurs.titel}</div>
                   {resurs.beskrivning && (
                     <p style="font-size: 0.8rem; color: #64748b; margin: 0;">{resurs.beskrivning}</p>
                   )}
                   <div class="resource-meta">
                     <span class="resource-kategori">{resurs.kategori}</span>
-                    <form method="POST" style="display: inline;">
-                      <input type="hidden" name="action" value="ta-bort">
-                      <input type="hidden" name="id" value={resurs.id}>
-                      <input type="hidden" name="fil_namn" value="">
-                      <button type="submit" class="resource-delete" onclick="return confirm('Ta bort denna video?')">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                      </button>
-                    </form>
                   </div>
-                </div>
+                </a>
               ))
             )}
           </div>
