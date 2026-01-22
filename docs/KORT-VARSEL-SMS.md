@@ -184,7 +184,8 @@ Innan patienten kan svara JA måste de bekräfta en fråga. Dessutom visas en **
 │    i området som ska opereras.                                  │
 │                                                                 │
 │  💊 Tar du blodförtunnande medicin?                            │
-│  Kom ihåg att sätta ut den idag (minst 48 timmar innan).       │
+│  När vi ringer dig får du instruktioner om hur du ska göra.    │
+│  Vanligtvis sätts blodförtunnande ut ca 2 dagar innan.         │
 │                                                                 │
 │  ...                                                            │
 └─────────────────────────────────────────────────────────────────┘
@@ -215,8 +216,10 @@ Innan patienten kan svara JA måste de bekräfta en fråga. Dessutom visas en **
 | Dagar till op | Visas | Text |
 |---------------|-------|------|
 | **1 dag (imorgon)** | ⚠️ Varning | "Tar du blodförtunnande? Kontakta oss innan du svarar JA." |
-| **2 dagar** | 💊 Påminnelse | "Kom ihåg att sätta ut den idag (minst 48 timmar)." |
+| **2 dagar** | 💊 Info | "När vi ringer får du instruktioner. Vanligtvis sätts det ut ca 2 dagar innan." |
 | **3+ dagar** | Ingen | - |
+
+**Viktigt:** Patienten ska aldrig själv sätta ut blodförtunnande utan läkarordination. Texten för 2 dagar informerar endast om att de kommer få instruktioner vid uppringning.
 
 **Notering:** JA-knappen är grå/inaktiv tills checkboxen kryssas i.
 
