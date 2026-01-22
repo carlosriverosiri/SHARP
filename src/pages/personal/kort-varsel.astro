@@ -8,25 +8,25 @@ export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { hamtaAnvandare } from '../../lib/auth';
-import { supabase } from '../../lib/supabase';
+import { supabaseAdmin } from '../../lib/supabase';
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
 
 // Hämta all personal för notifieringslistan
-const { data: personal } = await supabase
+const { data: personal } = await supabaseAdmin
   .from('profiles')
   .select('id, email, mobilnummer, vill_ha_notifikationer')
   .order('email');
 
 // Hämta aktiva och senaste kampanjer
-const { data: kampanjer } = await supabase
+const { data: kampanjer } = await supabaseAdmin
   .from('sms_kampanjer')
   .select('*')
   .order('skapad_vid', { ascending: false })
   .limit(20);
 
 // Hämta statistik
-const { data: statistik } = await supabase
+const { data: statistik } = await supabaseAdmin
   .from('kort_varsel_statistik')
   .select('*')
   .single();
