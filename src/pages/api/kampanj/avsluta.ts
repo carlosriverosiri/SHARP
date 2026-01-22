@@ -14,7 +14,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 // 46elks
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
@@ -83,7 +83,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     // Uppdatera kampanjen
-    const { error: uppdateraError } = await supabase
+    const { error: uppdateraError } = await supabaseAdmin
       .from('sms_kampanjer')
       .update({
         status: 'avslutad',
@@ -105,7 +105,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // (endast om utfallet är fyllt och användaren vill skicka)
     if (body.skickaAvslutSms !== false && (body.utfall === 'fylld_via_sms' || body.utfall === 'fylld_manuellt')) {
       // Hämta mottagare som fått SMS men inte svarat och inte redan notifierats
-      const { data: attNotifiera } = await supabase
+      const { data: attNotifiera } = await supabaseAdmin
         .from('sms_kampanj_mottagare')
         .select('id, telefon_hash')
         .eq('kampanj_id', body.kampanjId)
@@ -119,7 +119,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         // OBS: Vi kan inte skicka SMS här eftersom vi bara har hashade nummer
         // Detta hanteras i scheduled function eller vid kampanjskapande
         // Markera dem som notifierade ändå
-        await supabase
+        await supabaseAdmin
           .from('sms_kampanj_mottagare')
           .update({ notifierad_om_fylld: true })
           .eq('kampanj_id', body.kampanjId)

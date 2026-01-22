@@ -13,7 +13,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 import crypto from 'crypto';
 
 // Krypteringsnyckel (ska vara i .env i produktion!)
@@ -109,7 +109,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     // Lägg till i databasen
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('kort_varsel_patienter')
       .insert(patientData)
       .select();

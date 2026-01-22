@@ -10,7 +10,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 export const GET: APIRoute = async ({ url, cookies }) => {
   // Kontrollera inloggning
@@ -32,7 +32,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
 
   try {
     // Hämta kampanj
-    const { data: kampanj, error: kampanjError } = await supabase
+    const { data: kampanj, error: kampanjError } = await supabaseAdmin
       .from('sms_kampanjer')
       .select(`
         *,
@@ -49,14 +49,14 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     }
 
     // Hämta mottagare
-    const { data: mottagare } = await supabase
+    const { data: mottagare } = await supabaseAdmin
       .from('sms_kampanj_mottagare')
       .select('*')
       .eq('kampanj_id', kampanjId)
       .order('ordning');
 
     // Hämta personal som ska notifieras
-    const { data: notifieringar } = await supabase
+    const { data: notifieringar } = await supabaseAdmin
       .from('sms_kampanj_notifieringar')
       .select(`
         personal_id,

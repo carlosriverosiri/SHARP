@@ -13,7 +13,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 type PatientStatus = 'tillganglig' | 'kontaktad' | 'reserv' | 'nej' | 'bokad';
 
@@ -98,7 +98,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // Utför uppdatering
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('kort_varsel_patienter')
       .update(updateData)
       .eq('id', body.patientId)

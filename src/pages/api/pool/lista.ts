@@ -12,7 +12,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 export const GET: APIRoute = async ({ cookies, url }) => {
   // Kontrollera inloggning
@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
   try {
     // Bygg query
-    let query = supabase
+    let query = supabaseAdmin
       .from('kort_varsel_patienter')
       .select('*')
       .gt('utgar_vid', new Date().toISOString()) // Endast aktiva (ej utgångna)

@@ -12,7 +12,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 export const GET: APIRoute = async ({ url, cookies }) => {
   if (!await arInloggad(cookies)) {
@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
   const limit = parseInt(url.searchParams.get('limit') || '20');
 
   try {
-    let query = supabase
+    let query = supabaseAdmin
       .from('sms_kampanjer')
       .select(`
         id,
@@ -62,7 +62,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     // Hämta statistik för varje kampanj
     const kampanjerMedStatistik = await Promise.all(
       (kampanjer || []).map(async (k) => {
-        const { data: mottagare } = await supabase
+        const { data: mottagare } = await supabaseAdmin
           .from('sms_kampanj_mottagare')
           .select('svar, skickad_vid')
           .eq('kampanj_id', k.id);

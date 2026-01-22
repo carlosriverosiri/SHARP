@@ -18,7 +18,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 import crypto from 'crypto';
 
 // 46elks API-konfiguration
@@ -153,7 +153,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let patientPoolMapping: Map<string, string> = new Map(); // telefon_hash -> pool_id
   
   if (body.patientIds?.length) {
-    const { data: poolPatienter, error: poolError } = await supabase
+    const { data: poolPatienter, error: poolError } = await supabaseAdmin
       .from('kort_varsel_patienter')
       .select('id, namn, telefon_krypterad, har_samtycke')
       .in('id', body.patientIds)
@@ -182,7 +182,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     // Uppdatera status till 'kontaktad' för alla
-    await supabase
+    await supabaseAdmin
       .from('kort_varsel_patienter')
       .update({ 
         status: 'kontaktad',
@@ -196,7 +196,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     // 1. Skapa kampanj
-    const { data: kampanj, error: kampanjError } = await supabase
+    const { data: kampanj, error: kampanjError } = await supabaseAdmin
       .from('sms_kampanjer')
       .insert({
         datum: body.datum,
@@ -228,7 +228,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         personal_id: personalId,
       }));
       
-      await supabase.from('sms_kampanj_notifieringar').insert(notifieringar);
+      await supabaseAdmin.from('sms_kampanj_notifieringar').insert(notifieringar);
     }
 
     // 3. Lägg till mottagare (från manuell input eller pool)
@@ -242,7 +242,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       ordning: index + 1,
     }));
 
-    const { data: mottagare, error: mottagareError } = await supabase
+    const { data: mottagare, error: mottagareError } = await supabaseAdmin
       .from('sms_kampanj_mottagare')
       .insert(mottagareData)
       .select();
@@ -250,7 +250,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (mottagareError || !mottagare) {
       console.error('Kunde inte lägga till mottagare:', mottagareError);
       // Rensa upp kampanjen
-      await supabase.from('sms_kampanjer').delete().eq('id', kampanj.id);
+      await supabaseAdmin.from('sms_kampanjer').delete().eq('id', kampanj.id);
       return new Response(
         JSON.stringify({ error: 'Kunde inte lägga till mottagare' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -289,7 +289,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       
       if (skickades) {
         // Markera som skickad
-        await supabase
+        await supabaseAdmin
           .from('sms_kampanj_mottagare')
           .update({ skickad_vid: new Date().toISOString() })
           .eq('id', m.id);
@@ -309,7 +309,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       updates.nasta_utskick_vid = nastaUtskick.toISOString();
     }
 
-    await supabase
+    await supabaseAdmin
       .from('sms_kampanjer')
       .update(updates)
       .eq('id', kampanj.id);
