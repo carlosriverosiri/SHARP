@@ -84,37 +84,97 @@ OBS: Först till kvarn - flera har fått denna förfrågan!
 
 ## 4. Gradvis SMS-utskick (Batchning)
 
-De flesta som är intresserade svarar inom 10-15 minuter. Istället för att skicka alla SMS samtidigt kan man välja att skicka gradvis.
+De flesta som är intresserade svarar inom 10-15 minuter. Istället för att skicka alla SMS samtidigt kan man välja att skicka **en patient i taget** med ett visst intervall.
+
+### Dynamiskt intervall baserat på tillgänglig tid
+
+Systemet föreslår intervall automatiskt baserat på hur bråttom det är:
+
+| Situation | Föreslagen intervall | Logik |
+|-----------|---------------------|-------|
+| Operation om 3+ dagar | 20 min | Gott om tid - ge varje patient chans att svara |
+| Operation om 1-2 dagar | 10 min | Standard |
+| Operation imorgon, <3h kvar till deadline | 5 min | Bråttom - snabbare utskick |
+| Operation imorgon, <1h kvar till deadline | 2 min | Mycket bråttom |
 
 ### Inställningar vid kampanjskapande
 
 ```
-Utskicksmetod:
-○ Skicka alla direkt (standard)
-● Skicka gradvis
-
-   Intervall: [10 ▼] minuter mellan varje batch
-   Antal per batch: [3 ▼] patienter
-   
-   → 10 patienter = ~30 min totalt
+┌─────────────────────────────────────────────────────────────────┐
+│  Utskicksmetod:                                                 │
+│                                                                 │
+│  ○ Skicka alla direkt                                          │
+│  ● Skicka gradvis (en i taget)                                 │
+│                                                                 │
+│    Intervall: [10 ▼] minuter mellan varje SMS                  │
+│                                                                 │
+│    💡 Rekommenderat intervall: 10 min                          │
+│       (Operation om 2 dagar, deadline 18:00)                   │
+│                                                                 │
+│    → 10 patienter × 10 min = ~90 min totalt                    │
+│       (om ingen svarar JA innan)                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+**Manuell justering:** Personal kan alltid ändra intervallet. T.ex. om man bara har 30 minuter kvar och 10 patienter → sätt 3 min intervall.
 
 ### Fördelar
 
-- **Mindre "slöseri"** - Om patient 1 svarar JA på 5 min, behöver kanske patient 4-10 aldrig få SMS
+- **Mindre "slöseri"** - Om patient 1 svarar JA på 5 min, behöver patient 2-10 aldrig få SMS
 - **Minskad FOMO** - Färre får "tiden tagen"-SMS
 - **Lägre kostnad** - Färre SMS skickas totalt
+- **Rättvisare** - Varje patient får rimlig tid att svara
 
-### Flöde med gradvis utskick
+### Exempel: Bråttom-scenario
+
+```
+Klockan är 15:00
+Operation: Imorgon 08:00
+Deadline: 17:00 (2 timmar kvar)
+Patienter: 10 st
+
+Föreslagen intervall: 5 min
+→ 10 × 5 = 50 min (hinner precis innan deadline)
+
+Flöde:
+15:00  Patient 1 får SMS
+15:05  Patient 2 får SMS (om ingen svarat JA)
+15:10  Patient 3 får SMS (om ingen svarat JA)
+...
+15:45  Patient 10 får SMS (om ingen svarat JA)
+17:00  Deadline - kampanjen stängs
+```
+
+### Exempel: Gott om tid
+
+```
+Operation: Om 3 dagar
+Ingen deadline satt
+Patienter: 10 st
+
+Föreslagen intervall: 20 min
+→ 10 × 20 = 200 min (~3 timmar)
+
+Flöde:
+14:00  Patient 1 får SMS
+14:20  Patient 2 får SMS (om ingen svarat JA)
+14:40  Patient 3 får SMS (om ingen svarat JA)
+...
+```
+
+### Flöde sammanfattning
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  00:00  Batch 1: Patient 1-3 får SMS                             │
-│  00:10  Batch 2: Patient 4-6 får SMS (om ingen svarat JA)        │
-│  00:20  Batch 3: Patient 7-9 får SMS (om ingen svarat JA)        │
-│  00:30  Batch 4: Patient 10 får SMS (om ingen svarat JA)         │
+│  Patient 1 får SMS                                               │
+│       ↓ vänta [intervall] minuter                               │
+│  Ingen JA? → Patient 2 får SMS                                  │
+│       ↓ vänta [intervall] minuter                               │
+│  Ingen JA? → Patient 3 får SMS                                  │
+│       ...                                                        │
 ├──────────────────────────────────────────────────────────────────┤
-│  Om någon svarar JA → Stoppa automatiskt nästa batch             │
+│  Om någon svarar JA → Stoppa automatiskt                        │
 │  Resterande patienter får aldrig något SMS                       │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -384,8 +444,8 @@ Vi återkommer vid nästa lediga tid!
 │  Utskicksmetod:                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ ○ Skicka alla direkt                                    │   │
-│  │ ● Skicka gradvis                                        │   │
-│  │   Intervall: [10 ▼] min   Antal per batch: [3 ▼]       │   │
+│  │ ● Skicka gradvis (en i taget)                           │   │
+│  │   Intervall: [10 ▼] min  (💡 rekommenderat)             │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  📱 Notifiera personal vid JA-svar:                            │
