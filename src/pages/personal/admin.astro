@@ -1,0 +1,465 @@
+---
+/**
+ * Admin-sida för personalportalen
+ * URL: /personal/admin
+ * 
+ * Hantera användare och läkare.
+ */
+
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { hamtaAnvandare } from '../../lib/auth';
+import { supabaseAdmin } from '../../lib/supabase';
+
+const anvandare = await hamtaAnvandare(Astro.cookies);
+
+// Endast inloggade
+if (!anvandare) {
+  return Astro.redirect('/personal/');
+}
+
+// Hämta alla profiler med notifikationsinställningar
+let personal: any[] = [];
+let personalError = '';
+
+try {
+  // Hämta alla användare från auth och deras profiler
+  const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
+  
+  if (authError) {
+    personalError = 'Kunde inte hämta användare';
+    console.error('Auth error:', authError);
+  } else {
+    // Hämta profiler
+    const { data: profiles } = await supabaseAdmin
+      .from('profiles')
+      .select('*');
+    
+    // Kombinera
+    personal = (authUsers?.users || []).map(user => {
+      const profil = profiles?.find(p => p.id === user.id);
+      return {
+        id: user.id,
+        email: user.email,
+        skapad: user.created_at,
+        mobilnummer: profil?.mobilnummer || null,
+        vill_ha_notifikationer: profil?.vill_ha_notifikationer || false
+      };
+    });
+  }
+} catch (e) {
+  console.error('Error fetching personal:', e);
+  personalError = 'Ett fel uppstod';
+}
+
+// Hämta läkare
+let lakare: any[] = [];
+let lakareError = '';
+
+try {
+  const { data, error } = await supabaseAdmin
+    .from('lakare')
+    .select('*')
+    .order('namn');
+  
+  if (error) {
+    lakareError = error.message;
+  } else {
+    lakare = data || [];
+  }
+} catch (e) {
+  lakareError = 'Kunde inte hämta läkare';
+}
+
+// Hantera formulär
+let meddelande = '';
+let meddelandeTyp: 'success' | 'error' = 'success';
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action');
+
+    // === SKAPA NY ANVÄNDARE ===
+    if (action === 'skapa_anvandare') {
+      const email = formData.get('email')?.toString().trim();
+      const password = formData.get('password')?.toString();
+
+      if (!email || !password) {
+        meddelande = 'E-post och lösenord krävs';
+        meddelandeTyp = 'error';
+      } else if (password.length < 6) {
+        meddelande = 'Lösenordet måste vara minst 6 tecken';
+        meddelandeTyp = 'error';
+      } else {
+        const { data, error } = await supabaseAdmin.auth.admin.createUser({
+          email,
+          password,
+          email_confirm: true // Bekräfta direkt utan email-verifiering
+        });
+
+        if (error) {
+          meddelande = `Kunde inte skapa användare: ${error.message}`;
+          meddelandeTyp = 'error';
+        } else {
+          meddelande = `✅ Användare ${email} skapad!`;
+          meddelandeTyp = 'success';
+          
+          // Lägg till i personal-listan
+          personal.push({
+            id: data.user.id,
+            email: data.user.email,
+            skapad: data.user.created_at,
+            mobilnummer: null,
+            vill_ha_notifikationer: false
+          });
+        }
+      }
+    }
+
+    // === LÄGG TILL LÄKARE ===
+    if (action === 'lagg_till_lakare') {
+      const namn = formData.get('lakare_namn')?.toString().trim();
+      const kortnamn = formData.get('lakare_kortnamn')?.toString().trim();
+
+      if (!namn) {
+        meddelande = 'Läkarens namn krävs';
+        meddelandeTyp = 'error';
+      } else {
+        const { error } = await supabaseAdmin
+          .from('lakare')
+          .insert({ namn, kortnamn: kortnamn || null });
+
+        if (error) {
+          if (error.code === '23505') {
+            meddelande = 'En läkare med detta namn finns redan';
+          } else {
+            meddelande = `Kunde inte lägga till läkare: ${error.message}`;
+          }
+          meddelandeTyp = 'error';
+        } else {
+          meddelande = `✅ Läkare "${namn}" tillagd!`;
+          meddelandeTyp = 'success';
+          
+          // Hämta uppdaterad lista
+          const { data } = await supabaseAdmin
+            .from('lakare')
+            .select('*')
+            .order('namn');
+          lakare = data || [];
+        }
+      }
+    }
+
+    // === TA BORT LÄKARE ===
+    if (action === 'ta_bort_lakare') {
+      const lakareId = formData.get('lakare_id')?.toString();
+
+      if (lakareId) {
+        const { error } = await supabaseAdmin
+          .from('lakare')
+          .delete()
+          .eq('id', lakareId);
+
+        if (error) {
+          meddelande = `Kunde inte ta bort läkare: ${error.message}`;
+          meddelandeTyp = 'error';
+        } else {
+          meddelande = '✅ Läkare borttagen!';
+          meddelandeTyp = 'success';
+          lakare = lakare.filter(l => l.id !== lakareId);
+        }
+      }
+    }
+
+    // === UPPDATERA LÄKARE STATUS ===
+    if (action === 'toggle_lakare_aktiv') {
+      const lakareId = formData.get('lakare_id')?.toString();
+      const nuvarandeAktiv = formData.get('nuvarande_aktiv') === 'true';
+
+      if (lakareId) {
+        const { error } = await supabaseAdmin
+          .from('lakare')
+          .update({ aktiv: !nuvarandeAktiv })
+          .eq('id', lakareId);
+
+        if (error) {
+          meddelande = `Kunde inte uppdatera läkare: ${error.message}`;
+          meddelandeTyp = 'error';
+        } else {
+          meddelande = nuvarandeAktiv ? '⏸️ Läkare inaktiverad' : '✅ Läkare aktiverad';
+          meddelandeTyp = 'success';
+          
+          // Uppdatera lokalt
+          const idx = lakare.findIndex(l => l.id === lakareId);
+          if (idx >= 0) {
+            lakare[idx].aktiv = !nuvarandeAktiv;
+          }
+        }
+      }
+    }
+
+  } catch (e) {
+    console.error('Form error:', e);
+    meddelande = 'Ett oväntat fel uppstod';
+    meddelandeTyp = 'error';
+  }
+}
+
+// Formatera mobilnummer för visning
+function formateraNummer(nummer: string | null): string {
+  if (!nummer) return '—';
+  const clean = nummer.replace(/^\+46/, '0');
+  if (clean.length === 10) {
+    return `${clean.slice(0, 3)}-${clean.slice(3, 6)} ${clean.slice(6, 8)} ${clean.slice(8)}`;
+  }
+  return clean;
+}
+
+function formateraDatum(datum: string): string {
+  return new Date(datum).toLocaleDateString('sv-SE', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+---
+
+<BaseLayout title="Administration | Personalportal" description="Hantera användare och läkare">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+      <div class="max-w-6xl mx-auto px-4 py-4">
+        <div class="flex items-center gap-4">
+          <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
+            ← Tillbaka
+          </a>
+          <h1 class="text-2xl font-bold text-gray-900">⚙️ Administration</h1>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      
+      {/* Meddelande */}
+      {meddelande && (
+        <div class={`mb-6 p-4 rounded-lg border ${
+          meddelandeTyp === 'success' 
+            ? 'bg-green-50 border-green-200 text-green-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`}>
+          {meddelande}
+        </div>
+      )}
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- ANVÄNDARE -->
+        <section class="bg-white rounded-xl shadow-sm border overflow-hidden">
+          <div class="bg-gradient-to-r from-sky-500 to-sky-600 px-6 py-4">
+            <h2 class="text-xl font-semibold text-white">👥 Användare</h2>
+            <p class="text-sky-100 text-sm">Personal som kan logga in i portalen</p>
+          </div>
+          
+          <div class="p-6">
+            {/* Formulär för ny användare */}
+            <form method="POST" class="mb-6 p-4 bg-gray-50 rounded-lg border">
+              <h3 class="font-medium text-gray-900 mb-4">➕ Bjud in ny användare</h3>
+              
+              <input type="hidden" name="action" value="skapa_anvandare" />
+              
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">E-postadress</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    required
+                    placeholder="anna@sodermalmsortopedi.se"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Tillfälligt lösenord</label>
+                  <input 
+                    type="text" 
+                    name="password" 
+                    required
+                    minlength="6"
+                    placeholder="Minst 6 tecken"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Användaren kan byta lösenord senare</p>
+                </div>
+                
+                <button 
+                  type="submit"
+                  class="w-full px-4 py-2 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-700 transition-colors"
+                >
+                  Skapa användare
+                </button>
+              </div>
+            </form>
+            
+            {/* Lista över användare */}
+            <div>
+              <h3 class="font-medium text-gray-900 mb-3">Registrerade användare ({personal.length})</h3>
+              
+              {personalError && (
+                <p class="text-red-600 text-sm">{personalError}</p>
+              )}
+              
+              <div class="space-y-2">
+                {personal.map(p => (
+                  <div class="p-3 bg-gray-50 rounded-lg border flex items-center justify-between">
+                    <div>
+                      <div class="font-medium text-gray-900 text-sm">{p.email}</div>
+                      <div class="text-xs text-gray-500">
+                        📱 {formateraNummer(p.mobilnummer)}
+                        {p.vill_ha_notifikationer && (
+                          <span class="ml-2 text-green-600">🔔 Notifikationer på</span>
+                        )}
+                      </div>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      {formateraDatum(p.skapad)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <p class="text-xs text-gray-500 mt-4">
+                💡 Användare lägger till sitt mobilnummer via <a href="/personal/profil" class="text-sky-600 underline">Min profil</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- LÄKARE -->
+        <section class="bg-white rounded-xl shadow-sm border overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4">
+            <h2 class="text-xl font-semibold text-white">🩺 Läkare</h2>
+            <p class="text-emerald-100 text-sm">Kirurger för Kort Varsel-kampanjer</p>
+          </div>
+          
+          <div class="p-6">
+            {/* Formulär för ny läkare */}
+            <form method="POST" class="mb-6 p-4 bg-gray-50 rounded-lg border">
+              <h3 class="font-medium text-gray-900 mb-4">➕ Lägg till läkare</h3>
+              
+              <input type="hidden" name="action" value="lagg_till_lakare" />
+              
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Namn</label>
+                  <input 
+                    type="text" 
+                    name="lakare_namn" 
+                    required
+                    placeholder="Dr. Andersson"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Kortnamn (valfritt)</label>
+                  <input 
+                    type="text" 
+                    name="lakare_kortnamn" 
+                    placeholder="Andersson"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Används i SMS om det är kortare</p>
+                </div>
+                
+                <button 
+                  type="submit"
+                  class="w-full px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  Lägg till läkare
+                </button>
+              </div>
+            </form>
+            
+            {/* Lista över läkare */}
+            <div>
+              <h3 class="font-medium text-gray-900 mb-3">Registrerade läkare ({lakare.length})</h3>
+              
+              {lakareError && (
+                <p class="text-red-600 text-sm">{lakareError}</p>
+              )}
+              
+              <div class="space-y-2">
+                {lakare.map(l => (
+                  <div class={`p-3 rounded-lg border flex items-center justify-between ${
+                    l.aktiv ? 'bg-gray-50' : 'bg-gray-100 opacity-60'
+                  }`}>
+                    <div>
+                      <div class="font-medium text-gray-900 text-sm flex items-center gap-2">
+                        {l.namn}
+                        {!l.aktiv && <span class="text-xs bg-gray-300 text-gray-600 px-2 py-0.5 rounded">Inaktiv</span>}
+                      </div>
+                      {l.kortnamn && (
+                        <div class="text-xs text-gray-500">Kortnamn: {l.kortnamn}</div>
+                      )}
+                    </div>
+                    <div class="flex gap-2">
+                      {/* Toggle aktiv */}
+                      <form method="POST" class="inline">
+                        <input type="hidden" name="action" value="toggle_lakare_aktiv" />
+                        <input type="hidden" name="lakare_id" value={l.id} />
+                        <input type="hidden" name="nuvarande_aktiv" value={l.aktiv.toString()} />
+                        <button 
+                          type="submit"
+                          class={`px-2 py-1 text-xs rounded ${
+                            l.aktiv 
+                              ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' 
+                              : 'bg-green-100 text-green-700 hover:bg-green-200'
+                          }`}
+                          title={l.aktiv ? 'Inaktivera' : 'Aktivera'}
+                        >
+                          {l.aktiv ? '⏸️' : '▶️'}
+                        </button>
+                      </form>
+                      
+                      {/* Ta bort */}
+                      <form method="POST" class="inline" onsubmit="return confirm('Vill du verkligen ta bort denna läkare?')">
+                        <input type="hidden" name="action" value="ta_bort_lakare" />
+                        <input type="hidden" name="lakare_id" value={l.id} />
+                        <button 
+                          type="submit"
+                          class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+                          title="Ta bort"
+                        >
+                          🗑️
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ))}
+                
+                {lakare.length === 0 && (
+                  <p class="text-gray-500 text-sm italic">Inga läkare tillagda ännu</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+      
+      <!-- Info-ruta -->
+      <div class="mt-8 bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <h3 class="font-medium text-amber-900 mb-2">💡 Tips</h3>
+        <ul class="text-sm text-amber-800 space-y-1 list-disc list-inside">
+          <li>Nya användare kan logga in direkt med e-post och det tillfälliga lösenordet</li>
+          <li>Be användare gå till <strong>Min profil</strong> för att lägga till sitt mobilnummer och aktivera notifikationer</li>
+          <li>Läkare som är inaktiverade visas inte i Kort Varsel-dropdown:en</li>
+        </ul>
+      </div>
+      
+    </main>
+  </div>
+</BaseLayout>
