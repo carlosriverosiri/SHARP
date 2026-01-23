@@ -218,6 +218,9 @@ async function supabaseLoggaIn(
   }
 
   console.log('🔐 Försöker logga in med:', email);
+  console.log('🔍 Supabase URL:', supabaseKonfigurerad ? 'Konfigurerad' : 'Saknas');
+  console.log('🔍 Supabase URL-värde:', import.meta.env.PUBLIC_SUPABASE_URL?.substring(0, 30) + '...' || 'Saknas');
+  console.log('🔍 Supabase Anon Key:', import.meta.env.PUBLIC_SUPABASE_ANON_KEY ? 'Finns (' + import.meta.env.PUBLIC_SUPABASE_ANON_KEY.substring(0, 20) + '...)' : 'Saknas');
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -225,13 +228,14 @@ async function supabaseLoggaIn(
       password: losenord
     });
 
-    console.log('📡 Supabase svar:', { 
-      hasData: !!data, 
-      hasSession: !!data?.session,
-      hasUser: !!data?.user,
-      error: error?.message,
-      errorCode: error?.status 
-    });
+  console.log('📡 Supabase svar:', { 
+    hasData: !!data, 
+    hasSession: !!data?.session,
+    hasUser: !!data?.user,
+    error: error?.message,
+    errorCode: error?.status,
+    errorName: error?.name
+  });
 
     if (error) {
       // Ge mer specifika felmeddelanden baserat på feltyp

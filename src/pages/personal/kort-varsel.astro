@@ -7,36 +7,150 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { hamtaAnvandare } from '../../lib/auth';
-import { supabaseAdmin } from '../../lib/supabase';
+import { hamtaAnvandare, arInloggad } from '../../lib/auth';
+import { supabaseAdmin, supabaseKonfigurerad } from '../../lib/supabase';
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+// Debug: Logga start
+console.log('🚀 kort-varsel.astro: Startar rendering');
+console.log('🔧 Supabase konfigurerad:', supabaseKonfigurerad);
 
-// Hämta läkare
-const { data: lakare } = await supabaseAdmin
-  .from('lakare')
-  .select('id, namn, kortnamn')
-  .eq('aktiv', true)
-  .order('namn');
+// Kontrollera inloggning med felhantering
+let arInloggadStatus = false;
+try {
+  arInloggadStatus = await arInloggad(Astro.cookies);
+  console.log('🔐 Inloggningsstatus:', arInloggadStatus);
+} catch (authError: any) {
+  console.error('❌ Fel vid inloggningskontroll:', authError?.message || authError);
+}
 
-// Hämta all personal för notifieringslistan
-const { data: personal } = await supabaseAdmin
-  .from('profiles')
-  .select('id, email, mobilnummer, vill_ha_notifikationer')
-  .order('email');
+if (!arInloggadStatus) {
+  console.log('🔄 Omdirigerar till /personal/ (ej inloggad)');
+  return Astro.redirect('/personal/');
+}
 
-// Hämta aktiva och senaste kampanjer
-const { data: kampanjer } = await supabaseAdmin
-  .from('sms_kampanjer')
-  .select('*')
-  .order('skapad_vid', { ascending: false })
-  .limit(20);
+let anvandare: any = null;
+try {
+  anvandare = await hamtaAnvandare(Astro.cookies);
+  console.log('👤 Användare:', anvandare?.email || 'null');
+} catch (userError: any) {
+  console.error('❌ Fel vid hämtning av användare:', userError?.message || userError);
+}
 
-// Hämta statistik
-const { data: statistik } = await supabaseAdmin
-  .from('kort_varsel_statistik')
-  .select('*')
-  .single();
+// Om användare är null trots inloggning, omdirigera
+if (!anvandare) {
+  console.log('🔄 Omdirigerar till /personal/ (användare null)');
+  return Astro.redirect('/personal/');
+}
+
+// Supabase-konfiguration kommer från importen
+if (!supabaseKonfigurerad) {
+  console.error('❌ Supabase inte konfigurerat - saknar miljövariabler');
+}
+
+console.log('📊 Börjar hämta data från databasen...');
+
+// Hämta läkare med felhantering - ENDAST om Supabase är konfigurerat
+let lakare: any[] = [];
+let lakareError: string | null = null;
+
+if (supabaseKonfigurerad) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('lakare')
+      .select('id, namn, kortnamn')
+      .eq('aktiv', true)
+      .order('namn');
+    
+    if (error) {
+      lakareError = `Läkare: ${error.message || 'Okänt fel'}`;
+      console.error('❌ Fel vid hämtning av läkare:', error);
+    } else {
+      lakare = data || [];
+      console.log(`✅ Hämtade ${lakare.length} läkare`);
+    }
+  } catch (error: any) {
+    lakareError = `Läkare: ${error?.message || 'Exception'}`;
+    console.error('❌ Exception vid hämtning av läkare:', error);
+  }
+} else {
+  lakareError = 'Supabase är inte konfigurerat';
+}
+
+// Hämta all personal för notifieringslistan med felhantering
+let personal: any[] = [];
+let personalError: string | null = null;
+
+if (supabaseKonfigurerad) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('id, email, mobilnummer, vill_ha_notifikationer')
+      .order('email');
+    
+    if (error) {
+      personalError = `Personal: ${error.message || 'Okänt fel'}`;
+      console.error('❌ Fel vid hämtning av personal:', error);
+    } else {
+      personal = data || [];
+      console.log(`✅ Hämtade ${personal.length} personal`);
+    }
+  } catch (error: any) {
+    personalError = `Personal: ${error?.message || 'Exception'}`;
+    console.error('❌ Exception vid hämtning av personal:', error);
+  }
+}
+
+// Hämta aktiva och senaste kampanjer med felhantering
+let kampanjer: any[] = [];
+let kampanjerError: string | null = null;
+
+if (supabaseKonfigurerad) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('sms_kampanjer')
+      .select('*')
+      .order('skapad_vid', { ascending: false })
+      .limit(20);
+    
+    if (error) {
+      kampanjerError = `Kampanjer: ${error.message || 'Okänt fel'}`;
+      console.error('❌ Fel vid hämtning av kampanjer:', error);
+    } else {
+      kampanjer = data || [];
+      console.log(`✅ Hämtade ${kampanjer.length} kampanjer`);
+    }
+  } catch (error: any) {
+    kampanjerError = `Kampanjer: ${error?.message || 'Exception'}`;
+    console.error('❌ Exception vid hämtning av kampanjer:', error);
+  }
+}
+
+// Hämta statistik med felhantering
+let statistik: any = null;
+let statistikError: string | null = null;
+
+if (supabaseKonfigurerad) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('kort_varsel_statistik')
+      .select('*')
+      .single();
+    
+    if (error) {
+      // Statistik-tabellen kanske inte finns - det är OK
+      statistikError = `Statistik: ${error.message || 'Okänt fel'}`;
+      console.error('❌ Fel vid hämtning av statistik:', error);
+    } else {
+      statistik = data;
+      console.log('✅ Hämtade statistik');
+    }
+  } catch (error: any) {
+    statistikError = `Statistik: ${error?.message || 'Exception'}`;
+    console.error('❌ Exception vid hämtning av statistik:', error);
+  }
+}
+
+console.log('✅ kort-varsel.astro: Klar med datainhämtning, renderar HTML');
 ---
 
 <BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-kampanjer">
@@ -52,13 +166,40 @@ const { data: statistik } = await supabaseAdmin
             <h1 class="text-2xl font-bold text-gray-900">📱 Kort varsel SMS</h1>
           </div>
           <div class="text-sm text-gray-500">
-            Inloggad som {anvandare?.email}
+            Inloggad som {anvandare.email}
           </div>
         </div>
       </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Debug: Visa om Supabase inte är konfigurerat -->
+      {!supabaseKonfigurerad && (
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <h3 class="text-sm font-semibold text-red-800 mb-2">❌ Supabase inte konfigurerat</h3>
+          <p class="text-xs text-red-700">
+            Miljövariablerna <code>PUBLIC_SUPABASE_URL</code> eller <code>SUPABASE_SERVICE_ROLE_KEY</code> saknas.
+            Kontrollera Netlify-inställningar → Environment variables.
+          </p>
+        </div>
+      )}
+      
+      <!-- Debug: Visa felmeddelanden om något gick fel -->
+      {(lakareError || personalError || kampanjerError || statistikError) && (
+        <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h3 class="text-sm font-semibold text-yellow-800 mb-2">⚠️ Varningar vid databasanslutning:</h3>
+          <ul class="text-xs text-yellow-700 space-y-1">
+            {lakareError && <li>• {lakareError}</li>}
+            {personalError && <li>• {personalError}</li>}
+            {kampanjerError && <li>• {kampanjerError}</li>}
+            {statistikError && <li>• {statistikError}</li>}
+          </ul>
+          <p class="text-xs text-yellow-600 mt-2">
+            Sidan fungerar fortfarande, men vissa data kan saknas. Kontrollera Netlify-funktionsloggar för mer information.
+          </p>
+        </div>
+      )}
+      
       <!-- Flikar -->
       <div class="mb-6 border-b border-gray-200">
         <nav class="flex gap-6" role="tablist">

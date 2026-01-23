@@ -23,6 +23,7 @@ let _supabase: SupabaseClient;
 
 try {
   if (supabaseKonfigurerad) {
+    console.log('🔧 Skapar Supabase-klient med URL:', supabaseUrl.substring(0, 30) + '...');
     _supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
@@ -37,6 +38,8 @@ try {
       auth: { persistSession: false },
     });
     console.warn('⚠️ Supabase miljövariabler saknas - använder placeholder');
+    console.warn('⚠️ PUBLIC_SUPABASE_URL:', supabaseUrl || 'Saknas');
+    console.warn('⚠️ PUBLIC_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Finns' : 'Saknas');
   }
 } catch (error) {
   console.error('❌ Kunde inte skapa Supabase-klient:', error);
