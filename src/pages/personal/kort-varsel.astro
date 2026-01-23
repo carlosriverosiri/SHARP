@@ -674,7 +674,8 @@ Erik Eriksson, 0701111111, ja"
                   <div class="flex items-center justify-between">
                     <div>
                       <div class="font-medium text-gray-900">
-                        {new Date(`${k.datum}T${k.tid}`).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' })} kl {k.tid.slice(0, 5)}
+                        {new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        {k.tid && ` kl ${k.tid.slice(0, 5)}`}
                       </div>
                       {k.operation_typ && (
                         <div class="text-sm text-gray-500">{k.operation_typ}</div>
@@ -739,7 +740,7 @@ Erik Eriksson, 0701111111, ja"
                 >
                   <div class="flex items-center justify-between text-sm">
                     <span class="text-gray-600">
-                      {new Date(k.skapad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
+                      {k.skapad_vid ? new Date(k.skapad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }) : '-'}
                     </span>
                     <span class={`px-2 py-0.5 text-xs rounded-full ${
                       k.utfall === 'fylld_via_sms' ? 'bg-green-100 text-green-700' :
@@ -775,11 +776,11 @@ Erik Eriksson, 0701111111, ja"
                 <div class="flex items-center justify-between">
                   <div>
                     <div class="font-medium text-gray-900">
-                      {new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' })}
+                      {k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Inget datum'}
                       {k.tidsblock && ` (${k.tidsblock === 'formiddag' ? 'förmiddag' : 'eftermiddag'})`}
                     </div>
                     <div class="text-sm text-gray-500">
-                      Skapad {new Date(k.skapad_vid).toLocaleDateString('sv-SE')}
+                      Skapad {k.skapad_vid ? new Date(k.skapad_vid).toLocaleDateString('sv-SE') : '-'}
                       {k.operation_typ && ` • ${k.operation_typ}`}
                     </div>
                   </div>
