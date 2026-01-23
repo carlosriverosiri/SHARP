@@ -16,7 +16,7 @@ import { supabase, loggaHandelse, supabaseKonfigurerad } from './supabase';
 // ============================================
 
 const SESSION_COOKIE_NAME = 'personal_session';
-const SESSION_DURATION_SECONDS = 60 * 60; // 1 timme (sliding timeout)
+const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7; // 7 dagar (sliding timeout)
 const SESSION_SECRET = import.meta.env.PERSONAL_SESSION_SECRET || 'default-session-secret';
 
 // Aktivera Supabase-auth genom att sätta denna till 'true'
@@ -289,7 +289,7 @@ function sparaSupabaseSession(
     path: '/',
     httpOnly: true,
     secure: import.meta.env.PROD,
-    sameSite: 'strict',
+    sameSite: 'lax', // 'lax' för att fungera med redirects
     maxAge: SESSION_DURATION_SECONDS
   });
   
@@ -298,8 +298,8 @@ function sparaSupabaseSession(
       path: '/',
       httpOnly: true,
       secure: import.meta.env.PROD,
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7 // 7 dagar för refresh token
+      sameSite: 'lax', // 'lax' för att fungera med redirects
+      maxAge: 60 * 60 * 24 * 30 // 30 dagar för refresh token
     });
   }
 }
