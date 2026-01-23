@@ -227,17 +227,17 @@ BEGIN
     RETURN;
   END IF;
   
-  -- Försök öka antal_fyllda atomärt
-  UPDATE sms_kampanjer
-  SET antal_fyllda = antal_fyllda + 1,
-      fyllda_av_mottagare = array_append(COALESCE(fyllda_av_mottagare, '{}'), v_mottagare_id),
+  -- Försök öka antal_fyllda atomärt (använd kvalificerade kolumnnamn för att undvika tvetydighet)
+  UPDATE sms_kampanjer k2
+  SET antal_fyllda = k2.antal_fyllda + 1,
+      fyllda_av_mottagare = array_append(COALESCE(k2.fyllda_av_mottagare, '{}'), v_mottagare_id),
       -- Markera som fylld om vi nått målet
-      status = CASE WHEN antal_fyllda + 1 >= antal_platser THEN 'fylld' ELSE 'aktiv' END,
-      fylld_vid = CASE WHEN antal_fyllda + 1 >= antal_platser THEN NOW() ELSE fylld_vid END
-  WHERE id = v_kampanj_id 
-    AND status = 'aktiv'
-    AND antal_fyllda < antal_platser
-  RETURNING antal_fyllda INTO v_ny_fyllda;
+      status = CASE WHEN k2.antal_fyllda + 1 >= k2.antal_platser THEN 'fylld' ELSE 'aktiv' END,
+      fylld_vid = CASE WHEN k2.antal_fyllda + 1 >= k2.antal_platser THEN NOW() ELSE k2.fylld_vid END
+  WHERE k2.id = v_kampanj_id 
+    AND k2.status = 'aktiv'
+    AND k2.antal_fyllda < k2.antal_platser
+  RETURNING k2.antal_fyllda INTO v_ny_fyllda;
   
   IF FOUND THEN
     -- Vi fick en plats!
