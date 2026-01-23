@@ -242,9 +242,12 @@ if (supabaseKonfigurerad) {
             <div class="flex gap-4">
               <textarea 
                 id="nya-patienter"
-                rows="3"
-                placeholder="Anna Andersson, 0701234567, ja
-Karl Karlsson, 0709876543, nej"
+                rows="4"
+                placeholder="Angela Blomfalk 19760516-0022
+Mobilnummer: 070-747 40 74
+
+Karl Karlsson 19850312-1234
+Mobilnummer: 073-123 45 67"
                 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 font-mono text-sm"
               ></textarea>
               <button 
@@ -255,7 +258,7 @@ Karl Karlsson, 0709876543, nej"
               </button>
             </div>
             <p class="text-xs text-gray-500 mt-2">
-              Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - en patient per rad. Läkare och flexibel gäller alla patienter du lägger till.
+              Klistra in direkt från journalsystemet. Format: <code>Namn Personnummer</code> på en rad, <code>Mobilnummer: 07X-XXX XX XX</code> på nästa rad.
             </p>
           </div>
           
@@ -974,24 +977,61 @@ Erik Eriksson, 0701111111, ja"
         return;
       }
       
-      const lines = text.split('\n').filter(l => l.trim());
-      const patienter = lines.map(line => {
-        const parts = line.split(',').map(p => p.trim());
-        let telefon = parts[1]?.replace(/\s/g, '') || '';
-        if (telefon.startsWith('0')) {
-          telefon = '+46' + telefon.slice(1);
+      // Parsera patientdata - stödjer journalsystemformat
+      const patienter: any[] = [];
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+      
+      // Journalsystemformat: "Namn Personnummer" följt av "Mobilnummer: 07X-XXX XX XX"
+      if (text.toLowerCase().includes('mobilnummer')) {
+        let currentNamn = '';
+        
+        for (const line of lines) {
+          // Kontrollera om raden innehåller personnummer (ÅÅÅÅMMDD-XXXX eller ÅÅMMDD-XXXX)
+          const personnummerMatch = line.match(/^(.+?)\s+(\d{6,8}[-\s]?\d{4})\s*$/);
+          if (personnummerMatch) {
+            currentNamn = personnummerMatch[1].trim();
+          }
+          // Kontrollera om raden innehåller mobilnummer
+          else if (line.toLowerCase().startsWith('mobilnummer')) {
+            let telefon = line.replace(/mobilnummer[:\s]*/i, '').replace(/[-\s]/g, '');
+            if (telefon.startsWith('0')) {
+              telefon = '+46' + telefon.slice(1);
+            }
+            if (currentNamn && telefon) {
+              patienter.push({
+                namn: currentNamn,
+                telefon: telefon,
+                harSamtycke: true, // Default till ja vid journalimport
+                lakare: lakare,
+                flexibelLakare: flexibelLakare
+              });
+              currentNamn = '';
+            }
+          }
         }
-        return {
-          namn: parts[0] || '',
-          telefon: telefon,
-          harSamtycke: (parts[2] || '').toLowerCase() === 'ja',
-          lakare: lakare,
-          flexibelLakare: flexibelLakare
-        };
-      }).filter(p => p.namn && p.telefon);
+      } 
+      // Gammalt CSV-format: "Namn, Telefon, Samtycke"
+      else {
+        for (const line of lines) {
+          const parts = line.split(',').map(p => p.trim());
+          let telefon = parts[1]?.replace(/\s/g, '') || '';
+          if (telefon.startsWith('0')) {
+            telefon = '+46' + telefon.slice(1);
+          }
+          if (parts[0] && telefon) {
+            patienter.push({
+              namn: parts[0],
+              telefon: telefon,
+              harSamtycke: (parts[2] || '').toLowerCase() === 'ja',
+              lakare: lakare,
+              flexibelLakare: flexibelLakare
+            });
+          }
+        }
+      }
       
       if (patienter.length === 0) {
-        alert('Inga giltiga patienter hittades');
+        alert('Inga giltiga patienter hittades. Kontrollera formatet.');
         return;
       }
       
