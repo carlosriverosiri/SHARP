@@ -25,7 +25,7 @@ import crypto from 'crypto';
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
 const ELKS_API_USER = import.meta.env.ELKS_API_USER || '';
 const ELKS_API_PASSWORD = import.meta.env.ELKS_API_PASSWORD || '';
-const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://specialist.se';
+const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://sodermalm.netlify.app';
 
 interface Mottagare {
   namn: string;
