@@ -10,46 +10,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { hamtaAnvandare, arInloggad } from '../../lib/auth';
 import { supabaseAdmin, supabaseKonfigurerad } from '../../lib/supabase';
 
-// Debug: Logga start
-console.log('🚀 kort-varsel.astro: Startar rendering');
-console.log('🔧 Supabase konfigurerad:', supabaseKonfigurerad);
-
-// Kontrollera inloggning med felhantering
-let arInloggadStatus = false;
-try {
-  arInloggadStatus = await arInloggad(Astro.cookies);
-  console.log('🔐 Inloggningsstatus:', arInloggadStatus);
-} catch (authError: any) {
-  console.error('❌ Fel vid inloggningskontroll:', authError?.message || authError);
-}
-
-if (!arInloggadStatus) {
-  console.log('🔄 Omdirigerar till /personal/ (ej inloggad)');
+// Kontrollera inloggning
+if (!await arInloggad(Astro.cookies)) {
   return Astro.redirect('/personal/');
 }
 
-let anvandare: any = null;
-try {
-  anvandare = await hamtaAnvandare(Astro.cookies);
-  console.log('👤 Användare:', anvandare?.email || 'null');
-} catch (userError: any) {
-  console.error('❌ Fel vid hämtning av användare:', userError?.message || userError);
-}
+const anvandare = await hamtaAnvandare(Astro.cookies);
 
 // Om användare är null trots inloggning, omdirigera
 if (!anvandare) {
-  console.log('🔄 Omdirigerar till /personal/ (användare null)');
   return Astro.redirect('/personal/');
 }
 
-// Supabase-konfiguration kommer från importen
-if (!supabaseKonfigurerad) {
-  console.error('❌ Supabase inte konfigurerat - saknar miljövariabler');
-}
-
-console.log('📊 Börjar hämta data från databasen...');
-
-// Hämta läkare med felhantering - ENDAST om Supabase är konfigurerat
+// Hämta läkare
 let lakare: any[] = [];
 let lakareError: string | null = null;
 
@@ -63,20 +36,17 @@ if (supabaseKonfigurerad) {
     
     if (error) {
       lakareError = `Läkare: ${error.message || 'Okänt fel'}`;
-      console.error('❌ Fel vid hämtning av läkare:', error);
     } else {
       lakare = data || [];
-      console.log(`✅ Hämtade ${lakare.length} läkare`);
     }
   } catch (error: any) {
     lakareError = `Läkare: ${error?.message || 'Exception'}`;
-    console.error('❌ Exception vid hämtning av läkare:', error);
   }
 } else {
   lakareError = 'Supabase är inte konfigurerat';
 }
 
-// Hämta all personal för notifieringslistan med felhantering
+// Hämta personal för notifieringslistan
 let personal: any[] = [];
 let personalError: string | null = null;
 
@@ -89,18 +59,15 @@ if (supabaseKonfigurerad) {
     
     if (error) {
       personalError = `Personal: ${error.message || 'Okänt fel'}`;
-      console.error('❌ Fel vid hämtning av personal:', error);
     } else {
       personal = data || [];
-      console.log(`✅ Hämtade ${personal.length} personal`);
     }
   } catch (error: any) {
     personalError = `Personal: ${error?.message || 'Exception'}`;
-    console.error('❌ Exception vid hämtning av personal:', error);
   }
 }
 
-// Hämta aktiva och senaste kampanjer med felhantering
+// Hämta kampanjer
 let kampanjer: any[] = [];
 let kampanjerError: string | null = null;
 
@@ -114,18 +81,15 @@ if (supabaseKonfigurerad) {
     
     if (error) {
       kampanjerError = `Kampanjer: ${error.message || 'Okänt fel'}`;
-      console.error('❌ Fel vid hämtning av kampanjer:', error);
     } else {
       kampanjer = data || [];
-      console.log(`✅ Hämtade ${kampanjer.length} kampanjer`);
     }
   } catch (error: any) {
     kampanjerError = `Kampanjer: ${error?.message || 'Exception'}`;
-    console.error('❌ Exception vid hämtning av kampanjer:', error);
   }
 }
 
-// Hämta statistik med felhantering
+// Hämta statistik
 let statistik: any = null;
 let statistikError: string | null = null;
 
@@ -137,20 +101,14 @@ if (supabaseKonfigurerad) {
       .single();
     
     if (error) {
-      // Statistik-tabellen kanske inte finns - det är OK
       statistikError = `Statistik: ${error.message || 'Okänt fel'}`;
-      console.error('❌ Fel vid hämtning av statistik:', error);
     } else {
       statistik = data;
-      console.log('✅ Hämtade statistik');
     }
   } catch (error: any) {
     statistikError = `Statistik: ${error?.message || 'Exception'}`;
-    console.error('❌ Exception vid hämtning av statistik:', error);
   }
 }
-
-console.log('✅ kort-varsel.astro: Klar med datainhämtning, renderar HTML');
 ---
 
 <BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-kampanjer">

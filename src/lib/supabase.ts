@@ -23,7 +23,6 @@ let _supabase: SupabaseClient;
 
 try {
   if (supabaseKonfigurerad) {
-    console.log('🔧 Skapar Supabase-klient med URL:', supabaseUrl.substring(0, 30) + '...');
     _supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
@@ -31,15 +30,12 @@ try {
         detectSessionInUrl: true,
       },
     });
-    console.log('✅ Supabase klient initierad');
   } else {
     // Skapa en dummy-klient för att undvika bygge-fel
     _supabase = createClient('https://placeholder.supabase.co', 'placeholder-key', {
       auth: { persistSession: false },
     });
-    console.warn('⚠️ Supabase miljövariabler saknas - använder placeholder');
-    console.warn('⚠️ PUBLIC_SUPABASE_URL:', supabaseUrl || 'Saknas');
-    console.warn('⚠️ PUBLIC_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Finns' : 'Saknas');
+    console.warn('⚠️ Supabase miljövariabler saknas');
   }
 } catch (error) {
   console.error('❌ Kunde inte skapa Supabase-klient:', error);
@@ -59,11 +55,9 @@ try {
     _supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
       auth: { persistSession: false },
     });
-    console.log('✅ Supabase admin-klient initierad');
   } else {
     // Fallback till vanlig klient
     _supabaseAdmin = _supabase;
-    console.warn('⚠️ Service role key saknas - admin-klient använder anon key');
   }
 } catch (error) {
   console.error('❌ Kunde inte skapa admin-klient:', error);
