@@ -470,13 +470,15 @@ Mobilnummer: 073-123 45 67"
                   name="mottagare" 
                   rows="6"
                   required
-                  placeholder="Anna Andersson, 0701234567, ja
-Karl Karlsson, 0709876543, nej
-Erik Eriksson, 0701111111, ja"
+                  placeholder="Angela Blomfalk 19760516-0022
+Mobilnummer: 070-747 40 74
+
+Karl Karlsson 19850312-1234
+Mobilnummer: 073-123 45 67"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 font-mono text-sm"
                 ></textarea>
                 <p class="text-xs text-gray-500 mt-1">
-                  Format: <code>Namn, Telefon, Samtycke (ja/nej)</code> - Samtycke = godkänt SMS i hälsodeklarationen
+                  Klistra in direkt från journalsystemet. Samtycke sätts automatiskt till ja.
                 </p>
               </div>
 
@@ -1129,15 +1131,49 @@ Erik Eriksson, 0701111111, ja"
 
     function parseMottagare() {
       const text = mottagareTextarea?.value || '';
-      const lines = text.trim().split('\n').filter(l => l.trim());
-      return lines.map(line => {
-        const parts = line.split(',').map(p => p.trim());
-        return {
-          namn: parts[0] || '',
-          telefon: parts[1]?.replace(/\s/g, '') || '',
-          harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
-        };
-      }).filter(m => m.namn && m.telefon);
+      const lines = text.trim().split('\n').map(l => l.trim()).filter(l => l);
+      const mottagare: any[] = [];
+      
+      // Journalsystemformat: "Namn Personnummer" följt av "Mobilnummer: 07X-XXX XX XX"
+      if (text.toLowerCase().includes('mobilnummer')) {
+        let currentNamn = '';
+        
+        for (const line of lines) {
+          // Kontrollera om raden innehåller personnummer
+          const personnummerMatch = line.match(/^(.+?)\s+(\d{6,8}[-\s]?\d{4})\s*$/);
+          if (personnummerMatch) {
+            currentNamn = personnummerMatch[1].trim();
+          }
+          // Kontrollera om raden innehåller mobilnummer
+          else if (line.toLowerCase().startsWith('mobilnummer')) {
+            const telefon = line.replace(/mobilnummer[:\s]*/i, '').replace(/[-\s]/g, '');
+            if (currentNamn && telefon) {
+              mottagare.push({
+                namn: currentNamn,
+                telefon: telefon,
+                harSamtycke: true
+              });
+              currentNamn = '';
+            }
+          }
+        }
+      } 
+      // Gammalt CSV-format
+      else {
+        for (const line of lines) {
+          const parts = line.split(',').map(p => p.trim());
+          const telefon = parts[1]?.replace(/\s/g, '') || '';
+          if (parts[0] && telefon) {
+            mottagare.push({
+              namn: parts[0],
+              telefon: telefon,
+              harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
+            });
+          }
+        }
+      }
+      
+      return mottagare;
     }
 
     function updateMottagareCount() {
