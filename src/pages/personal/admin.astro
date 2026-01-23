@@ -44,7 +44,8 @@ try {
         email: user.email,
         skapad: user.created_at,
         mobilnummer: profil?.mobilnummer || null,
-        vill_ha_notifikationer: profil?.vill_ha_notifikationer || false
+        vill_ha_notifikationer: profil?.vill_ha_notifikationer || false,
+        avatar_url: profil?.avatar_url || null
       };
     });
   }
@@ -311,21 +312,53 @@ function formateraDatum(datum: string): string {
                 <p class="text-red-600 text-sm">{personalError}</p>
               )}
               
-              <div class="space-y-2">
+              <div class="space-y-3">
                 {personal.map(p => (
-                  <div class="p-3 bg-gray-50 rounded-lg border flex items-center justify-between">
-                    <div>
-                      <div class="font-medium text-gray-900 text-sm">{p.email}</div>
-                      <div class="text-xs text-gray-500">
-                        📱 {formateraNummer(p.mobilnummer)}
-                        {p.vill_ha_notifikationer && (
-                          <span class="ml-2 text-green-600">🔔 Notifikationer på</span>
-                        )}
+                  <div class="p-3 bg-gray-50 rounded-lg border" data-user-id={p.id}>
+                    <div class="flex items-center gap-3">
+                      {/* Profilbild */}
+                      <div class="relative group">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                          {p.avatar_url ? (
+                            <img 
+                              src={p.avatar_url} 
+                              alt={p.email}
+                              class="w-full h-full object-cover avatar-img"
+                            />
+                          ) : (
+                            <span class="text-gray-400 text-lg">👤</span>
+                          )}
+                        </div>
+                        {/* Ladda upp-knapp */}
+                        <label class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                          <span class="text-white text-xs">📷</span>
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            class="hidden avatar-input"
+                            data-user-id={p.id}
+                          />
+                        </label>
+                      </div>
+                      
+                      {/* Info */}
+                      <div class="flex-1 min-w-0">
+                        <div class="font-medium text-gray-900 text-sm truncate">{p.email}</div>
+                        <div class="text-xs text-gray-500">
+                          📱 {formateraNummer(p.mobilnummer)}
+                          {p.vill_ha_notifikationer && (
+                            <span class="ml-2 text-green-600">🔔</span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Datum */}
+                      <div class="text-xs text-gray-400">
+                        {formateraDatum(p.skapad)}
                       </div>
                     </div>
-                    <div class="text-xs text-gray-400">
-                      {formateraDatum(p.skapad)}
-                    </div>
+                    {/* Upload status */}
+                    <div class="upload-status hidden mt-2 text-xs"></div>
                   </div>
                 ))}
               </div>
@@ -457,9 +490,81 @@ function formateraDatum(datum: string): string {
           <li>Nya användare kan logga in direkt med e-post och det tillfälliga lösenordet</li>
           <li>Be användare gå till <strong>Min profil</strong> för att lägga till sitt mobilnummer och aktivera notifikationer</li>
           <li>Läkare som är inaktiverade visas inte i Kort Varsel-dropdown:en</li>
+          <li>Hovra över en profilbild och klicka på 📷 för att ladda upp en ny bild</li>
         </ul>
       </div>
       
     </main>
   </div>
+
+  <script>
+    // Hantera bilduppladdning
+    document.querySelectorAll('.avatar-input').forEach(input => {
+      input.addEventListener('change', async (e) => {
+        const target = e.target as HTMLInputElement;
+        const file = target.files?.[0];
+        const userId = target.dataset.userId;
+        
+        if (!file || !userId) return;
+        
+        // Hitta status-elementet
+        const container = target.closest('[data-user-id]');
+        const statusEl = container?.querySelector('.upload-status');
+        const imgEl = container?.querySelector('.avatar-img') as HTMLImageElement;
+        const placeholder = container?.querySelector('.text-gray-400');
+        
+        if (statusEl) {
+          statusEl.classList.remove('hidden');
+          statusEl.textContent = '⏳ Laddar upp...';
+          statusEl.className = 'upload-status mt-2 text-xs text-blue-600';
+        }
+        
+        try {
+          const formData = new FormData();
+          formData.append('userId', userId);
+          formData.append('avatar', file);
+          
+          const response = await fetch('/api/admin/upload-avatar', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Uppdatera bilden
+            if (imgEl) {
+              imgEl.src = result.avatarUrl + '?t=' + Date.now(); // Cache bust
+            } else if (placeholder) {
+              // Ersätt placeholder med bild
+              const img = document.createElement('img');
+              img.src = result.avatarUrl;
+              img.alt = 'Profilbild';
+              img.className = 'w-full h-full object-cover avatar-img';
+              placeholder.replaceWith(img);
+            }
+            
+            if (statusEl) {
+              statusEl.textContent = '✅ Bild uppladdad!';
+              statusEl.className = 'upload-status mt-2 text-xs text-green-600';
+              setTimeout(() => statusEl.classList.add('hidden'), 3000);
+            }
+          } else {
+            if (statusEl) {
+              statusEl.textContent = '❌ ' + (result.error || 'Uppladdning misslyckades');
+              statusEl.className = 'upload-status mt-2 text-xs text-red-600';
+            }
+          }
+        } catch (error) {
+          if (statusEl) {
+            statusEl.textContent = '❌ Nätverksfel';
+            statusEl.className = 'upload-status mt-2 text-xs text-red-600';
+          }
+        }
+        
+        // Återställ input
+        target.value = '';
+      });
+    });
+  </script>
 </BaseLayout>

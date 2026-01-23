@@ -143,8 +143,16 @@ function formateraNummer(nummer: string | null): string {
             <!-- Profil-header -->
             <div class="bg-gradient-to-r from-sky-500 to-sky-600 px-6 py-8 text-white">
               <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-                  👤
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl overflow-hidden">
+                  {profil?.avatar_url ? (
+                    <img 
+                      src={profil.avatar_url} 
+                      alt="Profilbild"
+                      class="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span>👤</span>
+                  )}
                 </div>
                 <div>
                   <h2 class="text-xl font-semibold">{anvandare?.email}</h2>
