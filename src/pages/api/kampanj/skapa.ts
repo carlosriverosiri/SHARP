@@ -71,16 +71,17 @@ function beraknaIntervall(m: Mottagare, defaultIntervall: number): number {
   return defaultIntervall || PRIORITETS_INTERVALL.normal;
 }
 
-// Sortera efter prioritet (akut > ont > sjukskriven > pensionär > normal)
+// Sortera efter prioritet (akut > sjukskriven > ont > pensionär > normal)
+// Sjukskrivna prioriteras före "mycket ont" - de har både ont OCH funktionsbortfall
 // Inom varje prioritetsnivå: rätt sida först
 function sorteraPaPrioritet(a: Mottagare, b: Mottagare, onskadSida?: string): number {
   // Pensionär = 67+
   const arPensionarA = (a.alder ?? 0) >= 67;
   const arPensionarB = (b.alder ?? 0) >= 67;
   
-  // Prioritetspoäng: akut > ont > sjukskriven > pensionär > normal
-  const prioA = (a.akut ? 10000 : 0) + (a.harOnt ? 1000 : 0) + (a.sjukskriven ? 100 : 0) + (arPensionarA ? 10 : 0);
-  const prioB = (b.akut ? 10000 : 0) + (b.harOnt ? 1000 : 0) + (b.sjukskriven ? 100 : 0) + (arPensionarB ? 10 : 0);
+  // Prioritetspoäng: akut > sjukskriven > ont > pensionär > normal
+  const prioA = (a.akut ? 10000 : 0) + (a.sjukskriven ? 1000 : 0) + (a.harOnt ? 100 : 0) + (arPensionarA ? 10 : 0);
+  const prioB = (b.akut ? 10000 : 0) + (b.sjukskriven ? 1000 : 0) + (b.harOnt ? 100 : 0) + (arPensionarB ? 10 : 0);
   
   // Om samma prioritetsnivå, sortera på sida
   if (prioA === prioB && onskadSida) {

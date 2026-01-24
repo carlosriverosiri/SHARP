@@ -255,19 +255,19 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
             <h4 class="font-bold text-red-800">Akut</h4>
             <p class="text-xs text-red-600">Måste opereras snarast</p>
           </div>
+          <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center hover:shadow-md transition">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <span class="text-2xl">📋</span>
+            </div>
+            <h4 class="font-bold text-orange-800">Sjukskrivna</h4>
+            <p class="text-xs text-orange-600">Ont + kan ej arbeta</p>
+          </div>
           <div class="bg-amber-50 border-2 border-amber-200 p-4 rounded-xl text-center hover:shadow-md transition">
             <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
               <span class="text-2xl">🔥</span>
             </div>
             <h4 class="font-bold text-amber-800">Mycket ont</h4>
             <p class="text-xs text-amber-600">Hög smärtnivå</p>
-          </div>
-          <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center hover:shadow-md transition">
-            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span class="text-2xl">📋</span>
-            </div>
-            <h4 class="font-bold text-orange-800">Sjukskrivna</h4>
-            <p class="text-xs text-orange-600">Väntar på att komma tillbaka</p>
           </div>
           <div class="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl text-center hover:shadow-md transition">
             <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -791,8 +791,8 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
                   </thead>
                   <tbody class="text-slate-200">
                     <tr><td>🚨 AKUT</td><td>60 min</td><td>Måste opereras snarast</td></tr>
-                    <tr><td>🔥 Mycket ont</td><td>20 min</td><td>Hög smärtnivå</td></tr>
-                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Väntar på att återgå i arbete</td></tr>
+                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Ont + funktionsbortfall, kan ej arbeta</td></tr>
+                    <tr><td>🔥 Mycket ont</td><td>20 min</td><td>Hög smärtnivå men kan arbeta</td></tr>
                     <tr><td>👴 Pensionär (67+)</td><td>10 min</td><td>Flexibla tider, lättare att komma</td></tr>
                     <tr><td>⏰ Normal</td><td>10 min</td><td>Standardintervall</td></tr>
                   </tbody>
@@ -807,12 +807,12 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
                 </p>
                 <div class="bg-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300">
                   <div class="text-emerald-400 mb-2">// Exempel: Kampanj söker HÖGER sida</div>
-                  <div>1. Akut + HÖ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Skickas först</div>
+                  <div>1. Akut + HÖ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Skickas först</div>
                   <div>2. Akut + VÄ</div>
-                  <div>3. Ont + HÖ</div>
-                  <div>4. Ont + VÄ</div>
-                  <div>5. Sjukskriven + HÖ</div>
-                  <div>6. Sjukskriven + VÄ</div>
+                  <div>3. Sjukskriven + HÖ</div>
+                  <div>4. Sjukskriven + VÄ</div>
+                  <div>5. Ont + HÖ</div>
+                  <div>6. Ont + VÄ</div>
                   <div>7. Pensionär + HÖ</div>
                   <div>8. Pensionär + VÄ</div>
                   <div>9. Normal + HÖ</div>
