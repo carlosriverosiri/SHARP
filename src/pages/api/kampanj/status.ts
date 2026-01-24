@@ -31,6 +31,8 @@ export const GET: APIRoute = async ({ url, cookies }) => {
   }
 
   try {
+    console.log('🔍 Status API: Söker kampanj med ID:', kampanjId);
+    
     // Hämta kampanj
     const { data: kampanj, error: kampanjError } = await supabaseAdmin
       .from('sms_kampanjer')
@@ -41,9 +43,12 @@ export const GET: APIRoute = async ({ url, cookies }) => {
       .eq('id', kampanjId)
       .single();
 
+    console.log('📊 Status API: Supabase svar:', { kampanj: !!kampanj, error: kampanjError?.message });
+
     if (kampanjError || !kampanj) {
+      console.error('❌ Status API: Kampanj hittades inte. Error:', kampanjError);
       return new Response(
-        JSON.stringify({ error: 'Kampanj hittades inte' }),
+        JSON.stringify({ error: 'Kampanj hittades inte', details: kampanjError?.message }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }

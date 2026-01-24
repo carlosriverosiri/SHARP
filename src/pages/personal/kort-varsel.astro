@@ -867,7 +867,7 @@ Mobilnummer: 073-456 78 90"
       console.log('👁️ Visar kampanjdetalj-wrap och sätter Laddar...');
       wrap.classList.remove('hidden');
       rubrik.textContent = '📋 Kampanj – vem svarade?';
-      datumEl.textContent = 'Laddar...';
+      datumEl.textContent = `Laddar kampanj ID: ${kampanjId}...`;
       listaEl.innerHTML = '<p class="text-gray-400 italic text-sm">Laddar mottagare...</p>';
       wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -880,10 +880,10 @@ Mobilnummer: 073-456 78 90"
         console.log('📊 API-data:', data);
         
         if (!response.ok || data.error) {
-          console.error('❌ API-fel:', data.error);
+          console.error('❌ API-fel:', data.error, 'Details:', data.details);
           rubrik.textContent = 'Kunde inte ladda kampanj';
-          datumEl.textContent = data.error || 'Okänt fel';
-          listaEl.innerHTML = '';
+          datumEl.textContent = `${data.error || 'Okänt fel'}${data.details ? ' – ' + data.details : ''}`;
+          listaEl.innerHTML = `<p class="text-red-600 text-sm">API-fel: ${data.error}</p><p class="text-gray-500 text-xs mt-2">Kampanj-ID: ${kampanjId}</p>`;
           return;
         }
 
