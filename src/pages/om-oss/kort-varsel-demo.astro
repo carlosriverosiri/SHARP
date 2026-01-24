@@ -416,7 +416,169 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
             <span>🔧 För personal: Teknisk information</span>
             <span class="text-slate-400">▼</span>
           </summary>
-          <div class="px-6 pb-6 space-y-6">
+          <div class="px-6 pb-6 space-y-8">
+
+            <!-- Priority Algorithm Simulation -->
+            <div>
+              <h3 class="font-bold text-lg mb-2 text-slate-200 flex items-center gap-2">
+                <span class="text-xl">⚡</span> Prioritetsalgoritm (Gradvis utskick)
+              </h3>
+              <p class="text-slate-400 text-sm mb-4">
+                Systemet skickar inte SMS till alla samtidigt. Istället används "gradvis utskick" baserat på klinisk urgens.
+              </p>
+
+              <div class="bg-slate-900 rounded-xl overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3">
+                  <!-- Control Panel -->
+                  <div class="p-6 bg-slate-800 border-r border-slate-700 flex flex-col justify-between">
+                    <div>
+                      <h4 class="font-bold text-sm mb-3 text-slate-300">Kontrollpanel</h4>
+                      <p class="text-xs text-slate-500 mb-4">Klicka på start för att simulera en kampanj.</p>
+                      
+                      <div class="space-y-3">
+                        <button id="startSimBtn" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-lg shadow-sm transition transform active:scale-95 flex items-center justify-center gap-2 text-sm">
+                          <span>▶</span> Starta Kampanj
+                        </button>
+                        <button id="resetSimBtn" class="w-full bg-slate-700 border border-slate-600 hover:bg-slate-600 text-slate-300 font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 text-sm" disabled>
+                          <span>↺</span> Återställ
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mt-6">
+                      <div class="text-xs font-mono text-slate-500 uppercase tracking-widest mb-2">Status</div>
+                      <div id="simStatus" class="font-mono text-emerald-400 font-bold bg-slate-900 p-2.5 rounded border border-slate-700 text-sm">
+                        Väntar på start...
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Visualization -->
+                  <div class="col-span-2 p-6 relative">
+                    <!-- Timer -->
+                    <div class="absolute top-6 right-6 text-right">
+                      <div class="text-xs text-slate-500 font-mono">TID (SIMULERAD)</div>
+                      <div id="simTimer" class="text-2xl font-bold text-white tabular-nums">0 min</div>
+                    </div>
+
+                    <div class="space-y-3 mt-8">
+                      <!-- Group 1: Akut -->
+                      <div id="group1" class="p-3 rounded-xl border-2 border-transparent bg-slate-800 transition-all duration-300 opacity-50">
+                        <div class="flex justify-between items-center">
+                          <div class="flex items-center gap-3">
+                            <div class="text-xl bg-slate-700 p-2 rounded-full">🚨</div>
+                            <div>
+                              <h4 class="font-bold text-white text-sm">1. Akut & Standby</h4>
+                              <p class="text-xs text-slate-500">Högsta prioritet</p>
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <span class="block text-xs font-bold text-rose-400 uppercase tracking-wider">Exklusivitet</span>
+                            <span class="text-sm font-mono font-bold text-slate-300">60 min</span>
+                          </div>
+                        </div>
+                        <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div id="bar1" class="h-full bg-rose-500 w-0 transition-all duration-100 ease-linear"></div>
+                        </div>
+                        <div id="msg1" class="text-xs text-slate-500 mt-1 h-4 italic"></div>
+                      </div>
+
+                      <!-- Group 2: Sjukskrivna -->
+                      <div id="group2" class="p-3 rounded-xl border-2 border-transparent bg-slate-800 transition-all duration-300 opacity-50">
+                        <div class="flex justify-between items-center">
+                          <div class="flex items-center gap-3">
+                            <div class="text-xl bg-slate-700 p-2 rounded-full">📋</div>
+                            <div>
+                              <h4 class="font-bold text-white text-sm">2. Sjukskrivna</h4>
+                              <p class="text-xs text-slate-500">Hög prioritet</p>
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <span class="block text-xs font-bold text-orange-400 uppercase tracking-wider">Exklusivitet</span>
+                            <span class="text-sm font-mono font-bold text-slate-300">30 min</span>
+                          </div>
+                        </div>
+                        <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div id="bar2" class="h-full bg-orange-500 w-0 transition-all duration-100 ease-linear"></div>
+                        </div>
+                        <div id="msg2" class="text-xs text-slate-500 mt-1 h-4 italic"></div>
+                      </div>
+
+                      <!-- Group 3: Smärta -->
+                      <div id="group3" class="p-3 rounded-xl border-2 border-transparent bg-slate-800 transition-all duration-300 opacity-50">
+                        <div class="flex justify-between items-center">
+                          <div class="flex items-center gap-3">
+                            <div class="text-xl bg-slate-700 p-2 rounded-full">🔥</div>
+                            <div>
+                              <h4 class="font-bold text-white text-sm">3. Hög Smärta</h4>
+                              <p class="text-xs text-slate-500">Prioriterad</p>
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <span class="block text-xs font-bold text-amber-400 uppercase tracking-wider">Exklusivitet</span>
+                            <span class="text-sm font-mono font-bold text-slate-300">20 min</span>
+                          </div>
+                        </div>
+                        <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div id="bar3" class="h-full bg-amber-500 w-0 transition-all duration-100 ease-linear"></div>
+                        </div>
+                        <div id="msg3" class="text-xs text-slate-500 mt-1 h-4 italic"></div>
+                      </div>
+
+                      <!-- Group 4: Standard -->
+                      <div id="group4" class="p-3 rounded-xl border-2 border-transparent bg-slate-800 transition-all duration-300 opacity-50">
+                        <div class="flex justify-between items-center">
+                          <div class="flex items-center gap-3">
+                            <div class="text-xl bg-slate-700 p-2 rounded-full">⏰</div>
+                            <div>
+                              <h4 class="font-bold text-white text-sm">4. Standard / Reserv</h4>
+                              <p class="text-xs text-slate-500">Normal prioritet</p>
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <span class="block text-xs font-bold text-blue-400 uppercase tracking-wider">Intervall</span>
+                            <span class="text-sm font-mono font-bold text-slate-300">10 min</span>
+                          </div>
+                        </div>
+                        <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                          <div id="bar4" class="h-full bg-blue-500 w-0 transition-all duration-100 ease-linear"></div>
+                        </div>
+                        <div id="msg4" class="text-xs text-slate-500 mt-1 h-4 italic"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dashboard & Statistics -->
+            <div>
+              <h3 class="font-bold text-lg mb-2 text-slate-200 flex items-center gap-2">
+                <span class="text-xl">📊</span> Dashboard & Statistik
+              </h3>
+              <p class="text-slate-400 text-sm mb-4">
+                Realtidsdata för processoptimering och uppföljning.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Chart 1: Fill Rate -->
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                  <h4 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wide">Fyllnadsgrad (Sista 30 dagarna)</h4>
+                  <div class="h-48">
+                    <canvas id="fillRateChart"></canvas>
+                  </div>
+                  <p class="text-xs text-center text-slate-500 mt-3">83% av kort-varsel luckor fylldes via systemet.</p>
+                </div>
+
+                <!-- Chart 2: Efficiency -->
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                  <h4 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wide">Effektivitet (SMS per fylld tid)</h4>
+                  <div class="h-48">
+                    <canvas id="efficiencyChart"></canvas>
+                  </div>
+                  <p class="text-xs text-center text-slate-500 mt-3">Lågt antal = Hög precision i algoritmen.</p>
+                </div>
+              </div>
+            </div>
             
             <!-- Tech Stack -->
             <div>
@@ -756,6 +918,168 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
 
     // Initialize
     renderPhoneContent();
+
+    // --- Priority Cascade Simulation ---
+    const simState = {
+      running: false,
+      time: 0,
+      intervalId: null
+    };
+
+    const cascadeRules = [
+      { id: 'group1', start: 0, duration: 60, msg: 'Skickar till Akut...' },
+      { id: 'group2', start: 60, duration: 30, msg: 'Skickar till Sjukskrivna...' },
+      { id: 'group3', start: 90, duration: 20, msg: 'Skickar till Smärtpatienter...' },
+      { id: 'group4', start: 110, duration: 1000, msg: 'Skickar till Standardkö (10min intervall)...' }
+    ];
+
+    const startSimBtn = document.getElementById('startSimBtn');
+    const resetSimBtn = document.getElementById('resetSimBtn');
+    const simTimer = document.getElementById('simTimer');
+    const simStatus = document.getElementById('simStatus');
+
+    if (startSimBtn) {
+      startSimBtn.addEventListener('click', startSimulation);
+      resetSimBtn.addEventListener('click', resetSimulation);
+    }
+
+    function startSimulation() {
+      if (simState.running) return;
+      simState.running = true;
+      simState.time = 0;
+      
+      startSimBtn.disabled = true;
+      startSimBtn.classList.add('opacity-50');
+      resetSimBtn.disabled = false;
+      simStatus.innerText = "Kampanj Aktiv: Söker patienter...";
+      simStatus.className = "font-mono text-rose-400 font-bold bg-slate-900 p-2.5 rounded border border-rose-500 text-sm animate-pulse";
+
+      simState.intervalId = setInterval(() => {
+        simState.time += 2;
+        updateSimUI(simState.time);
+      }, 100);
+    }
+
+    function resetSimulation() {
+      clearInterval(simState.intervalId);
+      simState.running = false;
+      simState.time = 0;
+      updateSimUI(0, true);
+      
+      startSimBtn.disabled = false;
+      startSimBtn.classList.remove('opacity-50');
+      resetSimBtn.disabled = true;
+      simStatus.innerText = "Väntar på start...";
+      simStatus.className = "font-mono text-emerald-400 font-bold bg-slate-900 p-2.5 rounded border border-slate-700 text-sm";
+    }
+
+    function updateSimUI(currentTime, isReset = false) {
+      if (simTimer) simTimer.innerText = currentTime + " min";
+
+      cascadeRules.forEach(rule => {
+        const elGroup = document.getElementById(rule.id);
+        const elBar = document.getElementById(rule.id.replace('group', 'bar'));
+        const elMsg = document.getElementById(rule.id.replace('group', 'msg'));
+
+        if (!elGroup || !elBar || !elMsg) return;
+
+        if (isReset) {
+          elGroup.classList.remove('border-rose-500', 'border-blue-500', 'bg-slate-700', 'shadow-md', 'opacity-100');
+          elGroup.classList.add('border-transparent', 'bg-slate-800', 'opacity-50');
+          elBar.style.width = '0%';
+          elMsg.innerText = '';
+          return;
+        }
+
+        if (currentTime >= rule.start) {
+          elGroup.classList.remove('opacity-50', 'bg-slate-800', 'border-transparent');
+          elGroup.classList.add('opacity-100', 'bg-slate-700');
+
+          let progress = 0;
+          if (rule.id === 'group4') {
+            progress = ((currentTime - rule.start) % 10) * 10;
+            if (currentTime > rule.start) elMsg.innerText = rule.msg + ` (Batch ${Math.floor((currentTime - rule.start) / 10) + 1})`;
+            elGroup.classList.add('border-blue-500', 'shadow-md');
+          } else {
+            const timeInGroup = currentTime - rule.start;
+            progress = Math.min((timeInGroup / rule.duration) * 100, 100);
+            
+            if (progress < 100) {
+              elGroup.classList.add('border-rose-500', 'shadow-md');
+              elMsg.innerText = rule.msg;
+            } else {
+              elGroup.classList.remove('border-rose-500', 'shadow-md');
+              elGroup.classList.add('border-slate-600');
+              elMsg.innerText = "Fönster stängt. Inget svar.";
+            }
+          }
+          elBar.style.width = progress + '%';
+        }
+      });
+    }
+
+    // --- Chart.js Initialization ---
+    window.addEventListener('load', () => {
+      const ctxFill = document.getElementById('fillRateChart');
+      const ctxEff = document.getElementById('efficiencyChart');
+
+      if (ctxFill) {
+        new Chart(ctxFill.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Fyllda via SMS', 'Manuellt Fyllda', 'Missade'],
+            datasets: [{
+              data: [83, 12, 5],
+              backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { 
+                position: 'bottom',
+                labels: { color: '#94a3b8', font: { size: 11 } }
+              }
+            }
+          }
+        });
+      }
+
+      if (ctxEff) {
+        new Chart(ctxEff.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Kampanj A', 'Kampanj B', 'Kampanj C', 'Kampanj D', 'Snitt'],
+            datasets: [{
+              label: 'Antal SMS',
+              data: [5, 12, 8, 15, 8.7],
+              backgroundColor: '#6366f1',
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { 
+                beginAtZero: true, 
+                ticks: { color: '#94a3b8' },
+                grid: { color: '#334155' }
+              },
+              x: {
+                ticks: { color: '#94a3b8' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+    });
   </script>
 
 </BaseLayout>
