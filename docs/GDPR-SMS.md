@@ -96,6 +96,98 @@ Databaskommunikation:   TLS till Supabase
 
 ---
 
+## Myndighetskontakt
+
+### IMY - Integritetsskyddsmyndigheten
+
+**Status:** Väntar på svar (skickat 2026-01-24)
+
+Vi har begärt vägledning från IMY gällande:
+
+1. **Patientdatalagen vs GDPR** - Eftersom systemet är fristående från journalsystemet och data skrivs in manuellt, omfattas det av PDL eller endast GDPR?
+2. **EU-molntjänster** - Är det tillåtet att använda molntjänst inom EU (Frankfurt) för notifieringsdata?
+3. **Ytterligare rekommendationer**
+
+#### Skickad förfrågan till IMY
+
+```
+Till: dso@imy.se
+Datum: 2026-01-24
+Ämne: Vägledning - fristående SMS-notifiering för avbokade operationstider
+
+Hej,
+
+Jag driver en privat ortopedisk specialistklinik och har utvecklat ett 
+internt notifieringssystem för att informera patienter om lediga 
+operationstider. Jag vill säkerställa att lösningen följer gällande 
+lagstiftning och ber om vägledning.
+
+BAKGRUND
+När patienter avbokar operationer vill vi kunna informera andra patienter 
+på väntelistan om att en tid blivit ledig.
+
+Viktiga avgränsningar:
+- Systemet är helt fristående från vårt journalsystem
+- Ingen teknisk koppling eller automatisk dataöverföring
+- All patientdata skrivs in manuellt av personal
+- Detta är inte ett bokningssystem och inte ett tvåvägs-SMS-system
+
+Flödet är:
+1. Personal skriver manuellt in patientuppgifter
+2. Systemet skickar ett informations-SMS (envägskommunikation)
+3. Patienten klickar på en länk och markerar intresse via webbsida
+4. Personal kontaktar patienten per telefon för att slutföra bokning
+
+Ingen aktiv SMS-dialog sker mellan patient och system.
+All medicinsk dokumentation och tidsbokning sker uteslutande i det 
+fristående journalsystemet.
+
+TEKNISK LÖSNING
+- Databas: Supabase (servrar i Frankfurt, EU)
+- SMS-leverantör: 46elks (svensk operatör, reglerad av LEK)
+- Webbhotell: Netlify (EU)
+
+Data som lagras:
+- Patientnamn
+- Telefonnummer (krypterat med AES-256)
+- Prioritetsgrupp (1, 2 eller 3 - inga medicinska detaljer)
+- Svarsstatus (intresserad/ej intresserad)
+
+Data raderas automatiskt efter 30 dagar. Personnummer lagras inte.
+
+Säkerhetsåtgärder:
+- Kryptering i vila och under transport
+- Row Level Security på databasnivå
+- Endast behörig personal har åtkomst
+- Loggning av alla åtkomster
+- Personuppgiftsbiträdesavtal (DPA) med Supabase
+
+SAMTYCKE
+SMS skickas endast till patienter som aktivt samtyckt till att kontaktas 
+vid lediga operationstider. Samtycket inhämtas via vår digitala 
+hälsodeklaration. Patienten kan avregistrera sig via länk i SMS:et.
+
+MINA FRÅGOR
+1. Eftersom systemet är helt fristående från journalsystemet, data skrivs 
+   in manuellt, och ingen medicinsk information hanteras - omfattas det 
+   av Patientdatalagen, eller endast av GDPR?
+2. Är det tillåtet att använda en molntjänst inom EU (Frankfurt) för 
+   denna typ av notifieringsdata?
+3. Finns det ytterligare åtgärder ni rekommenderar?
+
+Jag uppskattar all vägledning ni kan ge.
+
+Med Vänlig Hälsning
+Carlos Rivero Siri, verksamhetschef
+Södermalms Ortopedi / Siri Stockholm AB
+```
+
+#### Svar från IMY
+
+*Väntar på svar - uppdateras när svar inkommer*
+
+---
+
 ## Bilagor
 
 ### E-postbekräftelse från 46elks
