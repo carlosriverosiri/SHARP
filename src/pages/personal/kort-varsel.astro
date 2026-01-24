@@ -743,8 +743,9 @@ if (supabaseKonfigurerad) {
             </div>
           </div>
 
-          <!-- Höger: Lista över aktiva kampanjer -->
-          <div class="lg:col-span-1">
+          <!-- Höger: Lista över aktiva och avslutade kampanjer -->
+          <div class="lg:col-span-1 space-y-4">
+            <!-- Aktiva kampanjer -->
             <div class="bg-white rounded-xl shadow-sm border p-4">
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
@@ -788,6 +789,69 @@ if (supabaseKonfigurerad) {
                     )}
                   </a>
                 ))}
+              </div>
+            </div>
+
+            <!-- Nyligen avslutade kampanjer (senaste 7 dagarna) -->
+            <div class="bg-white rounded-xl shadow-sm border p-4">
+              <h3 class="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <span class="text-green-600">✓</span>
+                Nyligen avslutade
+                <span class="text-xs font-normal text-gray-500">(7 dagar)</span>
+              </h3>
+              
+              <div class="space-y-2">
+                {(() => {
+                  const sjuDagarSen = new Date();
+                  sjuDagarSen.setDate(sjuDagarSen.getDate() - 7);
+                  const avslutade = kampanjer?.filter(k => 
+                    k.status === 'avslutad' && 
+                    k.avslutad_vid && 
+                    new Date(k.avslutad_vid) >= sjuDagarSen
+                  ) || [];
+                  
+                  if (avslutade.length === 0) {
+                    return <p class="text-gray-400 text-sm italic text-center py-3">Inga avslutade kampanjer senaste veckan</p>;
+                  }
+                  
+                  return avslutade.map(k => (
+                    <a 
+                      href={`/personal/kort-varsel?id=${k.id}`}
+                      class="block p-3 border border-gray-200 rounded-lg hover:border-green-400 hover:bg-green-50 transition-colors"
+                    >
+                      <div class="flex items-center justify-between mb-1">
+                        <span class={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                          k.utfall === 'fylld_via_sms' ? 'bg-green-100 text-green-800' :
+                          k.utfall === 'fylld_manuellt' ? 'bg-blue-100 text-blue-800' :
+                          k.utfall === 'misslyckad' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {k.utfall === 'fylld_via_sms' ? '✅ Via SMS' :
+                           k.utfall === 'fylld_manuellt' ? '✅ Manuellt' :
+                           k.utfall === 'misslyckad' ? '❌ Misslyckad' : '✓ Avslutad'}
+                        </span>
+                        <span class="text-gray-400 text-xs">
+                          {k.avslutad_vid ? new Date(k.avslutad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }) : '-'}
+                        </span>
+                      </div>
+                      <div class="font-medium text-gray-900 text-sm">
+                        {k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Inget datum'}
+                      </div>
+                      {k.lakare && (
+                        <div class="text-xs text-gray-500 mt-1">{k.lakare}</div>
+                      )}
+                    </a>
+                  ));
+                })()}
+              </div>
+              
+              <div class="mt-3 pt-3 border-t">
+                <button 
+                  onclick="document.getElementById('tab-historik')?.click()"
+                  class="w-full text-center text-sm text-sky-600 hover:text-sky-800 hover:underline"
+                >
+                  Visa alla i historik →
+                </button>
               </div>
             </div>
           </div>
