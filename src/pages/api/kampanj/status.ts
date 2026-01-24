@@ -33,24 +33,36 @@ export const GET: APIRoute = async ({ url, cookies }) => {
   try {
     console.log('🔍 Status API: Söker kampanj med ID:', kampanjId);
     
-    // Hämta kampanj
+    // Hämta kampanj (utan nested select för att undvika fel)
     const { data: kampanj, error: kampanjError } = await supabaseAdmin
       .from('sms_kampanjer')
-      .select(`
-        *,
-        skapare:skapad_av (email)
-      `)
+      .select('*')
       .eq('id', kampanjId)
       .single();
 
-    console.log('📊 Status API: Supabase svar:', { kampanj: !!kampanj, error: kampanjError?.message });
+    console.log('📊 Status API: Supabase svar:', { kampanj: !!kampanj, error: kampanjError?.message, errorCode: kampanjError?.code });
 
     if (kampanjError || !kampanj) {
       console.error('❌ Status API: Kampanj hittades inte. Error:', kampanjError);
       return new Response(
-        JSON.stringify({ error: 'Kampanj hittades inte', details: kampanjError?.message }),
+        JSON.stringify({ 
+          error: 'Kampanj hittades inte', 
+          details: kampanjError?.message || 'Ingen data returnerad',
+          errorCode: kampanjError?.code
+        }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
+    }
+    
+    // Hämta skapare separat om det behövs
+    let skapadAvEmail = null;
+    if (kampanj.skapad_av) {
+      const { data: skapare } = await supabaseAdmin
+        .from('profiles')
+        .select('email')
+        .eq('id', kampanj.skapad_av)
+        .single();
+      skapadAvEmail = skapare?.email || null;
     }
 
     // Hämta mottagare
@@ -93,7 +105,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
           status: kampanj.status,
           utfall: kampanj.utfall,
           skapadVid: kampanj.skapad_vid,
-          skapadAv: (kampanj.skapare as any)?.email,
+          skapadAv: skapadAvEmail,
           sistaVarstid: kampanj.sista_svarstid,
           batchIntervallMinuter: kampanj.batch_intervall_minuter,
           nastaUtskickVid: kampanj.nasta_utskick_vid,
