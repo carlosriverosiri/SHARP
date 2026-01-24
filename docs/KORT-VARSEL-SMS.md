@@ -1,8 +1,272 @@
 # 📱 Kort varsel SMS - Specifikation
 
-> **Status:** 🚧 Under implementation  
+> **Status:** ✅ Implementerad (fas 1-2 klar)  
 > **Prioritet:** Hög  
-> **Senast uppdaterad:** 2026-01-22
+> **Senast uppdaterad:** 2026-01-24
+
+---
+
+## 🔧 Teknisk översikt (för framtida referens)
+
+### Vad är detta system?
+
+**Kort varsel SMS** är ett internt verktyg för att fylla lediga operationstider. När en patient avbokar kan personal snabbt skicka SMS till andra patienter på väntelistan och få svar via en webbsida.
+
+> 📱 **Interaktiv demo:** Det finns en publik demosida som förklarar systemet för personal och patienter:  
+> **URL:** `/om-oss/kort-varsel-demo`  
+> **Fil:** `src/pages/om-oss/kort-varsel-demo.astro`
+
+### Teknologier som används
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         SYSTEMARKITEKTUR                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐              │
+│   │   NETLIFY   │     │  SUPABASE   │     │   46ELKS    │              │
+│   │  (hosting)  │────▶│ (databas)   │     │   (SMS)     │              │
+│   └─────────────┘     └─────────────┘     └─────────────┘              │
+│         │                   │                   │                       │
+│         │                   │                   │                       │
+│   ┌─────▼─────────────────────────────────────▼─────┐                  │
+│   │              ASTRO FRAMEWORK                     │                  │
+│   │         (webbsidor + API-endpoints)              │                  │
+│   └─────────────────────────────────────────────────┘                  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Komponenter förklarade
+
+| Komponent | Vad det är | Används till | Webbadress |
+|-----------|------------|--------------|------------|
+| **Astro** | Webbramverk (som WordPress men kod) | Bygger hemsidan, hanterar logik | astro.build |
+| **Supabase** | Databas + inloggning (som Firebase) | Lagrar data, hanterar användare | supabase.com |
+| **46elks** | Svensk SMS-leverantör | Skickar/tar emot SMS | 46elks.se |
+| **Netlify** | Hosting (som en webserver) | Publicerar hemsidan, kör schemalagda jobb | netlify.com |
+| **GitHub** | Kodförvaring (som Dropbox för kod) | Versionshanterar all kod | github.com |
+
+### Supabase - vad används?
+
+Supabase är vår "backend" och ersätter traditionella databaser + serverlogik.
+
+| Supabase-del | Vad det gör | Hur vi använder det |
+|--------------|-------------|---------------------|
+| **Database** | PostgreSQL-databas | Lagrar kampanjer, patienter, svar |
+| **Auth** | Inloggningssystem | Personal loggar in med mejl/lösenord |
+| **Row Level Security (RLS)** | Säkerhet på radnivå | Förhindrar obehörig åtkomst |
+| **Functions** | Databasfunktioner | Atomära operationer (t.ex. "först till kvarn") |
+| **Storage** | Fillagring | Profilbilder för personal |
+
+**Inloggningsuppgifter:** Se `.env`-filen eller Supabase Dashboard.
+
+### 46elks - SMS-leverantör
+
+46elks är ett svenskt företag som hanterar SMS.
+
+| Funktion | API-endpoint | Beskrivning |
+|----------|--------------|-------------|
+| **Skicka SMS** | `POST api.46elks.com/a1/sms` | Vi skickar, 46elks levererar till telefonen |
+| **Ta emot SMS** | Webhook till vår server | 46elks ropar på `/api/sms/inkommande` |
+
+**Kostnad:** ~0,40-0,60 kr per SMS (2026)
+
+**Inloggningsuppgifter:** Se `.env`-filen (`ELKS_API_USER`, `ELKS_API_PASSWORD`)
+
+### Netlify - vad kör där?
+
+| Funktion | Beskrivning |
+|----------|-------------|
+| **Hosting** | Serverar hemsidan på `sodermalm.netlify.app` |
+| **Serverless Functions** | API-endpoints körs som funktioner |
+| **Scheduled Functions** | `scheduled-sms.mts` körs varje minut för gradvis SMS-utskick |
+| **Miljövariabler** | Hemliga nycklar lagras säkert |
+
+### Filstruktur (var finns vad?)
+
+```
+c:\Dev\ASTRO\SHARP\
+│
+├── src/                          ← ALL KOD FÖR HEMSIDAN
+│   ├── pages/                    ← Webbsidor (.astro = HTML + logik)
+│   │   ├── personal/
+│   │   │   └── kort-varsel.astro ← Huvuddashboard för personal
+│   │   ├── s/
+│   │   │   └── [kod].astro       ← Svarssida för patienter
+│   │   └── api/                  ← API-endpoints (backend-logik)
+│   │       ├── kampanj/          ← Kampanjhantering
+│   │       ├── pool/             ← Patientpool
+│   │       └── sms/              ← SMS-webhooks
+│   ├── lib/                      ← Hjälpfunktioner
+│   │   ├── supabase.ts           ← Databasanslutning
+│   │   ├── auth.ts               ← Inloggningslogik
+│   │   └── kryptering.ts         ← Kryptering av telefonnummer
+│   └── components/               ← Återanvändbara delar
+│
+├── supabase/                     ← DATABASSCHEMA
+│   ├── README.md                 ← Instruktioner
+│   └── migrations/               ← SQL-filer att köra i Supabase
+│       ├── 001-initial-setup.sql
+│       ├── 002-kort-varsel.sql
+│       └── ...
+│
+├── netlify/                      ← SCHEMALAGDA JOBB
+│   └── functions/
+│       └── scheduled-sms.mts     ← Körs varje minut
+│
+├── docs/                         ← DOKUMENTATION (du läser detta!)
+│   └── KORT-VARSEL-SMS.md
+│
+├── .env                          ← HEMLIGA NYCKLAR (ALDRIG dela!)
+├── package.json                  ← Projektberoenden (npm)
+└── astro.config.mjs              ← Astro-konfiguration
+```
+
+### Databastabeller (i Supabase)
+
+| Tabell | Beskrivning | Viktiga kolumner |
+|--------|-------------|------------------|
+| `sms_kampanjer` | En kampanj = en ledig tid | datum, status, antal_platser |
+| `sms_kampanj_mottagare` | Patienter i en kampanj | namn, svar, telefon_krypterad |
+| `kort_varsel_patienter` | Patientpoolen (återanvänds) | namn, status, akut, har_ont |
+| `lakare` | Lista av läkare | namn, aktiv |
+| `profiles` | Personalens profiler | email, mobilnummer |
+| `audit_logg` | Spårning av händelser | handelse_typ, detaljer |
+
+### Miljövariabler (.env)
+
+```env
+# Supabase (databas + auth)
+PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=xxx
+SUPABASE_SERVICE_ROLE_KEY=xxx        # HEMLIG - full åtkomst!
+
+# 46elks (SMS)
+ELKS_API_USER=xxx
+ELKS_API_PASSWORD=xxx
+
+# Kryptering
+POOL_ENCRYPTION_KEY=xxx              # För telefonnummer (AES-256)
+
+# URL
+SITE=https://sodermalm.netlify.app   # Används i SMS-länkar
+```
+
+### Säkerhet & GDPR
+
+| Aspekt | Hur det hanteras |
+|--------|------------------|
+| **Telefonnummer** | Krypteras med AES-256 innan lagring |
+| **Auto-radering** | Patienter raderas efter utgångsdatum |
+| **Inloggning** | Endast behörig personal via Supabase Auth |
+| **RLS** | Databasnivå-säkerhet förhindrar obehörig åtkomst |
+| **Service Role Key** | Används endast server-side, aldrig i klient |
+
+### Hur systemet fungerar (översikt)
+
+```
+1. PERSONAL SKAPAR KAMPANJ
+   └── /personal/kort-varsel.astro
+       └── Anropar /api/kampanj/skapa.ts
+           └── Sparar i Supabase: sms_kampanjer + sms_kampanj_mottagare
+           └── Skickar SMS via 46elks
+
+2. PATIENT FÅR SMS
+   └── SMS innehåller länk: specialist.se/s/abc123
+   
+3. PATIENT KLICKAR LÄNK
+   └── /s/[kod].astro renderas
+       └── Visar JA/NEJ-knappar
+       
+4. PATIENT SVARAR
+   └── Anropar /api/kampanj/svar.ts
+       └── Atomär SQL-funktion (förhindrar dubbelbokningar)
+       └── Uppdaterar sms_kampanj_mottagare.svar
+       
+5. GRADVIS UTSKICK (om aktiverat)
+   └── scheduled-sms.mts körs varje minut
+       └── Kollar: "Ska nästa SMS skickas nu?"
+       └── Skickar till nästa patient i kön
+       
+6. KAMPANJ AVSLUTAS
+   └── Automatiskt när alla platser fyllda
+   └── Eller manuellt av personal
+```
+
+### Om du behöver felsöka
+
+| Problem | Var du hittar info |
+|---------|-------------------|
+| SMS skickas inte | Kolla `.env` (46elks-nycklar), Netlify logs |
+| Inloggning fungerar inte | Supabase Dashboard → Auth |
+| Data saknas | Supabase Dashboard → Table Editor |
+| Webbsidan kraschar | Netlify → Deploys → View logs |
+| Schemalagt jobb | Netlify → Functions → scheduled-sms |
+
+### Kontaktinfo för tjänster
+
+| Tjänst | Support | Dokumentation |
+|--------|---------|---------------|
+| Supabase | support@supabase.io | docs.supabase.com |
+| 46elks | support@46elks.se | 46elks.se/docs |
+| Netlify | support@netlify.com | docs.netlify.com |
+| Astro | Discord community | docs.astro.build |
+
+### 🚀 Snabbstart för ny utvecklare
+
+Om du tar över projektet, gör så här:
+
+**1. Klona projektet**
+```bash
+git clone https://github.com/ditt-repo/SHARP.git
+cd SHARP
+npm install
+```
+
+**2. Skapa `.env`-fil**
+Kopiera `.env.example` (om den finns) eller skapa ny med variabler ovan.
+Hämta nycklar från:
+- Supabase Dashboard → Settings → API
+- 46elks Dashboard → API Keys
+- Netlify Dashboard → Site settings → Environment variables
+
+**3. Starta lokal utveckling**
+```bash
+npm run dev
+```
+Öppna `http://localhost:4321/personal/kort-varsel`
+
+**4. Förstå koden**
+- Börja med `src/pages/personal/kort-varsel.astro` (huvudvyn)
+- Titta på `src/pages/api/kampanj/skapa.ts` (hur kampanjer skapas)
+- Läs `supabase/migrations/002-kort-varsel.sql` (databasstrukturen)
+
+**5. Databasändringar**
+- Gör aldrig direkta ändringar i Supabase Dashboard
+- Skapa ny migration i `supabase/migrations/`
+- Kör SQL i Supabase → SQL Editor
+- Committa migrationen till Git
+
+### Vanliga frågor (FAQ)
+
+**Q: Var lagras patientdata?**
+A: I Supabase (PostgreSQL-databas). Telefonnummer krypteras med AES-256.
+
+**Q: Hur skickas SMS?**
+A: Via 46elks API. Koden finns i `src/pages/api/kampanj/skapa.ts`.
+
+**Q: Vad kostar det att driva?**
+A: Supabase Free tier (0 kr), Netlify Free tier (0 kr), 46elks ~0,50 kr/SMS.
+
+**Q: Hur lägger man till en ny läkare?**
+A: I Supabase Dashboard → Table Editor → `lakare` → Insert row.
+
+**Q: Hur ändrar man SMS-texten?**
+A: I `src/pages/api/kampanj/skapa.ts`, sök efter `smsText`.
+
+**Q: Vem kan logga in?**
+A: Endast användare skapade i Supabase Auth (Dashboard → Authentication → Users).
 
 ---
 
@@ -10,6 +274,12 @@
 
 | Datum | Ändring |
 |-------|---------|
+| 2026-01-24 | **Prioritetsbaserade intervall:** AKUT (60 min), sjukskriven (30 min), ont (20 min) |
+| 2026-01-24 | **Opt-out:** Patienter kan avregistrera sig via webben eller SMS (STOPP) |
+| 2026-01-24 | **Ålder & sortering:** Ålder beräknas från personnummer, sorterbara kolumner |
+| 2026-01-24 | **Utöka kampanj:** Lägg till fler patienter till aktiv kampanj |
+| 2026-01-24 | **SQL-filer flyttade:** Ny struktur i `supabase/migrations/` |
+| 2026-01-23 | **Läkare:** Läkare-dropdown, "flexibel läkare"-alternativ |
 | 2026-01-22 | **Patientpool:** Ny modell med persistent patientlista, reservhantering, NEJ-spårning |
 | 2026-01-22 | **Ny modell:** Stöd för 1-3 platser per kampanj + tidsblock istället för exakt klockslag |
 | 2026-01-22 | Implementation påbörjad: Dashboard, svarssida, API:er, databas-schema |
@@ -82,20 +352,34 @@ Istället för att mata in patienter manuellt för varje kampanj finns en **pers
 | **❌ NEJ** | Tackade nej | Uppdatera journalsystemet, ta bort |
 | **✅ Bokad** | Fick en tid | Visas som referens |
 
-### Tillgängliga patienter
+### Tillgängliga patienter (ny layout)
+
+Listan visar nu mer information och är sortierbar:
 
 ```
 ┌─ Tillgängliga (8) ────────────────────────────────────────────┐
-│ ☐ Anna Andersson     070-1** ****    ← 5 dagar kvar          │
-│ ☐ Karl Karlsson      070-9** ****    ← 3 dagar kvar          │
-│ ☐ Lisa Larsson       070-2** ****    ← 6 dagar kvar          │
-│ ...                                                           │
+│  [Prio ↕] [Namn ↕]           [Ålder ↕] [Läkare ↕] [Dagar ↕]  │
+├──────────────────────────────────────────────────────────────┤
+│  ☐ 🚨    Anna Andersson         68      Dr. Siri      3d    │
+│  ☐ 📋🔥  Karl Karlsson          45      Dr. Lindberg  5d    │
+│  ☐ 🔥    Erik Eriksson          72      Dr. Siri      2d    │
+│  ☐       Lisa Larsson           55      Dr. Lindberg  6d    │
+│  ...                                                          │
 │                                                                │
-│ [☑️ Välj alla]  [📤 Skapa kampanj med valda]                  │
+│  [☑️ Välj alla]  [📤 Skapa kampanj med valda]                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**"Dagar kvar":** Patienter raderas automatiskt efter 7 dagar (GDPR).
+**Kolumner:**
+- **Prio:** 🚨 AKUT, 📋 Sjukskriven, 🔥 Ont (kan kombineras)
+- **Namn:** Fullständigt namn (click-to-copy)
+- **Ålder:** Beräknad från personnummer (grön = 65+ pensionär)
+- **Läkare:** Vilken läkare patienten tillhör
+- **Dagar:** Dagar kvar till ordinarie operation (orange = ≤7 dagar)
+
+**Sortering:** Klicka på kolumnrubriken för att sortera. AKUT-patienter är **alltid överst** oavsett annan sortering.
+
+**"Dagar kvar":** Baserat på patientens ordinarie operationsdatum, inte 7 dagar från tillägg.
 
 ### Reservlista (prioriteras!)
 
@@ -170,16 +454,58 @@ Patienter som tackat nej måste markeras i journalsystemet:
 
 ---
 
-## 1c. Manuellt intervall för SMS-utskick
+## 1c. Prioritetsbaserade SMS-intervall (nytt!)
 
-Personal kan välja intervall mellan SMS manuellt:
+Systemet har nu **automatiska intervall baserat på patientens prioritet**. Detta gör att akuta patienter alltid kontaktas först och får mer tid att svara.
+
+### Prioritetsnivåer
+
+| Prioritet | Ikon | Intervall | Beskrivning |
+|-----------|------|-----------|-------------|
+| 🚨 **AKUT** | 🚨 | 60 min | Måste opereras snarast, sitter standby |
+| 📋 **Sjukskriven** | 📋 | 30 min | Stark prioritet, ofta kopplat till smärta |
+| 🔥 **Mycket ont** | 🔥 | 20 min | Hög prioritet pga smärta |
+| (normal) | - | 10 min | Standardintervall |
+
+### Automatisk sortering
+
+Vid kampanjskapande sorteras patienter **automatiskt efter prioritet**:
+
+```
+1. 🚨 AKUT-patienter (alltid först!)
+2. 📋 Sjukskrivna
+3. 🔥 Patienter med mycket ont
+4. Övriga (sorterade på namn/dagar kvar)
+```
+
+### Flöde med prioriterade patienter
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  10:00  🚨 AKUT-patient får SMS                                  │
+│         ↓ vänta 60 minuter                                       │
+│  11:00  📋 Sjukskriven patient får SMS                           │
+│         ↓ vänta 30 minuter                                       │
+│  11:30  🔥 Patient med ont får SMS                               │
+│         ↓ vänta 20 minuter                                       │
+│  11:50  Normal patient får SMS                                   │
+│         ↓ vänta 10 minuter                                       │
+│  12:00  Nästa normal patient...                                  │
+├──────────────────────────────────────────────────────────────────┤
+│  Om någon svarar JA → Stoppa automatiskt                        │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Manuellt intervall (backup)
+
+Personal kan fortfarande välja manuellt intervall:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Intervall mellan SMS:                                          │
 │                                                                 │
-│  (•) Automatiskt (rekommenderas baserat på deadline)           │
-│      💡 Just nu: 10 min (operation om 2 dagar)                 │
+│  (•) Automatiskt (baserat på prioritet)                        │
+│      💡 AKUT: 60 min, Sjukskriven: 30 min, Ont: 20 min         │
 │                                                                 │
 │  ( ) Manuellt:                                                  │
 │      [ 5 ] [10 ] [15 ] [20 ] [30 ] [45 ] [60 ] minuter         │
@@ -193,6 +519,63 @@ Personal kan välja intervall mellan SMS manuellt:
 | **10 min** | Standard, 1-2 dagar |
 | **15-20 min** | Gott om tid, 2-3 dagar |
 | **30-60 min** | Låg stress, 3+ dagar |
+
+---
+
+## 1d. Patient-avregistrering (opt-out)
+
+Patienter kan välja att **avregistrera sig** från kort varsel-listan. Detta kan göras på två sätt:
+
+### Via webben (rekommenderat)
+
+På svarssidan (`/s/[kod]`) finns en knapp:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  [ ✅ JA, jag kan ]    [ ❌ NEJ, jag kan inte ]                 │
+│                                                                 │
+│  ─────────────────────────────────────────────────────────────  │
+│                                                                 │
+│  [ Jag vill inte längre få dessa förfrågningar ]               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Effekt:** Patienten markeras som "avregistrerad" i systemet och får inga fler kort varsel-SMS.
+
+### Via SMS (backup)
+
+Patienten kan svara **STOPP** på ett SMS. Systemet känner igen:
+- STOPP
+- STOP
+- AVSLUTA
+- AVREGISTRERA
+- TA BORT MIG
+
+**Bekräftelse-SMS skickas:**
+```
+Du är nu avregistrerad från våra kortvarselsms.
+Din ordinarie operationstid påverkas inte.
+/Södermalms Ortopedi
+```
+
+### Visuell indikation i kampanjvy
+
+Avregistrerade patienter markeras tydligt:
+
+```
+┌─ Kampanj: Ledig tid 28/1 ────────────────────────────────────────┐
+│                                                                  │
+│  🚫 Anna Andersson    avregistrerad   → Ändra i kalender        │
+│  ✅ Karl Karlsson     JA              📞 Ring!                   │
+│  ❌ Erik Eriksson     NEJ                                        │
+│  ⏳ Lisa Larsson      väntar                                     │
+│                                                                  │
+│  💡 "Ändra i kalender" = byt från "operation kortvarsel"        │
+│     till "operation" i kalendersystemet                          │
+└──────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -979,33 +1362,308 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 
 ---
 
-## 10. GDPR och juridik
+## 10. GDPR, Patientdatalagen och juridik
 
-### Krav
+### Översikt: Rättslig grund
 
-| Krav | Åtgärd |
-|------|--------|
-| **Dataminimering** | Lagra endast nödvändig information |
-| **Kort lagringstid** | Auto-radera kampanjer efter 7 dagar |
-| **Säkerhet** | Endast inloggad, behörig personal |
-| **Spårbarhet** | Logga vem som skapat kampanjer |
-| **Tredjepartsavtal** | 46elks har standard-DPA |
+Detta system hanterar **känsliga personuppgifter** (hälsodata) och lyder under:
 
-### Vad som lagras
+| Lag/förordning | Relevans | Krav |
+|----------------|----------|------|
+| **GDPR** | All personuppgiftsbehandling | Samtycke eller annan rättslig grund |
+| **Patientdatalagen (PDL)** | Vården behandlar patientuppgifter | Journalföringsskyldighet, sekretess |
+| **Offentlighets- och sekretesslagen** | Privat vård | Tystnadsplikt |
 
-| Data | Lagras | Radering |
-|------|--------|----------|
-| Patientnamn | Ja | Efter 7 dagar |
-| Telefonnummer (hashat) | Ja | Efter 7 dagar |
-| Telefonnummer (klartext) | Nej | Raderas direkt efter sändning |
-| Svar (ja/nej/reserv) | Ja | Efter 7 dagar |
-| Svars-tidpunkt | Ja | Efter 7 dagar |
+### Rättslig grund för behandling
+
+Vi använder **två olika rättsliga grunder** beroende på om patienten gett samtycke:
+
+| Grund | GDPR-artikel | När det gäller |
+|-------|--------------|----------------|
+| **Uttryckligt samtycke** | Art. 9(2)(a) | Patient har kryssat i samtycke på hälsodeklarationen |
+| **Berättigat intresse** | Art. 6(1)(f) | Patient saknar samtycke (vagt SMS-innehåll) |
+
+**Viktigt:** Behandlingen av känsliga uppgifter (hälsodata) kräver normalt uttryckligt samtycke. Därför är samtyckesrutan på hälsodeklarationen central.
+
+---
+
+### Hur samtycke inhämtas
+
+#### Steg 1: Hälsodeklarationen (externt system)
+
+När patienten fyller i sin hälsodeklaration (före första besöket) finns en samtyckesruta:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  HÄLSODEKLARATION                                               │
+│  ...                                                            │
+│                                                                 │
+│  ☐ Jag godkänner SMS-kommunikation om mina bokningar,          │
+│    inklusive förfrågan om lediga operationstider vid           │
+│    avbokningar.                                                 │
+│                                                                 │
+│  💡 Patienten har redan loggat in med BankID vid detta         │
+│     tillfälle, vilket utgör en giltig elektronisk signatur.    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Steg 2: Journalsystemet
+
+- Samtyckesuppgiften dokumenteras i journalen
+- Personal ser i journalen om samtycke finns
+- Vid inmatning i kort varsel-systemet anges samtyckesstatus
+
+#### Steg 3: Kort varsel-systemet
+
+```
+┌─ Lägg till patient ──────────────────────────────────────────────┐
+│                                                                  │
+│  Namn: [Anna Andersson        ]                                 │
+│  Telefon: [070-123 45 67      ]                                 │
+│                                                                  │
+│  ☑️ Patienten har godkänt SMS-kommunikation                     │
+│     (enligt hälsodeklaration i journalsystemet)                 │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### SMS-innehåll baserat på samtycke
+
+Systemet anpassar **automatiskt** SMS-texten beroende på samtyckesstatus:
+
+#### MED samtycke (tydlig formulering)
+```
+Hej Anna! Vi har en ledig operationsplats för axeloperation 
+tis 28/1 (förmiddag).
+
+Kan du komma med kort varsel?
+Svara här: specialist.se/s/x7k9m2
+
+/Södermalms Ortopedi
+```
+✅ Innehåller: namn, operationstyp, datum
+
+#### UTAN samtycke (vag formulering)
+```
+Hej! Vi har en ledig operationsplats hos Södermalms Ortopedi 
+tis 28/1.
+
+Kan du komma med kort varsel?
+Svara här: specialist.se/s/x7k9m2
+
+/Södermalms Ortopedi
+```
+⚠️ Innehåller INTE: namn, operationstyp (endast datum och mottagning)
+
+**Logik:** Utan samtycke skickas ett "anonymt" SMS som inte avslöjar patientens hälsotillstånd för den som råkar se telefonen.
+
+---
+
+### Patientens rättigheter
+
+| Rättighet | Hur det implementeras |
+|-----------|----------------------|
+| **Rätt till information** | Samtyckesfrågan förklarar vad uppgifterna används till |
+| **Rätt till tillgång** | Patienten kan begära registerutdrag (via mottagningen) |
+| **Rätt till radering** | Auto-radering efter utgångsdatum + manuell på begäran |
+| **Rätt till invändning** | Opt-out via webben eller SMS (STOPP) |
+| **Rätt att återkalla samtycke** | Kan meddela mottagningen när som helst |
+
+### Opt-out (avregistrering)
+
+Patienten kan avregistrera sig från kort varsel-listan på två sätt:
+
+1. **Via webben:** Knapp på svarssidan "Jag vill inte längre få dessa förfrågningar"
+2. **Via SMS:** Svara STOPP på ett mottaget SMS
+
+**Effekt:** Patienten markeras som `avregistrerad` och får inga fler kort varsel-SMS. Ordinarie bokningar påverkas inte.
+
+---
+
+### Datalagring och radering
+
+| Uppgift | Lagringsform | Lagringstid | Raderingsmetod |
+|---------|--------------|-------------|----------------|
+| Patientnamn | Klartext | Till utgångsdatum | Automatisk (cron) |
+| Telefonnummer | **AES-256 krypterat** | Till utgångsdatum | Automatisk |
+| Telefon-hash | SHA-256 | Till utgångsdatum | Automatisk |
+| Svar (ja/nej) | Klartext | Till kampanj raderas | Automatisk |
+| Tidpunkt för svar | Timestamp | Till kampanj raderas | Automatisk |
+
+**Utgångsdatum:** Baserat på patientens ordinarie operationsdatum (inte 7 dagar från tillägg).
+
+**Kryptering:** Telefonnummer krypteras med AES-256 så att endast systemet kan dekryptera dem för SMS-utskick. Om databasen läcker är numren oläsbara.
+
+---
+
+### Tredjepartsleverantörer (Personuppgiftsbiträden)
+
+Dessa tjänster behandlar personuppgifter för vår räkning:
+
+| Leverantör | Land | Tjänst | Data de ser |
+|------------|------|--------|-------------|
+| **46elks** | 🇸🇪 Sverige | SMS-leverans | Telefonnummer + SMS-text |
+| **Supabase** | 🇺🇸 USA | Databas + Auth | All lagrad data (krypterad) |
+| **Netlify** | 🇺🇸 USA | Hosting | Trafikloggar, IP-adresser |
+
+---
+
+#### 🇸🇪 46elks - Personuppgiftsbiträdesavtal
+
+**Status:** Svenskt bolag - GDPR gäller automatiskt.
+
+| Info | Detaljer |
+|------|----------|
+| **DPA tillgängligt** | ✅ Ja, standard PUB-avtal |
+| **Hur man får det** | Kontakta support@46elks.se eller ladda ner |
+| **URL** | https://46elks.se/gdpr |
+| **Datalagring** | Sverige/EU |
+
+**Att göra:** Mejla 46elks och begär PUB-avtal, eller ladda ner från deras GDPR-sida.
+
+---
+
+#### 🇺🇸 Supabase - Data Processing Agreement
+
+**Status:** Amerikanskt bolag med GDPR-compliance och SCC.
+
+| Info | Detaljer |
+|------|----------|
+| **DPA tillgängligt** | ✅ Ja, ingår i Terms of Service |
+| **SCC (Standard Contractual Clauses)** | ✅ Ja, för EU→USA överföring |
+| **Hur man får det** | Dashboard → Settings → Legal, eller mejla privacy@supabase.io |
+| **URL** | https://supabase.com/docs/company/privacy |
+| **Datalagring** | Välj EU-region vid projektuppsättning! |
+
+**Att göra:** 
+1. Se till att Supabase-projektet är i **EU-region** (Frankfurt)
+2. Ladda ner/acceptera DPA via Dashboard eller mejl
+3. Spara kopia av avtalet
+
+---
+
+#### 🇺🇸 Netlify - Data Processing Agreement
+
+**Status:** Amerikanskt bolag med GDPR-compliance och SCC.
+
+| Info | Detaljer |
+|------|----------|
+| **DPA tillgängligt** | ✅ Ja |
+| **SCC (Standard Contractual Clauses)** | ✅ Ja, för EU→USA överföring |
+| **Hur man får det** | Mejla privacy@netlify.com eller via Trust Center |
+| **URL** | https://www.netlify.com/gdpr-ccpa/ |
+| **Datalagring** | Globalt CDN (data kan finnas i flera regioner) |
+
+**Att göra:**
+1. Mejla Netlify och begär DPA
+2. Spara kopia av avtalet
+
+---
+
+#### Mall för att begära DPA (engelska)
+
+```
+Subject: Request for Data Processing Agreement (DPA)
+
+Hi,
+
+We are using [SERVICE NAME] for our healthcare application 
+in Sweden and need to ensure GDPR compliance.
+
+Could you please provide us with:
+1. Your Data Processing Agreement (DPA)
+2. Information about Standard Contractual Clauses (SCC) 
+   for EU-US data transfers
+3. Confirmation of technical security measures
+
+Our organization details:
+- Company: [Företagsnamn]
+- Organization number: [Org.nr]
+- Contact: [Din mejl]
+- Account/Project ID: [Om tillämpligt]
+
+Thank you,
+[Ditt namn]
+```
+
+---
+
+#### Checklista: DPA-avtal
+
+| Leverantör | Avtal begärt | Avtal mottaget | Sparat |
+|------------|--------------|----------------|--------|
+| 46elks | ☐ | ☐ | ☐ |
+| Supabase | ☐ | ☐ | ☐ |
+| Netlify | ☐ | ☐ | ☐ |
+
+**Tips:** Spara alla DPA-avtal i en mapp, t.ex. `docs/avtal/` eller i företagets dokumenthanteringssystem.
+
+---
+
+#### Varför USA-leverantörer kräver extra åtgärder
+
+Efter **Schrems II-domen (2020)** räcker det inte med bara DPA för överföring av personuppgifter till USA. Leverantören måste också ha:
+
+1. **Standard Contractual Clauses (SCC)** - Godkända av EU-kommissionen
+2. **Tekniska skyddsåtgärder** - T.ex. kryptering så att leverantören inte kan läsa datan
+3. **Supplementary measures** - Extra skyddsåtgärder vid behov
+
+✅ Både Supabase och Netlify har uppdaterat sina avtal efter Schrems II.
+
+✅ Vi krypterar telefonnummer med AES-256, vilket är en teknisk skyddsåtgärd som gör att även om Supabase skulle tvingas lämna ut data, är telefonnumren oläsbara utan vår krypteringsnyckel.
+
+---
+
+### Säkerhetsåtgärder
+
+| Åtgärd | Implementation |
+|--------|----------------|
+| **Kryptering i vila** | Telefonnummer krypteras med AES-256 |
+| **Kryptering i transit** | HTTPS för all kommunikation |
+| **Åtkomstkontroll** | Endast inloggad personal |
+| **Row Level Security** | Databasnivå-skydd i Supabase |
+| **Audit-logg** | Alla händelser loggas |
+| **Korta svarskoder** | Minst 16 tecken, ej gissningsbara |
+
+---
+
+### Checklista för GDPR-efterlevnad
+
+#### Före lansering
+- [ ] Samtyckesruta tillagd i hälsodeklarationen
+- [ ] Informationstext om databehandling på svarssidan
+- [ ] DPA undertecknat med 46elks
+- [ ] DPA undertecknat med Supabase
+- [ ] DPA undertecknat med Netlify
+- [ ] Dokumentation om behandlingen i registret (art. 30)
+
+#### Löpande
+- [ ] Kontrollera att auto-radering fungerar
+- [ ] Hantera eventuella registerutdragsbegäranden
+- [ ] Hantera opt-out/avregistreringar
+- [ ] Uppdatera dokumentation vid ändringar
+
+---
+
+### Vad som lagras (sammanfattning)
+
+| Data | Lagras | Krypterad | Radering |
+|------|--------|-----------|----------|
+| Patientnamn | ✅ Ja | ❌ Nej | Auto |
+| Telefonnummer | ✅ Ja | ✅ AES-256 | Auto |
+| Telefon-hash | ✅ Ja | - (hash) | Auto |
+| Samtyckesstatus | ✅ Ja | ❌ Nej | Auto |
+| Svar (ja/nej) | ✅ Ja | ❌ Nej | Auto |
+| Prioritet (akut/ont) | ✅ Ja | ❌ Nej | Auto |
+| Svars-tidpunkt | ✅ Ja | ❌ Nej | Auto |
 
 ---
 
 ## 11. Teknisk implementation
 
-### Nya filer
+### Filstruktur
 
 ```
 src/pages/
@@ -1013,18 +1671,39 @@ src/pages/
 │   ├── kort-varsel.astro       ← Dashboard för personal
 │   └── profil.astro            ← Personalens profilsida
 ├── s/
-│   └── [kod].astro             ← Svarssida för patient
+│   └── [kod].astro             ← Svarssida för patient (med opt-out)
 └── api/
-    └── kampanj/
-        ├── skapa.ts            ← Skapa kampanj + skicka SMS
-        ├── status.ts           ← Hämta status (för polling)
-        ├── svar.ts             ← Registrera patientsvar (atomär)
-        ├── nasta-batch.ts      ← Skicka nästa batch (cron/manuellt)
-        ├── utoka.ts            ← Lägg till fler mottagare
-        ├── avsluta.ts          ← Stäng kampanj (med utfall)
-        ├── bekrafta.ts         ← Bekräfta bokning efter uppringning
-        ├── aktiv.ts            ← Finns aktiv kampanj? (för header-indikator)
-        └── statistik.ts        ← Aggregerad statistik
+    ├── kampanj/
+    │   ├── skapa.ts            ← Skapa kampanj + skicka SMS (med prioritet)
+    │   ├── status.ts           ← Hämta status (för polling)
+    │   ├── svar.ts             ← Registrera patientsvar (ja/nej/avregistrera)
+    │   ├── utoka.ts            ← Lägg till fler mottagare till aktiv kampanj
+    │   ├── avsluta.ts          ← Stäng kampanj (med utfall + notifiera)
+    │   ├── aktiv.ts            ← Finns aktiv kampanj? (för header-indikator)
+    │   └── lista.ts            ← Lista kampanjer
+    ├── pool/
+    │   ├── lagg-till.ts        ← Lägg till patient i pool (med dublettkontroll)
+    │   ├── lista.ts            ← Lista patienter i pool
+    │   └── ta-bort.ts          ← Ta bort patient från pool
+    └── sms/
+        └── inkommande.ts       ← Webhook för STOPP-sms (opt-out)
+
+netlify/
+└── functions/
+    └── scheduled-sms.mts       ← Schemalagd funktion för gradvis utskick
+
+supabase/                       ← NY MAPP!
+├── README.md                   ← Instruktioner
+├── schema.sql                  ← Placeholder
+└── migrations/
+    ├── 001-initial-setup.sql   ← Audit, statistik, mallar
+    ├── 002-kort-varsel.sql     ← Kampanjer, mottagare, patientpool
+    ├── 003-lakare.sql          ← Läkare-tabell
+    ├── 004-profilbilder.sql    ← Avatar-stöd
+    └── 005-prioritet.sql       ← Prioritetsfält (akut, ont, sjukskriven)
+
+src/lib/
+└── kryptering.ts               ← AES-256 kryptering av telefonnummer
 ```
 
 ### Databas (Supabase)
@@ -1164,7 +1843,7 @@ Med gradvis utskick kan kostnaden bli lägre om någon svarar snabbt.
 ### Fas 1: Grundsystem (✅ Klart)
 
 1. ✅ Specifikation klar (detta dokument)
-2. ✅ Databasschema designat (`docs/KORT-VARSEL-SCHEMA.sql`)
+2. ✅ Databasschema designat (`supabase/migrations/`)
 3. ✅ Bygga `/personal/kort-varsel` (dashboard)
 4. ✅ Bygga `/s/[kod]` (svarssida med pre-op bekräftelse)
 5. ✅ Bygga API-endpoints (skapa, svar, status, avsluta, lista)
@@ -1173,83 +1852,73 @@ Med gradvis utskick kan kostnaden bli lägre om någon svarar snabbt.
 8. ✅ Header-indikator för aktiv kampanj
 9. ✅ Personalprofil med mobilnummer
 
-### Fas 2: Patientpool (⬜ Planerad)
+### Fas 2: Patientpool (✅ Klart)
 
-| Uppgift | Beskrivning |
-|---------|-------------|
-| ⬜ Patientpool-tabell | Ny tabell `kort_varsel_patienter` med krypterade telefonnummer |
-| ⬜ Krypterad lagring | AES-256 för telefonnummer istället för hash (7 dagars livstid) |
-| ⬜ Pool-dashboard | Ny vy med Tillgängliga / Reserv / NEJ / Bokade |
-| ⬜ NEJ-hantering | "Markera som hanterad" + koppling till journalsystem |
-| ⬜ Reserv-prioritering | Automatiskt först i kön vid nästa kampanj |
-| ⬜ Manuellt intervall | Dropdown: 5/10/15/20/30/45/60 min |
-| ⬜ Auto-radering | Cron-jobb för att radera patienter efter 7 dagar |
-| ⬜ Välj från pool | Checkbox-lista + "Skapa kampanj med valda" |
+| Uppgift | Status |
+|---------|--------|
+| ✅ Patientpool-tabell | `kort_varsel_patienter` med krypterade telefonnummer |
+| ✅ Krypterad lagring | AES-256 för telefonnummer |
+| ✅ Pool-dashboard | Tillgängliga / Reserv / NEJ / Bokade |
+| ✅ Dublettkontroll | Varnar om telefonnummer redan finns |
+| ✅ Läkare-stöd | Dropdown för läkare + "flexibel läkare" |
+| ✅ Utgångsdatum | Baserat på ordinarie operationsdatum |
+| ✅ Välj från pool | Checkbox-lista + "Skapa kampanj med valda" |
+| ✅ Utöka kampanj | Lägg till fler patienter till aktiv kampanj |
 
-### Fas 3: Integration och test
+### Fas 3: Prioritet & Opt-out (✅ Klart)
+
+| Uppgift | Status |
+|---------|--------|
+| ✅ Prioritetsfält | AKUT, Sjukskriven, Mycket ont |
+| ✅ Automatiska intervall | 60/30/20/10 min baserat på prioritet |
+| ✅ Ålder från personnummer | Beräknas och visas (pensionär = grön) |
+| ✅ Sorterbara kolumner | Prio, Namn, Ålder, Läkare, Dagar |
+| ✅ Opt-out via webb | Knapp på svarssidan |
+| ✅ Opt-out via SMS | STOPP-kommando webhook |
+| ✅ Avregistrerings-markering | Tydlig i kampanjvy med åtgärdsförslag |
+
+### Fas 4: Integration och produktion (⬜ Planerad)
 
 | Uppgift | Beskrivning |
 |---------|-------------|
 | ⬜ Samtyckesfråga | Lägg till i hälsodeklarationen (externt system) |
-| ⬜ Databas-migrering | Köra SQL i Supabase |
-| ⬜ KortVarselIndikator | Lägga till i BaseLayout |
+| ⬜ 46elks webhook | Konfigurera inkommande SMS |
 | ⬜ Produktion | Testa med riktig personal |
 | ⬜ Utbildning | Visa personal hur systemet fungerar |
+| ⬜ Statistik-dashboard | Visualisera framgång över tid |
 
-### Databasändringar för patientpool
+### Databasschema
 
-```sql
--- NY TABELL: Patientpool (persistent, 7 dagar)
-CREATE TABLE kort_varsel_patienter (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
-  -- Patientinfo
-  namn TEXT NOT NULL,
-  telefon_krypterad TEXT NOT NULL,    -- AES-256 (ej hash!)
-  telefon_masked TEXT NOT NULL,       -- "070-1** ****" för visning
-  har_samtycke BOOLEAN DEFAULT false,
-  
-  -- Status
-  status TEXT DEFAULT 'tillganglig' 
-    CHECK (status IN ('tillganglig', 'kontaktad', 'reserv', 'nej', 'bokad')),
-  
-  -- Spårning
-  tillagd_vid TIMESTAMPTZ DEFAULT NOW(),
-  tillagd_av UUID REFERENCES auth.users(id),
-  senast_kontaktad TIMESTAMPTZ,
-  
-  -- NEJ-hantering
-  tackade_nej_vid TIMESTAMPTZ,
-  hanterad_i_journal BOOLEAN DEFAULT false,
-  
-  -- Bokad (om status = 'bokad')
-  bokad_datum DATE,
-  bokad_tidsblock TEXT,
-  
-  -- GDPR: Auto-radering
-  utgar_vid TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
-);
+SQL-filer finns nu i `supabase/migrations/`:
 
--- Funktion för auto-radering
-CREATE OR REPLACE FUNCTION rensa_utgangna_patienter()
-RETURNS void AS $$
-BEGIN
-  DELETE FROM kort_varsel_patienter 
-  WHERE utgar_vid < NOW();
-END;
-$$ LANGUAGE plpgsql;
 ```
+supabase/
+├── README.md                   ← Instruktioner
+└── migrations/
+    ├── 001-initial-setup.sql   ← Grundtabeller
+    ├── 002-kort-varsel.sql     ← Kampanjer & patientpool
+    ├── 003-lakare.sql          ← Läkare
+    ├── 004-profilbilder.sql    ← Avatars
+    └── 005-prioritet.sql       ← Prioritetsfält
+```
+
+Se `supabase/README.md` för instruktioner om hur man kör migrations.
 
 ### Prioriteringsordning vid kampanj
 
 ```
-1. ⭐ Reservpatienter (svarade JA men fick ej plats) - FÖRST
-2. Tillgängliga (aldrig kontaktade) - sorterat på tillagd_vid
-3. Kontaktade (fått SMS men ej svarat) - SIST
+1. 🚨 AKUT-patienter (alltid först!)
+2. 📋 Sjukskrivna
+3. 🔥 Patienter med mycket ont
+4. ⭐ Reservpatienter (svarade JA men fick ej plats)
+5. Tillgängliga (aldrig kontaktade)
+6. Kontaktade (fått SMS men ej svarat) - SIST
 ```
 
 ---
 
 *Specifikation skapad 2026-01-22*  
 *Implementation påbörjad 2026-01-22*  
-*Patientpool-modell tillagd 2026-01-22*
+*Patientpool-modell tillagd 2026-01-22*  
+*Prioritet & opt-out tillagt 2026-01-24*  
+*SQL-filer flyttade till supabase/ 2026-01-24*

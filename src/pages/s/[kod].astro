@@ -345,6 +345,27 @@ const fornamn = mottagare?.namn?.split(' ')[0] || '';
       font-size: 0.875rem;
     }
     
+    .optout-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn-optout {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      text-decoration: underline;
+    }
+    
+    .btn-optout:hover {
+      color: #64748b;
+    }
+    
     /* Resultat-sidor */
     .result-container {
       text-align: center;
@@ -532,6 +553,13 @@ const fornamn = mottagare?.namn?.split(' ')[0] || '';
         <div class="first-come">
           ⚠️ Flera patienter har fått denna förfrågan. Först till kvarn!
         </div>
+        
+        <!-- Avregistrering -->
+        <div class="optout-link">
+          <button type="button" class="btn-optout" id="btn-optout">
+            Jag vill inte längre få dessa förfrågningar
+          </button>
+        </div>
       </div>
       
       <!-- Loading -->
@@ -602,6 +630,24 @@ const fornamn = mottagare?.namn?.split(' ')[0] || '';
           Ring <a href="tel:+46855110422">08-55 11 04 22</a>
         </div>
       </div>
+      
+      <!-- Avregistrerad -->
+      <div class="result-container" id="result-optout" style="display: none;">
+        <div class="result-icon">👋</div>
+        <h2 class="result-title">Du är avregistrerad</h2>
+        <p class="result-text">
+          Vi kommer inte längre skicka kortvarsel-SMS till dig.
+        </p>
+        <p class="result-text" style="font-size: 0.875rem;">
+          Din ordinarie operationstid kvarstår och påverkas inte av detta.
+        </p>
+        <div class="info-box">
+          <div class="title">💡 Ångrar du dig?</div>
+          <p>
+            Kontakta oss på <a href="tel:+46855110422" style="color: #166534;">08-55 11 04 22</a> så lägger vi till dig igen.
+          </p>
+        </div>
+      </div>
     )}
   </div>
   
@@ -664,6 +710,48 @@ const fornamn = mottagare?.namn?.split(' ')[0] || '';
     
     if (btnNo) {
       btnNo.addEventListener('click', () => submitAnswer('nej'));
+    }
+    
+    // Avregistrering
+    const btnOptout = document.getElementById('btn-optout');
+    if (btnOptout) {
+      btnOptout.addEventListener('click', async () => {
+        const bekrafta = confirm(
+          'Är du säker på att du inte längre vill få kortvarsel-SMS?\n\n' +
+          'Din ordinarie operationstid påverkas inte.'
+        );
+        
+        if (!bekrafta) return;
+        
+        if (form) form.style.display = 'none';
+        if (loading) loading.style.display = 'block';
+        
+        try {
+          const response = await fetch('/api/kampanj/svar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              kod: kod,
+              svar: 'avregistrerad',
+              bekraftatPreop: false,
+            }),
+          });
+          
+          const data = await response.json();
+          
+          if (loading) loading.style.display = 'none';
+          
+          if (data.success) {
+            document.getElementById('result-optout').style.display = 'block';
+          } else {
+            document.getElementById('error-message').textContent = data.error || 'Kunde inte avregistrera.';
+            document.getElementById('result-error').style.display = 'block';
+          }
+        } catch (error) {
+          if (loading) loading.style.display = 'none';
+          document.getElementById('result-error').style.display = 'block';
+        }
+      });
     }
   </script>
 </body>

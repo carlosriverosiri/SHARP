@@ -1,14 +1,15 @@
 -- ============================================
--- MIGRATION: Profilbilder för personal
+-- MIGRATION 004: Profilbilder
 -- ============================================
--- Kör detta i Supabase SQL Editor för att
--- lägga till stöd för profilbilder.
+-- Stöd för profilbilder i Supabase Storage
+-- Skapad: 2026-01-23
 -- ============================================
 
--- 1. Lägg till avatar_url i profiles
+-- Lägg till avatar_url i profiles (om inte redan finns)
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS avatar_url TEXT;
 
 COMMENT ON COLUMN profiles.avatar_url IS 'URL till profilbild i Supabase Storage';
+
 
 -- ============================================
 -- VIKTIGT: Skapa Storage Bucket manuellt!
@@ -40,5 +41,8 @@ COMMENT ON COLUMN profiles.avatar_url IS 'URL till profilbild i Supabase Storage
 --   - Policy: true
 --
 -- ============================================
--- KLART!
--- ============================================
+
+-- Schema version
+INSERT INTO schema_version (version, description) VALUES
+  (4, 'Profilbilder: avatar_url kolumn')
+ON CONFLICT (version) DO NOTHING;

@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   let body: {
     kod: string;
-    svar: 'ja' | 'nej';
+    svar: 'ja' | 'nej' | 'avregistrerad';
     bekraftatPreop?: boolean;
   };
 
@@ -75,14 +75,68 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  if (body.svar !== 'ja' && body.svar !== 'nej') {
+  if (body.svar !== 'ja' && body.svar !== 'nej' && body.svar !== 'avregistrerad') {
     return new Response(
-      JSON.stringify({ error: 'Svar måste vara "ja" eller "nej"' }),
+      JSON.stringify({ error: 'Svar måste vara "ja", "nej" eller "avregistrerad"' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   try {
+    // AVREGISTRERING
+    if (body.svar === 'avregistrerad') {
+      // Hämta mottagarens info först
+      const { data: mottagare, error: mottagareError } = await supabaseAdmin
+        .from('sms_kampanj_mottagare')
+        .select('id, telefon_hash')
+        .eq('unik_kod', body.kod)
+        .single();
+
+      if (mottagareError || !mottagare) {
+        return new Response(
+          JSON.stringify({ error: 'Ogiltig kod', status: 'not_found' }),
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Markera denna mottagare som avregistrerad
+      await supabaseAdmin
+        .from('sms_kampanj_mottagare')
+        .update({
+          svar: 'avregistrerad',
+          svar_vid: new Date().toISOString(),
+        })
+        .eq('id', mottagare.id);
+
+      // Markera alla framtida kampanjmottagare med samma telefon som avregistrerade
+      await supabaseAdmin
+        .from('sms_kampanj_mottagare')
+        .update({
+          svar: 'avregistrerad',
+          svar_vid: new Date().toISOString(),
+        })
+        .eq('telefon_hash', mottagare.telefon_hash)
+        .is('svar', null);
+
+      // Om patienten finns i patientpoolen, markera dem som avregistrerade där också
+      await supabaseAdmin
+        .from('kort_varsel_patienter')
+        .update({
+          status: 'avregistrerad',
+          avregistrerad_vid: new Date().toISOString(),
+          avregistrerings_orsak: 'Egen begäran via svarssida',
+        })
+        .eq('telefon_hash', mottagare.telefon_hash);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          status: 'optout',
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (body.svar === 'ja') {
       // Använd atomär funktion för JA-svar
       const { data, error } = await supabaseAdmin.rpc('registrera_ja_svar', {

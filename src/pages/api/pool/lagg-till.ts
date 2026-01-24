@@ -25,6 +25,11 @@ interface PatientInput {
   harSamtycke: boolean;
   lakare?: string;
   flexibelLakare?: boolean;
+  opDatum?: string; // Patientens ordinarie operationsdatum (används som utgångsdatum)
+  akut?: boolean; // AKUT - måste opereras snarast (högsta prioritet)
+  harOnt?: boolean; // Patienten har mycket ont
+  sjukskriven?: boolean; // Patienten är sjukskriven
+  alder?: number | null; // Patientens ålder (beräknad från personnummer)
 }
 
 // Kryptera telefonnummer med AES-256
@@ -47,6 +52,11 @@ function maskeraTelefon(telefon: string): string {
     return `${clean.slice(0, 3)}-${clean.slice(3, 4)}** ****`;
   }
   return '***-*** ****';
+}
+
+// Hasha telefonnummer för snabb matchning
+function hashaTelefon(telefon: string): string {
+  return crypto.createHash('sha256').update(telefon).digest('hex');
 }
 
 // Formatera telefonnummer till +46...
@@ -92,36 +102,84 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    // Beräkna utgångsdatum (7 dagar framåt)
-    const utgarVid = new Date();
-    utgarVid.setDate(utgarVid.getDate() + 7);
-
-    // Förbered data för insert
-    const patientData = body.patienter.map(p => {
+    // Förbered data och beräkna hashar för dublettkontroll
+    const patientDataMedHash = body.patienter.map(p => {
       const telefonFormaterad = formateraTelefon(p.telefon);
+      const hash = hashaTelefon(telefonFormaterad);
+      
+      // Använd operationsdatum som utgångsdatum om angivet, annars 7 dagar
+      let utgarVid: Date;
+      if (p.opDatum) {
+        // Sätt utgångsdatum till slutet av operationsdagen
+        utgarVid = new Date(p.opDatum + 'T23:59:59');
+      } else {
+        utgarVid = new Date();
+        utgarVid.setDate(utgarVid.getDate() + 7);
+      }
+      
       return {
         namn: p.namn.trim(),
         telefon_krypterad: krypteraTelefon(telefonFormaterad),
+        telefon_hash: hash,
         telefon_masked: maskeraTelefon(telefonFormaterad),
         har_samtycke: p.harSamtycke,
         lakare: p.lakare || null,
         flexibel_lakare: p.flexibelLakare || false,
+        akut: p.akut || false, // AKUT - måste opereras snarast
+        har_ont: p.harOnt || false, // Patienten har mycket ont
+        sjukskriven: p.sjukskriven || false, // Patienten är sjukskriven
+        alder: p.alder ?? null, // Ålder från personnummer (kan vara null)
         status: 'tillganglig',
         tillagd_av: anvandare?.id || null,
         utgar_vid: utgarVid.toISOString(),
       };
     });
 
+    // Kontrollera om något telefonnummer redan finns i poolen (aktiva patienter)
+    const hasharAttKontrollera = patientDataMedHash.map(p => p.telefon_hash);
+    
+    const { data: existerande } = await supabaseAdmin
+      .from('kort_varsel_patienter')
+      .select('namn, telefon_hash')
+      .in('telefon_hash', hasharAttKontrollera)
+      .in('status', ['tillganglig', 'kontaktad', 'reserv']); // Endast aktiva patienter
+    
+    if (existerande && existerande.length > 0) {
+      // Hitta namn på dubbletter
+      const existerandeHashar = new Set(existerande.map(e => e.telefon_hash));
+      const dubletter = patientDataMedHash
+        .filter(p => existerandeHashar.has(p.telefon_hash))
+        .map(p => p.namn);
+      
+      // Hitta också existerande namn för bättre meddelande
+      const existerandeNamn = existerande.map(e => e.namn);
+      
+      return new Response(
+        JSON.stringify({ 
+          error: 'Dubbletter hittades',
+          message: `Följande telefonnummer finns redan i poolen: ${existerandeNamn.join(', ')}`,
+          dubletter: dubletter,
+          existerande: existerandeNamn
+        }),
+        { status: 409, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Lägg till i databasen
     const { data, error } = await supabaseAdmin
       .from('kort_varsel_patienter')
-      .insert(patientData)
+      .insert(patientDataMedHash)
       .select();
 
     if (error) {
       console.error('Kunde inte lägga till patienter:', error);
       return new Response(
-        JSON.stringify({ error: 'Kunde inte lägga till patienter' }),
+        JSON.stringify({ 
+          error: 'Kunde inte lägga till patienter', 
+          details: error.message,
+          hint: error.hint || null,
+          code: error.code || null
+        }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }

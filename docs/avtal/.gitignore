@@ -1,0 +1,9 @@
+# Avtalsdokument ska INTE versionshanteras i Git
+# (innehåller känslig affärsinformation)
+# 
+# Spara originalen i företagets dokumenthanteringssystem!
+
+*.pdf
+*.doc
+*.docx
+*.signed.*

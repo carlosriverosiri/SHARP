@@ -5,6 +5,7 @@
  * Body: {
  *   kampanjId: "xxx",
  *   utfall: "fylld_via_sms" | "fylld_manuellt" | "misslyckad" | "avbruten"
+ *   skickaAvslutSms: boolean
  * }
  * 
  * Avslutar kampanjen och skickar "tiden bokad"-SMS till de som inte svarat.
@@ -15,6 +16,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
+import { dekryptera } from '../../../lib/kryptering';
 
 // 46elks
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
@@ -22,7 +24,10 @@ const ELKS_API_USER = import.meta.env.ELKS_API_USER || '';
 const ELKS_API_PASSWORD = import.meta.env.ELKS_API_PASSWORD || '';
 
 async function skickaSMS(telefon: string, meddelande: string): Promise<boolean> {
-  if (!ELKS_API_USER || !ELKS_API_PASSWORD) return false;
+  if (!ELKS_API_USER || !ELKS_API_PASSWORD) {
+    console.log('⚠️ 46elks inte konfigurerat, skippar SMS');
+    return false;
+  }
 
   try {
     const response = await fetch(ELKS_API_URL, {
@@ -37,8 +42,12 @@ async function skickaSMS(telefon: string, meddelande: string): Promise<boolean> 
         message: meddelande,
       }),
     });
+    if (!response.ok) {
+      console.error('SMS-fel:', await response.text());
+    }
     return response.ok;
-  } catch {
+  } catch (err) {
+    console.error('SMS-exception:', err);
     return false;
   }
 }
@@ -102,34 +111,47 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // Skicka "tiden bokad"-SMS till de som fått SMS men inte svarat
-    // (endast om utfallet är fyllt och användaren vill skicka)
-    if (body.skickaAvslutSms !== false && (body.utfall === 'fylld_via_sms' || body.utfall === 'fylld_manuellt')) {
+    let antalNotifierade = 0;
+    
+    if (body.skickaAvslutSms === true && (body.utfall === 'fylld_via_sms' || body.utfall === 'fylld_manuellt' || body.utfall === 'avbruten')) {
       // Hämta mottagare som fått SMS men inte svarat och inte redan notifierats
       const { data: attNotifiera } = await supabaseAdmin
         .from('sms_kampanj_mottagare')
-        .select('id, telefon_hash')
+        .select('id, namn, telefon_krypterad')
         .eq('kampanj_id', body.kampanjId)
         .not('skickad_vid', 'is', null)
         .is('svar', null)
         .eq('notifierad_om_fylld', false);
 
       if (attNotifiera?.length) {
-        const meddelande = `Hej! Tiden vi frågade om har nu blivit bokad.\nDin ordinarie tid kvarstår.\n\nVi återkommer vid nästa lediga tid!\n/Södermalms Ortopedi`;
+        const meddelande = `Hej! Tiden vi frågade om har nu blivit bokad av en annan patient.\n\nDin ordinarie tid kvarstår. Vi skickar nytt SMS nästa gång en tid blir ledig!\n\nVill du inte längre få dessa förfrågningar? Svara STOPP.\n/Södermalms Ortopedi`;
 
-        // OBS: Vi kan inte skicka SMS här eftersom vi bara har hashade nummer
-        // Detta hanteras i scheduled function eller vid kampanjskapande
-        // Markera dem som notifierade ändå
-        await supabaseAdmin
-          .from('sms_kampanj_mottagare')
-          .update({ notifierad_om_fylld: true })
-          .eq('kampanj_id', body.kampanjId)
-          .not('skickad_vid', 'is', null)
-          .is('svar', null);
+        for (const m of attNotifiera) {
+          // Dekryptera och skicka SMS
+          if (m.telefon_krypterad) {
+            try {
+              const telefon = dekryptera(m.telefon_krypterad);
+              const skickades = await skickaSMS(telefon, meddelande);
+              
+              if (skickades) {
+                antalNotifierade++;
+              }
+            } catch (err) {
+              console.error('Kunde inte dekryptera/skicka SMS:', err);
+            }
+          }
+          
+          // Markera som notifierad oavsett om SMS gick fram
+          await supabaseAdmin
+            .from('sms_kampanj_mottagare')
+            .update({ notifierad_om_fylld: true })
+            .eq('id', m.id);
+        }
       }
     }
 
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ success: true, antalNotifierade }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 

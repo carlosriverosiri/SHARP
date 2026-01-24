@@ -1,0 +1,529 @@
+---
+/**
+ * Demosida: Kort varsel SMS-systemet
+ * 
+ * Interaktiv demonstration för personal och patienter
+ * som visar hur systemet fungerar.
+ * 
+ * Skapad av: Gemini AI + Claude AI
+ * Datum: 2026-01-24
+ */
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Kort Varsel SMS - Så fungerar det";
+const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidigare operationstid när någon avbokar. Interaktiv demonstration.";
+---
+
+<BaseLayout title={title} description={description}>
+  
+  <!-- Custom styles for this page -->
+  <style>
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 300px;
+      max-height: 350px;
+    }
+
+    .phone-mockup {
+      border: 12px solid #1f2937;
+      border-radius: 2rem;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-section {
+      scroll-margin-top: 100px;
+    }
+  </style>
+
+  <main class="bg-stone-50">
+    
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-rose-600 to-rose-700 text-white py-16">
+      <div class="max-w-5xl mx-auto px-4 text-center">
+        <div class="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 text-sm mb-6">
+          <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+          Systemet är aktivt
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          📱 Kort Varsel SMS
+        </h1>
+        <p class="text-xl text-rose-100 max-w-2xl mx-auto">
+          Så hjälper vi dig att få en tidigare operationstid när någon avbokar i sista minuten
+        </p>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+
+      <!-- Intro Section -->
+      <section class="demo-section bg-white rounded-2xl shadow-sm p-8 border border-stone-200">
+        <div class="max-w-3xl">
+          <h2 class="text-3xl font-bold text-slate-900 mb-4">Vad är Kort Varsel SMS?</h2>
+          <p class="text-lg text-slate-600 leading-relaxed mb-6">
+            När en patient avbokar sin operation med kort varsel får vi en ledig tid som vi vill fylla. 
+            Istället för att ringa runt manuellt skickar vi <strong>automatiska SMS</strong> till patienter 
+            på väntelistan som kan tänka sig att komma med kort varsel.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+              <div class="text-2xl mb-1">📉</div>
+              <h3 class="font-bold text-slate-800">Snabbare vård</h3>
+              <p class="text-sm text-slate-500">Du kan få din operation tidigare.</p>
+            </div>
+            <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+              <div class="text-2xl mb-1">⚖️</div>
+              <h3 class="font-bold text-slate-800">Rättvist system</h3>
+              <p class="text-sm text-slate-500">De som har mest ont prioriteras.</p>
+            </div>
+            <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+              <div class="text-2xl mb-1">🔒</div>
+              <h3 class="font-bold text-slate-800">Säkert & frivilligt</h3>
+              <p class="text-sm text-slate-500">Du väljer själv om du vill delta.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Requirements Section -->
+      <section class="demo-section bg-amber-50 rounded-2xl shadow-sm p-8 border-2 border-amber-200">
+        <h2 class="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-2">
+          <span>📋</span> Krav för att delta
+        </h2>
+        <p class="text-amber-800 mb-6">
+          För att kunna erbjudas en kortvarselstid behöver följande vara uppfyllt:
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-amber-200">
+            <h3 class="font-bold text-amber-900 mb-2">✅ Ifylld hälsodeklaration</h3>
+            <p class="text-sm text-amber-700">
+              Du måste ha fyllt i din hälsodeklaration så vi vet att du är redo för operation. 
+              Utan den kan vi inte bedöma om det är säkert att operera dig med kort varsel.
+            </p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-amber-200">
+            <h3 class="font-bold text-amber-900 mb-2">✅ Samtycke till SMS</h3>
+            <p class="text-sm text-amber-700">
+              I hälsodeklarationen kan du ange om du vill få personliga SMS med information om din operation, 
+              eller om du föredrar generella meddelanden. Båda alternativen fungerar.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-4 p-4 bg-white rounded-lg text-sm text-amber-800 border border-amber-300">
+          <p class="font-bold mb-2">⚠️ Viktigt: Detta är ett NYTT frågeformulär!</p>
+          <p class="mb-2">
+            Du fick en länk till hälsodeklarationen via SMS samma dag som du bokades för operation 
+            (oftast efter ditt mottagningsbesök eller telefonkontakt).
+          </p>
+          <p class="text-amber-700">
+            <strong>Obs!</strong> Förväxla inte denna med de kortare frågeformulär du fyllt i tidigare. 
+            Hälsodeklarationen är mer omfattande och <u>måste</u> fyllas i separat innan operation.
+          </p>
+        </div>
+      </section>
+
+      <!-- How it works for patients -->
+      <section class="demo-section">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-slate-900">Så fungerar det för dig som patient</h2>
+          <p class="text-slate-600 mt-2">Tre enkla steg från SMS till bokad tid.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="space-y-4">
+              <div class="flex gap-4 p-4 rounded-lg bg-white border border-stone-200 cursor-pointer hover:border-rose-400 transition step-btn" data-step="1">
+                <div class="text-2xl">📱</div>
+                <div>
+                  <h4 class="font-bold text-slate-800">1. Du får ett SMS</h4>
+                  <p class="text-sm text-slate-500">Med information om den lediga tiden och en länk.</p>
+                </div>
+              </div>
+              <div class="flex gap-4 p-4 rounded-lg bg-white border border-stone-200 cursor-pointer hover:border-rose-400 transition step-btn" data-step="2">
+                <div class="text-2xl">🏥</div>
+                <div>
+                  <h4 class="font-bold text-slate-800">2. Bekräfta din hälsostatus</h4>
+                  <p class="text-sm text-slate-500">Svara på en kort fråga om infektioner.</p>
+                </div>
+              </div>
+              <div class="flex gap-4 p-4 rounded-lg bg-white border border-stone-200 cursor-pointer hover:border-rose-400 transition step-btn" data-step="3">
+                <div class="text-2xl">✅</div>
+                <div>
+                  <h4 class="font-bold text-slate-800">3. Få din bekräftelse</h4>
+                  <p class="text-sm text-slate-500">Vi ringer dig för att slutföra bokningen.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p class="text-sm text-amber-800">
+                <strong>💡 Tips:</strong> Klicka på stegen ovan för att se hur det ser ut på mobilen!
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive Phone Mockup -->
+          <div class="flex justify-center">
+            <div class="phone-mockup w-[320px] h-[640px] relative bg-stone-50 flex flex-col">
+              <!-- Status Bar -->
+              <div class="bg-slate-900 text-white text-[10px] px-4 py-1 flex justify-between items-center">
+                <span>14:30</span>
+                <div class="flex gap-1">
+                  <span>📶</span>
+                  <span>🔋</span>
+                </div>
+              </div>
+              
+              <!-- Screen Content -->
+              <div id="phoneContent" class="flex-1 overflow-y-auto p-4 relative">
+                <!-- Content injected via JS -->
+              </div>
+
+              <!-- Home Bar -->
+              <div class="h-1 w-1/3 bg-slate-300 rounded-full mx-auto mb-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Priority Algorithm (Simplified for patients) -->
+      <section class="demo-section bg-white rounded-2xl shadow-sm p-8 border border-stone-200">
+        <h2 class="text-2xl font-bold text-slate-900 mb-4">Vem får SMS först?</h2>
+        <p class="text-slate-600 mb-6">
+          Vi prioriterar patienter baserat på medicinsk angelägenhet. De som har störst behov får frågan först.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center">
+            <div class="text-3xl mb-2">🚨</div>
+            <h4 class="font-bold text-red-800">Akut</h4>
+            <p class="text-xs text-red-600">Måste opereras snarast</p>
+          </div>
+          <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center">
+            <div class="text-3xl mb-2">📋</div>
+            <h4 class="font-bold text-orange-800">Sjukskrivna</h4>
+            <p class="text-xs text-orange-600">Väntar på att komma tillbaka</p>
+          </div>
+          <div class="bg-amber-50 border-2 border-amber-200 p-4 rounded-xl text-center">
+            <div class="text-3xl mb-2">🔥</div>
+            <h4 class="font-bold text-amber-800">Mycket ont</h4>
+            <p class="text-xs text-amber-600">Hög smärtnivå</p>
+          </div>
+          <div class="bg-blue-50 border-2 border-blue-200 p-4 rounded-xl text-center">
+            <div class="text-3xl mb-2">⏰</div>
+            <h4 class="font-bold text-blue-800">Övriga</h4>
+            <p class="text-xs text-blue-600">Normal väntelista</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ for patients -->
+      <section class="demo-section">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Vanliga frågor</h2>
+        
+        <!-- Important clarification box -->
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6">
+          <p class="text-blue-800 font-medium mb-3">
+            ℹ️ <strong>Viktigt att veta:</strong> Kort varsel SMS är <u>endast</u> en extra möjlighet att få en tidigare tid. 
+            Oavsett om du tackar nej eller avregistrerar dig – <strong class="underline">din ordinarie planerade operationstid påverkas aldrig</strong>.
+          </p>
+          <p class="text-blue-700 text-sm">
+            ⚠️ <strong>Behöver du avboka eller omboka din operation?</strong> Det gör du <u>inte</u> via detta system. 
+            Kontakta oss via <strong>telefon 08-551 104 22</strong> eller <strong>Mina vårdkontakter (1177)</strong>.
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Varför måste jag fylla i hälsodeklarationen?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              <p class="mb-2">
+                Hälsodeklarationen är ett krav för att vi ska kunna erbjuda dig en kortvarselstid. Den innehåller viktig information om:
+              </p>
+              <ul class="list-disc list-inside mb-3 space-y-1">
+                <li>Din hälsostatus och eventuella sjukdomar</li>
+                <li>Mediciner du tar (särskilt blodförtunnande)</li>
+                <li>Om du samtycker till personliga SMS eller föredrar generella meddelanden</li>
+              </ul>
+              <div class="bg-amber-50 border border-amber-200 rounded p-2 text-amber-800 text-xs">
+                <strong>⚠️ Viktigt:</strong> Hälsodeklarationen är ett <u>nytt</u> frågeformulär – inte samma som de kortare formulär 
+                du kan ha fyllt i tidigare. Du fick länken via SMS samma dag du bokades för operation.
+              </div>
+            </div>
+          </details>
+
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Måste jag svara direkt?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              <p class="mb-2">
+                Nej, men det är "först till kvarn" som gäller. Om du är intresserad, svara så snart du kan!
+              </p>
+              <p>
+                Om du inte kan just den tiden är det bara att svara NEJ – <strong class="underline">din ordinarie operationstid påverkas inte</strong>.
+              </p>
+            </div>
+          </details>
+
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Vad händer om jag svarar JA men ångrar mig?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              <p class="mb-2">
+                Ring oss på <strong>08-551 104 22</strong> så fort som möjligt. Vi förstår att planer kan ändras.
+              </p>
+              <p>
+                <strong class="underline">Din ordinarie operationstid finns kvar</strong> om den nya tiden inte fungerar.
+              </p>
+            </div>
+          </details>
+
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Kan jag sluta få SMS om kort varseltid?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              <p class="mb-3">
+                Ja! Du kan antingen klicka på "Jag vill inte längre få dessa förfrågningar" på svarssidan, 
+                eller svara <strong>STOPP</strong> på ett SMS.
+              </p>
+              <p class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-emerald-800">
+                <strong class="underline">Viktigt:</strong> Din ordinarie operationstid påverkas inte! 
+                Detta avregistrerar dig endast från kortvarselfunktionen – din planerade operation kvarstår som vanligt.
+              </p>
+            </div>
+          </details>
+
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Kan jag avboka eller omboka min operation här?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              <p class="mb-3">
+                <strong>Nej.</strong> Detta system är <u>endast</u> till för patienter som vill ha möjlighet att komma <em>tidigare</em> – 
+                inte för att avboka eller omboka din planerade operation.
+              </p>
+              <p class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800">
+                <strong>Behöver du avboka eller omboka?</strong><br>
+                Kontakta oss via:<br>
+                • <strong>Telefon:</strong> 08-551 104 22<br>
+                • <strong>Mina vårdkontakter:</strong> via 1177.se
+              </p>
+            </div>
+          </details>
+
+          <details class="bg-white rounded-lg shadow-sm border border-stone-200 group">
+            <summary class="px-4 py-3 cursor-pointer font-medium text-slate-800 hover:text-rose-600 flex justify-between items-center">
+              <span>Är mina uppgifter säkra?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+            </summary>
+            <div class="px-4 pb-4 text-sm text-slate-600 border-t border-stone-100 pt-2">
+              Ja. Ditt telefonnummer krypteras och raderas automatiskt efter din operation. 
+              Vi följer GDPR och Patientdatalagen. Endast behörig personal har tillgång.
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- For staff (collapsible) -->
+      <section class="demo-section">
+        <details class="bg-slate-800 text-white rounded-2xl overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-bold text-lg flex justify-between items-center">
+            <span>🔧 För personal: Teknisk information</span>
+            <span class="text-slate-400">▼</span>
+          </summary>
+          <div class="px-6 pb-6 space-y-6">
+            
+            <!-- Tech Stack -->
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-slate-200">Systemarkitektur</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-slate-700 p-4 rounded-xl">
+                  <div class="text-2xl mb-2">🚀</div>
+                  <h4 class="font-bold text-white">Astro</h4>
+                  <p class="text-xs text-slate-400">Frontend & API</p>
+                </div>
+                <div class="bg-slate-700 p-4 rounded-xl">
+                  <div class="text-2xl mb-2">🗄️</div>
+                  <h4 class="font-bold text-white">Supabase</h4>
+                  <p class="text-xs text-slate-400">Databas & Auth</p>
+                </div>
+                <div class="bg-slate-700 p-4 rounded-xl">
+                  <div class="text-2xl mb-2">💬</div>
+                  <h4 class="font-bold text-white">46elks</h4>
+                  <p class="text-xs text-slate-400">SMS Gateway</p>
+                </div>
+                <div class="bg-slate-700 p-4 rounded-xl">
+                  <div class="text-2xl mb-2">☁️</div>
+                  <h4 class="font-bold text-white">Netlify</h4>
+                  <p class="text-xs text-slate-400">Hosting & Cron</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Priority intervals -->
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-slate-200">Prioritetsintervall</h3>
+              <div class="bg-slate-700 rounded-xl p-4">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-slate-400 text-left">
+                      <th class="pb-2">Prioritet</th>
+                      <th class="pb-2">Intervall</th>
+                      <th class="pb-2">Beskrivning</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-slate-200">
+                    <tr><td>🚨 AKUT</td><td>60 min</td><td>Måste opereras snarast</td></tr>
+                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Väntar på att återgå i arbete</td></tr>
+                    <tr><td>🔥 Mycket ont</td><td>20 min</td><td>Hög smärtnivå</td></tr>
+                    <tr><td>⏰ Normal</td><td>10 min</td><td>Standardintervall</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <a href="/personal/kort-varsel" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg font-medium transition">
+                → Öppna dashboard
+              </a>
+              <a href="https://github.com" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition">
+                📚 Dokumentation
+              </a>
+            </div>
+          </div>
+        </details>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Chart.js for future stats display -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Interactive JavaScript -->
+  <script>
+    // Phone mockup state
+    let currentStep = 1;
+
+    // Step button click handlers
+    document.querySelectorAll('.step-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentStep = parseInt(btn.dataset.step);
+        renderPhoneContent();
+        
+        // Highlight active step
+        document.querySelectorAll('.step-btn').forEach(b => {
+          b.classList.remove('border-rose-500', 'bg-rose-50');
+          b.classList.add('border-stone-200');
+        });
+        btn.classList.remove('border-stone-200');
+        btn.classList.add('border-rose-500', 'bg-rose-50');
+      });
+    });
+
+    function renderPhoneContent() {
+      const container = document.getElementById('phoneContent');
+      if (!container) return;
+
+      if (currentStep === 1) {
+        container.innerHTML = `
+          <div class="flex flex-col gap-4 fade-in">
+            <div class="text-xs text-center text-slate-400 mb-2">Idag 14:30</div>
+            <div class="bg-stone-200 p-3 rounded-2xl rounded-bl-none max-w-[85%] self-start text-sm text-slate-800 shadow-sm">
+              <p class="font-bold mb-1">Södermalms Ortopedi</p>
+              <p>Hej Anna! Vi har en ledig operationsplats för axeloperation imorgon 14:30.</p>
+              <br>
+              <p>Kan du komma med kort varsel?</p>
+              <p class="text-blue-600 underline mt-1">specialist.se/s/x7k9m2</p>
+            </div>
+            <div class="text-xs text-center text-slate-400 mt-4">
+              ☝️ Klicka på länken för att svara
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 2) {
+        container.innerHTML = `
+          <div class="fade-in bg-white h-full flex flex-col">
+            <div class="border-b pb-2 mb-4 flex justify-between items-center">
+              <span class="font-bold text-rose-600">Södermalms Ortopedi</span>
+              <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Säker länk</span>
+            </div>
+            
+            <h3 class="font-bold text-lg mb-2">Ledig tid: Imorgon 14:30</h3>
+            
+            <div class="bg-orange-50 border border-orange-200 p-3 rounded-lg mb-4 text-xs text-orange-800">
+              <strong>⚠️ Viktigt</strong><br>
+              Operationen är inom 24h. Har du frågor om mediciner? Ring oss!
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <label class="flex gap-2 items-start cursor-pointer">
+                <input type="checkbox" class="mt-1" id="healthCheck">
+                <span class="text-sm text-slate-700">Jag har inga öppna sår eller pågående infektioner.</span>
+              </label>
+            </div>
+
+            <div class="mt-auto space-y-2">
+              <button onclick="goToStep(3)" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-emerald-700">JA, jag kan komma</button>
+              <button class="w-full bg-stone-100 text-slate-600 font-medium py-3 rounded-lg">Nej, jag kan inte</button>
+            </div>
+            <div class="mt-4 text-center">
+              <span class="text-xs text-stone-400 underline">Avregistrera mig</span>
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 3) {
+        container.innerHTML = `
+          <div class="fade-in h-full flex flex-col items-center justify-center text-center">
+            <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-3xl mb-4">🎉</div>
+            <h3 class="font-bold text-xl text-slate-900 mb-2">Tack Anna!</h3>
+            <p class="text-sm text-slate-600 mb-6">Du har svarat JA. Vi ringer dig inom kort för att bekräfta.</p>
+            
+            <div class="bg-stone-50 p-4 rounded-lg w-full text-left border border-stone-200">
+              <p class="text-xs text-stone-500 uppercase font-bold mb-1">Status</p>
+              <p class="text-sm font-medium text-slate-800">✅ Preliminärbokad</p>
+              <p class="text-xs text-slate-500 mt-2">Din ordinarie tid finns kvar som backup.</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Make goToStep available globally for onclick
+    window.goToStep = function(step) {
+      currentStep = step;
+      renderPhoneContent();
+    };
+
+    // Initialize
+    renderPhoneContent();
+  </script>
+
+</BaseLayout>

@@ -4,7 +4,11 @@
  * Körs var 1:a minut och:
  * 1. Hittar aktiva kampanjer där "nästa utskick" har passerat
  * 2. Skickar SMS till nästa patient i kön
- * 3. Uppdaterar "nästa utskick" till nu + intervallet
+ * 3. Uppdaterar "nästa utskick" baserat på patientens prioritet:
+ *    - AKUT: 60 min
+ *    - Sjukskriven: 30 min
+ *    - Mycket ont: 20 min
+ *    - Normal: 10 min (eller kampanjens batch_intervall)
  * 4. Stoppar om kampanjen är fylld
  * 
  * Konfigureras i netlify.toml med cron schedule.
@@ -12,6 +16,7 @@
 
 import type { Config, Context } from "@netlify/functions";
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 // Supabase med service role
 const SUPABASE_URL = process.env.PUBLIC_SUPABASE_URL || '';
@@ -23,6 +28,21 @@ const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
 const ELKS_API_USER = process.env.ELKS_API_USER || '';
 const ELKS_API_PASSWORD = process.env.ELKS_API_PASSWORD || '';
 const SITE_URL = process.env.SITE || process.env.PUBLIC_SITE_URL || 'https://specialist.se';
+
+// Krypteringsnyckel för telefonnummer
+const ENCRYPTION_KEY = process.env.POOL_ENCRYPTION_KEY || 'default-dev-key-32-bytes-long!!';
+
+// Dekryptera telefonnummer
+function dekrypteraTelefon(krypterad: string): string {
+  const [ivHex, encrypted] = krypterad.split(':');
+  const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+  const iv = Buffer.from(ivHex, 'hex');
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+  
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
 
 async function skickaSMS(telefon: string, meddelande: string): Promise<boolean> {
   if (!ELKS_API_USER || !ELKS_API_PASSWORD) {
@@ -132,26 +152,65 @@ export default async function handler(req: Request, context: Context) {
         continue;
       }
 
-      // Hämta originalnumret från en separat tabell eller temporär lagring
-      // OBS: Vi har bara hashat nummer i databasen för GDPR
-      // Vi behöver ett sätt att skicka SMS - antingen:
-      // 1. Lagra nummer krypterat (inte hashat) temporärt
-      // 2. Eller ha en webhook som triggas vid kampanjskapande
-      
-      // För nu loggar vi bara - vi behöver lösa telefonnummer-problemet
-      console.log(`Ska skicka till ${nastaMottagare.namn} (ordning ${nastaMottagare.ordning})`);
-      console.log(`⚠️ OBS: Telefonnummer är hashat i DB - behöver lösning för gradvis utskick`);
+      // Dekryptera telefonnummer
+      if (!nastaMottagare.telefon_krypterad) {
+        console.error(`Kampanj ${kampanj.id}: Mottagare ${nastaMottagare.id} saknar krypterat telefonnummer`);
+        // Markera som skickad för att gå vidare (men logga felet)
+        await supabase
+          .from('sms_kampanj_mottagare')
+          .update({ skickad_vid: nu })
+          .eq('id', nastaMottagare.id);
+        continue;
+      }
 
-      // Markera som "skickad" (för demo/test)
-      // I produktion behöver vi faktiskt telefonnumret
+      let telefon: string;
+      try {
+        telefon = dekrypteraTelefon(nastaMottagare.telefon_krypterad);
+      } catch (decryptError) {
+        console.error(`Kampanj ${kampanj.id}: Kunde inte dekryptera telefon:`, decryptError);
+        continue;
+      }
+
+      console.log(`Ska skicka till ${nastaMottagare.namn} (ordning ${nastaMottagare.ordning})`);
+      
+      // Bygg SMS-text
+      const datumStr = formateraDatum(kampanj.datum, kampanj.tidsblock || '12:00');
+      const platsText = kampanj.antal_platser === 1 
+        ? 'en ledig operationsplats' 
+        : `${kampanj.antal_platser} lediga operationsplatser`;
+      const lakareText = kampanj.lakare ? ` hos ${kampanj.lakare}` : '';
+      
+      let smsText: string;
+      if (nastaMottagare.har_samtycke && kampanj.operation_typ) {
+        smsText = `Hej ${nastaMottagare.namn.split(' ')[0]}! Vi har ${platsText} för ${kampanj.operation_typ.toLowerCase()}${lakareText} ${datumStr}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${nastaMottagare.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
+      } else {
+        smsText = `Hej! Vi har ${platsText}${lakareText} på Södermalms Ortopedi ${datumStr}.\n\nKan du komma med kort varsel?\nSvara här: ${SITE_URL}/s/${nastaMottagare.unik_kod}\n\nOBS: Först till kvarn!\n/Södermalms Ortopedi`;
+      }
+      
+      // Skicka SMS
+      const smsSkickades = await skickaSMS(telefon, smsText);
+      
+      if (!smsSkickades) {
+        console.error(`Kampanj ${kampanj.id}: Kunde inte skicka SMS till ${nastaMottagare.namn}`);
+        // Fortsätt ändå - markera som försökt
+      }
+
+      // Markera som skickad
       await supabase
         .from('sms_kampanj_mottagare')
         .update({ skickad_vid: nu })
         .eq('id', nastaMottagare.id);
 
-      // Uppdatera kampanjens SMS-räknare och nästa utskick-tid
+      // Beräkna nästa utskick baserat på DENNA mottagares prioritetsintervall
+      const intervallMinuter = nastaMottagare.intervall_till_nasta || kampanj.batch_intervall_minuter || 10;
       const nastaUtskick = new Date();
-      nastaUtskick.setMinutes(nastaUtskick.getMinutes() + kampanj.batch_intervall_minuter);
+      nastaUtskick.setMinutes(nastaUtskick.getMinutes() + intervallMinuter);
+
+      // Logga prioritetsinformation
+      const prioInfo = nastaMottagare.akut ? '🚨 AKUT' : 
+                       nastaMottagare.sjukskriven ? '📋 Sjukskriven' :
+                       nastaMottagare.har_ont ? '🔥 Ont' : 'Normal';
+      console.log(`Kampanj ${kampanj.id}: ${prioInfo} patient, väntar ${intervallMinuter} min till nästa`);
 
       await supabase
         .from('sms_kampanjer')

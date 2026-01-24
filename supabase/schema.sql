@@ -1,0 +1,37 @@
+-- ============================================
+-- KOMPLETT SUPABASE SCHEMA
+-- ============================================
+-- 
+-- Denna fil innehåller hela databasschemat.
+-- Kör detta för nyinstallation.
+-- 
+-- För befintliga projekt, kör istället
+-- endast de migrations du saknar.
+-- 
+-- Version: 5
+-- Senast uppdaterad: 2026-01-24
+-- ============================================
+
+-- Kör alla migrations i ordning:
+-- \i migrations/001-initial-setup.sql
+-- \i migrations/002-kort-varsel.sql
+-- \i migrations/003-lakare.sql
+-- \i migrations/004-profilbilder.sql
+-- \i migrations/005-prioritet.sql
+
+-- Eller kopiera innehållet från varje fil hit nedan.
+
+-- ============================================
+-- OBS: För fullständigt schema, se migrations/
+-- ============================================
+-- 
+-- Denna fil är en placeholder. För nyinstallation:
+-- 1. Kör 001-initial-setup.sql
+-- 2. Kör 002-kort-varsel.sql  
+-- 3. Kör 003-lakare.sql
+-- 4. Kör 004-profilbilder.sql
+-- 5. Kör 005-prioritet.sql
+--
+-- Migrations är organiserade så att varje fil
+-- kan köras oberoende (med IF NOT EXISTS).
+-- ============================================

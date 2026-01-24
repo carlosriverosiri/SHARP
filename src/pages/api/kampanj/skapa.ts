@@ -19,6 +19,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
+import { kryptera } from '../../../lib/kryptering';
 import crypto from 'crypto';
 
 // 46elks API-konfiguration
@@ -32,6 +33,33 @@ interface Mottagare {
   telefon: string;
   harSamtycke: boolean;
   poolId?: string;  // Om hämtad från patientpool
+  // Prioritetsfält (hämtas från patientpool)
+  akut?: boolean;
+  sjukskriven?: boolean;
+  harOnt?: boolean;
+}
+
+// Prioritetsintervall i minuter
+const PRIORITETS_INTERVALL = {
+  akut: 60,        // AKUT: 1 timme
+  sjukskriven: 30, // Sjukskriven: 30 min
+  harOnt: 20,      // Mycket ont: 20 min
+  normal: 10,      // Standard: 10 min
+};
+
+// Beräkna intervall baserat på prioritet
+function beraknaIntervall(m: Mottagare, defaultIntervall: number): number {
+  if (m.akut) return PRIORITETS_INTERVALL.akut;
+  if (m.sjukskriven) return PRIORITETS_INTERVALL.sjukskriven;
+  if (m.harOnt) return PRIORITETS_INTERVALL.harOnt;
+  return defaultIntervall || PRIORITETS_INTERVALL.normal;
+}
+
+// Sortera efter prioritet (akut > sjukskriven > harOnt > normal)
+function sorteraPaPrioritet(a: Mottagare, b: Mottagare): number {
+  const prioA = (a.akut ? 1000 : 0) + (a.sjukskriven ? 100 : 0) + (a.harOnt ? 10 : 0);
+  const prioB = (b.akut ? 1000 : 0) + (b.sjukskriven ? 100 : 0) + (b.harOnt ? 10 : 0);
+  return prioB - prioA; // Högst prioritet först
 }
 
 // Generera säker unik kod (16+ tecken)
@@ -156,7 +184,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (body.patientIds?.length) {
     const { data: poolPatienter, error: poolError } = await supabaseAdmin
       .from('kort_varsel_patienter')
-      .select('id, namn, telefon_krypterad, har_samtycke')
+      .select('id, namn, telefon_krypterad, har_samtycke, akut, sjukskriven, har_ont')
       .in('id', body.patientIds)
       .in('status', ['tillganglig', 'kontaktad', 'reserv']);
     
@@ -179,8 +207,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         telefon: telefon,
         harSamtycke: p.har_samtycke,
         poolId: p.id,
+        // Prioritetsfält
+        akut: p.akut || false,
+        sjukskriven: p.sjukskriven || false,
+        harOnt: p.har_ont || false,
       };
     });
+    
+    // Sortera efter prioritet: akut > sjukskriven > harOnt > normal
+    mottagareLista.sort(sorteraPaPrioritet);
 
     // Uppdatera status till 'kontaktad' för alla
     await supabaseAdmin
@@ -234,14 +269,23 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // 3. Lägg till mottagare (från manuell input eller pool)
+    // Mottagare är redan sorterade efter prioritet
+    const defaultIntervall = body.batchIntervallMinuter || PRIORITETS_INTERVALL.normal;
+    
     const mottagareData = mottagareLista.map((m, index) => ({
       kampanj_id: kampanj.id,
       namn: m.namn,
       telefon_hash: hashaTelefon(m.telefon),
       telefon_masked: maskeraTelefon(m.telefon),
+      telefon_krypterad: kryptera(m.telefon), // För uppföljnings-SMS
       unik_kod: genereraUnikKod(),
       har_samtycke: m.harSamtycke,
       ordning: index + 1,
+      // Prioritetsfält och intervall
+      akut: m.akut || false,
+      sjukskriven: m.sjukskriven || false,
+      har_ont: m.harOnt || false,
+      intervall_till_nasta: beraknaIntervall(m, defaultIntervall),
     }));
 
     const { data: mottagare, error: mottagareError } = await supabaseAdmin
@@ -307,11 +351,23 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       antal_sms_skickade: antalSkickade,
     };
 
-    if (body.batchIntervallMinuter > 0 && mottagare.length > 1) {
-      // Sätt tid för nästa utskick
+    // Kolla om det finns prioriterade patienter (för att aktivera gradvis utskick automatiskt)
+    const harPrioriteradePatienter = mottagareLista.some(m => m.akut || m.sjukskriven || m.harOnt);
+    const skaAnvandaGradvisUtskick = body.batchIntervallMinuter > 0 || harPrioriteradePatienter;
+
+    if (skaAnvandaGradvisUtskick && mottagare.length > 1) {
+      // Använd första mottagarens intervall för nästa utskick
+      const forstaMottagare = mottagare[0];
+      const intervallMinuter = forstaMottagare.intervall_till_nasta || defaultIntervall;
+      
       const nastaUtskick = new Date();
-      nastaUtskick.setMinutes(nastaUtskick.getMinutes() + body.batchIntervallMinuter);
+      nastaUtskick.setMinutes(nastaUtskick.getMinutes() + intervallMinuter);
       updates.nasta_utskick_vid = nastaUtskick.toISOString();
+      
+      // Säkerställ att batch_intervall_minuter är satt (för scheduled function)
+      if (!body.batchIntervallMinuter) {
+        updates.batch_intervall_minuter = defaultIntervall;
+      }
     }
 
     await supabaseAdmin
