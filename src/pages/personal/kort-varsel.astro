@@ -89,6 +89,9 @@ if (supabaseKonfigurerad) {
   }
 }
 
+// URL-parameter för att visa specifik kampanj (?id=...)
+const kampanjIdFromUrl = Astro.url.searchParams.get('id');
+
 // Hämta statistik
 let statistik: any = null;
 let statistikError: string | null = null;
@@ -130,7 +133,7 @@ if (supabaseKonfigurerad) {
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 py-8" data-kampanj-id={kampanjIdFromUrl || ''}>
       <!-- Debug: Visa om Supabase inte är konfigurerat -->
       {!supabaseKonfigurerad && (
         <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -344,6 +347,37 @@ Mobilnummer: 073-456 78 90"
 
       <!-- ========== SKAPA KAMPANJ-VY ========== -->
       <div id="panel-kampanj" class="tab-panel hidden">
+        <!-- Kampanjdetaljer (visas när ?id= finns) -->
+        <div id="kampanj-detalj-wrap" class="hidden mb-8">
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <div class="flex items-center justify-between mb-4">
+              <a href="/personal/kort-varsel" class="text-sky-600 hover:underline text-sm">← Tillbaka till översikt</a>
+            </div>
+            <h2 id="kampanj-detalj-rubrik" class="text-xl font-semibold text-gray-900 mb-2">Kampanj</h2>
+            <p id="kampanj-detalj-datum" class="text-gray-500 text-sm mb-4"></p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div class="bg-green-50 rounded-lg p-3">
+                <span id="kampanj-detalj-ja" class="text-2xl font-bold text-green-700">0</span>
+                <div class="text-sm text-green-600">✅ JA (fick plats)</div>
+              </div>
+              <div class="bg-yellow-50 rounded-lg p-3">
+                <span id="kampanj-detalj-reserv" class="text-2xl font-bold text-yellow-700">0</span>
+                <div class="text-sm text-yellow-600">⏰ Reserv</div>
+              </div>
+              <div class="bg-red-50 rounded-lg p-3">
+                <span id="kampanj-detalj-nej" class="text-2xl font-bold text-red-700">0</span>
+                <div class="text-sm text-red-600">❌ NEJ</div>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <span id="kampanj-detalj-vantar" class="text-2xl font-bold text-gray-700">0</span>
+                <div class="text-sm text-gray-600">⏳ Väntar</div>
+              </div>
+            </div>
+            <h3 class="font-medium text-gray-900 mb-3">Mottagare och svar</h3>
+            <div id="kampanj-detalj-lista" class="space-y-2 max-h-80 overflow-y-auto"></div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         <!-- Vänster kolumn: Skapa kampanj -->
@@ -788,23 +822,104 @@ Mobilnummer: 073-456 78 90"
     const tabs = document.querySelectorAll('.tab-button');
     const panels = document.querySelectorAll('.tab-panel');
 
+    function visaPanel(panelKey: string) {
+      const targetPanel = panelKey;
+      tabs.forEach(t => {
+        const key = t.getAttribute('data-tab');
+        const isActive = key === targetPanel;
+        t.classList.toggle('border-sky-500', isActive);
+        t.classList.toggle('text-sky-600', isActive);
+        t.classList.toggle('border-transparent', !isActive);
+        t.classList.toggle('text-gray-500', !isActive);
+      });
+      panels.forEach(p => p.classList.add('hidden'));
+      document.getElementById(`panel-${targetPanel}`)?.classList.remove('hidden');
+    }
+
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const targetPanel = tab.getAttribute('data-tab');
-        
-        // Uppdatera flikar
-        tabs.forEach(t => {
-          t.classList.remove('border-sky-500', 'text-sky-600');
-          t.classList.add('border-transparent', 'text-gray-500');
-        });
-        tab.classList.remove('border-transparent', 'text-gray-500');
-        tab.classList.add('border-sky-500', 'text-sky-600');
-        
-        // Visa rätt panel
-        panels.forEach(p => p.classList.add('hidden'));
-        document.getElementById(`panel-${targetPanel}`)?.classList.remove('hidden');
+        if (targetPanel) visaPanel(targetPanel);
       });
     });
+
+    // ========== KAMPANJDETALJ (?id=) ==========
+    async function laddaKampanjDetalj(kampanjId: string) {
+      const wrap = document.getElementById('kampanj-detalj-wrap');
+      const rubrik = document.getElementById('kampanj-detalj-rubrik');
+      const datumEl = document.getElementById('kampanj-detalj-datum');
+      const jaEl = document.getElementById('kampanj-detalj-ja');
+      const reservEl = document.getElementById('kampanj-detalj-reserv');
+      const nejEl = document.getElementById('kampanj-detalj-nej');
+      const vantarEl = document.getElementById('kampanj-detalj-vantar');
+      const listaEl = document.getElementById('kampanj-detalj-lista');
+      if (!wrap || !rubrik || !datumEl || !jaEl || !reservEl || !nejEl || !vantarEl || !listaEl) return;
+
+      try {
+        const response = await fetch(`/api/kampanj/status?id=${encodeURIComponent(kampanjId)}`, { credentials: 'include' });
+        const data = await response.json();
+        if (!response.ok || data.error) {
+          wrap.classList.remove('hidden');
+          rubrik.textContent = 'Kunde inte ladda kampanj';
+          datumEl.textContent = data.error || 'Okänt fel';
+          return;
+        }
+
+        const k = data.kampanj;
+        const mottagare = data.mottagare || [];
+        const stats = data.statistik || {};
+
+        wrap.classList.remove('hidden');
+        rubrik.textContent = `Kampanj ${k.operationTyp || 'Kort varsel'} – ${k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' }) : ''}`;
+        datumEl.textContent = k.status === 'fylld' ? '✅ Fylld' : k.status === 'aktiv' ? '⏳ Aktiv' : 'Avslutad';
+
+        jaEl.textContent = String(stats.jaSvar ?? 0);
+        reservEl.textContent = String(stats.reservSvar ?? 0);
+        nejEl.textContent = String(stats.nejSvar ?? 0);
+        vantarEl.textContent = String(stats.vantar ?? 0);
+
+        listaEl.innerHTML = mottagare.map((m: any) => {
+          let badge = '';
+          let label = '';
+          if (m.svar === 'ja') {
+            badge = m.svarOrdning === 1 ? '✅' : '✅';
+            label = m.svarOrdning === 1 ? 'JA (fick plats)' : 'JA';
+          } else if (m.svar === 'reserv') {
+            badge = '⏰';
+            label = 'Reserv';
+          } else if (m.svar === 'nej') {
+            badge = '❌';
+            label = 'NEJ';
+          } else {
+            badge = '⏳';
+            label = 'Väntar';
+          }
+          const vid = m.svarVid ? new Date(m.svarVid).toLocaleString('sv-SE') : '';
+          const namn = (m.namn || '').toString();
+          const tel = (m.telefonMasked || '').toString();
+          return `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+            <div>
+              <span class="font-medium text-gray-900">${escapeHtml(namn)}</span>
+              <span class="text-gray-400 mx-2">${escapeHtml(tel)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-1 text-sm rounded-full ${m.svar === 'ja' ? 'bg-green-100 text-green-800' : m.svar === 'reserv' ? 'bg-yellow-100 text-yellow-800' : m.svar === 'nej' ? 'bg-red-100 text-red-800' : 'bg-gray-200 text-gray-700'}">${badge} ${label}</span>
+              ${vid ? `<span class="text-xs text-gray-500">${vid}</span>` : ''}
+            </div>
+          </div>`;
+        }).join('') || '<p class="text-gray-400 italic text-sm">Inga mottagare</p>';
+      } catch (e) {
+        wrap.classList.remove('hidden');
+        rubrik.textContent = 'Kunde inte ladda kampanj';
+        datumEl.textContent = 'Nätverksfel';
+      }
+    }
+
+    function escapeHtml(s: string) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
 
     // ========== PATIENTPOOL ==========
     let valdaPatienter: Set<string> = new Set();
@@ -1094,6 +1209,13 @@ Mobilnummer: 073-456 78 90"
 
     // Ladda patientpool vid start
     laddaPatientpool();
+
+    // Vid ?id=: visa kampanj-flik och ladda kampanjdetaljer (JA/NEJ/reserv)
+    const kampanjIdFromUrl = document.querySelector('main')?.getAttribute('data-kampanj-id')?.trim();
+    if (kampanjIdFromUrl) {
+      visaPanel('kampanj');
+      laddaKampanjDetalj(kampanjIdFromUrl);
+    }
 
     // ========== KAMPANJFORMULÄR ==========
     // Visa/dölj intervall-sektion
