@@ -5,6 +5,8 @@
  * Laddar upp en bild till Supabase Storage och uppdaterar profiles.avatar_url
  */
 
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 import { supabaseAdmin } from '../../../lib/supabase';
 import { hamtaAnvandare } from '../../../lib/auth';
