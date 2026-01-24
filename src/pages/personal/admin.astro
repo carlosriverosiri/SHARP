@@ -499,13 +499,33 @@ function formateraDatum(datum: string): string {
 
   <script>
     // Hantera bilduppladdning
+    let isUploading = false;
+    
     document.querySelectorAll('.avatar-input').forEach(input => {
       input.addEventListener('change', async (e) => {
+        // Förhindra dubbla uppladdningar
+        if (isUploading) {
+          (e.target as HTMLInputElement).value = '';
+          return;
+        }
+        
         const target = e.target as HTMLInputElement;
         const file = target.files?.[0];
         const userId = target.dataset.userId;
         
-        if (!file || !userId) return;
+        if (!file || !userId) {
+          target.value = '';
+          return;
+        }
+        
+        // Kontrollera filstorlek tidigt (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+          alert('Bilden är för stor. Max 2 MB.');
+          target.value = '';
+          return;
+        }
+        
+        isUploading = true;
         
         // Hitta status-elementet
         const container = target.closest('[data-user-id]');
@@ -527,7 +547,7 @@ function formateraDatum(datum: string): string {
           const response = await fetch('/api/admin/upload-avatar', {
             method: 'POST',
             body: formData,
-            credentials: 'include' // Viktigt: skicka cookies
+            credentials: 'include'
           });
           
           const result = await response.json();
@@ -535,9 +555,8 @@ function formateraDatum(datum: string): string {
           if (result.success) {
             // Uppdatera bilden
             if (imgEl) {
-              imgEl.src = result.avatarUrl + '?t=' + Date.now(); // Cache bust
+              imgEl.src = result.avatarUrl + '?t=' + Date.now();
             } else if (placeholder) {
-              // Ersätt placeholder med bild
               const img = document.createElement('img');
               img.src = result.avatarUrl;
               img.alt = 'Profilbild';
@@ -561,10 +580,11 @@ function formateraDatum(datum: string): string {
             statusEl.textContent = '❌ Nätverksfel';
             statusEl.className = 'upload-status mt-2 text-xs text-red-600';
           }
+        } finally {
+          // Alltid återställ
+          isUploading = false;
+          target.value = '';
         }
-        
-        // Återställ input
-        target.value = '';
       });
     });
   </script>
