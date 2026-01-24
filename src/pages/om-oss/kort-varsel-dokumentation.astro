@@ -1,0 +1,404 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Kort varsel SMS - Dokumentation";
+const description = "Teknisk dokumentation för SMS-systemet för kort varseltider";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    
+    <!-- Header -->
+    <div class="mb-12">
+      <a href="/om-oss/kort-varsel-demo" class="text-rose-600 hover:text-rose-700 mb-4 inline-block">
+        ← Tillbaka till demo
+      </a>
+      <h1 class="text-4xl font-bold text-slate-800 mb-4">
+        Kort varsel SMS - Specifikation
+      </h1>
+      <div class="flex flex-wrap gap-4 text-sm">
+        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-medium">
+          ✅ Implementerad (fas 1-2 klar)
+        </span>
+        <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full">
+          Prioritet: Hög
+        </span>
+        <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full">
+          Senast uppdaterad: 2026-01-24
+        </span>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <nav class="bg-slate-50 rounded-xl p-6 mb-12">
+      <h2 class="font-bold text-lg mb-4">Innehåll</h2>
+      <ul class="space-y-2 text-slate-700">
+        <li><a href="#oversikt" class="hover:text-rose-600">1. Teknisk översikt</a></li>
+        <li><a href="#komponenter" class="hover:text-rose-600">2. Komponenter</a></li>
+        <li><a href="#databas" class="hover:text-rose-600">3. Databastabeller</a></li>
+        <li><a href="#sakerhet" class="hover:text-rose-600">4. Säkerhet & GDPR</a></li>
+        <li><a href="#flode" class="hover:text-rose-600">5. Systemflöde</a></li>
+        <li><a href="#historik" class="hover:text-rose-600">6. Ändringshistorik</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <article class="prose prose-slate prose-lg max-w-none">
+      
+      <!-- Section 1: Overview -->
+      <section id="oversikt" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">1. Teknisk översikt</h2>
+        
+        <h3>Vad är detta system?</h3>
+        <p>
+          <strong>Kort varsel SMS</strong> är ett internt verktyg för att fylla lediga operationstider. 
+          När en patient avbokar kan personal snabbt skicka SMS till andra patienter på väntelistan 
+          och få svar via en webbsida.
+        </p>
+
+        <div class="bg-slate-800 text-slate-100 p-6 rounded-xl font-mono text-sm overflow-x-auto my-6">
+          <pre class="whitespace-pre">┌─────────────────────────────────────────────────────────────────────────┐
+│                         SYSTEMARKITEKTUR                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐              │
+│   │   NETLIFY   │     │  SUPABASE   │     │   46ELKS    │              │
+│   │  (hosting)  │────▶│ (databas)   │     │   (SMS)     │              │
+│   └─────────────┘     └─────────────┘     └─────────────┘              │
+│         │                   │                   │                       │
+│         │                   │                   │                       │
+│   ┌─────▼─────────────────────────────────────▼─────┐                  │
+│   │              ASTRO FRAMEWORK                     │                  │
+│   │         (webbsidor + API-endpoints)              │                  │
+│   └─────────────────────────────────────────────────┘                  │
+│                            │                                            │
+│                      ┌─────▼─────┐                                      │
+│                      │  GITHUB   │                                      │
+│                      │ (version) │                                      │
+│                      └───────────┘                                      │
+└─────────────────────────────────────────────────────────────────────────┘</pre>
+        </div>
+      </section>
+
+      <!-- Section 2: Components -->
+      <section id="komponenter" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">2. Komponenter</h2>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Komponent</th>
+                <th class="text-left p-3">Vad det är</th>
+                <th class="text-left p-3">Används till</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Astro</td>
+                <td class="p-3">Webbramverk</td>
+                <td class="p-3">Bygger hemsidan, hanterar logik</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Supabase</td>
+                <td class="p-3">Databas + inloggning</td>
+                <td class="p-3">Lagrar data, hanterar användare</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">46elks</td>
+                <td class="p-3">Svensk SMS-leverantör</td>
+                <td class="p-3">Skickar/tar emot SMS</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Netlify</td>
+                <td class="p-3">Hosting</td>
+                <td class="p-3">Publicerar hemsidan, kör schemalagda jobb</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">GitHub</td>
+                <td class="p-3">Kodförvaring</td>
+                <td class="p-3">Versionshantering av all kod</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="mt-8">Supabase - vad används?</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Del</th>
+                <th class="text-left p-3">Vad det gör</th>
+                <th class="text-left p-3">Hur vi använder det</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Database</td>
+                <td class="p-3">PostgreSQL-databas</td>
+                <td class="p-3">Lagrar kampanjer, patienter, svar</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Auth</td>
+                <td class="p-3">Inloggningssystem</td>
+                <td class="p-3">Personal loggar in med mejl/lösenord</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Row Level Security</td>
+                <td class="p-3">Säkerhet på radnivå</td>
+                <td class="p-3">Förhindrar obehörig åtkomst</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Functions</td>
+                <td class="p-3">Databasfunktioner</td>
+                <td class="p-3">Atomära operationer (t.ex. "först till kvarn")</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="mt-8">46elks - SMS-leverantör</h3>
+        <p>46elks är ett svenskt företag som hanterar SMS.</p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Funktion</th>
+                <th class="text-left p-3">Beskrivning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Skicka SMS</td>
+                <td class="p-3">Vi skickar, 46elks levererar till telefonen</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Ta emot SMS</td>
+                <td class="p-3">46elks ropar på vår webhook vid inkommande svar</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-600 mt-2"><strong>Kostnad:</strong> ~0,40-0,60 kr per SMS (2026)</p>
+
+        <h3 class="mt-8">Netlify - vad kör där?</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Funktion</th>
+                <th class="text-left p-3">Beskrivning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Hosting</td>
+                <td class="p-3">Serverar hemsidan</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Serverless Functions</td>
+                <td class="p-3">API-endpoints körs som funktioner</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Scheduled Functions</td>
+                <td class="p-3">Körs varje minut för gradvis SMS-utskick</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Miljövariabler</td>
+                <td class="p-3">Hemliga nycklar lagras säkert</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 3: Database -->
+      <section id="databas" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">3. Databastabeller</h2>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Tabell</th>
+                <th class="text-left p-3">Beskrivning</th>
+                <th class="text-left p-3">Viktiga kolumner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">sms_kampanjer</td>
+                <td class="p-3">En kampanj = en ledig tid</td>
+                <td class="p-3 text-sm">datum, status, antal_platser</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">sms_kampanj_mottagare</td>
+                <td class="p-3">Patienter i en kampanj</td>
+                <td class="p-3 text-sm">namn, svar, telefon_krypterad</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">kort_varsel_patienter</td>
+                <td class="p-3">Patientpoolen (återanvänds)</td>
+                <td class="p-3 text-sm">namn, status, akut, har_ont</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">lakare</td>
+                <td class="p-3">Lista av läkare</td>
+                <td class="p-3 text-sm">namn, aktiv</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">profiles</td>
+                <td class="p-3">Personalens profiler</td>
+                <td class="p-3 text-sm">email, mobilnummer</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">audit_logg</td>
+                <td class="p-3">Spårning av händelser</td>
+                <td class="p-3 text-sm">handelse_typ, detaljer</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 4: Security -->
+      <section id="sakerhet" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">4. Säkerhet & GDPR</h2>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Aspekt</th>
+                <th class="text-left p-3">Hur det hanteras</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Telefonnummer</td>
+                <td class="p-3">Krypteras med AES-256 innan lagring</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">Auto-radering</td>
+                <td class="p-3">Patienter raderas efter utgångsdatum</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Inloggning</td>
+                <td class="p-3">Endast behörig personal via Supabase Auth</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-semibold">RLS</td>
+                <td class="p-3">Databasnivå-säkerhet förhindrar obehörig åtkomst</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-semibold">Service Role Key</td>
+                <td class="p-3">Används endast server-side, aldrig i klient</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mt-6">
+          <h4 class="font-bold text-emerald-800 mb-3">Regelefterlevnad</h4>
+          <ul class="space-y-2 text-emerald-700">
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-600">✓</span> GDPR (Art. 6 & 9)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-600">✓</span> Patientdatalagen (PDL)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-emerald-600">✓</span> Offentlighets- & sekretesslagen
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 5: Flow -->
+      <section id="flode" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">5. Systemflöde</h2>
+        
+        <div class="bg-slate-800 text-slate-100 p-6 rounded-xl font-mono text-sm overflow-x-auto my-6">
+          <pre class="whitespace-pre">1. PERSONAL SKAPAR KAMPANJ
+   └── Väljer datum, tid, läkare, patienter
+       └── Sparas i databas
+       └── SMS skickas via 46elks
+
+2. PATIENT FÅR SMS
+   └── SMS innehåller personlig länk
+   
+3. PATIENT KLICKAR LÄNK
+   └── Svarssida visas med JA/NEJ-knappar
+       
+4. PATIENT SVARAR
+   └── Atomär databasfunktion (förhindrar dubbelbokningar)
+   └── Status uppdateras
+       
+5. GRADVIS UTSKICK (om aktiverat)
+   └── Schemalagt jobb körs varje minut
+       └── Skickar till nästa patient i kön
+       
+6. KAMPANJ AVSLUTAS
+   └── Automatiskt när alla platser fyllda
+   └── Eller manuellt av personal</pre>
+        </div>
+      </section>
+
+      <!-- Section 6: History -->
+      <section id="historik" class="mb-16">
+        <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">6. Ändringshistorik</h2>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="text-left p-3">Datum</th>
+                <th class="text-left p-3">Ändring</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">2026-01-24</td>
+                <td class="p-3"><strong>Prioritetsbaserade intervall:</strong> AKUT (60 min), sjukskriven (30 min), ont (20 min)</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">2026-01-24</td>
+                <td class="p-3"><strong>Opt-out:</strong> Patienter kan avregistrera sig via webben eller SMS (STOPP)</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">2026-01-24</td>
+                <td class="p-3"><strong>Ålder & sortering:</strong> Ålder beräknas från personnummer, sorterbara kolumner</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">2026-01-24</td>
+                <td class="p-3"><strong>Utöka kampanj:</strong> Lägg till fler patienter till aktiv kampanj</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">2026-01-23</td>
+                <td class="p-3"><strong>Läkare:</strong> Läkare-dropdown, "flexibel läkare"-alternativ</td>
+              </tr>
+              <tr class="border-b bg-slate-50">
+                <td class="p-3 font-mono text-sm">2026-01-22</td>
+                <td class="p-3"><strong>Patientpool:</strong> Ny modell med persistent patientlista, reservhantering</td>
+              </tr>
+              <tr class="border-b">
+                <td class="p-3 font-mono text-sm">2026-01-22</td>
+                <td class="p-3"><strong>Ny modell:</strong> Stöd för 1-3 platser per kampanj + tidsblock</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- Back link -->
+    <div class="mt-12 pt-8 border-t">
+      <a href="/om-oss/kort-varsel-demo" class="text-rose-600 hover:text-rose-700 font-medium">
+        ← Tillbaka till demo
+      </a>
+    </div>
+
+  </main>
+</BaseLayout>
