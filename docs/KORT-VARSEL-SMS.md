@@ -1,6 +1,6 @@
 # 📱 Kort varsel SMS - Specifikation
 
-> **Status:** ✅ Implementerad (fas 1-2 klar)  
+> **Status:** ✅ Implementerad (fas 1-2 klar) | ⏳ Juridisk granskning pågår (IMY)  
 > **Prioritet:** Hög  
 > **Senast uppdaterad:** 2026-01-24
 
@@ -1363,6 +1363,33 @@ Varje personal registrerar sitt mobilnummer i sin profil.
 ---
 
 ## 10. GDPR, Patientdatalagen och juridik
+
+### ⏳ Pågående granskning hos IMY
+
+**Status:** Begäran om vägledning skickad till Integritetsskyddsmyndigheten (IMY).
+
+| Datum | Händelse | Status |
+|-------|----------|--------|
+| 2026-01-24 | Mejl skickat till imy@imy.se | ⏳ Väntar på svar |
+
+**Frågeställningar som ställts till IMY:**
+
+1. Eftersom systemet är helt fristående från journalsystemet, data skrivs in manuellt, och ingen medicinsk information hanteras - omfattas det av Patientdatalagen, eller endast av GDPR?
+2. Är det tillåtet att använda en molntjänst inom EU (Frankfurt) för denna typ av notifieringsdata?
+3. Finns det ytterligare åtgärder som rekommenderas?
+
+**Systemets karaktär (beskrivet för IMY):**
+
+- Helt fristående från journalsystemet - ingen teknisk koppling
+- All patientdata skrivs in manuellt av personal
+- Inte ett bokningssystem och inte ett tvåvägs-SMS-system
+- Endast ett notifieringsverktyg där patienten kan signalera intresse
+- Patienten kontaktas därefter per telefon för faktisk bokning
+- SMS skickas endast till patienter som aktivt samtyckt
+
+**Uppdatering:** Detta avsnitt uppdateras när svar inkommer från IMY.
+
+---
 
 ### Översikt: Rättslig grund
 
