@@ -526,7 +526,8 @@ function formateraDatum(datum: string): string {
           
           const response = await fetch('/api/admin/upload-avatar', {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'include' // Viktigt: skicka cookies
           });
           
           const result = await response.json();
