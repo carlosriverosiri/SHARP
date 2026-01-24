@@ -719,23 +719,17 @@ if (supabaseKonfigurerad) {
                 
                 <!-- Åtgärder -->
                 <div id="kampanj-detalj-actions" class="mt-4 pt-4 border-t border-sky-200">
-                  <p class="text-xs text-gray-600 mb-2">Avsluta kampanj:</p>
+                  <p class="text-sm font-medium text-gray-700 mb-2">Avsluta kampanj:</p>
                   <div class="flex flex-wrap gap-2">
                     <button 
                       id="btn-fylld-manuellt"
-                      class="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-colors"
+                      class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                     >
-                      ✅ Fylld manuellt
-                    </button>
-                    <button 
-                      id="btn-avbokad"
-                      class="px-3 py-1.5 bg-orange-500 text-white text-xs font-medium rounded-lg hover:bg-orange-600 transition-colors"
-                    >
-                      📅 Avbokad tid
+                      ✅ Avsluta kampanj - Tiden fylld
                     </button>
                   </div>
                   <p class="text-xs text-gray-500 mt-2">
-                    Båda skickar SMS till väntande patienter om att tiden är fylld
+                    Avslutar kampanjen och skickar SMS till de som fått förfrågan men ännu inte svarat
                   </p>
                 </div>
               </div>
@@ -1093,16 +1087,14 @@ if (supabaseKonfigurerad) {
     }
 
     // ========== AVSLUTA KAMPANJ ==========
-    async function avslutaKampanj(utfall: 'fylld_manuellt' | 'avbruten') {
+    async function avslutaKampanj(utfall: 'fylld_manuellt') {
       const kampanjId = (window as any).aktivKampanjId;
       if (!kampanjId) {
         alert('Ingen kampanj vald');
         return;
       }
       
-      const bekrafta = utfall === 'fylld_manuellt'
-        ? confirm('Markera kampanjen som fylld manuellt?\n\nDetta innebär att platsen bokades på annat sätt.\n\nSMS skickas till de som väntar på svar.')
-        : confirm('Markera tiden som avbokad?\n\nSMS skickas till de som väntar på svar och informerar att tiden nu är bokad.');
+      const bekrafta = confirm('Avsluta kampanjen och markera tiden som fylld?\n\nSMS skickas till de som fått förfrågan men ännu inte svarat, och meddelar att tiden nu är bokad.');
       
       if (!bekrafta) return;
       
@@ -1121,11 +1113,9 @@ if (supabaseKonfigurerad) {
         
         if (data.success) {
           const smsInfo = data.antalNotifierade > 0 
-            ? `\n\n${data.antalNotifierade} SMS skickades till väntande patienter.` 
+            ? `\n\n${data.antalNotifierade} SMS skickades till patienter som ännu inte svarat.` 
             : '';
-          alert(utfall === 'fylld_manuellt' 
-            ? `✅ Kampanjen markerades som fylld manuellt!${smsInfo}` 
-            : `📅 Tiden markerades som avbokad!${smsInfo}`);
+          alert(`✅ Kampanjen avslutades - tiden markerad som fylld!${smsInfo}`);
           window.location.href = '/personal/kort-varsel';
         } else {
           alert('Något gick fel: ' + (data.error || 'Okänt fel'));
@@ -1136,13 +1126,9 @@ if (supabaseKonfigurerad) {
       }
     }
     
-    // Event listeners för avsluta-knappar
+    // Event listener för avsluta-knapp
     document.getElementById('btn-fylld-manuellt')?.addEventListener('click', () => {
       avslutaKampanj('fylld_manuellt');
-    });
-    
-    document.getElementById('btn-avbokad')?.addEventListener('click', () => {
-      avslutaKampanj('avbruten');
     });
 
     // ========== UTÖKA KAMPANJ ==========
