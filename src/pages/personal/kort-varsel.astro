@@ -347,13 +347,13 @@ Mobilnummer: 073-456 78 90"
 
       <!-- ========== SKAPA KAMPANJ-VY ========== -->
       <div id="panel-kampanj" class="tab-panel hidden">
-        <!-- Kampanjdetaljer (visas när ?id= finns) -->
+        <!-- Kampanjdetaljer (visas när ?id= finns) – VEM SVARADE JA? -->
         <div id="kampanj-detalj-wrap" class="hidden mb-8">
-          <div class="bg-white rounded-xl shadow-sm border p-6">
+          <div class="bg-sky-50 rounded-xl shadow-sm border-2 border-sky-200 p-6">
             <div class="flex items-center justify-between mb-4">
-              <a href="/personal/kort-varsel" class="text-sky-600 hover:underline text-sm">← Tillbaka till översikt</a>
+              <a href="/personal/kort-varsel" class="text-sky-600 hover:underline text-sm font-medium">← Tillbaka till översikt</a>
             </div>
-            <h2 id="kampanj-detalj-rubrik" class="text-xl font-semibold text-gray-900 mb-2">Kampanj</h2>
+            <h2 id="kampanj-detalj-rubrik" class="text-xl font-semibold text-gray-900 mb-2">📋 Kampanj – vem svarade?</h2>
             <p id="kampanj-detalj-datum" class="text-gray-500 text-sm mb-4"></p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div class="bg-green-50 rounded-lg p-3">
@@ -845,6 +845,8 @@ Mobilnummer: 073-456 78 90"
 
     // ========== KAMPANJDETALJ (?id=) ==========
     async function laddaKampanjDetalj(kampanjId: string) {
+      console.log('📦 laddaKampanjDetalj anropad med ID:', kampanjId);
+      
       const wrap = document.getElementById('kampanj-detalj-wrap');
       const rubrik = document.getElementById('kampanj-detalj-rubrik');
       const datumEl = document.getElementById('kampanj-detalj-datum');
@@ -853,24 +855,45 @@ Mobilnummer: 073-456 78 90"
       const nejEl = document.getElementById('kampanj-detalj-nej');
       const vantarEl = document.getElementById('kampanj-detalj-vantar');
       const listaEl = document.getElementById('kampanj-detalj-lista');
-      if (!wrap || !rubrik || !datumEl || !jaEl || !reservEl || !nejEl || !vantarEl || !listaEl) return;
+      
+      console.log('📦 Element hittade:', { wrap: !!wrap, rubrik: !!rubrik, datumEl: !!datumEl, listaEl: !!listaEl });
+      
+      if (!wrap || !rubrik || !datumEl || !jaEl || !reservEl || !nejEl || !vantarEl || !listaEl) {
+        console.error('❌ Kunde inte hitta alla element för kampanjdetalj');
+        return;
+      }
+
+      // Visa direkt så användaren ser att något laddas
+      console.log('👁️ Visar kampanjdetalj-wrap och sätter Laddar...');
+      wrap.classList.remove('hidden');
+      rubrik.textContent = '📋 Kampanj – vem svarade?';
+      datumEl.textContent = 'Laddar...';
+      listaEl.innerHTML = '<p class="text-gray-400 italic text-sm">Laddar mottagare...</p>';
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       try {
+        console.log('🌐 Fetchar kampanjstatus från API...');
         const response = await fetch(`/api/kampanj/status?id=${encodeURIComponent(kampanjId)}`, { credentials: 'include' });
+        console.log('📥 API svarade med status:', response.status);
+        
         const data = await response.json();
+        console.log('📊 API-data:', data);
+        
         if (!response.ok || data.error) {
-          wrap.classList.remove('hidden');
+          console.error('❌ API-fel:', data.error);
           rubrik.textContent = 'Kunde inte ladda kampanj';
           datumEl.textContent = data.error || 'Okänt fel';
+          listaEl.innerHTML = '';
           return;
         }
 
         const k = data.kampanj;
         const mottagare = data.mottagare || [];
         const stats = data.statistik || {};
+        
+        console.log('✅ Renderar kampanjdetaljer:', { antalMottagare: mottagare.length, stats });
 
-        wrap.classList.remove('hidden');
-        rubrik.textContent = `Kampanj ${k.operationTyp || 'Kort varsel'} – ${k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' }) : ''}`;
+        rubrik.textContent = `📋 Kampanj – vem svarade? ${k.operationTyp || 'Kort varsel'} ${k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' }) : ''}`;
         datumEl.textContent = k.status === 'fylld' ? '✅ Fylld' : k.status === 'aktiv' ? '⏳ Aktiv' : 'Avslutad';
 
         jaEl.textContent = String(stats.jaSvar ?? 0);
@@ -908,10 +931,12 @@ Mobilnummer: 073-456 78 90"
             </div>
           </div>`;
         }).join('') || '<p class="text-gray-400 italic text-sm">Inga mottagare</p>';
+
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (e) {
-        wrap.classList.remove('hidden');
         rubrik.textContent = 'Kunde inte ladda kampanj';
         datumEl.textContent = 'Nätverksfel';
+        listaEl.innerHTML = '';
       }
     }
 
@@ -1212,9 +1237,13 @@ Mobilnummer: 073-456 78 90"
 
     // Vid ?id=: visa kampanj-flik och ladda kampanjdetaljer (JA/NEJ/reserv)
     const kampanjIdFromUrl = document.querySelector('main')?.getAttribute('data-kampanj-id')?.trim();
+    console.log('🔍 Kampanj-ID från URL:', kampanjIdFromUrl);
     if (kampanjIdFromUrl) {
+      console.log('✅ Visar kampanj-flik och laddar detaljer för ID:', kampanjIdFromUrl);
       visaPanel('kampanj');
       laddaKampanjDetalj(kampanjIdFromUrl);
+    } else {
+      console.log('⚠️ Ingen kampanj-ID i URL, visar standard-vy');
     }
 
     // ========== KAMPANJFORMULÄR ==========

@@ -1,7 +1,26 @@
 {
   "name": "Södermalms Ortopedi",
-  "short_name": "Södermalms Ortopedi",
+  "short_name": "SÖ Ortopedi",
+  "description": "Patientinformation om operationer och rehabilitering från Södermalms Ortopedi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#024264",
+  "orientation": "portrait-primary",
+  "scope": "/",
   "icons": [
+    {
+      "src": "/favicons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/favicons/web-app-manifest-192x192.png",
       "sizes": "192x192",
@@ -15,7 +34,6 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "categories": ["medical", "health"],
+  "lang": "sv-SE"
 }
