@@ -236,14 +236,14 @@ if (supabaseKonfigurerad) {
               <label class="block text-sm font-medium text-gray-700 mb-2">Operationsstorlek *</label>
               <div class="flex flex-wrap gap-3">
                 <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
-                  <input type="checkbox" id="patient-op-liten" class="rounded w-4 h-4 text-sky-600" />
+                  <input type="radio" name="patient-op-storlek" value="liten" class="w-4 h-4 text-sky-600" />
                   <div>
                     <span class="text-sm font-medium text-gray-900">🔹 Liten</span>
                     <span class="text-xs text-gray-500 block">5-15 min</span>
                   </div>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
-                  <input type="checkbox" id="patient-op-stor" class="rounded w-4 h-4 text-sky-600" />
+                  <input type="radio" name="patient-op-storlek" value="stor" class="w-4 h-4 text-sky-600" />
                   <div>
                     <span class="text-sm font-medium text-gray-900">🔷 Stor</span>
                     <span class="text-xs text-gray-500 block">15-60 min</span>
@@ -251,7 +251,7 @@ if (supabaseKonfigurerad) {
                 </label>
               </div>
               <p class="text-xs text-gray-500 mt-1">
-                💡 Kryssa i båda om patienten kan fylla antingen ett litet eller stort utrymme
+                Operationens faktiska storlek (fast värde)
               </p>
             </div>
             
@@ -1496,8 +1496,6 @@ if (supabaseKonfigurerad) {
       const akutCheckbox = document.getElementById('patient-akut') as HTMLInputElement;
       const ontCheckbox = document.getElementById('patient-ont') as HTMLInputElement;
       const sjukskrivenCheckbox = document.getElementById('patient-sjukskriven') as HTMLInputElement;
-      const opLitenCheckbox = document.getElementById('patient-op-liten') as HTMLInputElement;
-      const opStorCheckbox = document.getElementById('patient-op-stor') as HTMLInputElement;
       
       // Hämta valda läkare (checkboxar)
       const lakareCheckboxes = document.querySelectorAll('input[name="patient-lakare"]:checked') as NodeListOf<HTMLInputElement>;
@@ -1507,13 +1505,17 @@ if (supabaseKonfigurerad) {
       const sidaRadio = document.querySelector('input[name="patient-sida"]:checked') as HTMLInputElement;
       const sida = sidaRadio?.value || null;
       
+      // Hämta vald operationsstorlek (radio - liten ELLER stor)
+      const opStorlekRadio = document.querySelector('input[name="patient-op-storlek"]:checked') as HTMLInputElement;
+      const opStorlek = opStorlekRadio?.value || null;
+      
       const text = textarea.value.trim();
       const opDatum = opDatumInput.value;
       const arAkut = akutCheckbox.checked;
       const harOnt = ontCheckbox.checked;
       const arSjukskriven = sjukskrivenCheckbox.checked;
-      const opLiten = opLitenCheckbox.checked;
-      const opStor = opStorCheckbox.checked;
+      const opLiten = opStorlek === 'liten';
+      const opStor = opStorlek === 'stor';
       
       if (!text) return;
       
@@ -1532,8 +1534,8 @@ if (supabaseKonfigurerad) {
         return;
       }
       
-      if (!opLiten && !opStor) {
-        alert('Välj operationsstorlek (liten, stor eller båda)');
+      if (!opStorlek) {
+        alert('Välj operationsstorlek (liten eller stor)');
         return;
       }
       
@@ -1643,12 +1645,12 @@ if (supabaseKonfigurerad) {
           akutCheckbox.checked = false;
           ontCheckbox.checked = false;
           sjukskrivenCheckbox.checked = false;
-          opLitenCheckbox.checked = false;
-          opStorCheckbox.checked = false;
           // Återställ läkare-checkboxar
           document.querySelectorAll('input[name="patient-lakare"]').forEach((cb: any) => cb.checked = false);
           // Återställ sida-radioknappar
           document.querySelectorAll('input[name="patient-sida"]').forEach((rb: any) => rb.checked = false);
+          // Återställ operationsstorlek-radioknappar
+          document.querySelectorAll('input[name="patient-op-storlek"]').forEach((rb: any) => rb.checked = false);
           laddaPatientpool();
           
           // Visa succémeddelande
