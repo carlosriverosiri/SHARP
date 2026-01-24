@@ -66,8 +66,8 @@ export default defineConfig({
     assets: '_astro',
   },
   
-  // Output configuration - Static by default, SSR för sidor med prerender = false
-  output: 'static',
+  // Output configuration - Hybrid för SSR-sidor och API-routes
+  output: 'hybrid',
   
   // Netlify adapter för SSR (krävs för sidor med prerender = false)
   adapter: netlify(),
