@@ -247,43 +247,66 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
           Vi prioriterar patienter baserat på medicinsk angelägenhet. De som har störst behov får frågan först.
         </p>
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div class="bg-red-50 border-2 border-red-200 p-4 rounded-xl text-center hover:shadow-md transition">
             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-red-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
+              <span class="text-2xl">🚨</span>
             </div>
             <h4 class="font-bold text-red-800">Akut</h4>
             <p class="text-xs text-red-600">Måste opereras snarast</p>
           </div>
-          <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center hover:shadow-md transition">
-            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-orange-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
-              </svg>
-            </div>
-            <h4 class="font-bold text-orange-800">Sjukskrivna</h4>
-            <p class="text-xs text-orange-600">Väntar på att komma tillbaka</p>
-          </div>
           <div class="bg-amber-50 border-2 border-amber-200 p-4 rounded-xl text-center hover:shadow-md transition">
             <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-amber-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
-              </svg>
+              <span class="text-2xl">🔥</span>
             </div>
             <h4 class="font-bold text-amber-800">Mycket ont</h4>
             <p class="text-xs text-amber-600">Hög smärtnivå</p>
           </div>
+          <div class="bg-orange-50 border-2 border-orange-200 p-4 rounded-xl text-center hover:shadow-md transition">
+            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <span class="text-2xl">📋</span>
+            </div>
+            <h4 class="font-bold text-orange-800">Sjukskrivna</h4>
+            <p class="text-xs text-orange-600">Väntar på att komma tillbaka</p>
+          </div>
+          <div class="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl text-center hover:shadow-md transition">
+            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <span class="text-2xl">👴</span>
+            </div>
+            <h4 class="font-bold text-emerald-800">Pensionärer</h4>
+            <p class="text-xs text-emerald-600">67+ flexibla tider</p>
+          </div>
           <div class="bg-blue-50 border-2 border-blue-200 p-4 rounded-xl text-center hover:shadow-md transition">
             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-blue-600">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <span class="text-2xl">⏰</span>
             </div>
             <h4 class="font-bold text-blue-800">Övriga</h4>
             <p class="text-xs text-blue-600">Normal väntelista</p>
+          </div>
+        </div>
+
+        <!-- Additional factors -->
+        <div class="mt-6 p-4 bg-stone-50 border border-stone-200 rounded-xl">
+          <h4 class="font-bold text-slate-800 mb-3">Ytterligare faktorer som påverkar:</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="flex gap-3 items-start">
+              <span class="text-lg">↔️</span>
+              <div>
+                <span class="font-medium text-slate-700">Höger/Vänster sida (HÖ/VÄ)</span>
+                <p class="text-slate-500 text-xs mt-0.5">
+                  Patienter med rätt sida prioriteras inom varje nivå. Det minskar utrustningsbyten under operationsdagen.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="text-lg">📏</span>
+              <div>
+                <span class="font-medium text-slate-700">Operationsstorlek (Liten/Stor)</span>
+                <p class="text-slate-500 text-xs mt-0.5">
+                  Liten (5-15 min) eller stor (15-60 min) operation matchas mot den lediga tiden.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -753,8 +776,11 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
 
             <!-- Priority intervals -->
             <div>
-              <h3 class="font-bold text-lg mb-4 text-slate-200">Prioritetsintervall</h3>
-              <div class="bg-slate-700 rounded-xl p-4">
+              <h3 class="font-bold text-lg mb-4 text-slate-200">Prioritetsalgoritm (detaljerad)</h3>
+              
+              <!-- Huvudprioritet -->
+              <div class="bg-slate-700 rounded-xl p-4 mb-4">
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">1. Medicinsk prioritet (primär sortering)</h4>
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="text-slate-400 text-left">
@@ -765,11 +791,64 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
                   </thead>
                   <tbody class="text-slate-200">
                     <tr><td>🚨 AKUT</td><td>60 min</td><td>Måste opereras snarast</td></tr>
-                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Väntar på att återgå i arbete</td></tr>
                     <tr><td>🔥 Mycket ont</td><td>20 min</td><td>Hög smärtnivå</td></tr>
+                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Väntar på att återgå i arbete</td></tr>
+                    <tr><td>👴 Pensionär (67+)</td><td>10 min</td><td>Flexibla tider, lättare att komma</td></tr>
                     <tr><td>⏰ Normal</td><td>10 min</td><td>Standardintervall</td></tr>
                   </tbody>
                 </table>
+              </div>
+
+              <!-- Sekundär sortering -->
+              <div class="bg-slate-700 rounded-xl p-4 mb-4">
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">2. Sida HÖ/VÄ (sekundär sortering)</h4>
+                <p class="text-slate-400 text-xs mb-3">
+                  Inom varje prioritetsnivå sorteras patienter efter om deras sida matchar kampanjens önskade sida.
+                </p>
+                <div class="bg-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300">
+                  <div class="text-emerald-400 mb-2">// Exempel: Kampanj söker HÖGER sida</div>
+                  <div>1. Akut + HÖ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Skickas först</div>
+                  <div>2. Akut + VÄ</div>
+                  <div>3. Ont + HÖ</div>
+                  <div>4. Ont + VÄ</div>
+                  <div>5. Sjukskriven + HÖ</div>
+                  <div>6. Sjukskriven + VÄ</div>
+                  <div>7. Pensionär + HÖ</div>
+                  <div>8. Pensionär + VÄ</div>
+                  <div>9. Normal + HÖ</div>
+                  <div>10. Normal + VÄ</div>
+                </div>
+                <p class="text-slate-500 text-xs mt-3">
+                  💡 <strong>Varför sida?</strong> Att operera alla höger-axlar först och sedan alla vänster-axlar 
+                  minskar utrustningsbyten och sparar tid under operationsdagen.
+                </p>
+              </div>
+
+              <!-- Operationsstorlek -->
+              <div class="bg-slate-700 rounded-xl p-4">
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">3. Operationsstorlek (filtrering)</h4>
+                <p class="text-slate-400 text-xs mb-3">
+                  Vid kampanjskapande filtreras patienter baserat på om operationsstorleken matchar den lediga tiden.
+                </p>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="bg-slate-800 rounded-lg p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sky-400">🔹</span>
+                      <span class="font-bold text-slate-200">Liten operation</span>
+                    </div>
+                    <p class="text-xs text-slate-400">5-15 minuter. T.ex. injektioner, små exkisioner.</p>
+                  </div>
+                  <div class="bg-slate-800 rounded-lg p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-indigo-400">🔷</span>
+                      <span class="font-bold text-slate-200">Stor operation</span>
+                    </div>
+                    <p class="text-xs text-slate-400">15-60 minuter. T.ex. artroskopi, ligamentplastik.</p>
+                  </div>
+                </div>
+                <p class="text-slate-500 text-xs mt-3">
+                  💡 Patienter kan markeras för "båda" om de kan fylla antingen en liten eller stor lucka.
+                </p>
               </div>
             </div>
 
