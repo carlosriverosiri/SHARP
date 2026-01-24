@@ -376,21 +376,95 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
                   <div class="text-2xl mb-2">🚀</div>
                   <h4 class="font-bold text-white">Astro</h4>
                   <p class="text-xs text-slate-400">Frontend & API</p>
+                  <p class="text-xs text-slate-500 mt-1">Ingen patientdata</p>
                 </div>
-                <div class="bg-slate-700 p-4 rounded-xl">
+                <div class="bg-slate-700 p-4 rounded-xl border-2 border-emerald-500">
                   <div class="text-2xl mb-2">🗄️</div>
                   <h4 class="font-bold text-white">Supabase</h4>
                   <p class="text-xs text-slate-400">Databas & Auth</p>
+                  <p class="text-xs text-emerald-400 mt-1">✓ DPA krävs</p>
                 </div>
-                <div class="bg-slate-700 p-4 rounded-xl">
+                <div class="bg-slate-700 p-4 rounded-xl border-2 border-emerald-500">
                   <div class="text-2xl mb-2">💬</div>
                   <h4 class="font-bold text-white">46elks</h4>
                   <p class="text-xs text-slate-400">SMS Gateway</p>
+                  <p class="text-xs text-emerald-400 mt-1">✓ DPA krävs</p>
                 </div>
-                <div class="bg-slate-700 p-4 rounded-xl">
+                <div class="bg-slate-700 p-4 rounded-xl border-2 border-emerald-500">
                   <div class="text-2xl mb-2">☁️</div>
                   <h4 class="font-bold text-white">Netlify</h4>
                   <p class="text-xs text-slate-400">Hosting & Cron</p>
+                  <p class="text-xs text-emerald-400 mt-1">✓ DPA krävs</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- GDPR & Legal Compliance -->
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-slate-200">🛡️ GDPR, PDL & Avtal</h3>
+              
+              <!-- Compliance checklist -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-slate-700 rounded-xl p-4">
+                  <h4 class="font-bold text-emerald-400 mb-3">Regelefterlevnad</h4>
+                  <ul class="space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span>GDPR (Art. 6 & 9)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span>Patientdatalagen (PDL)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span>Offentlighets- & sekretesslagen</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span>AES-256 kryptering</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span>Automatisk dataradering</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="bg-slate-700 rounded-xl p-4">
+                  <h4 class="font-bold text-amber-400 mb-3">Personuppgiftsbiträdesavtal (DPA)</h4>
+                  <ul class="space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">☐</span>
+                      <span><strong>Supabase</strong> – Databas (EU/Frankfurt)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">☐</span>
+                      <span><strong>46elks</strong> – SMS (Sverige)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-emerald-400">☐</span>
+                      <span><strong>Netlify</strong> – Hosting (EU)</span>
+                    </li>
+                  </ul>
+                  <p class="text-xs text-slate-400 mt-3">
+                    ☐ = Ska inhämtas | ✓ = Klart
+                  </p>
+                </div>
+              </div>
+
+              <!-- Samtycke & rättslig grund -->
+              <div class="bg-slate-700 rounded-xl p-4">
+                <h4 class="font-bold text-slate-200 mb-3">Rättslig grund för SMS-utskick</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div class="bg-slate-600 p-3 rounded-lg">
+                    <p class="font-bold text-emerald-400 mb-1">Med samtycke (Art. 9.2.a)</p>
+                    <p class="text-slate-300">Patient har kryssat i hälsodeklarationen → Personligt SMS med operationsdetaljer</p>
+                  </div>
+                  <div class="bg-slate-600 p-3 rounded-lg">
+                    <p class="font-bold text-amber-400 mb-1">Utan samtycke (Berättigat intresse)</p>
+                    <p class="text-slate-300">Generiskt SMS utan känslig info → "Vi har en ledig tid..."</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -417,12 +491,48 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
               </div>
             </div>
 
-            <div class="flex gap-4">
+            <!-- Data handling -->
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-slate-200">Datahantering</h3>
+              <div class="bg-slate-700 rounded-xl p-4">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-slate-400 text-left">
+                      <th class="pb-2">Data</th>
+                      <th class="pb-2">Lagring</th>
+                      <th class="pb-2">Radering</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-slate-200">
+                    <tr>
+                      <td>Telefonnummer</td>
+                      <td>AES-256 krypterat</td>
+                      <td>Efter op-datum eller 7 dagar</td>
+                    </tr>
+                    <tr>
+                      <td>Patientnamn</td>
+                      <td>Klartext (för sökning)</td>
+                      <td>Efter op-datum eller 7 dagar</td>
+                    </tr>
+                    <tr>
+                      <td>Kampanjhistorik</td>
+                      <td>Anonymiserad</td>
+                      <td>90 dagar</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4">
               <a href="/personal/kort-varsel" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg font-medium transition">
                 → Öppna dashboard
               </a>
-              <a href="https://github.com" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition">
-                📚 Dokumentation
+              <a href="https://github.com/carlosriverosiri/SHARP" target="_blank" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition">
+                📚 GitHub
+              </a>
+              <a href="/docs/KORT-VARSEL-SMS.md" target="_blank" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition">
+                📄 Full dokumentation
               </a>
             </div>
           </div>
