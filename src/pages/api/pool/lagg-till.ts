@@ -23,13 +23,15 @@ interface PatientInput {
   namn: string;
   telefon: string;
   harSamtycke: boolean;
-  lakare?: string;
-  flexibelLakare?: boolean;
+  lakare?: string | string[]; // En eller flera läkare som kan operera
   opDatum?: string; // Patientens ordinarie operationsdatum (används som utgångsdatum)
   akut?: boolean; // AKUT - måste opereras snarast (högsta prioritet)
   harOnt?: boolean; // Patienten har mycket ont
   sjukskriven?: boolean; // Patienten är sjukskriven
   alder?: number | null; // Patientens ålder (beräknad från personnummer)
+  opLiten?: boolean; // Liten operation (5-15 min)
+  opStor?: boolean; // Stor operation (15-60 min)
+  sida?: 'höger' | 'vänster' | null; // Vilken sida ska opereras (HÖ/VÄ)
 }
 
 // Kryptera telefonnummer med AES-256
@@ -117,18 +119,23 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         utgarVid.setDate(utgarVid.getDate() + 7);
       }
       
+      // Hantera läkare som array
+      const lakareArray = Array.isArray(p.lakare) ? p.lakare : (p.lakare ? [p.lakare] : []);
+      
       return {
         namn: p.namn.trim(),
         telefon_krypterad: krypteraTelefon(telefonFormaterad),
         telefon_hash: hash,
         telefon_masked: maskeraTelefon(telefonFormaterad),
         har_samtycke: p.harSamtycke,
-        lakare: p.lakare || null,
-        flexibel_lakare: p.flexibelLakare || false,
+        lakare: lakareArray, // Array av läkare som kan operera
         akut: p.akut || false, // AKUT - måste opereras snarast
         har_ont: p.harOnt || false, // Patienten har mycket ont
         sjukskriven: p.sjukskriven || false, // Patienten är sjukskriven
         alder: p.alder ?? null, // Ålder från personnummer (kan vara null)
+        op_liten: p.opLiten || false, // Liten operation (5-15 min)
+        op_stor: p.opStor || false, // Stor operation (15-60 min)
+        sida: p.sida || null, // Vilken sida ska opereras (höger/vänster)
         status: 'tillganglig',
         tillagd_av: anvandare?.id || null,
         utgar_vid: utgarVid.toISOString(),

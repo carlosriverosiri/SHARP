@@ -200,201 +200,193 @@ if (supabaseKonfigurerad) {
 
       <!-- ========== PATIENTPOOL-VY ========== -->
       <div id="panel-pool" class="tab-panel">
-        <div class="flex flex-col lg:flex-row gap-6">
+        <div class="max-w-3xl mx-auto space-y-6">
           
-          <!-- ===== VÄNSTER HUVUDKOLUMN ===== -->
-          <div class="flex-1 space-y-5">
+          <!-- Lägg till patienter -->
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">➕ Lägg till patient i kortvarsel-poolen</h3>
             
-            <!-- Kompakt statistik-rad -->
-            <div class="flex flex-wrap gap-3">
-              <div class="bg-white rounded-lg shadow-sm border px-4 py-2 flex items-center gap-2">
-                <span class="text-xl font-bold text-sky-600" id="stat-tillgangliga">-</span>
-                <span class="text-xs text-gray-500">tillgängliga</span>
+            <!-- Rad 1: Planerat operationsdatum -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Planerat operationsdatum *</label>
+              <input 
+                type="date" 
+                id="patient-op-datum"
+                class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+              />
+              <p class="text-xs text-gray-500 mt-1">Patientens nuvarande bokade operationsdatum (inte kort varsel-datum)</p>
+            </div>
+            
+            <!-- Rad 2: Läkare (checkboxar - välj en eller flera) -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Vilka läkare kan operera patienten? *</label>
+              <div class="flex flex-wrap gap-2" id="lakare-checkboxes">
+                {lakare?.map(l => (
+                  <label class="flex items-center gap-2 cursor-pointer px-3 py-2 border border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                    <input type="checkbox" name="patient-lakare" value={l.namn} class="rounded w-4 h-4 text-sky-600" />
+                    <span class="text-sm text-gray-700">{l.namn}</span>
+                  </label>
+                ))}
               </div>
-              <div class="bg-yellow-50 rounded-lg border border-yellow-200 px-4 py-2 flex items-center gap-2">
-                <span class="text-xl font-bold text-yellow-600" id="stat-reserv">-</span>
-                <span class="text-xs text-yellow-700">⭐ reserv</span>
+              <p class="text-xs text-gray-500 mt-1">💡 T.ex. alla knäkirurger för en knäoperation, eller alla armbågskirurger för en armbågsoperation</p>
+            </div>
+            
+            <!-- Rad 2: Operationsstorlek -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Operationsstorlek *</label>
+              <div class="flex flex-wrap gap-3">
+                <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                  <input type="checkbox" id="patient-op-liten" class="rounded w-4 h-4 text-sky-600" />
+                  <div>
+                    <span class="text-sm font-medium text-gray-900">🔹 Liten</span>
+                    <span class="text-xs text-gray-500 block">5-15 min</span>
+                  </div>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                  <input type="checkbox" id="patient-op-stor" class="rounded w-4 h-4 text-sky-600" />
+                  <div>
+                    <span class="text-sm font-medium text-gray-900">🔷 Stor</span>
+                    <span class="text-xs text-gray-500 block">15-60 min</span>
+                  </div>
+                </label>
               </div>
-              <div class="bg-white rounded-lg shadow-sm border px-4 py-2 flex items-center gap-2">
-                <span class="text-xl font-bold text-gray-500" id="stat-totalt">-</span>
-                <span class="text-xs text-gray-500">totalt</span>
+              <p class="text-xs text-gray-500 mt-1">
+                💡 Kryssa i båda om patienten kan fylla antingen ett litet eller stort utrymme
+              </p>
+            </div>
+            
+            <!-- Rad 3: Sida (HÖ/VÄ) -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Sida *</label>
+              <div class="flex gap-3">
+                <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                  <input type="radio" name="patient-sida" value="höger" class="w-4 h-4 text-sky-600" />
+                  <span class="text-sm font-medium text-gray-900">HÖ</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer px-4 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                  <input type="radio" name="patient-sida" value="vänster" class="w-4 h-4 text-sky-600" />
+                  <span class="text-sm font-medium text-gray-900">VÄ</span>
+                </label>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Vilken sida ska opereras?</p>
+            </div>
+            
+            <!-- Rad 4: Prioritet -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Prioritet (valfritt)</label>
+              <div class="flex flex-wrap gap-3">
+                <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-red-100 border-2 border-red-300 rounded-lg hover:bg-red-200 has-[:checked]:border-red-500 transition-colors">
+                  <input type="checkbox" id="patient-akut" class="rounded w-4 h-4 text-red-600 focus:ring-red-500" />
+                  <span class="text-sm text-red-700 font-bold">🚨 AKUT</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 has-[:checked]:border-orange-400 transition-colors">
+                  <input type="checkbox" id="patient-ont" class="rounded w-4 h-4 text-orange-600 focus:ring-orange-500" />
+                  <span class="text-sm text-orange-700 font-medium">🔥 Mycket ont</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 has-[:checked]:border-blue-400 transition-colors">
+                  <input type="checkbox" id="patient-sjukskriven" class="rounded w-4 h-4 text-blue-600 focus:ring-blue-500" />
+                  <span class="text-sm text-blue-700 font-medium">📋 Sjukskriven</span>
+                </label>
               </div>
             </div>
-
-            <!-- Lägg till patienter (kompaktare) -->
-            <div class="bg-white rounded-xl shadow-sm border p-5">
-              <h3 class="text-base font-semibold text-gray-900 mb-3">➕ Lägg till patient</h3>
-              
-              <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-3">
-                <div>
-                  <label class="block text-xs font-medium text-gray-600 mb-1">Läkare *</label>
-                  <select 
-                    id="patient-lakare"
-                    class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  >
-                    <option value="">Välj...</option>
-                    {lakare?.map(l => (
-                      <option value={l.namn}>{l.namn}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-gray-600 mb-1">Op-datum *</label>
-                  <input 
-                    type="date" 
-                    id="patient-op-datum"
-                    class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-                  />
-                </div>
-                <div class="flex items-end pb-1">
-                  <label class="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox" id="patient-flexibel" class="rounded" />
-                    <span class="text-xs text-gray-600">Flexibel läkare</span>
-                  </label>
-                </div>
-                <div class="flex items-end pb-1">
-                  <label class="flex items-center gap-1.5 cursor-pointer bg-red-100 border-2 border-red-300 rounded px-2 py-1">
-                    <input type="checkbox" id="patient-akut" class="rounded text-red-600 focus:ring-red-500" />
-                    <span class="text-xs text-red-700 font-bold">🚨 AKUT</span>
-                  </label>
-                </div>
-                <div class="flex items-end pb-1">
-                  <label class="flex items-center gap-1.5 cursor-pointer bg-orange-50 border border-orange-200 rounded px-2 py-1">
-                    <input type="checkbox" id="patient-ont" class="rounded text-orange-600 focus:ring-orange-500" />
-                    <span class="text-xs text-orange-700 font-medium">🔥 Ont</span>
-                  </label>
-                </div>
-                <div class="flex items-end pb-1">
-                  <label class="flex items-center gap-1.5 cursor-pointer bg-blue-50 border border-blue-200 rounded px-2 py-1">
-                    <input type="checkbox" id="patient-sjukskriven" class="rounded text-blue-600 focus:ring-blue-500" />
-                    <span class="text-xs text-blue-700 font-medium">📋 Sjukskr.</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div class="flex gap-2">
+            
+            <!-- Rad 4: Patientdata -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Patientdata *</label>
+              <div class="flex gap-3">
                 <textarea 
                   id="nya-patienter"
-                  rows="2"
-                  placeholder="Namn Personnummer&#10;Mobilnummer: 07X-XXX XX XX"
-                  class="flex-1 px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 font-mono text-xs"
+                  rows="3"
+                  placeholder="Klistra in från journalsystemet:&#10;Namn Personnummer&#10;Mobilnummer: 07X-XXX XX XX"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 font-mono text-sm"
                 ></textarea>
                 <button 
                   id="btn-lagg-till"
-                  class="px-4 py-1.5 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors self-start"
+                  class="px-6 py-2 bg-sky-600 text-white font-medium rounded-lg hover:bg-sky-700 transition-colors self-start"
                 >
                   Lägg till
                 </button>
               </div>
-              
-              <!-- Felmeddelande för dubbletter -->
-              <div id="dubblett-varning" class="hidden mt-3 p-3 bg-red-50 border-2 border-red-300 rounded-lg">
-                <div class="flex items-start gap-2">
-                  <span class="text-lg">⛔</span>
-                  <div class="flex-1">
-                    <h4 class="font-bold text-red-800 text-xs">DUBBLETT - REDAN I POOLEN</h4>
-                    <div id="dubblett-lista" class="mt-1 space-y-1"></div>
-                    <p class="text-red-600 text-xs mt-1">Ta bort patienten först för att lägga till på nytt.</p>
-                  </div>
-                  <button id="stang-dubblett-varning" class="text-red-400 hover:text-red-600 font-bold" title="Stäng">×</button>
+            </div>
+            
+            <!-- Felmeddelande för dubbletter -->
+            <div id="dubblett-varning" class="hidden mt-3 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+              <div class="flex items-start gap-3">
+                <span class="text-2xl">⛔</span>
+                <div class="flex-1">
+                  <h4 class="font-bold text-red-800">DUBBLETT - REDAN I POOLEN</h4>
+                  <div id="dubblett-lista" class="mt-2 space-y-1"></div>
+                  <p class="text-red-600 text-sm mt-2">Ta bort patienten först för att lägga till på nytt.</p>
                 </div>
-              </div>
-              
-              <!-- Succémeddelande -->
-              <div id="tillagd-success" class="hidden mt-2 p-2 bg-green-50 border border-green-300 rounded-lg">
-                <div class="flex items-center gap-2 text-green-700 text-sm">
-                  <span>✅</span>
-                  <span id="tillagd-success-text" class="font-medium"></span>
-                </div>
+                <button id="stang-dubblett-varning" class="text-red-400 hover:text-red-600 text-xl font-bold" title="Stäng">×</button>
               </div>
             </div>
             
-            <!-- Filter + Tillgängliga -->
-            <div class="bg-white rounded-xl shadow-sm border p-5">
-              <div class="flex items-center justify-between mb-3">
-                <h3 class="text-base font-semibold text-gray-900">✅ Tillgängliga patienter</h3>
-                <div class="flex items-center gap-2">
-                  <select 
-                    id="filter-lakare"
-                    class="px-2 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-sky-500"
-                  >
-                    <option value="">Alla läkare</option>
-                    {lakare?.map(l => (
-                      <option value={l.namn}>{l.namn}</option>
-                    ))}
-                  </select>
-                  <label class="flex items-center gap-1 cursor-pointer text-xs text-gray-600">
-                    <input type="checkbox" id="filter-inkludera-flexibla" checked class="rounded" />
-                    +flexibla
-                  </label>
-                  <button id="btn-valj-alla" class="text-xs text-sky-600 hover:underline">Välj alla</button>
-                </div>
-              </div>
-              
-              <!-- Kolumnrubriker med sortering -->
-              <div class="flex items-center gap-2 px-2 py-1.5 bg-gray-50 rounded-t border-b text-xs font-medium text-gray-600 mb-1">
-                <div class="w-5"></div>
-                <button id="sort-prioritet" class="w-12 text-center hover:text-red-600 cursor-pointer" title="Sortera på prioritet (ont/sjukskriven)">Prio ↕</button>
-                <button id="sort-namn" class="flex-1 text-left hover:text-sky-600 cursor-pointer">Namn ↕</button>
-                <button id="sort-alder" class="w-10 text-center hover:text-sky-600 cursor-pointer" title="Pensionärer kommer lättare">Ålder ↕</button>
-                <button id="sort-lakare" class="w-20 text-left hover:text-sky-600 cursor-pointer">Läkare ↕</button>
-                <button id="sort-dagar" class="w-12 text-right hover:text-sky-600 cursor-pointer">Dagar ↕</button>
-              </div>
-              
-              <div id="lista-tillgangliga" class="space-y-1 max-h-[50vh] overflow-y-auto">
-                <p class="text-gray-400 italic text-sm">Laddar...</p>
-              </div>
-              
-              <div class="mt-4 pt-3 border-t flex items-center justify-between">
-                <span id="valda-count" class="text-sm text-gray-500">0 valda</span>
-                <button 
-                  id="btn-skapa-fran-pool"
-                  disabled
-                  class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                >
-                  📤 Skapa kampanj med valda
-                </button>
+            <!-- Succémeddelande -->
+            <div id="tillagd-success" class="hidden mt-3 p-3 bg-green-50 border border-green-300 rounded-lg">
+              <div class="flex items-center gap-2 text-green-700">
+                <span class="text-xl">✅</span>
+                <span id="tillagd-success-text" class="font-medium"></span>
               </div>
             </div>
           </div>
-
-          <!-- ===== HÖGER SIDOKOLUMN ===== -->
-          <div class="lg:w-72 space-y-4">
+          
+          <!-- Patienter i poolen (visar de som redan finns) -->
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">
+                📋 Patienter i poolen
+                <span id="stat-tillgangliga" class="text-sky-600 font-normal ml-2">-</span>
+              </h3>
+              <div class="flex items-center gap-3">
+                <select 
+                  id="filter-lakare"
+                  class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                >
+                  <option value="">Alla läkare</option>
+                  {lakare?.map(l => (
+                    <option value={l.namn}>{l.namn}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             
-            <!-- Reserv (kompakt) -->
-            <div class="bg-yellow-50 rounded-lg border border-yellow-200 p-4">
-              <h4 class="text-sm font-semibold text-yellow-800 mb-2 flex items-center gap-1">
-                ⭐ Reserv
-                <span class="text-xs font-normal text-yellow-600">(prioriteras!)</span>
-              </h4>
-              <div id="lista-reserv" class="space-y-1 max-h-32 overflow-y-auto text-sm">
-                <p class="text-yellow-600 italic text-xs">Inga</p>
-              </div>
+            <!-- Kolumnrubriker med sortering -->
+            <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-t border-b text-xs font-medium text-gray-600 mb-1">
+              <button id="sort-prioritet" class="w-14 text-center hover:text-red-600 cursor-pointer" title="Sortera på prioritet">Prio ↕</button>
+              <button id="sort-namn" class="flex-1 text-left hover:text-sky-600 cursor-pointer">Namn ↕</button>
+              <button id="sort-sida" class="w-10 text-center hover:text-sky-600 cursor-pointer" title="Höger/Vänster sida">Sida ↕</button>
+              <button id="sort-storlek" class="w-16 text-center hover:text-sky-600 cursor-pointer" title="Liten/Stor operation">Storlek ↕</button>
+              <button id="sort-alder" class="w-12 text-center hover:text-sky-600 cursor-pointer" title="Pensionärer (67+) kommer lättare">Ålder ↕</button>
+              <button id="sort-lakare" class="w-28 text-left hover:text-sky-600 cursor-pointer">Läkare ↕</button>
+              <button id="sort-dagar" class="w-14 text-right hover:text-sky-600 cursor-pointer">Dagar ↕</button>
             </div>
-
-            <!-- NEJ (kompakt) -->
-            <div class="bg-red-50 rounded-lg border border-red-200 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <h4 class="text-sm font-semibold text-red-800">❌ Tackat NEJ</h4>
-                <span class="text-xs text-red-600" id="stat-nej">-</span>
-              </div>
-              <div id="lista-nej" class="space-y-1 max-h-40 overflow-y-auto text-sm">
-                <p class="text-red-400 italic text-xs">Inga</p>
-              </div>
-              <p class="text-xs text-red-600 mt-2 italic">Klicka "Hanterad" efter uppdatering i journal</p>
+            
+            <div id="lista-tillgangliga" class="space-y-1 max-h-[60vh] overflow-y-auto">
+              <p class="text-gray-400 italic text-sm py-4 text-center">Laddar...</p>
             </div>
-
-            <!-- Bokade (kompakt) -->
-            <div class="bg-green-50 rounded-lg border border-green-200 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <h4 class="text-sm font-semibold text-green-800">✅ Bokade</h4>
-                <span class="text-xs text-green-600" id="stat-bokade">-</span>
-              </div>
-              <div id="lista-bokade" class="space-y-1 max-h-32 overflow-y-auto text-sm">
-                <p class="text-green-600 italic text-xs">Inga</p>
-              </div>
+            
+            <!-- Info om hur man skapar kampanj -->
+            <div class="mt-4 pt-4 border-t text-center">
+              <p class="text-sm text-gray-500">
+                För att skapa en kampanj, gå till fliken 
+                <button 
+                  onclick="document.getElementById('tab-kampanj')?.click()" 
+                  class="text-sky-600 hover:underline font-medium"
+                >📤 Skapa kampanj</button>
+              </p>
             </div>
-
+          </div>
+          
+          <!-- Dolt: statistik-element för JS-kompatibilitet -->
+          <div class="hidden">
+            <span id="stat-reserv">0</span>
+            <span id="stat-nej">0</span>
+            <span id="stat-bokade">0</span>
+            <span id="stat-totalt">0</span>
+            <div id="lista-reserv"></div>
+            <div id="lista-nej"></div>
+            <div id="lista-bokade"></div>
           </div>
 
         </div>
@@ -414,7 +406,7 @@ if (supabaseKonfigurerad) {
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Datum för operationen *
+                    Ledig operationstid *
                   </label>
                   <input 
                     type="date" 
@@ -422,6 +414,7 @@ if (supabaseKonfigurerad) {
                     required
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                   >
+                  <p class="text-xs text-gray-500 mt-1">Datumet för den lediga tiden (kort varsel)</p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -453,10 +446,10 @@ if (supabaseKonfigurerad) {
                 </div>
               </div>
 
-              <!-- Läkare (VIKTIGT!) -->
+              <!-- Läkare som har den lediga tiden -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                  Opererande läkare *
+                  Läkare med ledig tid *
                 </label>
                 <select 
                   name="lakare"
@@ -469,8 +462,52 @@ if (supabaseKonfigurerad) {
                   ))}
                 </select>
                 <p class="text-xs text-gray-500 mt-1">
-                  Visas i SMS:et så patienten vet vem som opererar
+                  Läkaren som har luckan i sitt schema
                 </p>
+              </div>
+
+              <!-- Sida (HÖ/VÄ) och Operationsstorlek -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Önskad sida *
+                  </label>
+                  <div class="flex gap-2">
+                    <label class="flex-1">
+                      <input type="radio" name="kampanjSida" value="höger" required class="sr-only peer">
+                      <div class="text-center py-2 px-4 border-2 border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:text-sky-700 font-medium transition-colors">
+                        HÖ
+                      </div>
+                    </label>
+                    <label class="flex-1">
+                      <input type="radio" name="kampanjSida" value="vänster" class="sr-only peer">
+                      <div class="text-center py-2 px-4 border-2 border-gray-300 rounded-lg cursor-pointer peer-checked:border-sky-500 peer-checked:bg-sky-50 peer-checked:text-sky-700 font-medium transition-colors">
+                        VÄ
+                      </div>
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Patienter med rätt sida prioriteras
+                  </p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Operationsstorlek *
+                  </label>
+                  <div class="flex gap-2">
+                    <label class="flex items-center gap-2 cursor-pointer px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                      <input type="checkbox" name="kampanjOpLiten" class="rounded w-4 h-4 text-sky-600" checked />
+                      <span class="text-sm font-medium">🔹 Liten</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer px-3 py-2 border-2 border-gray-200 rounded-lg hover:border-sky-300 has-[:checked]:border-sky-500 has-[:checked]:bg-sky-50 transition-colors">
+                      <input type="checkbox" name="kampanjOpStor" class="rounded w-4 h-4 text-sky-600" checked />
+                      <span class="text-sm font-medium">🔷 Stor</span>
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Vilken storlek har den lediga tiden?
+                  </p>
+                </div>
               </div>
 
               <!-- Tidsblock och operationstyp -->
@@ -516,83 +553,43 @@ if (supabaseKonfigurerad) {
                 </div>
               </div>
 
-              <!-- Mottagare -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                  Mottagare (en per rad) *
-                </label>
-                <textarea 
-                  name="mottagare" 
-                  rows="6"
-                  required
-                  placeholder="Tolvan Tolvansson 19121212-1212
-Mobilnummer: 070-123 45 67
-
-Tretton Trettonsson 19131313-1313
-Mobilnummer: 073-456 78 90"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 font-mono text-sm"
-                ></textarea>
-                <p class="text-xs text-gray-500 mt-1">
-                  Klistra in direkt från journalsystemet. Samtycke sätts automatiskt till ja.
-                </p>
+              <!-- Info: Mottagare hämtas från patientpoolen -->
+              <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <span class="text-xl">📋</span>
+                  <div>
+                    <div class="font-medium text-sky-900">Mottagare hämtas automatiskt från patientpoolen</div>
+                    <div class="text-sm text-sky-700 mt-1">
+                      Patienter med matchande läkare, sida och operationsstorlek kontaktas i prioritetsordning.
+                    </div>
+                    <div id="matchande-patienter" class="text-sm text-sky-600 mt-2 font-medium"></div>
+                  </div>
+                </div>
               </div>
 
-              <!-- Utskicksmetod -->
+              <!-- Intervall mellan SMS -->
               <div class="bg-gray-50 rounded-lg p-4">
-                <label class="block text-sm font-medium text-gray-700 mb-3">
-                  Utskicksmetod
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Tid mellan varje SMS-utskick
                 </label>
-                <div class="space-y-3">
-                  <label class="flex items-start gap-3 cursor-pointer">
-                    <input 
-                      type="radio" 
-                      name="utskicksmetod" 
-                      value="direkt"
-                      checked
-                      class="mt-1"
-                    >
-                    <div>
-                      <div class="font-medium text-gray-900">Skicka alla direkt</div>
-                      <div class="text-sm text-gray-500">Alla patienter får SMS samtidigt</div>
-                    </div>
-                  </label>
-                  <label class="flex items-start gap-3 cursor-pointer">
-                    <input 
-                      type="radio" 
-                      name="utskicksmetod" 
-                      value="gradvis"
-                      class="mt-1"
-                    >
-                    <div>
-                      <div class="font-medium text-gray-900">Skicka gradvis (en i taget)</div>
-                      <div class="text-sm text-gray-500">
-                        Väntar mellan varje SMS - stoppar automatiskt när alla platser är fyllda
-                      </div>
-                    </div>
-                  </label>
+                <div class="flex items-center gap-2">
+                  <select 
+                    name="intervall" 
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 bg-white"
+                  >
+                    <option value="5">5 minuter</option>
+                    <option value="10" selected>10 minuter</option>
+                    <option value="15">15 minuter</option>
+                    <option value="20">20 minuter</option>
+                    <option value="30">30 minuter</option>
+                    <option value="45">45 minuter</option>
+                    <option value="60">60 minuter (1 timme)</option>
+                  </select>
+                  <span class="text-sm text-gray-500">mellan varje patient</span>
                 </div>
-
-                <div id="intervall-section" class="mt-4 hidden">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Intervall mellan SMS
-                  </label>
-                  <div class="flex items-center gap-2">
-                    <select 
-                      name="intervall" 
-                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
-                    >
-                      <option value="5">5 minuter</option>
-                      <option value="10" selected>10 minuter</option>
-                      <option value="15">15 minuter</option>
-                      <option value="20">20 minuter</option>
-                      <option value="30">30 minuter</option>
-                      <option value="45">45 minuter</option>
-                      <option value="60">60 minuter (1 timme)</option>
-                    </select>
-                    <span class="text-sm text-gray-500">mellan varje SMS</span>
-                  </div>
-                  <p id="tid-berakning" class="text-sm text-sky-600 mt-2"></p>
-                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                  SMS skickas gradvis till en patient i taget. Stoppar automatiskt när alla platser är fyllda.
+                </p>
               </div>
 
               <!-- Tidsgräns -->
@@ -1225,7 +1222,6 @@ Mobilnummer: 073-456 78 90"
     });
 
     // ========== PATIENTPOOL ==========
-    let valdaPatienter: Set<string> = new Set();
     let cachedTillgangliga: any[] = []; // Cache för sortering
     let currentSort: { field: string; asc: boolean } = { field: 'prioritet', asc: false }; // Prioriterade först som default
 
@@ -1236,20 +1232,27 @@ Mobilnummer: 073-456 78 90"
         
         if (data.success) {
           // Uppdatera statistik
-          document.getElementById('stat-tillgangliga')!.textContent = data.statistik.tillgangliga;
-          document.getElementById('stat-reserv')!.textContent = data.statistik.reserv;
-          document.getElementById('stat-nej')!.textContent = data.statistik.nej;
-          document.getElementById('stat-bokade')!.textContent = data.statistik.bokade;
-          document.getElementById('stat-totalt')!.textContent = data.statistik.totalt;
+          const tillgangligaCount = data.statistik?.tillgangliga ?? data.patienter?.tillgangliga?.length ?? 0;
+          document.getElementById('stat-tillgangliga')!.textContent = `(${tillgangligaCount} st)`;
+          
+          // Uppdatera dolda element för kompatibilitet
+          const statReserv = document.getElementById('stat-reserv');
+          const statNej = document.getElementById('stat-nej');
+          const statBokade = document.getElementById('stat-bokade');
+          const statTotalt = document.getElementById('stat-totalt');
+          if (statReserv) statReserv.textContent = data.statistik?.reserv ?? '0';
+          if (statNej) statNej.textContent = data.statistik?.nej ?? '0';
+          if (statBokade) statBokade.textContent = data.statistik?.bokade ?? '0';
+          if (statTotalt) statTotalt.textContent = data.statistik?.totalt ?? '0';
           
           // Spara och sortera tillgängliga
-          cachedTillgangliga = data.patienter.tillgangliga || [];
+          cachedTillgangliga = data.patienter?.tillgangliga || [];
           renderaSorteradLista();
           
-          // Rendera övriga listor
-          renderaPatientlista('lista-reserv', data.patienter.reserv, true, 'reserv');
-          renderaPatientlista('lista-nej', data.patienter.nej, false, 'nej');
-          renderaPatientlista('lista-bokade', data.patienter.bokade, false, 'bokad');
+          // Uppdatera matchande patienter i kampanjformuläret
+          if (typeof updateMatchandePatienter === 'function') {
+            updateMatchandePatienter();
+          }
         }
       } catch (error) {
         console.error('Kunde inte ladda patientpool:', error);
@@ -1271,13 +1274,26 @@ Mobilnummer: 073-456 78 90"
           comparison = prioB - prioA;
         } else if (currentSort.field === 'namn') {
           comparison = (a.namn || '').localeCompare(b.namn || '', 'sv');
+        } else if (currentSort.field === 'storlek') {
+          // Storlek: båda=3, stor=2, liten=1, ingen=0
+          const storlekA = (a.op_liten ? 1 : 0) + (a.op_stor ? 2 : 0);
+          const storlekB = (b.op_liten ? 1 : 0) + (b.op_stor ? 2 : 0);
+          comparison = storlekB - storlekA;
         } else if (currentSort.field === 'alder') {
           // Äldre först (pensionärer kommer lättare)
           const alderA = a.alder ?? 0;
           const alderB = b.alder ?? 0;
           comparison = alderB - alderA;
+        } else if (currentSort.field === 'sida') {
+          // Höger först (h < v alfabetiskt)
+          const sidaA = a.sida || 'zzz'; // Sätt tomma sist
+          const sidaB = b.sida || 'zzz';
+          comparison = sidaA.localeCompare(sidaB, 'sv');
         } else if (currentSort.field === 'lakare') {
-          comparison = (a.lakare || '').localeCompare(b.lakare || '', 'sv');
+          // Hantera läkare som array
+          const lakareA = Array.isArray(a.lakare) ? a.lakare.join(', ') : (a.lakare || '');
+          const lakareB = Array.isArray(b.lakare) ? b.lakare.join(', ') : (b.lakare || '');
+          comparison = lakareA.localeCompare(lakareB, 'sv');
         } else if (currentSort.field === 'dagar') {
           const dagarA = Math.ceil((new Date(a.utgar_vid).getTime() - Date.now()) / (1000*60*60*24));
           const dagarB = Math.ceil((new Date(b.utgar_vid).getTime() - Date.now()) / (1000*60*60*24));
@@ -1287,7 +1303,7 @@ Mobilnummer: 073-456 78 90"
         return currentSort.asc ? comparison : -comparison;
       });
       
-      renderaPatientlista('lista-tillgangliga', sorterade, true);
+      renderaPatientlista('lista-tillgangliga', sorterade);
     }
     
     // Sorteringsknappar
@@ -1305,22 +1321,18 @@ Mobilnummer: 073-456 78 90"
     
     setupSortering('sort-prioritet', 'prioritet');
     setupSortering('sort-namn', 'namn');
+    setupSortering('sort-sida', 'sida');
+    setupSortering('sort-storlek', 'storlek');
     setupSortering('sort-alder', 'alder');
     setupSortering('sort-lakare', 'lakare');
     setupSortering('sort-dagar', 'dagar');
 
-    function renderaPatientlista(containerId: string, patienter: any[], selectable: boolean, type?: string) {
+    function renderaPatientlista(containerId: string, patienter: any[], type?: string) {
       const container = document.getElementById(containerId);
       if (!container) return;
       
       if (!patienter || patienter.length === 0) {
-        const emptyMessages: Record<string, string> = {
-          'lista-tillgangliga': 'Inga tillgängliga patienter. Lägg till ovan!',
-          'lista-reserv': 'Inga',
-          'lista-nej': 'Inga',
-          'lista-bokade': 'Inga',
-        };
-        container.innerHTML = `<p class="text-gray-400 italic text-xs">${emptyMessages[containerId] || 'Inga'}</p>`;
+        container.innerHTML = `<p class="text-gray-400 italic text-sm py-4 text-center">Inga patienter i poolen ännu. Lägg till ovan!</p>`;
         return;
       }
       
@@ -1362,14 +1374,19 @@ Mobilnummer: 073-456 78 90"
           `;
         }
         
-        // Tillgängliga och Reserv
-        const lakareInfo = p.lakare || '-';
-        const flexBadge = p.flexibel_lakare ? '<span class="text-[10px] bg-purple-100 text-purple-700 px-0.5 rounded">F</span>' : '';
+        // Tillgängliga patienter
+        // Hantera läkare som array
+        const lakareArray = Array.isArray(p.lakare) ? p.lakare : (p.lakare ? [p.lakare] : []);
+        const lakareInfo = lakareArray.length > 0 ? lakareArray.join(', ') : '-';
+        const lakareTitle = lakareArray.length > 1 ? `Kan opereras av: ${lakareArray.join(', ')}` : '';
+        
         const arAkut = p.akut === true;
         const harOnt = p.har_ont === true;
         const arSjukskriven = p.sjukskriven === true;
+        const opLiten = p.op_liten === true;
+        const opStor = p.op_stor === true;
         
-        // Bakgrundsfärg baserat på prioritet (akut > ont > sjukskriven > reserv > normal)
+        // Bakgrundsfärg baserat på prioritet (akut > ont > sjukskriven > normal)
         let prioClass = 'border-gray-100';
         if (arAkut) {
           prioClass = 'bg-red-100 border-red-300 border-2';
@@ -1377,8 +1394,6 @@ Mobilnummer: 073-456 78 90"
           prioClass = 'bg-orange-50 border-orange-200';
         } else if (arSjukskriven) {
           prioClass = 'bg-blue-50 border-blue-200';
-        } else if (type === 'reserv') {
-          prioClass = 'border-yellow-200 bg-yellow-50';
         }
         
         // Prioritetsikoner
@@ -1387,89 +1402,51 @@ Mobilnummer: 073-456 78 90"
         if (harOnt) prioIcons.push('<span title="Mycket ont">🔥</span>');
         if (arSjukskriven) prioIcons.push('<span title="Sjukskriven">📋</span>');
         
-        // Ålder
+        // Operationsstorlek
+        let storlekBadge = '';
+        if (opLiten && opStor) {
+          storlekBadge = '<span class="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded" title="Liten eller stor operation">L+S</span>';
+        } else if (opLiten) {
+          storlekBadge = '<span class="text-xs bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded" title="Liten operation (5-15 min)">🔹 L</span>';
+        } else if (opStor) {
+          storlekBadge = '<span class="text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded" title="Stor operation (15-60 min)">🔷 S</span>';
+        }
+        
+        // Ålder - pensionär vid 67+
         const alderText = p.alder ? `${p.alder}` : '-';
-        const isPension = p.alder && p.alder >= 65;
-        const alderClass = isPension ? 'text-green-600 font-medium' : 'text-gray-500';
+        const isPension = p.alder && p.alder >= 67;
+        const alderClass = isPension ? 'text-green-600 font-bold' : 'text-gray-500';
+        const pensionBadge = isPension ? '<span class="ml-0.5 text-green-500" title="Pensionär - kommer lättare på kort varsel">✓</span>' : '';
+        
+        // Sida (HÖ/VÄ)
+        const sidaText = p.sida === 'höger' ? 'HÖ' : (p.sida === 'vänster' ? 'VÄ' : '-');
+        const sidaClass = p.sida ? 'text-gray-700 font-medium' : 'text-gray-400';
         
         return `
-          <label class="flex items-center gap-2 px-2 py-1.5 rounded border ${prioClass} hover:border-sky-300 cursor-pointer text-sm">
-            ${selectable ? `
-              <input 
-                type="checkbox" 
-                value="${p.id}" 
-                class="patient-checkbox rounded flex-shrink-0 w-4 h-4"
-                ${valdaPatienter.has(p.id) ? 'checked' : ''}
-              >
-            ` : '<div class="w-4"></div>'}
-            <div class="w-12 text-center flex-shrink-0 text-sm">
+          <div class="flex items-center gap-2 px-3 py-2 rounded border ${prioClass} text-sm">
+            <div class="w-14 text-center flex-shrink-0 text-sm">
               ${prioIcons.join('')}
             </div>
             <div class="flex-1 min-w-0">
               <span class="font-medium text-gray-900">${p.namn}</span>
-              ${flexBadge}
             </div>
             <div class="w-10 text-center flex-shrink-0">
-              <span class="text-xs ${alderClass}" title="${isPension ? 'Pensionär - kommer lättare' : 'Ålder'}">${alderText}</span>
+              <span class="text-xs ${sidaClass}" title="${p.sida === 'höger' ? 'Höger sida' : (p.sida === 'vänster' ? 'Vänster sida' : 'Ingen sida angiven')}">${sidaText}</span>
             </div>
-            <div class="w-20 text-xs text-sky-600 font-medium truncate flex-shrink-0">${lakareInfo}</div>
-            <div class="w-12 text-right flex-shrink-0">
+            <div class="w-16 text-center flex-shrink-0">
+              ${storlekBadge}
+            </div>
+            <div class="w-12 text-center flex-shrink-0">
+              <span class="text-xs ${alderClass}" title="${isPension ? 'Pensionär (67+) - kommer lättare på kort varsel' : 'Ålder'}">${alderText}${pensionBadge}</span>
+            </div>
+            <div class="w-28 text-xs text-sky-600 font-medium truncate flex-shrink-0" title="${lakareTitle}">${lakareInfo}</div>
+            <div class="w-14 text-right flex-shrink-0">
               <span class="text-xs font-medium ${dagarKvar <= 7 ? 'text-orange-600' : 'text-gray-400'}">${dagarKvar}d</span>
             </div>
-          </label>
+          </div>
         `;
       }).join('');
-      
-      // Lägg till event listeners för checkboxar
-      if (selectable) {
-        container.querySelectorAll('.patient-checkbox').forEach(cb => {
-          cb.addEventListener('change', (e) => {
-            const id = (e.target as HTMLInputElement).value;
-            if ((e.target as HTMLInputElement).checked) {
-              valdaPatienter.add(id);
-            } else {
-              valdaPatienter.delete(id);
-            }
-            uppdateraValdaCount();
-          });
-        });
-      }
     }
-
-    function uppdateraValdaCount() {
-      const count = valdaPatienter.size;
-      document.getElementById('valda-count')!.textContent = `${count} valda`;
-      const btn = document.getElementById('btn-skapa-fran-pool') as HTMLButtonElement;
-      btn.disabled = count === 0;
-    }
-
-    // Välj alla
-    document.getElementById('btn-valj-alla')?.addEventListener('click', () => {
-      const checkboxes = document.querySelectorAll('#lista-tillgangliga .patient-checkbox') as NodeListOf<HTMLInputElement>;
-      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-      
-      checkboxes.forEach(cb => {
-        cb.checked = !allChecked;
-        if (!allChecked) {
-          valdaPatienter.add(cb.value);
-        } else {
-          valdaPatienter.delete(cb.value);
-        }
-      });
-      
-      // Inkludera reserv också
-      const reservCheckboxes = document.querySelectorAll('#lista-reserv .patient-checkbox') as NodeListOf<HTMLInputElement>;
-      reservCheckboxes.forEach(cb => {
-        cb.checked = !allChecked;
-        if (!allChecked) {
-          valdaPatienter.add(cb.value);
-        } else {
-          valdaPatienter.delete(cb.value);
-        }
-      });
-      
-      uppdateraValdaCount();
-    });
 
     // Hjälpfunktion: Beräkna ålder från personnummer
     function beraknaAlderFranPnr(pnr: string): number | null {
@@ -1515,30 +1492,48 @@ Mobilnummer: 073-456 78 90"
     // Lägg till patienter
     document.getElementById('btn-lagg-till')?.addEventListener('click', async () => {
       const textarea = document.getElementById('nya-patienter') as HTMLTextAreaElement;
-      const lakareSelect = document.getElementById('patient-lakare') as HTMLSelectElement;
-      const flexibelCheckbox = document.getElementById('patient-flexibel') as HTMLInputElement;
       const opDatumInput = document.getElementById('patient-op-datum') as HTMLInputElement;
       const akutCheckbox = document.getElementById('patient-akut') as HTMLInputElement;
       const ontCheckbox = document.getElementById('patient-ont') as HTMLInputElement;
       const sjukskrivenCheckbox = document.getElementById('patient-sjukskriven') as HTMLInputElement;
+      const opLitenCheckbox = document.getElementById('patient-op-liten') as HTMLInputElement;
+      const opStorCheckbox = document.getElementById('patient-op-stor') as HTMLInputElement;
+      
+      // Hämta valda läkare (checkboxar)
+      const lakareCheckboxes = document.querySelectorAll('input[name="patient-lakare"]:checked') as NodeListOf<HTMLInputElement>;
+      const valdaLakare = Array.from(lakareCheckboxes).map(cb => cb.value);
+      
+      // Hämta vald sida (HÖ/VÄ)
+      const sidaRadio = document.querySelector('input[name="patient-sida"]:checked') as HTMLInputElement;
+      const sida = sidaRadio?.value || null;
       
       const text = textarea.value.trim();
-      const lakare = lakareSelect.value;
-      const flexibelLakare = flexibelCheckbox.checked;
       const opDatum = opDatumInput.value;
       const arAkut = akutCheckbox.checked;
       const harOnt = ontCheckbox.checked;
       const arSjukskriven = sjukskrivenCheckbox.checked;
+      const opLiten = opLitenCheckbox.checked;
+      const opStor = opStorCheckbox.checked;
       
       if (!text) return;
       
-      if (!lakare) {
-        alert('Välj vilken läkare patienterna tillhör');
+      if (valdaLakare.length === 0) {
+        alert('Välj minst en läkare som kan utföra operationen');
         return;
       }
       
       if (!opDatum) {
         alert('Ange patientens ordinarie operationsdatum');
+        return;
+      }
+      
+      if (!sida) {
+        alert('Välj vilken sida som ska opereras (HÖ eller VÄ)');
+        return;
+      }
+      
+      if (!opLiten && !opStor) {
+        alert('Välj operationsstorlek (liten, stor eller båda)');
         return;
       }
       
@@ -1579,13 +1574,15 @@ Mobilnummer: 073-456 78 90"
                 namn: currentNamn,
                 telefon: telefon,
                 harSamtycke: true, // Default till ja vid journalimport
-                lakare: lakare,
-                flexibelLakare: flexibelLakare,
+                lakare: valdaLakare, // Array av läkare
                 opDatum: opDatum,
                 akut: arAkut,
                 harOnt: harOnt,
                 sjukskriven: arSjukskriven,
-                alder: currentAlder
+                alder: currentAlder,
+                opLiten: opLiten,
+                opStor: opStor,
+                sida: sida
               });
               currentNamn = '';
               currentAlder = null;
@@ -1606,13 +1603,15 @@ Mobilnummer: 073-456 78 90"
               namn: parts[0],
               telefon: telefon,
               harSamtycke: (parts[2] || '').toLowerCase() === 'ja',
-              lakare: lakare,
-              flexibelLakare: flexibelLakare,
+              lakare: valdaLakare, // Array av läkare
               opDatum: opDatum,
               akut: arAkut,
               harOnt: harOnt,
               sjukskriven: arSjukskriven,
-              alder: null // Ingen ålder vid CSV-import
+              alder: null, // Ingen ålder vid CSV-import
+              opLiten: opLiten,
+              opStor: opStor,
+              sida: sida
             });
           }
         }
@@ -1644,6 +1643,12 @@ Mobilnummer: 073-456 78 90"
           akutCheckbox.checked = false;
           ontCheckbox.checked = false;
           sjukskrivenCheckbox.checked = false;
+          opLitenCheckbox.checked = false;
+          opStorCheckbox.checked = false;
+          // Återställ läkare-checkboxar
+          document.querySelectorAll('input[name="patient-lakare"]').forEach((cb: any) => cb.checked = false);
+          // Återställ sida-radioknappar
+          document.querySelectorAll('input[name="patient-sida"]').forEach((rb: any) => rb.checked = false);
           laddaPatientpool();
           
           // Visa succémeddelande
@@ -1704,15 +1709,6 @@ Mobilnummer: 073-456 78 90"
       laddaPatientpool();
     }
 
-    // Skapa kampanj från pool
-    document.getElementById('btn-skapa-fran-pool')?.addEventListener('click', () => {
-      // Byt till kampanj-fliken och fyll i valda patienter
-      document.getElementById('tab-kampanj')?.click();
-      
-      // TODO: Fylla i patientlistan i kampanjformuläret
-      alert(`Skapa kampanj med ${valdaPatienter.size} valda patienter\n\nDenna funktion är under utveckling.`);
-    });
-
     // Gör funktioner globala för onclick
     (window as any).markeraHanterad = markeraHanterad;
     (window as any).taBortPatient = taBortPatient;
@@ -1742,27 +1738,14 @@ Mobilnummer: 073-456 78 90"
     }
 
     // ========== KAMPANJFORMULÄR ==========
-    // Visa/dölj intervall-sektion
-    document.querySelectorAll('input[name="utskicksmetod"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const section = document.getElementById('intervall-section');
-        if ((e.target as HTMLInputElement).value === 'gradvis') {
-          section?.classList.remove('hidden');
-          updateTidBerakning();
-        } else {
-          section?.classList.add('hidden');
-        }
-      });
-    });
-
+    
     // Visa/dölj tidsgräns
     document.querySelector('input[name="harTidsGrans"]')?.addEventListener('change', (e) => {
       const section = document.getElementById('tidsgrans-section');
       if ((e.target as HTMLInputElement).checked) {
         section?.classList.remove('hidden');
-        // Sätt default till imorgon
+        // Sätt default till idag
         const idag = new Date();
-        idag.setDate(idag.getDate());
         (document.querySelector('input[name="tidsgransDatum"]') as HTMLInputElement).value = 
           idag.toISOString().split('T')[0];
       } else {
@@ -1770,84 +1753,48 @@ Mobilnummer: 073-456 78 90"
       }
     });
 
-    // Räkna mottagare och uppdatera tid-beräkning
-    const mottagareTextarea = document.querySelector('textarea[name="mottagare"]') as HTMLTextAreaElement;
-    const mottagareCount = document.getElementById('mottagare-count');
-    const intervallSelect = document.querySelector('select[name="intervall"]') as HTMLSelectElement;
-
-    function parseMottagare() {
-      const text = mottagareTextarea?.value || '';
-      const lines = text.trim().split('\n').map(l => l.trim()).filter(l => l);
-      const mottagare: any[] = [];
+    // Uppdatera matchande patienter när filter ändras
+    function updateMatchandePatienter() {
+      const lakare = (document.querySelector('select[name="lakare"]') as HTMLSelectElement)?.value;
+      const sida = (document.querySelector('input[name="kampanjSida"]:checked') as HTMLInputElement)?.value;
+      const opLiten = (document.querySelector('input[name="kampanjOpLiten"]') as HTMLInputElement)?.checked;
+      const opStor = (document.querySelector('input[name="kampanjOpStor"]') as HTMLInputElement)?.checked;
       
-      // Journalsystemformat: "Namn Personnummer" följt av "Mobilnummer: 07X-XXX XX XX"
-      if (text.toLowerCase().includes('mobilnummer')) {
-        let currentNamn = '';
-        
-        for (const line of lines) {
-          // Kontrollera om raden innehåller personnummer
-          const personnummerMatch = line.match(/^(.+?)\s+(\d{6,8}[-\s]?\d{4})\s*$/);
-          if (personnummerMatch) {
-            currentNamn = personnummerMatch[1].trim();
-          }
-          // Kontrollera om raden innehåller mobilnummer
-          else if (line.toLowerCase().startsWith('mobilnummer')) {
-            const telefon = line.replace(/mobilnummer[:\s]*/i, '').replace(/[-\s]/g, '');
-            if (currentNamn && telefon) {
-              mottagare.push({
-                namn: currentNamn,
-                telefon: telefon,
-                harSamtycke: true
-              });
-              currentNamn = '';
-            }
-          }
+      // Filtrera cachedTillgangliga baserat på filter
+      const matchande = cachedTillgangliga.filter(p => {
+        // Läkare: patienten måste ha vald läkare i sin array
+        if (lakare) {
+          const patientLakare = Array.isArray(p.lakare) ? p.lakare : [p.lakare];
+          if (!patientLakare.includes(lakare)) return false;
         }
-      } 
-      // Gammalt CSV-format
-      else {
-        for (const line of lines) {
-          const parts = line.split(',').map(p => p.trim());
-          const telefon = parts[1]?.replace(/\s/g, '') || '';
-          if (parts[0] && telefon) {
-            mottagare.push({
-              namn: parts[0],
-              telefon: telefon,
-              harSamtycke: (parts[2] || '').toLowerCase() === 'ja'
-            });
-          }
+        // Sida: matchar eller ej angiven
+        if (sida && p.sida && p.sida !== sida) return false;
+        // Operationsstorlek
+        if (opLiten && !opStor && !p.op_liten) return false;
+        if (opStor && !opLiten && !p.op_stor) return false;
+        if (opLiten && opStor && !p.op_liten && !p.op_stor) return false;
+        return true;
+      });
+      
+      const matchandeEl = document.getElementById('matchande-patienter');
+      if (matchandeEl) {
+        if (matchande.length > 0) {
+          matchandeEl.textContent = `${matchande.length} patient(er) matchar filtret`;
+        } else if (lakare) {
+          matchandeEl.textContent = '⚠️ Inga patienter matchar filtret';
+        } else {
+          matchandeEl.textContent = '';
         }
       }
-      
-      return mottagare;
     }
-
-    function updateMottagareCount() {
-      const mottagare = parseMottagare();
-      if (mottagareCount) {
-        mottagareCount.textContent = `${mottagare.length} mottagare`;
-      }
-      updateTidBerakning();
-    }
-
-    function updateTidBerakning() {
-      const mottagare = parseMottagare();
-      const intervall = parseInt(intervallSelect?.value || '10');
-      const totalTid = mottagare.length * intervall;
-      
-      const tidBerakning = document.getElementById('tid-berakning');
-      if (tidBerakning && mottagare.length > 0) {
-        const timmar = Math.floor(totalTid / 60);
-        const minuter = totalTid % 60;
-        const tidStr = timmar > 0 
-          ? `${timmar}h ${minuter}min` 
-          : `${minuter} min`;
-        tidBerakning.textContent = `💡 ${mottagare.length} patienter × ${intervall} min = ~${tidStr} totalt (om ingen svarar JA)`;
-      }
-    }
-
-    mottagareTextarea?.addEventListener('input', updateMottagareCount);
-    intervallSelect?.addEventListener('change', updateTidBerakning);
+    
+    // Lyssna på filterändringar
+    document.querySelector('select[name="lakare"]')?.addEventListener('change', updateMatchandePatienter);
+    document.querySelectorAll('input[name="kampanjSida"]').forEach(r => 
+      r.addEventListener('change', updateMatchandePatienter)
+    );
+    document.querySelector('input[name="kampanjOpLiten"]')?.addEventListener('change', updateMatchandePatienter);
+    document.querySelector('input[name="kampanjOpStor"]')?.addEventListener('change', updateMatchandePatienter);
 
     // Formulärsubmit
     document.getElementById('kampanj-form')?.addEventListener('submit', async (e) => {
@@ -1857,29 +1804,65 @@ Mobilnummer: 073-456 78 90"
       const formData = new FormData(form);
       const result = document.getElementById('result');
       
-      const mottagare = parseMottagare();
-      if (mottagare.length === 0) {
+      // Hämta filter-värden
+      const lakare = formData.get('lakare') as string;
+      const sida = formData.get('kampanjSida') as string;
+      const opLiten = (form.querySelector('input[name="kampanjOpLiten"]') as HTMLInputElement)?.checked;
+      const opStor = (form.querySelector('input[name="kampanjOpStor"]') as HTMLInputElement)?.checked;
+      
+      // Validera
+      if (!lakare) {
         if (result) {
           result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
-          result.textContent = 'Lägg till minst en mottagare';
+          result.textContent = 'Välj vilken läkare som har den lediga tiden';
+          result.classList.remove('hidden');
+        }
+        return;
+      }
+      
+      if (!sida) {
+        if (result) {
+          result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+          result.textContent = 'Välj vilken sida (HÖ/VÄ) som gäller';
+          result.classList.remove('hidden');
+        }
+        return;
+      }
+      
+      if (!opLiten && !opStor) {
+        if (result) {
+          result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+          result.textContent = 'Välj operationsstorlek (Liten, Stor eller båda)';
+          result.classList.remove('hidden');
+        }
+        return;
+      }
+      
+      // Filtrera matchande patienter från poolen
+      const matchande = cachedTillgangliga.filter(p => {
+        // Läkare: patienten måste ha vald läkare i sin array
+        const patientLakare = Array.isArray(p.lakare) ? p.lakare : [p.lakare];
+        if (!patientLakare.includes(lakare)) return false;
+        // Sida: matchar eller ej angiven på patienten
+        if (p.sida && p.sida !== sida) return false;
+        // Operationsstorlek
+        if (opLiten && !opStor && !p.op_liten) return false;
+        if (opStor && !opLiten && !p.op_stor) return false;
+        if (opLiten && opStor && !p.op_liten && !p.op_stor) return false;
+        return true;
+      });
+      
+      if (matchande.length === 0) {
+        if (result) {
+          result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
+          result.textContent = 'Inga patienter i poolen matchar dina filter. Lägg till patienter först.';
           result.classList.remove('hidden');
         }
         return;
       }
 
-      // Formatera telefonnummer
-      const mottagareMedTelefon = mottagare.map(m => {
-        let telefon = m.telefon.replace(/\D/g, '');
-        if (telefon.startsWith('0')) {
-          telefon = '+46' + telefon.slice(1);
-        } else if (!telefon.startsWith('+')) {
-          telefon = '+46' + telefon;
-        }
-        return { ...m, telefon };
-      });
-
-      const utskicksmetod = formData.get('utskicksmetod');
-      const intervall = utskicksmetod === 'gradvis' ? parseInt(formData.get('intervall') as string) : 0;
+      // Hämta intervall (alltid gradvis nu)
+      const intervall = parseInt(formData.get('intervall') as string) || 10;
 
       // Tidsgräns
       let sistaVarstid = null;
@@ -1905,10 +1888,15 @@ Mobilnummer: 073-456 78 90"
         antalPlatser,
         tidsblock,
         operationTyp: formData.get('operationTyp') || null,
-        mottagare: mottagareMedTelefon,
+        lakare: lakare,
+        filterSida: sida,
+        filterOpLiten: opLiten,
+        filterOpStor: opStor,
         batchIntervallMinuter: intervall,
         sistaVarstid,
         notifieraPersonal: notifiera,
+        // Skicka patient-ID:n för de matchande patienterna
+        patientIds: matchande.map(p => p.id),
       };
 
       try {
@@ -1934,7 +1922,8 @@ Mobilnummer: 073-456 78 90"
               </a>
             `;
             form.reset();
-            updateMottagareCount();
+            updateMatchandePatienter();
+            laddaPatientpool(); // Uppdatera poolen
           } else {
             result.className = 'mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800';
             result.textContent = data.error || 'Något gick fel';
@@ -1950,7 +1939,7 @@ Mobilnummer: 073-456 78 90"
       }
     });
 
-    // Initial count
-    updateMottagareCount();
+    // Initial uppdatering av matchande patienter
+    // (görs när laddaPatientpool() har kört klart)
   </script>
 </BaseLayout>

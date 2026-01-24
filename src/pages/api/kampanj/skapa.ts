@@ -4,11 +4,22 @@
  * POST /api/kampanj/skapa
  * Body: {
  *   datum: "2026-01-28",
- *   antalPlatser: 1-3,           // Antal lediga platser att fylla
+ *   antalPlatser: 1-3,                    // Antal lediga platser att fylla
  *   tidsblock?: "formiddag" | "eftermiddag",  // Valfritt
  *   operationTyp?: "Knäartroskopi",
+ *   lakare?: "Dr. Smith",                 // Läkare med ledig tid
+ *   
+ *   // Mottagare - ANTINGEN:
+ *   patientIds: ["uuid-1", "uuid-2"],     // ID:n från patientpoolen (rekommenderat)
+ *   // ELLER (legacy):
  *   mottagare: [{ namn, telefon, harSamtycke }],
- *   batchIntervallMinuter: 10,   // 0 = skicka alla direkt
+ *   
+ *   // Filter (för patientpool)
+ *   filterSida?: "höger" | "vänster",     // Önskad sida (för prioritering)
+ *   filterOpLiten?: boolean,              // Filtrera på liten operation
+ *   filterOpStor?: boolean,               // Filtrera på stor operation
+ *   
+ *   batchIntervallMinuter: 10,            // Minuter mellan varje SMS
  *   sistaVarstid?: "2026-01-27T18:00:00",
  *   notifieraPersonal: ["user-id-1", "user-id-2"]
  * }
@@ -37,6 +48,11 @@ interface Mottagare {
   akut?: boolean;
   sjukskriven?: boolean;
   harOnt?: boolean;
+  alder?: number | null;  // Ålder (67+ = pensionär)
+  // Sida och operationsstorlek
+  sida?: 'höger' | 'vänster' | null;
+  opLiten?: boolean;
+  opStor?: boolean;
 }
 
 // Prioritetsintervall i minuter
@@ -55,10 +71,26 @@ function beraknaIntervall(m: Mottagare, defaultIntervall: number): number {
   return defaultIntervall || PRIORITETS_INTERVALL.normal;
 }
 
-// Sortera efter prioritet (akut > sjukskriven > harOnt > normal)
-function sorteraPaPrioritet(a: Mottagare, b: Mottagare): number {
-  const prioA = (a.akut ? 1000 : 0) + (a.sjukskriven ? 100 : 0) + (a.harOnt ? 10 : 0);
-  const prioB = (b.akut ? 1000 : 0) + (b.sjukskriven ? 100 : 0) + (b.harOnt ? 10 : 0);
+// Sortera efter prioritet (akut > ont > sjukskriven > pensionär > normal)
+// Inom varje prioritetsnivå: rätt sida först
+function sorteraPaPrioritet(a: Mottagare, b: Mottagare, onskadSida?: string): number {
+  // Pensionär = 67+
+  const arPensionarA = (a.alder ?? 0) >= 67;
+  const arPensionarB = (b.alder ?? 0) >= 67;
+  
+  // Prioritetspoäng: akut > ont > sjukskriven > pensionär > normal
+  const prioA = (a.akut ? 10000 : 0) + (a.harOnt ? 1000 : 0) + (a.sjukskriven ? 100 : 0) + (arPensionarA ? 10 : 0);
+  const prioB = (b.akut ? 10000 : 0) + (b.harOnt ? 1000 : 0) + (b.sjukskriven ? 100 : 0) + (arPensionarB ? 10 : 0);
+  
+  // Om samma prioritetsnivå, sortera på sida
+  if (prioA === prioB && onskadSida) {
+    const sidaMatchA = a.sida === onskadSida ? 1 : 0;
+    const sidaMatchB = b.sida === onskadSida ? 1 : 0;
+    if (sidaMatchA !== sidaMatchB) {
+      return sidaMatchB - sidaMatchA; // Rätt sida först
+    }
+  }
+  
   return prioB - prioA; // Högst prioritet först
 }
 
@@ -153,8 +185,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     tidsblock?: 'formiddag' | 'eftermiddag';
     operationTyp?: string;
     lakare?: string;                    // Opererande läkare
-    mottagare?: Mottagare[];           // Manuell input
+    mottagare?: Mottagare[];           // Manuell input (legacy)
     patientIds?: string[];              // Från patientpool
+    // Filter för patientpool
+    filterSida?: 'höger' | 'vänster';   // Önskad sida (för prioritering)
+    filterOpLiten?: boolean;            // Filtrera på liten operation
+    filterOpStor?: boolean;             // Filtrera på stor operation
     batchIntervallMinuter: number;
     sistaVarstid?: string;
     notifieraPersonal: string[];
@@ -184,7 +220,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (body.patientIds?.length) {
     const { data: poolPatienter, error: poolError } = await supabaseAdmin
       .from('kort_varsel_patienter')
-      .select('id, namn, telefon_krypterad, har_samtycke, akut, sjukskriven, har_ont')
+      .select('id, namn, telefon_krypterad, har_samtycke, akut, sjukskriven, har_ont, alder, sida, op_liten, op_stor')
       .in('id', body.patientIds)
       .in('status', ['tillganglig', 'kontaktad', 'reserv']);
     
@@ -211,11 +247,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         akut: p.akut || false,
         sjukskriven: p.sjukskriven || false,
         harOnt: p.har_ont || false,
+        alder: p.alder || null,
+        // Sida och operationsstorlek
+        sida: p.sida || null,
+        opLiten: p.op_liten || false,
+        opStor: p.op_stor || false,
       };
     });
     
-    // Sortera efter prioritet: akut > sjukskriven > harOnt > normal
-    mottagareLista.sort(sorteraPaPrioritet);
+    // Sortera efter prioritet: akut > ont > sjukskriven > pensionär > normal
+    // Inom varje nivå: rätt sida först
+    mottagareLista.sort((a, b) => sorteraPaPrioritet(a, b, body.filterSida));
 
     // Uppdatera status till 'kontaktad' för alla
     await supabaseAdmin
@@ -244,6 +286,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         skapad_av: anvandare.id,
         batch_intervall_minuter: body.batchIntervallMinuter || 0,
         sista_svarstid: body.sistaVarstid || null,
+        // Filtervärden (för referens/historik)
+        filter_sida: body.filterSida || null,
+        filter_op_liten: body.filterOpLiten ?? true,
+        filter_op_stor: body.filterOpStor ?? true,
         // Om gradvis utskick, sätt nästa utskick till nu (första skickas direkt)
         nasta_utskick_vid: body.batchIntervallMinuter > 0 ? new Date().toISOString() : null,
       })
@@ -286,6 +332,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       sjukskriven: m.sjukskriven || false,
       har_ont: m.harOnt || false,
       intervall_till_nasta: beraknaIntervall(m, defaultIntervall),
+      // Sida och operationsstorlek
+      sida: m.sida || null,
+      op_liten: m.opLiten || false,
+      op_stor: m.opStor || false,
     }));
 
     const { data: mottagare, error: mottagareError } = await supabaseAdmin

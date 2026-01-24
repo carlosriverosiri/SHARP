@@ -13,7 +13,8 @@ supabase/
     ├── 002-kort-varsel.sql      # Kort varsel SMS-kampanjer
     ├── 003-lakare.sql           # Läkare-funktionalitet
     ├── 004-profilbilder.sql     # Profilbilder för personal
-    └── 005-prioritet.sql        # Prioritetsfält (akut, ont, sjukskriven)
+    ├── 005-prioritet.sql        # Prioritetsfält (akut, ont, sjukskriven)
+    └── 006-operationsstorlek.sql # Op-storlek, läkare[], sida (HÖ/VÄ)
 ```
 
 ## Hur man kör migrations

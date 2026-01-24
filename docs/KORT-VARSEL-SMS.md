@@ -1,6 +1,6 @@
 # 📱 Kort varsel SMS - Specifikation
 
-> **Status:** ✅ Implementerad (fas 1-2 klar) | ⏳ Juridisk granskning pågår (IMY)  
+> **Status:** ✅ Implementerad (fas 1-3 klar) | ⏳ Juridisk granskning pågår (IMY)  
 > **Prioritet:** Hög  
 > **Senast uppdaterad:** 2026-01-24
 
@@ -129,7 +129,7 @@ c:\Dev\ASTRO\SHARP\
 |--------|-------------|------------------|
 | `sms_kampanjer` | En kampanj = en ledig tid | datum, status, antal_platser |
 | `sms_kampanj_mottagare` | Patienter i en kampanj | namn, svar, telefon_krypterad |
-| `kort_varsel_patienter` | Patientpoolen (återanvänds) | namn, status, akut, har_ont |
+| `kort_varsel_patienter` | Patientpoolen (återanvänds) | namn, status, lakare[], akut, har_ont, op_liten, op_stor, sida |
 | `lakare` | Lista av läkare | namn, aktiv |
 | `profiles` | Personalens profiler | email, mobilnummer |
 | `audit_logg` | Spårning av händelser | handelse_typ, detaljer |
@@ -274,6 +274,12 @@ A: Endast användare skapade i Supabase Auth (Dashboard → Authentication → U
 
 | Datum | Ändring |
 |-------|---------|
+| 2026-01-24 | **Sida (HÖ/VÄ):** Höger/vänster sida för operationen, påverkar prioritering inom varje nivå |
+| 2026-01-24 | **Läkare som array:** Flera läkare kan väljas per patient (ersätter flexibel_lakare) |
+| 2026-01-24 | **Pensionärsålder 67+:** Patienter 67+ markeras tydligt som pensionärer |
+| 2026-01-24 | **Renare patientpool:** Kampanjskapande flyttat till egen flik, enklare registreringsvy |
+| 2026-01-24 | **Operationsstorlek:** Liten (5-15 min) / Stor (15-60 min) / Båda för flexibel schemaläggning |
+| 2026-01-24 | **Förenklad patientpool:** Renare registreringsvy utan onödiga block |
 | 2026-01-24 | **Prioritetsbaserade intervall:** AKUT (60 min), sjukskriven (30 min), ont (20 min) |
 | 2026-01-24 | **Opt-out:** Patienter kan avregistrera sig via webben eller SMS (STOPP) |
 | 2026-01-24 | **Ålder & sortering:** Ålder beräknas från personnummer, sorterbara kolumner |
@@ -522,7 +528,110 @@ Personal kan fortfarande välja manuellt intervall:
 
 ---
 
-## 1d. Patient-avregistrering (opt-out)
+## 1d. Operationsstorlek
+
+Systemet stödjer klassificering av operationer efter tidsåtgång för att matcha patienter med rätt lediga tidsblock.
+
+### Operationsklasser
+
+| Storlek | Tidsåtgång | Ikon | Beskrivning |
+|---------|------------|------|-------------|
+| **Liten** | 5-15 min | 🔹 | Korta ingrepp som injektioner, små exkisioner |
+| **Stor** | 15-60 min | 🔷 | Standard-operationer som artroskopi, ligamentplastik |
+| **Båda** | Flexibel | L+S | Patienten kan fylla antingen ett litet eller stort tidsblock |
+
+### Användning vid registrering
+
+Vid registrering av patient i poolen väljer man:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Operationsstorlek *                                            │
+│                                                                 │
+│  [☑️ 🔹 Liten]     [☑️ 🔷 Stor]                                 │
+│     5-15 min          15-60 min                                 │
+│                                                                 │
+│  💡 Kryssa i båda om patienten kan fylla antingen ett litet    │
+│     eller stort utrymme                                         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Varför detta är viktigt
+
+| Scenario | Lösning |
+|----------|---------|
+| Alla stora operationer är bokade, men ett litet tidsblock är ledigt | Filtrera på patienter med liten operation |
+| Ett stort tidsblock är ledigt, ingen stor operation finns | Patienter med "båda" kan fylla utrymmet med en liten operation |
+| Behöver fylla ett specifikt tidsblock | Filtrera på rätt operationsstorlek vid kampanjskapande |
+
+### Filtrering vid kampanjskapande
+
+Framtida funktion: Vid kampanjskapande kan man filtrera vilka patienter som kontaktas baserat på om den lediga tiden passar en liten eller stor operation.
+
+---
+
+## 1e. Sida (HÖ/VÄ)
+
+Systemet stödjer registrering av vilken sida som ska opereras för att optimera utrustningsbyten under operationsdagen.
+
+### Bakgrund
+
+Vid operationsdagar (t.ex. axelkirurgi) opereras normalt alla vänster-axlar först, sedan alla höger-axlar. Detta beror på att flytta utrustning mellan höger och vänster sida är tidskrävande.
+
+### Användning
+
+**Vid patientregistrering:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Sida *                                                          │
+│                                                                 │
+│  [○ HÖ]     [○ VÄ]                                              │
+│                                                                 │
+│  💡 Vilken sida ska opereras?                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Vid kampanjskapande:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Önskad sida *                                                   │
+│                                                                 │
+│  [○ HÖ]     [○ VÄ]                                              │
+│                                                                 │
+│  💡 Patienter med rätt sida prioriteras inom varje nivå         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Prioriteringslogik
+
+Sidan fungerar som en sekundär sortering inom varje prioritetsnivå:
+
+```
+Sorteringsordning (om kampanj önskar HÖ):
+
+1. Akut + HÖ
+2. Akut + VÄ
+3. Mycket ont + HÖ
+4. Mycket ont + VÄ
+5. Sjukskriven + HÖ
+6. Sjukskriven + VÄ
+7. Vanlig + HÖ
+8. Vanlig + VÄ
+```
+
+Detta skapar en "drift" mot rätt sida utan att äventyra den medicinska prioriteringen.
+
+### Visning i patientlistan
+
+| Kolumn | Visas som | Betydelse |
+|--------|-----------|-----------|
+| **Sida** | HÖ | Höger sida |
+| **Sida** | VÄ | Vänster sida |
+| **Sida** | - | Ej angiven |
+
+---
+
+## 1f. Patient-avregistrering (opt-out)
 
 Patienter kan välja att **avregistrera sig** från kort varsel-listan. Detta kan göras på två sätt:
 
@@ -1684,6 +1793,7 @@ Efter **Schrems II-domen (2020)** räcker det inte med bara DPA för överförin
 | Samtyckesstatus | ✅ Ja | ❌ Nej | Auto |
 | Svar (ja/nej) | ✅ Ja | ❌ Nej | Auto |
 | Prioritet (akut/ont) | ✅ Ja | ❌ Nej | Auto |
+| Operationsstorlek | ✅ Ja | ❌ Nej | Auto |
 | Svars-tidpunkt | ✅ Ja | ❌ Nej | Auto |
 
 ---
@@ -1926,7 +2036,8 @@ supabase/
     ├── 002-kort-varsel.sql     ← Kampanjer & patientpool
     ├── 003-lakare.sql          ← Läkare
     ├── 004-profilbilder.sql    ← Avatars
-    └── 005-prioritet.sql       ← Prioritetsfält
+    ├── 005-prioritet.sql       ← Prioritetsfält
+    └── 006-operationsstorlek.sql ← Liten/stor operation + sida (HÖ/VÄ)
 ```
 
 Se `supabase/README.md` för instruktioner om hur man kör migrations.
