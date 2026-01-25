@@ -277,17 +277,18 @@ if (supabaseKonfigurerad) {
               <div class="flex flex-wrap gap-3">
                 <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-red-100 border-2 border-red-300 rounded-lg hover:bg-red-200 has-[:checked]:border-red-500 transition-colors">
                   <input type="checkbox" id="patient-akut" class="rounded w-4 h-4 text-red-600 focus:ring-red-500" />
-                  <span class="text-sm text-red-700 font-bold">🚨 AKUT</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 has-[:checked]:border-orange-400 transition-colors">
-                  <input type="checkbox" id="patient-ont" class="rounded w-4 h-4 text-orange-600 focus:ring-orange-500" />
-                  <span class="text-sm text-orange-700 font-medium">🔥 Mycket ont</span>
+                  <span class="text-sm text-red-700 font-bold">🚨 AKUT <span class="font-normal">(1)</span></span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 has-[:checked]:border-blue-400 transition-colors">
                   <input type="checkbox" id="patient-sjukskriven" class="rounded w-4 h-4 text-blue-600 focus:ring-blue-500" />
-                  <span class="text-sm text-blue-700 font-medium">📋 Sjukskriven</span>
+                  <span class="text-sm text-blue-700 font-medium">📋 Sjukskriven <span class="font-normal">(2)</span></span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 has-[:checked]:border-orange-400 transition-colors">
+                  <input type="checkbox" id="patient-ont" class="rounded w-4 h-4 text-orange-600 focus:ring-orange-500" />
+                  <span class="text-sm text-orange-700 font-medium">🔥 Mycket ont <span class="font-normal">(3)</span></span>
                 </label>
               </div>
+              <p class="text-xs text-gray-500 mt-1">Prioritet 4 = normal (ingen markering)</p>
             </div>
             
             <!-- Rad 4: Patientdata -->
@@ -1876,6 +1877,14 @@ if (supabaseKonfigurerad) {
       }
     }
     
+    // Hjälpfunktion för att beräkna prioritetsnummer
+    function getPrioritetNummer(p: any): number {
+      if (p.akut) return 1;
+      if (p.sjukskriven) return 2;
+      if (p.har_ont) return 3;
+      return 4;
+    }
+    
     function renderaSorteradLista() {
       const sorterade = [...cachedTillgangliga].sort((a, b) => {
         // AKUT alltid först, oavsett annan sortering
@@ -1885,10 +1894,10 @@ if (supabaseKonfigurerad) {
         let comparison = 0;
         
         if (currentSort.field === 'prioritet') {
-          // Prioritet: ont=2, sjukskriven=1, båda=3
-          const prioA = (a.har_ont ? 2 : 0) + (a.sjukskriven ? 1 : 0);
-          const prioB = (b.har_ont ? 2 : 0) + (b.sjukskriven ? 1 : 0);
-          comparison = prioB - prioA;
+          // Prioritet: 1=akut, 2=sjukskriven, 3=ont, 4=normal (lägre nummer = högre prioritet)
+          const prioA = getPrioritetNummer(a);
+          const prioB = getPrioritetNummer(b);
+          comparison = prioA - prioB; // Lägre nummer först
         } else if (currentSort.field === 'namn') {
           comparison = (a.namn || '').localeCompare(b.namn || '', 'sv');
         } else if (currentSort.field === 'storlek') {
@@ -2005,11 +2014,23 @@ if (supabaseKonfigurerad) {
           rowClass = 'bg-blue-50 hover:bg-blue-100 border-l-4 border-l-blue-400';
         }
         
-        // Prioritetsikoner
-        const prioIcons: string[] = [];
-        if (arAkut) prioIcons.push('<span title="AKUT - måste opereras snarast" class="text-base">🚨</span>');
-        if (harOnt) prioIcons.push('<span title="Mycket ont" class="text-base">🔥</span>');
-        if (arSjukskriven) prioIcons.push('<span title="Sjukskriven" class="text-base">📋</span>');
+        // Prioritetsnummer: 1=Akut, 2=Sjukskriven, 3=Mycket ont, 4=Normal
+        let prioNum = 4;
+        let prioTitle = 'Normal prioritet';
+        let prioClass = 'text-gray-400';
+        if (arAkut) {
+          prioNum = 1;
+          prioTitle = 'AKUT - måste opereras snarast';
+          prioClass = 'text-red-600 font-bold text-lg';
+        } else if (arSjukskriven) {
+          prioNum = 2;
+          prioTitle = 'Sjukskriven';
+          prioClass = 'text-blue-600 font-bold';
+        } else if (harOnt) {
+          prioNum = 3;
+          prioTitle = 'Mycket ont';
+          prioClass = 'text-orange-600 font-bold';
+        }
         
         // Operationsstorlek
         let storlekBadge = '<span class="text-gray-300">-</span>';
@@ -2037,7 +2058,7 @@ if (supabaseKonfigurerad) {
         return `
           <tr class="${rowClass} group transition-colors">
             <td class="px-2 py-2.5 text-center">
-              ${prioIcons.length > 0 ? prioIcons.join(' ') : '<span class="text-gray-300">-</span>'}
+              <span class="${prioClass}" title="${prioTitle}">${prioNum}</span>
             </td>
             <td class="px-2 py-2.5">
               <span class="font-medium text-gray-900">${p.namn}</span>
