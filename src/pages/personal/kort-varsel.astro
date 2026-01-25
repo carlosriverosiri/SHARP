@@ -574,19 +574,52 @@ if (supabaseKonfigurerad) {
                 </label>
                 <div class="flex items-center gap-2">
                   <select 
+                    id="intervall-select"
                     name="intervall" 
                     class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 bg-white"
                   >
                     <option value="5">5 minuter</option>
-                    <option value="10" selected>10 minuter</option>
+                    <option value="10">10 minuter</option>
                     <option value="15">15 minuter</option>
                     <option value="20">20 minuter</option>
                     <option value="30">30 minuter</option>
                     <option value="45">45 minuter</option>
                     <option value="60">60 minuter (1 timme)</option>
                   </select>
-                  <span class="text-sm text-gray-500">mellan varje patient</span>
+                  <span id="intervall-auto-badge" class="hidden px-2 py-0.5 text-xs font-medium bg-sky-100 text-sky-700 rounded-full">
+                    Auto
+                  </span>
                 </div>
+                
+                <!-- Rekommendation/varning -->
+                <div id="intervall-info" class="mt-3 hidden">
+                  <div id="intervall-rekommendation" class="hidden p-3 bg-sky-50 border border-sky-200 rounded-lg">
+                    <div class="flex items-start gap-2">
+                      <span class="text-sky-600">💡</span>
+                      <div class="text-sm">
+                        <span class="font-medium text-sky-800">Rekommenderat intervall:</span>
+                        <span id="rekommenderat-intervall" class="text-sky-700"></span>
+                        <p id="rekommendation-anledning" class="text-xs text-sky-600 mt-1"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="intervall-varning" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div class="flex items-start gap-2">
+                      <span class="text-amber-600">⚠️</span>
+                      <div class="text-sm">
+                        <p id="varning-text" class="text-amber-800"></p>
+                        <button 
+                          type="button"
+                          id="btn-anvand-rekommenderat"
+                          class="mt-2 px-3 py-1 text-xs font-medium bg-amber-600 text-white rounded hover:bg-amber-700 transition-colors"
+                        >
+                          Använd rekommenderat intervall
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
                 <p class="text-xs text-gray-500 mt-2">
                   SMS skickas gradvis till en patient i taget. Stoppar automatiskt när alla platser är fyllda.
                 </p>
@@ -1831,9 +1864,9 @@ if (supabaseKonfigurerad) {
       const matchandeEl = document.getElementById('matchande-patienter');
       if (matchandeEl) {
         if (matchande.length > 0) {
-          matchandeEl.textContent = `${matchande.length} patient(er) matchar filtret`;
+          matchandeEl.innerHTML = `<span id="matchande-antal">${matchande.length}</span> patient(er) matchar filtret`;
         } else if (lakare) {
-          matchandeEl.textContent = '⚠️ Inga patienter matchar filtret';
+          matchandeEl.innerHTML = '<span id="matchande-antal">0</span> ⚠️ Inga patienter matchar filtret';
         } else {
           matchandeEl.textContent = '';
         }
@@ -1847,6 +1880,185 @@ if (supabaseKonfigurerad) {
     );
     document.querySelector('input[name="kampanjOpLiten"]')?.addEventListener('change', updateMatchandePatienter);
     document.querySelector('input[name="kampanjOpStor"]')?.addEventListener('change', updateMatchandePatienter);
+
+    // ========== SMART INTERVALL-LOGIK ==========
+    
+    // Intervall-tabell baserat på dagar och prioritet (i minuter)
+    const INTERVALL_TABELL = {
+      // [dagar]: { akut, sjukskriven, ont, normal }
+      0: { akut: 5, sjukskriven: 5, ont: 5, normal: 5 },      // Samma dag
+      1: { akut: 15, sjukskriven: 10, ont: 10, normal: 5 },   // Dagen innan
+      2: { akut: 30, sjukskriven: 20, ont: 15, normal: 10 },  // 2 dagar
+      3: { akut: 60, sjukskriven: 45, ont: 30, normal: 20 },  // 3+ dagar
+    };
+    
+    // Tidspress-multiplikator (dagen innan, baserat på klockan)
+    function getTidspressMultiplikator(): number {
+      const nu = new Date();
+      const timme = nu.getHours();
+      if (timme >= 16) return 0.25;  // Efter 16: desperat
+      if (timme >= 14) return 0.5;   // 14-16: stress
+      if (timme >= 12) return 0.75;  // 12-14: lite press
+      return 1.0;                     // Före 12: lugnt
+    }
+    
+    // Beräkna rekommenderat intervall
+    function beraknaRekommenderatIntervall(opDatum: string, antalPatienter: number): { 
+      intervall: number; 
+      anledning: string;
+      varning: string | null;
+    } {
+      if (!opDatum) return { intervall: 10, anledning: 'Inget datum valt', varning: null };
+      
+      const idag = new Date();
+      idag.setHours(0, 0, 0, 0);
+      const opDate = new Date(opDatum);
+      opDate.setHours(0, 0, 0, 0);
+      
+      const diffMs = opDate.getTime() - idag.getTime();
+      const diffDagar = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      // Välj intervall-nivå
+      let dagarKey = Math.min(Math.max(diffDagar, 0), 3);
+      if (diffDagar >= 3) dagarKey = 3;
+      
+      const intervaller = INTERVALL_TABELL[dagarKey as keyof typeof INTERVALL_TABELL];
+      
+      // Använd "normal" som default (kan förbättras med patientdata senare)
+      let basIntervall = intervaller.normal;
+      let anledning = '';
+      
+      if (diffDagar <= 0) {
+        basIntervall = 5;
+        anledning = 'Samma dag - maximal hastighet';
+      } else if (diffDagar === 1) {
+        basIntervall = intervaller.normal;
+        // Applicera tidspress
+        const multiplikator = getTidspressMultiplikator();
+        basIntervall = Math.max(5, Math.round(basIntervall * multiplikator));
+        
+        const nu = new Date();
+        if (nu.getHours() >= 14) {
+          anledning = `Dagen innan, kl ${nu.getHours()}:${nu.getMinutes().toString().padStart(2, '0')} - ökat tempo`;
+        } else {
+          anledning = 'Dagen innan operation';
+        }
+      } else if (diffDagar === 2) {
+        basIntervall = intervaller.normal;
+        anledning = '2 dagar kvar - normalt tempo';
+      } else {
+        basIntervall = intervaller.normal;
+        anledning = `${diffDagar} dagar kvar - lugnt tempo`;
+      }
+      
+      // Kontrollera om tiden räcker
+      let varning: string | null = null;
+      if (antalPatienter > 0 && diffDagar <= 1) {
+        const nu = new Date();
+        const slutTid = new Date();
+        slutTid.setHours(16, 0, 0, 0);
+        
+        if (diffDagar === 0 || nu.toDateString() === opDate.toDateString()) {
+          // Samma dag - kolla tid kvar idag
+        } else if (diffDagar === 1) {
+          // Dagen innan - kolla tid kvar idag
+          const minuterKvar = Math.max(0, (slutTid.getTime() - nu.getTime()) / (1000 * 60));
+          const totalTidBehövs = antalPatienter * basIntervall;
+          
+          if (totalTidBehövs > minuterKvar && minuterKvar > 0) {
+            const rekommenderatIntervall = Math.max(5, Math.floor(minuterKvar / antalPatienter));
+            varning = `Med ${basIntervall} min intervall och ${antalPatienter} patienter tar det ${Math.round(totalTidBehövs)} min. Du har ca ${Math.round(minuterKvar)} min kvar till 16:00. Rekommenderat: ${rekommenderatIntervall} min.`;
+            basIntervall = rekommenderatIntervall;
+          }
+        }
+      }
+      
+      // Runda till närmaste valbara värde
+      const valbara = [5, 10, 15, 20, 30, 45, 60];
+      const närmaste = valbara.reduce((prev, curr) => 
+        Math.abs(curr - basIntervall) < Math.abs(prev - basIntervall) ? curr : prev
+      );
+      
+      return { intervall: närmaste, anledning, varning };
+    }
+    
+    // Uppdatera intervall-rekommendation i UI
+    let rekommenderatIntervallVarde = 10;
+    
+    function updateIntervallRekommendation() {
+      const datumInput = document.querySelector('input[name="datum"]') as HTMLInputElement;
+      const intervallSelect = document.getElementById('intervall-select') as HTMLSelectElement;
+      const infoDiv = document.getElementById('intervall-info');
+      const rekommendationDiv = document.getElementById('intervall-rekommendation');
+      const varningDiv = document.getElementById('intervall-varning');
+      const autoBadge = document.getElementById('intervall-auto-badge');
+      
+      if (!datumInput?.value || !intervallSelect || !infoDiv) return;
+      
+      // Räkna matchande patienter
+      const matchandeText = document.getElementById('matchande-antal')?.textContent || '0';
+      const antalPatienter = parseInt(matchandeText) || 0;
+      
+      const { intervall, anledning, varning } = beraknaRekommenderatIntervall(datumInput.value, antalPatienter);
+      rekommenderatIntervallVarde = intervall;
+      
+      // Visa info
+      infoDiv.classList.remove('hidden');
+      
+      if (varning) {
+        // Visa varning
+        rekommendationDiv?.classList.add('hidden');
+        varningDiv?.classList.remove('hidden');
+        const varningText = document.getElementById('varning-text');
+        if (varningText) varningText.textContent = varning;
+      } else {
+        // Visa rekommendation
+        varningDiv?.classList.add('hidden');
+        rekommendationDiv?.classList.remove('hidden');
+        const rekText = document.getElementById('rekommenderat-intervall');
+        const rekAnledning = document.getElementById('rekommendation-anledning');
+        if (rekText) rekText.textContent = `${intervall} minuter`;
+        if (rekAnledning) rekAnledning.textContent = anledning;
+      }
+      
+      // Auto-välj intervall om användaren inte ändrat manuellt
+      if (intervallSelect.dataset.autoSet !== 'false') {
+        intervallSelect.value = String(intervall);
+        autoBadge?.classList.remove('hidden');
+      }
+    }
+    
+    // Event listeners för intervall-logik
+    document.querySelector('input[name="datum"]')?.addEventListener('change', () => {
+      const intervallSelect = document.getElementById('intervall-select') as HTMLSelectElement;
+      if (intervallSelect) intervallSelect.dataset.autoSet = 'true'; // Återställ auto vid nytt datum
+      updateIntervallRekommendation();
+    });
+    
+    document.getElementById('intervall-select')?.addEventListener('change', () => {
+      const intervallSelect = document.getElementById('intervall-select') as HTMLSelectElement;
+      const autoBadge = document.getElementById('intervall-auto-badge');
+      intervallSelect.dataset.autoSet = 'false'; // Markera som manuellt ändrat
+      autoBadge?.classList.add('hidden');
+    });
+    
+    document.getElementById('btn-anvand-rekommenderat')?.addEventListener('click', () => {
+      const intervallSelect = document.getElementById('intervall-select') as HTMLSelectElement;
+      const autoBadge = document.getElementById('intervall-auto-badge');
+      if (intervallSelect) {
+        intervallSelect.value = String(rekommenderatIntervallVarde);
+        intervallSelect.dataset.autoSet = 'true';
+        autoBadge?.classList.remove('hidden');
+      }
+      updateIntervallRekommendation();
+    });
+    
+    // Uppdatera när matchande patienter ändras
+    const originalUpdateMatchande = updateMatchandePatienter;
+    (window as any).updateMatchandePatienter = function() {
+      originalUpdateMatchande();
+      setTimeout(updateIntervallRekommendation, 100); // Vänta på DOM-uppdatering
+    };
 
     // Formulärsubmit
     document.getElementById('kampanj-form')?.addEventListener('submit', async (e) => {
