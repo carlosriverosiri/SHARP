@@ -828,34 +828,40 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
                 </table>
               </div>
 
-              <!-- Sekundär sortering -->
+              <!-- Sekundär sortering: Sida -->
               <div class="bg-slate-700 rounded-xl p-4 mb-4">
                 <h4 class="font-bold text-slate-300 mb-3 text-sm">3. Sida HÖ/VÄ (sekundär sortering)</h4>
                 <p class="text-slate-400 text-xs mb-3">
                   Inom varje prioritetsnivå sorteras patienter efter om deras sida matchar kampanjens önskade sida.
                 </p>
-                <div class="bg-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300">
-                  <div class="text-emerald-400 mb-2">// Exempel: Kampanj söker HÖGER sida</div>
-                  <div>1. Akut + HÖ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Skickas först</div>
-                  <div>2. Akut + VÄ</div>
-                  <div>3. Sjukskriven + HÖ</div>
-                  <div>4. Sjukskriven + VÄ</div>
-                  <div>5. Ont + HÖ</div>
-                  <div>6. Ont + VÄ</div>
-                  <div>7. Pensionär + HÖ</div>
-                  <div>8. Pensionär + VÄ</div>
-                  <div>9. Normal + HÖ</div>
-                  <div>10. Normal + VÄ</div>
-                </div>
-                <p class="text-slate-500 text-xs mt-3">
+                <p class="text-slate-500 text-xs">
                   💡 <strong>Varför sida?</strong> Att operera alla höger-axlar först och sedan alla vänster-axlar 
                   minskar utrustningsbyten och sparar tid under operationsdagen.
                 </p>
               </div>
 
+              <!-- Tertiär sortering: Väntetid -->
+              <div class="bg-slate-700 rounded-xl p-4 mb-4">
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">4. Väntetid (tertiär sortering)</h4>
+                <p class="text-slate-400 text-xs mb-3">
+                  Inom samma prioritet och sida, sorteras patienter efter hur långt bort deras planerade operation är.
+                  <strong class="text-slate-200">Längst väntetid först.</strong>
+                </p>
+                <div class="bg-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300">
+                  <div class="text-emerald-400 mb-2">// Exempel: Två normala patienter, båda HÖ sida</div>
+                  <div>Patient A: Op planerad om 3 månader ← Skickas först</div>
+                  <div>Patient B: Op planerad om 2 veckor</div>
+                </div>
+                <p class="text-slate-500 text-xs mt-3">
+                  💡 <strong>Varför?</strong> Patienter med lång väntetid är mest motiverade att ta en kortvarsel-tid. 
+                  De som redan har operation nästa vecka vill sällan ändra. Genom att prioritera de med längst kö 
+                  minskar den totala väntetiden för alla.
+                </p>
+              </div>
+
               <!-- Operationsstorlek -->
               <div class="bg-slate-700 rounded-xl p-4">
-                <h4 class="font-bold text-slate-300 mb-3 text-sm">4. Operationsstorlek (filtrering)</h4>
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">5. Operationsstorlek (filtrering)</h4>
                 <p class="text-slate-400 text-xs mb-3">
                   Vid kampanjskapande filtreras patienter baserat på om operationsstorleken matchar den lediga tiden.
                 </p>

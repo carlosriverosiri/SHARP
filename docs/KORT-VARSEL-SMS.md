@@ -513,7 +513,10 @@ Patienter sorteras **alltid efter medicinsk prioritet** (oavsett intervall):
 5. ⏰ Övriga (normal prioritet)
 ```
 
-Inom varje prioritetsnivå sorteras på **sida (HÖ/VÄ)** om kampanjen angett önskad sida.
+Inom varje prioritetsnivå sorteras i följande ordning:
+
+1. **Sida (HÖ/VÄ)** - Rätt sida först om kampanjen angett önskad sida
+2. **Planerat operationsdatum** - Patienter med längst väntetid först (de är mest motiverade att flytta fram sin operation)
 
 ### Manuell override
 

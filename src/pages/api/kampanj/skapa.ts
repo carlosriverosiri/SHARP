@@ -53,6 +53,8 @@ interface Mottagare {
   sida?: 'höger' | 'vänster' | null;
   opLiten?: boolean;
   opStor?: boolean;
+  // Planerat operationsdatum (för sekundär prioritering)
+  planeratOpDatum?: string | null;
 }
 
 // Prioritetsintervall i minuter
@@ -73,7 +75,9 @@ function beraknaIntervall(m: Mottagare, defaultIntervall: number): number {
 
 // Sortera efter prioritet (akut > sjukskriven > ont > pensionär > normal)
 // Sjukskrivna prioriteras före "mycket ont" - de har både ont OCH funktionsbortfall
-// Inom varje prioritetsnivå: rätt sida först
+// Inom varje prioritetsnivå: 
+//   1. Rätt sida först
+//   2. Längst till planerad op först (de väntar mest och är mest motiverade)
 function sorteraPaPrioritet(a: Mottagare, b: Mottagare, onskadSida?: string): number {
   // Pensionär = 67+
   const arPensionarA = (a.alder ?? 0) >= 67;
@@ -83,12 +87,28 @@ function sorteraPaPrioritet(a: Mottagare, b: Mottagare, onskadSida?: string): nu
   const prioA = (a.akut ? 10000 : 0) + (a.sjukskriven ? 1000 : 0) + (a.harOnt ? 100 : 0) + (arPensionarA ? 10 : 0);
   const prioB = (b.akut ? 10000 : 0) + (b.sjukskriven ? 1000 : 0) + (b.harOnt ? 100 : 0) + (arPensionarB ? 10 : 0);
   
-  // Om samma prioritetsnivå, sortera på sida
-  if (prioA === prioB && onskadSida) {
-    const sidaMatchA = a.sida === onskadSida ? 1 : 0;
-    const sidaMatchB = b.sida === onskadSida ? 1 : 0;
-    if (sidaMatchA !== sidaMatchB) {
-      return sidaMatchB - sidaMatchA; // Rätt sida först
+  // Om samma prioritetsnivå
+  if (prioA === prioB) {
+    // 1. Sortera på sida (rätt sida först)
+    if (onskadSida) {
+      const sidaMatchA = a.sida === onskadSida ? 1 : 0;
+      const sidaMatchB = b.sida === onskadSida ? 1 : 0;
+      if (sidaMatchA !== sidaMatchB) {
+        return sidaMatchB - sidaMatchA; // Rätt sida först
+      }
+    }
+    
+    // 2. Sortera på planerat operationsdatum (längst bort först = mest motiverad)
+    if (a.planeratOpDatum && b.planeratOpDatum) {
+      const datumA = new Date(a.planeratOpDatum).getTime();
+      const datumB = new Date(b.planeratOpDatum).getTime();
+      if (datumA !== datumB) {
+        return datumB - datumA; // Längst bort först (högre datum = senare = prioriteras)
+      }
+    } else if (a.planeratOpDatum && !b.planeratOpDatum) {
+      return -1; // A har datum, B har inte → A först
+    } else if (!a.planeratOpDatum && b.planeratOpDatum) {
+      return 1; // B har datum, A har inte → B först
     }
   }
   
@@ -221,7 +241,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (body.patientIds?.length) {
     const { data: poolPatienter, error: poolError } = await supabaseAdmin
       .from('kort_varsel_patienter')
-      .select('id, namn, telefon_krypterad, har_samtycke, akut, sjukskriven, har_ont, alder, sida, op_liten, op_stor')
+      .select('id, namn, telefon_krypterad, har_samtycke, akut, sjukskriven, har_ont, alder, sida, op_liten, op_stor, utgar_vid')
       .in('id', body.patientIds)
       .in('status', ['tillganglig', 'kontaktad', 'reserv']);
     
@@ -253,6 +273,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         sida: p.sida || null,
         opLiten: p.op_liten || false,
         opStor: p.op_stor || false,
+        // Planerat operationsdatum
+        planeratOpDatum: p.utgar_vid || null,
       };
     });
     
