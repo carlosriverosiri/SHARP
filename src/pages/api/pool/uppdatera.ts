@@ -4,8 +4,19 @@
  * POST /api/pool/uppdatera
  * Body: {
  *   patientId: "uuid",
- *   action: "markera_hanterad" | "fornya" | "andra_status",
- *   nyttStatus?: "tillganglig" | "kontaktad" | "reserv" | "nej" | "bokad"
+ *   action: "markera_hanterad" | "fornya" | "andra_status" | "redigera",
+ *   nyttStatus?: "tillganglig" | "kontaktad" | "reserv" | "nej" | "bokad",
+ *   // För action="redigera":
+ *   namn?: string,
+ *   lakare?: string[],
+ *   sida?: "höger" | "vänster",
+ *   opLiten?: boolean,
+ *   opStor?: boolean,
+ *   akut?: boolean,
+ *   harOnt?: boolean,
+ *   sjukskriven?: boolean,
+ *   alder?: number,
+ *   utgarVid?: string
  * }
  */
 
@@ -19,8 +30,19 @@ type PatientStatus = 'tillganglig' | 'kontaktad' | 'reserv' | 'nej' | 'bokad';
 
 interface UpdateRequest {
   patientId: string;
-  action: 'markera_hanterad' | 'fornya' | 'andra_status';
+  action: 'markera_hanterad' | 'fornya' | 'andra_status' | 'redigera';
   nyttStatus?: PatientStatus;
+  // För redigering
+  namn?: string;
+  lakare?: string[];
+  sida?: 'höger' | 'vänster' | null;
+  opLiten?: boolean;
+  opStor?: boolean;
+  akut?: boolean;
+  harOnt?: boolean;
+  sjukskriven?: boolean;
+  alder?: number | null;
+  utgarVid?: string;
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -87,6 +109,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         // Om ändrar till 'nej', sätt tackade_nej_vid
         if (body.nyttStatus === 'nej') {
           updateData.tackade_nej_vid = new Date().toISOString();
+        }
+        break;
+
+      case 'redigera':
+        // Uppdatera patientuppgifter
+        if (body.namn !== undefined) updateData.namn = body.namn;
+        if (body.lakare !== undefined) updateData.lakare = body.lakare;
+        if (body.sida !== undefined) updateData.sida = body.sida;
+        if (body.opLiten !== undefined) updateData.op_liten = body.opLiten;
+        if (body.opStor !== undefined) updateData.op_stor = body.opStor;
+        if (body.akut !== undefined) updateData.akut = body.akut;
+        if (body.harOnt !== undefined) updateData.har_ont = body.harOnt;
+        if (body.sjukskriven !== undefined) updateData.sjukskriven = body.sjukskriven;
+        if (body.alder !== undefined) updateData.alder = body.alder;
+        if (body.utgarVid !== undefined) updateData.utgar_vid = body.utgarVid;
+        
+        if (Object.keys(updateData).length === 0) {
+          return new Response(
+            JSON.stringify({ error: 'Inga fält att uppdatera' }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+          );
         }
         break;
 
