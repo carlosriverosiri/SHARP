@@ -771,7 +771,7 @@ if (supabaseKonfigurerad) {
                   <p class="text-sm font-medium text-gray-700 mb-2">Ny avbokning? Utöka kampanjen:</p>
                   
                   <!-- Alternativ för att rensa NEJ-svar -->
-                  <label class="flex items-center gap-2 mb-3 cursor-pointer">
+                  <label class="flex items-center gap-2 mb-2 cursor-pointer">
                     <input 
                       type="checkbox" 
                       id="checkbox-rensa-nej"
@@ -780,6 +780,17 @@ if (supabaseKonfigurerad) {
                     >
                     <span class="text-sm text-gray-700">Ta bort NEJ-svar (börja om med nya patienter)</span>
                   </label>
+                  
+                  <!-- Info-ruta om patientpoolen -->
+                  <div class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div class="flex items-start gap-2">
+                      <span class="text-amber-500 text-lg leading-none">ℹ️</span>
+                      <div class="text-xs text-amber-800">
+                        <p class="font-medium">Patienterna finns kvar i poolen</p>
+                        <p class="mt-0.5 text-amber-700">NEJ betyder bara "inte just denna tid". De kan kontaktas för andra tider.</p>
+                      </div>
+                    </div>
+                  </div>
                   
                   <div class="flex flex-wrap gap-2 items-center">
                     <button 
