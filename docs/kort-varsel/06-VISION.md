@@ -48,6 +48,51 @@ Grunden för ett **AI-native journalsystem** - ett system där AI inte är ett t
 
 ---
 
+## Ekonomin: Varför marginalen är magisk
+
+### Samuelson och marginalanalys
+
+Paul Samuelson, Nobelpristagare i ekonomi 1970, formaliserade i *Economics* principen att **vinsten maximeras på marginalen** - de sista enheterna ett företag producerar har ofta högst vinstmarginal eftersom fasta kostnader redan är täckta.
+
+### Tillämpning: Den obesatta OP-tiden
+
+En kirurgklinik har enorma fasta kostnader som måste betalas oavsett beläggning:
+
+| Fast kostnad | Betalas oavsett om salen används |
+|--------------|----------------------------------|
+| Personal (anestesi, op-ssk) | ✅ Ja |
+| Lokal, utrustning | ✅ Ja |
+| Administration | ✅ Ja |
+
+När en patient avbokar och tiden förblir tom **förlorar kliniken hela intäkten men sparar nästan ingenting**. De rörliga kostnaderna (material, förbrukning) är bara 15-30% av intäkten.
+
+### Konsekvens: Extrem lönsamhet
+
+> **En obesatt tid som fylls via kort varsel kan generera 50-70% ren vinstmarginal.**
+
+| | Tom tid | Fylld via kort varsel |
+|-|---------|----------------------|
+| Intäkt | 0 kr | 25 000 kr |
+| Rörliga kostnader | 0 kr | -5 000 kr |
+| **Täckningsbidrag** | **0 kr** | **20 000 kr** |
+
+### ROI för systemet
+
+| Investering | Kostnad |
+|-------------|---------|
+| Supabase (databas) | ~100 kr/mån |
+| 46elks (SMS) | ~0.50 kr/SMS |
+| Utvecklingstid | Engångskostnad |
+
+| Avkastning | Värde |
+|------------|-------|
+| 1 fylld tid/vecka | ~80 000 kr/mån i täckningsbidrag |
+| 2 fyllda tider/vecka | ~160 000 kr/mån |
+
+**Payback-tid: < 1 dag.**
+
+---
+
 ## Produkten: Kort Varsel App
 
 ### Kärnfunktioner (v1.0 - Klar!)

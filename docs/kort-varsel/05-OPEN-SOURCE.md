@@ -19,6 +19,66 @@ Alla ortopedkliniker har samma problem: patienter avbokar, och tomma OP-tider ko
 
 ---
 
+## Ekonomisk bakgrund: Marginalintäktens kraft
+
+### Samuelson och marginalekonomi
+
+Paul Samuelson, Nobelpristagare i ekonomi 1970, formaliserade i sin klassiska lärobok *Economics* (1948) principerna för **marginalanalys** - hur företag maximerar vinst genom att analysera kostnaden och intäkten för varje ytterligare enhet.
+
+Kärninsikten: **När fasta kostnader redan är täckta, genererar ytterligare försäljning exceptionellt hög vinstmarginal.**
+
+### Tillämpning på operationsverksamhet
+
+En operationssal har stora **fasta kostnader** som måste betalas oavsett beläggning:
+
+| Kostnad | Typ | Betalas oavsett om salen används |
+|---------|-----|----------------------------------|
+| Personal (anestesi, op-ssk, undersköterska) | Fast | ✅ Ja |
+| Lokalhyra | Fast | ✅ Ja |
+| Utrustning, avskrivningar | Fast | ✅ Ja |
+| Försäkringar, administration | Fast | ✅ Ja |
+
+När dessa kostnader redan är täckta av planerade operationer, blir **marginalkostnaden** för en extra operation mycket låg:
+
+| Kostnad | Typ | Ungefärlig andel av intäkt |
+|---------|-----|----------------------------|
+| Förbrukningsmaterial (suturer, implantat) | Rörlig | ~10-20% |
+| Läkemedel | Rörlig | ~5-10% |
+| Städning | Rörlig | ~1-2% |
+| **Totalt rörlig kostnad** | | **~15-30%** |
+
+### Konsekvens: Extremt hög vinstmarginal
+
+> *"En obesatt operationstid som fylls via kort varsel kan generera **50-70% ren vinstmarginal** eftersom de fasta kostnaderna redan är täckta av det ordinarie schemat."*
+
+**Räkneexempel:**
+```
+Intäkt för en knäartroskopi:        25 000 kr
+- Rörliga kostnader (material):     - 5 000 kr
+= Täckningsbidrag:                  20 000 kr (80%)
+
+Om salen annars stått tom:
+- Förlorad intäkt:                  25 000 kr
+- Sparade rörliga kostnader:        + 5 000 kr
+= Förlorat täckningsbidrag:         20 000 kr
+```
+
+### Varför detta motiverar systemet
+
+1. **ROI på minuter:** Ett SMS-utskick kostar ~0.50 kr och tar 30 sekunder att initiera. Potentiell vinst: 20 000 kr.
+
+2. **Varje fylld tid räknas:** Till skillnad från "vanliga" patienter där marginalerna är lägre, ger kort varsel-patienter nästan maximal vinst.
+
+3. **Dubbel effekt:** Förutom direkt vinst kortas kön, vilket förbättrar patientnöjdhet och minskar risk för komplikationer av fördröjd vård.
+
+### Sammanfattning
+
+Samuelson visade att rationella företag fokuserar på marginalen - där varje ytterligare enhet ger högst avkastning. För en operationsklinik är **den obesatta tiden som fylls via kort varsel** exakt en sådan marginalenhet: låg kostnad, hög intäkt, maximal vinst.
+
+Detta gör ett välfungerande kort varsel-system till en av de mest lönsamma investeringarna en klinik kan göra.
+
+---
+
 ## Kärnfunktioner att inkludera
 
 ### Måste ha (MVP)
