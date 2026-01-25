@@ -749,7 +749,7 @@ if (supabaseKonfigurerad) {
                   </div>
                   <div class="bg-gray-100 rounded-lg p-2 text-center">
                     <span id="kampanj-detalj-vantar" class="text-xl font-bold text-gray-700">0</span>
-                    <div class="text-xs text-gray-600">⏳ Väntar</div>
+                    <div class="text-xs text-gray-600">⏳ Väntar på svar</div>
                   </div>
                 </div>
                 <h3 class="font-medium text-gray-900 mb-2 text-sm">Mottagare</h3>
@@ -907,7 +907,7 @@ if (supabaseKonfigurerad) {
                                 ? 'bg-green-100 text-green-800' 
                                 : 'bg-yellow-100 text-yellow-800'
                             }`}>
-                              {k.status === 'fylld' ? '🎉 Fylld' : '⏳ Väntar'}
+                              {k.status === 'fylld' ? '🎉 Fylld' : '⏳ Väntar på svar'}
                             </span>
                             {visaProgress && (
                               <span class="text-xs text-gray-500">
@@ -1553,7 +1553,7 @@ if (supabaseKonfigurerad) {
         if (k.status === 'fylld') {
           datumEl.textContent = `✅ Fylld${platserText}`;
         } else if (k.status === 'aktiv') {
-          datumEl.textContent = `⏳ Väntar${platserText}`;
+          datumEl.textContent = `⏳ Väntar på svar${platserText}`;
         } else {
           datumEl.textContent = 'Avslutad';
         }
