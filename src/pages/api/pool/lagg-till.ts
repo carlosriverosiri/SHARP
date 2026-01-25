@@ -36,7 +36,7 @@ interface PatientInput {
 
 // Kryptera telefonnummer med AES-256
 function krypteraTelefon(telefon: string): string {
-  const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+  const key = crypto.scryptSync(ENCRYPTION_KEY, 'kort-varsel-salt', 32);
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
   
