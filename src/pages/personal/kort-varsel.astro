@@ -963,6 +963,29 @@ if (supabaseKonfigurerad) {
               <canvas id="svarsfordelning-chart"></canvas>
             </div>
           </div>
+          
+          <!-- Statistik per dimension -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Per operationsstorlek -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                📐 Per operationsstorlek
+              </h3>
+              <div id="dimension-opstorlek" class="space-y-3">
+                <p class="text-gray-500 text-sm italic">Laddar...</p>
+              </div>
+            </div>
+            
+            <!-- Per sida -->
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                ↔️ Per sida (HÖ/VÄ)
+              </h3>
+              <div id="dimension-sida" class="space-y-3">
+                <p class="text-gray-500 text-sm italic">Laddar...</p>
+              </div>
+            </div>
+          </div>
         </div>
         
         <!-- ========== SVARSTIDSSTATISTIK ========== -->
@@ -2375,9 +2398,58 @@ if (supabaseKonfigurerad) {
         // Rendera svarsfördelning
         renderaSvarsfordelningChart(data.svarsfordelning);
         
+        // Rendera dimensioner
+        renderaDimensioner(data.dimensioner);
+        
       } catch (error) {
         console.error('Fel vid laddning av dashboard:', error);
       }
+    }
+
+    function renderaDimensioner(dimensioner: any) {
+      // Operationsstorlek
+      const opStorlekEl = document.getElementById('dimension-opstorlek');
+      if (opStorlekEl) {
+        if (dimensioner.opStorlek.length === 0) {
+          opStorlekEl.innerHTML = '<p class="text-gray-500 text-sm italic">Ingen data ännu</p>';
+        } else {
+          opStorlekEl.innerHTML = dimensioner.opStorlek.map((d: any) => renderaDimensionRad(d)).join('');
+        }
+      }
+      
+      // Sida
+      const sidaEl = document.getElementById('dimension-sida');
+      if (sidaEl) {
+        if (dimensioner.sida.length === 0) {
+          sidaEl.innerHTML = '<p class="text-gray-500 text-sm italic">Ingen data ännu</p>';
+        } else {
+          sidaEl.innerHTML = dimensioner.sida.map((d: any) => renderaDimensionRad(d)).join('');
+        }
+      }
+    }
+
+    function renderaDimensionRad(d: any) {
+      const jaProc = d.totalt > 0 ? Math.round(100 * d.ja / d.totalt) : 0;
+      const nejProc = d.totalt > 0 ? Math.round(100 * d.nej / d.totalt) : 0;
+      const ingenProc = 100 - jaProc - nejProc;
+      
+      return `
+        <div class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-medium text-gray-800">${d.namn}</span>
+            <span class="text-sm text-gray-500">${d.totalt} SMS</span>
+          </div>
+          <div class="flex h-4 rounded-full overflow-hidden bg-gray-100">
+            <div class="bg-green-500 transition-all" style="width: ${jaProc}%" title="JA: ${d.ja}"></div>
+            <div class="bg-red-500 transition-all" style="width: ${nejProc}%" title="NEJ: ${d.nej}"></div>
+            <div class="bg-gray-300 transition-all" style="width: ${ingenProc}%" title="Inget svar: ${d.ingenSvar}"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-500 mt-1">
+            <span class="text-green-600">JA ${d.jaRate}%</span>
+            <span>Inget svar: ${d.ingenSvar}</span>
+          </div>
+        </div>
+      `;
     }
 
     function uppdateraNyckeltal(nyckeltal: any, trend: any) {

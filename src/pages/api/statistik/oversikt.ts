@@ -13,6 +13,15 @@ import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 
+interface DimensionStats {
+  namn: string;
+  totalt: number;
+  ja: number;
+  nej: number;
+  ingenSvar: number;
+  jaRate: number;
+}
+
 interface OversiktData {
   period: string;
   nyckeltal: {
@@ -41,6 +50,10 @@ interface OversiktData {
     totalt: number;
     jaRate: number;
   }[];
+  dimensioner: {
+    opStorlek: DimensionStats[];
+    sida: DimensionStats[];
+  };
 }
 
 export const GET: APIRoute = async ({ url, cookies }) => {
@@ -66,12 +79,16 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     
     // Hämta svarsfördelning per kategori
     const svarsfordelning = await hamtaSvarsfordelning(dagar);
+    
+    // Hämta statistik per dimension
+    const dimensioner = await hamtaDimensionsstatistik(dagar);
 
     const response: OversiktData = {
       period: periodParam === 'all' ? 'Allt' : `${periodParam} dagar`,
       nyckeltal: nuData,
       trend,
       svarsfordelning,
+      dimensioner,
     };
 
     return new Response(
@@ -238,4 +255,83 @@ async function hamtaSvarsfordelning(dagar: number | null) {
       jaRate: svarMottagna > 0 ? Math.round(100 * data.ja / svarMottagna) : 0,
     };
   });
+}
+
+/**
+ * Hämta statistik per dimension (op-storlek, sida)
+ */
+async function hamtaDimensionsstatistik(dagar: number | null) {
+  let startDatum: string | null = null;
+  
+  if (dagar !== null) {
+    const start = new Date();
+    start.setDate(start.getDate() - dagar);
+    startDatum = start.toISOString();
+  }
+
+  // Hämta alla mottagare med dimensionsfält
+  let query = supabaseAdmin
+    .from('sms_kampanj_mottagare')
+    .select('op_liten, op_stor, sida, svar, skickad_vid');
+  
+  if (startDatum) query = query.gte('skickad_vid', startDatum);
+  
+  const { data: mottagare } = await query;
+  
+  // Statistik per operationsstorlek
+  const opStorlek: Record<string, { ja: number; nej: number; ingenSvar: number }> = {
+    'Liten': { ja: 0, nej: 0, ingenSvar: 0 },
+    'Stor': { ja: 0, nej: 0, ingenSvar: 0 },
+  };
+  
+  // Statistik per sida
+  const sida: Record<string, { ja: number; nej: number; ingenSvar: number }> = {
+    'Höger': { ja: 0, nej: 0, ingenSvar: 0 },
+    'Vänster': { ja: 0, nej: 0, ingenSvar: 0 },
+    'Ej angiven': { ja: 0, nej: 0, ingenSvar: 0 },
+  };
+
+  for (const m of mottagare || []) {
+    if (!m.skickad_vid) continue;
+    
+    // Op-storlek
+    if (m.op_liten) {
+      if (m.svar === 'ja') opStorlek['Liten'].ja++;
+      else if (m.svar === 'nej') opStorlek['Liten'].nej++;
+      else opStorlek['Liten'].ingenSvar++;
+    }
+    if (m.op_stor) {
+      if (m.svar === 'ja') opStorlek['Stor'].ja++;
+      else if (m.svar === 'nej') opStorlek['Stor'].nej++;
+      else opStorlek['Stor'].ingenSvar++;
+    }
+    
+    // Sida
+    const sidaNamn = m.sida === 'höger' ? 'Höger' : 
+                     m.sida === 'vänster' ? 'Vänster' : 'Ej angiven';
+    if (m.svar === 'ja') sida[sidaNamn].ja++;
+    else if (m.svar === 'nej') sida[sidaNamn].nej++;
+    else sida[sidaNamn].ingenSvar++;
+  }
+
+  // Formatera resultat
+  const formateraDimension = (data: Record<string, { ja: number; nej: number; ingenSvar: number }>): DimensionStats[] => {
+    return Object.entries(data).map(([namn, stats]) => {
+      const totalt = stats.ja + stats.nej + stats.ingenSvar;
+      const svarMottagna = stats.ja + stats.nej;
+      return {
+        namn,
+        totalt,
+        ja: stats.ja,
+        nej: stats.nej,
+        ingenSvar: stats.ingenSvar,
+        jaRate: svarMottagna > 0 ? Math.round(100 * stats.ja / svarMottagna) : 0,
+      };
+    }).filter(d => d.totalt > 0); // Filtrera bort tomma
+  };
+
+  return {
+    opStorlek: formateraDimension(opStorlek),
+    sida: formateraDimension(sida),
+  };
 }
