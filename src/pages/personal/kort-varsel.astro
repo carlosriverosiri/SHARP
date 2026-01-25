@@ -200,7 +200,7 @@ if (supabaseKonfigurerad) {
 
       <!-- ========== PATIENTPOOL-VY ========== -->
       <div id="panel-pool" class="tab-panel">
-        <div class="max-w-3xl mx-auto space-y-6">
+        <div class="max-w-5xl mx-auto space-y-6">
           
           <!-- Lägg till patienter -->
           <div class="bg-white rounded-xl shadow-sm border p-6">
@@ -348,34 +348,53 @@ if (supabaseKonfigurerad) {
                     <option value={l.namn}>{l.namn}</option>
                   ))}
                 </select>
+                <button 
+                  onclick="document.getElementById('tab-kampanj')?.click()"
+                  class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2"
+                >
+                  📤 Skapa SMS-utskick
+                </button>
               </div>
             </div>
             
-            <!-- Kolumnrubriker med sortering -->
-            <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-t border-b text-xs font-medium text-gray-600 mb-1">
-              <button id="sort-prioritet" class="w-14 text-center hover:text-red-600 cursor-pointer" title="Sortera på prioritet">Prio ↕</button>
-              <button id="sort-namn" class="flex-1 text-left hover:text-sky-600 cursor-pointer">Namn ↕</button>
-              <button id="sort-sida" class="w-10 text-center hover:text-sky-600 cursor-pointer" title="Höger/Vänster sida">Sida ↕</button>
-              <button id="sort-storlek" class="w-16 text-center hover:text-sky-600 cursor-pointer" title="Liten/Stor operation">Storlek ↕</button>
-              <button id="sort-alder" class="w-12 text-center hover:text-sky-600 cursor-pointer" title="Pensionärer (67+) kommer lättare">Ålder ↕</button>
-              <button id="sort-lakare" class="w-28 text-left hover:text-sky-600 cursor-pointer">Läkare ↕</button>
-              <button id="sort-dagar" class="w-14 text-right hover:text-sky-600 cursor-pointer">Dagar ↕</button>
+            <!-- Tabell för patienter -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-gray-50 border-b text-xs font-medium text-gray-600">
+                    <th class="px-2 py-2 text-center w-16">
+                      <button id="sort-prioritet" class="hover:text-red-600 cursor-pointer" title="Sortera på prioritet">Prio ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-left min-w-[180px]">
+                      <button id="sort-namn" class="hover:text-sky-600 cursor-pointer">Namn ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-center w-14">
+                      <button id="sort-sida" class="hover:text-sky-600 cursor-pointer" title="Höger/Vänster">Sida ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-center w-20">
+                      <button id="sort-storlek" class="hover:text-sky-600 cursor-pointer" title="Liten/Stor op">Storlek ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-center w-14">
+                      <button id="sort-alder" class="hover:text-sky-600 cursor-pointer" title="Pensionärer (67+) kommer lättare">Ålder ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-left min-w-[140px]">
+                      <button id="sort-lakare" class="hover:text-sky-600 cursor-pointer">Läkare ↕</button>
+                    </th>
+                    <th class="px-2 py-2 text-center w-16">
+                      <button id="sort-dagar" class="hover:text-sky-600 cursor-pointer" title="Dagar kvar till planerad op">Kvar ↕</button>
+                    </th>
+                    <th class="px-2 py-2 w-20 text-center">Åtgärd</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-tillgangliga" class="divide-y divide-gray-100">
+                  <tr><td colspan="8" class="text-gray-400 italic text-sm py-8 text-center">Laddar...</td></tr>
+                </tbody>
+              </table>
             </div>
             
-            <div id="lista-tillgangliga" class="space-y-1 max-h-[60vh] overflow-y-auto">
-              <p class="text-gray-400 italic text-sm py-4 text-center">Laddar...</p>
-            </div>
-            
-            <!-- Info om hur man skapar SMS-utskick -->
-            <div class="mt-4 pt-4 border-t text-center">
-              <p class="text-sm text-gray-500">
-                För att skapa ett SMS-utskick, gå till fliken 
-                <button 
-                  onclick="document.getElementById('tab-kampanj')?.click()" 
-                  class="text-sky-600 hover:underline font-medium"
-                >📤 Skapa SMS-utskick</button>
-              </p>
-            </div>
+            <p class="text-xs text-gray-400 mt-3 text-center">
+              💡 Klicka på kolumnrubriker för att sortera. Hovra över en patient för att se redigera/ta bort.
+            </p>
           </div>
           
           <!-- Dolt: statistik-element för JS-kompatibilitet -->
@@ -1930,7 +1949,7 @@ if (supabaseKonfigurerad) {
       if (!container) return;
       
       if (!patienter || patienter.length === 0) {
-        container.innerHTML = `<p class="text-gray-400 italic text-sm py-4 text-center">Inga patienter i poolen ännu. Lägg till ovan!</p>`;
+        container.innerHTML = `<tr><td colspan="8" class="text-gray-400 italic text-sm py-8 text-center">Inga patienter i poolen ännu. Lägg till ovan!</td></tr>`;
         return;
       }
       
@@ -1939,41 +1958,33 @@ if (supabaseKonfigurerad) {
         
         if (type === 'nej') {
           return `
-            <div class="flex items-center justify-between p-1.5 bg-white rounded border border-red-100 text-xs">
-              <div class="min-w-0 flex-1">
-                <div class="font-medium text-gray-800 truncate">${p.namn}</div>
-              </div>
-              <div class="flex items-center gap-1 flex-shrink-0">
+            <tr class="bg-red-50 hover:bg-red-100">
+              <td colspan="6" class="px-2 py-2 font-medium text-gray-800">${p.namn}</td>
+              <td class="px-2 py-2 text-center">
                 ${!p.hanterad_i_journal ? `
-                  <button 
-                    onclick="markeraHanterad('${p.id}')"
-                    class="px-1.5 py-0.5 bg-gray-100 rounded hover:bg-gray-200 text-[10px]"
-                  >✓</button>
-                ` : '<span class="text-green-600 text-[10px]">✓</span>'}
-                <button 
-                  onclick="taBortPatient('${p.id}')"
-                  class="px-1 py-0.5 text-red-500 hover:bg-red-50 rounded"
-                >🗑</button>
-              </div>
-            </div>
+                  <button onclick="markeraHanterad('${p.id}')" class="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 text-xs">✓ Hanterad</button>
+                ` : '<span class="text-green-600 text-xs">✓ Hanterad</span>'}
+              </td>
+              <td class="px-2 py-2 text-center">
+                <button onclick="taBortPatient('${p.id}')" class="p-1 text-red-500 hover:bg-red-100 rounded" title="Ta bort">🗑️</button>
+              </td>
+            </tr>
           `;
         }
         
         if (type === 'bokad') {
           return `
-            <div class="flex items-center p-1.5 bg-white rounded border border-green-100 text-xs">
-              <div class="min-w-0 flex-1">
-                <div class="font-medium text-gray-800 truncate">${p.namn}</div>
-                <div class="text-[10px] text-gray-500">
-                  ${p.bokad_datum ? new Date(p.bokad_datum).toLocaleDateString('sv-SE') : ''}
-                </div>
-              </div>
-            </div>
+            <tr class="bg-green-50 hover:bg-green-100">
+              <td colspan="7" class="px-2 py-2">
+                <span class="font-medium text-gray-800">${p.namn}</span>
+                <span class="text-xs text-gray-500 ml-2">${p.bokad_datum ? new Date(p.bokad_datum).toLocaleDateString('sv-SE') : ''}</span>
+              </td>
+              <td class="px-2 py-2"></td>
+            </tr>
           `;
         }
         
         // Tillgängliga patienter
-        // Hantera läkare som array
         const lakareArray = Array.isArray(p.lakare) ? p.lakare : (p.lakare ? [p.lakare] : []);
         const lakareInfo = lakareArray.length > 0 ? lakareArray.join(', ') : '-';
         const lakareTitle = lakareArray.length > 1 ? `Kan opereras av: ${lakareArray.join(', ')}` : '';
@@ -1984,76 +1995,83 @@ if (supabaseKonfigurerad) {
         const opLiten = p.op_liten === true;
         const opStor = p.op_stor === true;
         
-        // Bakgrundsfärg baserat på prioritet (akut > ont > sjukskriven > normal)
-        let prioClass = 'border-gray-100';
+        // Bakgrundsfärg baserat på prioritet
+        let rowClass = 'hover:bg-gray-50';
         if (arAkut) {
-          prioClass = 'bg-red-100 border-red-300 border-2';
+          rowClass = 'bg-red-50 hover:bg-red-100 border-l-4 border-l-red-500';
         } else if (harOnt) {
-          prioClass = 'bg-orange-50 border-orange-200';
+          rowClass = 'bg-orange-50 hover:bg-orange-100 border-l-4 border-l-orange-400';
         } else if (arSjukskriven) {
-          prioClass = 'bg-blue-50 border-blue-200';
+          rowClass = 'bg-blue-50 hover:bg-blue-100 border-l-4 border-l-blue-400';
         }
         
         // Prioritetsikoner
         const prioIcons: string[] = [];
-        if (arAkut) prioIcons.push('<span title="AKUT - måste opereras snarast">🚨</span>');
-        if (harOnt) prioIcons.push('<span title="Mycket ont">🔥</span>');
-        if (arSjukskriven) prioIcons.push('<span title="Sjukskriven">📋</span>');
+        if (arAkut) prioIcons.push('<span title="AKUT - måste opereras snarast" class="text-base">🚨</span>');
+        if (harOnt) prioIcons.push('<span title="Mycket ont" class="text-base">🔥</span>');
+        if (arSjukskriven) prioIcons.push('<span title="Sjukskriven" class="text-base">📋</span>');
         
         // Operationsstorlek
-        let storlekBadge = '';
+        let storlekBadge = '<span class="text-gray-300">-</span>';
         if (opLiten && opStor) {
-          storlekBadge = '<span class="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded" title="Liten eller stor operation">L+S</span>';
+          storlekBadge = '<span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium" title="Liten eller stor">L+S</span>';
         } else if (opLiten) {
-          storlekBadge = '<span class="text-xs bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded" title="Liten operation (5-15 min)">🔹 L</span>';
+          storlekBadge = '<span class="text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded font-medium" title="Liten operation (5-15 min)">Liten</span>';
         } else if (opStor) {
-          storlekBadge = '<span class="text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded" title="Stor operation (15-60 min)">🔷 S</span>';
+          storlekBadge = '<span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-medium" title="Stor operation (15-60 min)">Stor</span>';
         }
         
         // Ålder - pensionär vid 67+
         const alderText = p.alder ? `${p.alder}` : '-';
         const isPension = p.alder && p.alder >= 67;
         const alderClass = isPension ? 'text-green-600 font-bold' : 'text-gray-500';
-        const pensionBadge = isPension ? '<span class="ml-0.5 text-green-500" title="Pensionär - kommer lättare på kort varsel">✓</span>' : '';
+        const pensionBadge = isPension ? ' ✓' : '';
         
         // Sida (HÖ/VÄ)
         const sidaText = p.sida === 'höger' ? 'HÖ' : (p.sida === 'vänster' ? 'VÄ' : '-');
         const sidaClass = p.sida ? 'text-gray-700 font-medium' : 'text-gray-400';
         
+        // Dagar kvar styling
+        const dagarClass = dagarKvar <= 3 ? 'text-red-600 font-bold' : (dagarKvar <= 7 ? 'text-orange-600 font-medium' : 'text-gray-500');
+        
         return `
-          <div class="flex items-center gap-2 px-3 py-2 rounded border ${prioClass} text-sm group hover:shadow-sm transition-shadow">
-            <div class="w-14 text-center flex-shrink-0 text-sm">
-              ${prioIcons.join('')}
-            </div>
-            <div class="flex-1 min-w-0">
+          <tr class="${rowClass} group transition-colors">
+            <td class="px-2 py-2.5 text-center">
+              ${prioIcons.length > 0 ? prioIcons.join(' ') : '<span class="text-gray-300">-</span>'}
+            </td>
+            <td class="px-2 py-2.5">
               <span class="font-medium text-gray-900">${p.namn}</span>
-            </div>
-            <div class="w-10 text-center flex-shrink-0">
-              <span class="text-xs ${sidaClass}" title="${p.sida === 'höger' ? 'Höger sida' : (p.sida === 'vänster' ? 'Vänster sida' : 'Ingen sida angiven')}">${sidaText}</span>
-            </div>
-            <div class="w-16 text-center flex-shrink-0">
+            </td>
+            <td class="px-2 py-2.5 text-center">
+              <span class="${sidaClass}" title="${p.sida === 'höger' ? 'Höger sida' : (p.sida === 'vänster' ? 'Vänster sida' : 'Ej angiven')}">${sidaText}</span>
+            </td>
+            <td class="px-2 py-2.5 text-center">
               ${storlekBadge}
-            </div>
-            <div class="w-12 text-center flex-shrink-0">
-              <span class="text-xs ${alderClass}" title="${isPension ? 'Pensionär (67+) - kommer lättare på kort varsel' : 'Ålder'}">${alderText}${pensionBadge}</span>
-            </div>
-            <div class="w-28 text-xs text-sky-600 font-medium truncate flex-shrink-0" title="${lakareTitle}">${lakareInfo}</div>
-            <div class="w-14 text-right flex-shrink-0">
-              <span class="text-xs font-medium ${dagarKvar <= 7 ? 'text-orange-600' : 'text-gray-400'}">${dagarKvar}d</span>
-            </div>
-            <div class="w-16 flex-shrink-0 flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button 
-                onclick="redigeraPatient('${p.id}')"
-                class="p-1 text-gray-400 hover:text-sky-600 hover:bg-sky-50 rounded"
-                title="Redigera patient"
-              >✏️</button>
-              <button 
-                onclick="taBortPatient('${p.id}')"
-                class="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
-                title="Ta bort patient"
-              >🗑️</button>
-            </div>
-          </div>
+            </td>
+            <td class="px-2 py-2.5 text-center">
+              <span class="${alderClass}" title="${isPension ? 'Pensionär (67+) - kommer lättare på kort varsel' : 'Ålder'}">${alderText}${pensionBadge}</span>
+            </td>
+            <td class="px-2 py-2.5 text-sky-700 font-medium" title="${lakareTitle}">
+              ${lakareInfo}
+            </td>
+            <td class="px-2 py-2.5 text-center">
+              <span class="${dagarClass}" title="Dagar till planerad operation">${dagarKvar}d</span>
+            </td>
+            <td class="px-2 py-2.5 text-center">
+              <div class="flex items-center justify-center gap-1 opacity-30 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onclick="redigeraPatient('${p.id}')"
+                  class="p-1.5 text-gray-500 hover:text-sky-600 hover:bg-sky-50 rounded"
+                  title="Redigera patient"
+                >✏️</button>
+                <button 
+                  onclick="taBortPatient('${p.id}')"
+                  class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                  title="Ta bort patient"
+                >🗑️</button>
+              </div>
+            </td>
+          </tr>
         `;
       }).join('');
     }
