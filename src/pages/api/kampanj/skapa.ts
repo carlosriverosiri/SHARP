@@ -461,10 +461,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Oväntat fel:', error);
     return new Response(
-      JSON.stringify({ error: 'Ett oväntat fel uppstod' }),
+      JSON.stringify({ 
+        error: 'Ett oväntat fel uppstod',
+        details: error?.message || String(error),
+        stack: error?.stack?.split('\n').slice(0, 3).join('\n') || null
+      }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
