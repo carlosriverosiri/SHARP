@@ -1,7 +1,7 @@
 # Specifikation: Prediktioner för Kort varsel-SMS
 
 > **Status:** Koncept / Framtida utveckling  
-> **Beroenden:** Minst 200-500 kampanjer för tillförlitliga prediktioner  
+> **Beroenden:** Minst 200-500 utskick för tillförlitliga prediktioner  
 > **Senast uppdaterad:** 2026-01-24
 
 ---
@@ -10,14 +10,14 @@
 
 ### Problemet vi löser
 
-Idag startar personalen en kampanj och hoppas att någon svarar JA. De vet inte:
+Idag startar personalen ett utskick och hoppas att någon svarar JA. De vet inte:
 - Hur många SMS som troligen behövs för att fylla tiden
 - Om de borde vänta till imorgon för bättre chanser
 - Vilka patienter som har störst chans att tacka ja
 
 ### Lösningen
 
-Ett prediktionssystem som **innan kampanjen startas** kan säga:
+Ett prediktionssystem som **innan utskicket startas** kan säga:
 
 > *"Baserat på historisk data: För att fylla denna tid med **90% säkerhet** behöver du kontakta **5 patienter**. Med nuvarande patientpool (3 AKUT, 2 Sjukskrivna) uppskattar vi **85% chans** att fylla tiden."*
 
@@ -80,7 +80,7 @@ N = ln(0.10) / ln(0.40) = -2.303 / -0.916 ≈ 2.5
 
 ### 3.1 Inputdata
 
-För varje kampanj samlar vi:
+För varje utskick samlar vi:
 
 ```typescript
 interface PrediktionInput {
@@ -92,8 +92,8 @@ interface PrediktionInput {
     dagarTillPlaneradOp: number;
   }[];
   
-  // Kampanjparametrar
-  dagarTillKampanjDatum: number;
+  // Utskicksparametrar
+  dagarTillUtskickDatum: number;
   tidPaDagen: number; // timme (8-18)
   lakare: string;
   onskatSida: 'höger' | 'vänster' | null;
@@ -151,9 +151,9 @@ p_justerad = p_bas × faktor_tid × faktor_veckodag × faktor_vantetid × ...
 
 ## 4. Användargränssnitt
 
-### 4.1 Innan kampanjstart
+### 4.1 Innan utskicksstart
 
-När användaren fyller i kampanjformuläret visas en prediktionspanel:
+När användaren fyller i utskicksformuläret visas en prediktionspanel:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -234,7 +234,7 @@ CREATE TABLE sms_prediktioner (
   prediktion_antal_sms INTEGER,       -- Förväntat antal SMS
   prediktion_tid_minuter INTEGER,     -- Förväntad tid
   
-  -- Utfall (fylls i när kampanjen avslutas)
+  -- Utfall (fylls i när utskicket avslutas)
   faktiskt_antal_sms INTEGER,
   faktisk_tid_minuter INTEGER,
   kampanj_fylld BOOLEAN,
@@ -268,7 +268,7 @@ interface PrediktionResponse {
   patientRanking: PatientRank[];
   rekommendationer: string[];
   dataunderlag: {
-    antalHistoriskaKampanjer: number;
+    antalHistoriskaUtskick: number;
     senastUppdaterad: string;
   };
 }
@@ -290,7 +290,7 @@ function beraknaPredikion(
     let sannolikhet = basfrekvenser[p.kategori].effektivJaRate;
     
     // Justera för tid på dagen
-    sannolikhet *= tidPaDagenFaktor(kampanjStartTid);
+    sannolikhet *= tidPaDagenFaktor(utskickStartTid);
     
     // Justera för väntetid
     sannolikhet *= vantetidFaktor(p.dagarTillPlaneradOp);
@@ -343,7 +343,7 @@ function beraknaPredikion(
 
 ### 6.1 Mätning av noggrannhet
 
-Efter varje kampanj jämför vi prediktion med utfall:
+Efter varje utskick jämför vi prediktion med utfall:
 
 ```typescript
 interface PrediktionValidering {
@@ -363,15 +363,15 @@ interface PrediktionValidering {
 Systemet förbättras över tid genom:
 
 1. **Bayesiansk uppdatering** - Justera basfrekvenser med nya data
-2. **Anomalidetektering** - Flagga kampanjer som avviker kraftigt
+2. **Anomalidetektering** - Flagga utskick som avviker kraftigt
 3. **A/B-testning** - Testa olika viktningar av faktorer
 
 ### 6.3 Krav på dataunderlag
 
 | Mått | Minimum | Rekommenderat |
 |------|---------|---------------|
-| Totalt antal kampanjer | 100 | 500+ |
-| Kampanjer per kategori | 20 | 100+ |
+| Totalt antal utskick | 100 | 500+ |
+| Utskick per kategori | 20 | 100+ |
 | Tidsperiod | 3 månader | 12 månader |
 
 ---
@@ -409,7 +409,7 @@ Med tillräckligt med data kan vi träna en ML-modell:
 
 ### 8.2 Realtidsjustering
 
-Under pågående kampanj:
+Under pågående utskick:
 
 > *"📊 Uppdaterad prediktion: Efter 2 NEJ-svar har chansen sjunkit till 65%. Överväg att utöka med 2 patienter för att nå 90% igen."*
 
@@ -426,7 +426,7 @@ Under pågående kampanj:
 ### Fas 1: Grundläggande prediktion (MVP)
 - [ ] Beräkna basfrekvenser från historisk data
 - [ ] Enkel sannolikhetsberäkning per patient
-- [ ] Visa chans att fylla i kampanjformuläret
+- [ ] Visa chans att fylla i utskicksformuläret
 - [ ] Uppskattad tid till fylld
 
 ### Fas 2: Patientranking

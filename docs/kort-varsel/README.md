@@ -10,7 +10,7 @@
 |---|----------|-------------|
 | 1 | [Teknisk dokumentation](./01-TEKNISK.md) | Huvuddokumentation - arkitektur, API:er, prioriteringslogik |
 | 2 | [Statistik](./02-STATISTIK.md) | Statistikfunktionen - svarstider, trender, dashboard |
-| 3 | [Prediktion](./03-PREDIKTION.md) | Prediktionssystem - beräkna chans att fylla kampanj |
+| 3 | [Prediktion](./03-PREDIKTION.md) | Prediktionssystem - beräkna chans att fylla utskick |
 | 4 | [GDPR](./04-GDPR.md) | GDPR-compliance, 46elks, IMY-kommunikation |
 | 5 | [Open Source](./05-OPEN-SOURCE.md) | Plan för att göra systemet tillgängligt som öppen källkod |
 | 6 | [Vision](./06-VISION.md) | Kommersiell vision och långsiktig roadmap |
@@ -30,7 +30,7 @@ Ett system som automatiskt kontaktar patienter på väntelistan när operationst
 2. System skickar SMS i prioritetsordning (AKUT → Sjukskriven → Ont → Normal)
 3. Patient klickar länk → Svarar JA/NEJ
 4. Personal ringer JA-svar → Bokar tiden
-5. Kampanj avslutas automatiskt eller manuellt
+5. Utskick avslutas automatiskt eller manuellt
 ```
 
 ### Prioriteringsordning
@@ -68,7 +68,7 @@ Tid mellan SMS anpassas automatiskt baserat på:
 ```
 src/pages/personal/kort-varsel.astro   # Huvudsidan för personal
 src/pages/s/[kod].astro                 # Patientens svarssida
-src/pages/api/kampanj/                  # API-endpoints för kampanjer
+src/pages/api/kampanj/                  # API-endpoints för utskick
 src/pages/api/pool/                     # API-endpoints för patientpool
 src/pages/api/statistik/                # API-endpoints för statistik
 src/pages/om-oss/kort-varsel-demo.astro # Offentlig demosida

@@ -53,7 +53,7 @@ Supabase är vår "backend" och ersätter traditionella databaser + serverlogik.
 
 | Supabase-del | Vad det gör | Hur vi använder det |
 |--------------|-------------|---------------------|
-| **Database** | PostgreSQL-databas | Lagrar kampanjer, patienter, svar |
+| **Database** | PostgreSQL-databas | Lagrar utskick, patienter, svar |
 | **Auth** | Inloggningssystem | Personal loggar in med mejl/lösenord |
 | **Row Level Security (RLS)** | Säkerhet på radnivå | Förhindrar obehörig åtkomst |
 | **Functions** | Databasfunktioner | Atomära operationer (t.ex. "först till kvarn") |
@@ -95,7 +95,7 @@ c:\Dev\ASTRO\SHARP\
 │   │   ├── s/
 │   │   │   └── [kod].astro       ← Svarssida för patienter
 │   │   └── api/                  ← API-endpoints (backend-logik)
-│   │       ├── kampanj/          ← Kampanjhantering
+│   │       ├── kampanj/          ← Utskickshantering
 │   │       ├── pool/             ← Patientpool
 │   │       └── sms/              ← SMS-webhooks
 │   ├── lib/                      ← Hjälpfunktioner
@@ -127,8 +127,8 @@ c:\Dev\ASTRO\SHARP\
 
 | Tabell | Beskrivning | Viktiga kolumner |
 |--------|-------------|------------------|
-| `sms_kampanjer` | En kampanj = en ledig tid | datum, status, antal_platser |
-| `sms_kampanj_mottagare` | Patienter i en kampanj | namn, svar, telefon_krypterad |
+| `sms_kampanjer` | Ett utskick = en ledig tid | datum, status, antal_platser |
+| `sms_kampanj_mottagare` | Patienter i ett utskick | namn, svar, telefon_krypterad |
 | `kort_varsel_patienter` | Patientpoolen (återanvänds) | namn, status, lakare[], akut, har_ont, op_liten, op_stor, sida |
 | `lakare` | Lista av läkare | namn, aktiv |
 | `profiles` | Personalens profiler | email, mobilnummer |
@@ -166,7 +166,7 @@ SITE=https://sodermalm.netlify.app   # Används i SMS-länkar
 ### Hur systemet fungerar (översikt)
 
 ```
-1. PERSONAL SKAPAR KAMPANJ
+1. PERSONAL SKAPAR UTSKICK
    └── /personal/kort-varsel.astro
        └── Anropar /api/kampanj/skapa.ts
            └── Sparar i Supabase: sms_kampanjer + sms_kampanj_mottagare
@@ -189,7 +189,7 @@ SITE=https://sodermalm.netlify.app   # Används i SMS-länkar
        └── Kollar: "Ska nästa SMS skickas nu?"
        └── Skickar till nästa patient i kön
        
-6. KAMPANJ AVSLUTAS
+6. UTSKICK AVSLUTAS
    └── Automatiskt när alla platser fyllda
    └── Eller manuellt av personal
 ```
@@ -239,7 +239,7 @@ npm run dev
 
 **4. Förstå koden**
 - Börja med `src/pages/personal/kort-varsel.astro` (huvudvyn)
-- Titta på `src/pages/api/kampanj/skapa.ts` (hur kampanjer skapas)
+- Titta på `src/pages/api/kampanj/skapa.ts` (hur utskick skapas)
 - Läs `supabase/migrations/002-kort-varsel.sql` (databasstrukturen)
 
 **5. Databasändringar**
@@ -277,17 +277,17 @@ A: Endast användare skapade i Supabase Auth (Dashboard → Authentication → U
 | 2026-01-24 | **Sida (HÖ/VÄ):** Höger/vänster sida för operationen, påverkar prioritering inom varje nivå |
 | 2026-01-24 | **Läkare som array:** Flera läkare kan väljas per patient (ersätter flexibel_lakare) |
 | 2026-01-24 | **Pensionärsålder 67+:** Patienter 67+ markeras tydligt som pensionärer |
-| 2026-01-24 | **Renare patientpool:** Kampanjskapande flyttat till egen flik, enklare registreringsvy |
+| 2026-01-24 | **Renare patientpool:** Utskicksskapande flyttat till egen flik, enklare registreringsvy |
 | 2026-01-24 | **Operationsstorlek:** Liten (5-15 min) / Stor (15-60 min) / Båda för flexibel schemaläggning |
 | 2026-01-24 | **Förenklad patientpool:** Renare registreringsvy utan onödiga block |
 | 2026-01-24 | **Prioritetsbaserade intervall:** AKUT (60 min), sjukskriven (30 min), ont (20 min) |
 | 2026-01-24 | **Opt-out:** Patienter kan avregistrera sig via webben eller SMS (STOPP) |
 | 2026-01-24 | **Ålder & sortering:** Ålder beräknas från personnummer, sorterbara kolumner |
-| 2026-01-24 | **Utöka kampanj:** Lägg till fler patienter till aktiv kampanj |
+| 2026-01-24 | **Utöka utskick:** Lägg till fler patienter till aktivt utskick |
 | 2026-01-24 | **SQL-filer flyttade:** Ny struktur i `supabase/migrations/` |
 | 2026-01-23 | **Läkare:** Läkare-dropdown, "flexibel läkare"-alternativ |
 | 2026-01-22 | **Patientpool:** Ny modell med persistent patientlista, reservhantering, NEJ-spårning |
-| 2026-01-22 | **Ny modell:** Stöd för 1-3 platser per kampanj + tidsblock istället för exakt klockslag |
+| 2026-01-22 | **Ny modell:** Stöd för 1-3 platser per utskick + tidsblock istället för exakt klockslag |
 | 2026-01-22 | Implementation påbörjad: Dashboard, svarssida, API:er, databas-schema |
 
 ---
@@ -308,16 +308,16 @@ Ett system för att snabbt kontakta patienter på väntelistan och fylla lediga 
 
 **Flöde:**
 ```
-Inställd operation → Personal skapar kampanj (1-3 platser) → SMS skickas →
+Inställd operation → Personal skapar utskick (1-3 platser) → SMS skickas →
 Patient klickar länk → Bekräftar pre-op fråga → Svarar JA →
 Får bekräftelse + personal notifieras → Personal ringer patient → Bokar in
 ```
 
 **Princip:** Först till kvarn. De första N som svarar JA får platserna. Övriga blir reserv.
 
-### Flera platser per kampanj
+### Flera platser per utskick
 
-Systemet stödjer 1-3 lediga platser per kampanj:
+Systemet stödjer 1-3 lediga platser per utskick:
 
 | Antal platser | Användningsfall |
 |---------------|-----------------|
@@ -330,7 +330,7 @@ Systemet stödjer 1-3 lediga platser per kampanj:
 
 ## 1b. Patientpool (ny modell)
 
-Istället för att mata in patienter manuellt för varje kampanj finns en **persistent patientpool** där alla kort varsel-patienter samlas.
+Istället för att mata in patienter manuellt för varje utskick finns en **persistent patientpool** där alla kort varsel-patienter samlas.
 
 ### Översikt
 
@@ -352,9 +352,9 @@ Istället för att mata in patienter manuellt för varje kampanj finns en **pers
 
 | Status | Beskrivning | Åtgärd |
 |--------|-------------|--------|
-| **Tillgänglig** | Redo att kontaktas | Kan väljas till kampanj |
+| **Tillgänglig** | Redo att kontaktas | Kan väljas till utskick |
 | **Kontaktad** | Fått SMS, ej svarat | Väntar på svar |
-| **⭐ Reserv** | Svarade JA men fick ej plats | Prioriteras i nästa kampanj! |
+| **⭐ Reserv** | Svarade JA men fick ej plats | Prioriteras i nästa utskick! |
 | **❌ NEJ** | Tackade nej | Uppdatera journalsystemet, ta bort |
 | **✅ Bokad** | Fick en tid | Visas som referens |
 
@@ -372,7 +372,7 @@ Listan visar nu mer information och är sortierbar:
 │  ☐       Lisa Larsson           55      Dr. Lindberg  6d    │
 │  ...                                                          │
 │                                                                │
-│  [☑️ Välj alla]  [📤 Skapa kampanj med valda]                │
+│  [☑️ Välj alla]  [📤 Skapa utskick med valda]                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -397,7 +397,7 @@ Patienter som svarade JA men inte fick plats (någon annan hann före):
 │ ⭐ Maria Månsson     svarade JA 22/1   ← Prioritera!          │
 │                                                                │
 │ 💡 Dessa har visat att de är motiverade och snabba.           │
-│    Läggs automatiskt först i kön vid nästa kampanj.           │
+│    Läggs automatiskt först i kön vid nästa utskick.           │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -434,7 +434,7 @@ Patienter som tackat nej måste markeras i journalsystemet:
         ↓
 2. Avbokning inkommer
         ↓
-3. Personal väljer patienter från poolen + skapar kampanj
+3. Personal väljer patienter från poolen + skapar utskick
         ↓
 4. Patienter svarar:
    - JA (får plats) → Status: Bokad
@@ -515,7 +515,7 @@ Patienter sorteras **alltid efter medicinsk prioritet** (oavsett intervall):
 
 Inom varje prioritetsnivå sorteras i följande ordning:
 
-1. **Sida (HÖ/VÄ)** - Rätt sida först om kampanjen angett önskad sida
+1. **Sida (HÖ/VÄ)** - Rätt sida först om utskicket angett önskad sida
 2. **Planerat operationsdatum** - Patienter med längst väntetid först (de är mest motiverade att flytta fram sin operation)
 
 ### Manuell override
@@ -580,11 +580,11 @@ Vid registrering av patient i poolen väljer man:
 |----------|---------|
 | Alla stora operationer är bokade, men ett litet tidsblock är ledigt | Filtrera på patienter med liten operation |
 | Ett stort tidsblock är ledigt, ingen stor operation finns | Patienter med "båda" kan fylla utrymmet med en liten operation |
-| Behöver fylla ett specifikt tidsblock | Filtrera på rätt operationsstorlek vid kampanjskapande |
+| Behöver fylla ett specifikt tidsblock | Filtrera på rätt operationsstorlek vid utskicksskapande |
 
-### Filtrering vid kampanjskapande
+### Filtrering vid utskicksskapande
 
-Framtida funktion: Vid kampanjskapande kan man filtrera vilka patienter som kontaktas baserat på om den lediga tiden passar en liten eller stor operation.
+Framtida funktion: Vid utskicksskapande kan man filtrera vilka patienter som kontaktas baserat på om den lediga tiden passar en liten eller stor operation.
 
 ---
 
@@ -609,7 +609,7 @@ Vid operationsdagar (t.ex. axelkirurgi) opereras normalt alla vänster-axlar fö
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Vid kampanjskapande:**
+**Vid utskicksskapande:**
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Önskad sida *                                                   │
@@ -625,7 +625,7 @@ Vid operationsdagar (t.ex. axelkirurgi) opereras normalt alla vänster-axlar fö
 Sidan fungerar som en sekundär sortering inom varje prioritetsnivå:
 
 ```
-Sorteringsordning (om kampanj önskar HÖ):
+Sorteringsordning (om utskick önskar HÖ):
 
 1. Akut + HÖ
 2. Akut + VÄ
@@ -687,12 +687,12 @@ Din ordinarie operationstid påverkas inte.
 /Södermalms Ortopedi
 ```
 
-### Visuell indikation i kampanjvy
+### Visuell indikation i utskicksvy
 
 Avregistrerade patienter markeras tydligt:
 
 ```
-┌─ Kampanj: Ledig tid 28/1 ────────────────────────────────────────┐
+┌─ Utskick: Ledig tid 28/1 ────────────────────────────────────────┐
 │                                                                  │
 │  🚫 Anna Andersson    avregistrerad   → Ändra i kalender        │
 │  ✅ Karl Karlsson     JA              📞 Ring!                   │
@@ -801,7 +801,7 @@ Systemet föreslår intervall automatiskt baserat på hur bråttom det är:
 | Operation imorgon, <3h kvar till deadline | 5 min | Bråttom - snabbare utskick |
 | Operation imorgon, <1h kvar till deadline | 2 min | Mycket bråttom |
 
-### Inställningar vid kampanjskapande
+### Inställningar vid utskicksskapande
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -847,7 +847,7 @@ Flöde:
 15:10  Patient 3 får SMS (om ingen svarat JA)
 ...
 15:45  Patient 10 får SMS (om ingen svarat JA)
-17:00  Deadline - kampanjen stängs
+17:00  Deadline - utskicket stängs
 ```
 
 ### Exempel: Gott om tid
@@ -1022,7 +1022,7 @@ Innan patienten kan svara JA måste de bekräfta en fråga. Dessutom visas en **
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Steg 2c: Om kampanjen är avslutad
+### Steg 2c: Om utskicket är avslutat
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -1113,11 +1113,11 @@ Vi återkommer vid nästa lediga tid!
 
 **URL:** `/personal/kort-varsel`
 
-### 7.1 Skapa kampanj
+### 7.1 Skapa utskick
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  📱 Skapa kort varsel-kampanj                                   │
+│  📱 Skapa kort varsel-utskick                                   │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Ledig tid                                                      │
@@ -1160,7 +1160,7 @@ Vi återkommer vid nästa lediga tid!
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  ┌───────────────────────────────────────────────────────┐     │
-│  │           🚀 Skicka kampanj                           │     │
+│  │           🚀 Skicka utskick                           │     │
 │  └───────────────────────────────────────────────────────┘     │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -1172,7 +1172,7 @@ Vi återkommer vid nästa lediga tid!
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Utskick: Ledig tid 28/1 kl 08:00                           │
 │  Status: ⏳ Väntar på svar                                      │
 │  Utskick: Gradvis (3 st var 10:e min)                          │
 ├─────────────────────────────────────────────────────────────────┤
@@ -1202,7 +1202,7 @@ Vi återkommer vid nästa lediga tid!
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Utskick: Ledig tid 28/1 kl 08:00                           │
 │  Status: ✅ FYLLD                                               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
@@ -1279,7 +1279,7 @@ Ibland behöver man avsluta en kampanj manuellt - antingen för att tiden fyllde
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Utskick: Ledig tid 28/1 kl 08:00                           │
 │  Status: ⏳ Väntar på svar                                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
@@ -1347,7 +1347,7 @@ När personal har ringt patienten som svarade JA:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  📱 Kampanj: Ledig tid 28/1 kl 08:00                           │
+│  📱 Utskick: Ledig tid 28/1 kl 08:00                           │
 │  Status: ✅ FYLLD - Väntar på bekräftelse                       │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │

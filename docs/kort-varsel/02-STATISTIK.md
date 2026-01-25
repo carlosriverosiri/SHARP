@@ -2,7 +2,7 @@
 
 > **Status:** Planering  
 > **Prioritet:** Medel (kräver dataunderlag först)  
-> **Beroenden:** Minst 100-200 kampanjer för meningsfull statistik  
+> **Beroenden:** Minst 100-200 utskick för meningsfull statistik  
 > **Senast uppdaterad:** 2026-01-24
 
 ---
@@ -32,7 +32,7 @@
 
 ### 🥈 Fas 2: Tid på dagen
 
-**Varför viktigt:** Hjälper planera *när* kampanjer ska startas för bäst respons.
+**Varför viktigt:** Hjälper planera *när* utskick ska startas för bäst respons.
 
 - Förmiddag (08-12) vs Eftermiddag (12-16) vs Kväll (16-20)
 - Svarstid och svarsfrekvens per tidsblock
@@ -72,7 +72,7 @@ Statistikfunktionen ska ge insikter som möjliggör:
 ### 2.1 Befintliga tabeller
 
 ```sql
--- Kampanjdata
+-- Utskicksdata
 sms_kampanjer:
   - id, datum, skapad_vid, avslutad_vid
   - status, utfall
@@ -97,14 +97,14 @@ kort_varsel_patienter:
 
 ### 2.2 Data som behöver läggas till
 
-För fullständig statistik behöver vi spara mer data vid kampanjskapande:
+För fullständig statistik behöver vi spara mer data vid utskicksskapande:
 
 ```sql
 -- Lägg till i sms_kampanj_mottagare:
 ALTER TABLE sms_kampanj_mottagare ADD COLUMN IF NOT EXISTS
   alder INTEGER,                           -- Patientens ålder vid utskick
   planerat_op_datum DATE,                  -- Planerat operationsdatum
-  dagar_till_planerad_op INTEGER,          -- Beräknat: planerat_op - kampanj_datum
+  dagar_till_planerad_op INTEGER,          -- Beräknat: planerat_op - utskick_datum
   svarstid_minuter INTEGER;                -- Beräknat: svarad_vid - skickad_vid
 ```
 
@@ -121,7 +121,7 @@ ALTER TABLE sms_kampanj_mottagare ADD COLUMN IF NOT EXISTS
 │  📊 ÖVERSIKT                                          [30d ▼]      │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  Kampanjer          Fyllda via SMS      Svarsfrekvens              │
+│  Utskick            Fyllda via SMS      Svarsfrekvens              │
 │  ┌────────┐         ┌────────┐          ┌────────┐                 │
 │  │   47   │         │   38   │          │  72%   │                 │
 │  │        │         │  81%   │          │        │                 │
@@ -222,7 +222,7 @@ ALTER TABLE sms_kampanj_mottagare ADD COLUMN IF NOT EXISTS
 │  👨‍⚕️ PER LÄKARE                                                    │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  Läkare          Kampanjer   Fyllda    JA-rate   Medel svarstid   │
+│  Läkare          Utskick     Fyllda    JA-rate   Medel svarstid   │
 │  ─────────────────────────────────────────────────────────────────  │
 │  Dr. Andersson        12        10       75%         18 min        │
 │  Dr. Bergström        15        11       68%         24 min        │
@@ -374,7 +374,7 @@ ALTER TABLE sms_kampanj_mottagare
 -- Kommentarer
 COMMENT ON COLUMN sms_kampanj_mottagare.alder IS 'Patientens ålder vid SMS-utskick';
 COMMENT ON COLUMN sms_kampanj_mottagare.planerat_op_datum IS 'Patientens ordinarie planerade operationsdatum';
-COMMENT ON COLUMN sms_kampanj_mottagare.dagar_till_planerad_op IS 'Dagar mellan kampanjdatum och planerad op';
+COMMENT ON COLUMN sms_kampanj_mottagare.dagar_till_planerad_op IS 'Dagar mellan utskicksdatum och planerad op';
 COMMENT ON COLUMN sms_kampanj_mottagare.svarstid_sekunder IS 'Sekunder mellan skickad_vid och svarad_vid';
 
 -- Index för snabba aggregeringar
@@ -454,7 +454,7 @@ GET /api/statistik/oversikt?dagar=30
 Response:
 {
   "period": "30 dagar",
-  "kampanjer": 47,
+  "utskick": 47,
   "fyllda_via_sms": 38,
   "fyllda_procent": 81,
   "totalt_sms": 258,
@@ -517,7 +517,7 @@ Response:
 
 ### 6.1 Placering
 
-Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlistan:
+Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför utskickslistan:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -532,8 +532,8 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 │  │                                                              │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                                                                     │
-│  ┌─── KAMPANJLISTA ────────────────────────────────────────────┐   │
-│  │  (Befintlig lista med alla kampanjer)                       │   │
+│  ┌─── UTSKICKSLISTA ───────────────────────────────────────────┐   │
+│  │  (Befintlig lista med alla utskick)                         │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
@@ -689,7 +689,7 @@ Implementerade funktioner:
 1. **Export till Excel** - Ladda ner statistik som CSV
 2. **Jämförelse** - Jämför två perioder
 3. **Notifieringar** - "Din JA-rate har ökat med 10% denna månad!"
-4. **Prediktioner** - "Baserat på historik behövs troligen 3 SMS för denna kampanj"
+4. **Prediktioner** - "Baserat på historik behövs troligen 3 SMS för detta utskick"
 5. **A/B-testning** - Testa olika intervall och mät resultat
 
 ### Integrationsmöjligheter

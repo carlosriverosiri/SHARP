@@ -114,7 +114,7 @@ if (supabaseKonfigurerad) {
 }
 ---
 
-<BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-kampanjer">
+<BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-utskick">
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
@@ -701,7 +701,7 @@ if (supabaseKonfigurerad) {
         </div>
       </div> <!-- Stäng panel-kampanj -->
 
-      <!-- ========== AKTIVA KAMPANJER-VY ========== -->
+      <!-- ========== AKTIVA UTSKICK-VY ========== -->
       <div id="panel-aktiva" class="tab-panel hidden">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
@@ -734,7 +734,7 @@ if (supabaseKonfigurerad) {
                 <h3 class="font-medium text-gray-900 mb-2 text-sm">Mottagare</h3>
                 <div id="kampanj-detalj-lista" class="space-y-1.5 max-h-64 overflow-y-auto"></div>
                 
-                <!-- Utöka kampanj -->
+                <!-- Utöka utskick -->
                 <div id="kampanj-utoka-section" class="mt-4 pt-4 border-t border-sky-200">
                   <button 
                     id="btn-utoka-kampanj"
@@ -746,29 +746,29 @@ if (supabaseKonfigurerad) {
                     Lägg till fler patienter
                   </button>
                   <p class="text-xs text-gray-500 mt-1 text-center">
-                    Utöka kampanjen med fler mottagare
+                    Utöka utskicket med fler mottagare
                   </p>
                 </div>
                 
                 <!-- Åtgärder för aktiv kampanj -->
                 <div id="kampanj-detalj-actions" class="mt-4 pt-4 border-t border-sky-200">
-                  <p class="text-sm font-medium text-gray-700 mb-2">Avsluta kampanj:</p>
+                  <p class="text-sm font-medium text-gray-700 mb-2">Avsluta utskick:</p>
                   <div class="flex flex-wrap gap-2">
                     <button 
                       id="btn-fylld-manuellt"
                       class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                     >
-                      ✅ Avsluta kampanj - Tiden fylld
+                      ✅ Avsluta utskick - Tiden fylld
                     </button>
                   </div>
                   <p class="text-xs text-gray-500 mt-2">
-                    Avslutar kampanjen och skickar SMS till de som fått förfrågan men ännu inte svarat
+                    Avslutar utskicket och skickar SMS till de som fått förfrågan men ännu inte svarat
                   </p>
                 </div>
                 
                 <!-- Åtgärder för fylld kampanj (utöka med fler platser) -->
                 <div id="kampanj-detalj-utoka" class="mt-4 pt-4 border-t border-sky-200 hidden">
-                  <p class="text-sm font-medium text-gray-700 mb-2">Ny avbokning? Utöka kampanjen:</p>
+                  <p class="text-sm font-medium text-gray-700 mb-2">Ny avbokning? Utöka utskicket:</p>
                   
                   <!-- Alternativ för att rensa NEJ-svar -->
                   <label class="flex items-center gap-2 mb-2 cursor-pointer">
@@ -807,7 +807,7 @@ if (supabaseKonfigurerad) {
                     </button>
                   </div>
                   <p class="text-xs text-gray-500 mt-2">
-                    Återöppnar kampanjen och fortsätter skicka SMS. JA-svar behålls, NEJ-svar kan tas bort.
+                    Återöppnar utskicket och fortsätter skicka SMS. JA-svar behålls, NEJ-svar kan tas bort.
                   </p>
                   <div id="kampanj-platser-info" class="mt-2 text-sm text-sky-700 font-medium"></div>
                   <div id="kampanj-nej-info" class="text-sm text-orange-600"></div>
@@ -823,13 +823,13 @@ if (supabaseKonfigurerad) {
             </div>
           </div>
 
-          <!-- Höger: Lista över aktiva och avslutade kampanjer -->
+          <!-- Höger: Lista över aktiva och avslutade utskick -->
           <div class="lg:col-span-1 space-y-4">
-            <!-- Aktiva kampanjer -->
+            <!-- Aktiva utskick -->
             <div class="bg-white rounded-xl shadow-sm border p-4">
               <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
-                Aktiva kampanjer
+                Aktiva utskick
               </h3>
               
               <div class="space-y-2">
@@ -847,7 +847,7 @@ if (supabaseKonfigurerad) {
                   if (aktivaCount === 0) {
                     return (
                       <div class="text-center py-6">
-                        <p class="text-gray-500 text-sm italic mb-3">Inga aktiva kampanjer</p>
+                        <p class="text-gray-500 text-sm italic mb-3">Inga aktiva utskick</p>
                         <button 
                           onclick="document.getElementById('tab-kampanj')?.click()"
                           class="px-3 py-1.5 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors"
@@ -911,7 +911,7 @@ if (supabaseKonfigurerad) {
               </div>
             </div>
 
-            <!-- Nyligen avslutade kampanjer (senaste 7 dagarna) -->
+            <!-- Nyligen avslutade utskick (senaste 7 dagarna) -->
             <div class="bg-white rounded-xl shadow-sm border p-4">
               <h3 class="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
                 <span class="text-green-600">✓</span>
@@ -930,7 +930,7 @@ if (supabaseKonfigurerad) {
                   ) || [];
                   
                   if (avslutade.length === 0) {
-                    return <p class="text-gray-400 text-sm italic text-center py-3">Inga avslutade kampanjer senaste veckan</p>;
+                    return <p class="text-gray-400 text-sm italic text-center py-3">Inga avslutade utskick senaste veckan</p>;
                   }
                   
                   return avslutade.map(k => (
@@ -1513,7 +1513,7 @@ if (supabaseKonfigurerad) {
         const antalFyllda = k.antalFyllda || 0;
         
         if (actionsEl) {
-          // Avsluta-knappar: visa för aktiva kampanjer
+          // Avsluta-knappar: visa för aktiva utskick
           if (k.status === 'aktiv') {
             actionsEl.classList.remove('hidden');
           } else {
@@ -1529,7 +1529,7 @@ if (supabaseKonfigurerad) {
           }
         }
         if (utokaPlatserEl) {
-          // Utöka med fler platser: visa för fyllda kampanjer
+          // Utöka med fler platser: visa för fyllda utskick
           if (k.status === 'fylld') {
             utokaPlatserEl.classList.remove('hidden');
             if (platserInfoEl) {
@@ -1642,7 +1642,7 @@ if (supabaseKonfigurerad) {
       return div.innerHTML;
     }
 
-    // ========== AVSLUTA KAMPANJ ==========
+    // ========== AVSLUTA UTSKICK ==========
     async function avslutaKampanj(utfall: 'fylld_manuellt') {
       const kampanjId = (window as any).aktivKampanjId;
       if (!kampanjId) {
@@ -1650,7 +1650,7 @@ if (supabaseKonfigurerad) {
         return;
       }
       
-      const bekrafta = confirm('Avsluta kampanjen och markera tiden som fylld?\n\nSMS skickas till de som fått förfrågan men ännu inte svarat, och meddelar att tiden nu är bokad.');
+      const bekrafta = confirm('Avsluta utskicket och markera tiden som fylld?\n\nSMS skickas till de som fått förfrågan men ännu inte svarat, och meddelar att tiden nu är bokad.');
       
       if (!bekrafta) return;
       
@@ -1678,7 +1678,7 @@ if (supabaseKonfigurerad) {
         }
       } catch (err) {
         console.error('Fel vid avslutning:', err);
-        alert('Nätverksfel – kunde inte avsluta kampanjen');
+        alert('Nätverksfel – kunde inte avsluta utskicket');
       }
     }
     
@@ -1687,7 +1687,7 @@ if (supabaseKonfigurerad) {
       avslutaKampanj('fylld_manuellt');
     });
 
-    // ========== UTÖKA KAMPANJ MED FLER PLATSER ==========
+    // ========== UTÖKA UTSKICK MED FLER PLATSER ==========
     async function utokaMedPlatser(antalNyaPlatser: number) {
       const kampanjId = (window as any).aktivKampanjId;
       if (!kampanjId) {
@@ -1697,7 +1697,7 @@ if (supabaseKonfigurerad) {
       
       const rensaNejSvar = (document.getElementById('checkbox-rensa-nej') as HTMLInputElement)?.checked ?? true;
       
-      let bekraftaText = `Lägga till ${antalNyaPlatser} plats${antalNyaPlatser > 1 ? 'er' : ''} till kampanjen?`;
+      let bekraftaText = `Lägga till ${antalNyaPlatser} plats${antalNyaPlatser > 1 ? 'er' : ''} till utskicket?`;
       if (rensaNejSvar) {
         bekraftaText += '\n\n✓ NEJ-svar tas bort (nya patienter kontaktas)';
         bekraftaText += '\n✓ JA-svar behålls';
@@ -1731,7 +1731,7 @@ if (supabaseKonfigurerad) {
         }
       } catch (err) {
         console.error('Fel vid utökning:', err);
-        alert('Nätverksfel – kunde inte utöka kampanjen');
+        alert('Nätverksfel – kunde inte utöka utskicket');
       }
     }
     
@@ -1743,7 +1743,7 @@ if (supabaseKonfigurerad) {
       utokaMedPlatser(2);
     });
 
-    // ========== UTÖKA KAMPANJ MED FLER PATIENTER ==========
+    // ========== UTÖKA UTSKICK MED FLER PATIENTER ==========
     document.getElementById('btn-utoka-kampanj')?.addEventListener('click', async () => {
       const kampanjId = (window as any).aktivKampanjId;
       if (!kampanjId) {
@@ -1793,7 +1793,7 @@ if (supabaseKonfigurerad) {
       
       if (!bekrafta) return;
       
-      // Anropa API för att utöka kampanjen
+      // Anropa API för att utöka utskicket
       try {
         const utResponse = await fetch('/api/kampanj/utoka', {
           method: 'POST',
@@ -1815,7 +1815,7 @@ if (supabaseKonfigurerad) {
         }
       } catch (err) {
         console.error('Fel vid utökning:', err);
-        alert('Nätverksfel – kunde inte utöka kampanjen');
+        alert('Nätverksfel – kunde inte utöka utskicket');
       }
     });
 
