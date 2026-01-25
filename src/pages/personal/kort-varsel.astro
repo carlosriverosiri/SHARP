@@ -1533,12 +1533,14 @@ if (supabaseKonfigurerad) {
         if (!response.ok || data.error) {
           console.error('❌ API-fel:', data.error, 'Details:', data.details);
           
-          // Om kampanjen inte finns (404) - rensa URL och visa huvudvyn
+          // Om kampanjen inte finns (404) - rensa URL och data-attribut
           if (response.status === 404 || data.error === 'Kampanj hittades inte') {
-            console.log('🔄 Kampanj finns inte längre, rensar URL...');
+            console.log('🔄 Kampanj finns inte längre, rensar URL och data-attribut...');
             // Ta bort ?id= från URL utan att ladda om sidan
             const cleanUrl = window.location.pathname;
             window.history.replaceState({}, '', cleanUrl);
+            // Rensa även data-attributet så det inte läses igen vid tab-byte
+            document.querySelector('main')?.removeAttribute('data-kampanj-id');
             // Visa ett kort meddelande
             rubrik.textContent = 'Kampanj borttagen';
             datumEl.textContent = 'Välj en kampanj i listan till höger';
