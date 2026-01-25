@@ -1532,6 +1532,20 @@ if (supabaseKonfigurerad) {
         
         if (!response.ok || data.error) {
           console.error('❌ API-fel:', data.error, 'Details:', data.details);
+          
+          // Om kampanjen inte finns (404) - rensa URL och visa huvudvyn
+          if (response.status === 404 || data.error === 'Kampanj hittades inte') {
+            console.log('🔄 Kampanj finns inte längre, rensar URL...');
+            // Ta bort ?id= från URL utan att ladda om sidan
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, '', cleanUrl);
+            // Visa ett kort meddelande
+            rubrik.textContent = 'Kampanj borttagen';
+            datumEl.textContent = 'Välj en kampanj i listan till höger';
+            listaEl.innerHTML = `<p class="text-amber-600 text-sm">⚠️ Den kampanjen finns inte längre.</p><p class="text-gray-500 text-xs mt-2">URL:en har rensats automatiskt.</p>`;
+            return;
+          }
+          
           rubrik.textContent = 'Kunde inte ladda kampanj';
           datumEl.textContent = `${data.error || 'Okänt fel'}${data.details ? ' – ' + data.details : ''}`;
           listaEl.innerHTML = `<p class="text-red-600 text-sm">API-fel: ${data.error}</p><p class="text-gray-500 text-xs mt-2">Kampanj-ID: ${kampanjId}</p>`;
