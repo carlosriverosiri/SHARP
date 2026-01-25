@@ -8,7 +8,7 @@
 -- För befintliga projekt, kör istället
 -- endast de migrations du saknar.
 -- 
--- Version: 5
+-- Version: 7
 -- Senast uppdaterad: 2026-01-24
 -- ============================================
 
@@ -18,6 +18,8 @@
 -- \i migrations/003-lakare.sql
 -- \i migrations/004-profilbilder.sql
 -- \i migrations/005-prioritet.sql
+-- \i migrations/006-operationsstorlek.sql
+-- \i migrations/007-statistik.sql
 
 -- Eller kopiera innehållet från varje fil hit nedan.
 

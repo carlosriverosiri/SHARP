@@ -893,6 +893,86 @@ if (supabaseKonfigurerad) {
 
       <!-- ========== HISTORIK-VY ========== -->
       <div id="panel-historik" class="tab-panel hidden">
+        
+        <!-- ========== SVARSTIDSSTATISTIK ========== -->
+        <div class="mb-6">
+          <div class="bg-white rounded-xl shadow-sm border p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">
+                ⏱️ Svarstid per kategori
+              </h3>
+              <select 
+                id="svarstid-period"
+                class="text-sm border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
+              >
+                <option value="30">30 dagar</option>
+                <option value="90" selected>90 dagar</option>
+                <option value="all">All tid</option>
+              </select>
+            </div>
+            
+            <div id="svarstid-laddar" class="text-center py-8 text-gray-500">
+              <div class="animate-spin inline-block w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full"></div>
+              <p class="mt-2">Laddar statistik...</p>
+            </div>
+            
+            <div id="svarstid-innehall" class="hidden">
+              <!-- Totalt-kort -->
+              <div class="bg-gradient-to-r from-sky-50 to-sky-100 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm text-sky-700">Totalt antal svar</p>
+                    <p id="svarstid-totalt-antal" class="text-2xl font-bold text-sky-900">-</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-sky-700">Medel svarstid</p>
+                    <p id="svarstid-totalt-medel" class="text-2xl font-bold text-sky-900">- min</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Stapeldiagram -->
+              <div class="mb-6">
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Medel svarstid per kategori</h4>
+                <div id="svarstid-diagram" class="space-y-3">
+                  <!-- Fylls i via JavaScript -->
+                </div>
+              </div>
+              
+              <!-- Tabell -->
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b text-left text-gray-600">
+                      <th class="pb-2 font-medium">Kategori</th>
+                      <th class="pb-2 font-medium text-right">Antal</th>
+                      <th class="pb-2 font-medium text-right">Medel</th>
+                      <th class="pb-2 font-medium text-right">Median</th>
+                      <th class="pb-2 font-medium text-right">JA-rate</th>
+                    </tr>
+                  </thead>
+                  <tbody id="svarstid-tabell">
+                    <!-- Fylls i via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Tid på dagen -->
+              <div class="mt-6 pt-6 border-t">
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Svarstid per tid på dagen</h4>
+                <div id="svarstid-tid-diagram" class="space-y-2">
+                  <!-- Fylls i via JavaScript -->
+                </div>
+              </div>
+            </div>
+            
+            <div id="svarstid-ingen-data" class="hidden text-center py-8 text-gray-500">
+              <p>Ingen svarstidsdata ännu.</p>
+              <p class="text-sm mt-1">Statistik visas när patienter börjar svara på SMS.</p>
+            </div>
+          </div>
+        </div>
+        
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
           
           <!-- Vänster: Statistik -->
@@ -900,12 +980,12 @@ if (supabaseKonfigurerad) {
             <!-- Statistik -->
             <div class="bg-white rounded-xl shadow-sm border p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                📊 Statistik (30 dagar)
+                📊 Kampanjstatistik (30 d)
               </h3>
               
               <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Kampanjer</span>
+                  <span class="text-gray-600">SMS-utskick</span>
                   <span class="font-semibold">{statistik?.kampanjer_30_dagar || 0}</span>
                 </div>
                 <div class="flex justify-between items-center">
@@ -2205,5 +2285,194 @@ if (supabaseKonfigurerad) {
 
     // Initial uppdatering av matchande patienter
     // (görs när laddaPatientpool() har kört klart)
+
+    // ========== SVARSTIDSSTATISTIK ==========
+    const KATEGORI_FARGER: Record<string, string> = {
+      'AKUT': 'bg-red-500',
+      'Sjukskriven': 'bg-orange-500',
+      'Mycket ont': 'bg-amber-500',
+      'Normal': 'bg-sky-500',
+    };
+
+    const KATEGORI_IKONER: Record<string, string> = {
+      'AKUT': '🚨',
+      'Sjukskriven': '📋',
+      'Mycket ont': '🔥',
+      'Normal': '⏰',
+    };
+
+    async function laddaSvarstidsstatistik(period: string = '90') {
+      const laddarEl = document.getElementById('svarstid-laddar');
+      const innehallEl = document.getElementById('svarstid-innehall');
+      const ingenDataEl = document.getElementById('svarstid-ingen-data');
+      
+      if (!laddarEl || !innehallEl || !ingenDataEl) return;
+      
+      // Visa laddningsindikator
+      laddarEl.classList.remove('hidden');
+      innehallEl.classList.add('hidden');
+      ingenDataEl.classList.add('hidden');
+      
+      try {
+        const response = await fetch(`/api/statistik/svarstid?period=${period}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Kunde inte hämta statistik');
+        }
+        
+        // Dölj laddningsindikator
+        laddarEl.classList.add('hidden');
+        
+        // Kolla om det finns data
+        if (data.totalt.antalSvar === 0) {
+          ingenDataEl.classList.remove('hidden');
+          return;
+        }
+        
+        innehallEl.classList.remove('hidden');
+        
+        // Uppdatera totalt
+        const totaltAntalEl = document.getElementById('svarstid-totalt-antal');
+        const totaltMedelEl = document.getElementById('svarstid-totalt-medel');
+        if (totaltAntalEl) totaltAntalEl.textContent = data.totalt.antalSvar.toString();
+        if (totaltMedelEl) totaltMedelEl.textContent = `${data.totalt.medelSvarstidMin} min`;
+        
+        // Rendera stapeldiagram
+        renderaSvarstidDiagram(data.kategorier);
+        
+        // Rendera tabell
+        renderaSvarstidTabell(data.kategorier);
+        
+        // Rendera tid på dagen
+        renderaTidPaDagenDiagram(data.tidPaDagen);
+        
+      } catch (error) {
+        console.error('Fel vid laddning av svarstidsstatistik:', error);
+        laddarEl.classList.add('hidden');
+        ingenDataEl.classList.remove('hidden');
+      }
+    }
+
+    function renderaSvarstidDiagram(kategorier: any[]) {
+      const diagramEl = document.getElementById('svarstid-diagram');
+      if (!diagramEl) return;
+      
+      // Hitta max svarstid för skalning
+      const maxTid = Math.max(...kategorier.map(k => k.medelSvarstidMin), 1);
+      
+      diagramEl.innerHTML = kategorier.map(k => {
+        const bredd = Math.max((k.medelSvarstidMin / maxTid) * 100, 2);
+        const farg = KATEGORI_FARGER[k.kategori] || 'bg-gray-500';
+        const ikon = KATEGORI_IKONER[k.kategori] || '';
+        
+        return `
+          <div class="flex items-center gap-3">
+            <div class="w-28 text-sm text-gray-700 flex items-center gap-1">
+              <span>${ikon}</span>
+              <span>${k.kategori}</span>
+            </div>
+            <div class="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
+              <div 
+                class="${farg} h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                style="width: ${bredd}%"
+              >
+                ${k.antalSvar > 0 ? `<span class="text-xs text-white font-medium">${k.medelSvarstidMin} min</span>` : ''}
+              </div>
+            </div>
+            <div class="w-12 text-right text-sm text-gray-500">
+              n=${k.antalSvar}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderaSvarstidTabell(kategorier: any[]) {
+      const tabellEl = document.getElementById('svarstid-tabell');
+      if (!tabellEl) return;
+      
+      tabellEl.innerHTML = kategorier.map(k => {
+        const ikon = KATEGORI_IKONER[k.kategori] || '';
+        
+        return `
+          <tr class="border-b border-gray-100">
+            <td class="py-2">
+              <span class="inline-flex items-center gap-1">
+                <span>${ikon}</span>
+                <span>${k.kategori}</span>
+              </span>
+            </td>
+            <td class="py-2 text-right text-gray-600">${k.antalSvar}</td>
+            <td class="py-2 text-right font-medium">${k.medelSvarstidMin} min</td>
+            <td class="py-2 text-right text-gray-600">${Math.round(k.medianSvarstidSek / 60)} min</td>
+            <td class="py-2 text-right">
+              <span class="${k.jaRate >= 50 ? 'text-green-600' : 'text-gray-600'} font-medium">
+                ${k.jaRate}%
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderaTidPaDagenDiagram(tidPaDagen: any[]) {
+      const diagramEl = document.getElementById('svarstid-tid-diagram');
+      if (!diagramEl) return;
+      
+      // Hitta max svarstid för skalning
+      const maxTid = Math.max(...tidPaDagen.map(t => t.medelSvarstidMin), 1);
+      
+      diagramEl.innerHTML = tidPaDagen.map(t => {
+        const bredd = t.antalSvar > 0 ? Math.max((t.medelSvarstidMin / maxTid) * 100, 2) : 0;
+        
+        return `
+          <div class="flex items-center gap-2 text-sm">
+            <div class="w-12 text-gray-600">${t.tidsblock}</div>
+            <div class="flex-1 bg-gray-100 rounded h-4 overflow-hidden">
+              <div 
+                class="bg-sky-400 h-full rounded transition-all duration-500"
+                style="width: ${bredd}%"
+              ></div>
+            </div>
+            <div class="w-16 text-right text-gray-600">
+              ${t.antalSvar > 0 ? `${t.medelSvarstidMin} min` : '-'}
+            </div>
+            <div class="w-12 text-right text-gray-500 text-xs">
+              n=${t.antalSvar}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Hantera periodväljare
+    const periodSelect = document.getElementById('svarstid-period') as HTMLSelectElement;
+    if (periodSelect) {
+      periodSelect.addEventListener('change', () => {
+        laddaSvarstidsstatistik(periodSelect.value);
+      });
+    }
+
+    // Ladda svarstidsstatistik när Historik-fliken visas
+    const historikTab = document.getElementById('tab-historik');
+    if (historikTab) {
+      historikTab.addEventListener('click', () => {
+        // Ladda statistik första gången fliken klickas
+        const innehallEl = document.getElementById('svarstid-innehall');
+        const ingenDataEl = document.getElementById('svarstid-ingen-data');
+        const laddarEl = document.getElementById('svarstid-laddar');
+        
+        // Om ingen av vyerna visas (första laddningen)
+        if (innehallEl?.classList.contains('hidden') && 
+            ingenDataEl?.classList.contains('hidden') &&
+            laddarEl?.classList.contains('hidden')) {
+          // Visa laddar igen och hämta
+          laddarEl?.classList.remove('hidden');
+        }
+        
+        laddaSvarstidsstatistik(periodSelect?.value || '90');
+      });
+    }
   </script>
 </BaseLayout>
