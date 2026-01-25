@@ -14,6 +14,7 @@
 | 4 | [GDPR](./04-GDPR.md) | GDPR-compliance, 46elks, IMY-kommunikation |
 | 5 | [Open Source](./05-OPEN-SOURCE.md) | Plan för att göra systemet tillgängligt som öppen källkod |
 | 6 | [Vision](./06-VISION.md) | Kommersiell vision och långsiktig roadmap |
+| 7 | [AI-förberedelse](./07-AI-FORBEREDELSE.md) | Datasamling och schema för framtida ML/AI-integration |
 
 ---
 
@@ -85,5 +86,7 @@ supabase/migrations/                    # Databasschema
 - ✅ Smart intervall-logik
 - ✅ Statistik och dashboard
 - ✅ Trendanalys
-- 📋 Prediktion (planerad)
+- ✅ AI-förberedelse (datasamling aktiv)
+- 📋 Regelbaserad prediktion (planerad, kräver 500+ datapunkter)
+- 📋 ML-modell (planerad, kräver 2000+ datapunkter)
 - 📋 Open source-release (planerad)
