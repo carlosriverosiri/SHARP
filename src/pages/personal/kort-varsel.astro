@@ -894,6 +894,77 @@ if (supabaseKonfigurerad) {
       <!-- ========== HISTORIK-VY ========== -->
       <div id="panel-historik" class="tab-panel hidden">
         
+        <!-- ========== ÖVERSIKT / DASHBOARD ========== -->
+        <div class="mb-6">
+          <!-- Periodväljare för hela dashboard -->
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">📊 Statistik</h2>
+            <select 
+              id="dashboard-period"
+              class="text-sm border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
+            >
+              <option value="30" selected>30 dagar</option>
+              <option value="90">90 dagar</option>
+              <option value="all">All tid</option>
+            </select>
+          </div>
+          
+          <!-- Nyckeltalskort -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <!-- SMS-utskick -->
+            <div class="bg-white rounded-xl shadow-sm border p-4">
+              <div class="flex items-center justify-between">
+                <p class="text-sm text-gray-600">SMS-utskick</p>
+                <span id="nyckeltal-kampanjer-trend" class="text-xs font-medium hidden"></span>
+              </div>
+              <p id="nyckeltal-kampanjer" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+            </div>
+            
+            <!-- Fyllda tider -->
+            <div class="bg-white rounded-xl shadow-sm border p-4">
+              <p class="text-sm text-gray-600">Fyllda tider</p>
+              <p class="mt-1">
+                <span id="nyckeltal-fyllda-sms" class="text-2xl font-bold text-green-600">-</span>
+                <span class="text-sm text-gray-500"> via SMS</span>
+              </p>
+              <p class="text-xs text-gray-500 mt-1">
+                + <span id="nyckeltal-fyllda-manuellt">-</span> manuellt
+              </p>
+            </div>
+            
+            <!-- SMS skickade -->
+            <div class="bg-white rounded-xl shadow-sm border p-4">
+              <p class="text-sm text-gray-600">SMS skickade</p>
+              <p id="nyckeltal-sms-skickade" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+              <p class="text-xs text-gray-500 mt-1">
+                <span id="nyckeltal-sms-per-fylld">-</span> per fylld tid
+              </p>
+            </div>
+            
+            <!-- JA-rate -->
+            <div class="bg-white rounded-xl shadow-sm border p-4">
+              <div class="flex items-center justify-between">
+                <p class="text-sm text-gray-600">JA-rate</p>
+                <span id="nyckeltal-jarate-trend" class="text-xs font-medium hidden"></span>
+              </div>
+              <p id="nyckeltal-jarate" class="text-2xl font-bold text-sky-600 mt-1">-</p>
+              <p class="text-xs text-gray-500 mt-1">
+                Svarsfrekvens: <span id="nyckeltal-svarsrate">-</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Svarsfördelning per kategori -->
+          <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              📈 Svarsfördelning per kategori
+            </h3>
+            <div class="h-64">
+              <canvas id="svarsfordelning-chart"></canvas>
+            </div>
+          </div>
+        </div>
+        
         <!-- ========== SVARSTIDSSTATISTIK ========== -->
         <div class="mb-6">
           <div class="bg-white rounded-xl shadow-sm border p-6">
@@ -2286,6 +2357,161 @@ if (supabaseKonfigurerad) {
     // Initial uppdatering av matchande patienter
     // (görs när laddaPatientpool() har kört klart)
 
+    // ========== DASHBOARD / ÖVERSIKT ==========
+    let svarsfordelningChart: any = null;
+
+    async function laddaDashboard(period: string = '30') {
+      try {
+        const response = await fetch(`/api/statistik/oversikt?period=${period}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Kunde inte hämta statistik');
+        }
+        
+        // Uppdatera nyckeltal
+        uppdateraNyckeltal(data.nyckeltal, data.trend);
+        
+        // Rendera svarsfördelning
+        renderaSvarsfordelningChart(data.svarsfordelning);
+        
+      } catch (error) {
+        console.error('Fel vid laddning av dashboard:', error);
+      }
+    }
+
+    function uppdateraNyckeltal(nyckeltal: any, trend: any) {
+      // Kampanjer
+      const kampanjerEl = document.getElementById('nyckeltal-kampanjer');
+      const kampanjerTrendEl = document.getElementById('nyckeltal-kampanjer-trend');
+      if (kampanjerEl) kampanjerEl.textContent = nyckeltal.kampanjer.toString();
+      if (kampanjerTrendEl && trend.kampanjerTrend !== 0) {
+        kampanjerTrendEl.classList.remove('hidden');
+        kampanjerTrendEl.textContent = trend.kampanjerTrend > 0 
+          ? `↑ ${trend.kampanjerTrend}` 
+          : `↓ ${Math.abs(trend.kampanjerTrend)}`;
+        kampanjerTrendEl.className = `text-xs font-medium ${trend.kampanjerTrend > 0 ? 'text-green-600' : 'text-red-600'}`;
+      }
+      
+      // Fyllda tider
+      const fylldaSmsEl = document.getElementById('nyckeltal-fyllda-sms');
+      const fylldaManueltEl = document.getElementById('nyckeltal-fyllda-manuellt');
+      if (fylldaSmsEl) fylldaSmsEl.textContent = nyckeltal.fylldaViaSms.toString();
+      if (fylldaManueltEl) fylldaManueltEl.textContent = nyckeltal.fylldaManuellt.toString();
+      
+      // SMS skickade
+      const smsSkickadeEl = document.getElementById('nyckeltal-sms-skickade');
+      const smsPerFylldEl = document.getElementById('nyckeltal-sms-per-fylld');
+      if (smsSkickadeEl) smsSkickadeEl.textContent = nyckeltal.smsSkickade.toString();
+      if (smsPerFylldEl) smsPerFylldEl.textContent = nyckeltal.smsPerFylldTid.toString();
+      
+      // JA-rate
+      const jarateEl = document.getElementById('nyckeltal-jarate');
+      const jarateTrendEl = document.getElementById('nyckeltal-jarate-trend');
+      const svarsrateEl = document.getElementById('nyckeltal-svarsrate');
+      if (jarateEl) jarateEl.textContent = `${nyckeltal.jaRate}%`;
+      if (svarsrateEl) svarsrateEl.textContent = `${nyckeltal.svarsRate}%`;
+      if (jarateTrendEl && trend.jaRateTrend !== 0) {
+        jarateTrendEl.classList.remove('hidden');
+        jarateTrendEl.textContent = trend.jaRateTrend > 0 
+          ? `↑ ${trend.jaRateTrend}%` 
+          : `↓ ${Math.abs(trend.jaRateTrend)}%`;
+        jarateTrendEl.className = `text-xs font-medium ${trend.jaRateTrend > 0 ? 'text-green-600' : 'text-red-600'}`;
+      }
+    }
+
+    async function renderaSvarsfordelningChart(svarsfordelning: any[]) {
+      await laddaChartJs();
+      
+      const canvas = document.getElementById('svarsfordelning-chart') as HTMLCanvasElement;
+      if (!canvas || !Chart) return;
+      
+      if (svarsfordelningChart) {
+        svarsfordelningChart.destroy();
+      }
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      svarsfordelningChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: svarsfordelning.map(s => `${KATEGORI_IKONER[s.kategori] || ''} ${s.kategori}`),
+          datasets: [
+            {
+              label: 'JA',
+              data: svarsfordelning.map(s => s.ja),
+              backgroundColor: '#22c55e', // green-500
+              borderRadius: 4,
+            },
+            {
+              label: 'NEJ',
+              data: svarsfordelning.map(s => s.nej),
+              backgroundColor: '#ef4444', // red-500
+              borderRadius: 4,
+            },
+            {
+              label: 'Inget svar',
+              data: svarsfordelning.map(s => s.ingenSvar),
+              backgroundColor: '#d1d5db', // gray-300
+              borderRadius: 4,
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            tooltip: {
+              callbacks: {
+                afterBody: function(context: any) {
+                  const idx = context[0].dataIndex;
+                  const s = svarsfordelning[idx];
+                  return [`JA-rate: ${s.jaRate}%`, `Totalt: ${s.totalt} SMS`];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Antal'
+              }
+            }
+          },
+          animation: {
+            duration: 800,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    }
+
+    // Hantera dashboard-periodväljare
+    const dashboardPeriodSelect = document.getElementById('dashboard-period') as HTMLSelectElement;
+    if (dashboardPeriodSelect) {
+      dashboardPeriodSelect.addEventListener('change', () => {
+        const period = dashboardPeriodSelect.value;
+        laddaDashboard(period);
+        // Synka svarstid-perioden
+        const svarstidPeriod = document.getElementById('svarstid-period') as HTMLSelectElement;
+        if (svarstidPeriod) {
+          svarstidPeriod.value = period;
+          laddaSvarstidsstatistik(period);
+        }
+      });
+    }
+
     // ========== SVARSTIDSSTATISTIK (Chart.js) ==========
     // Importera Chart.js dynamiskt
     let Chart: any = null;
@@ -2566,11 +2792,18 @@ if (supabaseKonfigurerad) {
       });
     }
 
-    // Ladda svarstidsstatistik när Historik-fliken visas
+    // Ladda statistik när Historik-fliken visas
     const historikTab = document.getElementById('tab-historik');
+    let dashboardLaddad = false;
+    
     if (historikTab) {
       historikTab.addEventListener('click', () => {
-        // Ladda statistik första gången fliken klickas
+        const period = dashboardPeriodSelect?.value || '30';
+        
+        // Ladda dashboard (alltid vid klick för färsk data)
+        laddaDashboard(period);
+        
+        // Ladda svarstidsstatistik
         const innehallEl = document.getElementById('svarstid-innehall');
         const ingenDataEl = document.getElementById('svarstid-ingen-data');
         const laddarEl = document.getElementById('svarstid-laddar');
@@ -2579,11 +2812,10 @@ if (supabaseKonfigurerad) {
         if (innehallEl?.classList.contains('hidden') && 
             ingenDataEl?.classList.contains('hidden') &&
             laddarEl?.classList.contains('hidden')) {
-          // Visa laddar igen och hämta
           laddarEl?.classList.remove('hidden');
         }
         
-        laddaSvarstidsstatistik(periodSelect?.value || '90');
+        laddaSvarstidsstatistik(period);
       });
     }
   </script>
