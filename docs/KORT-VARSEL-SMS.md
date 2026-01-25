@@ -460,71 +460,86 @@ Patienter som tackat nej måste markeras i journalsystemet:
 
 ---
 
-## 1c. Prioritetsbaserade SMS-intervall (nytt!)
+## 1c. Smart intervall-logik (hybrid)
 
-Systemet har nu **automatiska intervall baserat på patientens prioritet**. Detta gör att akuta patienter alltid kontaktas först och får mer tid att svara.
+Systemet använder en **hybrid approach** för SMS-intervall som kombinerar:
+1. **Dagar till operation** - avgör basintervall
+2. **Tidspress** - justerar om det är sent på dagen innan
+3. **Manuell override** - personal kan alltid ändra
 
-### Prioritetsnivåer
+### Automatiskt förval baserat på dagar
 
-| Prioritet | Ikon | Intervall | Beskrivning |
-|-----------|------|-----------|-------------|
-| 🚨 **AKUT** | 🚨 | 60 min | Måste opereras snarast, sitter standby |
-| 📋 **Sjukskriven** | 📋 | 30 min | Stark prioritet, ofta kopplat till smärta |
-| 🔥 **Mycket ont** | 🔥 | 20 min | Hög prioritet pga smärta |
-| (normal) | - | 10 min | Standardintervall |
+| Dagar kvar | Intervall | Logik |
+|------------|-----------|-------|
+| **Samma dag** | 5 min | Desperat läge - maximal hastighet |
+| **1 dag (dagen innan)** | 5-10 min | Måste lösas idag - högt tempo |
+| **2 dagar** | 10 min | Gott om tid men vill lösa snart |
+| **3+ dagar** | 20 min | Lugnt tempo - systemet tuggar på |
 
-### Automatisk sortering
+### Tidspress (dagen innan operation)
 
-Vid kampanjskapande sorteras patienter **automatiskt efter prioritet**:
+Om det är **dagen innan** operation justeras intervallet baserat på klockan:
 
-```
-1. 🚨 AKUT-patienter (alltid först!)
-2. 📋 Sjukskrivna
-3. 🔥 Patienter med mycket ont
-4. Övriga (sorterade på namn/dagar kvar)
-```
+| Tid på dagen | Justering | Anledning |
+|--------------|-----------|-----------|
+| Före 12:00 | Normal | Gott om tid kvar |
+| 12:00-14:00 | -25% | Börjar bli press |
+| 14:00-16:00 | -50% | Stressläge |
+| Efter 16:00 | Minimum (5 min) | Desperat - hinner knappt |
 
-### Flöde med prioriterade patienter
+### Automatisk varning
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  10:00  🚨 AKUT-patient får SMS                                  │
-│         ↓ vänta 60 minuter                                       │
-│  11:00  📋 Sjukskriven patient får SMS                           │
-│         ↓ vänta 30 minuter                                       │
-│  11:30  🔥 Patient med ont får SMS                               │
-│         ↓ vänta 20 minuter                                       │
-│  11:50  Normal patient får SMS                                   │
-│         ↓ vänta 10 minuter                                       │
-│  12:00  Nästa normal patient...                                  │
-├──────────────────────────────────────────────────────────────────┤
-│  Om någon svarar JA → Stoppa automatiskt                        │
-└──────────────────────────────────────────────────────────────────┘
-```
-
-### Manuellt intervall (backup)
-
-Personal kan fortfarande välja manuellt intervall:
+Om tiden inte räcker visas en varning:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Intervall mellan SMS:                                          │
+│  ⚠️ Med 10 min intervall och 8 patienter tar det 80 min.       │
+│     Du har ca 45 min kvar till 16:00.                          │
+│     Rekommenderat intervall: 5 min.                            │
 │                                                                 │
-│  (•) Automatiskt (baserat på prioritet)                        │
-│      💡 AKUT: 60 min, Sjukskriven: 30 min, Ont: 20 min         │
-│                                                                 │
-│  ( ) Manuellt:                                                  │
-│      [ 5 ] [10 ] [15 ] [20 ] [30 ] [45 ] [60 ] minuter         │
-│                                                                 │
+│     [Använd rekommenderat intervall]                           │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+### Prioriteringsordning (sortering)
+
+Patienter sorteras **alltid efter medicinsk prioritet** (oavsett intervall):
+
+```
+1. 🚨 AKUT-patienter (alltid först!)
+2. 📋 Sjukskrivna (ont + funktionsbortfall)
+3. 🔥 Patienter med mycket ont
+4. 👴 Pensionärer (67+) - flexibla tider
+5. ⏰ Övriga (normal prioritet)
+```
+
+Inom varje prioritetsnivå sorteras på **sida (HÖ/VÄ)** om kampanjen angett önskad sida.
+
+### Manuell override
+
+Personal kan **alltid** ändra intervallet manuellt:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Tid mellan varje SMS-utskick                                   │
+│                                                                 │
+│  [ 10 minuter ▼ ]  [Auto]                                      │
+│                                                                 │
+│  💡 Rekommenderat intervall: 10 minuter                        │
+│     2 dagar kvar - normalt tempo                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+- **"Auto"-badge** visas när systemet valt intervallet
+- Ändrar personal intervallet försvinner "Auto"
+- Vid nytt datum återställs auto-valet
+
 | Intervall | Användningsfall |
 |-----------|-----------------|
-| **5 min** | Mycket bråttom, få timmar kvar |
-| **10 min** | Standard, 1-2 dagar |
-| **15-20 min** | Gott om tid, 2-3 dagar |
-| **30-60 min** | Låg stress, 3+ dagar |
+| **5 min** | Samma dag eller sent dagen innan |
+| **10 min** | Dagen innan (normalläge) eller 2 dagar kvar |
+| **15-20 min** | 2-3 dagar kvar |
+| **30-60 min** | 3+ dagar kvar - lugnt tempo |
 
 ---
 

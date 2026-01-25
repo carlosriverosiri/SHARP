@@ -778,30 +778,59 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
             <div>
               <h3 class="font-bold text-lg mb-4 text-slate-200">Prioritetsalgoritm (detaljerad)</h3>
               
+              <!-- Smart intervall baserat på dagar -->
+              <div class="bg-slate-700 rounded-xl p-4 mb-4">
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">1. Smart intervall (baserat på tid kvar)</h4>
+                <p class="text-slate-400 text-xs mb-3">
+                  Systemet väljer automatiskt intervall baserat på hur många dagar det är kvar till operationen.
+                </p>
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-slate-400 text-left">
+                      <th class="pb-2">Dagar kvar</th>
+                      <th class="pb-2">Intervall</th>
+                      <th class="pb-2">Läge</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-slate-200">
+                    <tr><td>Samma dag</td><td>5 min</td><td>🔴 Desperat</td></tr>
+                    <tr><td>1 dag (dagen innan)</td><td>5-10 min</td><td>🟠 Stressigt</td></tr>
+                    <tr><td>2 dagar</td><td>10 min</td><td>🟡 Normalt</td></tr>
+                    <tr><td>3+ dagar</td><td>20 min</td><td>🟢 Lugnt</td></tr>
+                  </tbody>
+                </table>
+                <p class="text-slate-500 text-xs mt-3">
+                  💡 <strong>Dagen innan:</strong> Intervallet justeras även baserat på klockan. 
+                  Efter 14:00 minskas intervallet för att hinna klart före 16:00.
+                </p>
+              </div>
+
               <!-- Huvudprioritet -->
               <div class="bg-slate-700 rounded-xl p-4 mb-4">
-                <h4 class="font-bold text-slate-300 mb-3 text-sm">1. Medicinsk prioritet (primär sortering)</h4>
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">2. Medicinsk prioritet (sorteringsordning)</h4>
+                <p class="text-slate-400 text-xs mb-3">
+                  Oavsett intervall skickas SMS alltid i denna prioritetsordning:
+                </p>
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="text-slate-400 text-left">
                       <th class="pb-2">Prioritet</th>
-                      <th class="pb-2">Intervall</th>
                       <th class="pb-2">Beskrivning</th>
                     </tr>
                   </thead>
                   <tbody class="text-slate-200">
-                    <tr><td>🚨 AKUT</td><td>60 min</td><td>Måste opereras snarast</td></tr>
-                    <tr><td>📋 Sjukskriven</td><td>30 min</td><td>Ont + funktionsbortfall, kan ej arbeta</td></tr>
-                    <tr><td>🔥 Mycket ont</td><td>20 min</td><td>Hög smärtnivå men kan arbeta</td></tr>
-                    <tr><td>👴 Pensionär (67+)</td><td>10 min</td><td>Flexibla tider, lättare att komma</td></tr>
-                    <tr><td>⏰ Normal</td><td>10 min</td><td>Standardintervall</td></tr>
+                    <tr><td>🚨 AKUT</td><td>Måste opereras snarast</td></tr>
+                    <tr><td>📋 Sjukskriven</td><td>Ont + funktionsbortfall, kan ej arbeta</td></tr>
+                    <tr><td>🔥 Mycket ont</td><td>Hög smärtnivå men kan arbeta</td></tr>
+                    <tr><td>👴 Pensionär (67+)</td><td>Flexibla tider, lättare att komma</td></tr>
+                    <tr><td>⏰ Normal</td><td>Standard väntelista</td></tr>
                   </tbody>
                 </table>
               </div>
 
               <!-- Sekundär sortering -->
               <div class="bg-slate-700 rounded-xl p-4 mb-4">
-                <h4 class="font-bold text-slate-300 mb-3 text-sm">2. Sida HÖ/VÄ (sekundär sortering)</h4>
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">3. Sida HÖ/VÄ (sekundär sortering)</h4>
                 <p class="text-slate-400 text-xs mb-3">
                   Inom varje prioritetsnivå sorteras patienter efter om deras sida matchar kampanjens önskade sida.
                 </p>
@@ -826,7 +855,7 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
 
               <!-- Operationsstorlek -->
               <div class="bg-slate-700 rounded-xl p-4">
-                <h4 class="font-bold text-slate-300 mb-3 text-sm">3. Operationsstorlek (filtrering)</h4>
+                <h4 class="font-bold text-slate-300 mb-3 text-sm">4. Operationsstorlek (filtrering)</h4>
                 <p class="text-slate-400 text-xs mb-3">
                   Vid kampanjskapande filtreras patienter baserat på om operationsstorleken matchar den lediga tiden.
                 </p>
