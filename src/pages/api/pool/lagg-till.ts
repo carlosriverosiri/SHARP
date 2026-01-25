@@ -65,15 +65,14 @@ function hashaTelefon(telefon: string): string {
 function formateraTelefon(telefon: string): string {
   let clean = telefon.replace(/\D/g, '');
   if (clean.startsWith('0')) {
-    clean = '+46' + clean.slice(1);
+    // 0701234567 → +46701234567
+    return '+46' + clean.slice(1);
   } else if (clean.startsWith('46')) {
-    clean = '+' + clean;
-  } else {
-    clean = '+46' + clean;
-  } else {
-    clean = '+' + clean;
+    // 46701234567 → +46701234567
+    return '+' + clean;
   }
-  return clean;
+  // Fallback: anta svenskt nummer
+  return '+46' + clean;
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
