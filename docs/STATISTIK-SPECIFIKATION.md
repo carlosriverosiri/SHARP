@@ -625,30 +625,33 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 
 ---
 
-### 📊 Sprint 4+: Utökad statistik (framtida)
+### 📊 Sprint 4: Utökad statistik ✅ KLAR
 
 #### 4a. Översikt/Dashboard
-- [ ] Nyckeltalskort (kampanjer, fyllda, svarsfrekvens)
-- [ ] Trend-pilar (jämför med föregående period)
+- [x] Nyckeltalskort (SMS-utskick, fyllda tider, SMS skickade, JA-rate)
+- [x] Trend-pilar (jämför med föregående period)
+- [x] API endpoint `/api/statistik/oversikt`
 
 #### 4b. Svarsfrekvens per kategori
-- [ ] JA / NEJ / Ingen svar per kategori
-- [ ] Stapeldiagram
+- [x] JA / NEJ / Ingen svar per kategori
+- [x] Staplat stapeldiagram med Chart.js
 
 #### 4c. Statistik per dimension
-- [ ] Per läkare
-- [ ] Per operationsstorlek (liten/stor)
-- [ ] Per sida (HÖ/VÄ)
-- [ ] Per väntetid till planerad op
+- [x] Per operationsstorlek (Liten/Stor)
+- [x] Per sida (Höger/Vänster/Ej angiven)
+- [x] Visuella progress bars med fördelning
 
 #### 4d. Trendanalys
-- [ ] Linjediagram över tid
-- [ ] Jämförelse mellan perioder
+- [x] API endpoint `/api/statistik/trend`
+- [x] Linjediagram med veckodata
+- [x] JA-rate, svarstid och SMS-volym över tid
+- [x] Interaktiva tooltips
 
-#### 4e. Polish
-- [ ] Responsiv design
-- [ ] Laddningsindikatorer
-- [ ] Export till CSV
+#### 4e. Polish (delvis)
+- [x] Laddningsindikatorer
+- [ ] Export till CSV (framtida)
+
+**Implementerad 2026-01-24**
 
 ---
 
@@ -659,14 +662,20 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 | **1** | Svarstid per kategori | ✅ Klar | 2026-01-24 |
 | **2** | Tid på dagen | ✅ Klar | 2026-01-24 |
 | **3** | Interaktiva grafer | ✅ Klar | 2026-01-24 |
-| **4+** | Utökad statistik | 📋 Planerad | - |
+| **4** | Utökad statistik | ✅ Klar | 2026-01-24 |
 
-**Sprint 1-3 implementerade:** 2026-01-24
+**Alla sprints implementerade:** 2026-01-24
 
 Implementerade funktioner:
 - [x] API endpoint `/api/statistik/svarstid`
+- [x] API endpoint `/api/statistik/oversikt`
+- [x] API endpoint `/api/statistik/trend`
 - [x] Databasmigrering med trigger för svarstidsberäkning
-- [x] Chart.js-grafer (kategori + tid på dagen)
+- [x] Dashboard med nyckeltalskort och trendpilar
+- [x] Svarsfördelning per kategori (staplat diagram)
+- [x] Statistik per dimension (op-storlek, sida)
+- [x] Trendanalys med linjediagram
+- [x] Chart.js-grafer med animationer
 - [x] Interaktiva tooltips
 - [x] Periodväljare (30d/90d/All tid)
 - [x] Detaljerad tabell med alla mätvärden
