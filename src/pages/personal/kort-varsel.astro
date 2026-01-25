@@ -750,7 +750,7 @@ if (supabaseKonfigurerad) {
                   </p>
                 </div>
                 
-                <!-- Åtgärder -->
+                <!-- Åtgärder för aktiv kampanj -->
                 <div id="kampanj-detalj-actions" class="mt-4 pt-4 border-t border-sky-200">
                   <p class="text-sm font-medium text-gray-700 mb-2">Avsluta kampanj:</p>
                   <div class="flex flex-wrap gap-2">
@@ -764,6 +764,29 @@ if (supabaseKonfigurerad) {
                   <p class="text-xs text-gray-500 mt-2">
                     Avslutar kampanjen och skickar SMS till de som fått förfrågan men ännu inte svarat
                   </p>
+                </div>
+                
+                <!-- Åtgärder för fylld kampanj (utöka med fler platser) -->
+                <div id="kampanj-detalj-utoka" class="mt-4 pt-4 border-t border-sky-200 hidden">
+                  <p class="text-sm font-medium text-gray-700 mb-2">Ny avbokning? Utöka kampanjen:</p>
+                  <div class="flex flex-wrap gap-2 items-center">
+                    <button 
+                      id="btn-utoka-en-plats"
+                      class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors"
+                    >
+                      ➕ Lägg till 1 plats
+                    </button>
+                    <button 
+                      id="btn-utoka-tva-platser"
+                      class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors"
+                    >
+                      ➕ Lägg till 2 platser
+                    </button>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2">
+                    Återöppnar kampanjen och fortsätter skicka SMS till patienter som inte kontaktats
+                  </p>
+                  <div id="kampanj-platser-info" class="mt-2 text-sm text-sky-700 font-medium"></div>
                 </div>
               </div>
             </div>
@@ -786,42 +809,81 @@ if (supabaseKonfigurerad) {
               </h3>
               
               <div class="space-y-2">
-                {kampanjer?.filter(k => k.status === 'aktiv' || k.status === 'fylld').length === 0 && (
-                  <div class="text-center py-6">
-                    <p class="text-gray-500 text-sm italic mb-3">Inga aktiva kampanjer</p>
-                    <button 
-                      onclick="document.getElementById('tab-kampanj')?.click()"
-                      class="px-3 py-1.5 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors"
-                    >
-                      📤 Skapa SMS-utskick
-                    </button>
-                  </div>
-                )}
-                {kampanjer?.filter(k => k.status === 'aktiv' || k.status === 'fylld').map(k => (
-                  <a 
-                    href={`/personal/kort-varsel?id=${k.id}`}
-                    class="block p-3 border border-gray-200 rounded-lg hover:border-sky-400 hover:bg-sky-50 transition-colors"
-                  >
-                    <div class="flex items-center justify-between mb-1">
-                      <span class={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                        k.status === 'fylld' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {k.status === 'fylld' ? '🎉 Fylld' : '⏳ Väntar'}
-                      </span>
-                      <span class="text-gray-400 text-xs">
-                        {k.skapad_vid ? new Date(k.skapad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }) : '-'}
-                      </span>
-                    </div>
-                    <div class="font-medium text-gray-900 text-sm">
-                      {k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Inget datum'}
-                    </div>
-                    {k.lakare && (
-                      <div class="text-xs text-gray-500 mt-1">{k.lakare}</div>
-                    )}
-                  </a>
-                ))}
+                {(() => {
+                  // Filtrera aktiva/fyllda som INTE har passerat datum
+                  const aktivaCount = kampanjer?.filter(k => {
+                    if (k.status !== 'aktiv' && k.status !== 'fylld') return false;
+                    if (!k.datum) return true;
+                    const opDatum = new Date(k.datum);
+                    const idag = new Date();
+                    idag.setHours(0,0,0,0);
+                    return opDatum >= idag;
+                  }).length || 0;
+                  
+                  if (aktivaCount === 0) {
+                    return (
+                      <div class="text-center py-6">
+                        <p class="text-gray-500 text-sm italic mb-3">Inga aktiva kampanjer</p>
+                        <button 
+                          onclick="document.getElementById('tab-kampanj')?.click()"
+                          class="px-3 py-1.5 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors"
+                        >
+                          📤 Skapa SMS-utskick
+                        </button>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
+                {(() => {
+                  // Filtrera aktiva/fyllda som INTE har passerat datum
+                  const aktiva = kampanjer?.filter(k => {
+                    if (k.status !== 'aktiv' && k.status !== 'fylld') return false;
+                    if (!k.datum) return true;
+                    const opDatum = new Date(k.datum);
+                    const idag = new Date();
+                    idag.setHours(0,0,0,0);
+                    return opDatum >= idag;
+                  }) || [];
+                  
+                  return aktiva.map(k => {
+                    const antalPlatser = k.antal_platser || 1;
+                    const antalFyllda = k.antal_fyllda || 0;
+                    const visaProgress = antalPlatser > 1;
+                    return (
+                      <a 
+                        href={`/personal/kort-varsel?id=${k.id}`}
+                        class="block p-3 border border-gray-200 rounded-lg hover:border-sky-400 hover:bg-sky-50 transition-colors"
+                      >
+                        <div class="flex items-center justify-between mb-1">
+                          <div class="flex items-center gap-2">
+                            <span class={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                              k.status === 'fylld' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {k.status === 'fylld' ? '🎉 Fylld' : '⏳ Väntar'}
+                            </span>
+                            {visaProgress && (
+                              <span class="text-xs text-gray-500">
+                                {antalFyllda}/{antalPlatser}
+                              </span>
+                            )}
+                          </div>
+                          <span class="text-gray-400 text-xs">
+                            {k.skapad_vid ? new Date(k.skapad_vid).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }) : '-'}
+                          </span>
+                        </div>
+                        <div class="font-medium text-gray-900 text-sm">
+                          {k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Inget datum'}
+                        </div>
+                        {k.lakare && (
+                          <div class="text-xs text-gray-500 mt-1">{k.lakare}</div>
+                        )}
+                      </a>
+                    );
+                  });
+                })()}
               </div>
             </div>
 
@@ -1361,6 +1423,8 @@ if (supabaseKonfigurerad) {
       const ingenVald = document.getElementById('kampanj-ingen-vald');
       const actionsEl = document.getElementById('kampanj-detalj-actions');
       const utokaEl = document.getElementById('kampanj-utoka-section');
+      const utokaPlatserEl = document.getElementById('kampanj-detalj-utoka');
+      const platserInfoEl = document.getElementById('kampanj-platser-info');
       const rubrik = document.getElementById('kampanj-detalj-rubrik');
       const datumEl = document.getElementById('kampanj-detalj-datum');
       const jaEl = document.getElementById('kampanj-detalj-ja');
@@ -1409,10 +1473,23 @@ if (supabaseKonfigurerad) {
         // Kortare rubrik för smalare layout
         const datumStr = k.datum ? new Date(k.datum).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }) : '';
         rubrik.textContent = `📋 ${datumStr}${k.operationTyp ? ' – ' + k.operationTyp : ''}`;
-        datumEl.textContent = k.status === 'fylld' ? '✅ Fylld' : k.status === 'aktiv' ? '⏳ Väntar' : 'Avslutad';
+        
+        // Status med platsinformation
+        const platserText = (k.antalPlatser || 1) > 1 ? ` (${k.antalFyllda || 0}/${k.antalPlatser})` : '';
+        if (k.status === 'fylld') {
+          datumEl.textContent = `✅ Fylld${platserText}`;
+        } else if (k.status === 'aktiv') {
+          datumEl.textContent = `⏳ Väntar${platserText}`;
+        } else {
+          datumEl.textContent = 'Avslutad';
+        }
 
-        // Visa/dölj avsluta-knappar och utöka-knapp beroende på status
+        // Visa/dölj knappar beroende på status
+        const antalPlatser = k.antalPlatser || 1;
+        const antalFyllda = k.antalFyllda || 0;
+        
         if (actionsEl) {
+          // Avsluta-knappar: visa för aktiva kampanjer
           if (k.status === 'aktiv') {
             actionsEl.classList.remove('hidden');
           } else {
@@ -1420,10 +1497,22 @@ if (supabaseKonfigurerad) {
           }
         }
         if (utokaEl) {
+          // Utöka med fler patienter (den gamla knappen)
           if (k.status === 'aktiv') {
             utokaEl.classList.remove('hidden');
           } else {
             utokaEl.classList.add('hidden');
+          }
+        }
+        if (utokaPlatserEl) {
+          // Utöka med fler platser: visa för fyllda kampanjer
+          if (k.status === 'fylld') {
+            utokaPlatserEl.classList.remove('hidden');
+            if (platserInfoEl) {
+              platserInfoEl.textContent = `Nuvarande: ${antalFyllda}/${antalPlatser} platser fyllda`;
+            }
+          } else {
+            utokaPlatserEl.classList.add('hidden');
           }
         }
 
@@ -1564,7 +1653,52 @@ if (supabaseKonfigurerad) {
       avslutaKampanj('fylld_manuellt');
     });
 
-    // ========== UTÖKA KAMPANJ ==========
+    // ========== UTÖKA KAMPANJ MED FLER PLATSER ==========
+    async function utokaMedPlatser(antalNyaPlatser: number) {
+      const kampanjId = (window as any).aktivKampanjId;
+      if (!kampanjId) {
+        alert('Ingen kampanj vald');
+        return;
+      }
+      
+      const bekrafta = confirm(`Lägga till ${antalNyaPlatser} plats${antalNyaPlatser > 1 ? 'er' : ''} till kampanjen?\n\nKampanjen återöppnas och fortsätter skicka SMS till patienter som inte kontaktats.`);
+      
+      if (!bekrafta) return;
+      
+      try {
+        const response = await fetch('/api/kampanj/utoka-platser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            kampanjId,
+            antalNyaPlatser
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          alert(`✅ ${data.message}`);
+          // Ladda om kampanjdetaljen
+          laddaKampanjDetalj(kampanjId);
+        } else {
+          alert('Något gick fel: ' + (data.error || 'Okänt fel'));
+        }
+      } catch (err) {
+        console.error('Fel vid utökning:', err);
+        alert('Nätverksfel – kunde inte utöka kampanjen');
+      }
+    }
+    
+    document.getElementById('btn-utoka-en-plats')?.addEventListener('click', () => {
+      utokaMedPlatser(1);
+    });
+    
+    document.getElementById('btn-utoka-tva-platser')?.addEventListener('click', () => {
+      utokaMedPlatser(2);
+    });
+
+    // ========== UTÖKA KAMPANJ MED FLER PATIENTER ==========
     document.getElementById('btn-utoka-kampanj')?.addEventListener('click', async () => {
       const kampanjId = (window as any).aktivKampanjId;
       if (!kampanjId) {
