@@ -1428,6 +1428,35 @@ if (supabaseKonfigurerad) {
         </div>
       </div>
     </div>
+    
+    <!-- Bekräftelsedialog (centrerad) -->
+    <div id="bekrafta-modal" class="fixed inset-0 z-50 hidden">
+      <!-- Bakgrund -->
+      <div class="absolute inset-0 bg-black/50" onclick="stangBekraftaModal()"></div>
+      
+      <!-- Modal-innehåll (centrerad) -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-xl shadow-xl overflow-hidden">
+        <div class="p-6 text-center">
+          <div class="text-4xl mb-4" id="bekrafta-ikon">⚠️</div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2" id="bekrafta-titel">Bekräfta</h3>
+          <p class="text-gray-600 text-sm" id="bekrafta-text">Är du säker?</p>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 flex gap-3 justify-center">
+          <button 
+            onclick="stangBekraftaModal()"
+            class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg text-sm font-medium"
+          >
+            Avbryt
+          </button>
+          <button 
+            id="bekrafta-ja-btn"
+            class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-lg text-sm font-medium"
+          >
+            Ta bort
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -2348,16 +2377,49 @@ if (supabaseKonfigurerad) {
       laddaPatientpool();
     }
 
+    // Bekräftelsedialog-funktioner
+    let bekraftaCallback: (() => void) | null = null;
+    
+    function visaBekraftaModal(titel: string, text: string, btnText: string, callback: () => void, ikon: string = '⚠️') {
+      document.getElementById('bekrafta-titel')!.textContent = titel;
+      document.getElementById('bekrafta-text')!.textContent = text;
+      document.getElementById('bekrafta-ikon')!.textContent = ikon;
+      document.getElementById('bekrafta-ja-btn')!.textContent = btnText;
+      bekraftaCallback = callback;
+      document.getElementById('bekrafta-modal')!.classList.remove('hidden');
+    }
+    
+    function stangBekraftaModal() {
+      document.getElementById('bekrafta-modal')!.classList.add('hidden');
+      bekraftaCallback = null;
+    }
+    
+    function bekraftaJa() {
+      if (bekraftaCallback) {
+        bekraftaCallback();
+      }
+      stangBekraftaModal();
+    }
+    
+    // Koppla bekräfta-knappen
+    document.getElementById('bekrafta-ja-btn')?.addEventListener('click', bekraftaJa);
+
     // Ta bort patient
     async function taBortPatient(patientId: string) {
-      if (!confirm('Ta bort patienten från listan?')) return;
-      
-      await fetch('/api/pool/ta-bort', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ patientId })
-      });
-      laddaPatientpool();
+      visaBekraftaModal(
+        'Ta bort patient?',
+        'Patienten tas bort från listan. Detta kan inte ångras.',
+        'Ta bort',
+        async () => {
+          await fetch('/api/pool/ta-bort', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ patientId })
+          });
+          laddaPatientpool();
+        },
+        '🗑️'
+      );
     }
 
     // Redigera patient
@@ -2504,6 +2566,7 @@ if (supabaseKonfigurerad) {
     (window as any).stangRedigeraModal = stangRedigeraModal;
     (window as any).sparaPatientandringar = sparaPatientandringar;
     (window as any).taBortPatientFranModal = taBortPatientFranModal;
+    (window as any).stangBekraftaModal = stangBekraftaModal;
 
     // Ladda patientpool vid start
     laddaPatientpool();
