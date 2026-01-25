@@ -66,7 +66,9 @@ function formateraTelefon(telefon: string): string {
   let clean = telefon.replace(/\D/g, '');
   if (clean.startsWith('0')) {
     clean = '+46' + clean.slice(1);
-  } else if (!clean.startsWith('+')) {
+  } else if (clean.startsWith('46')) {
+    clean = '+' + clean;
+  } else {
     clean = '+46' + clean;
   } else {
     clean = '+' + clean;

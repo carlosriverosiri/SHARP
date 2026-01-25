@@ -68,8 +68,8 @@ export function formateraTelefon(telefon: string): string {
   let clean = telefon.replace(/\D/g, '');
   if (clean.startsWith('0')) {
     return '+46' + clean.slice(1);
-  } else if (!clean.startsWith('46')) {
-    return '+46' + clean;
+  } else if (clean.startsWith('46')) {
+    return '+' + clean;
   }
-  return '+' + clean;
+  return '+46' + clean;
 }
