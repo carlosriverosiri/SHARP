@@ -212,7 +212,8 @@ if (supabaseKonfigurerad) {
               <input 
                 type="date" 
                 id="patient-op-datum"
-                class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                style="min-height: 42px;"
               />
               <p class="text-xs text-gray-500 mt-1">Patientens nuvarande bokade operationsdatum (inte kort varsel-datum)</p>
             </div>
@@ -2567,6 +2568,13 @@ if (supabaseKonfigurerad) {
     (window as any).sparaPatientandringar = sparaPatientandringar;
     (window as any).taBortPatientFranModal = taBortPatientFranModal;
     (window as any).stangBekraftaModal = stangBekraftaModal;
+
+    // Gör datum-inputs klickbara överallt (inte bara på kalender-ikonen)
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+      input.addEventListener('click', function(this: HTMLInputElement) {
+        this.showPicker?.();
+      });
+    });
 
     // Ladda patientpool vid start
     laddaPatientpool();
