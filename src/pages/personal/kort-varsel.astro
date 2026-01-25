@@ -931,16 +931,16 @@ if (supabaseKonfigurerad) {
                 </div>
               </div>
               
-              <!-- Stapeldiagram -->
+              <!-- Chart.js Stapeldiagram för svarstid per kategori -->
               <div class="mb-6">
-                <h4 class="text-sm font-medium text-gray-700 mb-3">Medel svarstid per kategori</h4>
-                <div id="svarstid-diagram" class="space-y-3">
-                  <!-- Fylls i via JavaScript -->
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Medel svarstid per kategori (minuter)</h4>
+                <div class="h-64">
+                  <canvas id="svarstid-kategori-chart"></canvas>
                 </div>
               </div>
               
-              <!-- Tabell -->
-              <div class="overflow-x-auto">
+              <!-- Tabell (kompakt) -->
+              <div class="overflow-x-auto mb-6">
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="border-b text-left text-gray-600">
@@ -957,11 +957,11 @@ if (supabaseKonfigurerad) {
                 </table>
               </div>
               
-              <!-- Tid på dagen -->
-              <div class="mt-6 pt-6 border-t">
-                <h4 class="text-sm font-medium text-gray-700 mb-3">Svarstid per tid på dagen</h4>
-                <div id="svarstid-tid-diagram" class="space-y-2">
-                  <!-- Fylls i via JavaScript -->
+              <!-- Chart.js diagram för tid på dagen -->
+              <div class="pt-6 border-t">
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Svarstid per tid på dagen (minuter)</h4>
+                <div class="h-48">
+                  <canvas id="svarstid-tid-chart"></canvas>
                 </div>
               </div>
             </div>
@@ -2286,12 +2286,17 @@ if (supabaseKonfigurerad) {
     // Initial uppdatering av matchande patienter
     // (görs när laddaPatientpool() har kört klart)
 
-    // ========== SVARSTIDSSTATISTIK ==========
-    const KATEGORI_FARGER: Record<string, string> = {
-      'AKUT': 'bg-red-500',
-      'Sjukskriven': 'bg-orange-500',
-      'Mycket ont': 'bg-amber-500',
-      'Normal': 'bg-sky-500',
+    // ========== SVARSTIDSSTATISTIK (Chart.js) ==========
+    // Importera Chart.js dynamiskt
+    let Chart: any = null;
+    let kategoriChart: any = null;
+    let tidChart: any = null;
+
+    const KATEGORI_FARGER_HEX: Record<string, string> = {
+      'AKUT': '#ef4444',        // red-500
+      'Sjukskriven': '#f97316', // orange-500
+      'Mycket ont': '#f59e0b',  // amber-500
+      'Normal': '#0ea5e9',      // sky-500
     };
 
     const KATEGORI_IKONER: Record<string, string> = {
@@ -2300,6 +2305,23 @@ if (supabaseKonfigurerad) {
       'Mycket ont': '🔥',
       'Normal': '⏰',
     };
+
+    async function laddaChartJs() {
+      if (Chart) return;
+      // Dynamisk import av Chart.js
+      const chartModule = await import('chart.js');
+      Chart = chartModule.Chart;
+      // Registrera alla komponenter
+      Chart.register(
+        chartModule.CategoryScale,
+        chartModule.LinearScale,
+        chartModule.BarController,
+        chartModule.BarElement,
+        chartModule.Title,
+        chartModule.Tooltip,
+        chartModule.Legend
+      );
+    }
 
     async function laddaSvarstidsstatistik(period: string = '90') {
       const laddarEl = document.getElementById('svarstid-laddar');
@@ -2314,7 +2336,12 @@ if (supabaseKonfigurerad) {
       ingenDataEl.classList.add('hidden');
       
       try {
-        const response = await fetch(`/api/statistik/svarstid?period=${period}`);
+        // Ladda Chart.js parallellt med API-anropet
+        const [response] = await Promise.all([
+          fetch(`/api/statistik/svarstid?period=${period}`),
+          laddaChartJs()
+        ]);
+        
         const data = await response.json();
         
         if (!response.ok) {
@@ -2338,14 +2365,12 @@ if (supabaseKonfigurerad) {
         if (totaltAntalEl) totaltAntalEl.textContent = data.totalt.antalSvar.toString();
         if (totaltMedelEl) totaltMedelEl.textContent = `${data.totalt.medelSvarstidMin} min`;
         
-        // Rendera stapeldiagram
-        renderaSvarstidDiagram(data.kategorier);
+        // Rendera Chart.js-grafer
+        renderaKategoriChart(data.kategorier);
+        renderaTidChart(data.tidPaDagen);
         
         // Rendera tabell
         renderaSvarstidTabell(data.kategorier);
-        
-        // Rendera tid på dagen
-        renderaTidPaDagenDiagram(data.tidPaDagen);
         
       } catch (error) {
         console.error('Fel vid laddning av svarstidsstatistik:', error);
@@ -2354,38 +2379,155 @@ if (supabaseKonfigurerad) {
       }
     }
 
-    function renderaSvarstidDiagram(kategorier: any[]) {
-      const diagramEl = document.getElementById('svarstid-diagram');
-      if (!diagramEl) return;
+    function renderaKategoriChart(kategorier: any[]) {
+      const canvas = document.getElementById('svarstid-kategori-chart') as HTMLCanvasElement;
+      if (!canvas || !Chart) return;
       
-      // Hitta max svarstid för skalning
-      const maxTid = Math.max(...kategorier.map(k => k.medelSvarstidMin), 1);
+      // Förstör befintlig graf
+      if (kategoriChart) {
+        kategoriChart.destroy();
+      }
       
-      diagramEl.innerHTML = kategorier.map(k => {
-        const bredd = Math.max((k.medelSvarstidMin / maxTid) * 100, 2);
-        const farg = KATEGORI_FARGER[k.kategori] || 'bg-gray-500';
-        const ikon = KATEGORI_IKONER[k.kategori] || '';
-        
-        return `
-          <div class="flex items-center gap-3">
-            <div class="w-28 text-sm text-gray-700 flex items-center gap-1">
-              <span>${ikon}</span>
-              <span>${k.kategori}</span>
-            </div>
-            <div class="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
-              <div 
-                class="${farg} h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
-                style="width: ${bredd}%"
-              >
-                ${k.antalSvar > 0 ? `<span class="text-xs text-white font-medium">${k.medelSvarstidMin} min</span>` : ''}
-              </div>
-            </div>
-            <div class="w-12 text-right text-sm text-gray-500">
-              n=${k.antalSvar}
-            </div>
-          </div>
-        `;
-      }).join('');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      kategoriChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: kategorier.map(k => `${KATEGORI_IKONER[k.kategori] || ''} ${k.kategori}`),
+          datasets: [{
+            label: 'Medel svarstid (min)',
+            data: kategorier.map(k => k.medelSvarstidMin),
+            backgroundColor: kategorier.map(k => KATEGORI_FARGER_HEX[k.kategori] || '#6b7280'),
+            borderRadius: 6,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context: any) {
+                  const idx = context.dataIndex;
+                  const kat = kategorier[idx];
+                  return [
+                    `Medel: ${kat.medelSvarstidMin} min`,
+                    `Median: ${Math.round(kat.medianSvarstidSek / 60)} min`,
+                    `Antal svar: ${kat.antalSvar}`,
+                    `JA-rate: ${kat.jaRate}%`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Minuter'
+              },
+              grid: {
+                color: 'rgba(0,0,0,0.05)'
+              }
+            },
+            y: {
+              grid: {
+                display: false
+              }
+            }
+          },
+          animation: {
+            duration: 800,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    }
+
+    function renderaTidChart(tidPaDagen: any[]) {
+      const canvas = document.getElementById('svarstid-tid-chart') as HTMLCanvasElement;
+      if (!canvas || !Chart) return;
+      
+      // Förstör befintlig graf
+      if (tidChart) {
+        tidChart.destroy();
+      }
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      tidChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: tidPaDagen.map(t => t.tidsblock),
+          datasets: [{
+            label: 'Medel svarstid (min)',
+            data: tidPaDagen.map(t => t.medelSvarstidMin),
+            backgroundColor: tidPaDagen.map(t => {
+              // Färglägg baserat på svarstid (grön = snabb, gul = medel, röd = långsam)
+              if (t.medelSvarstidMin <= 15) return '#22c55e'; // green-500
+              if (t.medelSvarstidMin <= 25) return '#eab308'; // yellow-500
+              return '#ef4444'; // red-500
+            }),
+            borderRadius: 4,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context: any) {
+                  const idx = context.dataIndex;
+                  const tid = tidPaDagen[idx];
+                  return [
+                    `Svarstid: ${tid.medelSvarstidMin} min`,
+                    `Antal svar: ${tid.antalSvar}`,
+                    `JA-rate: ${tid.jaRate}%`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Tid på dagen'
+              },
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Minuter'
+              },
+              grid: {
+                color: 'rgba(0,0,0,0.05)'
+              }
+            }
+          },
+          animation: {
+            duration: 800,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
     }
 
     function renderaSvarstidTabell(kategorier: any[]) {
@@ -2412,36 +2554,6 @@ if (supabaseKonfigurerad) {
               </span>
             </td>
           </tr>
-        `;
-      }).join('');
-    }
-
-    function renderaTidPaDagenDiagram(tidPaDagen: any[]) {
-      const diagramEl = document.getElementById('svarstid-tid-diagram');
-      if (!diagramEl) return;
-      
-      // Hitta max svarstid för skalning
-      const maxTid = Math.max(...tidPaDagen.map(t => t.medelSvarstidMin), 1);
-      
-      diagramEl.innerHTML = tidPaDagen.map(t => {
-        const bredd = t.antalSvar > 0 ? Math.max((t.medelSvarstidMin / maxTid) * 100, 2) : 0;
-        
-        return `
-          <div class="flex items-center gap-2 text-sm">
-            <div class="w-12 text-gray-600">${t.tidsblock}</div>
-            <div class="flex-1 bg-gray-100 rounded h-4 overflow-hidden">
-              <div 
-                class="bg-sky-400 h-full rounded transition-all duration-500"
-                style="width: ${bredd}%"
-              ></div>
-            </div>
-            <div class="w-16 text-right text-gray-600">
-              ${t.antalSvar > 0 ? `${t.medelSvarstidMin} min` : '-'}
-            </div>
-            <div class="w-12 text-right text-gray-500 text-xs">
-              n=${t.antalSvar}
-            </div>
-          </div>
         `;
       }).join('');
     }
