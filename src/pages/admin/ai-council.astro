@@ -1,0 +1,1674 @@
+---
+/**
+ * AI Council - Master Mind Tool
+ * URL: /admin/ai-council
+ * 
+ * Features:
+ * - Multi-model queries (OpenAI, Anthropic, Google)
+ * - Selectable synthesis model
+ * - File upload (images, documents)
+ * - Supabase session storage with localStorage fallback
+ */
+
+export const prerender = false;
+
+import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+
+// Check authentication
+if (!await arInloggad(Astro.cookies)) {
+  return Astro.redirect('/personal/');
+}
+
+const anvandare = await hamtaAnvandare(Astro.cookies);
+if (!anvandare) {
+  return Astro.redirect('/personal/');
+}
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>AI Council | Master Mind</title>
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  
+  <!-- Highlight.js for code syntax -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- PDF.js for PDF parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .layout { display: flex; min-height: 100vh; }
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    
+    /* Notes sidebar */
+    .notes-sidebar {
+      width: 320px;
+      background: #0d0d0d;
+      border-left: 1px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+    }
+    .notes-sidebar.collapsed { width: 48px; }
+    .notes-sidebar.collapsed .notes-content,
+    .notes-sidebar.collapsed .notes-header-title,
+    .notes-sidebar.collapsed .notes-actions { display: none; }
+    
+    .notes-header {
+      padding: 1rem;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .notes-header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #888;
+    }
+    .notes-toggle {
+      background: transparent;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    .notes-toggle:hover { color: #999; }
+    
+    .notes-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .notes-list { flex: 1; overflow-y: auto; padding: 0.75rem; }
+    
+    .note-item {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+      cursor: pointer;
+    }
+    .note-item:hover { border-color: #333; }
+    .note-item-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .note-item-time { font-size: 0.6875rem; color: #555; }
+    .note-item-actions { display: flex; gap: 0.25rem; }
+    .note-item-btn {
+      background: transparent;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      padding: 0.125rem;
+      font-size: 0.75rem;
+    }
+    .note-item-btn:hover { color: #999; }
+    .note-item-prompt {
+      color: #818cf8;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .note-item-preview {
+      color: #777;
+      font-size: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .note-item-model {
+      font-size: 0.625rem;
+      color: #555;
+      margin-top: 0.25rem;
+    }
+    
+    .notes-actions {
+      padding: 0.75rem;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .notes-btn {
+      flex: 1;
+      background: #1a1a1a;
+      border: 1px solid #222;
+      color: #888;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .notes-btn:hover { background: #222; color: #ccc; }
+    .notes-btn.danger:hover { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .notes-empty { text-align: center; padding: 2rem 1rem; color: #444; font-size: 0.8125rem; }
+    .notes-sync { font-size: 0.625rem; color: #555; padding: 0.5rem 0.75rem; text-align: center; }
+    .notes-sync.synced { color: #10b981; }
+    
+    /* Session modal */
+    .session-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .session-modal.open { display: flex; }
+    .session-modal-content {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .session-modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d0d0d;
+    }
+    .session-modal-title { font-size: 1rem; font-weight: 600; color: #ccc; }
+    .session-modal-meta { font-size: 0.75rem; color: #666; }
+    .session-modal-close {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+    .session-modal-close:hover { color: #999; }
+    .session-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    .session-modal-prompt {
+      background: #1a1a1a;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .session-modal-prompt-label { font-size: 0.75rem; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .session-modal-prompt-text { color: #818cf8; font-weight: 500; }
+    .session-modal-synthesis { color: #ddd; }
+    .session-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #222;
+      display: flex;
+      gap: 0.75rem;
+      background: #0d0d0d;
+    }
+    .session-modal-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .session-modal-btn:hover { background: #222; }
+    .session-modal-btn.primary { background: #818cf8; border-color: #818cf8; color: #fff; }
+    .session-modal-btn.primary:hover { background: #6366f1; }
+    
+    /* Header */
+    .header {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #222;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .back-link { color: #666; text-decoration: none; font-size: 0.875rem; }
+    .back-link:hover { color: #999; }
+    .logo h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #818cf8, #a78bfa, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .logo span { font-size: 0.75rem; color: #555; }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .user-email { font-size: 0.875rem; color: #666; }
+    .model-dots { display: flex; gap: 4px; }
+    .model-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-openai { background: #10a37f; }
+    .dot-anthropic { background: #d97706; }
+    .dot-google { background: #4285f4; }
+    .dot-grok { background: #1d9bf0; }
+    
+    /* Model selection checkboxes */
+    .model-selection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .model-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .model-checkbox:hover { border-color: #444; background: #222; }
+    .model-checkbox.selected { border-color: #555; background: #252525; }
+    .model-checkbox.unavailable { opacity: 0.4; cursor: not-allowed; }
+    .model-checkbox input { display: none; }
+    .model-checkbox-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .model-checkbox-name { font-size: 0.8125rem; color: #ccc; }
+    .model-checkbox-desc { font-size: 0.6875rem; color: #666; }
+    .model-checkbox.selected .model-checkbox-name { color: #fff; }
+    .model-checkbox-check {
+      width: 16px; height: 16px;
+      border: 2px solid #444;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: transparent;
+    }
+    .model-checkbox.selected .model-checkbox-check {
+      background: #818cf8;
+      border-color: #818cf8;
+      color: #fff;
+    }
+    
+    /* Deliberation toggle */
+    .deliberation-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .deliberation-toggle:hover { border-color: #444; background: #222; }
+    .deliberation-toggle.active { border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
+    .deliberation-toggle input { display: none; }
+    .deliberation-toggle-switch {
+      width: 36px; height: 20px;
+      background: #333;
+      border-radius: 10px;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .deliberation-toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      background: #666;
+      border-radius: 50%;
+      top: 2px; left: 2px;
+      transition: all 0.2s;
+    }
+    .deliberation-toggle.active .deliberation-toggle-switch { background: #f97316; }
+    .deliberation-toggle.active .deliberation-toggle-switch::after { background: #fff; left: 18px; }
+    .deliberation-toggle-label { font-size: 0.8125rem; color: #999; }
+    .deliberation-toggle.active .deliberation-toggle-label { color: #f97316; }
+    .deliberation-toggle-desc { font-size: 0.6875rem; color: #555; }
+    .deliberation-toggle.active .deliberation-toggle-desc { color: #b45309; }
+    
+    /* Round 2 section */
+    .round-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #f97316;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 1.5rem 0 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #222;
+    }
+    .round-label.round-1 { color: #818cf8; }
+    
+    /* Main content */
+    .main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+    
+    /* Input card */
+    .input-card {
+      background: linear-gradient(135deg, #818cf8, #a78bfa, #f97316);
+      padding: 2px;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+    .input-card-inner { background: #111; border-radius: 14px; padding: 1.5rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #ccc; margin-bottom: 0.5rem; }
+    .form-label .icon { margin-right: 0.5rem; }
+    .form-label .optional { color: #666; font-weight: 400; }
+    .form-label .required { color: #ef4444; }
+    
+    textarea, input[type="text"], select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #e5e5e5;
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      font-size: 0.9375rem;
+      font-family: inherit;
+    }
+    textarea { resize: vertical; }
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    }
+    textarea::placeholder, input::placeholder { color: #555; }
+    .context-input { min-height: 120px; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.875rem; }
+    .prompt-input { min-height: 80px; }
+    
+    /* File upload */
+    .file-upload-area {
+      border: 2px dashed #333;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-top: 0.75rem;
+    }
+    .file-upload-area:hover { border-color: #555; background: rgba(255,255,255,0.02); }
+    .file-upload-area.dragover { border-color: #818cf8; background: rgba(129, 140, 248, 0.1); }
+    .file-upload-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .file-upload-text { font-size: 0.8125rem; color: #666; }
+    .file-upload-text strong { color: #818cf8; }
+    .file-list { margin-top: 0.75rem; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: #1a1a1a;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    .file-item-name { flex: 1; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-item-size { color: #555; font-size: 0.75rem; }
+    .file-item-remove {
+      background: transparent;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    .file-item-remove:hover { color: #f87171; }
+    
+    /* Synthesis model selector */
+    .synthesis-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .synthesis-selector label { font-size: 0.8125rem; color: #888; }
+    .synthesis-selector select {
+      width: auto;
+      padding: 0.5rem 2rem 0.5rem 0.75rem;
+      font-size: 0.8125rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+      appearance: none;
+    }
+    
+    /* Actions row */
+    .actions-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .model-legend { display: flex; align-items: center; gap: 1rem; font-size: 0.75rem; color: #666; }
+    .model-legend-item { display: flex; align-items: center; gap: 0.375rem; }
+    .model-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    
+    .run-btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #f97316);
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .run-btn:hover:not(:disabled) { opacity: 0.9; }
+    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .run-btn .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+    .run-btn.loading .spinner { display: block; }
+    .run-btn.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Status & Error */
+    .status {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .status.visible { display: flex; }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #818cf8;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .status-text { font-size: 0.875rem; color: #aaa; }
+    
+    .error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      color: #f87171;
+      font-size: 0.875rem;
+      display: none;
+    }
+    .error.visible { display: block; }
+    
+    /* Results */
+    .results { display: none; }
+    .results.visible { display: block; }
+    
+    /* Copy button */
+    .copy-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #888;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .copy-btn:hover { background: #222; color: #ccc; }
+    .copy-btn.copied { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .copy-btn svg { width: 14px; height: 14px; }
+    
+    /* Synthesis card */
+    .synthesis-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-left: 4px solid #a855f7;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .synthesis-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .synthesis-icon { font-size: 1.5rem; }
+    .synthesis-title { flex: 1; }
+    .synthesis-title h2 { font-size: 1.125rem; font-weight: 600; color: #c4b5fd; }
+    .synthesis-title span { font-size: 0.75rem; color: #777; }
+    .synthesis-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .synthesis-duration { font-size: 0.75rem; color: #666; }
+    .synthesis-content { color: #ddd; }
+    
+    .save-note-btn {
+      background: transparent;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #a78bfa;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .save-note-btn:hover { background: rgba(168, 85, 247, 0.1); }
+    .save-note-btn.saved { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    
+    /* Accordion */
+    .responses-section h3 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+    .responses-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+    
+    .accordion { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; }
+    .accordion.openai { border-left: 3px solid #10a37f; }
+    .accordion.anthropic { border-left: 3px solid #d97706; }
+    .accordion.google { border-left: 3px solid #4285f4; }
+    .accordion.grok { border-left: 3px solid #1d9bf0; }
+    
+    .accordion-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .accordion-header:hover { background: rgba(255, 255, 255, 0.03); }
+    .accordion-header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .accordion-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .accordion-title { font-size: 0.9375rem; font-weight: 500; color: #ddd; }
+    .accordion-status { font-size: 0.75rem; color: #666; margin-left: 0.5rem; }
+    .accordion-status.success { color: #10b981; }
+    .accordion-status.error { color: #ef4444; }
+    .accordion-header-right { display: flex; align-items: center; gap: 0.75rem; }
+    .accordion-duration { font-size: 0.75rem; color: #555; }
+    .accordion-icon { width: 20px; height: 20px; color: #555; transition: transform 0.2s; }
+    .accordion.open .accordion-icon { transform: rotate(180deg); }
+    
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .accordion.open .accordion-content { max-height: 3000px; }
+    .accordion-content-inner { padding: 0 1.25rem 1.25rem; border-top: 1px solid #222; }
+    .accordion-content-inner .markdown-content { padding-top: 1rem; }
+    .accordion-content-actions { display: flex; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid #1a1a1a; margin-top: 1rem; }
+    
+    .total-duration { text-align: center; padding-top: 1.5rem; border-top: 1px solid #222; margin-top: 1.5rem; font-size: 0.875rem; color: #555; }
+    
+    /* Markdown */
+    .markdown-content { line-height: 1.7; color: #ccc; }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { color: #fff; margin-top: 1.5em; margin-bottom: 0.5em; }
+    .markdown-content h1:first-child, .markdown-content h2:first-child, .markdown-content h3:first-child { margin-top: 0; }
+    .markdown-content h1 { font-size: 1.5em; font-weight: 700; }
+    .markdown-content h2 { font-size: 1.25em; font-weight: 600; }
+    .markdown-content h3 { font-size: 1.1em; font-weight: 600; }
+    .markdown-content p { margin-bottom: 1em; }
+    .markdown-content ul, .markdown-content ol { margin-left: 1.5em; margin-bottom: 1em; }
+    .markdown-content li { margin-bottom: 0.25em; }
+    .markdown-content code { background: #1e1e1e; padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.875em; font-family: 'Monaco', 'Menlo', monospace; }
+    .markdown-content pre { background: #1e1e1e; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1em; }
+    .markdown-content pre code { background: transparent; padding: 0; font-size: 0.875rem; }
+    .markdown-content blockquote { border-left: 3px solid #818cf8; padding-left: 1em; margin-left: 0; margin-bottom: 1em; color: #999; }
+    .markdown-content table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    .markdown-content th, .markdown-content td { border: 1px solid #333; padding: 0.5em 0.75em; text-align: left; }
+    .markdown-content th { background: #1a1a1a; font-weight: 600; }
+    .markdown-content a { color: #818cf8; text-decoration: none; }
+    .markdown-content a:hover { text-decoration: underline; }
+    .markdown-content strong { color: #fff; }
+    
+    @media (max-width: 1024px) {
+      .notes-sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 200; transform: translateX(100%); }
+      .notes-sidebar.open { transform: translateX(0); }
+    }
+    @media (max-width: 768px) {
+      .header-inner { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .actions-row { flex-direction: column; align-items: stretch; }
+      .run-btn { justify-content: center; }
+      .notes-sidebar { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="main-area">
+      <header class="header">
+        <div class="header-inner">
+          <div class="header-left">
+            <a href="/personal/oversikt" class="back-link">← Tillbaka</a>
+            <div class="logo">
+              <h1>AI Council</h1>
+              <span>Master Mind Tool</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <span class="user-email">{anvandare.email}</span>
+            <div class="model-dots">
+              <span class="model-dot dot-openai" title="OpenAI o1"></span>
+              <span class="model-dot dot-anthropic" title="Claude Sonnet"></span>
+              <span class="model-dot dot-google" title="Gemini 1.5 Pro"></span>
+              <span class="model-dot dot-grok" title="Grok 2"></span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="input-card">
+          <div class="input-card-inner">
+            <!-- Context -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="icon">📋</span> Kontext
+                <span class="optional">(valfritt - kod, dokumentation)</span>
+              </label>
+              <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
+              
+              <!-- File upload -->
+              <div id="fileUploadArea" class="file-upload-area">
+                <div class="file-upload-icon">📎</div>
+                <div class="file-upload-text">
+                  <strong>Klicka</strong> eller dra filer hit<br>
+                  Bilder (PNG, JPG), PDF, TXT, MD, JSON
+                </div>
+                <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
+              </div>
+              <div id="fileList" class="file-list"></div>
+            </div>
+            
+            <!-- Prompt -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="icon">💬</span> Prompt <span class="required">*</span>
+              </label>
+              <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga..." required></textarea>
+            </div>
+            
+            <!-- Model selection -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="icon">🤖</span> Välj AI-modeller
+              </label>
+              <div class="model-selection" id="modelSelection">
+                <label class="model-checkbox selected" data-model="openai">
+                  <input type="checkbox" checked>
+                  <span class="model-checkbox-check">✓</span>
+                  <span class="model-checkbox-dot dot-openai"></span>
+                  <div>
+                    <div class="model-checkbox-name">OpenAI o1</div>
+                    <div class="model-checkbox-desc">Djup logik & resonering</div>
+                  </div>
+                </label>
+                <label class="model-checkbox selected" data-model="anthropic">
+                  <input type="checkbox" checked>
+                  <span class="model-checkbox-check">✓</span>
+                  <span class="model-checkbox-dot dot-anthropic"></span>
+                  <div>
+                    <div class="model-checkbox-name">Claude Sonnet</div>
+                    <div class="model-checkbox-desc">Struktur & kod</div>
+                  </div>
+                </label>
+                <label class="model-checkbox selected" data-model="gemini">
+                  <input type="checkbox" checked>
+                  <span class="model-checkbox-check">✓</span>
+                  <span class="model-checkbox-dot dot-google"></span>
+                  <div>
+                    <div class="model-checkbox-name">Gemini 1.5 Pro</div>
+                    <div class="model-checkbox-desc">Stor kontext</div>
+                  </div>
+                </label>
+                <label class="model-checkbox" data-model="grok">
+                  <input type="checkbox">
+                  <span class="model-checkbox-check">✓</span>
+                  <span class="model-checkbox-dot dot-grok"></span>
+                  <div>
+                    <div class="model-checkbox-name">Grok 2</div>
+                    <div class="model-checkbox-desc">Referenser & realtid</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions-row">
+              <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <div class="synthesis-selector">
+                  <label for="synthesisModel">Syntes-modell:</label>
+                  <select id="synthesisModel">
+                    <option value="claude">🔧 Claude (kod)</option>
+                    <option value="openai">🧪 OpenAI o1 (logik)</option>
+                    <option value="gemini">📚 Gemini (kontext)</option>
+                    <option value="grok">🌐 Grok (vetenskap)</option>
+                  </select>
+                </div>
+                <label id="deliberationToggle" class="deliberation-toggle">
+                  <input type="checkbox" id="enableDeliberation">
+                  <span class="deliberation-toggle-switch"></span>
+                  <div>
+                    <div class="deliberation-toggle-label">Deliberation</div>
+                    <div class="deliberation-toggle-desc">Runda 2: Modeller granskar varandra</div>
+                  </div>
+                </label>
+              </div>
+              <button type="button" id="runBtn" class="run-btn">
+                <span class="btn-text">⚡ Kör AI Council</span>
+                <span class="spinner"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+        
+        <div id="status" class="status">
+          <span class="status-dot"></span>
+          <span id="statusText" class="status-text">Förbereder...</span>
+        </div>
+        
+        <div id="error" class="error"></div>
+        
+        <section id="results" class="results">
+          <div id="synthesisCard" class="synthesis-card" style="display: none;">
+            <div class="synthesis-header">
+              <span class="synthesis-icon">🧠</span>
+              <div class="synthesis-title">
+                <h2>Syntes</h2>
+                <span id="synthesisModelLabel">Claude Sonnet syntetiserar</span>
+              </div>
+              <div class="synthesis-actions">
+                <button type="button" class="copy-btn" id="copySynthesis" title="Kopiera">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  <span>Kopiera</span>
+                </button>
+                <button type="button" class="save-note-btn" id="saveSynthesis" title="Spara">
+                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+                  <span>Spara</span>
+                </button>
+                <span id="synthesisDuration" class="synthesis-duration"></span>
+              </div>
+            </div>
+            <div id="synthesisContent" class="synthesis-content markdown-content"></div>
+          </div>
+          
+          <div class="responses-section">
+            <div id="round1Label" class="round-label round-1" style="display: none;">Runda 1 — Initiala svar</div>
+            <h3 id="responsesHeader">Individuella svar</h3>
+            <div class="responses-grid">
+              <div id="accordion-openai" class="accordion openai">
+                <button type="button" class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="accordion-dot dot-openai"></span>
+                    <span class="accordion-title">OpenAI o1</span>
+                    <span id="status-openai" class="accordion-status"></span>
+                  </div>
+                  <div class="accordion-header-right">
+                    <span id="duration-openai" class="accordion-duration"></span>
+                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </button>
+                <div id="content-openai" class="accordion-content">
+                  <div class="accordion-content-inner">
+                    <div class="markdown-content"></div>
+                    <div class="accordion-content-actions">
+                      <button type="button" class="copy-btn" data-copy="openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="accordion-anthropic" class="accordion anthropic">
+                <button type="button" class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="accordion-dot dot-anthropic"></span>
+                    <span class="accordion-title">Claude Sonnet</span>
+                    <span id="status-anthropic" class="accordion-status"></span>
+                  </div>
+                  <div class="accordion-header-right">
+                    <span id="duration-anthropic" class="accordion-duration"></span>
+                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </button>
+                <div id="content-anthropic" class="accordion-content">
+                  <div class="accordion-content-inner">
+                    <div class="markdown-content"></div>
+                    <div class="accordion-content-actions">
+                      <button type="button" class="copy-btn" data-copy="anthropic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="accordion-google" class="accordion google">
+                <button type="button" class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="accordion-dot dot-google"></span>
+                    <span class="accordion-title">Gemini 1.5 Pro</span>
+                    <span id="status-google" class="accordion-status"></span>
+                  </div>
+                  <div class="accordion-header-right">
+                    <span id="duration-google" class="accordion-duration"></span>
+                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </button>
+                <div id="content-google" class="accordion-content">
+                  <div class="accordion-content-inner">
+                    <div class="markdown-content"></div>
+                    <div class="accordion-content-actions">
+                      <button type="button" class="copy-btn" data-copy="google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="accordion-grok" class="accordion grok" style="display: none;">
+                <button type="button" class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="accordion-dot dot-grok"></span>
+                    <span class="accordion-title">Grok 2</span>
+                    <span id="status-grok" class="accordion-status"></span>
+                  </div>
+                  <div class="accordion-header-right">
+                    <span id="duration-grok" class="accordion-duration"></span>
+                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </button>
+                <div id="content-grok" class="accordion-content">
+                  <div class="accordion-content-inner">
+                    <div class="markdown-content"></div>
+                    <div class="accordion-content-actions">
+                      <button type="button" class="copy-btn" data-copy="grok"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Round 2 Section (Deliberation) -->
+            <div id="round2Section" style="display: none;">
+              <div class="round-label">Runda 2 — Granskning & förbättring</div>
+              <div class="responses-grid">
+                <div id="accordion-r2-openai" class="accordion openai">
+                  <button type="button" class="accordion-header">
+                    <div class="accordion-header-left">
+                      <span class="accordion-dot dot-openai"></span>
+                      <span class="accordion-title">OpenAI o1 (R2)</span>
+                      <span id="status-r2-openai" class="accordion-status"></span>
+                    </div>
+                    <div class="accordion-header-right">
+                      <span id="duration-r2-openai" class="accordion-duration"></span>
+                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div id="content-r2-openai" class="accordion-content">
+                    <div class="accordion-content-inner">
+                      <div class="markdown-content"></div>
+                      <div class="accordion-content-actions">
+                        <button type="button" class="copy-btn" data-copy="r2-openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="accordion-r2-anthropic" class="accordion anthropic">
+                  <button type="button" class="accordion-header">
+                    <div class="accordion-header-left">
+                      <span class="accordion-dot dot-anthropic"></span>
+                      <span class="accordion-title">Claude (R2)</span>
+                      <span id="status-r2-anthropic" class="accordion-status"></span>
+                    </div>
+                    <div class="accordion-header-right">
+                      <span id="duration-r2-anthropic" class="accordion-duration"></span>
+                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div id="content-r2-anthropic" class="accordion-content">
+                    <div class="accordion-content-inner">
+                      <div class="markdown-content"></div>
+                      <div class="accordion-content-actions">
+                        <button type="button" class="copy-btn" data-copy="r2-anthropic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="accordion-r2-google" class="accordion google">
+                  <button type="button" class="accordion-header">
+                    <div class="accordion-header-left">
+                      <span class="accordion-dot dot-google"></span>
+                      <span class="accordion-title">Gemini (R2)</span>
+                      <span id="status-r2-google" class="accordion-status"></span>
+                    </div>
+                    <div class="accordion-header-right">
+                      <span id="duration-r2-google" class="accordion-duration"></span>
+                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div id="content-r2-google" class="accordion-content">
+                    <div class="accordion-content-inner">
+                      <div class="markdown-content"></div>
+                      <div class="accordion-content-actions">
+                        <button type="button" class="copy-btn" data-copy="r2-google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="accordion-r2-grok" class="accordion grok" style="display: none;">
+                  <button type="button" class="accordion-header">
+                    <div class="accordion-header-left">
+                      <span class="accordion-dot dot-grok"></span>
+                      <span class="accordion-title">Grok (R2)</span>
+                      <span id="status-r2-grok" class="accordion-status"></span>
+                    </div>
+                    <div class="accordion-header-right">
+                      <span id="duration-r2-grok" class="accordion-duration"></span>
+                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div id="content-r2-grok" class="accordion-content">
+                    <div class="accordion-content-inner">
+                      <div class="markdown-content"></div>
+                      <div class="accordion-content-actions">
+                        <button type="button" class="copy-btn" data-copy="r2-grok"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="total-duration">Total tid: <span id="totalDuration">-</span></div>
+        </section>
+      </main>
+    </div>
+    
+    <!-- Notes sidebar -->
+    <aside id="notesSidebar" class="notes-sidebar">
+      <div class="notes-header">
+        <div class="notes-header-title">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          Sessionslogg
+        </div>
+        <button type="button" class="notes-toggle" id="notesToggle" title="Minimera">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+        </button>
+      </div>
+      <div class="notes-content">
+        <div id="notesSync" class="notes-sync">Laddar...</div>
+        <div id="notesList" class="notes-list">
+          <div class="notes-empty">Inga sparade sessioner.</div>
+        </div>
+        <div class="notes-actions">
+          <button type="button" class="notes-btn" id="exportNotes">📥 Export</button>
+          <button type="button" class="notes-btn danger" id="clearNotes">🗑️ Rensa</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+  <!-- Session modal -->
+  <div id="sessionModal" class="session-modal">
+    <div class="session-modal-content">
+      <div class="session-modal-header">
+        <div>
+          <div class="session-modal-title">Sparad session</div>
+          <div id="sessionModalMeta" class="session-modal-meta"></div>
+        </div>
+        <button type="button" class="session-modal-close" id="closeSessionModal">×</button>
+      </div>
+      <div class="session-modal-body">
+        <div class="session-modal-prompt">
+          <div class="session-modal-prompt-label">Prompt</div>
+          <div id="sessionModalPrompt" class="session-modal-prompt-text"></div>
+        </div>
+        <div id="sessionModalSynthesis" class="session-modal-synthesis markdown-content"></div>
+      </div>
+      <div class="session-modal-footer">
+        <button type="button" class="session-modal-btn" id="copySessionSynthesis">📋 Kopiera syntes</button>
+        <button type="button" class="session-modal-btn" id="copySessionAll">📄 Kopiera allt</button>
+        <button type="button" class="session-modal-btn" id="loadSessionPrompt">💬 Ladda prompt</button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configure marked
+      if (typeof marked !== 'undefined') {
+        marked.setOptions({ breaks: true, gfm: true });
+      }
+      
+      // State
+      let currentResponses = { openai: '', anthropic: '', google: '', grok: '', synthesis: '' };
+      let currentPrompt = '';
+      let uploadedFiles = [];
+      let sessions = [];
+      let useSupabase = true;
+      let availableModels = { openai: true, anthropic: true, gemini: true, grok: false };
+      
+      // Elements
+      const contextEl = document.getElementById('context');
+      const promptEl = document.getElementById('prompt');
+      const runBtn = document.getElementById('runBtn');
+      const statusEl = document.getElementById('status');
+      const statusTextEl = document.getElementById('statusText');
+      const errorEl = document.getElementById('error');
+      const resultsEl = document.getElementById('results');
+      const synthesisCard = document.getElementById('synthesisCard');
+      const synthesisModelEl = document.getElementById('synthesisModel');
+      const notesSidebar = document.getElementById('notesSidebar');
+      const notesToggle = document.getElementById('notesToggle');
+      const notesList = document.getElementById('notesList');
+      const notesSync = document.getElementById('notesSync');
+      const fileUploadArea = document.getElementById('fileUploadArea');
+      const fileInput = document.getElementById('fileInput');
+      const fileListEl = document.getElementById('fileList');
+      const modelSelectionEl = document.getElementById('modelSelection');
+      const deliberationToggle = document.getElementById('deliberationToggle');
+      const enableDeliberationEl = document.getElementById('enableDeliberation');
+      const round1Label = document.getElementById('round1Label');
+      const round2Section = document.getElementById('round2Section');
+      
+      // Deliberation toggle handler
+      deliberationToggle.addEventListener('click', () => {
+        enableDeliberationEl.checked = !enableDeliberationEl.checked;
+        deliberationToggle.classList.toggle('active', enableDeliberationEl.checked);
+      });
+      
+      // Model checkbox handlers
+      function getSelectedModels() {
+        return Array.from(modelSelectionEl.querySelectorAll('.model-checkbox.selected:not(.unavailable)'))
+          .map(el => el.dataset.model);
+      }
+      
+      function updateModelCheckboxes() {
+        modelSelectionEl.querySelectorAll('.model-checkbox').forEach(cb => {
+          const model = cb.dataset.model;
+          const isAvailable = availableModels[model];
+          const checkbox = cb.querySelector('input');
+          
+          if (!isAvailable) {
+            cb.classList.add('unavailable');
+            cb.classList.remove('selected');
+            checkbox.checked = false;
+            checkbox.disabled = true;
+          } else {
+            cb.classList.remove('unavailable');
+            checkbox.disabled = false;
+          }
+        });
+      }
+      
+      modelSelectionEl.querySelectorAll('.model-checkbox').forEach(cb => {
+        cb.addEventListener('click', (e) => {
+          if (cb.classList.contains('unavailable')) return;
+          
+          const checkbox = cb.querySelector('input');
+          checkbox.checked = !checkbox.checked;
+          cb.classList.toggle('selected', checkbox.checked);
+          
+          // Ensure at least one is selected
+          if (getSelectedModels().length === 0) {
+            checkbox.checked = true;
+            cb.classList.add('selected');
+          }
+        });
+      });
+      
+      // File upload handlers
+      fileUploadArea.addEventListener('click', () => fileInput.click());
+      fileUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); fileUploadArea.classList.add('dragover'); });
+      fileUploadArea.addEventListener('dragleave', () => fileUploadArea.classList.remove('dragover'));
+      fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+      });
+      fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+      
+      async function handleFiles(files) {
+        for (const file of files) {
+          const content = await extractFileContent(file);
+          if (content) {
+            uploadedFiles.push({ name: file.name, size: file.size, content });
+            renderFileList();
+          }
+        }
+      }
+      
+      async function extractFileContent(file) {
+        const type = file.type;
+        const name = file.name.toLowerCase();
+        
+        // Text files
+        if (type.startsWith('text/') || ['.txt', '.md', '.json', '.js', '.ts', '.py', '.html', '.css'].some(ext => name.endsWith(ext))) {
+          return await file.text();
+        }
+        
+        // PDF
+        if (type === 'application/pdf' || name.endsWith('.pdf')) {
+          try {
+            if (typeof pdfjsLib !== 'undefined') {
+              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+              const pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
+              let text = '';
+              for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                text += content.items.map(item => item.str).join(' ') + '\n';
+              }
+              return text;
+            }
+          } catch (e) {
+            console.error('PDF parse error:', e);
+          }
+          return '[PDF kunde inte läsas]';
+        }
+        
+        // Images - convert to base64 description placeholder
+        if (type.startsWith('image/')) {
+          return `[Bild: ${file.name} (${formatSize(file.size)})]`;
+        }
+        
+        return null;
+      }
+      
+      function renderFileList() {
+        if (uploadedFiles.length === 0) {
+          fileListEl.innerHTML = '';
+          return;
+        }
+        fileListEl.innerHTML = uploadedFiles.map((f, i) => 
+          '<div class="file-item">' +
+            '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
+            '<span class="file-item-size">' + formatSize(f.size) + '</span>' +
+            '<button class="file-item-remove" data-index="' + i + '">✕</button>' +
+          '</div>'
+        ).join('');
+        
+        fileListEl.querySelectorAll('.file-item-remove').forEach(btn => {
+          btn.addEventListener('click', () => {
+            uploadedFiles.splice(parseInt(btn.dataset.index), 1);
+            renderFileList();
+          });
+        });
+      }
+      
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+      
+      // Sessions management (Supabase with localStorage fallback)
+      async function loadSessions() {
+        notesSync.textContent = 'Laddar...';
+        notesSync.className = 'notes-sync';
+        
+        try {
+          const res = await fetch('/api/ai-council/sessions', { credentials: 'include' });
+          const data = await res.json();
+          
+          if (data.sessions && data.sessions.length > 0) {
+            sessions = data.sessions;
+            useSupabase = true;
+            notesSync.textContent = '☁️ Synkad med Supabase';
+            notesSync.className = 'notes-sync synced';
+          } else if (data.error && data.error.includes('ej konfigurerat')) {
+            // Fallback to localStorage
+            useSupabase = false;
+            sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+            notesSync.textContent = '💾 Lokal lagring';
+          } else {
+            sessions = data.sessions || [];
+            useSupabase = true;
+            notesSync.textContent = '☁️ Supabase (tom)';
+            notesSync.className = 'notes-sync synced';
+          }
+        } catch (e) {
+          useSupabase = false;
+          sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+          notesSync.textContent = '💾 Lokal lagring';
+        }
+        
+        renderSessions();
+      }
+      
+      async function saveSession(data) {
+        if (useSupabase) {
+          try {
+            const res = await fetch('/api/ai-council/sessions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (result.success) {
+              await loadSessions();
+              return true;
+            }
+          } catch (e) {
+            console.error('Save error:', e);
+          }
+        }
+        
+        // Fallback to localStorage
+        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+        localSessions.unshift({
+          id: Date.now().toString(),
+          prompt: data.prompt,
+          synthesis: data.synthesis,
+          synthesis_model: data.synthesisModel,
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('ai-council-sessions', JSON.stringify(localSessions.slice(0, 50)));
+        sessions = localSessions;
+        renderSessions();
+        return true;
+      }
+      
+      async function deleteSession(id) {
+        if (useSupabase) {
+          try {
+            await fetch('/api/ai-council/sessions?id=' + id, { method: 'DELETE', credentials: 'include' });
+            await loadSessions();
+            return;
+          } catch (e) {
+            console.error('Delete error:', e);
+          }
+        }
+        
+        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+        const filtered = localSessions.filter(s => s.id !== id);
+        localStorage.setItem('ai-council-sessions', JSON.stringify(filtered));
+        sessions = filtered;
+        renderSessions();
+      }
+      
+      function renderSessions() {
+        if (sessions.length === 0) {
+          notesList.innerHTML = '<div class="notes-empty">Inga sparade sessioner.</div>';
+          return;
+        }
+        
+        notesList.innerHTML = sessions.map(s => {
+          const date = new Date(s.created_at);
+          const timeStr = date.toLocaleString('sv-SE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          const preview = (s.synthesis || '').substring(0, 80).replace(/[#*`]/g, '');
+          const modelLabel = { claude: '🔧 Claude', openai: '🧪 OpenAI', gemini: '📚 Gemini' }[s.synthesis_model] || s.synthesis_model;
+          
+          return '<div class="note-item" data-id="' + s.id + '">' +
+            '<div class="note-item-header">' +
+              '<span class="note-item-time">' + timeStr + '</span>' +
+              '<div class="note-item-actions">' +
+                '<button class="note-item-btn" data-action="view" title="Visa">👁️</button>' +
+                '<button class="note-item-btn" data-action="copy" title="Kopiera">📋</button>' +
+                '<button class="note-item-btn" data-action="delete" title="Ta bort">✕</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="note-item-prompt">' + escapeHtml(s.prompt) + '</div>' +
+            '<div class="note-item-preview">' + escapeHtml(preview) + '...</div>' +
+            '<div class="note-item-model">' + modelLabel + '</div>' +
+          '</div>';
+        }).join('');
+        
+        notesList.querySelectorAll('.note-item-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = btn.closest('.note-item').dataset.id;
+            const action = btn.dataset.action;
+            
+            if (action === 'delete') deleteSession(id);
+            else if (action === 'copy') {
+              const session = sessions.find(s => s.id === id);
+              if (session) copyToClipboard(session.synthesis, btn);
+            }
+            else if (action === 'view') {
+              const session = sessions.find(s => s.id === id);
+              if (session) openSessionModal(session);
+            }
+          });
+        });
+        
+        notesList.querySelectorAll('.note-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const session = sessions.find(s => s.id === item.dataset.id);
+            if (session) openSessionModal(session);
+          });
+        });
+      }
+      
+      // Session modal
+      let currentModalSession = null;
+      const sessionModal = document.getElementById('sessionModal');
+      const sessionModalPrompt = document.getElementById('sessionModalPrompt');
+      const sessionModalSynthesis = document.getElementById('sessionModalSynthesis');
+      const sessionModalMeta = document.getElementById('sessionModalMeta');
+      
+      function openSessionModal(session) {
+        currentModalSession = session;
+        const date = new Date(session.created_at);
+        const modelLabel = { claude: '🔧 Claude', openai: '🧪 OpenAI', gemini: '📚 Gemini' }[session.synthesis_model] || session.synthesis_model;
+        
+        sessionModalMeta.textContent = date.toLocaleString('sv-SE') + ' • ' + modelLabel;
+        sessionModalPrompt.textContent = session.prompt;
+        sessionModalSynthesis.innerHTML = renderMarkdown(session.synthesis);
+        sessionModal.classList.add('open');
+      }
+      
+      function closeSessionModal() {
+        sessionModal.classList.remove('open');
+        currentModalSession = null;
+      }
+      
+      document.getElementById('closeSessionModal').addEventListener('click', closeSessionModal);
+      sessionModal.addEventListener('click', (e) => { if (e.target === sessionModal) closeSessionModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sessionModal.classList.contains('open')) closeSessionModal(); });
+      
+      document.getElementById('copySessionSynthesis').addEventListener('click', () => {
+        if (currentModalSession) {
+          navigator.clipboard.writeText(currentModalSession.synthesis);
+          alert('Syntes kopierad!');
+        }
+      });
+      
+      document.getElementById('copySessionAll').addEventListener('click', () => {
+        if (currentModalSession) {
+          const text = '## Prompt\n\n' + currentModalSession.prompt + '\n\n## Syntes\n\n' + currentModalSession.synthesis;
+          navigator.clipboard.writeText(text);
+          alert('Prompt + syntes kopierat!');
+        }
+      });
+      
+      document.getElementById('loadSessionPrompt').addEventListener('click', () => {
+        if (currentModalSession) {
+          promptEl.value = currentModalSession.prompt;
+          closeSessionModal();
+          promptEl.focus();
+        }
+      });
+      
+      function escapeHtml(str) {
+        return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      
+      // Initialize sessions
+      loadSessions();
+      
+      // Toggle sidebar
+      notesToggle.addEventListener('click', () => notesSidebar.classList.toggle('collapsed'));
+      
+      // Export
+      document.getElementById('exportNotes').addEventListener('click', () => {
+        if (sessions.length === 0) { alert('Inga sessioner att exportera.'); return; }
+        
+        let md = '# AI Council Sessioner\n\nExporterad: ' + new Date().toLocaleString('sv-SE') + '\n\n---\n\n';
+        sessions.forEach(s => {
+          md += '## ' + new Date(s.created_at).toLocaleString('sv-SE') + '\n\n';
+          md += '**Prompt:** ' + s.prompt + '\n\n';
+          md += '**Syntes-modell:** ' + s.synthesis_model + '\n\n';
+          md += s.synthesis + '\n\n---\n\n';
+        });
+        
+        const blob = new Blob([md], { type: 'text/markdown' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'ai-council-' + new Date().toISOString().split('T')[0] + '.md';
+        a.click();
+      });
+      
+      // Clear
+      document.getElementById('clearNotes').addEventListener('click', async () => {
+        if (!confirm('Rensa alla sessioner?')) return;
+        
+        if (useSupabase) {
+          for (const s of sessions) {
+            await fetch('/api/ai-council/sessions?id=' + s.id, { method: 'DELETE', credentials: 'include' });
+          }
+        }
+        localStorage.removeItem('ai-council-sessions');
+        sessions = [];
+        renderSessions();
+      });
+      
+      // Accordion toggles
+      document.querySelectorAll('.accordion-header').forEach(btn => {
+        btn.addEventListener('click', () => btn.closest('.accordion').classList.toggle('open'));
+      });
+      
+      // Copy
+      function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+          const span = btn.querySelector('span');
+          const orig = span ? span.textContent : '';
+          btn.classList.add('copied');
+          if (span) span.textContent = '✓';
+          setTimeout(() => { btn.classList.remove('copied'); if (span) span.textContent = orig; }, 2000);
+        });
+      }
+      
+      document.querySelectorAll('.copy-btn[data-copy]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const text = currentResponses[btn.dataset.copy];
+          if (text) copyToClipboard(text, btn);
+        });
+      });
+      
+      document.getElementById('copySynthesis').addEventListener('click', function() {
+        if (currentResponses.synthesis) copyToClipboard(currentResponses.synthesis, this);
+      });
+      
+      document.getElementById('saveSynthesis').addEventListener('click', async function() {
+        if (!currentResponses.synthesis || !currentPrompt) return;
+        
+        const btn = this;
+        btn.disabled = true;
+        
+        await saveSession({
+          prompt: currentPrompt,
+          context: contextEl.value,
+          responses: currentResponses.rawResponses,
+          synthesis: currentResponses.synthesis,
+          synthesisModel: synthesisModelEl.value,
+          totalDuration: currentResponses.totalDuration
+        });
+        
+        btn.classList.add('saved');
+        btn.querySelector('span').textContent = 'Sparat!';
+        setTimeout(() => { btn.classList.remove('saved'); btn.querySelector('span').textContent = 'Spara'; btn.disabled = false; }, 2000);
+      });
+      
+      // Helpers
+      function formatDuration(ms) { return ms < 1000 ? ms + 'ms' : (ms / 1000).toFixed(1) + 's'; }
+      function renderMarkdown(content) { return typeof marked !== 'undefined' && marked.parse ? marked.parse(content || '') : '<p>' + (content || '').replace(/\n/g, '<br>') + '</p>'; }
+      function setStatus(text, show) { statusEl.classList.toggle('visible', show); statusTextEl.textContent = text; }
+      function showError(text) { errorEl.classList.add('visible'); errorEl.textContent = text; }
+      function hideError() { errorEl.classList.remove('visible'); }
+      function setLoading(loading) { runBtn.disabled = loading; runBtn.classList.toggle('loading', loading); }
+      
+      function displayResponse(provider, data) {
+        const statusEl = document.getElementById('status-' + provider);
+        const durationEl = document.getElementById('duration-' + provider);
+        const contentEl = document.getElementById('content-' + provider);
+        const markdownEl = contentEl.querySelector('.markdown-content');
+        
+        currentResponses[provider] = data.response || '';
+        
+        if (data.error) {
+          statusEl.textContent = '❌';
+          statusEl.classList.add('error');
+          markdownEl.innerHTML = '<p style="color:#f87171;">' + data.error + '</p>';
+        } else {
+          statusEl.textContent = '✓';
+          statusEl.classList.add('success');
+          markdownEl.innerHTML = renderMarkdown(data.response);
+        }
+        durationEl.textContent = formatDuration(data.duration);
+      }
+      
+      // Run query
+      async function runQuery() {
+        const context = contextEl.value.trim();
+        const prompt = promptEl.value.trim();
+        const synthesisModel = synthesisModelEl.value;
+        const selectedModels = getSelectedModels();
+        const enableDeliberation = enableDeliberationEl.checked;
+        
+        if (!prompt) { showError('Ange en prompt.'); return; }
+        if (selectedModels.length === 0) { showError('Välj minst en AI-modell.'); return; }
+        if (enableDeliberation && selectedModels.length < 2) {
+          showError('Deliberation kräver minst 2 valda modeller.');
+          return;
+        }
+        
+        currentPrompt = prompt;
+        hideError();
+        setLoading(true);
+        
+        const modelNames = selectedModels.map(m => ({ openai: 'OpenAI', anthropic: 'Claude', gemini: 'Gemini', grok: 'Grok' }[m])).join(', ');
+        setStatus('Runda 1: Skickar till ' + modelNames + '...', true);
+        
+        resultsEl.classList.remove('visible');
+        synthesisCard.style.display = 'none';
+        round2Section.style.display = 'none';
+        round1Label.style.display = enableDeliberation ? 'block' : 'none';
+        
+        currentResponses = { openai: '', anthropic: '', google: '', grok: '', 'r2-openai': '', 'r2-anthropic': '', 'r2-google': '', 'r2-grok': '', synthesis: '', rawResponses: [], totalDuration: 0 };
+        
+        // Hide/show Round 1 accordions based on selection
+        ['openai', 'anthropic', 'google', 'grok'].forEach(p => {
+          const accordion = document.getElementById('accordion-' + p);
+          const r2Accordion = document.getElementById('accordion-r2-' + p);
+          if (accordion) {
+            const providerToModel = { openai: 'openai', anthropic: 'anthropic', google: 'gemini', grok: 'grok' };
+            const isSelected = selectedModels.includes(providerToModel[p]);
+            accordion.style.display = isSelected ? 'block' : 'none';
+            if (r2Accordion) r2Accordion.style.display = isSelected ? 'block' : 'none';
+            if (isSelected) {
+              document.getElementById('status-' + p).textContent = '';
+              document.getElementById('status-' + p).className = 'accordion-status';
+              document.getElementById('duration-' + p).textContent = '';
+              document.getElementById('content-' + p).querySelector('.markdown-content').innerHTML = '';
+              accordion.classList.remove('open');
+              // Clear R2 as well
+              if (r2Accordion) {
+                const r2Status = document.getElementById('status-r2-' + p);
+                const r2Duration = document.getElementById('duration-r2-' + p);
+                const r2Content = document.getElementById('content-r2-' + p);
+                if (r2Status) { r2Status.textContent = ''; r2Status.className = 'accordion-status'; }
+                if (r2Duration) r2Duration.textContent = '';
+                if (r2Content) r2Content.querySelector('.markdown-content').innerHTML = '';
+                r2Accordion.classList.remove('open');
+              }
+            }
+          }
+        });
+        
+        // Combine file content
+        const fileContent = uploadedFiles.map(f => '### ' + f.name + '\n' + f.content).join('\n\n---\n\n');
+        
+        try {
+          const response = await fetch('/api/ai-council/query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ context, prompt, synthesisModel, fileContent, selectedModels, enableDeliberation })
+          });
+          
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Något gick fel');
+          
+          // Update available models from API response
+          if (data.availableModels) {
+            data.availableModels.forEach(m => { availableModels[m.model] = m.available; });
+            updateModelCheckboxes();
+          }
+          
+          resultsEl.classList.add('visible');
+          currentResponses.rawResponses = data.responses;
+          currentResponses.totalDuration = data.totalDuration;
+          
+          // Display Round 1 responses
+          const providerMap = { 'OpenAI': 'openai', 'Anthropic': 'anthropic', 'Google': 'google', 'xAI': 'grok' };
+          data.responses.forEach(r => { const key = providerMap[r.provider]; if (key) displayResponse(key, r); });
+          
+          // Display Round 2 responses if deliberation was enabled
+          if (data.deliberationEnabled && data.round2Responses) {
+            setStatus('Runda 2: Modellerna granskar varandra...', true);
+            round2Section.style.display = 'block';
+            
+            data.round2Responses.forEach(r => {
+              const key = providerMap[r.provider];
+              if (key) {
+                displayResponse('r2-' + key, r);
+              }
+            });
+          }
+          
+          const synthLabel = { claude: 'Claude', openai: 'OpenAI o1', gemini: 'Gemini', grok: 'Grok' }[data.synthesisModel || synthesisModel];
+          const synthType = data.deliberationEnabled ? 'Supersyntes' : 'Syntes';
+          setStatus(synthType + ' med ' + synthLabel + '...', true);
+          
+          if (data.synthesis) {
+            currentResponses.synthesis = data.synthesis.response || '';
+            synthesisCard.style.display = 'block';
+            document.getElementById('synthesisDuration').textContent = formatDuration(data.synthesis.duration);
+            document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
+            document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
+          }
+          
+          document.getElementById('totalDuration').textContent = formatDuration(data.totalDuration);
+          setStatus('', false);
+        } catch (error) {
+          showError(error.message);
+          setStatus('', false);
+        } finally {
+          setLoading(false);
+        }
+      }
+      
+      runBtn.addEventListener('click', runQuery);
+      document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery(); });
+    });
+  </script>
+</body>
+</html>
