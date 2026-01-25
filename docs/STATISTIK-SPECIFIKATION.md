@@ -584,40 +584,44 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 
 ---
 
-### 🥈 Sprint 2: Tid på dagen
+### 🥈 Sprint 2: Tid på dagen ✅ KLAR
 
 **Mål:** Visa svarstid och svarsfrekvens baserat på när SMS skickades
 
-#### 2a. API (1h)
-- [ ] `GET /api/statistik/tid-pa-dagen`
-- [ ] Gruppera på tidsblock (08-10, 10-12, 12-14, 14-16, 16-18, 18-20)
+> **OBS:** Implementerad som del av Sprint 1 - API:et inkluderar redan tid-på-dagen-data.
 
-#### 2b. UI (1.5h)
-- [ ] Tabell med svarstid per tidsblock
-- [ ] Markera bästa/sämsta tid
+#### 2a. API (inkluderat i Sprint 1)
+- [x] Tid-på-dagen-data i `/api/statistik/svarstid`
+- [x] Grupperad på tidsblock (08-10, 10-12, etc.)
 
-**Uppskattad tid Sprint 2:** 2.5 timmar
+#### 2b. UI (inkluderat i Sprint 1 & 3)
+- [x] Chart.js-diagram med svarstid per tidsblock
+- [x] Färgkodning (grön/gul/röd) baserat på svarstid
+
+**Implementerad 2026-01-24**
 
 ---
 
-### 🥉 Sprint 3: Interaktiva grafer med Chart.js
+### 🥉 Sprint 3: Interaktiva grafer med Chart.js ✅ KLAR
 
 **Mål:** Professionellt utseende med interaktiva grafer
 
 #### 3a. Integrera Chart.js (1h)
-- [ ] Lägg till Chart.js dependency
-- [ ] Skapa återanvändbar graf-komponent
+- [x] Chart.js redan installerat (v4.5.1)
+- [x] Dynamisk import för bättre prestanda
 
-#### 3b. Svarstidshistogram (1.5h)
-- [ ] Interaktivt histogram: 0-5min, 5-15min, 15-30min, 30-60min, 60+min
-- [ ] Hover för detaljer
-- [ ] Färgkodning per kategori
+#### 3b. Kategori-diagram (1.5h)
+- [x] Horisontellt stapeldiagram per kategori
+- [x] Färgkodning per prioritet (röd/orange/amber/sky)
+- [x] Rika tooltips med medel, median, antal, JA-rate
+- [x] Animerad inladdning (800ms, easeOutQuart)
 
-#### 3c. Stapeldiagram per kategori (1h)
-- [ ] Ersätt enkel tabell med interaktiv graf
-- [ ] Animerad inladdning
+#### 3c. Tid-på-dagen-diagram (1h)
+- [x] Vertikalt stapeldiagram per tidsblock
+- [x] Dynamisk färgkodning (grön ≤15min, gul ≤25min, röd >25min)
+- [x] Tooltips med svarstid, antal, JA-rate
 
-**Uppskattad tid Sprint 3:** 3.5 timmar
+**Implementerad 2026-01-24**
 
 ---
 
@@ -650,19 +654,22 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 
 ### Sammanfattning
 
-| Sprint | Fokus | Tid | Prioritet |
-|--------|-------|-----|-----------|
-| **1** | Svarstid per kategori | 4h | 🥇 Högst |
-| **2** | Tid på dagen | 2.5h | 🥈 Hög |
-| **3** | Interaktiva grafer | 3.5h | 🥉 Medel |
-| **4+** | Utökad statistik | 6-8h | 📊 Framtida |
+| Sprint | Fokus | Status | Datum |
+|--------|-------|--------|-------|
+| **1** | Svarstid per kategori | ✅ Klar | 2026-01-24 |
+| **2** | Tid på dagen | ✅ Klar | 2026-01-24 |
+| **3** | Interaktiva grafer | ✅ Klar | 2026-01-24 |
+| **4+** | Utökad statistik | 📋 Planerad | - |
 
-**Total tid för Sprint 1-3:** ~10 timmar
-- [ ] Laddningsindikatorer
-- [ ] Felhantering
-- [ ] Dokumentation
+**Sprint 1-3 implementerade:** 2026-01-24
 
-**Total uppskattad tid:** 12-16 timmar
+Implementerade funktioner:
+- [x] API endpoint `/api/statistik/svarstid`
+- [x] Databasmigrering med trigger för svarstidsberäkning
+- [x] Chart.js-grafer (kategori + tid på dagen)
+- [x] Interaktiva tooltips
+- [x] Periodväljare (30d/90d/All tid)
+- [x] Detaljerad tabell med alla mätvärden
 
 ---
 
