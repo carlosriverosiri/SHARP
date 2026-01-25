@@ -559,26 +559,28 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 
 > **Prioriteringsprincip:** Fokusera på det som ger mest värde först - svarstidsanalys.
 
-### 🥇 Sprint 1: Svarstid per kategori (FÖRST)
+### 🥇 Sprint 1: Svarstid per kategori ✅ KLAR
 
 **Mål:** Visa svarstid för AKUT, Sjukskriven, Ont, Pensionär, Normal
 
 #### 1a. Datagrund (1h)
-- [ ] Skapa migration 007-statistik.sql
-- [ ] Lägg till `svarstid_sekunder` i `sms_kampanj_mottagare`
-- [ ] Skapa trigger för automatisk svarstidsberäkning
-- [ ] Uppdatera `kampanj/skapa.ts` att spara `prioritet` korrekt
+- [x] Skapa migration 007-statistik.sql
+- [x] Lägg till `svarstid_sekunder` i `sms_kampanj_mottagare`
+- [x] Skapa trigger för automatisk svarstidsberäkning
+- [x] Vyer för aggregerad statistik (`v_svarstid_per_kategori`, `v_svarstid_per_timme`)
 
 #### 1b. API för svarstid (1h)
-- [ ] `GET /api/statistik/svarstid` - returnerar svarstid per kategori
-- [ ] Medel, median, min, max per kategori
+- [x] `GET /api/statistik/svarstid` - returnerar svarstid per kategori
+- [x] Medel, median, min, max per kategori
+- [x] JA-rate per kategori
 
 #### 1c. UI: Svarstidstabell + stapeldiagram (2h)
-- [ ] Tabell med svarstid per kategori i Historik-fliken
-- [ ] Horisontellt stapeldiagram (enkel version först)
-- [ ] Periodväljare (30d / 90d / Allt)
+- [x] Tabell med svarstid per kategori i Historik-fliken
+- [x] Horisontellt stapeldiagram med färgkodning per kategori
+- [x] Periodväljare (30d / 90d / Allt)
+- [x] Tid på dagen-diagram
 
-**Uppskattad tid Sprint 1:** 4 timmar
+**Uppskattad tid Sprint 1:** 4 timmar → **Implementerad 2026-01-24**
 
 ---
 
