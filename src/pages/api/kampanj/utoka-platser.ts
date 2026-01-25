@@ -5,10 +5,16 @@
  * Body: {
  *   kampanjId: "xxx",
  *   antalNyaPlatser: 1 | 2  // Lägg till 1-2 extra platser
+ *   rensaNejSvar?: boolean  // Ta bort NEJ-svar så nya patienter kan kontaktas
  * }
  * 
  * Återöppnar en fylld kampanj och lägger till fler platser.
  * Fortsätter skicka SMS till patienter som inte kontaktats.
+ * 
+ * Om rensaNejSvar=true:
+ * - Tar bort mottagare som svarat NEJ
+ * - Behåller JA och RESERV (de är potentiellt bokade)
+ * - Behåller de som inte svarat ännu (fortsätter vänta på svar)
  */
 
 export const prerender = false;
@@ -28,6 +34,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let body: {
     kampanjId: string;
     antalNyaPlatser: number;
+    rensaNejSvar?: boolean;
   };
 
   try {
@@ -107,6 +114,28 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
+    // Rensa NEJ-svar om begärt
+    let antalNejBortagna = 0;
+    if (body.rensaNejSvar) {
+      const { data: nejMottagare } = await supabaseAdmin
+        .from('sms_kampanj_mottagare')
+        .select('id')
+        .eq('kampanj_id', body.kampanjId)
+        .eq('svar', 'nej');
+      
+      if (nejMottagare?.length) {
+        const { error: deleteError } = await supabaseAdmin
+          .from('sms_kampanj_mottagare')
+          .delete()
+          .eq('kampanj_id', body.kampanjId)
+          .eq('svar', 'nej');
+        
+        if (!deleteError) {
+          antalNejBortagna = nejMottagare.length;
+        }
+      }
+    }
+
     // Räkna hur många patienter som återstår att kontakta
     const { count: ejKontaktade } = await supabaseAdmin
       .from('sms_kampanj_mottagare')
@@ -114,13 +143,21 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       .eq('kampanj_id', body.kampanjId)
       .is('skickad_vid', null);
 
+    // Bygg meddelande
+    let message = `Kampanjen utökad till ${nyttAntalPlatser} platser.`;
+    if (antalNejBortagna > 0) {
+      message += ` ${antalNejBortagna} NEJ-svar borttagna.`;
+    }
+    message += ` ${ejKontaktade || 0} patienter kvar att kontakta.`;
+
     return new Response(
       JSON.stringify({
         success: true,
         nyttAntalPlatser,
         antalFyllda: kampanj.antal_fyllda || 0,
         ejKontaktade: ejKontaktade || 0,
-        message: `Kampanjen utökad till ${nyttAntalPlatser} platser. ${ejKontaktade || 0} patienter kvar att kontakta.`
+        antalNejBortagna,
+        message
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );

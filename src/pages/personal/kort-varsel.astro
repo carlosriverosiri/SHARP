@@ -769,6 +769,18 @@ if (supabaseKonfigurerad) {
                 <!-- Åtgärder för fylld kampanj (utöka med fler platser) -->
                 <div id="kampanj-detalj-utoka" class="mt-4 pt-4 border-t border-sky-200 hidden">
                   <p class="text-sm font-medium text-gray-700 mb-2">Ny avbokning? Utöka kampanjen:</p>
+                  
+                  <!-- Alternativ för att rensa NEJ-svar -->
+                  <label class="flex items-center gap-2 mb-3 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      id="checkbox-rensa-nej"
+                      class="rounded border-gray-300 text-sky-500 focus:ring-sky-500"
+                      checked
+                    >
+                    <span class="text-sm text-gray-700">Ta bort NEJ-svar (börja om med nya patienter)</span>
+                  </label>
+                  
                   <div class="flex flex-wrap gap-2 items-center">
                     <button 
                       id="btn-utoka-en-plats"
@@ -784,9 +796,10 @@ if (supabaseKonfigurerad) {
                     </button>
                   </div>
                   <p class="text-xs text-gray-500 mt-2">
-                    Återöppnar kampanjen och fortsätter skicka SMS till patienter som inte kontaktats
+                    Återöppnar kampanjen och fortsätter skicka SMS. JA-svar behålls, NEJ-svar kan tas bort.
                   </p>
                   <div id="kampanj-platser-info" class="mt-2 text-sm text-sky-700 font-medium"></div>
+                  <div id="kampanj-nej-info" class="text-sm text-orange-600"></div>
                 </div>
               </div>
             </div>
@@ -1511,6 +1524,16 @@ if (supabaseKonfigurerad) {
             if (platserInfoEl) {
               platserInfoEl.textContent = `Nuvarande: ${antalFyllda}/${antalPlatser} platser fyllda`;
             }
+            // Visa antal NEJ-svar
+            const nejInfoEl = document.getElementById('kampanj-nej-info');
+            if (nejInfoEl) {
+              const antalNej = stats.nejSvar ?? 0;
+              if (antalNej > 0) {
+                nejInfoEl.textContent = `${antalNej} patient${antalNej > 1 ? 'er' : ''} har svarat NEJ`;
+              } else {
+                nejInfoEl.textContent = '';
+              }
+            }
           } else {
             utokaPlatserEl.classList.add('hidden');
           }
@@ -1661,7 +1684,17 @@ if (supabaseKonfigurerad) {
         return;
       }
       
-      const bekrafta = confirm(`Lägga till ${antalNyaPlatser} plats${antalNyaPlatser > 1 ? 'er' : ''} till kampanjen?\n\nKampanjen återöppnas och fortsätter skicka SMS till patienter som inte kontaktats.`);
+      const rensaNejSvar = (document.getElementById('checkbox-rensa-nej') as HTMLInputElement)?.checked ?? true;
+      
+      let bekraftaText = `Lägga till ${antalNyaPlatser} plats${antalNyaPlatser > 1 ? 'er' : ''} till kampanjen?`;
+      if (rensaNejSvar) {
+        bekraftaText += '\n\n✓ NEJ-svar tas bort (nya patienter kontaktas)';
+        bekraftaText += '\n✓ JA-svar behålls';
+      } else {
+        bekraftaText += '\n\nKampanjen fortsätter med kvarvarande patienter.';
+      }
+      
+      const bekrafta = confirm(bekraftaText);
       
       if (!bekrafta) return;
       
@@ -1671,7 +1704,8 @@ if (supabaseKonfigurerad) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             kampanjId,
-            antalNyaPlatser
+            antalNyaPlatser,
+            rensaNejSvar
           })
         });
         
