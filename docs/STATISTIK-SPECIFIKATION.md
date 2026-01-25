@@ -7,6 +7,55 @@
 
 ---
 
+## Prioriteringsordning för implementation
+
+### 🥇 Fas 1: Svarstid per kategori (HÖGST PRIORITET)
+
+**Varför viktigast:** Svarstiden avgör hur vi ska sätta intervall. Om vi vet att 90% av AKUT-patienter svarar inom 30 minuter behöver vi inte vänta 60 minuter.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ⏱️ MEDEL SVARSTID                                         │
+│                                                             │
+│  🚨 AKUT        ████████████████████  18 min               │
+│  📋 Sjukskriven ██████████████████████████  21 min         │
+│  🔥 Mycket ont  ████████████████████████████████  25 min   │
+│  👴 Pensionär   ██████████████  14 min                     │
+│  ⏰ Normal      ████████████████████████████████████  32 min│
+│                                                             │
+│  💡 Insikt: Om ingen svarat inom 60 min → troligen ej      │
+│     intresserad. Systemet kan gå vidare till nästa.        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Mål:** Svara på frågan *"När kan vi anta att en patient inte är intresserad?"*
+
+### 🥈 Fas 2: Tid på dagen
+
+**Varför viktigt:** Hjälper planera *när* kampanjer ska startas för bäst respons.
+
+- Förmiddag (08-12) vs Eftermiddag (12-16) vs Kväll (16-20)
+- Svarstid och svarsfrekvens per tidsblock
+
+### 🥉 Fas 3: Interaktiva grafer
+
+**Varför viktigt:** Visuellt intryck vid demonstration och presentation.
+
+> *"Bilden av grafen är det man kommer ihåg - inte siffran '4 patienter fler per månad'"*
+
+- Svarstidsfördelning som interaktivt histogram
+- Hover-effekter för detaljer
+- Professionellt utseende som bygger förtroende
+
+### 📊 Fas 4+: Övrig statistik
+
+- Svarsfrekvens per kategori (JA/NEJ/Ingen svar)
+- Statistik per läkare, sida, operationsstorlek
+- Väntetidskorrelation
+- Trendanalys över tid
+
+---
+
 ## 1. Syfte
 
 Statistikfunktionen ska ge insikter som möjliggör:
@@ -506,37 +555,107 @@ Statistiken placeras i **Historik-fliken**, i en ny sektion ovanför kampanjlist
 
 ---
 
-## 7. Implementationsordning
+## 7. Implementationsordning (uppdaterad)
 
-### Fas 1: Datagrund (1-2h)
+> **Prioriteringsprincip:** Fokusera på det som ger mest värde först - svarstidsanalys.
+
+### 🥇 Sprint 1: Svarstid per kategori (FÖRST)
+
+**Mål:** Visa svarstid för AKUT, Sjukskriven, Ont, Pensionär, Normal
+
+#### 1a. Datagrund (1h)
 - [ ] Skapa migration 007-statistik.sql
-- [ ] Lägg till nya kolumner
-- [ ] Skapa trigger för svarstidsberäkning
-- [ ] Uppdatera kampanj/skapa.ts att spara extra data
+- [ ] Lägg till `svarstid_sekunder` i `sms_kampanj_mottagare`
+- [ ] Skapa trigger för automatisk svarstidsberäkning
+- [ ] Uppdatera `kampanj/skapa.ts` att spara `prioritet` korrekt
 
-### Fas 2: API (2-3h)
-- [ ] `/api/statistik/oversikt`
-- [ ] `/api/statistik/prioritet`
-- [ ] `/api/statistik/dimension`
-- [ ] `/api/statistik/trend`
+#### 1b. API för svarstid (1h)
+- [ ] `GET /api/statistik/svarstid` - returnerar svarstid per kategori
+- [ ] Medel, median, min, max per kategori
 
-### Fas 3: UI - Översikt (2h)
-- [ ] Nyckeltalskort i Historik-fliken
-- [ ] Periodväljare
-- [ ] Grundläggande styling
+#### 1c. UI: Svarstidstabell + stapeldiagram (2h)
+- [ ] Tabell med svarstid per kategori i Historik-fliken
+- [ ] Horisontellt stapeldiagram (enkel version först)
+- [ ] Periodväljare (30d / 90d / Allt)
 
-### Fas 4: UI - Detaljerad statistik (3-4h)
-- [ ] Tabeller per kategori
-- [ ] Svarsfrekvens-vy
-- [ ] Svarstidshistogram
+**Uppskattad tid Sprint 1:** 4 timmar
 
-### Fas 5: UI - Grafer & Trender (2-3h)
-- [ ] Integrera Chart.js
-- [ ] Trendgrafer
-- [ ] Insiktsbox
+---
 
-### Fas 6: Polish (1-2h)
+### 🥈 Sprint 2: Tid på dagen
+
+**Mål:** Visa svarstid och svarsfrekvens baserat på när SMS skickades
+
+#### 2a. API (1h)
+- [ ] `GET /api/statistik/tid-pa-dagen`
+- [ ] Gruppera på tidsblock (08-10, 10-12, 12-14, 14-16, 16-18, 18-20)
+
+#### 2b. UI (1.5h)
+- [ ] Tabell med svarstid per tidsblock
+- [ ] Markera bästa/sämsta tid
+
+**Uppskattad tid Sprint 2:** 2.5 timmar
+
+---
+
+### 🥉 Sprint 3: Interaktiva grafer med Chart.js
+
+**Mål:** Professionellt utseende med interaktiva grafer
+
+#### 3a. Integrera Chart.js (1h)
+- [ ] Lägg till Chart.js dependency
+- [ ] Skapa återanvändbar graf-komponent
+
+#### 3b. Svarstidshistogram (1.5h)
+- [ ] Interaktivt histogram: 0-5min, 5-15min, 15-30min, 30-60min, 60+min
+- [ ] Hover för detaljer
+- [ ] Färgkodning per kategori
+
+#### 3c. Stapeldiagram per kategori (1h)
+- [ ] Ersätt enkel tabell med interaktiv graf
+- [ ] Animerad inladdning
+
+**Uppskattad tid Sprint 3:** 3.5 timmar
+
+---
+
+### 📊 Sprint 4+: Utökad statistik (framtida)
+
+#### 4a. Översikt/Dashboard
+- [ ] Nyckeltalskort (kampanjer, fyllda, svarsfrekvens)
+- [ ] Trend-pilar (jämför med föregående period)
+
+#### 4b. Svarsfrekvens per kategori
+- [ ] JA / NEJ / Ingen svar per kategori
+- [ ] Stapeldiagram
+
+#### 4c. Statistik per dimension
+- [ ] Per läkare
+- [ ] Per operationsstorlek (liten/stor)
+- [ ] Per sida (HÖ/VÄ)
+- [ ] Per väntetid till planerad op
+
+#### 4d. Trendanalys
+- [ ] Linjediagram över tid
+- [ ] Jämförelse mellan perioder
+
+#### 4e. Polish
 - [ ] Responsiv design
+- [ ] Laddningsindikatorer
+- [ ] Export till CSV
+
+---
+
+### Sammanfattning
+
+| Sprint | Fokus | Tid | Prioritet |
+|--------|-------|-----|-----------|
+| **1** | Svarstid per kategori | 4h | 🥇 Högst |
+| **2** | Tid på dagen | 2.5h | 🥈 Hög |
+| **3** | Interaktiva grafer | 3.5h | 🥉 Medel |
+| **4+** | Utökad statistik | 6-8h | 📊 Framtida |
+
+**Total tid för Sprint 1-3:** ~10 timmar
 - [ ] Laddningsindikatorer
 - [ ] Felhantering
 - [ ] Dokumentation
