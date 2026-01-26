@@ -27,7 +27,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v2.3</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v2.4</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor
@@ -327,7 +327,14 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             Funktioner
           </h2>
           
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">⚡</div>
+              <h4 class="text-white font-semibold mb-1">Profilväljare</h4>
+              <p class="text-emerald-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">5 förinställda lägen</p>
+            </div>
+            
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">📎</div>
               <h4 class="text-white font-semibold mb-1">Filuppladdning</h4>
@@ -350,6 +357,35 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="text-2xl mb-3">💰</div>
               <h4 class="text-white font-semibold mb-1">Kostnadsvisning</h4>
               <p class="text-slate-500 text-sm">Realtidspriser i USD/SEK</p>
+            </div>
+          </div>
+          
+          <!-- Profile details -->
+          <div class="mt-8 bg-slate-900/50 border border-slate-700 rounded-xl p-6">
+            <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
+              <span>⚡</span> Profilväljare - snabbast som standard
+            </h4>
+            <div class="grid md:grid-cols-5 gap-3 text-sm">
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 text-center">
+                <div class="text-emerald-400 font-semibold">⚡ Snabb</div>
+                <div class="text-slate-500 text-xs">~3-5 sek</div>
+              </div>
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 text-center">
+                <div class="text-emerald-400 font-semibold">🏥 Patient</div>
+                <div class="text-slate-500 text-xs">Turbo</div>
+              </div>
+              <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                <div class="text-slate-300 font-semibold">💻 Kod</div>
+                <div class="text-slate-500 text-xs">~10 sek</div>
+              </div>
+              <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                <div class="text-slate-300 font-semibold">🔬 Vetenskap</div>
+                <div class="text-slate-500 text-xs">~30 sek</div>
+              </div>
+              <div class="bg-slate-800/50 rounded-lg p-3 text-center">
+                <div class="text-slate-300 font-semibold">🎯 Djup</div>
+                <div class="text-slate-500 text-xs">~45 sek</div>
+              </div>
             </div>
           </div>
         </div>
@@ -403,6 +439,23 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
+          
+          <!-- Profile selector update -->
+          <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-2xl">⚡</div>
+              <div>
+                <h3 class="text-emerald-400 font-semibold mb-2">Profilväljare (2026-01-26)</h3>
+                <p class="text-slate-400 text-sm mb-3">
+                  <strong class="text-slate-300">Nytt:</strong> 5 förinställda profiler för olika användningsfall.
+                  <strong class="text-emerald-400">Snabb är nu standard</strong> - inte den dyraste modellen.
+                </p>
+                <p class="text-slate-500 text-xs">
+                  Personalen får blixtsnabba svar (~3-5 sek) vid telefonsamtal med "⚡ Snabb" eller "🏥 Patientfrågor".
+                </p>
+              </div>
+            </div>
+          </div>
           
           <!-- Grok 4 Fast update -->
           <div class="bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-6">
@@ -466,6 +519,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <li>✓ Kostnadsvisning i realtid 💰</li>
                 <li>✓ Gemini 2.0 Flash (ersätter 1.5 Pro) ⚡</li>
                 <li>✓ Grok 4 Fast (2M kontext) 🚀</li>
+                <li>✓ Profilväljare med 5 lägen ⚡ NY!</li>
               </ul>
             </div>
             

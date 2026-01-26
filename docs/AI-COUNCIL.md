@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-26 (v2.3 - Grok 4 Fast)
+**Senast uppdaterad:** 2026-01-26 (v2.4 - Profilväljare)
 
 ---
 
@@ -70,14 +70,28 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 | **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
 | **Grok 4 Fast** | xAI | 2M kontext, djup analys, vetenskapligt | Litteratursyntes, evidensgranskning |
 
-### Välj modeller
+### Profilväljare ⚡ (NY!)
 
-Du kan välja vilka modeller som ska svara genom checkboxar i gränssnittet. Blanda fritt!
+Välj en förinställd profil för snabb konfiguration:
+
+| Profil | Modeller | Syntes | Deliberation | Tid | Användning |
+|--------|----------|--------|--------------|-----|------------|
+| **⚡ Snabb** (standard) | Gemini + Claude | GPT-4o | ❌ | ~3-5 sek | Allmänna frågor |
+| **🏥 Patientfrågor** | Gemini + Claude | GPT-4o | ❌ | ~3-5 sek | Telefonsamtal, turbo |
+| **💻 Kodning** | Claude + o1 | Claude | ❌ | ~10 sek | Arkitektur, debugging |
+| **🔬 Vetenskap** | Grok + o1 + Gemini | Grok | ✅ | ~30 sek | Litteratur, evidens |
+| **🎯 Djup analys** | Alla 4 | Opus 4.5 | ✅ | ~45 sek | Kritiska beslut |
+
+> **Standard = snabbast och billigast**, inte dyrast. Personalen får blixtsnabba svar vid telefonsamtal.
+
+### Välj modeller manuellt
+
+Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 
 **Exempelkombinationer:**
-- **Kodgranskning:** OpenAI + Claude + Gemini
-- **Vetenskaplig research:** Gemini + Grok  
-- **Snabb logisk analys:** Endast OpenAI o1
+- **Kodgranskning:** Claude + OpenAI o1
+- **Vetenskaplig research:** Grok + Gemini + o1
+- **Snabb logisk analys:** Endast Gemini
 
 ### Deliberation (Runda 2)
 
@@ -429,6 +443,22 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v2.4 (2026-01-26) - Profilväljare
+
+**Nyhet:** Förinställda profiler för olika användningsfall
+
+**Funktioner:**
+- ⚡ **Snabb** (standard) - Gemini + Claude med GPT-4o syntes (~3-5 sek)
+- 🏥 **Patientfrågor** - Turbo-läge för telefonsamtal
+- 💻 **Kodning** - Claude + o1 för arkitektur och debugging
+- 🔬 **Vetenskap** - Grok + deliberation för litteratursyntes
+- 🎯 **Djup analys** - Alla modeller + Opus 4.5 för kritiska beslut
+
+**Principer:**
+- Standard = snabbast och billigast (inte dyrast)
+- Manuella ändringar avmarkerar profilen
+- Syntesmodeller sorterade: snabbast först
 
 ### v2.3 (2026-01-26) - Grok 4 Fast
 
