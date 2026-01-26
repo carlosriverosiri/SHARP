@@ -846,6 +846,20 @@ if (!anvandare) {
             body: JSON.stringify(profileData)
           });
           
+          // Debug: Check response before parsing
+          const contentType = res.headers.get('content-type');
+          if (!res.ok) {
+            const text = await res.text();
+            console.error('API error:', res.status, text.substring(0, 200));
+            throw new Error(`Server error (${res.status}): ${text.includes('<!DOCTYPE') ? 'Sidan hittades inte' : text.substring(0, 100)}`);
+          }
+          
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await res.text();
+            console.error('Wrong content type:', contentType, text.substring(0, 200));
+            throw new Error('Servern svarade med fel format. Försök igen senare.');
+          }
+          
           const data = await res.json();
           
           if (data.success) {
