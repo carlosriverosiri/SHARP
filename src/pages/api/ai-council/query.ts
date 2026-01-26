@@ -1122,6 +1122,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     profileType = 'fast' // Which profile preset is being used
   } = body;
 
+  // Default scientific prompt for all users using the Science profile
+  const DEFAULT_SCIENTIFIC_PROMPT = `När du svarar på vetenskapliga eller medicinska frågor:
+
+REFERENSHANTERING:
+- Ge evidensbaserade svar med inline-referenser [1], [2], etc. direkt efter relevanta påståenden
+- Prioritera högkvalitativa källor: RCT:er, systematiska reviews, meta-analyser
+- Använd etablerade guidelines från AAOS, ESSKA, Cochrane, eller liknande organisationer
+- Max 5-10 referenser per svar om inte fler behövs
+
+REFERENSLISTA:
+I slutet av svaret, lägg till en sektion kallad "Referenser" med numrerad lista där varje referens inkluderar:
+- Författare, år, titel (kortfattad)
+- Klickbar länk (DOI, PubMed-länk eller direkt URL)
+- Prioritera källor som är enkla att importera till Zotero
+
+ZOTERO BULK IMPORT:
+Efter referenslistan, lägg ALLTID till en sektion kallad "Zotero Bulk Import Lista" med:
+- Ett kodblock (markdown \`\`\`) som innehåller DOI, PMID eller URL:er (en per rad)
+- Prioritera PMID för PubMed (extrahera siffran)
+- För DOI: använd full DOI (t.ex. 10.1016/j.jhsa.2021.07.012)
+- Instruktion ovanför: "Kopiera listan nedan och klistra in i Zotero → Add Item by Identifier (magic wand-ikonen)."
+
+SVARSSTIL:
+- Tydliga, strukturerade och evidensbaserade svar
+- Använd punktlistor eller tabeller vid behov
+- Gå direkt på nyanser och evidens för medicinska frågor`;
+
   // Fetch user profile for personalized AI responses
   let userProfileContext = '';
   if (SUPABASE_URL && SUPABASE_ANON_KEY) {
@@ -1141,19 +1168,35 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           
           if (profile) {
             // Use scientific_context for science profile, otherwise use general profile
-            if (profileType === 'science' && profile.scientific_context) {
-              userProfileContext = profile.scientific_context;
+            if (profileType === 'science') {
+              // Personal scientific context overrides default, otherwise use default
+              userProfileContext = profile.scientific_context || DEFAULT_SCIENTIFIC_PROMPT;
             } else if (profileType !== 'fast') {
               // For fast profile, skip personalization for speed
               userProfileContext = generateSystemPrompt(profile);
             }
+          } else if (profileType === 'science') {
+            // No profile exists but science mode selected - use default
+            userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
           }
+        } else if (profileType === 'science') {
+          // Not logged in but science mode - use default
+          userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
         }
+      } else if (profileType === 'science') {
+        // No access token but science mode - use default
+        userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
       }
     } catch (e) {
-      // Profile fetch failed, continue without personalization
+      // Profile fetch failed, continue without personalization (but use default for science)
       console.log('Failed to fetch user profile:', e);
+      if (profileType === 'science') {
+        userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
+      }
     }
+  } else if (profileType === 'science') {
+    // Supabase not configured but science mode - use default
+    userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
   }
 
   try {
