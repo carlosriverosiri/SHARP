@@ -386,6 +386,68 @@ Syntesen är en **rekommendation**, inte ett facit. Använd den som:
 
 ---
 
+## AI Council vs Cursor
+
+> När ska jag använda AI Council och när ska jag använda Cursor?
+
+### Cursor är bättre för:
+
+| Uppgift | Varför |
+|---------|--------|
+| **Kodimplementation** | Direkt tillgång till filsystemet, kan läsa/skriva kod |
+| **Kontextmedvetenhet** | Ser hela din kodbas, imports, typer, beroenden |
+| **Iteration** | Kan direkt fixa fel, köra linting, testa |
+| **Agentläge** | Kan utföra komplexa multi-steg uppgifter |
+| **Debugging** | Integrerad terminal, kan köra och verifiera koden |
+
+### AI Council är bättre för:
+
+| Uppgift | Varför |
+|---------|--------|
+| **Arkitekturbeslut FÖRE kodning** | "Ska jag använda Redux eller Zustand?" - få konsensus först |
+| **Deliberation** | Modellerna granskar varandras svar - fångar fler edge cases |
+| **Explicit syntes** | En "domare" väger alla argument och ger slutsats |
+| **Dokumenterad beslutslogg** | Sessioner sparas - du kan visa varför du valde en approach |
+| **Vetenskapliga frågor** | Referenshantering, Zotero-integration |
+| **Kostnadsvisning** | Du ser exakt vad varje körning kostar |
+| **Patientfrågor** | Snabba svar med korsvalidering från flera modeller |
+
+### Rekommenderad arbetsprocess
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  1. PLANERING (AI Council)                                          │
+│     "Hur bör jag strukturera autentiseringen?"                      │
+│     → Deliberation → Syntes → Spara beslut                          │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  2. IMPLEMENTATION (Cursor)                                          │
+│     "Implementera autentisering enligt denna plan"                  │
+│     → Agent mode → Kodgenerering → Testing                          │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  3. SECOND OPINION (AI Council - valfritt)                          │
+│     Om Cursor ger ett svar du är osäker på:                         │
+│     → Kör samma fråga med Deliberation                              │
+│     → Får alla modeller samma slutsats?                             │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Sammanfattning
+
+| Verktyg | Användning |
+|---------|------------|
+| **Cursor** | All faktisk kodskrivning, debugging, refaktorering, "gör X" |
+| **AI Council** | Strategiska beslut, arkitektur, forskning, beslutsdokumentation |
+
+> **Analogi:** AI Council är **arkitekten** som designar huset. Cursor är **byggaren** som bygger det.
+
+---
+
 ## Felsökning
 
 ### "API-nycklar saknas"
