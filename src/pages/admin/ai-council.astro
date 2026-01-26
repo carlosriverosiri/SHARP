@@ -299,6 +299,34 @@ if (!anvandare) {
     }
     .model-checkbox:hover { border-color: #444; background: #222; }
     .model-checkbox.selected { border-color: #555; background: #252525; }
+    
+    /* Profile selector */
+    .profile-selector {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #999;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .profile-btn:hover { border-color: #555; background: #222; color: #ccc; }
+    .profile-btn.active { border-color: #818cf8; background: rgba(129, 140, 248, 0.1); color: #818cf8; }
+    .profile-btn.turbo.active { border-color: #4ade80; background: rgba(74, 222, 128, 0.1); color: #4ade80; }
+    .profile-btn .profile-icon { font-size: 1rem; }
+    .profile-btn .profile-name { font-weight: 500; }
+    .profile-btn .profile-desc { font-size: 0.6875rem; color: #666; }
+    .profile-btn.active .profile-desc { color: inherit; opacity: 0.7; }
     .model-checkbox.unavailable { opacity: 0.4; cursor: not-allowed; }
     .model-checkbox input { display: none; }
     .model-checkbox-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -725,14 +753,59 @@ if (!anvandare) {
               <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga..." required></textarea>
             </div>
             
+            <!-- Profile selector -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="icon">⚡</span> Välj profil
+              </label>
+              <div class="profile-selector" id="profileSelector">
+                <button type="button" class="profile-btn turbo active" data-profile="snabb">
+                  <span class="profile-icon">⚡</span>
+                  <div>
+                    <div class="profile-name">Snabb</div>
+                    <div class="profile-desc">~3-5 sek</div>
+                  </div>
+                </button>
+                <button type="button" class="profile-btn turbo" data-profile="patient">
+                  <span class="profile-icon">🏥</span>
+                  <div>
+                    <div class="profile-name">Patientfrågor</div>
+                    <div class="profile-desc">Turbo + kontroll</div>
+                  </div>
+                </button>
+                <button type="button" class="profile-btn" data-profile="kod">
+                  <span class="profile-icon">💻</span>
+                  <div>
+                    <div class="profile-name">Kodning</div>
+                    <div class="profile-desc">Claude + o1</div>
+                  </div>
+                </button>
+                <button type="button" class="profile-btn" data-profile="vetenskap">
+                  <span class="profile-icon">🔬</span>
+                  <div>
+                    <div class="profile-name">Vetenskap</div>
+                    <div class="profile-desc">Grok + Deliberation</div>
+                  </div>
+                </button>
+                <button type="button" class="profile-btn" data-profile="djup">
+                  <span class="profile-icon">🎯</span>
+                  <div>
+                    <div class="profile-name">Djup analys</div>
+                    <div class="profile-desc">Alla + Opus</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+            
             <!-- Model selection -->
             <div class="form-group">
               <label class="form-label">
                 <span class="icon">🤖</span> Välj AI-modeller
+                <span class="optional">(eller använd profil)</span>
               </label>
               <div class="model-selection" id="modelSelection">
-                <label class="model-checkbox selected" data-model="openai">
-                  <input type="checkbox" checked>
+                <label class="model-checkbox" data-model="openai">
+                  <input type="checkbox">
                   <span class="model-checkbox-check">✓</span>
                   <span class="model-checkbox-dot dot-openai"></span>
                   <div>
@@ -755,7 +828,7 @@ if (!anvandare) {
                   <span class="model-checkbox-dot dot-google"></span>
                   <div>
                     <div class="model-checkbox-name">Gemini 2.0 Flash</div>
-                    <div class="model-checkbox-desc">Stor kontext</div>
+                    <div class="model-checkbox-desc">Snabbast & billigast</div>
                   </div>
                 </label>
                 <label class="model-checkbox" data-model="grok">
@@ -776,12 +849,12 @@ if (!anvandare) {
                 <div class="synthesis-selector">
                   <label for="synthesisModel">Syntes-modell:</label>
                   <select id="synthesisModel">
-                    <option value="claude">🔧 Claude Sonnet (kod)</option>
-                    <option value="claude-opus">👑 Claude Opus 4.5 (bäst)</option>
-                    <option value="openai">🧪 OpenAI o1 (logik)</option>
                     <option value="gpt4o">⚡ GPT-4o (snabb)</option>
-                    <option value="gemini">📚 Gemini (kontext)</option>
+                    <option value="claude">🔧 Claude Sonnet (kod)</option>
+                    <option value="gemini">📚 Gemini (billig)</option>
                     <option value="grok">🌐 Grok (vetenskap)</option>
+                    <option value="openai">🧪 OpenAI o1 (logik)</option>
+                    <option value="claude-opus">👑 Claude Opus 4.5 (bäst)</option>
                   </select>
                 </div>
                 <label id="deliberationToggle" class="deliberation-toggle">
@@ -814,7 +887,7 @@ if (!anvandare) {
               <span class="synthesis-icon">🧠</span>
               <div class="synthesis-title">
                 <h2>Syntes</h2>
-                <span id="synthesisModelLabel">Claude Sonnet syntetiserar</span>
+                <span id="synthesisModelLabel">GPT-4o syntetiserar</span>
               </div>
               <div class="synthesis-actions">
                 <button type="button" class="copy-btn" id="copySynthesis" title="Kopiera">
@@ -1117,10 +1190,88 @@ if (!anvandare) {
       const round1Label = document.getElementById('round1Label');
       const round2Section = document.getElementById('round2Section');
       
+      // Profile definitions
+      const profiles = {
+        snabb: {
+          name: 'Snabb',
+          models: ['gemini', 'anthropic'],
+          synthesis: 'gpt4o',
+          deliberation: false
+        },
+        patient: {
+          name: 'Patientfrågor',
+          models: ['gemini', 'anthropic'],
+          synthesis: 'gpt4o',
+          deliberation: false
+        },
+        kod: {
+          name: 'Kodning',
+          models: ['anthropic', 'openai'],
+          synthesis: 'claude',
+          deliberation: false
+        },
+        vetenskap: {
+          name: 'Vetenskap',
+          models: ['grok', 'openai', 'gemini'],
+          synthesis: 'grok',
+          deliberation: true
+        },
+        djup: {
+          name: 'Djup analys',
+          models: ['openai', 'anthropic', 'gemini', 'grok'],
+          synthesis: 'claude-opus',
+          deliberation: true
+        }
+      };
+      
+      let currentProfile = 'snabb';
+      
+      // Profile selector
+      const profileSelectorEl = document.getElementById('profileSelector');
+      
+      function applyProfile(profileId) {
+        const profile = profiles[profileId];
+        if (!profile) return;
+        
+        currentProfile = profileId;
+        
+        // Update profile buttons
+        profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.profile === profileId);
+        });
+        
+        // Update model checkboxes
+        modelSelectionEl.querySelectorAll('.model-checkbox').forEach(cb => {
+          const model = cb.dataset.model;
+          const checkbox = cb.querySelector('input');
+          const shouldSelect = profile.models.includes(model) && availableModels[model];
+          
+          checkbox.checked = shouldSelect;
+          cb.classList.toggle('selected', shouldSelect);
+        });
+        
+        // Update synthesis model
+        synthesisModelEl.value = profile.synthesis;
+        
+        // Update deliberation
+        enableDeliberationEl.checked = profile.deliberation;
+        deliberationToggle.classList.toggle('active', profile.deliberation);
+      }
+      
+      profileSelectorEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.profile-btn');
+        if (!btn) return;
+        
+        applyProfile(btn.dataset.profile);
+      });
+      
       // Deliberation toggle handler
       deliberationToggle.addEventListener('click', () => {
         enableDeliberationEl.checked = !enableDeliberationEl.checked;
         deliberationToggle.classList.toggle('active', enableDeliberationEl.checked);
+        
+        // Clear profile selection when manually changing
+        profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
       });
       
       // Model checkbox handlers
@@ -1160,7 +1311,15 @@ if (!anvandare) {
             checkbox.checked = true;
             cb.classList.add('selected');
           }
+          
+          // Clear profile selection when manually changing models
+          profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
         });
+      });
+      
+      // Clear profile when synthesis model is manually changed
+      synthesisModelEl.addEventListener('change', () => {
+        profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
       });
       
       // File upload handlers
