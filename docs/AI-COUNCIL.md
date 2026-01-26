@@ -2,7 +2,39 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-25 (v2.1 - Kostnadsvisning)
+**Senast uppdaterad:** 2026-01-23 (v2.2 - Användarprofiler)
+
+---
+
+## ⚠️ TODO: Aktivera AI Council på Netlify
+
+### 1. Lägg till API-nycklar i Netlify Dashboard
+
+Gå till [app.netlify.com](https://app.netlify.com) → ditt projekt → **Site configuration** → **Environment variables** → **Add a variable**:
+
+| Key | Var hittar jag nyckeln? |
+|-----|-------------------------|
+| `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
+| `ANTHROPIC_API_KEY` | [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys) |
+| `GOOGLE_AI_API_KEY` | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) |
+| `XAI_API_KEY` | [console.x.ai](https://console.x.ai/) |
+
+### 2. Kör migration i Supabase (för användarprofiler)
+
+Gå till [Supabase Dashboard](https://supabase.com/dashboard) → ditt projekt → **SQL Editor** → kör:
+
+```sql
+-- Kopiera innehållet från: supabase/migrations/010-ai-council-profiles.sql
+-- Eller kör filen direkt om du har psql
+```
+
+### 3. Trigga deploy på Netlify
+
+**Deploys** → **Trigger deploy** → **Deploy site** → vänta 1-2 min
+
+### 4. Testa
+
+Gå till `/admin/ai-council` och kör en testfråga!
 
 ---
 
