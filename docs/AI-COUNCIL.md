@@ -438,6 +438,62 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 ---
 
+## Användarprofiler (Ny!)
+
+Användarprofiler ger AI:n kontext om vem som frågar, vilket förbättrar svaren markant.
+
+### Profiltyper
+
+| Typ | Ikon | Beskrivning |
+|-----|------|-------------|
+| Läkare | 🩺 | Fokus på diagnostik, kirurgi, behandlingsprotokoll |
+| Sjuksköterska | 💉 | Fokus på omvårdnad, eftervård, patientkommunikation |
+| Fysioterapeut | 🏃 | Fokus på rehabilitering, träning |
+| Sekreterare | 📋 | Fokus på administration, bokningar |
+| Forskare | 🔬 | Fokus på litteratur, statistik, evidens |
+
+### Vad ingår i profilen?
+
+```
+┌─────────────────────────────────────────┐
+│  👤 Min AI-profil                        │
+│                                         │
+│  Typ: 🩺 Läkare                         │
+│                                         │
+│  Bakgrund:                              │
+│  "Ortopedkirurg med 15 års erfarenhet,  │
+│   specialiserad på axel- och knäkirurgi.│
+│   Arbetar på privat dagkirurgisk klinik.│
+│   Utbildad vid Karolinska Institutet."  │
+│                                         │
+│  Expertis: #ortopedi #axel #knä #artros │
+│                                         │
+│  [✓] Inkludera profil automatiskt       │
+└─────────────────────────────────────────┘
+```
+
+### Hur påverkar det svaren?
+
+**Utan profil:**
+> "Vid rotatorcuffskada finns flera behandlingsalternativ..."
+
+**Med läkarprofil:**
+> "Som ortopedkirurg med axelspecialisering känner du säkert till de olika suturtekniker som finns. Baserat på senaste litteraturen (Codman 2024, Burkhart 2025) visar dubbelradssutur..."
+
+### Databasschema
+
+Kör migrationen: `supabase/migrations/010-ai-council-profiles.sql`
+
+| Fält | Beskrivning |
+|------|-------------|
+| `ai_profil_typ` | lakare, sjukskoterska, fysioterapeut, etc. |
+| `ai_profil_bakgrund` | Fritext beskrivning |
+| `ai_profil_expertis` | Array: `{"ortopedi", "axel", "knä"}` |
+| `ai_default_models` | Förinställda modeller |
+| `ai_auto_inkludera_profil` | Auto-inkludera i prompts |
+
+---
+
 ## Framtida utveckling
 
 - [ ] Streaming-svar för snabbare feedback
@@ -449,10 +505,15 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - [x] Grok (xAI) integration för vetenskapliga frågor
 - [x] Deliberation: Runda 2 där modeller granskar varandra
 - [x] Kostnadsvisning per körning (tokens + USD/SEK) 💰
+- [ ] **Användarprofiler** (databas klar, UI pågår)
+- [ ] **Persistent projekttråd** + auto-summering
+- [ ] **Sök/taggning** i arkivet
 - [ ] Dela sessioner med kollegor
 - [ ] Custom syntes-prompts
 - [ ] Integration med Cursor via MCP
 - [ ] Bildanalys via multimodala API:er
+- [ ] RAG för tidigare sessioner (embeddings)
+- [ ] Grok-4 integration (när tillgänglig)
 
 ---
 
