@@ -8,3 +8,8 @@ Use these by typing @filename in chat:
 - @09_new_diagnosis_page.md (Generates a full Astro page from raw notes)
 - @11_diagnosis_master_en.md (Creates the English Master Page in /en/ with Zotero matching)
 - @13_translate_to_english.md (Translates current Swedish page to English structure)
+
+## Multi-AI Council Mode
+För komplexa problem, skriv **COUNCIL:** eller **RÅDET:** före din fråga.
+AI:n svarar då från tre perspektiv (Implementatör, Arkitekt, Kritiker) + syntes.
+Dokumentation: @MULTI-AI-ARBETSFLODE.md
