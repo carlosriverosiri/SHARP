@@ -220,6 +220,35 @@ XAI_API_KEY=xai-...  # Valfritt - för Grok
 
 > **Tips:** Du behöver inte alla nycklar. Modeller utan API-nyckel visas som "ej tillgänglig" i gränssnittet.
 
+### Lokal utveckling vs Netlify (Produktion)
+
+⚠️ **Viktigt:** `.env.local`-filen pushas **aldrig** till GitHub (av säkerhetsskäl). Du måste konfigurera miljövariabler separat för:
+
+| Miljö | Var konfigureras |
+|-------|------------------|
+| **Lokalt** | `.env.local` i projektroten |
+| **Netlify (produktion)** | Netlify Dashboard → Environment variables |
+
+#### Lägga till API-nycklar i Netlify:
+
+1. Gå till [Netlify Dashboard](https://app.netlify.com) → ditt projekt
+2. Klicka på **Site configuration** (vänstermenyn)
+3. Klicka på **Environment variables**
+4. Klicka på **Add a variable** och lägg till:
+
+| Key | Value |
+|-----|-------|
+| `OPENAI_API_KEY` | `sk-proj-...` (din OpenAI-nyckel) |
+| `ANTHROPIC_API_KEY` | `sk-ant-api03-...` (din Anthropic-nyckel) |
+| `GOOGLE_AI_API_KEY` | `AIza...` (din Google AI-nyckel) |
+| `XAI_API_KEY` | `xai-...` (din xAI/Grok-nyckel) |
+
+5. Klicka på **Deploys** → **Trigger deploy** → **Deploy site**
+6. Vänta 1-2 minuter tills deployen är klar
+7. Testa AI Council på `/admin/ai-council`
+
+> **Felsökning:** Om du ser "Inga API-nycklar konfigurerade" på Netlify betyder det att steg 1-5 ovan inte är gjorda.
+
 ---
 
 ## Användning

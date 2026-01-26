@@ -318,6 +318,102 @@ const USE_SUPABASE = arSupabaseAktiverat();
     .badge.coming { background: #fef3c7; color: #92400e; }
     .badge.new { background: #dcfce7; color: #166534; }
     
+    /* AI Council special card */
+    .ai-council-card {
+      display: block;
+      position: relative;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-decoration: none;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    
+    .ai-council-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.6);
+    }
+    
+    .ai-council-glow {
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .ai-council-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .ai-council-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 9999px;
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-council-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .ai-council-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+    
+    .ai-council-card h3 .ai-icon {
+      font-size: 1.75rem;
+    }
+    
+    .ai-council-card h3 .version {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-left: 0.25rem;
+    }
+    
+    .ai-council-card p {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-council-models {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .ai-council-models span {
+      padding: 0.25rem 0.625rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 0.375rem;
+      color: #e2e8f0;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
     /* Quick links section */
     .section-title {
       font-size: 1.25rem;
@@ -556,6 +652,31 @@ const USE_SUPABASE = arSupabaseAktiverat();
         <p>Hantera användare och läkare. Bjud in ny personal till portalen.</p>
       </a>
     </div>
+    
+    <!-- AI Council - Special featured card -->
+    <a href="/admin/ai-council" class="ai-council-card">
+      <div class="ai-council-glow"></div>
+      <div class="ai-council-content">
+        <div class="ai-council-badge">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          Internt AI-verktyg
+        </div>
+        <h3>
+          <span class="ai-icon">🧠</span>
+          AI Council
+          <span class="version">v2.1</span>
+        </h3>
+        <p>Konsultera flera AI-modeller samtidigt. Få syntetiserade rekommendationer för komplexa frågor.</p>
+        <div class="ai-council-models">
+          <span>GPT-4o</span>
+          <span>Claude</span>
+          <span>Gemini</span>
+          <span>Grok</span>
+        </div>
+      </div>
+    </a>
     
     <!-- Quick links -->
     <h3 class="section-title">
