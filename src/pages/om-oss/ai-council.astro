@@ -27,7 +27,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v2.5</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v2.6</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor
@@ -385,15 +385,55 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <div class="text-slate-300 font-semibold">💻 Kod</div>
                 <div class="text-slate-500 text-xs">~10 sek</div>
               </div>
-              <div class="bg-slate-800/50 rounded-lg p-3 text-center">
-                <div class="text-slate-300 font-semibold">🔬 Vetenskap</div>
-                <div class="text-slate-500 text-xs">~30 sek</div>
+              <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-lg p-3 text-center">
+                <div class="text-indigo-400 font-semibold">🔬 Vetenskap</div>
+                <div class="text-indigo-300 text-xs">Zotero-stöd!</div>
               </div>
               <div class="bg-slate-800/50 rounded-lg p-3 text-center">
                 <div class="text-slate-300 font-semibold">🎯 Djup</div>
                 <div class="text-slate-500 text-xs">~45 sek</div>
               </div>
             </div>
+          </div>
+          
+          <!-- Scientific Context Feature -->
+          <div class="mt-6 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 rounded-xl p-6">
+            <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
+              <span>🔬</span> Vetenskaplig kontext med Zotero-integration
+              <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full">NY!</span>
+            </h4>
+            <p class="text-slate-400 text-sm mb-4">
+              När du väljer <span class="text-indigo-400 font-semibold">🔬 Vetenskap</span>-profilen får du automatiskt:
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Inline-referenser [1], [2], etc.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Numrerad referenslista med DOI/PubMed</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Prioritering av RCT, reviews, guidelines</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-indigo-400">📚</span>
+                  <span class="text-slate-300"><strong class="text-indigo-300">Zotero Bulk Import</strong> - kopiera rakt in!</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-violet-400">👤</span>
+                  <span class="text-slate-300">Personlig överskrivning möjlig</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-slate-500 text-xs mt-4">
+              Standardmallen fungerar för alla - vill du anpassa? Fyll i "Vetenskaplig kontext" på profilsidan.
+            </p>
           </div>
         </div>
       </div>
@@ -446,6 +486,25 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
+          
+          <!-- Scientific context update -->
+          <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-2xl">🔬</div>
+              <div>
+                <h3 class="text-indigo-400 font-semibold mb-2">Vetenskaplig kontext med Zotero (2026-01-26)</h3>
+                <p class="text-slate-400 text-sm mb-3">
+                  <strong class="text-slate-300">Nytt:</strong> 🔬 Vetenskap-profilen inkluderar nu automatiskt stöd för 
+                  <strong class="text-indigo-400">inline-referenser</strong>, <strong class="text-indigo-400">DOI/PubMed-länkar</strong> 
+                  och <strong class="text-indigo-400">Zotero Bulk Import-listor</strong>.
+                </p>
+                <p class="text-slate-500 text-xs">
+                  Alla användare får standardmallen automatiskt. Vill du ha personlig bakgrund (t.ex. din specialisering)? 
+                  Fyll i "Vetenskaplig kontext" på profilsidan - den överskrider standardmallen.
+                </p>
+              </div>
+            </div>
+          </div>
           
           <!-- User profiles update -->
           <div class="bg-violet-500/5 border border-violet-500/20 rounded-xl p-6">

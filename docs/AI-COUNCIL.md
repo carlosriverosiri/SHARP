@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-26 (v2.5 - Användarprofiler)
+**Senast uppdaterad:** 2026-01-26 (v2.6 - Vetenskaplig kontext med Zotero)
 
 ---
 
@@ -196,6 +196,47 @@ AI Council anpassar nu svaren efter din bakgrund. Gå till **"Min profil"** i AI
 - **Sjuksköterska (nivå 2):** Får steg-för-steg-instruktioner utan facktermer
 
 **URL:** `/admin/ai-council/profil`
+
+### Vetenskaplig kontext 🔬 (NY!)
+
+När du väljer **🔬 Vetenskap**-profilen får du automatiskt stöd för vetenskaplig referenshantering:
+
+**Inbyggd standardmall för alla:**
+- Inline-referenser [1], [2], etc.
+- Numrerad referenslista med DOI/PubMed-länkar
+- **Zotero Bulk Import-lista** - kopiera rakt in i Zotero
+- Prioritering av RCT, systematiska reviews, guidelines
+
+**Personlig överskrivning:**
+
+Om du vill ha en mer anpassad vetenskaplig prompt (t.ex. med din medicinska bakgrund):
+
+1. Gå till `/admin/ai-council/profil`
+2. Fyll i fältet **"Vetenskaplig kontext"**
+3. Din personliga prompt **överskrider** standardmallen
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  🔬 Vetenskap-profil vald:                                          │
+│                                                                      │
+│  Har du "Vetenskaplig kontext" ifylld?                              │
+│    JA → Din personliga prompt används                               │
+│    NEJ → Standardmallen med Zotero-stöd används                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Zotero Bulk Import:**
+
+Varje vetenskapligt svar inkluderar ett kodblock med identifierare:
+
+```
+Zotero Bulk Import Lista
+Kopiera och klistra in i Zotero → Add Item by Identifier
+
+10.1016/j.jhsa.2021.07.012
+12345678
+https://pubmed.ncbi.nlm.nih.gov/87654321/
+```
 
 ### Filuppladdning
 
@@ -493,6 +534,22 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v2.6 (2026-01-26) - Vetenskaplig kontext med Zotero
+
+**Nyhet:** Automatisk referenshantering för alla som använder Vetenskap-profilen
+
+**Funktioner:**
+- 🔬 **Standardmall för vetenskap** - Alla får Zotero-stöd automatiskt
+- 📚 **Zotero Bulk Import** - Kodblock med DOI/PMID för snabb import
+- 👤 **Personlig överskrivning** - Fyll i egen vetenskaplig kontext på profilsidan
+- 📖 **Inline-referenser** - [1], [2] format med klickbara DOI/PubMed-länkar
+
+**Hur det fungerar:**
+1. Välj 🔬 Vetenskap-profilen
+2. Standardmallen med referensformatering används automatiskt
+3. Vill du ha egen bakgrund? Fyll i "Vetenskaplig kontext" på profilsidan
+4. Din personliga prompt överskrider standardmallen
 
 ### v2.5 (2026-01-26) - Användarprofiler
 
