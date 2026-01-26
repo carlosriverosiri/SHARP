@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-26 (v2.2 - Gemini-uppdatering)
+**Senast uppdaterad:** 2026-01-26 (v2.3 - Grok 4 Fast)
 
 ---
 
@@ -428,6 +428,16 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v2.3 (2026-01-26) - Grok 4 Fast
+
+**Ändring:** Uppgraderade från `grok-2-latest` till `grok-4-fast`
+
+**Förbättringar:**
+- ✅ **2M tokens kontext** - Kan hantera hela vetenskapliga papers
+- ✅ **10x billigare** - $0.20/$0.50 per 1M tokens (tidigare $2.00/$10.00)
+- ✅ **Bättre vetenskaplig analys** - Överlägsen för litteratursyntes och evidensgranskning
+- ✅ **Reasoning-funktion** - Djupare analys vid komplexa frågor
 
 ### v2.2 (2026-01-26) - Gemini-uppdatering
 
