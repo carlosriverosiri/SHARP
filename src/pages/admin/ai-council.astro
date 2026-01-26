@@ -308,6 +308,7 @@ if (!anvandare) {
       margin-bottom: 1rem;
     }
     .profile-btn {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -327,6 +328,78 @@ if (!anvandare) {
     .profile-btn .profile-name { font-weight: 500; }
     .profile-btn .profile-desc { font-size: 0.6875rem; color: #666; }
     .profile-btn.active .profile-desc { color: inherit; opacity: 0.7; }
+    
+    /* Profile tooltips */
+    .profile-tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      padding: 1rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .profile-btn:hover .profile-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    .profile-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: #333;
+    }
+    .profile-tooltip-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .profile-tooltip-why {
+      font-size: 0.8125rem;
+      color: #ccc;
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+    .profile-tooltip-config {
+      font-size: 0.75rem;
+      color: #888;
+      padding-top: 0.75rem;
+      border-top: 1px solid #333;
+    }
+    .profile-tooltip-config div {
+      margin-bottom: 0.25rem;
+    }
+    .profile-tooltip-config strong {
+      color: #aaa;
+    }
+    .profile-tooltip-tag {
+      display: inline-block;
+      padding: 0.125rem 0.375rem;
+      background: rgba(129, 140, 248, 0.2);
+      color: #818cf8;
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      margin-left: 0.25rem;
+    }
+    .profile-tooltip-tag.turbo {
+      background: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
     .model-checkbox.unavailable { opacity: 0.4; cursor: not-allowed; }
     .model-checkbox input { display: none; }
     .model-checkbox-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -765,12 +838,36 @@ if (!anvandare) {
                     <div class="profile-name">Snabb</div>
                     <div class="profile-desc">~3-5 sek</div>
                   </div>
+                  <div class="profile-tooltip">
+                    <div class="profile-tooltip-title">⚡ Snabb <span class="profile-tooltip-tag turbo">STANDARD</span></div>
+                    <div class="profile-tooltip-why">
+                      För allmänna frågor där du vill ha ett snabbt svar utan att vänta. 
+                      Två snabba modeller ger olika perspektiv, GPT-4o syntetiserar blixtsnabbt.
+                    </div>
+                    <div class="profile-tooltip-config">
+                      <div><strong>Modeller:</strong> Gemini 2.0 Flash + Claude Sonnet</div>
+                      <div><strong>Syntes:</strong> GPT-4o (snabbast)</div>
+                      <div><strong>Deliberation:</strong> Av</div>
+                    </div>
+                  </div>
                 </button>
                 <button type="button" class="profile-btn turbo" data-profile="patient">
                   <span class="profile-icon">🏥</span>
                   <div>
                     <div class="profile-name">Patientfrågor</div>
                     <div class="profile-desc">Turbo + kontroll</div>
+                  </div>
+                  <div class="profile-tooltip">
+                    <div class="profile-tooltip-title">🏥 Patientfrågor <span class="profile-tooltip-tag turbo">TURBO</span></div>
+                    <div class="profile-tooltip-why">
+                      Optimerad för telefonsamtal med patienter. Blixtsnabb respons när du 
+                      behöver svara direkt. Två modeller kontrollerar varandra för säkerhet.
+                    </div>
+                    <div class="profile-tooltip-config">
+                      <div><strong>Modeller:</strong> Gemini 2.0 Flash + Claude Sonnet</div>
+                      <div><strong>Syntes:</strong> GPT-4o (snabbast)</div>
+                      <div><strong>Deliberation:</strong> Av (för snabbhet)</div>
+                    </div>
                   </div>
                 </button>
                 <button type="button" class="profile-btn" data-profile="kod">
@@ -779,6 +876,18 @@ if (!anvandare) {
                     <div class="profile-name">Kodning</div>
                     <div class="profile-desc">Claude + o1</div>
                   </div>
+                  <div class="profile-tooltip">
+                    <div class="profile-tooltip-title">💻 Kodning</div>
+                    <div class="profile-tooltip-why">
+                      För arkitekturbeslut, debugging och kodgranskning. Claude är bäst på 
+                      strukturerad kod, o1 är bäst på komplex logik och resonering.
+                    </div>
+                    <div class="profile-tooltip-config">
+                      <div><strong>Modeller:</strong> Claude Sonnet + OpenAI o1</div>
+                      <div><strong>Syntes:</strong> Claude Sonnet (kod-expert)</div>
+                      <div><strong>Deliberation:</strong> Av</div>
+                    </div>
+                  </div>
                 </button>
                 <button type="button" class="profile-btn" data-profile="vetenskap">
                   <span class="profile-icon">🔬</span>
@@ -786,12 +895,38 @@ if (!anvandare) {
                     <div class="profile-name">Vetenskap</div>
                     <div class="profile-desc">Grok + Deliberation</div>
                   </div>
+                  <div class="profile-tooltip">
+                    <div class="profile-tooltip-title">🔬 Vetenskap</div>
+                    <div class="profile-tooltip-why">
+                      För litteratursyntes och evidensgranskning. Grok har 2M tokens kontext 
+                      och är stark på vetenskapliga referenser. Deliberation låter modellerna 
+                      felsöka varandra för att minska hallucinationer.
+                    </div>
+                    <div class="profile-tooltip-config">
+                      <div><strong>Modeller:</strong> Grok 4 Fast + OpenAI o1 + Gemini</div>
+                      <div><strong>Syntes:</strong> Grok (vetenskap-expert)</div>
+                      <div><strong>Deliberation:</strong> På ✓</div>
+                    </div>
+                  </div>
                 </button>
                 <button type="button" class="profile-btn" data-profile="djup">
                   <span class="profile-icon">🎯</span>
                   <div>
                     <div class="profile-name">Djup analys</div>
                     <div class="profile-desc">Alla + Opus</div>
+                  </div>
+                  <div class="profile-tooltip">
+                    <div class="profile-tooltip-title">🎯 Djup analys <span class="profile-tooltip-tag">PREMIUM</span></div>
+                    <div class="profile-tooltip-why">
+                      För kritiska beslut där kvalitet trumfar tid och kostnad. Alla fyra 
+                      AI-modeller + Deliberation + Claude Opus 4.5 (Anthropics bästa modell) 
+                      som syntetiserar.
+                    </div>
+                    <div class="profile-tooltip-config">
+                      <div><strong>Modeller:</strong> Alla 4 (o1, Claude, Gemini, Grok)</div>
+                      <div><strong>Syntes:</strong> Claude Opus 4.5 (bästa)</div>
+                      <div><strong>Deliberation:</strong> På ✓</div>
+                    </div>
                   </div>
                 </button>
               </div>
