@@ -502,6 +502,39 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 ---
 
+## Alternativ på marknaden
+
+Det finns flera liknande verktyg som kör flera AI-modeller parallellt:
+
+| Verktyg | Funktion | Kostnad |
+|---------|----------|---------|
+| **[Jenova.ai](https://jenova.ai)** | Unified platform, intelligent model routing, 50+ AI agents | Prenumeration |
+| **[Rival.tips](https://rival.tips)** | Side-by-side jämförelse, GPT, Claude, Grok, Gemini | Prenumeration |
+| **[Apify AI Compare](https://apify.com/onescales/ai-model-comparison)** | 2-4 modeller parallellt, "Smart Analysis" syntes | Per körning |
+| **[LLM Leaderboard](https://llmleaderboard.ai/compare/)** | Benchmark-jämförelser, upp till 7 modeller | Gratis |
+
+### AI Council vs alternativen
+
+| Funktion | AI Council | Jenova | Apify | Rival |
+|----------|:----------:|:------:|:-----:|:-----:|
+| Parallell körning | ✅ | ✅ | ✅ | ✅ |
+| Syntes ("Domaren") | ✅ | ✅ | ✅ | ❌ |
+| **Deliberation (Runda 2)** | ✅ | ❌ | ❌ | ❌ |
+| **Profilväljare** | ✅ | ❌ | ❌ | ❌ |
+| **Val av syntesmodell (6 st)** | ✅ | ❌ | ❌ | ❌ |
+| **Self-hosted** | ✅ | ❌ | ❌ | ❌ |
+| Full kostnadskontroll | ✅ | ❌ | ❌ | ❌ |
+
+### Våra unika fördelar
+
+1. **Deliberation Mode** - Modellerna granskar och korrigerar varandra (unikt!)
+2. **Self-hosted** - Dina egna API-nycklar, full kontroll över kostnader
+3. **Profilväljare** - Förinställda profiler för olika användningsfall
+4. **6 syntesmodeller** - Välj själv vilken AI som sammanfattar
+5. **Integrerat i personalportalen** - Ingen extra inloggning
+
+---
+
 ## Relaterade dokument
 
 - [AI-INTEGRATION-RESURSER.md](./AI-INTEGRATION-RESURSER.md) - Övriga AI-resurser i projektet
