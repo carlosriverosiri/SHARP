@@ -24,6 +24,7 @@ interface UserProfile {
   it_skills: string[];
   medical_specialties: string[];
   background?: string;
+  scientific_context?: string;
   can_do?: string;
   cannot_do?: string;
   response_style: string;
@@ -213,6 +214,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     it_skills: body.it_skills || [],
     medical_specialties: body.medical_specialties || [],
     background: body.background || null,
+    scientific_context: body.scientific_context || null,
     can_do: body.can_do || null,
     cannot_do: body.cannot_do || null,
     response_style: body.response_style || 'balanced',

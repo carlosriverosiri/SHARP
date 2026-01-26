@@ -2012,12 +2012,22 @@ if (!anvandare) {
         // Combine file content
         const fileContent = uploadedFiles.map(f => '### ' + f.name + '\n' + f.content).join('\n\n---\n\n');
         
+        // Map profile IDs to API profileType values
+        const profileTypeMap = {
+          snabb: 'fast',
+          patient: 'patient', 
+          kod: 'coding',
+          vetenskap: 'science',
+          djup: 'deep'
+        };
+        const profileType = profileTypeMap[currentProfile] || 'fast';
+        
         try {
           const response = await fetch('/api/ai-council/query', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ context, prompt, synthesisModel, fileContent, selectedModels, enableDeliberation })
+            body: JSON.stringify({ context, prompt, synthesisModel, fileContent, selectedModels, enableDeliberation, profileType })
           });
           
           const data = await response.json();

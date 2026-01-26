@@ -634,8 +634,22 @@ if (!anvandare) {
         <div class="section-title">✍️ Beskriv dig själv (valfritt)</div>
         
         <div class="form-group">
-          <label for="background">Bakgrund och erfarenhet</label>
+          <label for="background">Bakgrund och erfarenhet (allmän)</label>
           <textarea id="background" name="background" placeholder="T.ex. 'Jag är ortopedkirurg med 20 års erfarenhet. Kodar på fritiden i TypeScript och Astro. Föredrar detaljerade tekniska förklaringar.'"></textarea>
+        </div>
+      </div>
+      
+      <!-- Vetenskaplig kontext -->
+      <div class="section">
+        <div class="section-title">🔬 Vetenskaplig kontext (för forskningsfrågor)</div>
+        <p style="font-size: 0.8125rem; color: #666; margin-bottom: 1rem;">
+          Denna kontext används automatiskt när du väljer <strong>🔬 Vetenskap</strong>-profilen i AI Council.
+          Perfekt för referenshantering, Zotero-import och evidensbaserade svar.
+        </p>
+        
+        <div class="form-group">
+          <label for="scientificContext">Vetenskaplig prompt</label>
+          <textarea id="scientificContext" name="scientific_context" style="min-height: 200px;" placeholder="T.ex. din medicinska bakgrund, önskad referensformatering, Zotero-instruktioner..."></textarea>
         </div>
       </div>
       
@@ -723,6 +737,7 @@ if (!anvandare) {
         const codeExamples = document.getElementById('toggleCodeExamples').dataset.checked === 'true';
         const refs = document.getElementById('toggleReferences').dataset.checked === 'true';
         const background = document.getElementById('background').value;
+        const scientificContext = document.getElementById('scientificContext').value;
         
         let preview = `Du svarar ${roleTitle || 'en användare'}`;
         if (yearsExp) preview += ` med ${yearsExp} års erfarenhet`;
@@ -750,6 +765,13 @@ if (!anvandare) {
         if (refs) preview += '- Inkludera källhänvisningar.\n';
         
         preview += '\nAnpassa ditt svar efter denna bakgrund.';
+        
+        if (scientificContext) {
+          preview += '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+          preview += '🔬 VETENSKAPLIG KONTEXT (används med Vetenskap-profilen):\n';
+          preview += scientificContext.substring(0, 200);
+          if (scientificContext.length > 200) preview += '...';
+        }
         
         previewEl.textContent = preview;
       }
@@ -811,6 +833,9 @@ if (!anvandare) {
           // Set background
           if (p.background) document.getElementById('background').value = p.background;
           
+          // Set scientific context
+          if (p.scientific_context) document.getElementById('scientificContext').value = p.scientific_context;
+          
           updatePreview();
         }
       } catch (e) {
@@ -832,6 +857,7 @@ if (!anvandare) {
           it_skills: Array.from(document.querySelectorAll('input[name="it_skills"]:checked')).map(i => i.value),
           medical_specialties: [],
           background: document.getElementById('background').value || null,
+          scientific_context: document.getElementById('scientificContext').value || null,
           response_style: document.querySelector('input[name="response_style"]:checked')?.value || 'balanced',
           include_code_examples: document.getElementById('toggleCodeExamples').dataset.checked === 'true',
           include_references: document.getElementById('toggleReferences').dataset.checked === 'true',

@@ -83,6 +83,7 @@ interface QueryRequest {
   fileContent?: string; // Extracted text from uploaded files
   selectedModels?: ModelProvider[]; // Which models to query
   enableDeliberation?: boolean; // Enable round 2 where models review each other
+  profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'deep'; // Which preset profile to use
 }
 
 // OpenAI o1 query
@@ -1100,6 +1101,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
+  // Parse request body first to get profileType
+  let body: QueryRequest;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return new Response(JSON.stringify({ error: 'Ogiltig JSON i request' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const { 
+    context, 
+    prompt, 
+    synthesisModel = 'claude', 
+    fileContent,
+    selectedModels = availableProviders, // Default to all available models
+    enableDeliberation = false, // Optional second round
+    profileType = 'fast' // Which profile preset is being used
+  } = body;
+
   // Fetch user profile for personalized AI responses
   let userProfileContext = '';
   if (SUPABASE_URL && SUPABASE_ANON_KEY) {
@@ -1118,7 +1140,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
             .single();
           
           if (profile) {
-            userProfileContext = generateSystemPrompt(profile);
+            // Use scientific_context for science profile, otherwise use general profile
+            if (profileType === 'science' && profile.scientific_context) {
+              userProfileContext = profile.scientific_context;
+            } else if (profileType !== 'fast') {
+              // For fast profile, skip personalization for speed
+              userProfileContext = generateSystemPrompt(profile);
+            }
           }
         }
       }
@@ -1129,15 +1157,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    const body: QueryRequest = await request.json();
-    const { 
-      context, 
-      prompt, 
-      synthesisModel = 'claude', 
-      fileContent,
-      selectedModels = availableProviders, // Default to all available models
-      enableDeliberation = false // Optional second round
-    } = body;
 
     if (!prompt?.trim()) {
       return new Response(JSON.stringify({ error: 'Prompt krävs' }), {
