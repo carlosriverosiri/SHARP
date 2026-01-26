@@ -232,11 +232,27 @@ function formateraDatum(datum: string): string {
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
       <div class="max-w-6xl mx-auto px-4 py-4">
-        <div class="flex items-center gap-4">
-          <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
-            ← Tillbaka
-          </a>
-          <h1 class="text-2xl font-bold text-gray-900">⚙️ Administration</h1>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
+              ← Tillbaka
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">⚙️ Administration</h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <a 
+              href="/admin/ai-council" 
+              class="px-4 py-1.5 text-sm bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-colors flex items-center gap-2"
+            >
+              🧠 AI Council
+            </a>
+            <a 
+              href="/personal/oversikt?logout=true" 
+              class="px-3 py-1.5 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              Logga ut
+            </a>
+          </div>
         </div>
       </div>
     </header>
