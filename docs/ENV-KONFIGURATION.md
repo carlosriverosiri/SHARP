@@ -1,6 +1,51 @@
 # 🔧 Miljövariabler för Personalportalen
 
-> Kopiera variablerna nedan till din `.env`-fil i projektroten.
+> Kopiera variablerna nedan till din `.env.local`-fil i projektroten.
+
+## 🚀 Snabbstart för lokal utveckling
+
+### Steg 1: Hämta värden från Netlify
+
+1. Gå till [Netlify Dashboard](https://app.netlify.com)
+2. Välj ditt projekt
+3. Gå till **Site settings** → **Environment variables**
+4. Kopiera följande variabler:
+   - `PUBLIC_SUPABASE_URL`
+   - `PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `PERSONAL_SESSION_SECRET`
+   - `SITE`
+
+### Steg 2: Skapa `.env.local`-fil
+
+```bash
+# I projektroten
+cp .env.example .env.local
+```
+
+### Steg 3: Fyll i värdena
+
+Öppna `.env.local` och klistra in värdena från Netlify.
+
+### Steg 4: Starta om dev-servern
+
+```bash
+npm run dev
+```
+
+---
+
+## 📝 Alternativ: Hämta från Supabase direkt
+
+Om du vill hämta värdena direkt från Supabase:
+
+1. Gå till [Supabase Dashboard](https://app.supabase.com)
+2. Välj ditt projekt
+3. Gå till **Settings** → **API**
+4. Kopiera:
+   - **Project URL** → `PUBLIC_SUPABASE_URL`
+   - **anon public** key → `PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role** key → `SUPABASE_SERVICE_ROLE_KEY` (⚠️ HEMLIG!)
 
 ---
 
