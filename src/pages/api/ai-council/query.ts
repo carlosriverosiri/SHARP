@@ -17,20 +17,63 @@ const ANTHROPIC_API_KEY = import.meta.env.ANTHROPIC_API_KEY;
 const GOOGLE_AI_API_KEY = import.meta.env.GOOGLE_AI_API_KEY;
 const XAI_API_KEY = import.meta.env.XAI_API_KEY;
 
+interface TokenUsage {
+  inputTokens: number;
+  outputTokens: number;
+}
+
+interface CostInfo {
+  inputCost: number;
+  outputCost: number;
+  totalCost: number;
+  currency: 'USD';
+}
+
 interface AIResponse {
   model: string;
   provider: string;
   response: string;
   error?: string;
   duration: number;
+  tokens?: TokenUsage;
+  cost?: CostInfo;
+}
+
+// Pricing per 1M tokens (USD) - Updated January 2026
+const PRICING = {
+  // OpenAI
+  'o1': { input: 15.00, output: 60.00 },
+  'gpt-4o': { input: 2.50, output: 10.00 },
+  // Anthropic
+  'claude-sonnet-4-20250514': { input: 3.00, output: 15.00 },
+  'claude-opus-4-5-20250514': { input: 15.00, output: 75.00 },
+  // Google (free tier, but we track it)
+  'gemini-1.5-pro': { input: 1.25, output: 5.00 },
+  // xAI
+  'grok-2-latest': { input: 2.00, output: 10.00 },
+} as const;
+
+function calculateCost(model: string, tokens: TokenUsage): CostInfo {
+  const pricing = PRICING[model as keyof typeof PRICING] || { input: 0, output: 0 };
+  const inputCost = (tokens.inputTokens / 1_000_000) * pricing.input;
+  const outputCost = (tokens.outputTokens / 1_000_000) * pricing.output;
+  return {
+    inputCost,
+    outputCost,
+    totalCost: inputCost + outputCost,
+    currency: 'USD',
+  };
 }
 
 type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
 
+// Synthesis model options - separate from query models
+type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'gpt4o' | 'gemini' | 'grok';
+
 interface QueryRequest {
   context: string;
   prompt: string;
-  synthesisModel?: 'claude' | 'openai' | 'gemini' | 'grok';
+  synthesisModel?: SynthesisModel;
   fileContent?: string; // Extracted text from uploaded files
   selectedModels?: ModelProvider[]; // Which models to query
   enableDeliberation?: boolean; // Enable round 2 where models review each other
@@ -64,11 +107,17 @@ async function queryOpenAI(context: string, prompt: string): Promise<AIResponse>
     }
 
     const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
     return {
       model: 'o1',
       provider: 'OpenAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('o1', tokens),
     };
   } catch (error: any) {
     return {
@@ -112,11 +161,17 @@ async function queryAnthropic(context: string, prompt: string): Promise<AIRespon
 
     const data = await response.json();
     const content = data.content?.[0]?.text || 'Inget svar';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
     return {
       model: 'claude-sonnet-4-20250514',
       provider: 'Anthropic',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-sonnet-4-20250514', tokens),
     };
   } catch (error: any) {
     return {
@@ -164,11 +219,17 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
 
     const data = await response.json();
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Inget svar';
+    const tokens: TokenUsage = {
+      inputTokens: data.usageMetadata?.promptTokenCount || 0,
+      outputTokens: data.usageMetadata?.candidatesTokenCount || 0,
+    };
     return {
       model: 'gemini-1.5-pro',
       provider: 'Google',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gemini-1.5-pro', tokens),
     };
   } catch (error: any) {
     return {
@@ -210,11 +271,17 @@ async function queryGrok(context: string, prompt: string): Promise<AIResponse> {
     }
 
     const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
     return {
       model: 'grok-2-latest',
       provider: 'xAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('grok-2-latest', tokens),
     };
   } catch (error: any) {
     return {
@@ -497,12 +564,18 @@ async function synthesizeWithClaude(
 
     const data = await response.json();
     const content = data.content?.[0]?.text || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
     
     return {
       model: 'claude-sonnet-4-20250514',
       provider: 'Claude (Syntes)',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-sonnet-4-20250514', tokens),
     };
   } catch (error: any) {
     return {
@@ -557,12 +630,18 @@ async function synthesizeWithOpenAI(
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
     
     return {
       model: 'o1',
       provider: 'OpenAI (Syntes)',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('o1', tokens),
     };
   } catch (error: any) {
     return {
@@ -623,12 +702,18 @@ async function synthesizeWithGemini(
 
     const data = await response.json();
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usageMetadata?.promptTokenCount || 0,
+      outputTokens: data.usageMetadata?.candidatesTokenCount || 0,
+    };
     
     return {
       model: 'gemini-1.5-pro',
       provider: 'Gemini (Syntes)',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gemini-1.5-pro', tokens),
     };
   } catch (error: any) {
     return {
@@ -684,12 +769,18 @@ async function synthesizeWithGrok(
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
     
     return {
       model: 'grok-2-latest',
       provider: 'Grok (Syntes)',
       response: content,
       duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('grok-2-latest', tokens),
     };
   } catch (error: any) {
     return {
@@ -702,19 +793,158 @@ async function synthesizeWithGrok(
   }
 }
 
+// Synthesis using Claude Opus 4 (premium model for complex analysis)
+async function synthesizeWithClaudeOpus(
+  originalPrompt: string,
+  responses: AIResponse[]
+): Promise<AIResponse> {
+  const start = Date.now();
+  
+  const validResponses = responses.filter(r => !r.error && r.response);
+  
+  if (validResponses.length === 0) {
+    return {
+      model: 'claude-opus-4-5-20250514',
+      provider: 'Claude Opus (Syntes)',
+      response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
+      duration: Date.now() - start,
+    };
+  }
+
+  const synthesisPrompt = buildSynthesisPrompt(originalPrompt, responses);
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5-20250514',
+        max_tokens: 8192,
+        messages: [
+          { role: 'user', content: synthesisPrompt }
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.content?.[0]?.text || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
+    
+    return {
+      model: 'claude-opus-4-5-20250514',
+      provider: 'Claude Opus (Syntes)',
+      response: content,
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-opus-4-5-20250514', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'claude-opus-4-5-20250514',
+      provider: 'Claude Opus (Syntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+// Synthesis using GPT-4o (fast, high-quality synthesis)
+async function synthesizeWithGPT4o(
+  originalPrompt: string,
+  responses: AIResponse[]
+): Promise<AIResponse> {
+  const start = Date.now();
+  
+  const validResponses = responses.filter(r => !r.error && r.response);
+  
+  if (validResponses.length === 0) {
+    return {
+      model: 'gpt-4o',
+      provider: 'GPT-4o (Syntes)',
+      response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
+      duration: Date.now() - start,
+    };
+  }
+
+  const synthesisPrompt = buildSynthesisPrompt(originalPrompt, responses);
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'user', content: synthesisPrompt }
+        ],
+        max_tokens: 8192,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
+    
+    return {
+      model: 'gpt-4o',
+      provider: 'GPT-4o (Syntes)',
+      response: content,
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gpt-4o', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'gpt-4o',
+      provider: 'GPT-4o (Syntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
 // Main synthesis function that delegates to the selected model
 async function synthesize(
   originalPrompt: string,
   responses: AIResponse[],
-  synthesisModel: 'claude' | 'openai' | 'gemini' | 'grok' = 'claude'
+  synthesisModel: SynthesisModel = 'claude'
 ): Promise<AIResponse> {
   switch (synthesisModel) {
     case 'openai':
       return synthesizeWithOpenAI(originalPrompt, responses);
+    case 'gpt4o':
+      return synthesizeWithGPT4o(originalPrompt, responses);
     case 'gemini':
       return synthesizeWithGemini(originalPrompt, responses);
     case 'grok':
       return synthesizeWithGrok(originalPrompt, responses);
+    case 'claude-opus':
+      return synthesizeWithClaudeOpus(originalPrompt, responses);
     case 'claude':
     default:
       return synthesizeWithClaude(originalPrompt, responses);
@@ -726,7 +956,7 @@ async function superSynthesize(
   originalPrompt: string,
   round1Responses: AIResponse[],
   round2Responses: AIResponse[],
-  synthesisModel: 'claude' | 'openai' | 'gemini' | 'grok' = 'claude'
+  synthesisModel: SynthesisModel = 'claude'
 ): Promise<AIResponse> {
   const start = Date.now();
   const superPrompt = buildSuperSynthesisPrompt(originalPrompt, round1Responses, round2Responses);
@@ -752,9 +982,23 @@ async function superSynthesize(
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return { model: 'o1', provider: 'OpenAI (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+        return { model: 'o1', provider: 'OpenAI o1 (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'o1', provider: 'OpenAI (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'o1', provider: 'OpenAI o1 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+      }
+    
+    case 'gpt4o':
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
+          body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return { model: 'gpt-4o', provider: 'GPT-4o (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+      } catch (e: any) {
+        return { model: 'gpt-4o', provider: 'GPT-4o (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'gemini':
@@ -785,6 +1029,20 @@ async function superSynthesize(
         return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
+    case 'claude-opus':
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+          body: JSON.stringify({ model: 'claude-opus-4-5-20250514', max_tokens: 8192, messages: [{ role: 'user', content: superPrompt }] }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return { model: 'claude-opus-4-5-20250514', provider: 'Claude Opus (Supersyntes)', response: data.content?.[0]?.text || '', duration: Date.now() - start };
+      } catch (e: any) {
+        return { model: 'claude-opus-4-5-20250514', provider: 'Claude Opus (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+      }
+    
     case 'claude':
     default:
       try {
@@ -795,9 +1053,9 @@ async function superSynthesize(
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return { model: 'claude-sonnet-4-20250514', provider: 'Claude (Supersyntes)', response: data.content?.[0]?.text || '', duration: Date.now() - start };
+        return { model: 'claude-sonnet-4-20250514', provider: 'Claude Sonnet (Supersyntes)', response: data.content?.[0]?.text || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'claude-sonnet-4-20250514', provider: 'Claude (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'claude-sonnet-4-20250514', provider: 'Claude Sonnet (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
   }
 }
@@ -953,6 +1211,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const round2Duration = round2Responses.reduce((sum, r) => sum + r.duration, 0);
     const totalDuration = round1Duration + round2Duration + synthesis.duration;
 
+    // Calculate total cost
+    const allResponses = [...round1Responses, ...round2Responses, synthesis];
+    const totalCost = {
+      inputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.inputTokens || 0), 0),
+      outputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.outputTokens || 0), 0),
+      totalCostUSD: allResponses.reduce((sum, r) => sum + (r.cost?.totalCost || 0), 0),
+    };
+
     return new Response(JSON.stringify({
       success: true,
       responses: round1Responses,
@@ -963,6 +1229,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       synthesisModel: actualSynthesisModel,
       availableModels,
       totalDuration,
+      totalCost,
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

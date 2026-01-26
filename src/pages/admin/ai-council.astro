@@ -632,7 +632,10 @@ if (!anvandare) {
     .accordion-content-inner .markdown-content { padding-top: 1rem; }
     .accordion-content-actions { display: flex; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid #1a1a1a; margin-top: 1rem; }
     
-    .total-duration { text-align: center; padding-top: 1.5rem; border-top: 1px solid #222; margin-top: 1.5rem; font-size: 0.875rem; color: #555; }
+    .total-stats { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 1px solid #222; margin-top: 1.5rem; font-size: 0.875rem; color: #555; }
+    .total-duration { }
+    .total-cost { color: #4ade80; }
+    .total-cost .cost-details { display: block; font-size: 0.75rem; color: #666; margin-top: 0.25rem; }
     
     /* Markdown */
     .markdown-content { line-height: 1.7; color: #ccc; }
@@ -773,8 +776,10 @@ if (!anvandare) {
                 <div class="synthesis-selector">
                   <label for="synthesisModel">Syntes-modell:</label>
                   <select id="synthesisModel">
-                    <option value="claude">🔧 Claude (kod)</option>
+                    <option value="claude">🔧 Claude Sonnet (kod)</option>
+                    <option value="claude-opus">👑 Claude Opus 4.5 (bäst)</option>
                     <option value="openai">🧪 OpenAI o1 (logik)</option>
+                    <option value="gpt4o">⚡ GPT-4o (snabb)</option>
                     <option value="gemini">📚 Gemini (kontext)</option>
                     <option value="grok">🌐 Grok (vetenskap)</option>
                   </select>
@@ -1014,7 +1019,13 @@ if (!anvandare) {
             </div>
           </div>
           
-          <div class="total-duration">Total tid: <span id="totalDuration">-</span></div>
+          <div class="total-stats">
+            <div class="total-duration">Total tid: <span id="totalDuration">-</span></div>
+            <div class="total-cost" id="totalCostContainer" style="display: none;">
+              💰 Kostnad: <span id="totalCost">-</span>
+              <span class="cost-details" id="costDetails"></span>
+            </div>
+          </div>
         </section>
       </main>
     </div>
@@ -1542,7 +1553,13 @@ if (!anvandare) {
           statusEl.classList.add('success');
           markdownEl.innerHTML = renderMarkdown(data.response);
         }
-        durationEl.textContent = formatDuration(data.duration);
+        
+        // Display duration and cost
+        let durationText = formatDuration(data.duration);
+        if (data.cost && data.cost.totalCost > 0) {
+          durationText += ` · $${data.cost.totalCost.toFixed(4)}`;
+        }
+        durationEl.textContent = durationText;
       }
       
       // Run query
@@ -1644,19 +1661,46 @@ if (!anvandare) {
             });
           }
           
-          const synthLabel = { claude: 'Claude', openai: 'OpenAI o1', gemini: 'Gemini', grok: 'Grok' }[data.synthesisModel || synthesisModel];
+          const synthLabel = { 
+            claude: 'Claude Sonnet', 
+            'claude-opus': 'Claude Opus 4.5', 
+            openai: 'OpenAI o1', 
+            gpt4o: 'GPT-4o',
+            gemini: 'Gemini', 
+            grok: 'Grok' 
+          }[data.synthesisModel || synthesisModel];
           const synthType = data.deliberationEnabled ? 'Supersyntes' : 'Syntes';
           setStatus(synthType + ' med ' + synthLabel + '...', true);
           
           if (data.synthesis) {
             currentResponses.synthesis = data.synthesis.response || '';
             synthesisCard.style.display = 'block';
-            document.getElementById('synthesisDuration').textContent = formatDuration(data.synthesis.duration);
+            
+            let synthDuration = formatDuration(data.synthesis.duration);
+            if (data.synthesis.cost && data.synthesis.cost.totalCost > 0) {
+              synthDuration += ` · $${data.synthesis.cost.totalCost.toFixed(4)}`;
+            }
+            document.getElementById('synthesisDuration').textContent = synthDuration;
             document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
             document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
           }
           
           document.getElementById('totalDuration').textContent = formatDuration(data.totalDuration);
+          
+          // Display cost information
+          if (data.totalCost && data.totalCost.totalCostUSD > 0) {
+            const costContainer = document.getElementById('totalCostContainer');
+            const costEl = document.getElementById('totalCost');
+            const detailsEl = document.getElementById('costDetails');
+            
+            const usdCost = data.totalCost.totalCostUSD;
+            const sekCost = usdCost * 10.5; // Approximate USD to SEK
+            
+            costEl.textContent = `$${usdCost.toFixed(4)} (~${sekCost.toFixed(2)} kr)`;
+            detailsEl.textContent = `${data.totalCost.inputTokens.toLocaleString()} in / ${data.totalCost.outputTokens.toLocaleString()} ut tokens`;
+            costContainer.style.display = 'block';
+          }
+          
           setStatus('', false);
         } catch (error) {
           showError(error.message);

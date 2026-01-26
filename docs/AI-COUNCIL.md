@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-25
+**Senast uppdaterad:** 2026-01-25 (v2.1 - Kostnadsvisning)
 
 ---
 
@@ -50,7 +50,8 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 │                          │                                   │
 │                          ▼                                   │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │              Syntes (Claude Sonnet)                   │   │
+│  │         Syntes (valbar: 6 modeller)                  │   │
+│  │  👑 Opus 4.5 | 🔧 Sonnet | 🧪 o1 | ⚡ GPT-4o | 📚 Gemini | 🌐 Grok  │
 │  │   "Analysera svaren, identifiera konsensus,          │   │
 │  │    ge slutgiltig rekommendation"                      │   │
 │  └──────────────────────────────────────────────────────┘   │
@@ -129,12 +130,17 @@ Du är en senior teknisk expert. Analysera dessa tre förslag:
 
 Välj vilken AI som ska syntetisera svaren:
 
-| Modell | Bäst för | Emoji |
-|--------|----------|-------|
-| **Claude** | Kod, arkitektur, struktur | 🔧 |
-| **OpenAI o1** | Logik, vetenskap, resonemang | 🧪 |
-| **Gemini** | Stor kontext, research | 📚 |
-| **Grok** | Vetenskapliga frågor, referenser | 🌐 |
+| Modell | Bäst för | Emoji | Kostnad |
+|--------|----------|-------|---------|
+| **Claude Sonnet** | Kod, arkitektur, struktur | 🔧 | Låg |
+| **Claude Opus 4.5** | Komplex analys, Anthropics bästa modell | 👑 | Hög |
+| **OpenAI o1** | Logik, vetenskap, resonemang | 🧪 | Medium |
+| **GPT-4o** | Snabb syntes, balanserad | ⚡ | Låg |
+| **Gemini** | Stor kontext, research | 📚 | Gratis* |
+| **Grok** | Vetenskapliga frågor, referenser | 🌐 | Låg |
+
+> **Tips:** Använd **Claude Opus 4.5** 👑 för kritiska beslut där du vill ha djupaste möjliga analys.
+> Använd **GPT-4o** ⚡ för snabba synteser när du itererar.
 
 ### Filuppladdning
 
@@ -151,6 +157,30 @@ Dra och släpp eller klicka för att välja filer.
 ### Kopieringsknappar
 
 Varje svar har en **"Kopiera"**-knapp som kopierar råtexten (Markdown) till urklipp.
+
+### Kostnadsvisning 💰
+
+AI Council visar nu **kostnad per körning** i realtid:
+
+| Visning | Beskrivning |
+|---------|-------------|
+| **Per modell** | Varje accordion visar `tid · $kostnad` |
+| **Syntes** | Syntes-kortet visar syntes-kostnad |
+| **Total** | Längst ner visas total kostnad i USD och SEK |
+| **Tokens** | Antal input/output tokens för hela körningen |
+
+**Priser baseras på officiell prisdata (jan 2026):**
+
+| Modell | Input/1M | Output/1M |
+|--------|----------|-----------|
+| OpenAI o1 | $15.00 | $60.00 |
+| GPT-4o | $2.50 | $10.00 |
+| Claude Sonnet | $3.00 | $15.00 |
+| Claude Opus 4.5 | $15.00 | $75.00 |
+| Gemini 1.5 Pro | $1.25 | $5.00 |
+| Grok 2 | $2.00 | $10.00 |
+
+> **Tips:** Använd GPT-4o ⚡ eller Gemini 📚 för billigare iterationer under utveckling.
 
 ### Sessionslogg (Supabase + localStorage)
 
@@ -316,43 +346,56 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 {
   "context": "Valfri bakgrundsinformation",
   "prompt": "Din fråga",
-  "synthesisModel": "claude | openai | gemini | grok",
+  "synthesisModel": "claude | claude-opus | openai | gpt4o | gemini | grok",
   "fileContent": "Extraherat innehåll från uppladdade filer",
   "selectedModels": ["openai", "anthropic", "gemini", "grok"],
   "enableDeliberation": false
 }
 ```
 
+**Syntesmodeller:**
+- `claude` - Claude Sonnet (standard, balanserad)
+- `claude-opus` - Claude Opus 4.5 (Anthropics bästa modell)
+- `openai` - OpenAI o1 (resoneringsmodell)
+- `gpt4o` - GPT-4o (snabb, hög kvalitet)
+- `gemini` - Gemini 1.5 Pro (stor kontext)
+- `grok` - Grok 2 (vetenskap, referenser)
+
 **Response:**
 ```json
 {
   "success": true,
   "responses": [
-    { "provider": "OpenAI", "model": "o1", "response": "...", "duration": 5000 },
+    { 
+      "provider": "OpenAI", 
+      "model": "o1", 
+      "response": "...", 
+      "duration": 5000,
+      "tokens": { "inputTokens": 1500, "outputTokens": 2000 },
+      "cost": { "inputCost": 0.0225, "outputCost": 0.12, "totalCost": 0.1425, "currency": "USD" }
+    },
     { "provider": "Anthropic", "model": "claude-sonnet-4-20250514", "response": "...", "duration": 3000 },
     { "provider": "Google", "model": "gemini-1.5-pro", "response": "...", "duration": 4000 }
   ],
-  "round2Responses": [
-    { "provider": "OpenAI", "model": "o1", "response": "Förbättrat svar...", "duration": 6000 },
-    { "provider": "Anthropic", "model": "claude-sonnet-4-20250514", "response": "Förbättrat svar...", "duration": 4000 },
-    { "provider": "Google", "model": "gemini-1.5-pro", "response": "Förbättrat svar...", "duration": 5000 }
-  ],
+  "round2Responses": [...],
   "deliberationEnabled": true,
   "queriedModels": ["openai", "anthropic", "gemini"],
   "synthesis": {
     "provider": "Claude (Supersyntes)",
     "model": "claude-sonnet-4-20250514",
     "response": "...",
-    "duration": 4000
+    "duration": 4000,
+    "tokens": { "inputTokens": 5000, "outputTokens": 1500 },
+    "cost": { "inputCost": 0.015, "outputCost": 0.0225, "totalCost": 0.0375, "currency": "USD" }
   },
   "synthesisModel": "claude",
-  "availableModels": [
-    { "model": "openai", "available": true },
-    { "model": "anthropic", "available": true },
-    { "model": "gemini", "available": true },
-    { "model": "grok", "available": false }
-  ],
-  "totalDuration": 31000
+  "availableModels": [...],
+  "totalDuration": 31000,
+  "totalCost": {
+    "inputTokens": 15000,
+    "outputTokens": 8000,
+    "totalCostUSD": 0.2345
+  }
 }
 ```
 
@@ -370,15 +413,16 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 - [ ] Streaming-svar för snabbare feedback
 - [x] Val av syntes-modell per fråga
+- [x] Utökade syntesmodeller: Claude Opus 4.5 👑 och GPT-4o ⚡
 - [x] Val av vilka modeller som ska svara (checkboxar)
 - [x] Historik i Supabase (med localStorage fallback)
 - [x] Filuppladdning (bilder, PDF, dokument)
 - [x] Grok (xAI) integration för vetenskapliga frågor
 - [x] Deliberation: Runda 2 där modeller granskar varandra
+- [x] Kostnadsvisning per körning (tokens + USD/SEK) 💰
 - [ ] Dela sessioner med kollegor
 - [ ] Custom syntes-prompts
 - [ ] Integration med Cursor via MCP
-- [ ] Bildanalys via multimodala API:er
 - [ ] Bildanalys via multimodala API:er
 
 ---
