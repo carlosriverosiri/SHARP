@@ -27,7 +27,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v2.4</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v2.5</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor
@@ -328,12 +328,18 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             Funktioner
           </h2>
           
-          <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5 text-center">
+          <div class="grid md:grid-cols-2 lg:grid-cols-6 gap-4">
+            <div class="bg-gradient-to-b from-violet-500/10 to-slate-800/50 border border-violet-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">👤</div>
+              <h4 class="text-white font-semibold mb-1">Användarprofiler</h4>
+              <p class="text-violet-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Personanpassade svar</p>
+            </div>
+            
+            <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">⚡</div>
               <h4 class="text-white font-semibold mb-1">Profilväljare</h4>
-              <p class="text-emerald-400 text-xs">NY!</p>
-              <p class="text-slate-500 text-sm mt-1">5 förinställda lägen</p>
+              <p class="text-slate-500 text-sm">5 förinställda lägen</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
@@ -351,13 +357,13 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">☁️</div>
               <h4 class="text-white font-semibold mb-1">Molnsynk</h4>
-              <p class="text-slate-500 text-sm">Supabase sessionshistorik</p>
+              <p class="text-slate-500 text-sm">Supabase historik</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">💰</div>
-              <h4 class="text-white font-semibold mb-1">Kostnadsvisning</h4>
-              <p class="text-slate-500 text-sm">Realtidspriser i USD/SEK</p>
+              <h4 class="text-white font-semibold mb-1">Kostnad högst upp</h4>
+              <p class="text-slate-500 text-sm">Tydlig kostnadsvisning</p>
             </div>
           </div>
           
@@ -441,6 +447,24 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
           
+          <!-- User profiles update -->
+          <div class="bg-violet-500/5 border border-violet-500/20 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-2xl">👤</div>
+              <div>
+                <h3 class="text-violet-400 font-semibold mb-2">Användarprofiler (2026-01-26)</h3>
+                <p class="text-slate-400 text-sm mb-3">
+                  <strong class="text-slate-300">Nytt:</strong> AI Council anpassar nu svaren efter din bakgrund. 
+                  Ange din <strong class="text-violet-400">tekniska nivå</strong>, <strong class="text-violet-400">IT-kunskaper</strong> 
+                  och <strong class="text-violet-400">önskad svarsstil</strong>.
+                </p>
+                <p class="text-slate-500 text-xs">
+                  En läkare som kodar får detaljerade tekniska förklaringar, medan en sjuksköterska får steg-för-steg-instruktioner utan facktermer.
+                </p>
+              </div>
+            </div>
+          </div>
+          
           <!-- Profile selector update -->
           <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
             <div class="flex items-start gap-4">
@@ -520,7 +544,9 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <li>✓ Kostnadsvisning i realtid 💰</li>
                 <li>✓ Gemini 2.0 Flash (ersätter 1.5 Pro) ⚡</li>
                 <li>✓ Grok 4 Fast (2M kontext) 🚀</li>
-                <li>✓ Profilväljare med 5 lägen ⚡ NY!</li>
+                <li>✓ Profilväljare med 5 lägen ⚡</li>
+                <li>✓ Användarprofiler 👤 NY!</li>
+                <li>✓ Kostnad visas högst upp 💰 NY!</li>
               </ul>
             </div>
             

@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-26 (v2.4 - Profilväljare)
+**Senast uppdaterad:** 2026-01-26 (v2.5 - Användarprofiler)
 
 ---
 
@@ -157,6 +157,46 @@ Välj vilken AI som ska syntetisera svaren:
 > **Tips:** Använd **Claude Opus 4.5** 👑 för kritiska beslut där du vill ha djupaste möjliga analys.
 > Använd **GPT-4o** ⚡ för snabba synteser när du itererar.
 
+### Användarprofiler 👤 (NY!)
+
+AI Council anpassar nu svaren efter din bakgrund. Gå till **"Min profil"** i AI Council för att ställa in:
+
+| Inställning | Beskrivning |
+|-------------|-------------|
+| **Roll** | Läkare, sjuksköterska, admin, IT, annan |
+| **Teknisk nivå** | 1-5 (Nybörjare → Expert) |
+| **IT-kunskaper** | Mejl, Excel, Git, programmering, API:er, etc. |
+| **Svarsstil** | Detaljerat, balanserat, koncist, steg-för-steg |
+| **Bakgrund** | Fritext - beskriv dig själv |
+
+**Hur det fungerar:**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Din profil (sparas i Supabase):                                     │
+│  • Ortopedkirurg med 20 års erfarenhet                              │
+│  • Teknisk nivå: 5/5 (Expert)                                       │
+│  • Kunskaper: Git, API:er, TypeScript, Astro                        │
+│  • Svarsstil: Detaljerat med kodexempel                             │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  AI-modellerna får automatiskt denna kontext:                        │
+│                                                                      │
+│  "Du svarar en ortopedkirurg med 20 års erfarenhet.                 │
+│   Teknisk nivå: 5/5 (Expert). Kan programmera i TypeScript.         │
+│   Föredrar detaljerade svar med kodexempel.                         │
+│   Anpassa ditt svar efter denna bakgrund."                          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Exempel:**
+- **Läkare (nivå 5):** Får detaljerade tekniska förklaringar med kodexempel
+- **Sjuksköterska (nivå 2):** Får steg-för-steg-instruktioner utan facktermer
+
+**URL:** `/admin/ai-council/profil`
+
 ### Filuppladdning
 
 Ladda upp filer som kontext:
@@ -175,14 +215,21 @@ Varje svar har en **"Kopiera"**-knapp som kopierar råtexten (Markdown) till urk
 
 ### Kostnadsvisning 💰
 
-AI Council visar nu **kostnad per körning** i realtid:
+AI Council visar **kostnad per körning** i realtid, nu med prominent banner högst upp:
 
 | Visning | Beskrivning |
 |---------|-------------|
+| **💰 Kostnadsbanner** | Visas högst upp i resultatet - total kostnad, tid och tokens |
 | **Per modell** | Varje accordion visar `tid · $kostnad` |
 | **Syntes** | Syntes-kortet visar syntes-kostnad |
 | **Total** | Längst ner visas total kostnad i USD och SEK |
 | **Tokens** | Antal input/output tokens för hela körningen |
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  💰 $0.0342  (~0.36 kr)   ⏱️ 8.2s   📥 2,340 in   📤 1,890 out  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 **Priser baseras på officiell prisdata (jan 2026):**
 
@@ -435,6 +482,9 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - [x] Grok (xAI) integration för vetenskapliga frågor
 - [x] Deliberation: Runda 2 där modeller granskar varandra
 - [x] Kostnadsvisning per körning (tokens + USD/SEK) 💰
+- [x] Profilväljare med 5 lägen ⚡
+- [x] Användarprofiler 👤 NY!
+- [x] Kostnadsbanner högst upp 💰 NY!
 - [ ] Dela sessioner med kollegor
 - [ ] Custom syntes-prompts
 - [ ] Integration med Cursor via MCP
@@ -443,6 +493,25 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v2.5 (2026-01-26) - Användarprofiler
+
+**Nyhet:** Personanpassade AI-svar baserat på användarens bakgrund
+
+**Funktioner:**
+- 👤 **Användarprofiler** - Ställ in roll, teknisk nivå och svarsstil
+- 💰 **Kostnadsbanner högst upp** - Tydlig kostnadsvisning direkt i resultatet
+- 🔗 **Profilsida** - `/admin/ai-council/profil` för att redigera din profil
+
+**Hur det fungerar:**
+1. Användaren fyller i sin profil (roll, teknisk nivå, IT-kunskaper, etc.)
+2. Profilen sparas i Supabase och laddas automatiskt vid varje fråga
+3. AI-modellerna får en systemkontext som beskriver användarens bakgrund
+4. Svaren anpassas efter användarens förväntade kunskapsnivå
+
+**Exempel:**
+- Läkare med teknisk nivå 5 får detaljerade kodexempel
+- Sjuksköterska med nivå 2 får steg-för-steg utan facktermer
 
 ### v2.4 (2026-01-26) - Profilväljare
 

@@ -9,7 +9,13 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { arInloggad } from '../../../lib/auth';
+import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { createClient } from '@supabase/supabase-js';
+import { generateSystemPrompt } from './profile';
+
+// Supabase for user profiles
+const SUPABASE_URL = import.meta.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.SUPABASE_ANON_KEY;
 
 // API Keys from environment
 const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY;
@@ -1094,6 +1100,34 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
+  // Fetch user profile for personalized AI responses
+  let userProfileContext = '';
+  if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try {
+      const accessToken = cookies.get('sb-access-token')?.value;
+      if (accessToken) {
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          global: { headers: { Authorization: `Bearer ${accessToken}` } }
+        });
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('ai_council_profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (profile) {
+            userProfileContext = generateSystemPrompt(profile);
+          }
+        }
+      }
+    } catch (e) {
+      // Profile fetch failed, continue without personalization
+      console.log('Failed to fetch user profile:', e);
+    }
+  }
+
   try {
     const body: QueryRequest = await request.json();
     const { 
@@ -1136,8 +1170,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    // Combine context with file content if provided
-    const fullContext = [context, fileContent].filter(Boolean).join('\n\n---\n\n');
+    // Combine user profile context, provided context, and file content
+    const contextParts = [userProfileContext, context, fileContent].filter(Boolean);
+    const fullContext = contextParts.join('\n\n---\n\n');
 
     // Build query promises for selected models only
     const queryPromises: Promise<AIResponse>[] = [];

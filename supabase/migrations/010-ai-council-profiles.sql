@@ -1,100 +1,91 @@
--- =============================================
--- AI Council: Användarprofiler
--- =============================================
--- Migrering: 010-ai-council-profiles.sql
--- Datum: 2026-01-23
--- Beskrivning: Utökar profiles med AI Council-specifika fält
--- =============================================
+-- Migration: AI Council User Profiles
+-- Version: 010
+-- Description: Personliga profiler för att anpassa AI-svar efter användarens bakgrund
 
--- =============================================
--- Lägg till AI-profilfält i befintlig profiles-tabell
--- =============================================
-
--- Profiltyp (roll)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_profil_typ TEXT DEFAULT 'annan';
-COMMENT ON COLUMN profiles.ai_profil_typ IS 'Rolltyp: lakare, sjukskoterska, fysioterapeut, sekreterare, annan';
-
--- Bakgrundsbeskrivning (fritext)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_profil_bakgrund TEXT;
-COMMENT ON COLUMN profiles.ai_profil_bakgrund IS 'Beskrivning av användarens bakgrund för AI-kontext';
-
--- Expertisområden (array)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_profil_expertis TEXT[] DEFAULT '{}';
-COMMENT ON COLUMN profiles.ai_profil_expertis IS 'Lista över expertisområden, t.ex. {"ortopedi", "axel", "knä"}';
-
--- Prefererade modeller
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_default_models TEXT[] DEFAULT '{"openai", "anthropic", "gemini"}';
-COMMENT ON COLUMN profiles.ai_default_models IS 'Förinställda AI-modeller för AI Council';
-
--- Prefererad syntes-modell  
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_default_synthesis TEXT DEFAULT 'claude';
-COMMENT ON COLUMN profiles.ai_default_synthesis IS 'Förinställd syntes-modell: claude, claude-opus, openai, gpt4o, gemini, grok';
-
--- Inkludera profil automatiskt
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS ai_auto_inkludera_profil BOOLEAN DEFAULT true;
-COMMENT ON COLUMN profiles.ai_auto_inkludera_profil IS 'Om profilen ska inkluderas automatiskt i AI Council-prompts';
-
--- =============================================
--- Fördefinierade profilmallar (valfritt)
--- =============================================
-
-CREATE TABLE IF NOT EXISTS ai_profil_mallar (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    namn TEXT NOT NULL UNIQUE,
-    typ TEXT NOT NULL,
-    bakgrund_mall TEXT,
-    expertis_default TEXT[] DEFAULT '{}',
-    ikon TEXT,
-    ordning INTEGER DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+-- Skapa tabell för användarprofiler
+CREATE TABLE IF NOT EXISTS ai_council_profiles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  
+  -- Grundläggande info
+  role TEXT NOT NULL DEFAULT 'personal' CHECK (role IN ('lakare', 'ssk', 'admin', 'it', 'personal', 'annan')),
+  role_title TEXT, -- "Ortopedkirurg", "Mottagningssköterska"
+  years_experience INTEGER CHECK (years_experience >= 0 AND years_experience <= 60),
+  
+  -- Teknisk nivå (1-5)
+  -- 1: Nybörjare (mejl, webb)
+  -- 2: Grundläggande (installera program)
+  -- 3: Mellan (följa tekniska instruktioner)
+  -- 4: Avancerad (scripts, API:er)
+  -- 5: Expert (programmerar, systemarkitektur)
+  technical_level INTEGER NOT NULL DEFAULT 2 CHECK (technical_level BETWEEN 1 AND 5),
+  
+  -- Kunskaper (arrays)
+  it_skills TEXT[] DEFAULT '{}',
+  medical_specialties TEXT[] DEFAULT '{}',
+  
+  -- Fritext
+  background TEXT, -- Fri beskrivning av bakgrund
+  can_do TEXT,     -- Vad användaren kan göra
+  cannot_do TEXT,  -- Vad användaren INTE kan göra
+  
+  -- Preferenser för AI-svar
+  response_style TEXT NOT NULL DEFAULT 'balanced' 
+    CHECK (response_style IN ('detailed', 'balanced', 'concise', 'step-by-step')),
+  include_code_examples BOOLEAN NOT NULL DEFAULT true,
+  include_references BOOLEAN NOT NULL DEFAULT false,
+  preferred_language TEXT NOT NULL DEFAULT 'sv',
+  
+  -- Metadata
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  
+  -- En profil per användare
+  UNIQUE(user_id)
 );
 
-COMMENT ON TABLE ai_profil_mallar IS 'Fördefinierade profilmallar för snabbval';
+-- Skapa index för snabba uppslag
+CREATE INDEX IF NOT EXISTS idx_ai_council_profiles_user_id ON ai_council_profiles(user_id);
 
--- Sätt in standardmallar
-INSERT INTO ai_profil_mallar (namn, typ, bakgrund_mall, expertis_default, ikon, ordning)
-VALUES 
-    ('Läkare', 'lakare', 
-     'Jag är läkare med fokus på ortopedi. Jag arbetar med diagnostik och behandling av muskuloskeletala besvär.',
-     '{"ortopedi", "kirurgi", "diagnostik"}',
-     '🩺', 1),
-    ('Sjuksköterska', 'sjukskoterska',
-     'Jag är sjuksköterska med erfarenhet inom ortopedi och dagkirurgi. Jag arbetar med patientomhändertagande och eftervård.',
-     '{"omvårdnad", "eftervård", "patientkommunikation"}',
-     '💉', 2),
-    ('Fysioterapeut', 'fysioterapeut',
-     'Jag är fysioterapeut specialiserad på rehabilitering efter ortopediska ingrepp.',
-     '{"rehabilitering", "träning", "smärtlindring"}',
-     '🏃', 3),
-    ('Medicinsk sekreterare', 'sekreterare',
-     'Jag är medicinsk sekreterare och arbetar med administration, journalföring och patientkontakt.',
-     '{"administration", "journalföring", "bokningar"}',
-     '📋', 4),
-    ('Forskare', 'forskare',
-     'Jag arbetar med klinisk forskning inom ortopedi, med fokus på evidensbaserad medicin.',
-     '{"forskning", "litteraturöversikt", "statistik"}',
-     '🔬', 5)
-ON CONFLICT (namn) DO NOTHING;
+-- Row Level Security
+ALTER TABLE ai_council_profiles ENABLE ROW LEVEL SECURITY;
 
--- RLS för profilmallar (alla kan läsa)
-ALTER TABLE ai_profil_mallar ENABLE ROW LEVEL SECURITY;
+-- Användare kan se sin egen profil
+CREATE POLICY "Users can view own profile"
+  ON ai_council_profiles FOR SELECT
+  USING (auth.uid() = user_id);
 
-CREATE POLICY "Alla kan läsa profilmallar"
-    ON ai_profil_mallar
-    FOR SELECT
-    USING (true);
+-- Användare kan uppdatera sin egen profil
+CREATE POLICY "Users can update own profile"
+  ON ai_council_profiles FOR UPDATE
+  USING (auth.uid() = user_id);
 
--- =============================================
--- Utöka ai_council_sessions med profilreferens
--- =============================================
+-- Användare kan skapa sin egen profil
+CREATE POLICY "Users can insert own profile"
+  ON ai_council_profiles FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
 
--- Lägg till kolumn för vilken profil som användes
-ALTER TABLE ai_council_sessions ADD COLUMN IF NOT EXISTS profil_använd JSONB;
-COMMENT ON COLUMN ai_council_sessions.profil_använd IS 'Snapshot av användarens profil vid tidpunkten för sessionen';
+-- Användare kan ta bort sin egen profil
+CREATE POLICY "Users can delete own profile"
+  ON ai_council_profiles FOR DELETE
+  USING (auth.uid() = user_id);
 
--- =============================================
--- Index för nya fält
--- =============================================
+-- Trigger för att uppdatera updated_at
+CREATE OR REPLACE FUNCTION update_ai_council_profiles_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE INDEX IF NOT EXISTS idx_profiles_ai_typ ON profiles(ai_profil_typ);
-CREATE INDEX IF NOT EXISTS idx_profiles_ai_expertis ON profiles USING GIN(ai_profil_expertis);
+DROP TRIGGER IF EXISTS ai_council_profiles_updated_at ON ai_council_profiles;
+CREATE TRIGGER ai_council_profiles_updated_at
+  BEFORE UPDATE ON ai_council_profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION update_ai_council_profiles_updated_at();
+
+-- Kommentar för dokumentation
+COMMENT ON TABLE ai_council_profiles IS 'Användarprofiler för AI Council - anpassar AI-svar efter användarens bakgrund och kunskapsnivå';
+COMMENT ON COLUMN ai_council_profiles.technical_level IS '1=Nybörjare, 2=Grundläggande, 3=Mellan, 4=Avancerad, 5=Expert';
+COMMENT ON COLUMN ai_council_profiles.response_style IS 'detailed=Fullständiga förklaringar, balanced=Lagom, concise=Kort, step-by-step=Numrerade steg';

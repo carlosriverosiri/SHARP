@@ -271,6 +271,24 @@ if (!anvandare) {
     }
     .logo span { font-size: 0.75rem; color: #555; }
     .header-right { display: flex; align-items: center; gap: 1rem; }
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: rgba(129, 140, 248, 0.1);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      border-radius: 6px;
+      color: #a5b4fc;
+      font-size: 0.8125rem;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .profile-link:hover {
+      background: rgba(129, 140, 248, 0.15);
+      border-color: rgba(129, 140, 248, 0.5);
+      color: #c4b5fd;
+    }
     .user-email { font-size: 0.875rem; color: #666; }
     .model-dots { display: flex; gap: 4px; }
     .model-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -738,6 +756,52 @@ if (!anvandare) {
     .total-cost { color: #4ade80; }
     .total-cost .cost-details { display: block; font-size: 0.75rem; color: #666; margin-top: 0.25rem; }
     
+    /* Cost banner at top */
+    .cost-banner {
+      display: none;
+      background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(74, 222, 128, 0.05));
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .cost-banner.visible { display: block; }
+    .cost-banner-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .cost-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .cost-banner-icon { font-size: 1.5rem; }
+    .cost-banner-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4ade80;
+    }
+    .cost-banner-sek {
+      font-size: 0.875rem;
+      color: #86efac;
+      margin-left: 0.5rem;
+    }
+    .cost-banner-right {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.8125rem;
+      color: #666;
+    }
+    .cost-banner-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .cost-banner-stat-value { color: #999; font-weight: 500; }
+    
     /* Markdown */
     .markdown-content { line-height: 1.7; color: #ccc; }
     .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { color: #fff; margin-top: 1.5em; margin-bottom: 0.5em; }
@@ -784,6 +848,9 @@ if (!anvandare) {
             </div>
           </div>
           <div class="header-right">
+            <a href="/admin/ai-council/profil" class="profile-link" title="Redigera din AI-profil">
+              👤 Min profil
+            </a>
             <span class="user-email">{anvandare.email}</span>
             <div class="model-dots">
               <span class="model-dot dot-openai" title="OpenAI o1"></span>
@@ -1017,6 +1084,33 @@ if (!anvandare) {
         <div id="error" class="error"></div>
         
         <section id="results" class="results">
+          <!-- Cost banner at top -->
+          <div id="costBanner" class="cost-banner">
+            <div class="cost-banner-main">
+              <div class="cost-banner-left">
+                <span class="cost-banner-icon">💰</span>
+                <span id="costBannerAmount" class="cost-banner-amount">$0.00</span>
+                <span id="costBannerSek" class="cost-banner-sek">(~0 kr)</span>
+              </div>
+              <div class="cost-banner-right">
+                <div class="cost-banner-stat">
+                  <span>⏱️</span>
+                  <span id="costBannerTime" class="cost-banner-stat-value">0s</span>
+                </div>
+                <div class="cost-banner-stat">
+                  <span>📥</span>
+                  <span id="costBannerTokensIn" class="cost-banner-stat-value">0</span>
+                  <span>in</span>
+                </div>
+                <div class="cost-banner-stat">
+                  <span>📤</span>
+                  <span id="costBannerTokensOut" class="cost-banner-stat-value">0</span>
+                  <span>out</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <div id="synthesisCard" class="synthesis-card" style="display: none;">
             <div class="synthesis-header">
               <span class="synthesis-icon">🧠</span>
@@ -1882,6 +1976,7 @@ if (!anvandare) {
         synthesisCard.style.display = 'none';
         round2Section.style.display = 'none';
         round1Label.style.display = enableDeliberation ? 'block' : 'none';
+        document.getElementById('costBanner').classList.remove('visible');
         
         currentResponses = { openai: '', anthropic: '', google: '', grok: '', 'r2-openai': '', 'r2-anthropic': '', 'r2-google': '', 'r2-grok': '', synthesis: '', rawResponses: [], totalDuration: 0 };
         
@@ -1981,7 +2076,7 @@ if (!anvandare) {
           
           document.getElementById('totalDuration').textContent = formatDuration(data.totalDuration);
           
-          // Display cost information
+          // Display cost information (banner at top + details at bottom)
           if (data.totalCost && data.totalCost.totalCostUSD > 0) {
             const costContainer = document.getElementById('totalCostContainer');
             const costEl = document.getElementById('totalCost');
@@ -1993,6 +2088,15 @@ if (!anvandare) {
             costEl.textContent = `$${usdCost.toFixed(4)} (~${sekCost.toFixed(2)} kr)`;
             detailsEl.textContent = `${data.totalCost.inputTokens.toLocaleString()} in / ${data.totalCost.outputTokens.toLocaleString()} ut tokens`;
             costContainer.style.display = 'block';
+            
+            // Update cost banner at top
+            const costBanner = document.getElementById('costBanner');
+            document.getElementById('costBannerAmount').textContent = `$${usdCost.toFixed(4)}`;
+            document.getElementById('costBannerSek').textContent = `(~${sekCost.toFixed(2)} kr)`;
+            document.getElementById('costBannerTime').textContent = formatDuration(data.totalDuration);
+            document.getElementById('costBannerTokensIn').textContent = data.totalCost.inputTokens.toLocaleString();
+            document.getElementById('costBannerTokensOut').textContent = data.totalCost.outputTokens.toLocaleString();
+            costBanner.classList.add('visible');
           }
           
           setStatus('', false);

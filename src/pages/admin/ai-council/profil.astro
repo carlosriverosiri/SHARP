@@ -1,0 +1,870 @@
+---
+/**
+ * AI Council Profile Settings
+ * URL: /admin/ai-council/profil
+ * 
+ * Allows users to configure their personal AI Council profile
+ * which is used to customize AI responses.
+ */
+
+export const prerender = false;
+
+import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+
+// Check authentication
+if (!await arInloggad(Astro.cookies)) {
+  return Astro.redirect('/personal/');
+}
+
+const anvandare = await hamtaAnvandare(Astro.cookies);
+if (!anvandare) {
+  return Astro.redirect('/personal/');
+}
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Min AI-profil | AI Council</title>
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #222;
+    }
+    
+    .back-link {
+      color: #818cf8;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    
+    .intro {
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(129, 140, 248, 0.05));
+      border: 1px solid rgba(129, 140, 248, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.9375rem;
+      color: #a5b4fc;
+    }
+    
+    .section {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    label {
+      display: block;
+      font-size: 0.875rem;
+      color: #999;
+      margin-bottom: 0.5rem;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e5e5e5;
+      font-size: 0.9375rem;
+      font-family: inherit;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    }
+    
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    /* Technical level slider */
+    .level-slider {
+      margin: 1rem 0;
+    }
+    
+    .level-slider input[type="range"] {
+      width: 100%;
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      appearance: none;
+      cursor: pointer;
+    }
+    
+    .level-slider input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: #818cf8;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .level-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    .level-current {
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #818cf8;
+      margin-top: 0.75rem;
+    }
+    
+    .level-description {
+      text-align: center;
+      font-size: 0.8125rem;
+      color: #888;
+      margin-top: 0.25rem;
+    }
+    
+    /* Checkboxes */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.5rem;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .checkbox-item:hover {
+      border-color: #444;
+      background: #222;
+    }
+    
+    .checkbox-item.selected {
+      border-color: #818cf8;
+      background: rgba(129, 140, 248, 0.1);
+    }
+    
+    .checkbox-item input {
+      display: none;
+    }
+    
+    .checkbox-box {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #444;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      font-size: 0.75rem;
+    }
+    
+    .checkbox-item.selected .checkbox-box {
+      background: #818cf8;
+      border-color: #818cf8;
+      color: #fff;
+    }
+    
+    .checkbox-label {
+      font-size: 0.8125rem;
+      color: #ccc;
+    }
+    
+    /* Radio buttons */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .radio-item:hover {
+      border-color: #444;
+    }
+    
+    .radio-item.selected {
+      border-color: #818cf8;
+      background: rgba(129, 140, 248, 0.1);
+    }
+    
+    .radio-item input {
+      display: none;
+    }
+    
+    .radio-circle {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .radio-circle::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: transparent;
+      border-radius: 50%;
+    }
+    
+    .radio-item.selected .radio-circle {
+      border-color: #818cf8;
+    }
+    
+    .radio-item.selected .radio-circle::after {
+      background: #818cf8;
+    }
+    
+    .radio-label {
+      font-size: 0.875rem;
+      color: #ccc;
+    }
+    
+    /* Toggle switches */
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #222;
+    }
+    
+    .toggle-item:last-child {
+      border-bottom: none;
+    }
+    
+    .toggle-label {
+      font-size: 0.9375rem;
+      color: #ccc;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      background: #333;
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .toggle-switch.active {
+      background: #818cf8;
+    }
+    
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    
+    .toggle-switch.active::after {
+      transform: translateX(22px);
+    }
+    
+    /* Preview */
+    .preview-section {
+      background: #0d0d0d;
+      border: 1px dashed #333;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 2rem;
+    }
+    
+    .preview-title {
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .preview-content {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.8125rem;
+      color: #888;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    
+    /* Buttons */
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #818cf8, #6366f1);
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: #222;
+      color: #ccc;
+      border: 1px solid #333;
+    }
+    
+    .btn-secondary:hover {
+      background: #333;
+    }
+    
+    /* Status messages */
+    .status {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    
+    .status.visible { display: block; }
+    .status.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    
+    @media (max-width: 640px) {
+      .input-row { grid-template-columns: 1fr; }
+      .checkbox-grid { grid-template-columns: 1fr 1fr; }
+      .button-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/admin/ai-council" class="back-link">← Tillbaka till AI Council</a>
+      <span style="color: #666; font-size: 0.875rem;">{anvandare.email}</span>
+    </header>
+    
+    <h1>👤 Din AI-profil</h1>
+    
+    <div class="intro">
+      Denna profil hjälper AI att ge dig bättre svar anpassade efter din bakgrund och kunskapsnivå. 
+      Informationen skickas automatiskt med varje fråga du ställer i AI Council.
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <form id="profileForm">
+      <!-- Roll och titel -->
+      <div class="section">
+        <div class="section-title">👔 Roll & erfarenhet</div>
+        
+        <div class="form-group">
+          <label>Din roll</label>
+          <div class="radio-group" id="roleGroup">
+            <label class="radio-item" data-value="lakare">
+              <input type="radio" name="role" value="lakare">
+              <span class="radio-circle"></span>
+              <span class="radio-label">🩺 Läkare</span>
+            </label>
+            <label class="radio-item" data-value="ssk">
+              <input type="radio" name="role" value="ssk">
+              <span class="radio-circle"></span>
+              <span class="radio-label">💉 Sjuksköterska</span>
+            </label>
+            <label class="radio-item" data-value="admin">
+              <input type="radio" name="role" value="admin">
+              <span class="radio-circle"></span>
+              <span class="radio-label">📋 Administratör</span>
+            </label>
+            <label class="radio-item" data-value="it">
+              <input type="radio" name="role" value="it">
+              <span class="radio-circle"></span>
+              <span class="radio-label">💻 IT/Teknik</span>
+            </label>
+            <label class="radio-item" data-value="annan">
+              <input type="radio" name="role" value="annan">
+              <span class="radio-circle"></span>
+              <span class="radio-label">👤 Annan</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="input-row">
+          <div class="form-group">
+            <label for="roleTitle">Titel (t.ex. "Ortopedkirurg")</label>
+            <input type="text" id="roleTitle" name="role_title" placeholder="Din titel...">
+          </div>
+          <div class="form-group">
+            <label for="yearsExperience">År i yrket</label>
+            <input type="number" id="yearsExperience" name="years_experience" min="0" max="60" placeholder="0">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Teknisk nivå -->
+      <div class="section">
+        <div class="section-title">🖥️ Teknisk nivå</div>
+        
+        <div class="level-slider">
+          <input type="range" id="technicalLevel" name="technical_level" min="1" max="5" value="2">
+          <div class="level-labels">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+          </div>
+          <div class="level-current" id="levelCurrent">Nivå 2</div>
+          <div class="level-description" id="levelDescription">Grundläggande - Kan installera program</div>
+        </div>
+      </div>
+      
+      <!-- IT-kunskaper -->
+      <div class="section">
+        <div class="section-title">💡 IT-kunskaper</div>
+        <p style="font-size: 0.8125rem; color: #666; margin-bottom: 1rem;">Välj alla som stämmer</p>
+        
+        <div class="checkbox-grid" id="itSkillsGrid">
+          <label class="checkbox-item" data-value="mejl">
+            <input type="checkbox" name="it_skills" value="mejl">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Mejl</span>
+          </label>
+          <label class="checkbox-item" data-value="excel">
+            <input type="checkbox" name="it_skills" value="excel">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Excel</span>
+          </label>
+          <label class="checkbox-item" data-value="word">
+            <input type="checkbox" name="it_skills" value="word">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Word</span>
+          </label>
+          <label class="checkbox-item" data-value="skrivare">
+            <input type="checkbox" name="it_skills" value="skrivare">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Skrivare</span>
+          </label>
+          <label class="checkbox-item" data-value="natverk">
+            <input type="checkbox" name="it_skills" value="natverk">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Nätverk</span>
+          </label>
+          <label class="checkbox-item" data-value="programmering">
+            <input type="checkbox" name="it_skills" value="programmering">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Programmering</span>
+          </label>
+          <label class="checkbox-item" data-value="git">
+            <input type="checkbox" name="it_skills" value="git">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Git</span>
+          </label>
+          <label class="checkbox-item" data-value="api">
+            <input type="checkbox" name="it_skills" value="api">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">API:er</span>
+          </label>
+          <label class="checkbox-item" data-value="databaser">
+            <input type="checkbox" name="it_skills" value="databaser">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Databaser</span>
+          </label>
+          <label class="checkbox-item" data-value="astro">
+            <input type="checkbox" name="it_skills" value="astro">
+            <span class="checkbox-box">✓</span>
+            <span class="checkbox-label">Astro/React</span>
+          </label>
+        </div>
+      </div>
+      
+      <!-- Svarsstil -->
+      <div class="section">
+        <div class="section-title">📝 Svarsstil</div>
+        
+        <div class="form-group">
+          <label>Hur vill du ha dina svar?</label>
+          <div class="radio-group" id="styleGroup">
+            <label class="radio-item" data-value="detailed">
+              <input type="radio" name="response_style" value="detailed">
+              <span class="radio-circle"></span>
+              <span class="radio-label">📖 Detaljerat</span>
+            </label>
+            <label class="radio-item selected" data-value="balanced">
+              <input type="radio" name="response_style" value="balanced" checked>
+              <span class="radio-circle"></span>
+              <span class="radio-label">⚖️ Balanserat</span>
+            </label>
+            <label class="radio-item" data-value="concise">
+              <input type="radio" name="response_style" value="concise">
+              <span class="radio-circle"></span>
+              <span class="radio-label">📌 Koncist</span>
+            </label>
+            <label class="radio-item" data-value="step-by-step">
+              <input type="radio" name="response_style" value="step-by-step">
+              <span class="radio-circle"></span>
+              <span class="radio-label">📋 Steg-för-steg</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="toggle-item">
+          <span class="toggle-label">Inkludera kodexempel</span>
+          <div class="toggle-switch active" id="toggleCodeExamples" data-checked="true"></div>
+        </div>
+        
+        <div class="toggle-item">
+          <span class="toggle-label">Inkludera källhänvisningar</span>
+          <div class="toggle-switch" id="toggleReferences" data-checked="false"></div>
+        </div>
+      </div>
+      
+      <!-- Fritext -->
+      <div class="section">
+        <div class="section-title">✍️ Beskriv dig själv (valfritt)</div>
+        
+        <div class="form-group">
+          <label for="background">Bakgrund och erfarenhet</label>
+          <textarea id="background" name="background" placeholder="T.ex. 'Jag är ortopedkirurg med 20 års erfarenhet. Kodar på fritiden i TypeScript och Astro. Föredrar detaljerade tekniska förklaringar.'"></textarea>
+        </div>
+      </div>
+      
+      <!-- Förhandsvisning -->
+      <div class="preview-section">
+        <div class="preview-title">📋 Förhandsvisning av AI-kontext</div>
+        <div id="previewContent" class="preview-content">Fyll i formuläret för att se hur AI kommer uppfatta dig...</div>
+      </div>
+      
+      <div class="button-row">
+        <button type="submit" class="btn btn-primary" id="saveBtn">💾 Spara profil</button>
+        <a href="/admin/ai-council" class="btn btn-secondary">Avbryt</a>
+      </div>
+    </form>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const form = document.getElementById('profileForm');
+      const statusEl = document.getElementById('status');
+      const previewEl = document.getElementById('previewContent');
+      const saveBtn = document.getElementById('saveBtn');
+      
+      const levelDescriptions = [
+        'Nybörjare - Kan använda mejl och webben',
+        'Grundläggande - Kan installera program',
+        'Mellan - Förstår filsystem, tekniska instruktioner',
+        'Avancerad - Kan skriva scripts, förstår API:er',
+        'Expert - Kan programmera, systemarkitektur'
+      ];
+      
+      // Radio button handlers
+      document.querySelectorAll('.radio-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const group = this.closest('.radio-group');
+          group.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+          this.classList.add('selected');
+          this.querySelector('input').checked = true;
+          updatePreview();
+        });
+      });
+      
+      // Checkbox handlers
+      document.querySelectorAll('.checkbox-item').forEach(item => {
+        item.addEventListener('click', function() {
+          this.classList.toggle('selected');
+          const input = this.querySelector('input');
+          input.checked = !input.checked;
+          updatePreview();
+        });
+      });
+      
+      // Toggle handlers
+      document.querySelectorAll('.toggle-switch').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          this.classList.toggle('active');
+          this.dataset.checked = this.classList.contains('active') ? 'true' : 'false';
+          updatePreview();
+        });
+      });
+      
+      // Level slider
+      const levelSlider = document.getElementById('technicalLevel');
+      const levelCurrent = document.getElementById('levelCurrent');
+      const levelDescription = document.getElementById('levelDescription');
+      
+      levelSlider.addEventListener('input', function() {
+        const level = parseInt(this.value);
+        levelCurrent.textContent = 'Nivå ' + level;
+        levelDescription.textContent = levelDescriptions[level - 1];
+        updatePreview();
+      });
+      
+      // Text inputs
+      document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+        input.addEventListener('input', updatePreview);
+      });
+      
+      // Generate preview
+      function updatePreview() {
+        const role = document.querySelector('input[name="role"]:checked')?.value || 'personal';
+        const roleTitle = document.getElementById('roleTitle').value;
+        const yearsExp = document.getElementById('yearsExperience').value;
+        const level = parseInt(levelSlider.value);
+        const skills = Array.from(document.querySelectorAll('input[name="it_skills"]:checked')).map(i => i.value);
+        const style = document.querySelector('input[name="response_style"]:checked')?.value || 'balanced';
+        const codeExamples = document.getElementById('toggleCodeExamples').dataset.checked === 'true';
+        const refs = document.getElementById('toggleReferences').dataset.checked === 'true';
+        const background = document.getElementById('background').value;
+        
+        let preview = `Du svarar ${roleTitle || 'en användare'}`;
+        if (yearsExp) preview += ` med ${yearsExp} års erfarenhet`;
+        preview += '.\n\n';
+        
+        preview += `TEKNISK NIVÅ: ${level}/5 (${levelDescriptions[level - 1].split(' - ')[0]})\n`;
+        
+        if (skills.length > 0) {
+          preview += `\nIT-KUNSKAPER: ${skills.join(', ')}\n`;
+        }
+        
+        if (background) {
+          preview += `\nBAKGRUND:\n${background}\n`;
+        }
+        
+        preview += '\nPREFERENSER:\n';
+        const styleMap = {
+          detailed: 'Ge detaljerade svar med fullständiga förklaringar.',
+          balanced: 'Ge balanserade svar.',
+          concise: 'Ge korta och kärnfulla svar.',
+          'step-by-step': 'Ge steg-för-steg-instruktioner.'
+        };
+        preview += `- ${styleMap[style]}\n`;
+        preview += codeExamples ? '- Inkludera kodexempel.\n' : '- Undvik kodexempel.\n';
+        if (refs) preview += '- Inkludera källhänvisningar.\n';
+        
+        preview += '\nAnpassa ditt svar efter denna bakgrund.';
+        
+        previewEl.textContent = preview;
+      }
+      
+      // Load existing profile
+      try {
+        const res = await fetch('/api/ai-council/profile', { credentials: 'include' });
+        const data = await res.json();
+        
+        if (data.profile) {
+          const p = data.profile;
+          
+          // Set role
+          const roleItem = document.querySelector(`.radio-item[data-value="${p.role}"]`);
+          if (roleItem) {
+            roleItem.click();
+          }
+          
+          // Set title and years
+          if (p.role_title) document.getElementById('roleTitle').value = p.role_title;
+          if (p.years_experience) document.getElementById('yearsExperience').value = p.years_experience;
+          
+          // Set level
+          levelSlider.value = p.technical_level || 2;
+          levelSlider.dispatchEvent(new Event('input'));
+          
+          // Set IT skills
+          if (p.it_skills && p.it_skills.length > 0) {
+            p.it_skills.forEach(skill => {
+              const item = document.querySelector(`.checkbox-item[data-value="${skill}"]`);
+              if (item && !item.classList.contains('selected')) {
+                item.click();
+              }
+            });
+          }
+          
+          // Set style
+          const styleItem = document.querySelector(`.radio-item[data-value="${p.response_style}"]`);
+          if (styleItem) {
+            styleItem.click();
+          }
+          
+          // Set toggles
+          const codeToggle = document.getElementById('toggleCodeExamples');
+          if (p.include_code_examples && !codeToggle.classList.contains('active')) {
+            codeToggle.click();
+          } else if (!p.include_code_examples && codeToggle.classList.contains('active')) {
+            codeToggle.click();
+          }
+          
+          const refsToggle = document.getElementById('toggleReferences');
+          if (p.include_references && !refsToggle.classList.contains('active')) {
+            refsToggle.click();
+          }
+          
+          // Set background
+          if (p.background) document.getElementById('background').value = p.background;
+          
+          updatePreview();
+        }
+      } catch (e) {
+        console.error('Failed to load profile:', e);
+      }
+      
+      // Save profile
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Sparar...';
+        
+        const profileData = {
+          role: document.querySelector('input[name="role"]:checked')?.value || 'personal',
+          role_title: document.getElementById('roleTitle').value || null,
+          years_experience: parseInt(document.getElementById('yearsExperience').value) || null,
+          technical_level: parseInt(levelSlider.value),
+          it_skills: Array.from(document.querySelectorAll('input[name="it_skills"]:checked')).map(i => i.value),
+          medical_specialties: [],
+          background: document.getElementById('background').value || null,
+          response_style: document.querySelector('input[name="response_style"]:checked')?.value || 'balanced',
+          include_code_examples: document.getElementById('toggleCodeExamples').dataset.checked === 'true',
+          include_references: document.getElementById('toggleReferences').dataset.checked === 'true',
+          preferred_language: 'sv'
+        };
+        
+        try {
+          const res = await fetch('/api/ai-council/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(profileData)
+          });
+          
+          const data = await res.json();
+          
+          if (data.success) {
+            statusEl.textContent = '✓ Profil sparad! AI Council kommer nu anpassa svar efter din bakgrund.';
+            statusEl.className = 'status visible success';
+          } else {
+            throw new Error(data.error || 'Kunde inte spara profil');
+          }
+        } catch (error) {
+          statusEl.textContent = '❌ ' + error.message;
+          statusEl.className = 'status visible error';
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = '💾 Spara profil';
+        }
+      });
+      
+      // Initial preview
+      updatePreview();
+    });
+  </script>
+</body>
+</html>
