@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-25 (v2.1 - Kostnadsvisning)
+**Senast uppdaterad:** 2026-01-26 (v2.2 - Gemini-uppdatering)
 
 ---
 
@@ -43,7 +43,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 │  │                  Promise.all()                        │   │
 │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────┐  │   │
 │  │  │ OpenAI   │  │  Anthropic   │  │    Google      │  │   │
-│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 1.5 Pro │  │   │
+│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 2.0 Flash │  │   │
 │  │  └────┬─────┘  └──────┬───────┘  └───────┬────────┘  │   │
 │  │       │               │                  │           │   │
 │  └───────┴───────────────┴──────────────────┴───────────┘   │
@@ -66,7 +66,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 |--------|------------|--------|------------|
 | **o1** | OpenAI | Djup resonering, steg-för-steg-analys | Komplexa logiska problem |
 | **Claude Sonnet** | Anthropic | Struktur, kod, tydliga förklaringar | Kodgenerering, dokumentation |
-| **Gemini 1.5 Pro** | Google | Stor kontextfönster (1M tokens) | Stora kodbaser, långa dokument |
+| **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
 | **Grok 2** | xAI | Realtidsinfo, vetenskapliga källor | Referenshantering, aktuella frågor |
 
 ### Välj modeller
@@ -177,7 +177,7 @@ AI Council visar nu **kostnad per körning** i realtid:
 | GPT-4o | $2.50 | $10.00 |
 | Claude Sonnet | $3.00 | $15.00 |
 | Claude Opus 4.5 | $15.00 | $75.00 |
-| Gemini 1.5 Pro | $1.25 | $5.00 |
+| Gemini 2.0 Flash | $0.10 | $0.40 |
 | Grok 2 | $2.00 | $10.00 |
 
 > **Tips:** Använd GPT-4o ⚡ eller Gemini 📚 för billigare iterationer under utveckling.
@@ -358,7 +358,7 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - `claude-opus` - Claude Opus 4.5 (Anthropics bästa modell)
 - `openai` - OpenAI o1 (resoneringsmodell)
 - `gpt4o` - GPT-4o (snabb, hög kvalitet)
-- `gemini` - Gemini 1.5 Pro (stor kontext)
+- `gemini` - Gemini 2.0 Flash (stor kontext)
 - `grok` - Grok 2 (vetenskap, referenser)
 
 **Response:**
@@ -375,7 +375,7 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
       "cost": { "inputCost": 0.0225, "outputCost": 0.12, "totalCost": 0.1425, "currency": "USD" }
     },
     { "provider": "Anthropic", "model": "claude-sonnet-4-20250514", "response": "...", "duration": 3000 },
-    { "provider": "Google", "model": "gemini-1.5-pro", "response": "...", "duration": 4000 }
+    { "provider": "Google", "model": "gemini-2.0-flash", "response": "...", "duration": 4000 }
   ],
   "round2Responses": [...],
   "deliberationEnabled": true,
@@ -427,7 +427,42 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 ---
 
+## Versionshistorik
+
+### v2.2 (2026-01-26) - Gemini-uppdatering
+
+**Ändring:** Bytte från `gemini-1.5-pro` till `gemini-2.0-flash`
+
+**Orsak:** Google har fasats ut `gemini-1.5-pro` från v1beta API:t. Vid anrop returnerades felet:
+> "models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent"
+
+**Konsekvenser:**
+- ✅ **Snabbare svar** - Gemini 2.0 Flash är optimerad för hastighet
+- ✅ **Lägre kostnad** - $0.10/$0.40 per 1M tokens (tidigare $1.25/$5.00)
+- ✅ **Multimodal** - Stöder bild och video i framtiden
+- ⚠️ **Mindre kontextfönster** - 1M → 128K tokens (fortfarande tillräckligt för de flesta användningsfall)
+
+### v2.1 (2026-01-25) - Kostnadsvisning
+
+- Lade till kostnadsvisning per modell och total kostnad
+- Nya syntesmodeller: Claude Opus 4.5 och GPT-4o
+
+### v2.0 (2026-01-24) - Deliberation
+
+- Deliberation Mode (Runda 2)
+- Valbar modell för syntes
+- Grok (xAI) integration
+
+### v1.0 (2026-01-23) - Initial release
+
+- Multi-modell frågor (OpenAI, Claude, Gemini)
+- Automatisk syntes
+- Sessionshistorik
+
+---
+
 ## Relaterade dokument
 
 - [AI-INTEGRATION-RESURSER.md](./AI-INTEGRATION-RESURSER.md) - Övriga AI-resurser i projektet
+- [MULTI-AI-ARBETSFLODE.md](./MULTI-AI-ARBETSFLODE.md) - Arbetsflöden för multi-AI
 - [SETUP-ARBETSDATOR.md](./SETUP-ARBETSDATOR.md) - Installationsguide
