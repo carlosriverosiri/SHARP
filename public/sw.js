@@ -9,7 +9,7 @@
  * Version: 1.0.0
  */
 
-const CACHE_NAME = 'so-ortopedi-v2';
+const CACHE_NAME = 'so-ortopedi-v3';
 
 // Resurser att cachelagra vid installation
 const PRECACHE_URLS = [
