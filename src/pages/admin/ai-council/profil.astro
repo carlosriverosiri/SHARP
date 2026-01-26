@@ -667,23 +667,21 @@ if (!anvandare) {
         'Expert - Kan programmera, systemarkitektur'
       ];
       
-      // Radio button handlers
-      document.querySelectorAll('.radio-item').forEach(item => {
-        item.addEventListener('click', function() {
+      // Radio button handlers - use change event since label auto-toggles the radio
+      document.querySelectorAll('.radio-item input').forEach(input => {
+        input.addEventListener('change', function() {
           const group = this.closest('.radio-group');
           group.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
-          this.classList.add('selected');
-          this.querySelector('input').checked = true;
+          this.closest('.radio-item').classList.add('selected');
           updatePreview();
         });
       });
       
-      // Checkbox handlers
-      document.querySelectorAll('.checkbox-item').forEach(item => {
-        item.addEventListener('click', function() {
-          this.classList.toggle('selected');
-          const input = this.querySelector('input');
-          input.checked = !input.checked;
+      // Checkbox handlers - use change event since label auto-toggles the checkbox
+      document.querySelectorAll('.checkbox-item input').forEach(input => {
+        input.addEventListener('change', function() {
+          const item = this.closest('.checkbox-item');
+          item.classList.toggle('selected', this.checked);
           updatePreview();
         });
       });
@@ -764,10 +762,11 @@ if (!anvandare) {
         if (data.profile) {
           const p = data.profile;
           
-          // Set role
-          const roleItem = document.querySelector(`.radio-item[data-value="${p.role}"]`);
-          if (roleItem) {
-            roleItem.click();
+          // Set role - click the radio input directly
+          const roleInput = document.querySelector(`.radio-item[data-value="${p.role}"] input`);
+          if (roleInput) {
+            roleInput.checked = true;
+            roleInput.dispatchEvent(new Event('change'));
           }
           
           // Set title and years
@@ -778,20 +777,22 @@ if (!anvandare) {
           levelSlider.value = p.technical_level || 2;
           levelSlider.dispatchEvent(new Event('input'));
           
-          // Set IT skills
+          // Set IT skills - check the checkbox inputs directly
           if (p.it_skills && p.it_skills.length > 0) {
             p.it_skills.forEach(skill => {
-              const item = document.querySelector(`.checkbox-item[data-value="${skill}"]`);
-              if (item && !item.classList.contains('selected')) {
-                item.click();
+              const input = document.querySelector(`.checkbox-item[data-value="${skill}"] input`);
+              if (input && !input.checked) {
+                input.checked = true;
+                input.dispatchEvent(new Event('change'));
               }
             });
           }
           
-          // Set style
-          const styleItem = document.querySelector(`.radio-item[data-value="${p.response_style}"]`);
-          if (styleItem) {
-            styleItem.click();
+          // Set style - click the radio input directly
+          const styleInput = document.querySelector(`.radio-item[data-value="${p.response_style}"] input`);
+          if (styleInput) {
+            styleInput.checked = true;
+            styleInput.dispatchEvent(new Event('change'));
           }
           
           // Set toggles
