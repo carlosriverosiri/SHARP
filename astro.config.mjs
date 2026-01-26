@@ -39,6 +39,10 @@ Object.entries(shortLinksData)
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sodermalmsortopedi.se',
+  
+  // Trailing slash: 'never' = /om-oss/ai-council (utan /)
+  // Detta gör att /om-oss/ai-council/ redirectar till /om-oss/ai-council
+  trailingSlash: 'never',
 
   // Dynamiskt genererade redirects från shortLinks.json
   redirects,

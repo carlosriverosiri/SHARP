@@ -102,6 +102,13 @@
 [build.processing.html]
   pretty_urls = true
 
+# Redirect trailing slashes to non-trailing (consistency with Astro trailingSlash: 'never')
+[[redirects]]
+  from = "/*/"
+  to = "/:splat"
+  status = 301
+  force = false
+
 # DISABLE Netlify's image optimization - Astro handles this better!
 # Netlify's on-the-fly Image CDN converts WebP to JPEG, which is worse.
 # Astro's <Image> component generates optimized WebP at build time.
