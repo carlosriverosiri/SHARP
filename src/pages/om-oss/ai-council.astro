@@ -30,7 +30,8 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             Master Mind Tool <span class="text-sm text-slate-500">v2.6</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
-            Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor
+            Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor — 
+            <span class="text-indigo-400">inklusive inbyggd referenshantering med Zotero-stöd</span>
           </p>
         </div>
       </div>
@@ -64,12 +65,31 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               </p>
             </div>
             
-            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-indigo-500/50 transition-colors">
-              <div class="text-3xl mb-4">🧪</div>
-              <h3 class="text-lg font-semibold text-white mb-2">Forskning</h3>
+            <div class="bg-gradient-to-b from-indigo-500/10 to-slate-800/50 border border-indigo-500/40 rounded-xl p-6 hover:border-indigo-400 transition-colors">
+              <div class="text-3xl mb-4">📚</div>
+              <h3 class="text-lg font-semibold text-white mb-2">Vetenskaplig forskning</h3>
               <p class="text-slate-400 text-sm">
-                Syntetisera komplexa vetenskapliga ämnen med källgranskning.
+                <strong class="text-indigo-300">Inbyggd referenshantering</strong> med inline-citat, DOI-länkar och Zotero-import.
               </p>
+            </div>
+          </div>
+          
+          <!-- Highlight box for reference handling -->
+          <div class="mt-8 bg-gradient-to-r from-indigo-500/10 via-violet-500/10 to-indigo-500/10 border border-indigo-500/30 rounded-xl p-6">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+              <div class="text-4xl">📖</div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold text-lg mb-1">Vetenskapligt anpassad med enkel referenshantering</h3>
+                <p class="text-slate-300 text-sm">
+                  Välj <span class="text-indigo-400 font-semibold">🔬 Vetenskap</span>-profilen och få automatiskt 
+                  <strong class="text-white">inline-referenser [1], [2]</strong>, 
+                  <strong class="text-white">klickbara DOI/PubMed-länkar</strong> och en 
+                  <strong class="text-white">Zotero Bulk Import-lista</strong> som du kopierar direkt in i ditt referenshanteringsprogram.
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs rounded-full">Nyckelfunktion</span>
+              </div>
             </div>
           </div>
         </div>
@@ -468,14 +488,25 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               </p>
             </div>
             
-            <div class="bg-slate-900/50 border-l-4 border-emerald-500 rounded-r-xl p-6">
-              <h3 class="text-lg font-semibold text-white mb-2">Vetenskaplig research</h3>
-              <p class="text-slate-400 text-sm mb-3">
-                "Vad säger forskningen om regenerativ medicin för brosk?" (med Deliberation)
-              </p>
-              <p class="text-slate-500 text-xs">
-                → Modellerna korrigerar varandras påståenden och källhänvisningar
-              </p>
+            <div class="bg-gradient-to-r from-emerald-500/10 to-slate-900/50 border-l-4 border-emerald-400 rounded-r-xl p-6">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="text-lg font-semibold text-white mb-2">Vetenskaplig research</h3>
+                  <p class="text-slate-400 text-sm mb-3">
+                    "Vad säger forskningen om regenerativ medicin för brosk?" (med Deliberation)
+                  </p>
+                </div>
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-full">Populärast</span>
+              </div>
+              <div class="bg-slate-800/50 rounded-lg p-4 mt-3">
+                <p class="text-emerald-300 text-sm font-semibold mb-2">📚 Automatisk referenshantering:</p>
+                <ul class="text-slate-400 text-xs space-y-1">
+                  <li>→ Inline-citat [1], [2], [3] efter varje påstående</li>
+                  <li>→ Klickbara DOI och PubMed-länkar i referenslistan</li>
+                  <li>→ <strong class="text-white">Zotero Bulk Import-lista</strong> - kopiera direkt till Zotero</li>
+                  <li>→ Deliberation: AI-modellerna korrigerar varandras källor</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
