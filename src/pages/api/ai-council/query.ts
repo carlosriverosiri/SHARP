@@ -47,8 +47,8 @@ const PRICING = {
   // Anthropic
   'claude-sonnet-4-20250514': { input: 3.00, output: 15.00 },
   'claude-opus-4-5-20250514': { input: 15.00, output: 75.00 },
-  // Google (free tier, but we track it)
-  'gemini-1.5-pro': { input: 1.25, output: 5.00 },
+  // Google
+  'gemini-2.0-flash': { input: 0.10, output: 0.40 },
   // xAI
   'grok-2-latest': { input: 2.00, output: 10.00 },
 } as const;
@@ -193,7 +193,7 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
       : prompt;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -224,16 +224,16 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
       outputTokens: data.usageMetadata?.candidatesTokenCount || 0,
     };
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Google',
       response: content,
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('gemini-1.5-pro', tokens),
+      cost: calculateCost('gemini-2.0-flash', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Google',
       response: '',
       error: error.message,
@@ -457,7 +457,7 @@ async function deliberateGemini(originalPrompt: string, allResponses: AIResponse
     const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'Google');
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -475,13 +475,13 @@ async function deliberateGemini(originalPrompt: string, allResponses: AIResponse
 
     const data = await response.json();
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Google',
       response: data.candidates?.[0]?.content?.parts?.[0]?.text || 'Inget svar',
       duration: Date.now() - start,
     };
   } catch (error: any) {
-    return { model: 'gemini-1.5-pro', provider: 'Google', response: '', error: error.message, duration: Date.now() - start };
+    return { model: 'gemini-2.0-flash', provider: 'Google', response: '', error: error.message, duration: Date.now() - start };
   }
 }
 
@@ -665,7 +665,7 @@ async function synthesizeWithGemini(
   
   if (validResponses.length === 0) {
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Gemini (Syntes)',
       response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
       duration: Date.now() - start,
@@ -676,7 +676,7 @@ async function synthesizeWithGemini(
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -708,16 +708,16 @@ async function synthesizeWithGemini(
     };
     
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Gemini (Syntes)',
       response: content,
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('gemini-1.5-pro', tokens),
+      cost: calculateCost('gemini-2.0-flash', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.0-flash',
       provider: 'Gemini (Syntes)',
       response: '',
       error: error.message,
@@ -1003,16 +1003,16 @@ async function superSynthesize(
     
     case 'gemini':
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GOOGLE_AI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: superPrompt }] }], generationConfig: { maxOutputTokens: 8192 } }),
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return { model: 'gemini-1.5-pro', provider: 'Gemini (Supersyntes)', response: data.candidates?.[0]?.content?.parts?.[0]?.text || '', duration: Date.now() - start };
+        return { model: 'gemini-2.0-flash', provider: 'Gemini (Supersyntes)', response: data.candidates?.[0]?.content?.parts?.[0]?.text || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'gemini-1.5-pro', provider: 'Gemini (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'gemini-2.0-flash', provider: 'Gemini (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'grok':

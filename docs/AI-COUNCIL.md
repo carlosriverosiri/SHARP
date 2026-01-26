@@ -2,39 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-23 (v2.2 - Användarprofiler)
-
----
-
-## ⚠️ TODO: Aktivera AI Council på Netlify
-
-### 1. Lägg till API-nycklar i Netlify Dashboard
-
-Gå till [app.netlify.com](https://app.netlify.com) → ditt projekt → **Site configuration** → **Environment variables** → **Add a variable**:
-
-| Key | Var hittar jag nyckeln? |
-|-----|-------------------------|
-| `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
-| `ANTHROPIC_API_KEY` | [console.anthropic.com/settings/keys](https://console.anthropic.com/settings/keys) |
-| `GOOGLE_AI_API_KEY` | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) |
-| `XAI_API_KEY` | [console.x.ai](https://console.x.ai/) |
-
-### 2. Kör migration i Supabase (för användarprofiler)
-
-Gå till [Supabase Dashboard](https://supabase.com/dashboard) → ditt projekt → **SQL Editor** → kör:
-
-```sql
--- Kopiera innehållet från: supabase/migrations/010-ai-council-profiles.sql
--- Eller kör filen direkt om du har psql
-```
-
-### 3. Trigga deploy på Netlify
-
-**Deploys** → **Trigger deploy** → **Deploy site** → vänta 1-2 min
-
-### 4. Testa
-
-Gå till `/admin/ai-council` och kör en testfråga!
+**Senast uppdaterad:** 2026-01-26 (v2.2 - Gemini-uppdatering)
 
 ---
 
@@ -75,7 +43,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 │  │                  Promise.all()                        │   │
 │  │  ┌──────────┐  ┌──────────────┐  ┌────────────────┐  │   │
 │  │  │ OpenAI   │  │  Anthropic   │  │    Google      │  │   │
-│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 1.5 Pro │  │   │
+│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 2.0 Flash │  │   │
 │  │  └────┬─────┘  └──────┬───────┘  └───────┬────────┘  │   │
 │  │       │               │                  │           │   │
 │  └───────┴───────────────┴──────────────────┴───────────┘   │
@@ -98,7 +66,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 |--------|------------|--------|------------|
 | **o1** | OpenAI | Djup resonering, steg-för-steg-analys | Komplexa logiska problem |
 | **Claude Sonnet** | Anthropic | Struktur, kod, tydliga förklaringar | Kodgenerering, dokumentation |
-| **Gemini 1.5 Pro** | Google | Stor kontextfönster (1M tokens) | Stora kodbaser, långa dokument |
+| **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
 | **Grok 2** | xAI | Realtidsinfo, vetenskapliga källor | Referenshantering, aktuella frågor |
 
 ### Välj modeller
@@ -209,7 +177,7 @@ AI Council visar nu **kostnad per körning** i realtid:
 | GPT-4o | $2.50 | $10.00 |
 | Claude Sonnet | $3.00 | $15.00 |
 | Claude Opus 4.5 | $15.00 | $75.00 |
-| Gemini 1.5 Pro | $1.25 | $5.00 |
+| Gemini 2.0 Flash | $0.10 | $0.40 |
 | Grok 2 | $2.00 | $10.00 |
 
 > **Tips:** Använd GPT-4o ⚡ eller Gemini 📚 för billigare iterationer under utveckling.
@@ -251,35 +219,6 @@ XAI_API_KEY=xai-...  # Valfritt - för Grok
 | xAI (Grok) | https://console.x.ai/ | ~$0.02/fråga |
 
 > **Tips:** Du behöver inte alla nycklar. Modeller utan API-nyckel visas som "ej tillgänglig" i gränssnittet.
-
-### Lokal utveckling vs Netlify (Produktion)
-
-⚠️ **Viktigt:** `.env.local`-filen pushas **aldrig** till GitHub (av säkerhetsskäl). Du måste konfigurera miljövariabler separat för:
-
-| Miljö | Var konfigureras |
-|-------|------------------|
-| **Lokalt** | `.env.local` i projektroten |
-| **Netlify (produktion)** | Netlify Dashboard → Environment variables |
-
-#### Lägga till API-nycklar i Netlify:
-
-1. Gå till [Netlify Dashboard](https://app.netlify.com) → ditt projekt
-2. Klicka på **Site configuration** (vänstermenyn)
-3. Klicka på **Environment variables**
-4. Klicka på **Add a variable** och lägg till:
-
-| Key | Value |
-|-----|-------|
-| `OPENAI_API_KEY` | `sk-proj-...` (din OpenAI-nyckel) |
-| `ANTHROPIC_API_KEY` | `sk-ant-api03-...` (din Anthropic-nyckel) |
-| `GOOGLE_AI_API_KEY` | `AIza...` (din Google AI-nyckel) |
-| `XAI_API_KEY` | `xai-...` (din xAI/Grok-nyckel) |
-
-5. Klicka på **Deploys** → **Trigger deploy** → **Deploy site**
-6. Vänta 1-2 minuter tills deployen är klar
-7. Testa AI Council på `/admin/ai-council`
-
-> **Felsökning:** Om du ser "Inga API-nycklar konfigurerade" på Netlify betyder det att steg 1-5 ovan inte är gjorda.
 
 ---
 
@@ -419,7 +358,7 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - `claude-opus` - Claude Opus 4.5 (Anthropics bästa modell)
 - `openai` - OpenAI o1 (resoneringsmodell)
 - `gpt4o` - GPT-4o (snabb, hög kvalitet)
-- `gemini` - Gemini 1.5 Pro (stor kontext)
+- `gemini` - Gemini 2.0 Flash (stor kontext)
 - `grok` - Grok 2 (vetenskap, referenser)
 
 **Response:**
@@ -436,7 +375,7 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
       "cost": { "inputCost": 0.0225, "outputCost": 0.12, "totalCost": 0.1425, "currency": "USD" }
     },
     { "provider": "Anthropic", "model": "claude-sonnet-4-20250514", "response": "...", "duration": 3000 },
-    { "provider": "Google", "model": "gemini-1.5-pro", "response": "...", "duration": 4000 }
+    { "provider": "Google", "model": "gemini-2.0-flash", "response": "...", "duration": 4000 }
   ],
   "round2Responses": [...],
   "deliberationEnabled": true,
@@ -470,62 +409,6 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 ---
 
-## Användarprofiler (Ny!)
-
-Användarprofiler ger AI:n kontext om vem som frågar, vilket förbättrar svaren markant.
-
-### Profiltyper
-
-| Typ | Ikon | Beskrivning |
-|-----|------|-------------|
-| Läkare | 🩺 | Fokus på diagnostik, kirurgi, behandlingsprotokoll |
-| Sjuksköterska | 💉 | Fokus på omvårdnad, eftervård, patientkommunikation |
-| Fysioterapeut | 🏃 | Fokus på rehabilitering, träning |
-| Sekreterare | 📋 | Fokus på administration, bokningar |
-| Forskare | 🔬 | Fokus på litteratur, statistik, evidens |
-
-### Vad ingår i profilen?
-
-```
-┌─────────────────────────────────────────┐
-│  👤 Min AI-profil                        │
-│                                         │
-│  Typ: 🩺 Läkare                         │
-│                                         │
-│  Bakgrund:                              │
-│  "Ortopedkirurg med 15 års erfarenhet,  │
-│   specialiserad på axel- och knäkirurgi.│
-│   Arbetar på privat dagkirurgisk klinik.│
-│   Utbildad vid Karolinska Institutet."  │
-│                                         │
-│  Expertis: #ortopedi #axel #knä #artros │
-│                                         │
-│  [✓] Inkludera profil automatiskt       │
-└─────────────────────────────────────────┘
-```
-
-### Hur påverkar det svaren?
-
-**Utan profil:**
-> "Vid rotatorcuffskada finns flera behandlingsalternativ..."
-
-**Med läkarprofil:**
-> "Som ortopedkirurg med axelspecialisering känner du säkert till de olika suturtekniker som finns. Baserat på senaste litteraturen (Codman 2024, Burkhart 2025) visar dubbelradssutur..."
-
-### Databasschema
-
-Kör migrationen: `supabase/migrations/010-ai-council-profiles.sql`
-
-| Fält | Beskrivning |
-|------|-------------|
-| `ai_profil_typ` | lakare, sjukskoterska, fysioterapeut, etc. |
-| `ai_profil_bakgrund` | Fritext beskrivning |
-| `ai_profil_expertis` | Array: `{"ortopedi", "axel", "knä"}` |
-| `ai_default_models` | Förinställda modeller |
-| `ai_auto_inkludera_profil` | Auto-inkludera i prompts |
-
----
-
 ## Framtida utveckling
 
 - [ ] Streaming-svar för snabbare feedback
@@ -537,19 +420,49 @@ Kör migrationen: `supabase/migrations/010-ai-council-profiles.sql`
 - [x] Grok (xAI) integration för vetenskapliga frågor
 - [x] Deliberation: Runda 2 där modeller granskar varandra
 - [x] Kostnadsvisning per körning (tokens + USD/SEK) 💰
-- [ ] **Användarprofiler** (databas klar, UI pågår)
-- [ ] **Persistent projekttråd** + auto-summering
-- [ ] **Sök/taggning** i arkivet
 - [ ] Dela sessioner med kollegor
 - [ ] Custom syntes-prompts
 - [ ] Integration med Cursor via MCP
 - [ ] Bildanalys via multimodala API:er
-- [ ] RAG för tidigare sessioner (embeddings)
-- [ ] Grok-4 integration (när tillgänglig)
+
+---
+
+## Versionshistorik
+
+### v2.2 (2026-01-26) - Gemini-uppdatering
+
+**Ändring:** Bytte från `gemini-1.5-pro` till `gemini-2.0-flash`
+
+**Orsak:** Google har fasats ut `gemini-1.5-pro` från v1beta API:t. Vid anrop returnerades felet:
+> "models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent"
+
+**Konsekvenser:**
+- ✅ **Snabbare svar** - Gemini 2.0 Flash är optimerad för hastighet
+- ✅ **Lägre kostnad** - $0.10/$0.40 per 1M tokens (tidigare $1.25/$5.00)
+- ✅ **Multimodal** - Stöder bild och video i framtiden
+- ⚠️ **Mindre kontextfönster** - 1M → 128K tokens (fortfarande tillräckligt för de flesta användningsfall)
+
+### v2.1 (2026-01-25) - Kostnadsvisning
+
+- Lade till kostnadsvisning per modell och total kostnad
+- Nya syntesmodeller: Claude Opus 4.5 och GPT-4o
+
+### v2.0 (2026-01-24) - Deliberation
+
+- Deliberation Mode (Runda 2)
+- Valbar modell för syntes
+- Grok (xAI) integration
+
+### v1.0 (2026-01-23) - Initial release
+
+- Multi-modell frågor (OpenAI, Claude, Gemini)
+- Automatisk syntes
+- Sessionshistorik
 
 ---
 
 ## Relaterade dokument
 
 - [AI-INTEGRATION-RESURSER.md](./AI-INTEGRATION-RESURSER.md) - Övriga AI-resurser i projektet
+- [MULTI-AI-ARBETSFLODE.md](./MULTI-AI-ARBETSFLODE.md) - Arbetsflöden för multi-AI
 - [SETUP-ARBETSDATOR.md](./SETUP-ARBETSDATOR.md) - Installationsguide
