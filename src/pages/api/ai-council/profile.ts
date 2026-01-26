@@ -5,6 +5,9 @@
  * POST - Skapa/uppdatera profil
  */
 
+// Disable prerendering - this endpoint must be server-rendered
+export const prerender = false;
+
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
