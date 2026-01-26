@@ -50,7 +50,7 @@ const PRICING = {
   // Google
   'gemini-2.0-flash': { input: 0.10, output: 0.40 },
   // xAI
-  'grok-2-latest': { input: 2.00, output: 10.00 },
+  'grok-4-fast': { input: 0.20, output: 0.50 },
 } as const;
 
 function calculateCost(model: string, tokens: TokenUsage): CostInfo {
@@ -257,11 +257,11 @@ async function queryGrok(context: string, prompt: string): Promise<AIResponse> {
         'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'grok-2-latest',
+        model: 'grok-4-fast',
         messages: [
           { role: 'user', content: fullPrompt }
         ],
-        max_tokens: 8192,
+        max_tokens: 16384,
       }),
     });
 
@@ -276,16 +276,16 @@ async function queryGrok(context: string, prompt: string): Promise<AIResponse> {
       outputTokens: data.usage?.completion_tokens || 0,
     };
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'xAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('grok-2-latest', tokens),
+      cost: calculateCost('grok-4-fast', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'xAI',
       response: '',
       error: error.message,
@@ -497,7 +497,7 @@ async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]
         'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'grok-2-latest',
+        model: 'grok-4-fast',
         messages: [{ role: 'user', content: deliberationPrompt }],
         max_tokens: 8192,
       }),
@@ -510,13 +510,13 @@ async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]
 
     const data = await response.json();
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'xAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
     };
   } catch (error: any) {
-    return { model: 'grok-2-latest', provider: 'xAI', response: '', error: error.message, duration: Date.now() - start };
+    return { model: 'grok-4-fast', provider: 'xAI', response: '', error: error.message, duration: Date.now() - start };
   }
 }
 
@@ -737,7 +737,7 @@ async function synthesizeWithGrok(
   
   if (validResponses.length === 0) {
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'Grok (Syntes)',
       response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
       duration: Date.now() - start,
@@ -754,7 +754,7 @@ async function synthesizeWithGrok(
         'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'grok-2-latest',
+        model: 'grok-4-fast',
         messages: [
           { role: 'user', content: synthesisPrompt }
         ],
@@ -775,16 +775,16 @@ async function synthesizeWithGrok(
     };
     
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'Grok (Syntes)',
       response: content,
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('grok-2-latest', tokens),
+      cost: calculateCost('grok-4-fast', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'grok-2-latest',
+      model: 'grok-4-fast',
       provider: 'Grok (Syntes)',
       response: '',
       error: error.message,
@@ -1020,13 +1020,13 @@ async function superSynthesize(
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${XAI_API_KEY}` },
-          body: JSON.stringify({ model: 'grok-2-latest', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
+          body: JSON.stringify({ model: 'grok-4-fast', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+        return { model: 'grok-4-fast', provider: 'Grok (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'grok-4-fast', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'claude-opus':
