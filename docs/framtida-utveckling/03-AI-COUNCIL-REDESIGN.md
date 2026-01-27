@@ -122,12 +122,21 @@ ADD COLUMN project_id UUID REFERENCES ai_council_projects(id) ON DELETE SET NULL
 - [x] Hallucination report
 - [x] Cost banner
 
-### ⏳ Kvar (Fas 2):
-- [ ] Projekt-sidebar (ny komponent)
-- [ ] Drag-and-drop för sessioner
-- [ ] Sökfunktion
-- [ ] Projekt-CRUD i backend
+### ✅ Klart (Fas 2):
+- [x] Projekt-sidebar (vänster sida)
+- [x] "Ny chat" och "Nytt projekt" knappar
+- [x] Sökfunktion för sessioner
+- [x] Projekt-CRUD API (`/api/ai-council/projects`)
+- [x] Historik-accordion med sessioner
+- [x] Pin/unpin projekt
+- [x] Auto-kontext för projekt
+- [x] Responsiv hamburger-meny
+
+### ⏳ Kvar (Fas 3):
+- [ ] Drag-and-drop för sessioner mellan projekt
 - [ ] Chattbubbla-layout för meddelanden
+- [ ] Projekt-kontextmeny (högerklick)
+- [ ] Färgväljare för projekt
 
 ## 6. Nästa Steg
 
