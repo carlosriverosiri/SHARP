@@ -453,36 +453,42 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             Funktioner
           </h2>
           
-          <div class="grid md:grid-cols-2 lg:grid-cols-6 gap-4">
+          <!-- Rad 1: 4 block -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div class="bg-gradient-to-b from-red-500/10 to-slate-800/50 border border-red-500/30 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">🔍</div>
-              <h4 class="text-white font-semibold mb-1">Hallucinationsdetektion</h4>
+              <h4 class="text-white font-semibold mb-1">Hallucinations­detektion</h4>
               <p class="text-red-400 text-xs">NY!</p>
               <p class="text-slate-500 text-sm mt-1">Upptäcker AI-fel</p>
             </div>
             
             <div class="bg-gradient-to-b from-violet-500/10 to-slate-800/50 border border-violet-500/30 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">👤</div>
-              <h4 class="text-white font-semibold mb-1">Användarprofiler</h4>
+              <h4 class="text-white font-semibold mb-1">Användar­profiler</h4>
               <p class="text-violet-400 text-xs">NY!</p>
               <p class="text-slate-500 text-sm mt-1">Personanpassade svar</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">⚡</div>
-              <h4 class="text-white font-semibold mb-1">Profilväljare</h4>
+              <h4 class="text-white font-semibold mb-1">Profil­väljare</h4>
               <p class="text-slate-500 text-sm">5 förinställda lägen</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">📎</div>
-              <h4 class="text-white font-semibold mb-1">Filuppladdning</h4>
+              <h4 class="text-white font-semibold mb-1">Fil­uppladdning</h4>
               <p class="text-slate-500 text-sm">PDF, kod, bilder</p>
             </div>
-            
+          </div>
+          
+          <!-- Rad 2: 3 block (centrerade) -->
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">👑</div>
-              <h4 class="text-white font-semibold mb-1">6 syntesmodeller</h4>
+              <div class="w-10 h-10 mx-auto mb-3 rounded-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center">
+                <span class="text-amber-400 font-bold">6</span>
+              </div>
+              <h4 class="text-white font-semibold mb-1">Syntesmodeller</h4>
               <p class="text-slate-500 text-sm">Inkl. Claude Opus 4.5</p>
             </div>
             
@@ -492,10 +498,10 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <p class="text-slate-500 text-sm">Supabase historik</p>
             </div>
             
-            <div class="bg-slate-800/50 rounded-xl p-5 text-center">
+            <div class="bg-slate-800/50 rounded-xl p-5 text-center col-span-2 md:col-span-1">
               <div class="text-2xl mb-3">💰</div>
-              <h4 class="text-white font-semibold mb-1">Kostnad högst upp</h4>
-              <p class="text-slate-500 text-sm">Tydlig kostnadsvisning</p>
+              <h4 class="text-white font-semibold mb-1">Kostnadsvisning</h4>
+              <p class="text-slate-500 text-sm">Tydligt högst upp</p>
             </div>
           </div>
           
