@@ -214,13 +214,30 @@ function parseHallucinations(round2Responses: AIResponse[]): HallucinationReport
   };
 }
 
-// OpenAI o1 query
-async function queryOpenAI(context: string, prompt: string): Promise<AIResponse> {
+// OpenAI query - uses GPT-4o for images, o1 for text-only
+async function queryOpenAI(context: string, prompt: string, images: ImageData[] = []): Promise<AIResponse> {
   const start = Date.now();
+  const hasImages = images.length > 0;
+  const model = hasImages ? 'gpt-4o' : 'o1'; // GPT-4o supports vision, o1 does not
+  
   try {
     const fullPrompt = context 
       ? `Kontext:\n${context}\n\n---\n\nFråga/Uppgift:\n${prompt}`
       : prompt;
+
+    // Build content array for multimodal
+    let content: any;
+    if (hasImages) {
+      content = [
+        { type: 'text', text: fullPrompt },
+        ...images.map(img => ({
+          type: 'image_url',
+          image_url: { url: img.base64, detail: 'high' }
+        }))
+      ];
+    } else {
+      content = fullPrompt;
+    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -229,10 +246,9 @@ async function queryOpenAI(context: string, prompt: string): Promise<AIResponse>
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'o1',
-        messages: [
-          { role: 'user', content: fullPrompt }
-        ],
+        model,
+        messages: [{ role: 'user', content }],
+        ...(hasImages && { max_tokens: 4096 }),
       }),
     });
 
@@ -247,16 +263,16 @@ async function queryOpenAI(context: string, prompt: string): Promise<AIResponse>
       outputTokens: data.usage?.completion_tokens || 0,
     };
     return {
-      model: 'o1',
+      model,
       provider: 'OpenAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('o1', tokens),
+      cost: calculateCost(model, tokens),
     };
   } catch (error: any) {
     return {
-      model: 'o1',
+      model,
       provider: 'OpenAI',
       response: '',
       error: error.message,
@@ -265,13 +281,35 @@ async function queryOpenAI(context: string, prompt: string): Promise<AIResponse>
   }
 }
 
-// Anthropic Claude query
-async function queryAnthropic(context: string, prompt: string): Promise<AIResponse> {
+// Anthropic Claude query with image support
+async function queryAnthropic(context: string, prompt: string, images: ImageData[] = []): Promise<AIResponse> {
   const start = Date.now();
   try {
     const fullPrompt = context 
       ? `<context>\n${context}\n</context>\n\n${prompt}`
       : prompt;
+
+    // Build content array for multimodal
+    const content: any[] = [];
+    
+    // Add images first (Claude prefers images before text)
+    for (const img of images) {
+      // Extract base64 data and media type from data URL
+      const matches = img.base64.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        content.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: matches[1],
+            data: matches[2],
+          }
+        });
+      }
+    }
+    
+    // Add text prompt
+    content.push({ type: 'text', text: fullPrompt });
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -284,7 +322,7 @@ async function queryAnthropic(context: string, prompt: string): Promise<AIRespon
         model: 'claude-sonnet-4-20250514',
         max_tokens: 8192,
         messages: [
-          { role: 'user', content: fullPrompt }
+          { role: 'user', content: images.length > 0 ? content : fullPrompt }
         ],
       }),
     });
@@ -319,13 +357,32 @@ async function queryAnthropic(context: string, prompt: string): Promise<AIRespon
   }
 }
 
-// Google Gemini query
-async function queryGemini(context: string, prompt: string): Promise<AIResponse> {
+// Google Gemini query with image support
+async function queryGemini(context: string, prompt: string, images: ImageData[] = []): Promise<AIResponse> {
   const start = Date.now();
   try {
     const fullPrompt = context 
       ? `Kontext:\n${context}\n\n---\n\nFråga/Uppgift:\n${prompt}`
       : prompt;
+
+    // Build parts array for multimodal
+    const parts: any[] = [];
+    
+    // Add images first
+    for (const img of images) {
+      const matches = img.base64.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        parts.push({
+          inlineData: {
+            mimeType: matches[1],
+            data: matches[2],
+          }
+        });
+      }
+    }
+    
+    // Add text prompt
+    parts.push({ text: fullPrompt });
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
@@ -335,11 +392,7 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: fullPrompt }]
-            }
-          ],
+          contents: [{ parts }],
           generationConfig: {
             maxOutputTokens: 8192,
           },
@@ -378,11 +431,18 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
 }
 
 // xAI Grok query - tries grok-4 first, falls back to grok-2-latest
-async function queryGrok(context: string, prompt: string): Promise<AIResponse> {
+// Note: Grok does not support images yet, parameter included for API consistency
+async function queryGrok(context: string, prompt: string, images: ImageData[] = []): Promise<AIResponse> {
   const start = Date.now();
+  
+  // If images provided, add note that Grok can't see them
+  const imageNote = images.length > 0 
+    ? `\n\n[OBS: ${images.length} bild(er) bifogades men Grok stöder inte bildanalys. Andra modeller (GPT-4o, Claude, Gemini) kan analysera bilderna.]\n`
+    : '';
+  
   const fullPrompt = context 
-    ? `Kontext:\n${context}\n\n---\n\nFråga/Uppgift:\n${prompt}`
-    : prompt;
+    ? `Kontext:\n${context}${imageNote}\n\n---\n\nFråga/Uppgift:\n${prompt}`
+    : prompt + imageNote;
   
   // Try models in order: grok-4, then grok-2-latest as fallback
   const modelsToTry = ['grok-4', 'grok-2-latest'];
@@ -1407,13 +1467,9 @@ SVARSSTIL:
       });
     }
 
-    // Build image context description
-    const imageContext = images.length > 0 
-      ? `BIFOGADE BILDER (${images.length} st):\n${images.map((img, i) => `[Bild ${i + 1}: ${img.name}]`).join('\n')}\n\nOBS: Dessa bilder har bifogats till frågan. Multimodala AI-modeller (GPT-4o, Gemini, Claude) kan analysera bildinnehållet.`
-      : '';
-
-    // Combine user profile context, provided context, file content, and images
-    const contextParts = [userProfileContext, context, fileContent, imageContext].filter(Boolean);
+    // Combine user profile context, provided context, and file content
+    // Note: Images are now sent directly to multimodal APIs, not as text description
+    const contextParts = [userProfileContext, context, fileContent].filter(Boolean);
     const fullContext = contextParts.join('\n\n---\n\n');
 
     // Build query promises for selected models only
@@ -1421,19 +1477,19 @@ SVARSSTIL:
     const queryOrder: ModelProvider[] = [];
 
     if (modelsToQuery.includes('openai')) {
-      queryPromises.push(queryOpenAI(fullContext, prompt));
+      queryPromises.push(queryOpenAI(fullContext, prompt, images));
       queryOrder.push('openai');
     }
     if (modelsToQuery.includes('anthropic')) {
-      queryPromises.push(queryAnthropic(fullContext, prompt));
+      queryPromises.push(queryAnthropic(fullContext, prompt, images));
       queryOrder.push('anthropic');
     }
     if (modelsToQuery.includes('gemini')) {
-      queryPromises.push(queryGemini(fullContext, prompt));
+      queryPromises.push(queryGemini(fullContext, prompt, images));
       queryOrder.push('gemini');
     }
     if (modelsToQuery.includes('grok')) {
-      queryPromises.push(queryGrok(fullContext, prompt));
+      queryPromises.push(queryGrok(fullContext, prompt, images));
       queryOrder.push('grok');
     }
 
