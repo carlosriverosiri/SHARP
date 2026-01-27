@@ -333,7 +333,7 @@ async function queryAnthropic(context: string, prompt: string, images: ImageData
     }
 
     const data = parsed.data;
-    const content = data.content?.[0]?.text || 'Inget svar';
+    const responseText = data.content?.[0]?.text || 'Inget svar';
     const tokens: TokenUsage = {
       inputTokens: data.usage?.input_tokens || 0,
       outputTokens: data.usage?.output_tokens || 0,
@@ -341,7 +341,7 @@ async function queryAnthropic(context: string, prompt: string, images: ImageData
     return {
       model: 'claude-sonnet-4-20250514',
       provider: 'Anthropic',
-      response: content,
+      response: responseText,
       duration: Date.now() - start,
       tokens,
       cost: calculateCost('claude-sonnet-4-20250514', tokens),
