@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-27 (v2.7 - Hallucinationsdetektion, Export & Spara-modal)
+**Senast uppdaterad:** 2026-01-27 (v3.0 - Ljust tema, Projektsidebar & UI Redesign)
 
 ---
 
@@ -15,6 +15,9 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 - Prompt-design
 - Tekniska utredningar
 - Komplexa problemlösningar
+- Vetenskaplig forskning med referenshantering
+
+**Nytt i v3.0:** Ljust, modernt gränssnitt inspirerat av Grok/Gemini med projektsidebar för att organisera dina sessioner.
 
 ## Åtkomst
 
@@ -35,57 +38,69 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 - [ ] **Custom syntes-prompts** - Anpassa hur syntesen görs
 - [ ] **Cursor MCP-integration** - Använd AI Council direkt från Cursor
 - [ ] **Bildanalys** - Multimodala API:er för bilder i frågor
-- [ ] **Persistent Project Thread** - Spara långa sessioner som projekt
+- [ ] **Drag-and-drop** - Dra sessioner mellan projekt
+- [ ] **Chattbubblor i resultat** - Konversationsvy istället för accordion
+- [ ] **Keyboard shortcuts** - Ctrl+N för ny chat, etc.
 - [ ] **RAG för arkivet** - Sök i tidigare sessioner automatiskt
 
 ### ✅ Nyligen implementerat
 
+- [x] **Ljust tema** (v3.0) - Modernt UI inspirerat av Grok/Gemini
+- [x] **Projektsidebar** (v3.0) - Organisera sessioner i mappar
+- [x] **Projektkontext** (v3.0) - Auto-inkludera kontext per projekt
+- [x] **Färg/Ikon-väljare** (v3.0) - Anpassa projektens utseende
+- [x] **Kontextmeny** (v3.0) - Högerklicka för snabbåtgärder
+- [x] **Sökfunktion** (v3.0) - Sök bland sessioner
 - [x] **Spara-modal med eget namn** (v2.7) - Popup efter varje körning för att spara med anpassat namn
-- [x] **Auto-spara** (v2.7) - Aktiverbar funktion för automatisk sparning
 - [x] **Export som Markdown** (v2.7) - Ladda ned komplett session som .md-fil
-- [x] **Hallucinationsdetektion** (v2.7) - Trovärdighetsrapport med konfidensgrader (🔴 hög, 🟡 medium, ⚪ låg)
-- [x] Vetenskaplig kontext med Zotero-stöd (v2.6)
-- [x] Användarprofiler för personlig kontext (v2.5)
-- [x] Profilväljare med 5 lägen (v2.4)
-- [x] Grok 4 integration (v2.3)
-- [x] Kostnadsbanner (v2.2)
-- [x] Deliberation Mode (v2.0)
+- [x] **Hallucinationsdetektion** (v2.7) - Trovärdighetsrapport med konfidensgrader
 
 ---
 
 ## Arkitektur
 
 ```
-┌───────────────────────────────────────────────────────────────────────┐
-│                         Frontend (Astro)                               │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐            │
-│  │   Kontext   │  │   Prompt    │  │   Sessionslogg      │            │
-│  │  (textarea) │  │  (textarea) │  │   (Supabase)        │            │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘            │
-└───────────────────────────────┬───────────────────────────────────────┘
-                                │ POST /api/ai-council/query
-                                ▼
-┌───────────────────────────────────────────────────────────────────────┐
-│                       Backend API (Astro)                              │
-│                                                                        │
-│  ┌────────────────────────────────────────────────────────────────┐   │
-│  │                       Promise.all()                             │   │
-│  │  ┌──────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │   │
-│  │  │ OpenAI   │  │  Anthropic   │  │    Google    │  │   xAI   │ │   │
-│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 2.0   │  │Grok 4   │ │   │
-│  │  │          │  │              │  │    Flash     │  │  Fast   │ │   │
-│  │  └────┬─────┘  └──────┬───────┘  └──────┬───────┘  └────┬────┘ │   │
-│  │       │               │                 │               │      │   │
-│  └───────┴───────────────┴─────────────────┴───────────────┴──────┘   │
-│                                │                                       │
-│                                ▼                                       │
-│  ┌────────────────────────────────────────────────────────────────┐   │
-│  │              Syntes (valbar: 6 modeller)                        │   │
-│  │  👑 Opus 4.5 | 🔧 Sonnet | 🧪 o1 | ⚡ GPT-4o | 📚 Gemini | 🌐 Grok │   │
-│  │   "Analysera svaren, identifiera konsensus,                     │   │
-│  │    ge slutgiltig rekommendation"                                 │   │
-│  └────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Frontend (Astro) v3.0                               │
+│  ┌─────────────────┬──────────────────────────────────────────────────────┐  │
+│  │  PROJEKTSIDEBAR │               HUVUDOMRÅDE                             │  │
+│  │  (280px)        │                                                       │  │
+│  │                 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │  │
+│  │  📁 Mina       │  │   Kontext   │  │   Prompt    │  │  Profilval  │   │  │
+│  │     Projekt    │  │  (textarea) │  │  (textarea) │  │  ⚡🏥💻🔬🎯  │   │  │
+│  │  [+ Nytt]      │  └─────────────┘  └─────────────┘  └─────────────┘   │  │
+│  │                 │                                                       │  │
+│  │  📂 Historik   │  ┌───────────────────────────────────────────────┐   │  │
+│  │     (accordion) │  │         Sessionslogg (Supabase)              │   │  │
+│  └─────────────────┴──────────────────────────────────────────────────────┘  │
+└───────────────────────────────────┬─────────────────────────────────────────┘
+                                    │ POST /api/ai-council/query
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Backend API (Astro)                                   │
+│                                                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐      │
+│  │                       Promise.all()                                 │      │
+│  │  ┌──────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐    │      │
+│  │  │ OpenAI   │  │  Anthropic   │  │    Google    │  │   xAI   │    │      │
+│  │  │   o1     │  │ Claude Sonnet│  │ Gemini 2.0   │  │Grok 4   │    │      │
+│  │  │          │  │              │  │    Flash     │  │  Fast   │    │      │
+│  │  └────┬─────┘  └──────┬───────┘  └──────┬───────┘  └────┬────┘    │      │
+│  │       └───────────────┴─────────────────┴───────────────┘         │      │
+│  └──────────────────────────────────┬────────────────────────────────┘      │
+│                                     ▼                                        │
+│  ┌────────────────────────────────────────────────────────────────────┐      │
+│  │               Syntes (valbar: 6 modeller)                           │      │
+│  │  👑 Opus 4.5 | 🔧 Sonnet | 🧪 o1 | ⚡ GPT-4o | 📚 Gemini | 🌐 Grok   │      │
+│  └────────────────────────────────────────────────────────────────────┘      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                         Supabase (Datalagring)                               │
+│                                                                               │
+│  ┌──────────────────────┐  ┌──────────────────────┐  ┌─────────────────┐    │
+│  │ ai_council_projects  │  │  ai_council_sessions │  │  ai_profiles    │    │
+│  │ (projektmappar)      │◄─│  (frågor/svar)       │  │  (användare)    │    │
+│  └──────────────────────┘  └──────────────────────┘  └─────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -326,6 +341,51 @@ Sessioner sparas i **Supabase** (synkas mellan enheter) med **localStorage som f
 | **Rensa** | Tar bort alla sessioner |
 
 Statusindikator visar om du är synkad med Supabase (☁️) eller använder lokal lagring (💾).
+
+### Projektorganisation 📁 (NY i v3.0!)
+
+Organisera dina sessioner i **projektmappar** med automatisk kontext.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  PROJEKTSIDEBAR                                                 │
+│                                                                 │
+│  ✨ Ny chat                                                     │
+│  📁 + Nytt projekt                                              │
+│                                                                 │
+│  🔍 Sök sessioner...                                           │
+│                                                                 │
+│  📌 SENASTE PROJEKT                                             │
+│  ├── 🩺 IP-telefoni projekt     (blå)                          │
+│  ├── 🚀 Astro-migrering         (grön)                         │
+│  └── 🎤 Mikrofon-integration    (lila)                         │
+│                                                                 │
+│  📂 HISTORIK ▼                                                  │
+│      (expanderar till alla osorterade sessioner)               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Funktioner:**
+
+| Funktion | Beskrivning |
+|----------|-------------|
+| **Skapa projekt** | Klicka "📁 +" för att skapa en ny mapp |
+| **Projektkontext** | Kontext som automatiskt inkluderas i alla frågor inom projektet |
+| **Färgkodning** | 12 färger att välja bland (högerklicka → Färg) |
+| **Ikoner** | 18 emojis för visuell identifiering (högerklicka → Ikon) |
+| **Fäst projekt** | Högerklicka → Fäst för att hålla projektet överst |
+| **Kontextmeny** | Högerklicka på projekt för: Redigera, Färg, Ikon, Kontext, Fäst, Ta bort |
+
+**Exempel på projektkontext:**
+
+```
+Projekt: IP-telefoni
+Kontext: "Vi bygger ett IP-telefonisystem med Asterisk och WebRTC.
+          Stack: Node.js, React, PostgreSQL. 
+          Krav: HIPAA-kompatibelt, max 50 samtidiga samtal."
+```
+
+När du ställer en fråga i detta projekt får AI:erna automatiskt denna kontext – du slipper repetera bakgrundsinformation.
 
 ---
 
@@ -608,6 +668,40 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v3.0 (2026-01-27) - UI Redesign & Projektorganisation
+
+**Stor uppdatering:** Helt nytt gränssnitt inspirerat av Grok/Gemini med fokus på projekthantering.
+
+**Visuella ändringar:**
+- 🌞 **Ljust tema** - Modernt, professionellt utseende (mörkgrått → vit/ljusgrå)
+- 📐 **Ny layout** - Projektsidebar till vänster, huvudområde till höger
+- 📱 **Responsiv design** - Hamburger-meny på mobil
+
+**Nya funktioner:**
+- 📁 **Projektmappar** - Organisera sessioner i projekt
+- 🎨 **Färg/Ikon-väljare** - Anpassa projektens utseende (12 färger, 18 ikoner)
+- 📌 **Fäst projekt** - Håll viktiga projekt överst
+- 🔍 **Sökfunktion** - Sök bland alla sessioner
+- 📝 **Projektkontext** - Auto-inkludera kontext per projekt
+- 🖱️ **Kontextmeny** - Högerklicka för snabbåtgärder
+- ✨ **"Ny chat"** - Snabbknapp för att börja om
+
+**Tekniskt:**
+- Ny Supabase-tabell `ai_council_projects`
+- Nytt API: `/api/ai-council/projects` (CRUD)
+- CSS-variabler för enkel teming
+- WCAG AA-kompatibel kontrast
+
+### v2.7 (2026-01-27) - Hallucinationsdetektion, Export & Spara-modal
+
+**Nyhet:** Trovärdighetsrapport, export och förbättrad sparfunktion.
+
+**Funktioner:**
+- 🔍 **Hallucinationsdetektion** - Rapporterar när AI:er motsäger varandra (🔴 hög, 🟡 medium, ⚪ låg)
+- 💾 **Spara-modal** - Popup för att namnge session efter körning
+- 📥 **Export som Markdown** - Ladda ned komplett session som .md-fil
+- ⚙️ **Auto-spara** - Aktiverbar funktion
 
 ### v2.6 (2026-01-26) - Vetenskaplig kontext med Zotero
 

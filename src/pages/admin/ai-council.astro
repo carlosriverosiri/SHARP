@@ -273,6 +273,101 @@ if (!anvandare) {
       color: var(--text-light);
     }
     
+    /* Session accordions (Osorterade & Alla sessioner) */
+    .session-accordions {
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
+    }
+    .session-accordion {
+      border-bottom: 1px solid var(--border-color);
+    }
+    .session-accordion:last-child {
+      border-bottom: none;
+    }
+    .session-accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      transition: background 0.1s;
+    }
+    .session-accordion-header:hover { background: var(--bg-hover); }
+    .session-accordion-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .session-accordion-icon {
+      font-size: 1rem;
+    }
+    .session-accordion-title {
+      color: var(--text-primary);
+    }
+    .session-accordion-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5rem;
+      height: 1.25rem;
+      padding: 0 0.375rem;
+      background: var(--bg-hover);
+      border-radius: 0.625rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .session-accordion-chevron {
+      width: 16px;
+      height: 16px;
+      color: var(--text-light);
+      transition: transform 0.2s;
+    }
+    .session-accordion.open .session-accordion-chevron { transform: rotate(180deg); }
+    .session-accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    .session-accordion.open .session-accordion-content { 
+      max-height: 300px; 
+      overflow-y: auto; 
+    }
+    .session-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem 0.5rem 2.5rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .session-item:hover { background: var(--bg-hover); }
+    .session-item-icon { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.125rem; }
+    .session-item-info { flex: 1; min-width: 0; }
+    .session-item-name {
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .session-item-meta {
+      font-size: 0.625rem;
+      color: var(--text-light);
+    }
+    .session-empty {
+      padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    
     /* Project context menu */
     .project-context-menu {
       position: fixed;
@@ -1540,25 +1635,42 @@ if (!anvandare) {
       
       <div class="project-list" id="projectList">
         <!-- Projekten laddas dynamiskt -->
-        <div class="project-item active">
-          <span class="project-item-icon">📁</span>
-          <div class="project-item-info">
-            <div class="project-item-name">Osorterade</div>
-            <div class="project-item-count">Alla sessioner</div>
-          </div>
-        </div>
       </div>
       
-      <!-- History accordion -->
-      <div class="history-accordion" id="historyAccordion">
-        <button class="history-accordion-header">
-          <span>📂 Historik</span>
-          <svg class="history-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="history-accordion-content" id="historyList">
-          <!-- Historik laddas dynamiskt -->
+      <!-- Session accordions -->
+      <div class="session-accordions">
+        <!-- Osorterade sessioner -->
+        <div class="session-accordion" id="unsortedAccordion">
+          <button class="session-accordion-header">
+            <span class="session-accordion-header-left">
+              <span class="session-accordion-icon">📋</span>
+              <span class="session-accordion-title">Osorterade</span>
+            </span>
+            <span class="session-accordion-count" id="unsortedCount">0</span>
+            <svg class="session-accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="session-accordion-content" id="unsortedList">
+            <!-- Osorterade sessioner laddas dynamiskt -->
+          </div>
+        </div>
+        
+        <!-- Alla sessioner -->
+        <div class="session-accordion" id="allSessionsAccordion">
+          <button class="session-accordion-header">
+            <span class="session-accordion-header-left">
+              <span class="session-accordion-icon">📂</span>
+              <span class="session-accordion-title">Alla sessioner</span>
+            </span>
+            <span class="session-accordion-count" id="allSessionsCount">0</span>
+            <svg class="session-accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="session-accordion-content" id="allSessionsList">
+            <!-- Alla sessioner laddas dynamiskt -->
+          </div>
         </div>
       </div>
     </aside>
@@ -3362,8 +3474,13 @@ if (!anvandare) {
       const newProjectBtn = document.getElementById('newProjectBtn');
       const projectSearch = document.getElementById('projectSearch');
       const projectList = document.getElementById('projectList');
-      const historyAccordion = document.getElementById('historyAccordion');
-      const historyList = document.getElementById('historyList');
+      // Session accordions
+      const unsortedAccordion = document.getElementById('unsortedAccordion');
+      const unsortedList = document.getElementById('unsortedList');
+      const unsortedCount = document.getElementById('unsortedCount');
+      const allSessionsAccordion = document.getElementById('allSessionsAccordion');
+      const allSessionsList = document.getElementById('allSessionsList');
+      const allSessionsCount = document.getElementById('allSessionsCount');
       
       let projects = [];
       let currentProjectId = null; // null = "Osorterade"
@@ -3451,15 +3568,7 @@ if (!anvandare) {
         const pinnedProjects = projects.filter(p => p.is_pinned);
         const recentProjects = projects.filter(p => !p.is_pinned).slice(0, 5);
         
-        let html = `
-          <div class="project-item ${!currentProjectId ? 'active' : ''}" data-project-id="">
-            <span class="project-item-icon">📋</span>
-            <div class="project-item-info">
-              <div class="project-item-name">Osorterade</div>
-              <div class="project-item-count">Alla sessioner</div>
-            </div>
-          </div>
-        `;
+        let html = '';
         
         // Pinned projects
         pinnedProjects.forEach(p => {
@@ -3488,6 +3597,11 @@ if (!anvandare) {
             </div>
           `;
         });
+        
+        // Show empty state if no projects
+        if (!html) {
+          html = '<div class="session-empty" style="padding: 0.75rem 1.25rem;">Inga projekt ännu. Klicka 📁+ för att skapa.</div>';
+        }
         
         projectList.innerHTML = html;
         
@@ -3553,41 +3667,86 @@ if (!anvandare) {
         }
       }
       
-      // History accordion toggle
-      historyAccordion?.querySelector('.history-accordion-header')?.addEventListener('click', () => {
-        historyAccordion.classList.toggle('open');
+      // Session accordion toggles
+      unsortedAccordion?.querySelector('.session-accordion-header')?.addEventListener('click', () => {
+        unsortedAccordion.classList.toggle('open');
+      });
+      allSessionsAccordion?.querySelector('.session-accordion-header')?.addEventListener('click', () => {
+        allSessionsAccordion.classList.toggle('open');
       });
       
-      // Load history for a project
-      async function loadHistoryForProject(projectId) {
-        // Use existing sessions from the notes sidebar
-        const filteredSessions = sessions.filter(s => {
-          if (projectId === null) return true; // Show all in "Osorterade"
-          return s.project_id === projectId;
-        });
+      // Render session accordions
+      function renderSessionAccordions() {
+        // Unsorted sessions (no project_id)
+        const unsortedSessions = sessions.filter(s => !s.project_id);
+        // All sessions
+        const allSessions = sessions;
         
-        historyList.innerHTML = filteredSessions.slice(0, 20).map(s => `
-          <div class="history-item" data-session-id="${s.id}">
-            <span class="history-item-icon">💬</span>
-            <div class="history-item-info">
-              <div class="history-item-prompt">${escapeHtml(s.name || s.prompt?.substring(0, 50) || 'Utan titel')}</div>
-              <div class="history-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
-            </div>
-          </div>
-        `).join('') || '<div style="padding: 1rem; color: var(--text-muted); font-size: 0.75rem;">Ingen historik</div>';
+        // Update counts
+        if (unsortedCount) unsortedCount.textContent = unsortedSessions.length;
+        if (allSessionsCount) allSessionsCount.textContent = allSessions.length;
         
-        // Add click handlers for history items
-        historyList.querySelectorAll('.history-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const session = sessions.find(s => s.id === item.dataset.sessionId);
-            if (session) {
-              openSession(session);
-              if (window.innerWidth <= 1024) {
-                projectSidebar.classList.remove('open');
+        // Render unsorted sessions
+        if (unsortedList) {
+          unsortedList.innerHTML = unsortedSessions.length > 0 
+            ? unsortedSessions.slice(0, 15).map(s => `
+                <div class="session-item" data-session-id="${s.id}">
+                  <span class="session-item-icon">💬</span>
+                  <div class="session-item-info">
+                    <div class="session-item-name">${escapeHtml(s.name || s.prompt?.substring(0, 40) || 'Utan titel')}</div>
+                    <div class="session-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
+                  </div>
+                </div>
+              `).join('')
+            : '<div class="session-empty">Inga osorterade sessioner</div>';
+          
+          // Add click handlers
+          unsortedList.querySelectorAll('.session-item').forEach(item => {
+            item.addEventListener('click', () => {
+              const session = sessions.find(s => s.id === item.dataset.sessionId);
+              if (session) {
+                openSession(session);
+                if (window.innerWidth <= 1024) {
+                  projectSidebar.classList.remove('open');
+                }
               }
-            }
+            });
           });
-        });
+        }
+        
+        // Render all sessions
+        if (allSessionsList) {
+          allSessionsList.innerHTML = allSessions.length > 0 
+            ? allSessions.slice(0, 15).map(s => `
+                <div class="session-item" data-session-id="${s.id}">
+                  <span class="session-item-icon">💬</span>
+                  <div class="session-item-info">
+                    <div class="session-item-name">${escapeHtml(s.name || s.prompt?.substring(0, 40) || 'Utan titel')}</div>
+                    <div class="session-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
+                  </div>
+                </div>
+              `).join('')
+            : '<div class="session-empty">Inga sessioner ännu</div>';
+          
+          // Add click handlers
+          allSessionsList.querySelectorAll('.session-item').forEach(item => {
+            item.addEventListener('click', () => {
+              const session = sessions.find(s => s.id === item.dataset.sessionId);
+              if (session) {
+                openSession(session);
+                if (window.innerWidth <= 1024) {
+                  projectSidebar.classList.remove('open');
+                }
+              }
+            });
+          });
+        }
+      }
+      
+      // Load history for a project (now primarily updates project selection UI)
+      async function loadHistoryForProject(projectId) {
+        // Re-render session accordions when project changes
+        renderSessionAccordions();
       }
       
       // Search functionality
@@ -3601,22 +3760,45 @@ if (!anvandare) {
               (s.name || '').toLowerCase().includes(query) ||
               (s.prompt || '').toLowerCase().includes(query)
             );
-            historyList.innerHTML = filtered.slice(0, 20).map(s => `
-              <div class="history-item" data-session-id="${s.id}">
-                <span class="history-item-icon">💬</span>
-                <div class="history-item-info">
-                  <div class="history-item-prompt">${escapeHtml(s.name || s.prompt?.substring(0, 50) || 'Utan titel')}</div>
-                  <div class="history-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
-                </div>
-              </div>
-            `).join('') || '<div style="padding: 1rem; color: var(--text-muted); font-size: 0.75rem;">Inga resultat</div>';
             
-            // Open history accordion if closed
-            if (!historyAccordion.classList.contains('open')) {
-              historyAccordion.classList.add('open');
+            // Show search results in the all sessions accordion
+            if (allSessionsList) {
+              allSessionsList.innerHTML = filtered.length > 0 
+                ? filtered.slice(0, 20).map(s => `
+                    <div class="session-item" data-session-id="${s.id}">
+                      <span class="session-item-icon">💬</span>
+                      <div class="session-item-info">
+                        <div class="session-item-name">${escapeHtml(s.name || s.prompt?.substring(0, 40) || 'Utan titel')}</div>
+                        <div class="session-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
+                      </div>
+                    </div>
+                  `).join('')
+                : '<div class="session-empty">Inga resultat</div>';
+              
+              // Update count to show filtered results
+              if (allSessionsCount) allSessionsCount.textContent = filtered.length;
+              
+              // Add click handlers for search results
+              allSessionsList.querySelectorAll('.session-item').forEach(item => {
+                item.addEventListener('click', () => {
+                  const session = sessions.find(s => s.id === item.dataset.sessionId);
+                  if (session) {
+                    openSession(session);
+                    if (window.innerWidth <= 1024) {
+                      projectSidebar.classList.remove('open');
+                    }
+                  }
+                });
+              });
+              
+              // Open all sessions accordion if closed
+              if (!allSessionsAccordion.classList.contains('open')) {
+                allSessionsAccordion.classList.add('open');
+              }
             }
           } else {
-            loadHistoryForProject(currentProjectId);
+            // Reset to normal view
+            renderSessionAccordions();
           }
         }, 300);
       });
@@ -3783,11 +3965,11 @@ if (!anvandare) {
       // Load projects on page load
       loadProjects();
       
-      // Update history when sessions change
+      // Update session accordions when sessions change
       const originalLoadSessions = loadSessions;
       loadSessions = async function() {
         await originalLoadSessions.call(this);
-        loadHistoryForProject(currentProjectId);
+        renderSessionAccordions();
       };
     });
   </script>

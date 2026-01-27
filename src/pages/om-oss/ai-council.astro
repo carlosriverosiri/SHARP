@@ -27,11 +27,11 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v2.6</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v3.0</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor — 
-            <span class="text-indigo-400">inklusive inbyggd referenshantering med Zotero-stöd</span>
+            <span class="text-indigo-400">nu med ljust gränssnitt och projektorganisation</span>
           </p>
         </div>
       </div>
@@ -250,31 +250,30 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
               <span class="ml-2 text-slate-500 text-xs font-mono">architecture.diagram</span>
             </div>
-            <pre class="p-6 text-sm text-slate-300 font-mono overflow-x-auto"><code>┌───────────────────────────────────────────────────────────────────┐
-│                          ANVÄNDARE                                 │
-│                             │                                      │
-│                      Prompt + Kontext                              │
-│                         + Profilval                                │
-│                             ▼                                      │
-├───────────────────────────────────────────────────────────────────┤
-│                       AI COUNCIL API                               │
-│                             │                                      │
-│         ┌───────────────────┼───────────────────┐                  │
-│         ▼         ▼         ▼         ▼                            │
-│    ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐                     │
-│    │OpenAI  │ │ Claude │ │ Gemini │ │ Grok 4 │   ← Parallell       │
-│    │   o1   │ │ Sonnet │ │ 2.0    │ │  Fast  │     körning         │
-│    └────┬───┘ └────┬───┘ └────┬───┘ └────┬───┘                     │
-│         │          │          │          │                         │
-│         └──────────┴──────────┴──────────┘                         │
-│                             ▼                                      │
-│              ┌────────────────────────────┐                        │
-│              │    SYNTES ("Domaren")      │  ← Analyserar          │
-│              │   6 valbara modeller:      │    alla svar           │
-│              │   GPT-4o, Claude, Gemini,  │                        │
-│              │   Grok, o1, Opus 4.5       │                        │
-│              └────────────────────────────┘                        │
-└───────────────────────────────────────────────────────────────────┘</code></pre>
+            <pre class="p-6 text-xs text-slate-300 font-mono overflow-x-auto"><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                          FRONTEND v3.0 (Astro)                            │
+│  ┌─────────────────┬────────────────────────────────────────────────┐    │
+│  │ 📁 PROJEKTSIDEBAR│              HUVUDOMRÅDE                       │    │
+│  │                 │   [Prompt + Kontext + Profilval]                │    │
+│  │ + Nytt projekt  │                    │                            │    │
+│  │ 📂 Historik     │                    ▼                            │    │
+│  └─────────────────┴────────────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────────────────────┤
+│                         AI COUNCIL API                                    │
+│    ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐                           │
+│    │OpenAI  │ │ Claude │ │ Gemini │ │ Grok 4 │   ← Parallell             │
+│    │   o1   │ │ Sonnet │ │ 2.0    │ │  Fast  │     körning               │
+│    └────┬───┘ └────┬───┘ └────┬───┘ └────┬───┘                           │
+│         └──────────┴──────────┴──────────┘                               │
+│                             ▼                                            │
+│              ┌────────────────────────────┐                              │
+│              │    SYNTES ("Domaren")      │                              │
+│              │   6 valbara modeller       │                              │
+│              └────────────────────────────┘                              │
+├─────────────────────────────────────────────────────────────────────────┤
+│                      SUPABASE (Datalagring)                               │
+│   [ai_council_projects] ◄─ [ai_council_sessions] ◄─ [ai_profiles]        │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
           </div>
         </div>
       </div>
@@ -659,6 +658,52 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
+          
+          <!-- v3.0 UI Redesign - NEW! -->
+          <div class="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-violet-500/10 border-2 border-blue-500/40 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-3xl">🎨</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-blue-400 font-bold text-lg">UI Redesign v3.0 (2026-01-27)</h3>
+                  <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">STOR UPPDATERING</span>
+                </div>
+                <p class="text-slate-300 text-sm mb-4">
+                  Helt nytt gränssnitt inspirerat av Grok/Gemini med <strong class="text-blue-400">ljust tema</strong> och <strong class="text-blue-400">projektsidebar</strong>.
+                </p>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                  <div class="space-y-2">
+                    <div class="flex items-start gap-2">
+                      <span class="text-blue-400">🌞</span>
+                      <span class="text-slate-300">Modernt ljust tema (vit/ljusgrå)</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-blue-400">📁</span>
+                      <span class="text-slate-300">Projektmappar för att organisera frågor</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-blue-400">🎨</span>
+                      <span class="text-slate-300">Färg- och ikon-väljare för projekt</span>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="flex items-start gap-2">
+                      <span class="text-violet-400">📝</span>
+                      <span class="text-slate-300">Automatisk kontext per projekt</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-violet-400">🖱️</span>
+                      <span class="text-slate-300">Högerklick-meny för snabbåtgärder</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-violet-400">📱</span>
+                      <span class="text-slate-300">Responsiv design med mobilmeny</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           
           <!-- Save modal & Export update -->
           <div class="bg-orange-500/5 border border-orange-500/20 rounded-xl p-6">
