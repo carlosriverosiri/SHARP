@@ -273,6 +273,83 @@ if (!anvandare) {
       color: var(--text-light);
     }
     
+    /* Project context menu */
+    .project-context-menu {
+      position: fixed;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      min-width: 180px;
+      z-index: 1000;
+      display: none;
+      overflow: hidden;
+    }
+    .project-context-menu.open { display: block; }
+    .context-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background 0.1s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+    .context-menu-item:hover { background: var(--bg-hover); }
+    .context-menu-item.danger { color: var(--color-error); }
+    .context-menu-item.danger:hover { background: rgba(239, 68, 68, 0.1); }
+    .context-menu-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0.25rem 0;
+    }
+    
+    /* Color picker for projects */
+    .color-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+    .color-picker-option {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-picker-option:hover { transform: scale(1.15); }
+    .color-picker-option.selected { border-color: var(--text-primary); }
+    
+    /* Icon picker */
+    .icon-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+    .icon-picker-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.15s;
+    }
+    .icon-picker-option:hover { background: var(--bg-hover); border-color: var(--color-primary); }
+    .icon-picker-option.selected { background: var(--color-primary-light); border-color: var(--color-primary); }
+    
     @media (max-width: 1200px) {
       .project-sidebar { width: 240px; }
     }
@@ -1125,6 +1202,80 @@ if (!anvandare) {
     }
     .save-note-btn:hover { background: var(--color-primary-light); }
     .save-note-btn.saved { background: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+    
+    /* Chat bubble layout */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .chat-message {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 85%;
+    }
+    .chat-message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .chat-message.ai {
+      align-self: flex-start;
+    }
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .chat-message.user .chat-avatar {
+      background: var(--color-primary);
+      color: #fff;
+    }
+    .chat-message.ai .chat-avatar {
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #059669);
+      color: #fff;
+    }
+    .chat-bubble {
+      padding: 0.875rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    .chat-message.user .chat-bubble {
+      background: var(--color-primary);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-message.ai .chat-bubble {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-bubble-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .chat-message.user .chat-bubble-header { color: rgba(255,255,255,0.8); }
+    .chat-message.ai .chat-bubble-header { color: var(--text-muted); }
+    .chat-bubble-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .chat-message.user .chat-bubble-actions { border-color: rgba(255,255,255,0.2); }
     
     /* Accordion */
     .responses-section h3 {
@@ -2031,6 +2182,84 @@ if (!anvandare) {
         <button type="button" class="session-modal-btn" id="copySessionSynthesis">📋 Kopiera syntes</button>
         <button type="button" class="session-modal-btn" id="copySessionAll">📄 Kopiera allt</button>
         <button type="button" class="session-modal-btn" id="loadSessionPrompt">💬 Ladda prompt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project context menu -->
+  <div id="projectContextMenu" class="project-context-menu">
+    <button class="context-menu-item" data-action="edit">
+      ✏️ Redigera projekt
+    </button>
+    <button class="context-menu-item" data-action="color">
+      🎨 Ändra färg
+    </button>
+    <button class="context-menu-item" data-action="icon">
+      😀 Ändra ikon
+    </button>
+    <button class="context-menu-item" data-action="context">
+      📝 Redigera kontext
+    </button>
+    <div class="context-menu-divider"></div>
+    <button class="context-menu-item" data-action="pin">
+      📌 Fäst/ta bort
+    </button>
+    <div class="context-menu-divider"></div>
+    <button class="context-menu-item danger" data-action="delete">
+      🗑️ Ta bort projekt
+    </button>
+  </div>
+  
+  <!-- Color picker modal -->
+  <div id="colorPickerModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 320px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">Välj färg</div>
+        <button type="button" class="session-modal-close" id="closeColorPicker">×</button>
+      </div>
+      <div class="color-picker-grid">
+        <button class="color-picker-option" style="background: #2563eb;" data-color="#2563eb"></button>
+        <button class="color-picker-option" style="background: #7c3aed;" data-color="#7c3aed"></button>
+        <button class="color-picker-option" style="background: #db2777;" data-color="#db2777"></button>
+        <button class="color-picker-option" style="background: #dc2626;" data-color="#dc2626"></button>
+        <button class="color-picker-option" style="background: #ea580c;" data-color="#ea580c"></button>
+        <button class="color-picker-option" style="background: #ca8a04;" data-color="#ca8a04"></button>
+        <button class="color-picker-option" style="background: #16a34a;" data-color="#16a34a"></button>
+        <button class="color-picker-option" style="background: #059669;" data-color="#059669"></button>
+        <button class="color-picker-option" style="background: #0891b2;" data-color="#0891b2"></button>
+        <button class="color-picker-option" style="background: #0284c7;" data-color="#0284c7"></button>
+        <button class="color-picker-option" style="background: #6366f1;" data-color="#6366f1"></button>
+        <button class="color-picker-option" style="background: #64748b;" data-color="#64748b"></button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Icon picker modal -->
+  <div id="iconPickerModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 320px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">Välj ikon</div>
+        <button type="button" class="session-modal-close" id="closeIconPicker">×</button>
+      </div>
+      <div class="icon-picker-grid">
+        <button class="icon-picker-option" data-icon="📁">📁</button>
+        <button class="icon-picker-option" data-icon="💻">💻</button>
+        <button class="icon-picker-option" data-icon="🔬">🔬</button>
+        <button class="icon-picker-option" data-icon="📊">📊</button>
+        <button class="icon-picker-option" data-icon="🏥">🏥</button>
+        <button class="icon-picker-option" data-icon="📝">📝</button>
+        <button class="icon-picker-option" data-icon="🎯">🎯</button>
+        <button class="icon-picker-option" data-icon="⚙️">⚙️</button>
+        <button class="icon-picker-option" data-icon="🔧">🔧</button>
+        <button class="icon-picker-option" data-icon="📱">📱</button>
+        <button class="icon-picker-option" data-icon="🌐">🌐</button>
+        <button class="icon-picker-option" data-icon="🔒">🔒</button>
+        <button class="icon-picker-option" data-icon="💡">💡</button>
+        <button class="icon-picker-option" data-icon="📚">📚</button>
+        <button class="icon-picker-option" data-icon="🎨">🎨</button>
+        <button class="icon-picker-option" data-icon="🚀">🚀</button>
+        <button class="icon-picker-option" data-icon="⭐">⭐</button>
+        <button class="icon-picker-option" data-icon="❤️">❤️</button>
       </div>
     </div>
   </div>
@@ -3397,6 +3626,158 @@ if (!anvandare) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+      }
+      
+      // =============================================
+      // CONTEXT MENU FUNCTIONALITY
+      // =============================================
+      
+      const contextMenu = document.getElementById('projectContextMenu');
+      const colorPickerModal = document.getElementById('colorPickerModal');
+      const iconPickerModal = document.getElementById('iconPickerModal');
+      let contextMenuProjectId = null;
+      
+      // Right-click on project items
+      projectList.addEventListener('contextmenu', (e) => {
+        const projectItem = e.target.closest('.project-item');
+        if (!projectItem || !projectItem.dataset.projectId) return;
+        
+        e.preventDefault();
+        contextMenuProjectId = projectItem.dataset.projectId;
+        
+        // Position the menu
+        contextMenu.style.left = e.clientX + 'px';
+        contextMenu.style.top = e.clientY + 'px';
+        contextMenu.classList.add('open');
+      });
+      
+      // Close context menu when clicking elsewhere
+      document.addEventListener('click', (e) => {
+        if (!contextMenu.contains(e.target)) {
+          contextMenu.classList.remove('open');
+        }
+      });
+      
+      // Context menu actions
+      contextMenu.querySelectorAll('.context-menu-item').forEach(item => {
+        item.addEventListener('click', async () => {
+          const action = item.dataset.action;
+          const project = projects.find(p => p.id === contextMenuProjectId);
+          if (!project && action !== 'delete') return;
+          
+          contextMenu.classList.remove('open');
+          
+          switch (action) {
+            case 'edit':
+              const newName = prompt('Nytt namn:', project.name);
+              if (newName && newName !== project.name) {
+                await updateProject(contextMenuProjectId, { name: newName });
+              }
+              break;
+              
+            case 'context':
+              const newContext = prompt('Automatisk kontext för alla frågor:', project.context || '');
+              if (newContext !== null) {
+                await updateProject(contextMenuProjectId, { context: newContext });
+              }
+              break;
+              
+            case 'color':
+              // Mark current color as selected
+              colorPickerModal.querySelectorAll('.color-picker-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.color === project.color);
+              });
+              colorPickerModal.classList.add('open');
+              break;
+              
+            case 'icon':
+              // Mark current icon as selected
+              iconPickerModal.querySelectorAll('.icon-picker-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.icon === project.icon);
+              });
+              iconPickerModal.classList.add('open');
+              break;
+              
+            case 'pin':
+              await updateProject(contextMenuProjectId, { is_pinned: !project.is_pinned });
+              break;
+              
+            case 'delete':
+              if (confirm('Är du säker på att du vill ta bort projektet? Sessioner flyttas till "Osorterade".')) {
+                await deleteProject(contextMenuProjectId);
+              }
+              break;
+          }
+        });
+      });
+      
+      // Color picker
+      colorPickerModal.querySelectorAll('.color-picker-option').forEach(opt => {
+        opt.addEventListener('click', async () => {
+          const color = opt.dataset.color;
+          await updateProject(contextMenuProjectId, { color });
+          colorPickerModal.classList.remove('open');
+        });
+      });
+      document.getElementById('closeColorPicker').addEventListener('click', () => {
+        colorPickerModal.classList.remove('open');
+      });
+      
+      // Icon picker
+      iconPickerModal.querySelectorAll('.icon-picker-option').forEach(opt => {
+        opt.addEventListener('click', async () => {
+          const icon = opt.dataset.icon;
+          await updateProject(contextMenuProjectId, { icon });
+          iconPickerModal.classList.remove('open');
+        });
+      });
+      document.getElementById('closeIconPicker').addEventListener('click', () => {
+        iconPickerModal.classList.remove('open');
+      });
+      
+      // Update project helper
+      async function updateProject(projectId, data) {
+        try {
+          const res = await fetch('/api/ai-council/projects', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ id: projectId, ...data })
+          });
+          
+          if (res.ok) {
+            const result = await res.json();
+            if (result.project) {
+              const idx = projects.findIndex(p => p.id === projectId);
+              if (idx !== -1) {
+                projects[idx] = result.project;
+                renderProjects();
+              }
+            }
+          }
+        } catch (err) {
+          console.error('Error updating project:', err);
+        }
+      }
+      
+      // Delete project helper
+      async function deleteProject(projectId) {
+        try {
+          const res = await fetch('/api/ai-council/projects?id=' + projectId, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          
+          if (res.ok) {
+            projects = projects.filter(p => p.id !== projectId);
+            if (currentProjectId === projectId) {
+              selectProject(null);
+            }
+            renderProjects();
+          }
+        } catch (err) {
+          console.error('Error deleting project:', err);
+        }
       }
       
       // Load projects on page load
