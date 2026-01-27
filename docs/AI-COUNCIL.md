@@ -599,6 +599,104 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 
 ---
 
+## 🖥️ Använda syntesen i Cursor
+
+AI Council genererar automatiskt en **Cursor Implementation Guide** i slutet av varje syntes. Denna sektion är optimerad för att ge AI-kodverktyg (som Cursor, Copilot, Windsurf) all information de behöver för att implementera lösningen.
+
+### Vad ingår i Cursor-sektionen?
+
+| Sektion | Beskrivning | Exempel |
+|---------|-------------|---------|
+| **Nya filer att skapa** | Fullständiga sökvägar för nya filer | `src/pages/api/zotero/search.ts` |
+| **Befintliga filer att modifiera** | Filer som behöver ändras + vad | `ai-council.astro (lägg till modal)` |
+| **Dependencies** | npm-paket att installera | `npm install bottleneck pdf-parse` |
+| **Implementeringsordning** | Steg-för-steg guide | 1. Backend → 2. Frontend → 3. Test |
+| **Referens till mönster** | Befintliga filer med liknande struktur | `Se src/lib/kryptering.ts` |
+
+### Arbetsflöde: AI Council → Cursor
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. PLANERA I AI COUNCIL                                        │
+│     Beskriv problemet/funktionen du vill bygga                  │
+│     Välj profil: 💻 Kodning (deliberation + 4 modeller)         │
+│     Kör → Få syntes med Cursor-sektion                          │
+└─────────────────────────────────────────────────────────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  2. KOPIERA SYNTESEN                                            │
+│     Klicka "Kopiera" på syntes-kortet                           │
+│     Hela syntesen inkl. Cursor-sektionen kopieras               │
+└─────────────────────────────────────────────────────────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  3. KLISTRA IN I CURSOR                                         │
+│     Öppna Cursor och skapa ny chat (Ctrl+L)                     │
+│     Klistra in syntesen                                         │
+│     Lägg till: "Implementera enligt Cursor-sektionen"           │
+└─────────────────────────────────────────────────────────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  4. CURSOR IMPLEMENTERAR                                        │
+│     Cursor läser filsökvägarna och skapar/modifierar filer      │
+│     Följer implementeringsordningen                              │
+│     Använder referensmönster från projektet                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Praktiskt exempel
+
+**1. Fråga i AI Council:**
+> "Jag vill integrera Zotero Web API för att kunna söka och importera PDF:er direkt i AI Council. Användaren ska kunna spara sin API-nyckel säkert."
+
+**2. Syntesen genererar Cursor-sektion:**
+```markdown
+## 🖥️ Cursor Implementation Guide
+
+### Nya filer att skapa:
+- src/pages/api/ai-council/zotero/auth.ts
+- src/pages/api/ai-council/zotero/search.ts
+- src/pages/api/ai-council/zotero/import-pdf.ts
+- src/components/admin/ZoteroModal.astro
+- supabase/migrations/013-zotero-credentials.sql
+
+### Befintliga filer att modifiera:
+- src/pages/admin/ai-council.astro (lägg till Zotero-knapp och modal)
+- src/lib/kryptering.ts (använd befintlig krypteringsfunktion)
+
+### Dependencies att installera:
+```bash
+npm install bottleneck
+```
+
+### Implementeringsordning:
+1. Skapa databasschema (migration)
+2. Implementera auth-endpoint med kryptering
+3. Implementera search-endpoint med rate limiting
+4. Skapa ZoteroModal UI-komponent
+5. Integrera i ai-council.astro
+6. Testa med din Zotero API-nyckel
+
+### Referens till befintliga mönster:
+- Se src/lib/kryptering.ts för krypteringsmönster
+- Se src/pages/api/ai-council/query.ts för API-struktur
+- Se SaveModal i ai-council.astro för modal-mönster
+```
+
+**3. Klistra in i Cursor och säg:**
+> "Implementera Zotero-integrationen enligt Cursor-sektionen ovan. Börja med databasmigrationen."
+
+### Tips för bästa resultat
+
+| Tips | Varför |
+|------|--------|
+| **Använd 💻 Kodning-profilen** | Ger deliberation + alla 4 modeller för maximal kodgranskning |
+| **Var specifik i frågan** | "Integrera X med Y" ger bättre filsökvägar än "gör X" |
+| **Inkludera befintliga filer** | Om du har kod som referens, ladda upp den som kontext |
+| **Kör deliberation** | Runda 2 korrigerar säkerhetsfel och tekniska missar |
+
+---
+
 ## Säkerhet
 
 | Aspekt | Hantering |

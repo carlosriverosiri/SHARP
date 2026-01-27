@@ -581,6 +581,37 @@ ${r.response}
 3. **Väg för- och nackdelar**: Vilka förslag är starkast och varför?
 4. **Slutgiltig rekommendation**: Ge en konkret, actionbar rekommendation eller kodlösning som tar det bästa från varje förslag.
 
+## 🖥️ Cursor-sektion (för AI-assisterad implementation)
+
+Avsluta ALLTID din syntes med denna sektion för att underlätta implementation i Cursor eller liknande AI-kodverktyg:
+
+\`\`\`
+## 🖥️ Cursor Implementation Guide
+
+### Nya filer att skapa:
+<!-- Lista fullständiga sökvägar för nya filer som behövs -->
+- src/pages/api/...
+- src/components/...
+
+### Befintliga filer att modifiera:
+<!-- Lista filer som behöver ändras och vad som ska ändras -->
+- fil.ts (lägg till X, ändra Y)
+
+### Dependencies att installera:
+\`\`\`bash
+npm install paket1 paket2
+\`\`\`
+
+### Implementeringsordning:
+1. Börja med...
+2. Sedan...
+3. Testa genom att...
+
+### Referens till befintliga mönster:
+<!-- Vilka befintliga filer i projektet följer liknande mönster? -->
+- Se src/lib/... för liknande implementation
+\`\`\`
+
 Skriv din syntes på svenska. Var konkret och praktisk.`;
 }
 
@@ -616,6 +647,37 @@ ${r.response}
 2. **Analysera konsensus**: Vad är modellerna nu överens om efter granskning?
 3. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
 4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
+
+## 🖥️ Cursor-sektion (för AI-assisterad implementation)
+
+Avsluta ALLTID din supersyntes med denna sektion för att underlätta implementation i Cursor eller liknande AI-kodverktyg:
+
+\`\`\`
+## 🖥️ Cursor Implementation Guide
+
+### Nya filer att skapa:
+<!-- Lista fullständiga sökvägar för nya filer som behövs -->
+- src/pages/api/...
+- src/components/...
+
+### Befintliga filer att modifiera:
+<!-- Lista filer som behöver ändras och vad som ska ändras -->
+- fil.ts (lägg till X, ändra Y)
+
+### Dependencies att installera:
+\`\`\`bash
+npm install paket1 paket2
+\`\`\`
+
+### Implementeringsordning:
+1. Börja med...
+2. Sedan...
+3. Testa genom att...
+
+### Referens till befintliga mönster:
+<!-- Vilka befintliga filer i projektet följer liknande mönster? -->
+- Se src/lib/... för liknande implementation
+\`\`\`
 
 Skriv din supersyntes på svenska. Var extra noggrann med att lyfta fram vad som korrigerades mellan rundorna.`;
 }
