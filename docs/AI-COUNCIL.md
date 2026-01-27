@@ -764,6 +764,7 @@ Det finns flera liknande verktyg som kör flera AI-modeller parallellt:
 | Parallell körning | ✅ | ✅ | ✅ | ✅ |
 | Syntes ("Domaren") | ✅ | ✅ | ✅ | ❌ |
 | **Deliberation (Runda 2)** | ✅ | ❌ | ❌ | ❌ |
+| **Hallucinationsdetektion** | ✅ | ❌ | ❌ | ❌ |
 | **Profilväljare** | ✅ | ❌ | ❌ | ❌ |
 | **Val av syntesmodell (6 st)** | ✅ | ❌ | ❌ | ❌ |
 | **Self-hosted** | ✅ | ❌ | ❌ | ❌ |
@@ -771,11 +772,12 @@ Det finns flera liknande verktyg som kör flera AI-modeller parallellt:
 
 ### Våra unika fördelar
 
-1. **Deliberation Mode** - Modellerna granskar och korrigerar varandra (unikt!)
-2. **Self-hosted** - Dina egna API-nycklar, full kontroll över kostnader
-3. **Profilväljare** - Förinställda profiler för olika användningsfall
-4. **6 syntesmodeller** - Välj själv vilken AI som sammanfattar
-5. **Integrerat i personalportalen** - Ingen extra inloggning
+1. **Hallucinationsdetektion** - När 3/4 modeller flaggar samma fel = säker hallucination
+2. **Deliberation Mode** - Modellerna granskar och korrigerar varandra
+3. **Self-hosted** - Dina egna API-nycklar, full kontroll över kostnader
+4. **Profilväljare** - Förinställda profiler för olika användningsfall
+5. **6 syntesmodeller** - Välj själv vilken AI som sammanfattar
+6. **Integrerat i personalportalen** - Ingen extra inloggning
 
 ---
 
