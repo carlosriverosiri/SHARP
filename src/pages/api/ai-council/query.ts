@@ -101,6 +101,12 @@ type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
 // Synthesis model options - separate from query models
 type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'gpt4o' | 'gemini' | 'grok';
 
+interface ImageData {
+  name: string;
+  base64: string; // data:image/png;base64,...
+  mimeType: string;
+}
+
 interface QueryRequest {
   context: string;
   prompt: string;
@@ -108,7 +114,8 @@ interface QueryRequest {
   fileContent?: string; // Extracted text from uploaded files
   selectedModels?: ModelProvider[]; // Which models to query
   enableDeliberation?: boolean; // Enable round 2 where models review each other
-  profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'deep'; // Which preset profile to use
+  profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'strategy'; // Which preset profile to use
+  images?: ImageData[]; // Base64 encoded images for multimodal queries
 }
 
 // Hallucination detection
@@ -1286,7 +1293,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     fileContent,
     selectedModels = availableProviders, // Default to all available models
     enableDeliberation = false, // Optional second round
-    profileType = 'fast' // Which profile preset is being used
+    profileType = 'fast', // Which profile preset is being used
+    images = [] // Base64 images for multimodal
   } = body;
 
   // Default scientific prompt for all users using the Science profile
@@ -1399,8 +1407,13 @@ SVARSSTIL:
       });
     }
 
-    // Combine user profile context, provided context, and file content
-    const contextParts = [userProfileContext, context, fileContent].filter(Boolean);
+    // Build image context description
+    const imageContext = images.length > 0 
+      ? `BIFOGADE BILDER (${images.length} st):\n${images.map((img, i) => `[Bild ${i + 1}: ${img.name}]`).join('\n')}\n\nOBS: Dessa bilder har bifogats till frågan. Multimodala AI-modeller (GPT-4o, Gemini, Claude) kan analysera bildinnehållet.`
+      : '';
+
+    // Combine user profile context, provided context, file content, and images
+    const contextParts = [userProfileContext, context, fileContent, imageContext].filter(Boolean);
     const fullContext = contextParts.join('\n\n---\n\n');
 
     // Build query promises for selected models only

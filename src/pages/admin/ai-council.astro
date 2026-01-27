@@ -1139,6 +1139,35 @@ if (!anvandare) {
       padding: 0.25rem;
     }
     .file-item-remove:hover { color: var(--color-error); }
+    .file-item-icon { font-size: 1rem; flex-shrink: 0; }
+    .file-item-thumbnail { 
+      width: 40px; 
+      height: 40px; 
+      object-fit: cover; 
+      border-radius: 4px; 
+      flex-shrink: 0;
+      border: 1px solid var(--border-color);
+    }
+    .file-item.has-thumbnail { 
+      padding: 0.375rem 0.5rem;
+    }
+    
+    /* Paste indicator */
+    .paste-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      margin-left: 0.5rem;
+    }
+    .paste-hint kbd {
+      background: var(--bg-hover);
+      padding: 0.125rem 0.375rem;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.625rem;
+    }
     
     /* Synthesis model selector */
     .synthesis-selector {
@@ -1720,8 +1749,8 @@ if (!anvandare) {
               <div id="fileUploadArea" class="file-upload-area">
                 <div class="file-upload-icon">📎</div>
                 <div class="file-upload-text">
-                  <strong>Klicka</strong> eller dra filer hit<br>
-                  Bilder (PNG, JPG), PDF, TXT, MD, JSON
+                  <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
+                  <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
                 </div>
                 <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
               </div>
@@ -2566,6 +2595,36 @@ if (!anvandare) {
       });
       fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
       
+      // Paste image handler for context and prompt textareas
+      function handlePaste(e) {
+        const items = e.clipboardData?.items;
+        if (!items) return;
+        
+        let hasImage = false;
+        for (const item of items) {
+          if (item.type.startsWith('image/')) {
+            hasImage = true;
+            e.preventDefault(); // Prevent default paste behavior for images
+            
+            const file = item.getAsFile();
+            if (file) {
+              // Generate a name for pasted images
+              const timestamp = new Date().toISOString().slice(11, 19).replace(/:/g, '-');
+              const extension = file.type.split('/')[1] || 'png';
+              const namedFile = new File([file], `inklistrad-bild-${timestamp}.${extension}`, { type: file.type });
+              handleFiles([namedFile]);
+            }
+            break;
+          }
+        }
+        
+        // If no image, let the default paste behavior happen (for text)
+      }
+      
+      // Add paste listeners to both textareas
+      contextEl.addEventListener('paste', handlePaste);
+      promptEl.addEventListener('paste', handlePaste);
+      
       async function handleFiles(files) {
         for (const file of files) {
           const content = await extractFileContent(file);
@@ -2605,9 +2664,22 @@ if (!anvandare) {
           return '[PDF kunde inte läsas]';
         }
         
-        // Images - convert to base64 description placeholder
+        // Images - convert to base64 for multimodal APIs
         if (type.startsWith('image/')) {
-          return `[Bild: ${file.name} (${formatSize(file.size)})]`;
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64 = reader.result;
+              resolve({ 
+                type: 'image', 
+                base64: base64,
+                mimeType: type,
+                description: `[Bild: ${file.name} (${formatSize(file.size)})]`
+              });
+            };
+            reader.onerror = () => resolve(`[Bild kunde inte läsas: ${file.name}]`);
+            reader.readAsDataURL(file);
+          });
         }
         
         return null;
@@ -2618,13 +2690,20 @@ if (!anvandare) {
           fileListEl.innerHTML = '';
           return;
         }
-        fileListEl.innerHTML = uploadedFiles.map((f, i) => 
-          '<div class="file-item">' +
+        fileListEl.innerHTML = uploadedFiles.map((f, i) => {
+          // Check if this is an image with base64 data
+          const isImage = f.content && typeof f.content === 'object' && f.content.type === 'image';
+          const thumbnail = isImage 
+            ? '<img src="' + f.content.base64 + '" class="file-item-thumbnail" alt="' + escapeHtml(f.name) + '">'
+            : '<span class="file-item-icon">📄</span>';
+          
+          return '<div class="file-item' + (isImage ? ' has-thumbnail' : '') + '">' +
+            thumbnail +
             '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
             '<span class="file-item-size">' + formatSize(f.size) + '</span>' +
             '<button class="file-item-remove" data-index="' + i + '">✕</button>' +
-          '</div>'
-        ).join('');
+          '</div>';
+        }).join('');
         
         fileListEl.querySelectorAll('.file-item-remove').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -3223,8 +3302,23 @@ if (!anvandare) {
           }
         });
         
-        // Combine file content
-        const fileContent = uploadedFiles.map(f => '### ' + f.name + '\n' + f.content).join('\n\n---\n\n');
+        // Separate text files from images
+        const textFiles = [];
+        const imageFiles = [];
+        
+        uploadedFiles.forEach(f => {
+          if (f.content && typeof f.content === 'object' && f.content.type === 'image') {
+            imageFiles.push({
+              name: f.name,
+              base64: f.content.base64,
+              mimeType: f.content.mimeType
+            });
+          } else {
+            textFiles.push('### ' + f.name + '\n' + (typeof f.content === 'string' ? f.content : f.content?.description || ''));
+          }
+        });
+        
+        const fileContent = textFiles.join('\n\n---\n\n');
         
         // Map profile IDs to API profileType values
         const profileTypeMap = {
@@ -3232,7 +3326,7 @@ if (!anvandare) {
           patient: 'patient', 
           kod: 'coding',
           vetenskap: 'science',
-          djup: 'deep'
+          strategi: 'strategy'
         };
         const profileType = profileTypeMap[currentProfile] || 'fast';
         
@@ -3241,7 +3335,16 @@ if (!anvandare) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ context, prompt, synthesisModel, fileContent, selectedModels, enableDeliberation, profileType })
+            body: JSON.stringify({ 
+              context, 
+              prompt, 
+              synthesisModel, 
+              fileContent, 
+              selectedModels, 
+              enableDeliberation, 
+              profileType,
+              images: imageFiles.length > 0 ? imageFiles : undefined
+            })
           });
           
           // Check if response is JSON before parsing
