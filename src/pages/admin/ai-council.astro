@@ -673,6 +673,21 @@ if (!anvandare) {
     .copy-btn.copied { background: rgba(16, 185, 129, 0.2); color: #10b981; }
     .copy-btn svg { width: 14px; height: 14px; }
     
+    .export-md-btn {
+      background: linear-gradient(135deg, #1e3a5f 0%, #1a1a2e 100%);
+      border: 1px solid #3b82f6;
+      color: #60a5fa;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .export-md-btn:hover { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: #fff; border-color: #60a5fa; }
+    .export-md-btn svg { width: 14px; height: 14px; }
+    
     /* Synthesis card */
     .synthesis-card {
       background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
@@ -1267,6 +1282,10 @@ if (!anvandare) {
                 <button type="button" class="copy-btn" id="copySynthesis" title="Kopiera">
                   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                   <span>Kopiera</span>
+                </button>
+                <button type="button" class="export-md-btn" id="exportMarkdown" title="Exportera som Markdown">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <span>Export .md</span>
                 </button>
                 <button type="button" class="save-note-btn" id="saveSynthesis" title="Spara">
                   <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
@@ -2045,6 +2064,134 @@ if (!anvandare) {
       
       document.getElementById('copySynthesis').addEventListener('click', function() {
         if (currentResponses.synthesis) copyToClipboard(currentResponses.synthesis, this);
+      });
+      
+      // Export as Markdown
+      document.getElementById('exportMarkdown').addEventListener('click', function() {
+        if (!currentResponses.synthesis || !currentPrompt) {
+          alert('Ingen session att exportera.');
+          return;
+        }
+        
+        const now = new Date();
+        const dateStr = now.toLocaleString('sv-SE');
+        const fileDate = now.toISOString().split('T')[0];
+        
+        // Get current profile name
+        const profileSelect = document.getElementById('profileSelect');
+        const profileName = profileSelect.options[profileSelect.selectedIndex].text;
+        
+        // Get synthesis model name
+        const synthLabel = document.getElementById('synthesisModelLabel').textContent;
+        
+        // Get which models were used
+        const usedModels = [];
+        ['openai', 'anthropic', 'google', 'xai'].forEach(provider => {
+          const checkbox = document.querySelector(`input[value="${provider}"]`);
+          if (checkbox && checkbox.checked) {
+            const label = { openai: 'OpenAI o1', anthropic: 'Claude Sonnet', google: 'Gemini 2.0 Flash', xai: 'Grok 4' }[provider];
+            usedModels.push(label);
+          }
+        });
+        
+        // Get deliberation status
+        const deliberationEnabled = document.getElementById('enableDeliberation').checked;
+        
+        // Get cost info
+        const costBanner = document.getElementById('costBannerAmount');
+        const costSek = document.getElementById('costBannerSek');
+        const costInfo = costBanner ? `${costBanner.textContent} ${costSek ? costSek.textContent : ''}` : 'N/A';
+        
+        // Get duration
+        const totalDuration = document.getElementById('totalDuration').textContent || 'N/A';
+        
+        // Build markdown
+        let md = `# AI Council Session\n\n`;
+        md += `**Datum:** ${dateStr}\n`;
+        md += `**Profil:** ${profileName}\n`;
+        md += `**Modeller:** ${usedModels.join(', ')}\n`;
+        md += `**Syntesmodell:** ${synthLabel}\n`;
+        md += `**Deliberation:** ${deliberationEnabled ? 'Ja (Runda 2)' : 'Nej'}\n`;
+        md += `**Kostnad:** ${costInfo}\n`;
+        md += `**Total tid:** ${totalDuration}\n\n`;
+        
+        md += `---\n\n`;
+        
+        md += `## Frågeställning\n\n${currentPrompt}\n\n`;
+        
+        // Add context if provided
+        const context = document.getElementById('context').value;
+        if (context && context.trim()) {
+          md += `## Kontext\n\n${context.trim()}\n\n`;
+        }
+        
+        // Add hallucination report if present
+        const hallucinationReport = document.getElementById('hallucinationReport');
+        if (hallucinationReport && hallucinationReport.style.display !== 'none' && deliberationEnabled) {
+          const status = document.getElementById('hallucinationStatus').textContent;
+          const highCount = document.querySelector('#hallucinationHigh .count-num')?.textContent || '0';
+          const medCount = document.querySelector('#hallucinationMedium .count-num')?.textContent || '0';
+          const lowCount = document.querySelector('#hallucinationLow .count-num')?.textContent || '0';
+          
+          md += `## Trovärdighetsrapport\n\n`;
+          md += `**Status:** ${status}\n\n`;
+          md += `| Säkerhet | Antal |\n`;
+          md += `|----------|-------|\n`;
+          md += `| 🔴 Hög | ${highCount} |\n`;
+          md += `| 🟡 Medium | ${medCount} |\n`;
+          md += `| ⚪ Låg | ${lowCount} |\n\n`;
+        }
+        
+        md += `---\n\n`;
+        
+        // Add synthesis
+        const synthType = deliberationEnabled ? 'SUPERSYNTES' : 'Syntes';
+        md += `## ${synthType}\n\n${currentResponses.synthesis}\n\n`;
+        
+        md += `---\n\n`;
+        
+        // Add individual responses
+        md += `## Individuella svar\n\n`;
+        
+        const modelNames = {
+          openai: 'OpenAI o1',
+          anthropic: 'Claude Sonnet',
+          google: 'Gemini 2.0 Flash',
+          grok: 'Grok 4'
+        };
+        
+        ['openai', 'anthropic', 'google', 'grok'].forEach(provider => {
+          if (currentResponses[provider]) {
+            md += `### ${modelNames[provider]}\n\n`;
+            md += `${currentResponses[provider]}\n\n`;
+          }
+        });
+        
+        // Add deliberation responses if present (stored as 'r2-provider')
+        if (deliberationEnabled) {
+          const r2Keys = { openai: 'r2-openai', anthropic: 'r2-anthropic', google: 'r2-google', grok: 'r2-grok' };
+          const hasDeliberation = Object.values(r2Keys).some(k => currentResponses[k]);
+          if (hasDeliberation) {
+            md += `---\n\n`;
+            md += `## Deliberation (Runda 2)\n\n`;
+            Object.entries(r2Keys).forEach(([provider, r2Key]) => {
+              if (currentResponses[r2Key]) {
+                md += `### ${modelNames[provider]} - Granskning\n\n`;
+                md += `${currentResponses[r2Key]}\n\n`;
+              }
+            });
+          }
+        }
+        
+        md += `---\n\n*Exporterad från AI Council v2.6*\n`;
+        
+        // Create and download file
+        const blob = new Blob([md], { type: 'text/markdown' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `ai-council-${fileDate}.md`;
+        a.click();
+        URL.revokeObjectURL(a.href);
       });
       
       document.getElementById('saveSynthesis').addEventListener('click', async function() {
