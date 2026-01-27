@@ -802,6 +802,113 @@ if (!anvandare) {
     }
     .cost-banner-stat-value { color: #999; font-weight: 500; }
     
+    /* Hallucination Report */
+    .hallucination-report {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .hallucination-report.has-issues {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05));
+      border-color: rgba(251, 191, 36, 0.3);
+    }
+    .hallucination-report.has-high {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .hallucination-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .hallucination-icon { font-size: 1.5rem; }
+    .hallucination-title h2 { font-size: 1rem; font-weight: 600; color: #93c5fd; margin: 0; }
+    .hallucination-title span { font-size: 0.75rem; color: #666; }
+    .hallucination-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .hallucination-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .hallucination-status-good {
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+    }
+    .hallucination-status-warning {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+    .hallucination-status-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    .hallucination-counts {
+      display: flex;
+      gap: 1rem;
+    }
+    .hallucination-count {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+    }
+    .hallucination-count .count-num { font-weight: 600; color: #fff; }
+    .hallucination-count .count-label { color: #888; }
+    .hallucination-details { margin-top: 1rem; }
+    .hallucination-toggle {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      color: #888;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .hallucination-toggle:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .hallucination-list { margin-top: 1rem; }
+    .hallucination-item {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .hallucination-item.high { border-left: 3px solid #ef4444; }
+    .hallucination-item.medium { border-left: 3px solid #fbbf24; }
+    .hallucination-item.low { border-left: 3px solid #facc15; }
+    .hallucination-item-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .hallucination-item-claim {
+      font-style: italic;
+      color: #ccc;
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+      border-left: 2px solid #444;
+    }
+    .hallucination-item-meta {
+      font-size: 0.75rem;
+      color: #666;
+    }
+    .hallucination-item-meta span { margin-right: 1rem; }
+    
     /* Markdown */
     .markdown-content { line-height: 1.7; color: #ccc; }
     .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 { color: #fff; margin-top: 1.5em; margin-bottom: 0.5em; }
@@ -1106,6 +1213,46 @@ if (!anvandare) {
                   <span>out</span>
                 </div>
               </div>
+            </div>
+          </div>
+          
+          <!-- Hallucination Report (shown when deliberation is enabled) -->
+          <div id="hallucinationReport" class="hallucination-report" style="display: none;">
+            <div class="hallucination-header">
+              <span class="hallucination-icon">🔍</span>
+              <div class="hallucination-title">
+                <h2>Trovärdighetsrapport</h2>
+                <span id="hallucinationSubtitle">Baserat på modellernas granskning av varandra</span>
+              </div>
+            </div>
+            <div class="hallucination-summary">
+              <div id="hallucinationStatus" class="hallucination-status hallucination-status-good">
+                <span class="status-icon">✅</span>
+                <span class="status-text">Inga säkra fel upptäckta</span>
+              </div>
+              <div class="hallucination-counts">
+                <div class="hallucination-count high" id="hallucinationHigh" style="display: none;">
+                  <span class="count-badge">🔴</span>
+                  <span class="count-num">0</span>
+                  <span class="count-label">säkra</span>
+                </div>
+                <div class="hallucination-count medium" id="hallucinationMedium" style="display: none;">
+                  <span class="count-badge">🟠</span>
+                  <span class="count-num">0</span>
+                  <span class="count-label">troliga</span>
+                </div>
+                <div class="hallucination-count low" id="hallucinationLow" style="display: none;">
+                  <span class="count-badge">🟡</span>
+                  <span class="count-num">0</span>
+                  <span class="count-label">misstänkta</span>
+                </div>
+              </div>
+            </div>
+            <div id="hallucinationDetails" class="hallucination-details" style="display: none;">
+              <button type="button" class="hallucination-toggle" id="toggleHallucinationDetails">
+                <span>▼ Visa detaljer</span>
+              </button>
+              <div id="hallucinationList" class="hallucination-list" style="display: none;"></div>
             </div>
           </div>
           
@@ -1998,6 +2145,11 @@ if (!anvandare) {
         round1Label.style.display = enableDeliberation ? 'block' : 'none';
         document.getElementById('costBanner').classList.remove('visible');
         
+        // Reset hallucination report
+        document.getElementById('hallucinationReport').style.display = 'none';
+        document.getElementById('hallucinationList').innerHTML = '';
+        document.getElementById('hallucinationList').style.display = 'none';
+        
         currentResponses = { openai: '', anthropic: '', google: '', grok: '', 'r2-openai': '', 'r2-anthropic': '', 'r2-google': '', 'r2-grok': '', synthesis: '', rawResponses: [], totalDuration: 0 };
         
         // Hide/show Round 1 accordions based on selection
@@ -2161,6 +2313,87 @@ if (!anvandare) {
             costBanner.classList.add('visible');
           }
           
+          // Display hallucination report (only if deliberation was enabled)
+          const hallucinationReport = document.getElementById('hallucinationReport');
+          if (data.hallucinationReport && data.deliberationEnabled) {
+            const report = data.hallucinationReport;
+            hallucinationReport.style.display = 'block';
+            
+            // Update counts
+            const highEl = document.getElementById('hallucinationHigh');
+            const mediumEl = document.getElementById('hallucinationMedium');
+            const lowEl = document.getElementById('hallucinationLow');
+            const statusEl = document.getElementById('hallucinationStatus');
+            
+            if (report.high > 0) {
+              highEl.style.display = 'flex';
+              highEl.querySelector('.count-num').textContent = report.high;
+            } else {
+              highEl.style.display = 'none';
+            }
+            
+            if (report.medium > 0) {
+              mediumEl.style.display = 'flex';
+              mediumEl.querySelector('.count-num').textContent = report.medium;
+            } else {
+              mediumEl.style.display = 'none';
+            }
+            
+            if (report.low > 0) {
+              lowEl.style.display = 'flex';
+              lowEl.querySelector('.count-num').textContent = report.low;
+            } else {
+              lowEl.style.display = 'none';
+            }
+            
+            // Update status message and styling
+            if (report.high > 0) {
+              statusEl.className = 'hallucination-status hallucination-status-danger';
+              statusEl.innerHTML = '<span class="status-icon">🔴</span><span class="status-text">' + report.high + ' säkra fel upptäckta</span>';
+              hallucinationReport.className = 'hallucination-report has-high';
+            } else if (report.medium > 0) {
+              statusEl.className = 'hallucination-status hallucination-status-warning';
+              statusEl.innerHTML = '<span class="status-icon">🟠</span><span class="status-text">' + report.medium + ' troliga fel upptäckta</span>';
+              hallucinationReport.className = 'hallucination-report has-issues';
+            } else if (report.low > 0) {
+              statusEl.className = 'hallucination-status hallucination-status-warning';
+              statusEl.innerHTML = '<span class="status-icon">🟡</span><span class="status-text">' + report.low + ' misstänkta påståenden</span>';
+              hallucinationReport.className = 'hallucination-report has-issues';
+            } else {
+              statusEl.className = 'hallucination-status hallucination-status-good';
+              statusEl.innerHTML = '<span class="status-icon">✅</span><span class="status-text">Inga uppenbara fel upptäckta</span>';
+              hallucinationReport.className = 'hallucination-report';
+            }
+            
+            // Show details toggle if there are items
+            const detailsSection = document.getElementById('hallucinationDetails');
+            const listEl = document.getElementById('hallucinationList');
+            if (report.items && report.items.length > 0) {
+              detailsSection.style.display = 'block';
+              listEl.innerHTML = report.items.map(item => {
+                const confidenceClass = item.confidence;
+                const badge = item.confidence === 'high' ? '🔴' : item.confidence === 'medium' ? '🟠' : '🟡';
+                return `
+                  <div class="hallucination-item ${confidenceClass}">
+                    <div class="hallucination-item-header">
+                      <span>${badge}</span>
+                      <span style="color: #fff; font-weight: 500;">Flaggad av ${item.flaggedBy}</span>
+                    </div>
+                    <div class="hallucination-item-claim">"${item.claim}"</div>
+                    <div class="hallucination-item-meta">
+                      <span>Källa: ${item.source}</span>
+                      <span>Anledning: ${item.reason}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+            } else {
+              detailsSection.style.display = 'none';
+            }
+          } else {
+            hallucinationReport.style.display = 'none';
+          }
+          
           setStatus('', false);
         } catch (error) {
           showError(error.message);
@@ -2172,6 +2405,14 @@ if (!anvandare) {
       
       runBtn.addEventListener('click', runQuery);
       document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery(); });
+      
+      // Hallucination details toggle
+      document.getElementById('toggleHallucinationDetails').addEventListener('click', function() {
+        const listEl = document.getElementById('hallucinationList');
+        const isVisible = listEl.style.display !== 'none';
+        listEl.style.display = isVisible ? 'none' : 'block';
+        this.querySelector('span').textContent = isVisible ? '▼ Visa detaljer' : '▲ Dölj detaljer';
+      });
     });
   </script>
 </body>

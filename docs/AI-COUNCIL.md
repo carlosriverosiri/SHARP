@@ -24,6 +24,79 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ---
 
+## 🚀 Utvecklingsplan
+
+> **Obs:** Denna sektion visar planerade och pågående förbättringar. Implementerade funktioner flyttas till Versionshistorik.
+
+### 🔴 Nästa prioritet: Hallucinationsdetektion
+
+**Mål:** Visa användaren direkt hur trovärdigt resultatet är.
+
+AI Council har en unik fördel: flera oberoende modeller granskar samma fråga. När modellerna är oense om ett påstående är det en signal om potentiell hallucination.
+
+**Konfidensgrader:**
+
+| Kategori | Definition | Visning |
+|----------|------------|---------|
+| **Säker hallucination** | 3/4 modeller flaggar samma fel | 🔴 |
+| **Trolig hallucination** | 2/4 modeller flaggar | 🟠 |
+| **Misstänkt hallucination** | 1/4 modeller flaggar | 🟡 |
+
+**Planerad implementation:**
+
+1. **Fas 1:** Integrera i Deliberation-rundan
+   - Utöka prompten: "Flagga specifika påståenden du misstänker är felaktiga"
+   - Strukturerat format: `[HALLUCINATION?] "påståendet" - anledning`
+
+2. **Fas 2:** Hallucinationsrapport i UI
+   - Visas **överst** i resultatet (före syntes)
+   - Färgkodade varningar
+   - Expanderbara detaljer
+
+3. **Fas 3:** Statistik och historik
+   - "Denna session: X hallucinationer upptäckta"
+   - "Totalt upptäckta: Y"
+   - Per-modell statistik
+
+**Exempel på UI:**
+```
+┌─────────────────────────────────────────────────────┐
+│  🔍 TROVÄRDIGHETSRAPPORT                            │
+│                                                     │
+│  ✅ Inga säkra hallucinationer upptäckta            │
+│  ⚠️  1 misstänkt felaktighet flaggad               │
+│                                                     │
+│  ▼ Visa detaljer                                    │
+│  ┌─────────────────────────────────────────────┐    │
+│  │ 🟡 "Studien från Karolinska 2019..."        │    │
+│  │    Flaggad av: Claude                       │    │
+│  │    Källa: GPT-4o                            │    │
+│  │    Anledning: Kunde inte verifiera referens │    │
+│  └─────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────┘
+```
+
+### 🟡 Planerade funktioner
+
+- [ ] **Streaming-svar** - Visa svar i realtid istället för att vänta
+- [ ] **Dela sessioner** - Länk för att dela med kollegor
+- [ ] **Custom syntes-prompts** - Anpassa hur syntesen görs
+- [ ] **Cursor MCP-integration** - Använd AI Council direkt från Cursor
+- [ ] **Bildanalys** - Multimodala API:er för bilder i frågor
+- [ ] **Persistent Project Thread** - Spara långa sessioner som projekt
+- [ ] **RAG för arkivet** - Sök i tidigare sessioner automatiskt
+
+### ✅ Nyligen implementerat
+
+- [x] Vetenskaplig kontext med Zotero-stöd (v2.6)
+- [x] Användarprofiler för personlig kontext (v2.5)
+- [x] Profilväljare med 5 lägen (v2.4)
+- [x] Grok 4 integration (v2.3)
+- [x] Kostnadsbanner (v2.2)
+- [x] Deliberation Mode (v2.0)
+
+---
+
 ## Arkitektur
 
 ```
@@ -575,27 +648,6 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 **POST** `/api/ai-council/sessions` - Spara ny session
 
 **DELETE** `/api/ai-council/sessions?id=xxx` - Ta bort session
-
----
-
-## Framtida utveckling
-
-- [ ] Streaming-svar för snabbare feedback
-- [x] Val av syntes-modell per fråga
-- [x] Utökade syntesmodeller: Claude Opus 4.5 👑 och GPT-4o ⚡
-- [x] Val av vilka modeller som ska svara (checkboxar)
-- [x] Historik i Supabase (med localStorage fallback)
-- [x] Filuppladdning (bilder, PDF, dokument)
-- [x] Grok (xAI) integration för vetenskapliga frågor
-- [x] Deliberation: Runda 2 där modeller granskar varandra
-- [x] Kostnadsvisning per körning (tokens + USD/SEK) 💰
-- [x] Profilväljare med 5 lägen ⚡
-- [x] Användarprofiler 👤 NY!
-- [x] Kostnadsbanner högst upp 💰 NY!
-- [ ] Dela sessioner med kollegor
-- [ ] Custom syntes-prompts
-- [ ] Integration med Cursor via MCP
-- [ ] Bildanalys via multimodala API:er
 
 ---
 

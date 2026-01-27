@@ -111,6 +111,102 @@ interface QueryRequest {
   profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'deep'; // Which preset profile to use
 }
 
+// Hallucination detection
+interface Hallucination {
+  id: string;
+  claim: string;           // The suspected claim
+  source: string;          // Which model wrote it
+  flaggedBy: string;       // Which model flagged it
+  reason: string;          // Why it's suspected
+  confidence: 'high' | 'medium' | 'low';
+}
+
+interface HallucinationReport {
+  total: number;
+  high: number;    // 3+ models flagged
+  medium: number;  // 2 models flagged
+  low: number;     // 1 model flagged
+  items: Hallucination[];
+}
+
+// Parse hallucinations from deliberation responses
+function parseHallucinations(round2Responses: AIResponse[]): HallucinationReport {
+  const allFlags: Hallucination[] = [];
+  let idCounter = 1;
+  
+  for (const response of round2Responses) {
+    if (response.error || !response.response) continue;
+    
+    // Extract hallucination blocks using regex
+    const hallucinationRegex = /```hallucination\n([\s\S]*?)```/g;
+    let match;
+    
+    while ((match = hallucinationRegex.exec(response.response)) !== null) {
+      const block = match[1].trim();
+      
+      // Skip if no errors found
+      if (block.includes('INGA_FEL_FUNNA')) continue;
+      
+      // Parse individual fields
+      const sourceMatch = block.match(/KÄLLA:\s*(.+)/i);
+      const claimMatch = block.match(/PÅSTÅENDE:\s*(.+)/i);
+      const reasonMatch = block.match(/ANLEDNING:\s*(.+)/i);
+      
+      if (claimMatch) {
+        allFlags.push({
+          id: `h-${idCounter++}`,
+          claim: claimMatch[1].trim(),
+          source: sourceMatch ? sourceMatch[1].trim() : 'Okänd',
+          flaggedBy: response.provider,
+          reason: reasonMatch ? reasonMatch[1].trim() : 'Ingen anledning angiven',
+          confidence: 'low', // Will be updated based on consensus
+        });
+      }
+    }
+  }
+  
+  // Group by claim similarity and calculate confidence
+  const claimGroups = new Map<string, Hallucination[]>();
+  
+  for (const flag of allFlags) {
+    // Normalize claim for grouping (simple approach)
+    const normalizedClaim = flag.claim.toLowerCase().substring(0, 50);
+    const existing = claimGroups.get(normalizedClaim);
+    if (existing) {
+      existing.push(flag);
+    } else {
+      claimGroups.set(normalizedClaim, [flag]);
+    }
+  }
+  
+  // Build final list with confidence levels
+  const finalItems: Hallucination[] = [];
+  let high = 0, medium = 0, low = 0;
+  
+  for (const [, flags] of claimGroups) {
+    const uniqueFlaggers = new Set(flags.map(f => f.flaggedBy)).size;
+    const confidence: 'high' | 'medium' | 'low' = 
+      uniqueFlaggers >= 3 ? 'high' : 
+      uniqueFlaggers === 2 ? 'medium' : 'low';
+    
+    // Take the first flag as representative, update confidence
+    const representative = { ...flags[0], confidence };
+    finalItems.push(representative);
+    
+    if (confidence === 'high') high++;
+    else if (confidence === 'medium') medium++;
+    else low++;
+  }
+  
+  return {
+    total: finalItems.length,
+    high,
+    medium,
+    low,
+    items: finalItems,
+  };
+}
+
 // OpenAI o1 query
 async function queryOpenAI(context: string, prompt: string): Promise<AIResponse> {
   const start = Date.now();
@@ -371,12 +467,29 @@ ${r.response}
 
 ## Din uppgift (Runda 2):
 
-1. **Granska kritiskt**: Finns det fel, hallucinationer eller missförstånd i andra modellers svar?
-2. **Komplettera**: Vad missade de som du kan tillföra?
-3. **Förbättra**: Baserat på vad du lärt dig av de andra svaren, ge ett förbättrat och mer komplett svar.
-4. **Källkritik**: Om det gäller vetenskaplig information, påpeka eventuella felaktiga påståenden.
+### STEG 1: Hallucinationskontroll
+Granska de andra modellernas svar och leta efter potentiella fel, hallucinationer eller obekräftade påståenden.
 
-Skriv ditt förbättrade svar på svenska. Var konkret och påpeka specifikt vad du korrigerar eller tillför.`;
+**Om du hittar misstänkta fel, lista dem i detta exakta format:**
+\`\`\`hallucination
+KÄLLA: [Vilken modell som skrev det]
+PÅSTÅENDE: [Det exakta påståendet som kan vara fel]
+ANLEDNING: [Varför du misstänker att det är fel]
+\`\`\`
+
+Upprepa blocket för varje misstänkt fel du hittar. Om inga fel hittas, skriv:
+\`\`\`hallucination
+INGA_FEL_FUNNA
+\`\`\`
+
+### STEG 2: Förbättrat svar
+Efter hallucinationskontrollen, ge ditt förbättrade svar:
+
+1. **Korrigeringar**: Om du flaggade fel ovan, förklara rätt information
+2. **Kompletteringar**: Vad missade de andra som du kan tillföra?
+3. **Förbättrat svar**: Baserat på all input, ge ett komplett och korrekt svar
+
+Skriv ditt förbättrade svar på svenska. Var konkret och specifik.`;
 }
 
 // Build synthesis prompt
@@ -1370,11 +1483,17 @@ SVARSSTIL:
       totalCostUSD: allResponses.reduce((sum, r) => sum + (r.cost?.totalCost || 0), 0),
     };
 
+    // Parse hallucinations from deliberation responses
+    const hallucinationReport = enableDeliberation 
+      ? parseHallucinations(round2Responses) 
+      : undefined;
+
     return new Response(JSON.stringify({
       success: true,
       responses: round1Responses,
       round2Responses: enableDeliberation ? round2Responses : undefined,
       deliberationEnabled: enableDeliberation,
+      hallucinationReport, // NEW: Hallucination detection results
       queriedModels: queryOrder,
       synthesis,
       synthesisModel: actualSynthesisModel,
