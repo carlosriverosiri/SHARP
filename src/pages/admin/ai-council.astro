@@ -172,8 +172,9 @@ if (!anvandare) {
     .notes-btn:hover { background: #222; color: #ccc; }
     .notes-btn.danger:hover { background: rgba(239, 68, 68, 0.2); color: #f87171; }
     .notes-empty { text-align: center; padding: 2rem 1rem; color: #444; font-size: 0.8125rem; }
-    .notes-sync { font-size: 0.625rem; color: #555; padding: 0.5rem 0.75rem; text-align: center; }
+    .notes-sync { font-size: 0.625rem; color: #555; padding: 0.5rem 0.75rem; text-align: center; cursor: help; }
     .notes-sync.synced { color: #10b981; }
+    .notes-sync.error { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-radius: 4px; }
     
     /* Session modal */
     .session-modal {
@@ -2004,7 +2005,15 @@ if (!anvandare) {
           const res = await fetch('/api/ai-council/sessions', { credentials: 'include' });
           const data = await res.json();
           
-          if (data.sessions && data.sessions.length > 0) {
+          // Handle authentication errors clearly
+          if (data.error && (data.error.includes('Ej inloggad') || data.error.includes('användare'))) {
+            useSupabase = false;
+            sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+            notesSync.textContent = '⚠️ Session utgången';
+            notesSync.className = 'notes-sync error';
+            notesSync.title = 'Din session har gått ut. Logga in igen på /personal för molnsynk.';
+            console.warn('Auth error:', data.error);
+          } else if (data.sessions && data.sessions.length > 0) {
             sessions = data.sessions;
             useSupabase = true;
             notesSync.textContent = '☁️ Synkad med Supabase';
@@ -2024,6 +2033,7 @@ if (!anvandare) {
           useSupabase = false;
           sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
           notesSync.textContent = '💾 Lokal lagring';
+          console.error('Session load error:', e);
         }
         
         renderSessions();
