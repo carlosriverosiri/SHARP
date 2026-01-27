@@ -67,7 +67,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 │  │  (280px)        │                                                       │  │
 │  │                 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │  │
 │  │  📁 Mina       │  │   Kontext   │  │   Prompt    │  │  Profilval  │   │  │
-│  │     Projekt    │  │  (textarea) │  │  (textarea) │  │  ⚡🏥💻🔬🎯  │   │  │
+│  │     Projekt    │  │  (textarea) │  │  (textarea) │  │ ⚡🏥💻🔬📊  │   │  │
 │  │  [+ Nytt]      │  └─────────────┘  └─────────────┘  └─────────────┘   │  │
 │  │                 │                                                       │  │
 │  │  📂 Historik   │  ┌───────────────────────────────────────────────┐   │  │
@@ -114,19 +114,24 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 | **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
 | **Grok 4** | xAI | 256K kontext, djup analys, vetenskapligt | Litteratursyntes, evidensgranskning |
 
-### Profilväljare ⚡ (NY!)
+### Profilväljare ⚡
 
 Välj en förinställd profil för snabb konfiguration:
 
 | Profil | Modeller | Syntes | Deliberation | Tid | Användning |
 |--------|----------|--------|--------------|-----|------------|
-| **⚡ Snabb** (standard) | Gemini + Claude | GPT-4o | ❌ | ~3-5 sek | Allmänna frågor |
-| **🏥 Patientfrågor** | Gemini + Claude | GPT-4o | ❌ | ~3-5 sek | Telefonsamtal, turbo |
-| **💻 Kodning** | Claude + o1 | Claude | ❌ | ~10 sek | Arkitektur, debugging |
-| **🔬 Vetenskap** | Grok + o1 + Gemini | Grok | ✅ | ~30 sek | Litteratur, evidens |
-| **🎯 Djup analys** | Alla 4 | Opus 4.5 | ✅ | ~45 sek | Kritiska beslut |
+| **⚡ Snabb** (standard) | Gemini | Gemini | ❌ | ~3-5 sek | Allmänna frågor |
+| **🏥 Patientfrågor** | Gemini + Claude | GPT-4o | ❌ | ~5-10 sek | Telefonsamtal, turbo |
+| **💻 Kodning** | Alla 4 modeller | Opus 4.5 | ✅ | ~30-60 sek | Maximal kodgranskning |
+| **🔬 Vetenskap** | Gemini + Claude + Grok | o1 | ❌ | ~20-40 sek | Litteratur, evidens |
+| **📊 Strategi** | o1 + Claude + Grok | Opus 4.5 | ❌ | ~20-40 sek | Verksamhetsbeslut |
 
 > **Standard = snabbast och billigast**, inte dyrast. Personalen får blixtsnabba svar vid telefonsamtal.
+
+**Profilernas styrkor:**
+- **Kodning:** Alla 4 modeller + deliberation för maximal kodgranskning från olika perspektiv
+- **Vetenskap:** o1 som syntes för djup logisk granskning av vetenskapliga påståenden
+- **Strategi:** o1 resonerar, Claude strukturerar, Grok ger bred kontext - perfekt för affärsbeslut
 
 ### Välj modeller manuellt
 
@@ -743,11 +748,11 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 **Nyhet:** Förinställda profiler för olika användningsfall
 
 **Funktioner:**
-- ⚡ **Snabb** (standard) - Gemini + Claude med GPT-4o syntes (~3-5 sek)
-- 🏥 **Patientfrågor** - Turbo-läge för telefonsamtal
-- 💻 **Kodning** - Claude + o1 för arkitektur och debugging
-- 🔬 **Vetenskap** - Grok + deliberation för litteratursyntes
-- 🎯 **Djup analys** - Alla modeller + Opus 4.5 för kritiska beslut
+- ⚡ **Snabb** (standard) - Endast Gemini (~3-5 sek)
+- 🏥 **Patientfrågor** - Gemini + Claude för snabba svar
+- 💻 **Kodning** - Alla 4 modeller + deliberation + Opus 4.5 syntes
+- 🔬 **Vetenskap** - Gemini + Claude + Grok med o1 som syntes
+- 📊 **Strategi** - o1 + Claude + Grok med Opus 4.5 för verksamhetsbeslut
 
 **Principer:**
 - Standard = snabbast och billigast (inte dyrast)
