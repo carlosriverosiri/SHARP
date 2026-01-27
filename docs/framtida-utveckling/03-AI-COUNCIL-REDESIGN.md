@@ -132,11 +132,19 @@ ADD COLUMN project_id UUID REFERENCES ai_council_projects(id) ON DELETE SET NULL
 - [x] Auto-kontext för projekt
 - [x] Responsiv hamburger-meny
 
-### ⏳ Kvar (Fas 3):
+### ✅ Klart (Fas 3):
+- [x] Chattbubbla-CSS (`.chat-container`, `.chat-message`, `.chat-bubble`)
+- [x] Projekt-kontextmeny (högerklick)
+- [x] Färgväljare för projekt (12 färger)
+- [x] Ikon-väljare för projekt (18 emojis)
+- [x] Redigera projektnamn via meny
+- [x] Redigera projekt-kontext via meny
+- [x] Ta bort projekt (med bekräftelse)
+
+### ⏳ Kvar (Fas 4 - Framtida):
 - [ ] Drag-and-drop för sessioner mellan projekt
-- [ ] Chattbubbla-layout för meddelanden
-- [ ] Projekt-kontextmeny (högerklick)
-- [ ] Färgväljare för projekt
+- [ ] Visa chattbubblor i resultat-vy
+- [ ] Keyboard shortcuts (Ctrl+N = ny chat)
 
 ## 6. Nästa Steg
 
