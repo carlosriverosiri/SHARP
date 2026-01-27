@@ -1804,18 +1804,18 @@ if (!anvandare) {
                   <span class="profile-icon">🔬</span>
                   <div>
                     <div class="profile-name">Vetenskap</div>
-                    <div class="profile-desc">Gemini + Claude</div>
+                    <div class="profile-desc">3 modeller + o1</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title">🔬 Vetenskap</div>
                     <div class="profile-tooltip-why">
-                      För litteratursyntes och evidensgranskning. Gemini har stort kontextfönster,
-                      Claude är stark på analys.
+                      Gemini (stort kontext), Claude (analys), Grok (referenser).
+                      OpenAI o1 granskar och syntetiserar med djup resonering.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Gemini + Claude</div>
-                      <div><strong>Syntes:</strong> Claude</div>
-                      <div><strong>Tid:</strong> ~10-20 sek</div>
+                      <div><strong>Modeller:</strong> Gemini + Claude + Grok</div>
+                      <div><strong>Syntes:</strong> OpenAI o1 (resonering)</div>
+                      <div><strong>Tid:</strong> ~20-40 sek</div>
                     </div>
                   </div>
                 </button>
@@ -2441,10 +2441,11 @@ if (!anvandare) {
         },
         vetenskap: {
           name: 'Vetenskap',
-          // Warning: May timeout on free Netlify plan
-          models: ['gemini', 'anthropic'],
-          synthesis: 'claude',
-          deliberation: false  // Deliberation causes timeout
+          // Gemini (stort kontext), Claude (analys), Grok (referenser)
+          // o1 som syntes för djup logisk granskning av vetenskapliga påståenden
+          models: ['gemini', 'anthropic', 'grok'],
+          synthesis: 'openai',
+          deliberation: false  // Kan aktiveras manuellt vid behov
         },
         djup: {
           name: 'Djup analys',
