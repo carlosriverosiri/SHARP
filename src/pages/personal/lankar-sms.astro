@@ -15,7 +15,7 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 const anvandare = await hamtaAnvandare(Astro.cookies);

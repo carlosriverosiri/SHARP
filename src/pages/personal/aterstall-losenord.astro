@@ -67,7 +67,7 @@ if (Astro.request.method === 'POST') {
       } else {
         successMessage = 'Lösenordet har uppdaterats! Du kan nu logga in.';
         // Redirecta efter 2 sekunder
-        return Astro.redirect('/personal/');
+        return Astro.redirect('/personal');
       }
     } catch (err: any) {
       errorMessage = 'Ett fel uppstod. Försök igen.';

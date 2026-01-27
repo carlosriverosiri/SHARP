@@ -21,7 +21,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       
       if (!inloggad) {
         // Inte inloggad - omdirigera till inloggning
-        return context.redirect('/personal/');
+        return context.redirect('/personal');
       }
       
       // Hämta användarinfo och lägg till i context.locals
@@ -32,7 +32,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     } catch (error) {
       console.error('Middleware error:', error);
       // Vid fel, omdirigera till inloggning
-      return context.redirect('/personal/');
+      return context.redirect('/personal');
     }
   }
 

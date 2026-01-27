@@ -37,7 +37,7 @@ const { kategori } = Astro.params;
 
 // Kontrollera att kategorin finns
 if (!kategorier[kategori as keyof typeof kategorier]) {
-  return Astro.redirect('/fraga-doktorn/');
+  return Astro.redirect('/fraga-doktorn');
 }
 
 const categoryInfo = kategorier[kategori as keyof typeof kategorier];

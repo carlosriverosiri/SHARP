@@ -11,13 +11,13 @@ import { arInloggad, loggaUt, hamtaAnvandare, arSupabaseAktiverat } from '../../
 
 // Kontrollera inloggning (med sliding timeout - förlänger sessionen vid aktivitet)
 if (!await arInloggad(Astro.cookies)) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 // Hantera utloggning
 if (Astro.url.searchParams.get('logout') === 'true') {
   await loggaUt(Astro.cookies, Astro.request);
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 // Hämta användarinfo (för att visa i UI)

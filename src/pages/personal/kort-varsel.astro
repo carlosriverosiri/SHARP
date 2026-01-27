@@ -12,14 +12,14 @@ import { supabaseAdmin, supabaseKonfigurerad } from '../../lib/supabase';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
 
 // Om användare är null trots inloggning, omdirigera
 if (!anvandare) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 // Hämta läkare

@@ -16,7 +16,7 @@ const anvandare = await hamtaAnvandare(Astro.cookies);
 
 // Endast inloggade
 if (!anvandare) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 // Hämta alla profiler med notifikationsinställningar

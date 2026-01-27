@@ -16,12 +16,12 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 
 // Check authentication
 if (!await arInloggad(Astro.cookies)) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
 if (!anvandare) {
-  return Astro.redirect('/personal/');
+  return Astro.redirect('/personal');
 }
 ---
 
