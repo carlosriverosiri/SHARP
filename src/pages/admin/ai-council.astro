@@ -856,7 +856,7 @@ if (!anvandare) {
               <span class="model-dot dot-openai" title="OpenAI o1"></span>
               <span class="model-dot dot-anthropic" title="Claude Sonnet"></span>
               <span class="model-dot dot-google" title="Gemini 2.0 Flash"></span>
-              <span class="model-dot dot-grok" title="Grok 4 Fast"></span>
+              <span class="model-dot dot-grok" title="Grok 4"></span>
             </div>
           </div>
         </div>
@@ -908,13 +908,13 @@ if (!anvandare) {
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title">⚡ Snabb <span class="profile-tooltip-tag turbo">STANDARD</span></div>
                     <div class="profile-tooltip-why">
-                      För allmänna frågor där du vill ha ett snabbt svar utan att vänta. 
-                      Två snabba modeller ger olika perspektiv, GPT-4o syntetiserar blixtsnabbt.
+                      Blixtsnabbt svar med Gemini. Perfekt för enkla frågor och när du inte vill vänta.
+                      Undviker Netlify timeout-problem.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Gemini 2.0 Flash + Claude Sonnet</div>
-                      <div><strong>Syntes:</strong> GPT-4o (snabbast)</div>
-                      <div><strong>Deliberation:</strong> Av</div>
+                      <div><strong>Modell:</strong> Gemini 2.0 Flash</div>
+                      <div><strong>Syntes:</strong> Gemini (direkt)</div>
+                      <div><strong>Tid:</strong> ~2-5 sek</div>
                     </div>
                   </div>
                 </button>
@@ -941,18 +941,18 @@ if (!anvandare) {
                   <span class="profile-icon">💻</span>
                   <div>
                     <div class="profile-name">Kodning</div>
-                    <div class="profile-desc">Claude + o1</div>
+                    <div class="profile-desc">Claude</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title">💻 Kodning</div>
                     <div class="profile-tooltip-why">
-                      För arkitekturbeslut, debugging och kodgranskning. Claude är bäst på 
-                      strukturerad kod, o1 är bäst på komplex logik och resonering.
+                      Claude är bäst på strukturerad kod, debugging och arkitekturbeslut.
+                      Snabb nog för Netlify.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Claude Sonnet + OpenAI o1</div>
-                      <div><strong>Syntes:</strong> Claude Sonnet (kod-expert)</div>
-                      <div><strong>Deliberation:</strong> Av</div>
+                      <div><strong>Modell:</strong> Claude Sonnet</div>
+                      <div><strong>Syntes:</strong> Claude (kod-expert)</div>
+                      <div><strong>Tid:</strong> ~5-15 sek</div>
                     </div>
                   </div>
                 </button>
@@ -960,19 +960,18 @@ if (!anvandare) {
                   <span class="profile-icon">🔬</span>
                   <div>
                     <div class="profile-name">Vetenskap</div>
-                    <div class="profile-desc">Grok + Deliberation</div>
+                    <div class="profile-desc">Gemini + Claude</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title">🔬 Vetenskap</div>
                     <div class="profile-tooltip-why">
-                      För litteratursyntes och evidensgranskning. Grok har 2M tokens kontext 
-                      och är stark på vetenskapliga referenser. Deliberation låter modellerna 
-                      felsöka varandra för att minska hallucinationer.
+                      För litteratursyntes och evidensgranskning. Gemini har stort kontextfönster,
+                      Claude är stark på analys.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Grok 4 Fast + OpenAI o1 + Gemini</div>
-                      <div><strong>Syntes:</strong> Grok (vetenskap-expert)</div>
-                      <div><strong>Deliberation:</strong> På ✓</div>
+                      <div><strong>Modeller:</strong> Gemini + Claude</div>
+                      <div><strong>Syntes:</strong> Claude</div>
+                      <div><strong>Tid:</strong> ~10-20 sek</div>
                     </div>
                   </div>
                 </button>
@@ -980,19 +979,18 @@ if (!anvandare) {
                   <span class="profile-icon">🎯</span>
                   <div>
                     <div class="profile-name">Djup analys</div>
-                    <div class="profile-desc">Alla + Opus</div>
+                    <div class="profile-desc">Opus</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title">🎯 Djup analys <span class="profile-tooltip-tag">PREMIUM</span></div>
                     <div class="profile-tooltip-why">
-                      För kritiska beslut där kvalitet trumfar tid och kostnad. Alla fyra 
-                      AI-modeller + Deliberation + Claude Opus 4.5 (Anthropics bästa modell) 
-                      som syntetiserar.
+                      För kritiska beslut. Gemini + Claude med Claude Opus 4.5 som syntetiserar.
+                      Anthropics bästa modell för komplex analys.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Alla 4 (o1, Claude, Gemini, Grok)</div>
-                      <div><strong>Syntes:</strong> Claude Opus 4.5 (bästa)</div>
-                      <div><strong>Deliberation:</strong> På ✓</div>
+                      <div><strong>Modeller:</strong> Gemini + Claude</div>
+                      <div><strong>Syntes:</strong> Claude Opus 4.5</div>
+                      <div><strong>Tid:</strong> ~15-25 sek</div>
                     </div>
                   </div>
                 </button>
@@ -1038,7 +1036,7 @@ if (!anvandare) {
                   <span class="model-checkbox-check">✓</span>
                   <span class="model-checkbox-dot dot-grok"></span>
                   <div>
-                    <div class="model-checkbox-name">Grok 4 Fast</div>
+                    <div class="model-checkbox-name">Grok 4</div>
                     <div class="model-checkbox-desc">Referenser & realtid</div>
                   </div>
                 </label>
@@ -1207,7 +1205,7 @@ if (!anvandare) {
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="accordion-dot dot-grok"></span>
-                    <span class="accordion-title">Grok 4 Fast</span>
+                    <span class="accordion-title">Grok 4</span>
                     <span id="status-grok" class="accordion-status"></span>
                   </div>
                   <div class="accordion-header-right">
@@ -1423,33 +1421,39 @@ if (!anvandare) {
       const profiles = {
         snabb: {
           name: 'Snabb',
-          models: ['gemini', 'anthropic'],
-          synthesis: 'gpt4o',
+          // Only Gemini - fastest, avoids Netlify timeout (26s max on free plan)
+          models: ['gemini'],
+          synthesis: 'gemini',  // Gemini syntetiserar sig själv = snabbast
           deliberation: false
         },
         patient: {
           name: 'Patientfrågor',
+          // Gemini + Claude - fast enough for 26s timeout
           models: ['gemini', 'anthropic'],
           synthesis: 'gpt4o',
           deliberation: false
         },
         kod: {
           name: 'Kodning',
-          models: ['anthropic', 'openai'],
+          // Claude only - fast and good for code
+          models: ['anthropic'],
           synthesis: 'claude',
           deliberation: false
         },
         vetenskap: {
           name: 'Vetenskap',
-          models: ['grok', 'openai', 'gemini'],
-          synthesis: 'grok',
-          deliberation: true
+          // Warning: May timeout on free Netlify plan
+          models: ['gemini', 'anthropic'],
+          synthesis: 'claude',
+          deliberation: false  // Deliberation causes timeout
         },
         djup: {
           name: 'Djup analys',
-          models: ['openai', 'anthropic', 'gemini', 'grok'],
+          // Warning: Will likely timeout on free Netlify plan
+          // Requires Netlify Pro or local development
+          models: ['anthropic', 'gemini'],
           synthesis: 'claude-opus',
-          deliberation: true
+          deliberation: false  // Deliberation causes timeout
         }
       };
       
@@ -1929,8 +1933,24 @@ if (!anvandare) {
         const durationEl = document.getElementById('duration-' + provider);
         const contentEl = document.getElementById('content-' + provider);
         const markdownEl = contentEl.querySelector('.markdown-content');
+        const accordionEl = document.getElementById('accordion-' + provider);
+        const titleEl = accordionEl?.querySelector('.accordion-title');
         
         currentResponses[provider] = data.response || '';
+        
+        // Update accordion title with actual model name from response
+        if (titleEl && data.model) {
+          const modelDisplayNames = {
+            'o1': 'OpenAI o1',
+            'gpt-4o': 'GPT-4o',
+            'claude-sonnet-4-20250514': 'Claude Sonnet 4',
+            'claude-opus-4-5-20250514': 'Claude Opus 4.5',
+            'gemini-2.0-flash': 'Gemini 2.0 Flash',
+            'grok-4': 'Grok 4',
+            'grok-2-latest': 'Grok 2',
+          };
+          titleEl.textContent = modelDisplayNames[data.model] || data.model;
+        }
         
         if (data.error) {
           statusEl.textContent = '❌';
@@ -2030,7 +2050,39 @@ if (!anvandare) {
             body: JSON.stringify({ context, prompt, synthesisModel, fileContent, selectedModels, enableDeliberation, profileType })
           });
           
-          const data = await response.json();
+          // Check if response is JSON before parsing
+          const contentType = response.headers.get('content-type') || '';
+          const responseText = await response.text();
+          
+          // Debug: Log the first 500 chars if it looks like HTML
+          if (responseText.startsWith('<')) {
+            console.error('API returned HTML instead of JSON:', responseText.substring(0, 500));
+            console.error('Response status:', response.status, response.statusText);
+            console.error('Response URL:', response.url);
+            
+            // Try to extract useful info from HTML
+            let errorDetail = 'Okänt fel';
+            if (responseText.includes('Not Found') || responseText.includes('404')) {
+              errorDetail = 'API-endpoint hittades inte (404). Kolla att sidan är deployad korrekt på Netlify.';
+            } else if (responseText.includes('Unauthorized') || responseText.includes('401')) {
+              errorDetail = 'Ej behörig (401). Du kanske behöver logga in igen.';
+            } else if (responseText.includes('Internal Server Error') || responseText.includes('500')) {
+              errorDetail = 'Serverfel (500). Kolla Netlify-loggarna för mer info.';
+            } else if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
+              errorDetail = 'Server returnerade en HTML-sida istället för JSON. URL: ' + response.url;
+            }
+            
+            throw new Error(errorDetail);
+          }
+          
+          let data;
+          try {
+            data = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error('Failed to parse JSON:', responseText.substring(0, 500));
+            throw new Error('Kunde inte tolka API-svar som JSON: ' + responseText.substring(0, 100) + '...');
+          }
+          
           if (!response.ok) throw new Error(data.error || 'Något gick fel');
           
           // Update available models from API response

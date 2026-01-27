@@ -68,7 +68,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 | **o1** | OpenAI | Djup resonering, steg-för-steg-analys | Komplexa logiska problem |
 | **Claude Sonnet** | Anthropic | Struktur, kod, tydliga förklaringar | Kodgenerering, dokumentation |
 | **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
-| **Grok 4 Fast** | xAI | 2M kontext, djup analys, vetenskapligt | Litteratursyntes, evidensgranskning |
+| **Grok 4** | xAI | 256K kontext, djup analys, vetenskapligt | Litteratursyntes, evidensgranskning |
 
 ### Profilväljare ⚡ (NY!)
 
@@ -281,7 +281,7 @@ AI Council visar **kostnad per körning** i realtid, nu med prominent banner hö
 | Claude Sonnet | $3.00 | $15.00 |
 | Claude Opus 4.5 | $15.00 | $75.00 |
 | Gemini 2.0 Flash | $0.10 | $0.40 |
-| Grok 4 Fast | $0.20 | $0.50 |
+| Grok 4 | $3.00 | $15.00 |
 
 > **Tips:** Använd GPT-4o ⚡ eller Gemini 📚 för billigare iterationer under utveckling.
 
@@ -524,7 +524,7 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - `openai` - OpenAI o1 (resoneringsmodell)
 - `gpt4o` - GPT-4o (snabb, hög kvalitet)
 - `gemini` - Gemini 2.0 Flash (stor kontext)
-- `grok` - Grok 4 Fast (2M kontext, vetenskap)
+- `grok` - Grok 4 (256K kontext, vetenskap)
 
 **Response:**
 ```json
@@ -648,15 +648,15 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 - Manuella ändringar avmarkerar profilen
 - Syntesmodeller sorterade: snabbast först
 
-### v2.3 (2026-01-26) - Grok 4 Fast
+### v2.3 (2026-01-26) - Grok 4
 
-**Ändring:** Uppgraderade från `grok-2-latest` till `grok-4-fast`
+**Ändring:** Uppgraderade från `grok-2-latest` till `grok-4`
 
 **Förbättringar:**
-- ✅ **2M tokens kontext** - Kan hantera hela vetenskapliga papers
-- ✅ **10x billigare** - $0.20/$0.50 per 1M tokens (tidigare $2.00/$10.00)
+- ✅ **256K tokens kontext** - Kan hantera längre dokument
 - ✅ **Bättre vetenskaplig analys** - Överlägsen för litteratursyntes och evidensgranskning
 - ✅ **Reasoning-funktion** - Djupare analys vid komplexa frågor
+- ⚠️ **Pris:** $3.00/$15.00 per 1M tokens (samma nivå som o1)
 
 ### v2.2 (2026-01-26) - Gemini-uppdatering
 

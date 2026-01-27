@@ -55,8 +55,9 @@ const PRICING = {
   'claude-opus-4-5-20250514': { input: 15.00, output: 75.00 },
   // Google
   'gemini-2.0-flash': { input: 0.10, output: 0.40 },
-  // xAI
-  'grok-4-fast': { input: 0.20, output: 0.50 },
+  // xAI - Grok models
+  'grok-4': { input: 3.00, output: 15.00 },
+  'grok-2-latest': { input: 2.00, output: 10.00 },
 } as const;
 
 function calculateCost(model: string, tokens: TokenUsage): CostInfo {
@@ -69,6 +70,30 @@ function calculateCost(model: string, tokens: TokenUsage): CostInfo {
     totalCost: inputCost + outputCost,
     currency: 'USD',
   };
+}
+
+// Safe JSON parse that handles HTML error responses
+async function safeParseResponse(response: Response, provider: string): Promise<{ ok: boolean; data?: any; error?: string }> {
+  const contentType = response.headers.get('content-type') || '';
+  const text = await response.text();
+  
+  // Check if response is HTML (error page)
+  if (text.startsWith('<') || contentType.includes('text/html')) {
+    return { 
+      ok: false, 
+      error: `${provider} returnerade HTML istället för JSON (HTTP ${response.status}). Kontrollera API-nyckel och modellnamn.` 
+    };
+  }
+  
+  try {
+    const data = JSON.parse(text);
+    if (!response.ok) {
+      return { ok: false, error: data.error?.message || `HTTP ${response.status}` };
+    }
+    return { ok: true, data };
+  } catch (e) {
+    return { ok: false, error: `Kunde inte parsea svar från ${provider}: ${text.substring(0, 100)}...` };
+  }
 }
 
 type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
@@ -108,12 +133,12 @@ async function queryOpenAI(context: string, prompt: string): Promise<AIResponse>
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    const parsed = await safeParseResponse(response, 'OpenAI');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
     }
 
-    const data = await response.json();
+    const data = parsed.data;
     const tokens: TokenUsage = {
       inputTokens: data.usage?.prompt_tokens || 0,
       outputTokens: data.usage?.completion_tokens || 0,
@@ -161,12 +186,12 @@ async function queryAnthropic(context: string, prompt: string): Promise<AIRespon
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    const parsed = await safeParseResponse(response, 'Anthropic/Claude');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
     }
 
-    const data = await response.json();
+    const data = parsed.data;
     const content = data.content?.[0]?.text || 'Inget svar';
     const tokens: TokenUsage = {
       inputTokens: data.usage?.input_tokens || 0,
@@ -219,12 +244,12 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
       }
     );
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    const parsed = await safeParseResponse(response, 'Google/Gemini');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
     }
 
-    const data = await response.json();
+    const data = parsed.data;
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Inget svar';
     const tokens: TokenUsage = {
       inputTokens: data.usageMetadata?.promptTokenCount || 0,
@@ -249,56 +274,84 @@ async function queryGemini(context: string, prompt: string): Promise<AIResponse>
   }
 }
 
-// xAI Grok query
+// xAI Grok query - tries grok-4 first, falls back to grok-2-latest
 async function queryGrok(context: string, prompt: string): Promise<AIResponse> {
   const start = Date.now();
-  try {
-    const fullPrompt = context 
-      ? `Kontext:\n${context}\n\n---\n\nFråga/Uppgift:\n${prompt}`
-      : prompt;
+  const fullPrompt = context 
+    ? `Kontext:\n${context}\n\n---\n\nFråga/Uppgift:\n${prompt}`
+    : prompt;
+  
+  // Try models in order: grok-4, then grok-2-latest as fallback
+  const modelsToTry = ['grok-4', 'grok-2-latest'];
+  
+  for (const modelName of modelsToTry) {
+    try {
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${XAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: 'user', content: fullPrompt }
+          ],
+          max_tokens: 16384,
+        }),
+      });
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${XAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'grok-4-fast',
-        messages: [
-          { role: 'user', content: fullPrompt }
-        ],
-        max_tokens: 16384,
-      }),
-    });
+      const parsed = await safeParseResponse(response, `xAI/${modelName}`);
+      if (!parsed.ok) {
+        // If model not found, try next model
+        if (parsed.error?.includes('not found') || parsed.error?.includes('HTML')) {
+          console.log(`Grok model ${modelName} not available, trying next...`);
+          continue;
+        }
+        throw new Error(parsed.error);
+      }
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+      const data = parsed.data;
+      const tokens: TokenUsage = {
+        inputTokens: data.usage?.prompt_tokens || 0,
+        outputTokens: data.usage?.completion_tokens || 0,
+      };
+      
+      // Use correct pricing based on model
+      const costModel = modelName === 'grok-4' ? 'grok-4' : 'grok-2-latest';
+      
+      return {
+        model: modelName,
+        provider: 'xAI',
+        response: data.choices[0]?.message?.content || 'Inget svar',
+        duration: Date.now() - start,
+        tokens,
+        cost: calculateCost(costModel, tokens),
+      };
+    } catch (error: any) {
+      // If this is the last model, return the error
+      if (modelName === modelsToTry[modelsToTry.length - 1]) {
+        return {
+          model: modelName,
+          provider: 'xAI',
+          response: '',
+          error: error.message,
+          duration: Date.now() - start,
+        };
+      }
+      // Otherwise try next model
+      console.log(`Grok model ${modelName} failed: ${error.message}, trying next...`);
     }
-
-    const data = await response.json();
-    const tokens: TokenUsage = {
-      inputTokens: data.usage?.prompt_tokens || 0,
-      outputTokens: data.usage?.completion_tokens || 0,
-    };
-    return {
-      model: 'grok-4-fast',
-      provider: 'xAI',
-      response: data.choices[0]?.message?.content || 'Inget svar',
-      duration: Date.now() - start,
-      tokens,
-      cost: calculateCost('grok-4-fast', tokens),
-    };
-  } catch (error: any) {
-    return {
-      model: 'grok-4-fast',
-      provider: 'xAI',
-      response: '',
-      error: error.message,
-      duration: Date.now() - start,
-    };
   }
+  
+  // Should never reach here, but just in case
+  return {
+    model: 'grok',
+    provider: 'xAI',
+    response: '',
+    error: 'Inga Grok-modeller tillgängliga',
+    duration: Date.now() - start,
+  };
 }
 
 // Build deliberation prompt (Round 2) - for models to review each other
@@ -504,26 +557,26 @@ async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]
         'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'grok-4-fast',
+        model: 'grok-2-latest',
         messages: [{ role: 'user', content: deliberationPrompt }],
         max_tokens: 8192,
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    const parsed = await safeParseResponse(response, 'xAI/Grok');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
     }
 
-    const data = await response.json();
+    const data = parsed.data;
     return {
-      model: 'grok-4-fast',
+      model: 'grok-2-latest',
       provider: 'xAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
     };
   } catch (error: any) {
-    return { model: 'grok-4-fast', provider: 'xAI', response: '', error: error.message, duration: Date.now() - start };
+    return { model: 'grok-2-latest', provider: 'xAI', response: '', error: error.message, duration: Date.now() - start };
   }
 }
 
@@ -744,7 +797,7 @@ async function synthesizeWithGrok(
   
   if (validResponses.length === 0) {
     return {
-      model: 'grok-4-fast',
+      model: 'grok-2-latest',
       provider: 'Grok (Syntes)',
       response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
       duration: Date.now() - start,
@@ -761,7 +814,7 @@ async function synthesizeWithGrok(
         'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'grok-4-fast',
+        model: 'grok-2-latest',
         messages: [
           { role: 'user', content: synthesisPrompt }
         ],
@@ -769,12 +822,12 @@ async function synthesizeWithGrok(
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    const parsed = await safeParseResponse(response, 'xAI/Grok');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
     }
 
-    const data = await response.json();
+    const data = parsed.data;
     const content = data.choices[0]?.message?.content || 'Syntes misslyckades';
     const tokens: TokenUsage = {
       inputTokens: data.usage?.prompt_tokens || 0,
@@ -782,16 +835,16 @@ async function synthesizeWithGrok(
     };
     
     return {
-      model: 'grok-4-fast',
+      model: 'grok-2-latest',
       provider: 'Grok (Syntes)',
       response: content,
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('grok-4-fast', tokens),
+      cost: calculateCost('grok-2-latest', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'grok-4-fast',
+      model: 'grok-2-latest',
       provider: 'Grok (Syntes)',
       response: '',
       error: error.message,
@@ -1027,13 +1080,14 @@ async function superSynthesize(
         const response = await fetch('https://api.x.ai/v1/chat/completions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${XAI_API_KEY}` },
-          body: JSON.stringify({ model: 'grok-4-fast', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
+          body: JSON.stringify({ model: 'grok-2-latest', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        return { model: 'grok-4-fast', provider: 'Grok (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+        const parsed = await safeParseResponse(response, 'xAI/Grok');
+        if (!parsed.ok) throw new Error(parsed.error);
+        const data = parsed.data;
+        return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'grok-4-fast', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'claude-opus':

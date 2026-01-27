@@ -9,6 +9,13 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  # Extend timeout for AI API calls (max 26s on free plan, up to 15min on paid)
+  # Note: Astro SSR routes use Netlify Functions internally
+
+# Longer timeout for AI Council API
+# Pro plan allows up to 15 minutes, we use 60 seconds
+[functions."*"]
+  timeout = 60
 
 # Security headers (production)
 [[headers]]
