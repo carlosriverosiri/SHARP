@@ -1819,22 +1819,22 @@ if (!anvandare) {
                     </div>
                   </div>
                 </button>
-                <button type="button" class="profile-btn" data-profile="djup">
-                  <span class="profile-icon">🎯</span>
+                <button type="button" class="profile-btn" data-profile="strategi">
+                  <span class="profile-icon">📊</span>
                   <div>
-                    <div class="profile-name">Djup analys</div>
-                    <div class="profile-desc">Opus</div>
+                    <div class="profile-name">Strategi</div>
+                    <div class="profile-desc">o1 + Claude + Grok</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title">🎯 Djup analys <span class="profile-tooltip-tag">PREMIUM</span></div>
+                    <div class="profile-tooltip-title">📊 Strategi & Beslut</div>
                     <div class="profile-tooltip-why">
-                      För kritiska beslut. Gemini + Claude med Claude Opus 4.5 som syntetiserar.
-                      Anthropics bästa modell för komplex analys.
+                      För verksamhetsbeslut, investeringar och organisationsfrågor.
+                      o1 resonerar, Claude strukturerar, Grok ger bred kontext.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> Gemini + Claude</div>
+                      <div><strong>Modeller:</strong> o1 + Claude + Grok</div>
                       <div><strong>Syntes:</strong> Claude Opus 4.5</div>
-                      <div><strong>Tid:</strong> ~15-25 sek</div>
+                      <div><strong>Tid:</strong> ~20-40 sek</div>
                     </div>
                   </div>
                 </button>
@@ -2447,13 +2447,13 @@ if (!anvandare) {
           synthesis: 'openai',
           deliberation: false  // Kan aktiveras manuellt vid behov
         },
-        djup: {
-          name: 'Djup analys',
-          // Warning: Will likely timeout on free Netlify plan
-          // Requires Netlify Pro or local development
-          models: ['anthropic', 'gemini'],
+        strategi: {
+          name: 'Strategi',
+          // For business decisions, investments, organizational questions
+          // o1 for reasoning, Claude for structure, Grok for broad context
+          models: ['openai', 'anthropic', 'grok'],
           synthesis: 'claude-opus',
-          deliberation: false  // Deliberation causes timeout
+          deliberation: false  // Can enable manually if needed
         }
       };
       
