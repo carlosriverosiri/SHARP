@@ -512,8 +512,8 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </div>
           </div>
           
-          <!-- Rad 3: 2 block (centrerade) -->
-          <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto mt-4">
+          <!-- Rad 3: 4 block -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">🔄</div>
               <h4 class="text-white font-semibold mb-1">Auto-spara</h4>
@@ -525,6 +525,20 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="text-2xl mb-3">💰</div>
               <h4 class="text-white font-semibold mb-1">Kostnadsvisning</h4>
               <p class="text-slate-500 text-sm">Tydligt högst upp</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-rose-500/10 to-slate-800/50 border border-rose-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">📚</div>
+              <h4 class="text-white font-semibold mb-1">Zotero</h4>
+              <p class="text-rose-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Importera PDF:er</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-cyan-500/10 to-slate-800/50 border border-cyan-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">🖼️</div>
+              <h4 class="text-white font-semibold mb-1">Bildanalys</h4>
+              <p class="text-cyan-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Ctrl+V för bilder</p>
             </div>
           </div>
           
@@ -557,11 +571,54 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </div>
           </div>
           
+          <!-- Zotero Integration Feature -->
+          <div class="mt-6 bg-gradient-to-r from-rose-500/10 to-orange-500/10 border border-rose-500/30 rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-white font-semibold flex items-center gap-2">
+                <span>📚</span> Zotero-integration
+                <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full">NY!</span>
+              </h4>
+              <img src="https://www.zotero.org/static/images/promote/zotero-logo-512x123.svg" alt="Zotero" class="h-6 opacity-70">
+            </div>
+            <p class="text-slate-400 text-sm mb-4">
+              Koppla ditt <span class="text-rose-400 font-semibold">Zotero-bibliotek</span> direkt till AI Council för sökning och PDF-import.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Sök i ditt bibliotek från sidebaren</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Importera PDF:er direkt till kontexten</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Automatisk textextraktion med chunking</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Säker AES-256 kryptering av API-nycklar</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Smart rate limiting för Zotero API</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Visa författare, år och taggar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <!-- Scientific Context Feature -->
           <div class="mt-6 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 rounded-xl p-6">
             <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
-              <span>🔬</span> Vetenskaplig kontext med Zotero-integration
-              <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full">NY!</span>
+              <span>🔬</span> Vetenskaplig kontext med referenshantering
             </h4>
             <p class="text-slate-400 text-sm mb-4">
               När du väljer <span class="text-indigo-400 font-semibold">🔬 Vetenskap</span>-profilen får du automatiskt:

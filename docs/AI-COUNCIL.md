@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-27 (v3.1 - Multimodal bildanalys)
+**Senast uppdaterad:** 2026-01-27 (v3.2 - Zotero-integration)
 
 ---
 
@@ -44,6 +44,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Zotero-integration** (v3.2) - Sök och importera PDF:er från ditt Zotero-bibliotek
 - [x] **Bildanalys/Multimodal** (v3.1) - Klistra in bilder (Ctrl+V) för analys med GPT-4o, Claude, Gemini
 - [x] **Ljust tema** (v3.0) - Modernt UI inspirerat av Grok/Gemini
 - [x] **Projektsidebar** (v3.0) - Organisera sessioner i mappar
@@ -321,6 +322,46 @@ Bifoga skärmdumpar, diagram eller bilder direkt i frågan:
 - 📊 Diagram för analys eller förklaring
 - 🖼️ Designmockups för feedback
 - 📄 Bilder av dokument för textextraktion
+
+### 📚 Zotero-integration (v3.2)
+
+Importera vetenskapliga artiklar direkt från ditt Zotero-bibliotek till AI Council.
+
+#### Konfigurera Zotero
+
+1. **Öppna AI Council** → Klicka på "📚 Zotero" i sidebaren
+2. **Hämta API-nyckel** från [zotero.org/settings/keys](https://www.zotero.org/settings/keys)
+3. **Klistra in nyckeln** → Spara
+
+#### Sök och importera
+
+1. **Sök** efter titel, författare eller nyckelord
+2. **Välj** artiklar genom att klicka i checkboxar
+3. **Importera PDF** → Texten extraheras och läggs till i kontexten
+
+**Funktioner:**
+
+| Funktion | Beskrivning |
+|----------|-------------|
+| **Sökning** | Sök i hela ditt Zotero-bibliotek |
+| **PDF-import** | Hämtar och extraherar text automatiskt |
+| **Säkerhet** | AES-256-GCM kryptering av API-nycklar |
+| **Rate limiting** | 120 req/60s med exponential backoff |
+| **Chunking** | Stora PDF:er delas upp intelligent |
+
+**Begränsningar:**
+- Max 50 MB per PDF
+- Max 100k tecken extraheras (resten trunkeras)
+- Endast "imported_file" PDF:er stöds (inte länkade)
+- Grok kan inte analysera Zotero-stöder ej bildanalys
+
+**Tekniska filer:**
+```
+src/lib/zotero-crypto.ts          # Kryptering
+src/lib/zotero-rate-limiter.ts    # Rate limiting
+src/pages/api/ai-council/zotero/  # API endpoints
+supabase/migrations/013-*.sql     # Databasschema
+```
 
 ### Kopieringsknappar
 
@@ -794,6 +835,23 @@ npm install bottleneck
 ---
 
 ## Versionshistorik
+
+### v3.2 (2026-01-27) - Zotero-integration
+
+**Ny funktion:** Sök och importera PDF:er från Zotero-bibliotek.
+
+- 📚 **Zotero-accordion** i sidebaren med sökning och import
+- 🔐 **AES-256-GCM kryptering** av API-nycklar med PBKDF2
+- ⏱️ **Smart rate limiting** - 120 req/60s med exponential backoff
+- 📄 **PDF-extraktion** med pdf-parse och intelligent chunking
+- 🗄️ **Supabase-integration** med RLS för säker lagring
+
+**Tekniskt:**
+- 3 nya API-endpoints: validate, search, fetch-pdf
+- Migration 013 för zotero_configs tabell
+- npm: pdf-parse dependency
+
+---
 
 ### v3.1 (2026-01-27) - Multimodal bildanalys
 
