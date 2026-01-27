@@ -444,7 +444,11 @@ Syntesen är en **rekommendation**, inte ett facit. Använd den som:
 | **Cursor** | All faktisk kodskrivning, debugging, refaktorering, "gör X" |
 | **AI Council** | Strategiska beslut, arkitektur, forskning, beslutsdokumentation |
 
-> **Analogi:** AI Council är **arkitekten** som designar huset. Cursor är **byggaren** som bygger det.
+> **Analogi 1 - Arkitekt & Byggare:**  
+> AI Council är **arkitekten** som designar huset. Cursor är **byggaren** som bygger det.
+
+> **Analogi 2 - Skelett & Mjukdelar:**  
+> AI Council är **skelettet** i en beslutsprocess – det ger struktur, ramverk och definierar *vad* som ska göras och *varför*. Cursor och andra verktyg är **mjukdelarna** som kan formas på olika sätt för att utföra det faktiska arbetet – *hur* det ska göras. Skelettet (ramverket för beslut) förblir stabilt, medan mjukdelarna (implementationen) kan anpassas efter behov.
 
 ---
 
