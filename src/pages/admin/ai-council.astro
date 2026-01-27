@@ -99,6 +99,196 @@ if (!anvandare) {
     .layout { display: flex; min-height: 100vh; }
     .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
     
+    /* Project sidebar (left) */
+    .project-sidebar {
+      width: 280px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .project-sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .project-sidebar-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .project-sidebar-actions {
+      padding: 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .project-action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 0.5rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .project-action-btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--color-primary); }
+    .project-action-btn.primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .project-action-btn.primary:hover { background: var(--color-primary-hover); }
+    
+    .project-search {
+      padding: 0 0.75rem 0.75rem;
+    }
+    .project-search-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2rem;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 0.8125rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 0.5rem center;
+      background-size: 1rem;
+    }
+    .project-search-input:focus { outline: none; border-color: var(--color-primary); }
+    .project-search-input::placeholder { color: var(--text-light); }
+    
+    .project-section {
+      padding: 0.5rem 0;
+    }
+    .project-section-title {
+      padding: 0.5rem 1rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .project-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .project-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+    .project-item:hover { background: var(--bg-hover); }
+    .project-item.active { background: var(--color-primary-light); }
+    .project-item-icon { font-size: 1rem; flex-shrink: 0; }
+    .project-item-info { flex: 1; min-width: 0; }
+    .project-item-name {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .project-item.active .project-item-name { color: var(--color-primary); }
+    .project-item-count {
+      font-size: 0.6875rem;
+      color: var(--text-light);
+    }
+    .project-item-pin {
+      opacity: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .project-item:hover .project-item-pin { opacity: 1; }
+    .project-item-pin.pinned { opacity: 1; color: var(--color-warning); }
+    
+    /* History accordion in sidebar */
+    .history-accordion {
+      border-top: 1px solid var(--border-color);
+    }
+    .history-accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .history-accordion-header:hover { background: var(--bg-hover); }
+    .history-accordion-icon {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+    .history-accordion.open .history-accordion-icon { transform: rotate(180deg); }
+    .history-accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    .history-accordion.open .history-accordion-content { max-height: 400px; overflow-y: auto; }
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .history-item:hover { background: var(--bg-hover); }
+    .history-item-icon { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.125rem; }
+    .history-item-info { flex: 1; min-width: 0; }
+    .history-item-prompt {
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-item-meta {
+      font-size: 0.625rem;
+      color: var(--text-light);
+    }
+    
+    @media (max-width: 1200px) {
+      .project-sidebar { width: 240px; }
+    }
+    @media (max-width: 1024px) {
+      .project-sidebar { 
+        position: fixed; 
+        left: 0; 
+        top: 0; 
+        bottom: 0; 
+        z-index: 200; 
+        transform: translateX(-100%); 
+        box-shadow: var(--shadow-lg);
+      }
+      .project-sidebar.open { transform: translateX(0); }
+    }
+    
     /* Notes sidebar */
     .notes-sidebar {
       width: 320px;
@@ -461,6 +651,18 @@ if (!anvandare) {
     }
     .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 1rem; }
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .mobile-menu-btn:hover { color: var(--text-primary); }
+    @media (max-width: 1024px) {
+      .mobile-menu-btn { display: flex; }
+    }
     .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; }
     .back-link:hover { color: var(--color-primary); }
     .logo h1 {
@@ -1162,10 +1364,63 @@ if (!anvandare) {
 </head>
 <body>
   <div class="layout">
+    <!-- Project Sidebar (Left) -->
+    <aside class="project-sidebar" id="projectSidebar">
+      <div class="project-sidebar-header">
+        <span class="project-sidebar-logo">AI Council</span>
+      </div>
+      
+      <div class="project-sidebar-actions">
+        <button class="project-action-btn primary" id="newChatBtn" title="Starta ny chat">
+          ✨ Ny chat
+        </button>
+        <button class="project-action-btn" id="newProjectBtn" title="Skapa nytt projekt">
+          📁 +
+        </button>
+      </div>
+      
+      <div class="project-search">
+        <input type="text" class="project-search-input" placeholder="Sök i sessioner..." id="projectSearch">
+      </div>
+      
+      <div class="project-section">
+        <div class="project-section-title">📌 Senaste projekt</div>
+      </div>
+      
+      <div class="project-list" id="projectList">
+        <!-- Projekten laddas dynamiskt -->
+        <div class="project-item active">
+          <span class="project-item-icon">📁</span>
+          <div class="project-item-info">
+            <div class="project-item-name">Osorterade</div>
+            <div class="project-item-count">Alla sessioner</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- History accordion -->
+      <div class="history-accordion" id="historyAccordion">
+        <button class="history-accordion-header">
+          <span>📂 Historik</span>
+          <svg class="history-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="history-accordion-content" id="historyList">
+          <!-- Historik laddas dynamiskt -->
+        </div>
+      </div>
+    </aside>
+    
     <div class="main-area">
       <header class="header">
         <div class="header-inner">
           <div class="header-left">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" title="Visa projekt">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
             <a href="/personal/oversikt" class="back-link">← Tillbaka</a>
             <div class="logo">
               <h1>AI Council</h1>
@@ -2867,6 +3122,292 @@ if (!anvandare) {
         listEl.style.display = isVisible ? 'none' : 'block';
         this.querySelector('span').textContent = isVisible ? '▼ Visa detaljer' : '▲ Dölj detaljer';
       });
+      
+      // =============================================
+      // PROJECT SIDEBAR FUNCTIONALITY
+      // =============================================
+      
+      const projectSidebar = document.getElementById('projectSidebar');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const newChatBtn = document.getElementById('newChatBtn');
+      const newProjectBtn = document.getElementById('newProjectBtn');
+      const projectSearch = document.getElementById('projectSearch');
+      const projectList = document.getElementById('projectList');
+      const historyAccordion = document.getElementById('historyAccordion');
+      const historyList = document.getElementById('historyList');
+      
+      let projects = [];
+      let currentProjectId = null; // null = "Osorterade"
+      
+      // Toggle mobile sidebar
+      mobileMenuBtn?.addEventListener('click', () => {
+        projectSidebar.classList.toggle('open');
+      });
+      
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024 && 
+            projectSidebar.classList.contains('open') && 
+            !projectSidebar.contains(e.target) && 
+            e.target !== mobileMenuBtn) {
+          projectSidebar.classList.remove('open');
+        }
+      });
+      
+      // New chat button - clear everything
+      newChatBtn?.addEventListener('click', () => {
+        contextEl.value = '';
+        promptEl.value = '';
+        resultsEl.classList.remove('visible');
+        synthesisCard.style.display = 'none';
+        document.getElementById('costBanner').classList.remove('visible');
+        currentPrompt = '';
+        currentResponses = {};
+        uploadedFiles = [];
+        document.getElementById('fileList').innerHTML = '';
+        
+        // Close mobile sidebar
+        if (window.innerWidth <= 1024) {
+          projectSidebar.classList.remove('open');
+        }
+      });
+      
+      // New project button
+      newProjectBtn?.addEventListener('click', async () => {
+        const name = prompt('Projektnamn:');
+        if (!name) return;
+        
+        const description = prompt('Beskrivning (valfritt):') || '';
+        const context = prompt('Automatisk kontext för alla frågor (valfritt):') || '';
+        
+        try {
+          const res = await fetch('/api/ai-council/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ name, description, context })
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            if (data.project) {
+              projects.unshift(data.project);
+              renderProjects();
+              selectProject(data.project.id);
+            }
+          } else {
+            console.error('Failed to create project');
+          }
+        } catch (err) {
+          console.error('Error creating project:', err);
+        }
+      });
+      
+      // Load projects
+      async function loadProjects() {
+        try {
+          const res = await fetch('/api/ai-council/projects', { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            projects = data.projects || [];
+            renderProjects();
+          }
+        } catch (err) {
+          console.error('Error loading projects:', err);
+        }
+      }
+      
+      // Render projects in sidebar
+      function renderProjects() {
+        const pinnedProjects = projects.filter(p => p.is_pinned);
+        const recentProjects = projects.filter(p => !p.is_pinned).slice(0, 5);
+        
+        let html = `
+          <div class="project-item ${!currentProjectId ? 'active' : ''}" data-project-id="">
+            <span class="project-item-icon">📋</span>
+            <div class="project-item-info">
+              <div class="project-item-name">Osorterade</div>
+              <div class="project-item-count">Alla sessioner</div>
+            </div>
+          </div>
+        `;
+        
+        // Pinned projects
+        pinnedProjects.forEach(p => {
+          html += `
+            <div class="project-item ${currentProjectId === p.id ? 'active' : ''}" data-project-id="${p.id}">
+              <span class="project-item-icon">${p.icon || '📁'}</span>
+              <div class="project-item-info">
+                <div class="project-item-name">${escapeHtml(p.name)}</div>
+                <div class="project-item-count">${p.description || ''}</div>
+              </div>
+              <button class="project-item-pin pinned" title="Ta bort markering">📌</button>
+            </div>
+          `;
+        });
+        
+        // Recent projects (non-pinned)
+        recentProjects.forEach(p => {
+          html += `
+            <div class="project-item ${currentProjectId === p.id ? 'active' : ''}" data-project-id="${p.id}">
+              <span class="project-item-icon">${p.icon || '📁'}</span>
+              <div class="project-item-info">
+                <div class="project-item-name">${escapeHtml(p.name)}</div>
+                <div class="project-item-count">${p.description || ''}</div>
+              </div>
+              <button class="project-item-pin" title="Fäst projekt">📌</button>
+            </div>
+          `;
+        });
+        
+        projectList.innerHTML = html;
+        
+        // Add click handlers
+        projectList.querySelectorAll('.project-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            if (e.target.classList.contains('project-item-pin')) return;
+            selectProject(item.dataset.projectId || null);
+          });
+        });
+        
+        // Pin/unpin handlers
+        projectList.querySelectorAll('.project-item-pin').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const projectId = btn.closest('.project-item').dataset.projectId;
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+              project.is_pinned = !project.is_pinned;
+              renderProjects();
+              // Update in backend
+              try {
+                await fetch('/api/ai-council/projects', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ id: projectId, is_pinned: project.is_pinned })
+                });
+              } catch (err) {
+                console.error('Error updating project:', err);
+              }
+            }
+          });
+        });
+      }
+      
+      // Select a project
+      function selectProject(projectId) {
+        currentProjectId = projectId;
+        
+        // Update active state
+        projectList.querySelectorAll('.project-item').forEach(item => {
+          item.classList.toggle('active', (item.dataset.projectId || null) === projectId);
+        });
+        
+        // If project has auto-context, add it to context field
+        if (projectId) {
+          const project = projects.find(p => p.id === projectId);
+          if (project && project.context) {
+            // Prepend project context if not already there
+            if (!contextEl.value.includes('<!-- PROJECT CONTEXT -->')) {
+              contextEl.value = '<!-- PROJECT CONTEXT -->\n' + project.context + '\n<!-- END PROJECT CONTEXT -->\n\n' + contextEl.value;
+            }
+          }
+        }
+        
+        // Filter history by project
+        loadHistoryForProject(projectId);
+        
+        // Close mobile sidebar
+        if (window.innerWidth <= 1024) {
+          projectSidebar.classList.remove('open');
+        }
+      }
+      
+      // History accordion toggle
+      historyAccordion?.querySelector('.history-accordion-header')?.addEventListener('click', () => {
+        historyAccordion.classList.toggle('open');
+      });
+      
+      // Load history for a project
+      async function loadHistoryForProject(projectId) {
+        // Use existing sessions from the notes sidebar
+        const filteredSessions = sessions.filter(s => {
+          if (projectId === null) return true; // Show all in "Osorterade"
+          return s.project_id === projectId;
+        });
+        
+        historyList.innerHTML = filteredSessions.slice(0, 20).map(s => `
+          <div class="history-item" data-session-id="${s.id}">
+            <span class="history-item-icon">💬</span>
+            <div class="history-item-info">
+              <div class="history-item-prompt">${escapeHtml(s.name || s.prompt?.substring(0, 50) || 'Utan titel')}</div>
+              <div class="history-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
+            </div>
+          </div>
+        `).join('') || '<div style="padding: 1rem; color: var(--text-muted); font-size: 0.75rem;">Ingen historik</div>';
+        
+        // Add click handlers for history items
+        historyList.querySelectorAll('.history-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const session = sessions.find(s => s.id === item.dataset.sessionId);
+            if (session) {
+              openSession(session);
+              if (window.innerWidth <= 1024) {
+                projectSidebar.classList.remove('open');
+              }
+            }
+          });
+        });
+      }
+      
+      // Search functionality
+      let searchTimeout;
+      projectSearch?.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          const query = e.target.value.toLowerCase();
+          if (query) {
+            const filtered = sessions.filter(s => 
+              (s.name || '').toLowerCase().includes(query) ||
+              (s.prompt || '').toLowerCase().includes(query)
+            );
+            historyList.innerHTML = filtered.slice(0, 20).map(s => `
+              <div class="history-item" data-session-id="${s.id}">
+                <span class="history-item-icon">💬</span>
+                <div class="history-item-info">
+                  <div class="history-item-prompt">${escapeHtml(s.name || s.prompt?.substring(0, 50) || 'Utan titel')}</div>
+                  <div class="history-item-meta">${new Date(s.created_at).toLocaleDateString('sv-SE')}</div>
+                </div>
+              </div>
+            `).join('') || '<div style="padding: 1rem; color: var(--text-muted); font-size: 0.75rem;">Inga resultat</div>';
+            
+            // Open history accordion if closed
+            if (!historyAccordion.classList.contains('open')) {
+              historyAccordion.classList.add('open');
+            }
+          } else {
+            loadHistoryForProject(currentProjectId);
+          }
+        }, 300);
+      });
+      
+      // Helper function for escaping HTML
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+      
+      // Load projects on page load
+      loadProjects();
+      
+      // Update history when sessions change
+      const originalLoadSessions = loadSessions;
+      loadSessions = async function() {
+        await originalLoadSessions.call(this);
+        loadHistoryForProject(currentProjectId);
+      };
     });
   </script>
 </body>
