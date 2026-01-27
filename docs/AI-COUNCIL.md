@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-27 (v3.0 - Ljust tema, Projektsidebar & UI Redesign)
+**Senast uppdaterad:** 2026-01-27 (v3.1 - Multimodal bildanalys)
 
 ---
 
@@ -37,7 +37,6 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 - [ ] **Dela sessioner** - Länk för att dela med kollegor
 - [ ] **Custom syntes-prompts** - Anpassa hur syntesen görs
 - [ ] **Cursor MCP-integration** - Använd AI Council direkt från Cursor
-- [ ] **Bildanalys** - Multimodala API:er för bilder i frågor
 - [ ] **Drag-and-drop** - Dra sessioner mellan projekt
 - [ ] **Chattbubblor i resultat** - Konversationsvy istället för accordion
 - [ ] **Keyboard shortcuts** - Ctrl+N för ny chat, etc.
@@ -45,6 +44,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Bildanalys/Multimodal** (v3.1) - Klistra in bilder (Ctrl+V) för analys med GPT-4o, Claude, Gemini
 - [x] **Ljust tema** (v3.0) - Modernt UI inspirerat av Grok/Gemini
 - [x] **Projektsidebar** (v3.0) - Organisera sessioner i mappar
 - [x] **Projektkontext** (v3.0) - Auto-inkludera kontext per projekt
@@ -295,9 +295,32 @@ Ladda upp filer som kontext:
 |--------|------|
 | **Text** | `.txt`, `.md`, `.json`, `.js`, `.ts`, `.py`, `.html`, `.css` |
 | **PDF** | Extraherar text automatiskt |
-| **Bilder** | `.png`, `.jpg`, `.gif`, `.webp` (metadata) |
+| **Bilder** | `.png`, `.jpg`, `.gif`, `.webp` (**multimodal bildanalys**) |
 
-Dra och släpp eller klicka för att välja filer.
+Dra och släpp, klicka för att välja filer, eller **Ctrl+V för att klistra in bilder**.
+
+### 🖼️ Multimodal bildanalys (v3.1)
+
+Bifoga skärmdumpar, diagram eller bilder direkt i frågan:
+
+1. **Kopiera bild** (Ctrl+C från skärm, webbsida, bildprogram)
+2. **Klistra in** (Ctrl+V) i kontext- eller prompt-fältet
+3. **Kör fråga** - bilden analyseras av multimodala AI-modeller
+
+**Modellstöd:**
+
+| Modell | Bildstöd | Modell vid bilder |
+|--------|----------|-------------------|
+| **OpenAI** | ✅ | Byter till GPT-4o (o1 stöder ej bilder) |
+| **Claude** | ✅ | Claude Sonnet med vision |
+| **Gemini** | ✅ | Gemini 2.0 Flash |
+| **Grok** | ❌ | Får notis om att bilder bifogats |
+
+**Användningsfall:**
+- 📸 Screenshots av kod/UI för granskning
+- 📊 Diagram för analys eller förklaring
+- 🖼️ Designmockups för feedback
+- 📄 Bilder av dokument för textextraktion
 
 ### Kopieringsknappar
 
@@ -673,6 +696,22 @@ Komplexa frågor kan ta 30-60 sekunder. Om det tar längre:
 ---
 
 ## Versionshistorik
+
+### v3.1 (2026-01-27) - Multimodal bildanalys
+
+**Ny funktion:** Klistra in bilder direkt för AI-analys.
+
+- 🖼️ **Ctrl+V bildinklistring** - Klistra in screenshots direkt i kontext/prompt
+- 🔍 **Fullständig bildanalys** - GPT-4o, Claude och Gemini analyserar bildinnehållet
+- 📷 **Thumbnail-förhandsvisning** - Se inklistrade bilder innan körning
+- ⚠️ **Grok-notis** - Informerar när bilder inte kan analyseras av Grok
+
+**Tekniskt:**
+- OpenAI byter automatiskt från o1 till GPT-4o när bilder finns
+- Base64-kodning för direktöverföring till multimodala API:er
+- Stöd för PNG, JPG, GIF, WebP
+
+---
 
 ### v3.0 (2026-01-27) - UI Redesign & Projektorganisation
 
