@@ -1784,18 +1784,19 @@ if (!anvandare) {
                   <span class="profile-icon">💻</span>
                   <div>
                     <div class="profile-name">Kodning</div>
-                    <div class="profile-desc">Claude</div>
+                    <div class="profile-desc">Alla + Deliberation</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title">💻 Kodning</div>
+                    <div class="profile-tooltip-title">💻 Kodning (Premium)</div>
                     <div class="profile-tooltip-why">
-                      Claude är bäst på strukturerad kod, debugging och arkitekturbeslut.
-                      Snabb nog för Netlify.
+                      Maximal kodgranskning med alla 4 modeller + deliberation.
+                      Perfekt för arkitekturbeslut, säkerhet, prestanda och läsbarhet.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modell:</strong> Claude Sonnet</div>
-                      <div><strong>Syntes:</strong> Claude (kod-expert)</div>
-                      <div><strong>Tid:</strong> ~5-15 sek</div>
+                      <div><strong>Modeller:</strong> o1 + Claude + Gemini + Grok</div>
+                      <div><strong>Syntes:</strong> Claude Opus 4.5</div>
+                      <div><strong>Deliberation:</strong> ✓ Aktiverad</div>
+                      <div><strong>Tid:</strong> ~30-60 sek</div>
                     </div>
                   </div>
                 </button>
@@ -2432,10 +2433,11 @@ if (!anvandare) {
         },
         kod: {
           name: 'Kodning',
-          // Claude only - fast and good for code
-          models: ['anthropic'],
-          synthesis: 'claude',
-          deliberation: false
+          // All 4 models for maximum code review feedback + deliberation
+          // Uses Opus 4.5 for synthesis - best for combining diverse feedback
+          models: ['openai', 'anthropic', 'gemini', 'grok'],
+          synthesis: 'claude-opus',
+          deliberation: true
         },
         vetenskap: {
           name: 'Vetenskap',
