@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-26 (v2.6 - Vetenskaplig kontext med Zotero)
+**Senast uppdaterad:** 2026-01-27 (v2.7 - Hallucinationsdetektion, Export & Spara-modal)
 
 ---
 
@@ -28,54 +28,6 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 > **Obs:** Denna sektion visar planerade och pågående förbättringar. Implementerade funktioner flyttas till Versionshistorik.
 
-### 🔴 Nästa prioritet: Hallucinationsdetektion
-
-**Mål:** Visa användaren direkt hur trovärdigt resultatet är.
-
-AI Council har en unik fördel: flera oberoende modeller granskar samma fråga. När modellerna är oense om ett påstående är det en signal om potentiell hallucination.
-
-**Konfidensgrader:**
-
-| Kategori | Definition | Visning |
-|----------|------------|---------|
-| **Säker hallucination** | 3/4 modeller flaggar samma fel | 🔴 |
-| **Trolig hallucination** | 2/4 modeller flaggar | 🟠 |
-| **Misstänkt hallucination** | 1/4 modeller flaggar | 🟡 |
-
-**Planerad implementation:**
-
-1. **Fas 1:** Integrera i Deliberation-rundan
-   - Utöka prompten: "Flagga specifika påståenden du misstänker är felaktiga"
-   - Strukturerat format: `[HALLUCINATION?] "påståendet" - anledning`
-
-2. **Fas 2:** Hallucinationsrapport i UI
-   - Visas **överst** i resultatet (före syntes)
-   - Färgkodade varningar
-   - Expanderbara detaljer
-
-3. **Fas 3:** Statistik och historik
-   - "Denna session: X hallucinationer upptäckta"
-   - "Totalt upptäckta: Y"
-   - Per-modell statistik
-
-**Exempel på UI:**
-```
-┌─────────────────────────────────────────────────────┐
-│  🔍 TROVÄRDIGHETSRAPPORT                            │
-│                                                     │
-│  ✅ Inga säkra hallucinationer upptäckta            │
-│  ⚠️  1 misstänkt felaktighet flaggad               │
-│                                                     │
-│  ▼ Visa detaljer                                    │
-│  ┌─────────────────────────────────────────────┐    │
-│  │ 🟡 "Studien från Karolinska 2019..."        │    │
-│  │    Flaggad av: Claude                       │    │
-│  │    Källa: GPT-4o                            │    │
-│  │    Anledning: Kunde inte verifiera referens │    │
-│  └─────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────┘
-```
-
 ### 🟡 Planerade funktioner
 
 - [ ] **Streaming-svar** - Visa svar i realtid istället för att vänta
@@ -88,6 +40,10 @@ AI Council har en unik fördel: flera oberoende modeller granskar samma fråga. 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Spara-modal med eget namn** (v2.7) - Popup efter varje körning för att spara med anpassat namn
+- [x] **Auto-spara** (v2.7) - Aktiverbar funktion för automatisk sparning
+- [x] **Export som Markdown** (v2.7) - Ladda ned komplett session som .md-fil
+- [x] **Hallucinationsdetektion** (v2.7) - Trovärdighetsrapport med konfidensgrader (🔴 hög, 🟡 medium, ⚪ låg)
 - [x] Vetenskaplig kontext med Zotero-stöd (v2.6)
 - [x] Användarprofiler för personlig kontext (v2.5)
 - [x] Profilväljare med 5 lägen (v2.4)

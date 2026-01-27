@@ -482,8 +482,22 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </div>
           </div>
           
-          <!-- Rad 2: 3 block (centrerade) -->
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <!-- Rad 2: 4 block -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-b from-orange-500/10 to-slate-800/50 border border-orange-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">💾</div>
+              <h4 class="text-white font-semibold mb-1">Spara-modal</h4>
+              <p class="text-orange-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Eget namn på sessioner</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-blue-500/10 to-slate-800/50 border border-blue-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">📥</div>
+              <h4 class="text-white font-semibold mb-1">Export .md</h4>
+              <p class="text-blue-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Ladda ned som Markdown</p>
+            </div>
+            
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="w-10 h-10 mx-auto mb-3 rounded-full bg-amber-500/20 border-2 border-amber-500/50 flex items-center justify-center">
                 <span class="text-amber-400 font-bold">6</span>
@@ -497,8 +511,18 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <h4 class="text-white font-semibold mb-1">Molnsynk</h4>
               <p class="text-slate-500 text-sm">Supabase historik</p>
             </div>
+          </div>
+          
+          <!-- Rad 3: 2 block (centrerade) -->
+          <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto mt-4">
+            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">🔄</div>
+              <h4 class="text-white font-semibold mb-1">Auto-spara</h4>
+              <p class="text-emerald-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Spara automatiskt</p>
+            </div>
             
-            <div class="bg-slate-800/50 rounded-xl p-5 text-center col-span-2 md:col-span-1">
+            <div class="bg-slate-800/50 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">💰</div>
               <h4 class="text-white font-semibold mb-1">Kostnadsvisning</h4>
               <p class="text-slate-500 text-sm">Tydligt högst upp</p>
@@ -636,6 +660,23 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
           
+          <!-- Save modal & Export update -->
+          <div class="bg-orange-500/5 border border-orange-500/20 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-2xl">💾</div>
+              <div>
+                <h3 class="text-orange-400 font-semibold mb-2">Spara-modal & Export (2026-01-27)</h3>
+                <p class="text-slate-400 text-sm mb-3">
+                  <strong class="text-slate-300">Nytt:</strong> Efter varje körning visas en <strong class="text-orange-400">framträdande spara-dialog</strong> 
+                  där du kan ge sessionen ett eget namn. Plus <strong class="text-blue-400">Export .md</strong> för att ladda ned hela sessionen som Markdown.
+                </p>
+                <p class="text-slate-500 text-xs">
+                  Aktivera <strong>Auto-spara</strong> för att automatiskt spara alla sessioner. Namn visas i sessionslistan med orange markering.
+                </p>
+              </div>
+            </div>
+          </div>
+          
           <!-- Hallucination detection update -->
           <div class="bg-red-500/5 border border-red-500/20 rounded-xl p-6">
             <div class="flex items-start gap-4">
@@ -759,21 +800,20 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="bg-emerald-500/5 border border-emerald-500/30 rounded-xl p-6">
               <h3 class="text-emerald-400 font-semibold mb-4">✅ Klart (Q1 2026)</h3>
               <ul class="text-slate-400 text-sm space-y-2">
-                <li>✓ Multi-modell parallell körning</li>
-                <li>✓ Grok (xAI) integration</li>
-                <li>✓ PDF & filuppladdning</li>
-                <li>✓ Deliberation mode</li>
-                <li>✓ Supabase sessionslogg</li>
-                <li>✓ Claude Opus 4.5 syntes 👑</li>
-                <li>✓ GPT-4o snabb syntes ⚡</li>
-                <li>✓ Kostnadsvisning i realtid 💰</li>
-                <li>✓ Gemini 2.0 Flash (ersätter 1.5 Pro) ⚡</li>
-                <li>✓ Grok 4 (256K kontext) 🚀</li>
-                <li>✓ Profilväljare med 5 lägen ⚡</li>
-                <li>✓ Användarprofiler 👤</li>
-                <li>✓ Kostnad visas högst upp 💰</li>
+                <li>✓ Spara-modal med eget namn 💾 <span class="text-orange-400">NY!</span></li>
+                <li>✓ Export som Markdown 📥 <span class="text-orange-400">NY!</span></li>
+                <li>✓ Auto-spara funktion 🔄 <span class="text-orange-400">NY!</span></li>
+                <li>✓ Hallucinationsdetektion 🔍 <span class="text-orange-400">NY!</span></li>
                 <li>✓ Vetenskaplig kontext + Zotero 📚</li>
-                <li>✓ Hallucinationsdetektion 🔍 NY!</li>
+                <li>✓ Användarprofiler 👤</li>
+                <li>✓ Profilväljare med 5 lägen ⚡</li>
+                <li>✓ Grok 4 (256K kontext) 🚀</li>
+                <li>✓ Multi-modell parallell körning</li>
+                <li>✓ Deliberation mode</li>
+                <li>✓ Claude Opus 4.5 syntes 👑</li>
+                <li>✓ Kostnadsvisning i realtid 💰</li>
+                <li>✓ PDF & filuppladdning</li>
+                <li>✓ Supabase sessionslogg</li>
               </ul>
             </div>
             
