@@ -79,6 +79,42 @@ Skapa en SYNTES som:
 VIKTIGT: Skriv ENDAST syntesen, ingen meta-kommentar om processen.`;
 }
 
+// Build super-synthesis prompt (after deliberation)
+function buildSuperSynthesisPrompt(
+  originalPrompt: string, 
+  round1Responses: AIResponse[], 
+  round2Responses: AIResponse[]
+): string {
+  const validRound1 = round1Responses.filter(r => !r.error && r.response);
+  const validRound2 = round2Responses.filter(r => !r.error && r.response);
+  
+  return `Du är en senior teknisk expert och arkitekt. Din uppgift är att skapa en SUPERSYNTES baserad på en tvåstegsprocess där AI-modeller först svarat individuellt, sedan granskat varandras svar.
+
+## Originalfråga:
+${originalPrompt}
+
+## RUNDA 1 - Initiala svar:
+
+${validRound1.map(r => `### ${r.provider} (${r.model}):
+${r.response}
+`).join('\n---\n\n')}
+
+## RUNDA 2 - Granskning och förbättring:
+
+${validRound2.map(r => `### ${r.provider} (${r.model}) - Förbättrat svar:
+${r.response}
+`).join('\n---\n\n')}
+
+## Din uppgift (Supersyntes):
+
+1. **Identifiera korrigeringar**: Vilka fel upptäcktes i Runda 2? Vad korrigerades?
+2. **Analysera konsensus**: Vad är modellerna nu överens om efter granskning?
+3. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
+4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
+
+Skriv din supersyntes på svenska. Var extra noggrann med att lyfta fram vad som korrigerades mellan rundorna.`;
+}
+
 // Synthesis functions for each model
 async function synthesizeWithClaude(prompt: string, responses: AIResponse[]): Promise<AIResponse> {
   const start = Date.now();
@@ -343,10 +379,288 @@ async function synthesize(
   }
 }
 
+// Super-synthesis function (uses the same model but with super-synthesis prompt)
+async function superSynthesize(
+  prompt: string,
+  round1Responses: AIResponse[],
+  round2Responses: AIResponse[],
+  synthesisModel: SynthesisModel = 'claude'
+): Promise<AIResponse> {
+  const superPrompt = buildSuperSynthesisPrompt(prompt, round1Responses, round2Responses);
+  
+  // Create a fake "response" object to reuse synthesize functions
+  // The prompt already contains all the context needed
+  const fakeResponse: AIResponse = {
+    model: 'combined',
+    provider: 'Combined',
+    response: superPrompt,
+    duration: 0,
+  };
+  
+  // Use the appropriate model for super synthesis
+  // Note: We're passing the super prompt directly since it already includes all context
+  switch (synthesisModel) {
+    case 'gpt4o':
+      return synthesizeWithGPT4oSuper(prompt, round1Responses, round2Responses);
+    case 'gemini':
+      return synthesizeWithGeminiSuper(prompt, round1Responses, round2Responses);
+    case 'grok':
+      return synthesizeWithGrokSuper(prompt, round1Responses, round2Responses);
+    case 'claude-opus':
+      return synthesizeWithClaudeOpusSuper(prompt, round1Responses, round2Responses);
+    case 'openai':
+      return synthesizeWithGPT4oSuper(prompt, round1Responses, round2Responses);
+    case 'claude':
+    default:
+      return synthesizeWithClaudeSuper(prompt, round1Responses, round2Responses);
+  }
+}
+
+// Super synthesis variants that use the super-synthesis prompt
+async function synthesizeWithClaudeSuper(prompt: string, r1: AIResponse[], r2: AIResponse[]): Promise<AIResponse> {
+  const start = Date.now();
+  try {
+    const superPrompt = buildSuperSynthesisPrompt(prompt, r1, r2);
+    
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8192,
+        messages: [{ role: 'user', content: superPrompt }],
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
+    
+    return {
+      model: 'claude-sonnet-4-20250514',
+      provider: 'Claude Sonnet (Supersyntes)',
+      response: data.content?.[0]?.text || 'Supersyntes misslyckades',
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-sonnet-4-20250514', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'claude-sonnet-4-20250514',
+      provider: 'Claude Sonnet (Supersyntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+async function synthesizeWithClaudeOpusSuper(prompt: string, r1: AIResponse[], r2: AIResponse[]): Promise<AIResponse> {
+  const start = Date.now();
+  try {
+    const superPrompt = buildSuperSynthesisPrompt(prompt, r1, r2);
+    
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-20250514',
+        max_tokens: 8192,
+        messages: [{ role: 'user', content: superPrompt }],
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
+    
+    return {
+      model: 'claude-opus-4-20250514',
+      provider: 'Claude Opus 4.5 (Supersyntes)',
+      response: data.content?.[0]?.text || 'Supersyntes misslyckades',
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-opus-4-20250514', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'claude-opus-4-20250514',
+      provider: 'Claude Opus 4.5 (Supersyntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+async function synthesizeWithGPT4oSuper(prompt: string, r1: AIResponse[], r2: AIResponse[]): Promise<AIResponse> {
+  const start = Date.now();
+  try {
+    const superPrompt = buildSuperSynthesisPrompt(prompt, r1, r2);
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [{ role: 'user', content: superPrompt }],
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
+    
+    return {
+      model: 'gpt-4o',
+      provider: 'GPT-4o (Supersyntes)',
+      response: data.choices[0]?.message?.content || 'Supersyntes misslyckades',
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gpt-4o', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'gpt-4o',
+      provider: 'GPT-4o (Supersyntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+async function synthesizeWithGeminiSuper(prompt: string, r1: AIResponse[], r2: AIResponse[]): Promise<AIResponse> {
+  const start = Date.now();
+  try {
+    const superPrompt = buildSuperSynthesisPrompt(prompt, r1, r2);
+    
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: superPrompt }] }],
+          generationConfig: { maxOutputTokens: 8192 },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usageMetadata?.promptTokenCount || 0,
+      outputTokens: data.usageMetadata?.candidatesTokenCount || 0,
+    };
+    
+    return {
+      model: 'gemini-2.0-flash',
+      provider: 'Gemini (Supersyntes)',
+      response: data.candidates?.[0]?.content?.parts?.[0]?.text || 'Supersyntes misslyckades',
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gemini-2.0-flash', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'gemini-2.0-flash',
+      provider: 'Gemini (Supersyntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+async function synthesizeWithGrokSuper(prompt: string, r1: AIResponse[], r2: AIResponse[]): Promise<AIResponse> {
+  const start = Date.now();
+  try {
+    const superPrompt = buildSuperSynthesisPrompt(prompt, r1, r2);
+    
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${XAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'grok-4',
+        messages: [{ role: 'user', content: superPrompt }],
+        max_tokens: 8192,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
+    
+    return {
+      model: 'grok-4',
+      provider: 'Grok (Supersyntes)',
+      response: data.choices[0]?.message?.content || 'Supersyntes misslyckades',
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('grok-4', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'grok-4',
+      provider: 'Grok (Supersyntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { prompt, responses, synthesisModel = 'claude' } = body;
+    const { prompt, responses, round2Responses, synthesisModel = 'claude', isSuperSynthesis = false } = body;
 
     if (!prompt) {
       return new Response(JSON.stringify({ error: 'Prompt saknas' }), {
@@ -362,12 +676,20 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const synthesis = await synthesize(prompt, responses, synthesisModel);
+    let synthesis: AIResponse;
+    
+    // Use super-synthesis if R2 responses are provided
+    if (isSuperSynthesis && round2Responses && round2Responses.length > 0) {
+      synthesis = await superSynthesize(prompt, responses, round2Responses, synthesisModel);
+    } else {
+      synthesis = await synthesize(prompt, responses, synthesisModel);
+    }
 
     return new Response(JSON.stringify({
       success: true,
       synthesis,
       responsesCount: responses.length,
+      isSuperSynthesis: isSuperSynthesis && round2Responses && round2Responses.length > 0,
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

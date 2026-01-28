@@ -1776,13 +1776,19 @@ if (!anvandare) {
       border: 1px solid #f59e0b;
     }
     .retry-btn:hover { background: #fde68a; }
+    .deliberate-btn {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      border: none;
+    }
+    .deliberate-btn:hover { opacity: 0.9; }
     .synthesize-btn {
       background: linear-gradient(135deg, #059669, #10b981);
       color: white;
       border: none;
     }
     .synthesize-btn:hover { opacity: 0.9; }
-    .synthesize-btn:disabled, .retry-btn:disabled { opacity: 0.5; cursor: not-allowed;
+    .synthesize-btn:disabled, .retry-btn:disabled, .deliberate-btn:disabled { opacity: 0.5; cursor: not-allowed;
       display: none;
     }
     .run-btn.loading .spinner { display: block; }
@@ -2003,6 +2009,20 @@ if (!anvandare) {
     .accordion-status { font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem; }
     .accordion-status.success { color: var(--color-success); }
     .accordion-status.error { color: var(--color-error); }
+    .accordion-status.waiting { color: var(--color-primary); }
+    .accordion-status.waiting::before { 
+      content: ''; 
+      display: inline-block; 
+      width: 10px; 
+      height: 10px; 
+      border: 2px solid var(--color-primary); 
+      border-top-color: transparent; 
+      border-radius: 50%; 
+      animation: spin 1s linear infinite; 
+      margin-right: 4px; 
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .accordion-header-right { display: flex; align-items: center; gap: 0.75rem; }
     .accordion-duration { font-size: 0.75rem; color: var(--text-muted); }
     .accordion-icon { width: 20px; height: 20px; color: var(--text-muted); transition: transform 0.2s; }
@@ -2775,6 +2795,9 @@ if (!anvandare) {
               <button type="button" id="retryFailedBtn" class="retry-btn" style="display: none;" title="Kör endast modeller som misslyckades">
                 <span>🔄 Försök igen (misslyckade)</span>
               </button>
+              <button type="button" id="deliberateNowBtn" class="deliberate-btn" style="display: none;" title="Kör deliberation (Runda 2) på insamlade svar">
+                <span>🔄 Kör deliberation</span>
+              </button>
               <button type="button" id="synthesizeNowBtn" class="synthesize-btn" style="display: none;" title="Syntetisera insamlade svar">
                 <span>🧪 Kör syntes nu</span>
               </button>
@@ -3264,16 +3287,23 @@ if (!anvandare) {
       let useSupabase = true;
       let availableModels = { openai: true, anthropic: true, gemini: true, grok: true };
       
+      // Per-model progress tracking
+      let modelTimers = {}; // { openai: { startTime, intervalId }, ... }
+      let modelStartTimes = {}; // Track when each model started
+      
       // Elements
       const contextEl = document.getElementById('context');
       const promptEl = document.getElementById('prompt');
       const runBtn = document.getElementById('runBtn');
       const retryFailedBtn = document.getElementById('retryFailedBtn');
+      const deliberateNowBtn = document.getElementById('deliberateNowBtn');
       const synthesizeNowBtn = document.getElementById('synthesizeNowBtn');
-      
+
       // Track failed models for retry functionality
       let failedModels = [];
-      let collectedResponses = {}; // Store responses across multiple runs
+      let collectedResponses = {}; // Store Round 1 responses across multiple runs
+      let collectedR2Responses = {}; // Store Round 2 (deliberation) responses
+      let hasRunDeliberation = false; // Track if deliberation has been run
       const statusEl = document.getElementById('status');
       const statusTextEl = document.getElementById('statusText');
       const errorEl = document.getElementById('error');
@@ -4227,6 +4257,64 @@ if (!anvandare) {
       function setStatus(text, show) { statusEl.classList.toggle('visible', show); statusTextEl.textContent = text; }
       function showError(text) { errorEl.classList.add('visible'); errorEl.textContent = text; }
       function hideError() { errorEl.classList.remove('visible'); }
+      
+      // Per-model progress tracking
+      function startModelWaiting(models) {
+        // Clear any existing timers
+        stopAllModelTimers();
+        
+        const modelDisplayNames = { openai: 'OpenAI o1', anthropic: 'Claude', google: 'Gemini', grok: 'Grok' };
+        const modelToProvider = { openai: 'openai', anthropic: 'anthropic', gemini: 'google', grok: 'grok' };
+        
+        models.forEach(model => {
+          const provider = modelToProvider[model] || model;
+          const statusEl = document.getElementById('status-' + provider);
+          const durationEl = document.getElementById('duration-' + provider);
+          if (!statusEl) return;
+          
+          const startTime = Date.now();
+          modelStartTimes[provider] = startTime;
+          
+          // Set initial waiting status
+          statusEl.textContent = 'Väntar...';
+          statusEl.className = 'accordion-status waiting';
+          if (durationEl) durationEl.textContent = '0.0s';
+          
+          // Update timer every 100ms for smooth display
+          modelTimers[provider] = setInterval(() => {
+            const elapsed = (Date.now() - startTime) / 1000;
+            if (durationEl) durationEl.textContent = elapsed.toFixed(1) + 's';
+          }, 100);
+        });
+      }
+      
+      function stopModelTimer(provider) {
+        if (modelTimers[provider]) {
+          clearInterval(modelTimers[provider]);
+          delete modelTimers[provider];
+        }
+      }
+      
+      function stopAllModelTimers() {
+        Object.keys(modelTimers).forEach(provider => {
+          clearInterval(modelTimers[provider]);
+        });
+        modelTimers = {};
+        modelStartTimes = {};
+      }
+      
+      function markModelComplete(provider, duration, hasError) {
+        stopModelTimer(provider);
+        const statusEl = document.getElementById('status-' + provider);
+        if (statusEl) {
+          statusEl.textContent = hasError ? '❌' : '✓';
+          statusEl.className = 'accordion-status ' + (hasError ? 'error' : 'success');
+        }
+        const durationEl = document.getElementById('duration-' + provider);
+        if (durationEl && duration) {
+          durationEl.textContent = formatDuration(duration);
+        }
+      }
       function setLoading(loading) { runBtn.disabled = loading; runBtn.classList.toggle('loading', loading); }
       
       function displayResponse(provider, data) {
@@ -4253,12 +4341,17 @@ if (!anvandare) {
           titleEl.textContent = modelDisplayNames[data.model] || data.model;
         }
         
+        // Remove waiting class before adding success/error
+        statusEl.classList.remove('waiting');
+        
         if (data.error) {
           statusEl.textContent = '❌';
+          statusEl.classList.remove('success');
           statusEl.classList.add('error');
           markdownEl.innerHTML = '<p style="color:#f87171;">' + data.error + '</p>';
         } else {
           statusEl.textContent = '✓';
+          statusEl.classList.remove('error');
           statusEl.classList.add('success');
           markdownEl.innerHTML = renderMarkdown(data.response);
         }
@@ -4427,10 +4520,17 @@ if (!anvandare) {
                   switch (event.type) {
                     case 'started':
                       setStatus('🚀 Ansluten, frågar AI-modeller...', true);
+                      // Start per-model waiting indicators
+                      startModelWaiting(selectedModels);
                       break;
                     case 'heartbeat':
-                      // Keep-alive signal - show elapsed time
-                      setStatus('⏳ Arbetar... (' + event.data.elapsed + 's)', true);
+                      // Keep-alive signal - show elapsed time in main status
+                      const waitingCount = Object.keys(modelTimers).length;
+                      if (waitingCount > 0) {
+                        setStatus('⏳ Väntar på ' + waitingCount + ' modell' + (waitingCount > 1 ? 'er' : '') + '... (' + event.data.elapsed + 's)', true);
+                      } else {
+                        setStatus('⏳ Arbetar... (' + event.data.elapsed + 's)', true);
+                      }
                       break;
                     case 'snapshot':
                       // Backup data in case function dies later
@@ -4444,18 +4544,26 @@ if (!anvandare) {
                       setStatus('⏳ ' + event.data.message, true);
                       break;
                     case 'model_complete':
-                      const modelName = { openai: 'OpenAI', anthropic: 'Anthropic', gemini: 'Gemini', grok: 'Grok' }[event.data.provider] || event.data.provider;
-                      setStatus('✓ ' + modelName + ' klar (' + formatDuration(event.data.duration) + ')', true);
+                      // Map provider names to our internal keys
+                      const providerToKey = { openai: 'openai', anthropic: 'anthropic', gemini: 'google', grok: 'grok' };
+                      const modelKey = providerToKey[event.data.provider] || event.data.provider;
+                      markModelComplete(modelKey, event.data.duration, event.data.hasError);
+                      
+                      const modelDisplayName = { openai: 'OpenAI', anthropic: 'Claude', gemini: 'Gemini', grok: 'Grok' }[event.data.provider] || event.data.provider;
+                      setStatus('✓ ' + modelDisplayName + ' klar (' + formatDuration(event.data.duration) + ')', true);
                       break;
                     case 'error':
+                      stopAllModelTimers();
                       throw new Error(event.data.error);
                     case 'partial_complete':
+                      stopAllModelTimers();
                       // Graceful degradation - we have partial results
                       console.warn('Partial result received:', event.data.successfulModels);
                       data = event.data;
                       data._isPartial = true;
                       break;
                     case 'complete':
+                      stopAllModelTimers();
                       data = event.data;
                       break;
                   }
@@ -4510,7 +4618,8 @@ if (!anvandare) {
           currentResponses.totalDuration = data.totalDuration;
           
           // Display Round 1 responses
-          const providerMap = { 'OpenAI': 'openai', 'Anthropic': 'anthropic', 'Google': 'google', 'xAI': 'grok' };
+          // Note: Grok API returns 'Grok 4' or 'Grok 2' as provider, not 'xAI'
+          const providerMap = { 'OpenAI': 'openai', 'Anthropic': 'anthropic', 'Google': 'google', 'xAI': 'grok', 'Grok 4': 'grok', 'Grok 2': 'grok', 'Grok': 'grok' };
           data.responses.forEach(r => { const key = providerMap[r.provider]; if (key) displayResponse(key, r); });
           
           // Display Round 2 responses if deliberation was enabled
@@ -4659,24 +4768,42 @@ if (!anvandare) {
           setStatus('', false);
           
           // Track failed models and successful responses for incremental workflow
-          const providerToModel = { 'OpenAI': 'openai', 'Anthropic': 'anthropic', 'Google': 'gemini', 'Grok 4': 'grok', 'Grok 2': 'grok', 'xAI': 'grok' };
+          // Map API provider names to checkbox data-model values
+          const providerToModel = { 
+            'OpenAI': 'openai', 
+            'Anthropic': 'anthropic', 
+            'Google': 'gemini', 
+            'Grok 4': 'grok', 
+            'Grok 2': 'grok', 
+            'Grok': 'grok',
+            'xAI': 'grok' 
+          };
           failedModels = [];
           
           data.responses.forEach(r => {
             const modelKey = providerToModel[r.provider] || r.provider.toLowerCase();
-            if (r.error || !r.response) {
-              failedModels.push(modelKey);
+            // Check for error OR empty/missing response (like the Grok bug showed)
+            const hasFailed = r.error || !r.response || r.response.trim() === '';
+            if (hasFailed) {
+              // Avoid duplicates (e.g. if both 'Grok 4' and 'Grok 2' failed)
+              if (!failedModels.includes(modelKey)) {
+                failedModels.push(modelKey);
+              }
             } else {
               // Store successful response
               collectedResponses[modelKey] = r;
             }
           });
           
-          // Show/hide retry and synthesize buttons based on state
+          console.log('Failed models:', failedModels, 'Collected:', Object.keys(collectedResponses));
+          
+          // Show/hide retry, deliberation, and synthesize buttons based on state
           const hasFailures = failedModels.length > 0;
-          const hasSuccesses = Object.keys(collectedResponses).length > 0;
+          const successCount = Object.keys(collectedResponses).length;
+          const hasSuccesses = successCount > 0;
           const hasSynthesis = !!data.synthesis;
           const isSkipSynthesis = data.skipSynthesis || skipSynthesisEl.checked;
+          const hasDeliberation = data.deliberationEnabled || hasRunDeliberation;
           
           // Show retry button if there are failed models
           retryFailedBtn.style.display = hasFailures ? 'flex' : 'none';
@@ -4684,11 +4811,22 @@ if (!anvandare) {
             retryFailedBtn.querySelector('span').textContent = `🔄 Försök igen (${failedModels.length} misslyckade)`;
           }
           
+          // Show deliberation button if:
+          // - Skip synthesis mode is enabled (incremental workflow)
+          // - We have at least 2 responses (deliberation needs multiple perspectives)
+          // - Deliberation hasn't been run yet
+          const canRunDeliberation = isSkipSynthesis && successCount >= 2 && !hasDeliberation;
+          deliberateNowBtn.style.display = canRunDeliberation ? 'flex' : 'none';
+          if (canRunDeliberation) {
+            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${successCount} svar)`;
+          }
+          
           // Show synthesize button if we have responses but no synthesis (in skip-synthesis mode)
+          // Update button text based on whether deliberation has been run
           synthesizeNowBtn.style.display = (hasSuccesses && !hasSynthesis && isSkipSynthesis) ? 'flex' : 'none';
           if (hasSuccesses) {
-            const successCount = Object.keys(collectedResponses).length;
-            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${successCount} svar)`;
+            const synthType = hasDeliberation ? 'supersyntes' : 'syntes';
+            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${successCount} svar)`;
           }
           
           // Show save prompt or auto-save (works even without synthesis in debug mode)
@@ -4706,19 +4844,26 @@ if (!anvandare) {
           showError(error.message);
           setStatus('', false);
         } finally {
+          stopAllModelTimers();
           setLoading(false);
         }
       }
-      
+
       // Retry failed models button handler
       retryFailedBtn.addEventListener('click', async () => {
-        if (failedModels.length === 0) return;
+        if (failedModels.length === 0) {
+          console.log('No failed models to retry');
+          return;
+        }
         
-        // Select only the failed models
+        console.log('Retrying failed models:', failedModels);
+        
+        // Select only the failed models (using data-model attribute)
         document.querySelectorAll('.model-checkbox').forEach(cb => {
           const checkbox = cb.querySelector('input[type="checkbox"]');
-          const modelId = checkbox.id.replace('model-', '');
+          const modelId = cb.dataset.model; // Use data-model attribute
           const shouldSelect = failedModels.includes(modelId);
+          console.log(`Model ${modelId}: shouldSelect=${shouldSelect}, failed=${failedModels.includes(modelId)}`);
           checkbox.checked = shouldSelect;
           cb.classList.toggle('selected', shouldSelect);
         });
@@ -4727,8 +4872,88 @@ if (!anvandare) {
         skipSynthesisEl.checked = true;
         skipSynthesisToggle.classList.add('active');
         
-        // Run the query
+        // Run the query automatically
         await runQuery();
+      });
+      
+      // Deliberation button handler - run Round 2 on collected responses
+      deliberateNowBtn.addEventListener('click', async () => {
+        const responses = Object.values(collectedResponses);
+        if (responses.length < 2) {
+          alert('Deliberation kräver minst 2 svar.');
+          return;
+        }
+        
+        setLoading(true);
+        setStatus('🔄 Kör deliberation - modellerna granskar varandras svar...', true);
+        
+        // Show Round 2 section
+        round2Section.style.display = 'block';
+        round1Label.style.display = 'block';
+        
+        // Start waiting indicators for R2
+        const modelsWithResponses = Object.keys(collectedResponses);
+        modelsWithResponses.forEach(modelKey => {
+          const r2StatusEl = document.getElementById('status-r2-' + modelKey);
+          const r2DurationEl = document.getElementById('duration-r2-' + modelKey);
+          const r2Accordion = document.getElementById('accordion-r2-' + modelKey);
+          if (r2Accordion) r2Accordion.style.display = 'block';
+          if (r2StatusEl) {
+            r2StatusEl.textContent = 'Väntar...';
+            r2StatusEl.className = 'accordion-status waiting';
+          }
+          if (r2DurationEl) r2DurationEl.textContent = '0.0s';
+        });
+        
+        try {
+          const response = await fetch('/api/ai-council/deliberate-only', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: currentPrompt,
+              responses: responses
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Deliberationsfel: ' + response.statusText);
+          }
+          
+          const data = await response.json();
+          
+          if (data.round2Responses) {
+            // Store R2 responses
+            const providerToKey = { 
+              'OpenAI': 'openai', 
+              'Anthropic': 'anthropic', 
+              'Google': 'google', 
+              'Grok 4': 'grok', 
+              'Grok 2': 'grok',
+              'Grok': 'grok',
+              'xAI': 'grok' 
+            };
+            
+            data.round2Responses.forEach(r => {
+              const key = providerToKey[r.provider] || r.provider.toLowerCase();
+              collectedR2Responses[key] = r;
+              displayResponse('r2-' + key, r);
+            });
+            
+            hasRunDeliberation = true;
+            
+            // Hide deliberation button, update synthesize button
+            deliberateNowBtn.style.display = 'none';
+            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${Object.keys(collectedResponses).length} svar)`;
+            
+            setStatus('✓ Deliberation klar!', true);
+            setTimeout(() => setStatus('', false), 2000);
+          }
+        } catch (error) {
+          showError(error.message);
+          setStatus('', false);
+        } finally {
+          setLoading(false);
+        }
       });
       
       // Synthesize now button handler
@@ -4739,8 +4964,12 @@ if (!anvandare) {
           return;
         }
         
+        // Determine if this is super-synthesis (with R2 responses) or regular synthesis
+        const r2Responses = Object.values(collectedR2Responses);
+        const isSuperSynthesis = hasRunDeliberation && r2Responses.length > 0;
+        
         setLoading(true);
-        setStatus('🧪 Kör syntes på insamlade svar...', true);
+        setStatus(isSuperSynthesis ? '🧪 Kör supersyntes...' : '🧪 Kör syntes på insamlade svar...', true);
         
         try {
           const response = await fetch('/api/ai-council/synthesize-only', {
@@ -4749,7 +4978,9 @@ if (!anvandare) {
             body: JSON.stringify({
               prompt: currentPrompt,
               responses: responses,
-              synthesisModel: synthesisModelEl.value
+              round2Responses: isSuperSynthesis ? r2Responses : undefined,
+              synthesisModel: synthesisModelEl.value,
+              isSuperSynthesis
             })
           });
           
