@@ -2731,6 +2731,14 @@ if (!anvandare) {
                     <div class="deliberation-toggle-desc">Runda 2: Modeller granskar varandra</div>
                   </div>
                 </label>
+                <label id="skipSynthesisToggle" class="deliberation-toggle skip-synthesis-toggle" title="För debugging - kör endast modellerna utan syntes">
+                  <input type="checkbox" id="skipSynthesis">
+                  <span class="deliberation-toggle-switch"></span>
+                  <div>
+                    <div class="deliberation-toggle-label">🔧 Testa</div>
+                    <div class="deliberation-toggle-desc">Hoppa över syntes (debug)</div>
+                  </div>
+                </label>
               </div>
               <button type="button" id="runBtn" class="run-btn">
                 <span class="btn-text">⚡ Kör AI Council</span>
@@ -3242,6 +3250,8 @@ if (!anvandare) {
       const modelSelectionEl = document.getElementById('modelSelection');
       const deliberationToggle = document.getElementById('deliberationToggle');
       const enableDeliberationEl = document.getElementById('enableDeliberation');
+      const skipSynthesisToggle = document.getElementById('skipSynthesisToggle');
+      const skipSynthesisEl = document.getElementById('skipSynthesis');
       const round1Label = document.getElementById('round1Label');
       const round2Section = document.getElementById('round2Section');
       const dictationBtn = document.getElementById('dictationBtn');
@@ -3484,6 +3494,12 @@ if (!anvandare) {
         
         // Clear profile selection when manually changing
         profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
+      });
+      
+      // Skip synthesis toggle handler (for debugging)
+      skipSynthesisToggle.addEventListener('click', () => {
+        skipSynthesisEl.checked = !skipSynthesisEl.checked;
+        skipSynthesisToggle.classList.toggle('active', skipSynthesisEl.checked);
       });
       
       // Model checkbox handlers
@@ -4315,6 +4331,7 @@ if (!anvandare) {
               selectedModels, 
               enableDeliberation, 
               profileType,
+              skipSynthesis: skipSynthesisEl.checked,
               images: imageFiles.length > 0 ? imageFiles : undefined
             })
           });

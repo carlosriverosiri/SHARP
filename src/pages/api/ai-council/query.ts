@@ -116,6 +116,7 @@ interface QueryRequest {
   enableDeliberation?: boolean; // Enable round 2 where models review each other
   profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'strategy'; // Which preset profile to use
   images?: ImageData[]; // Base64 encoded images for multimodal queries
+  skipSynthesis?: boolean; // Debug mode: skip synthesis step
 }
 
 // Hallucination detection
@@ -1452,7 +1453,8 @@ async function handleStreamingQuery(
           selectedModels = availableProviders,
           enableDeliberation: enableDelib = false,
           profileType = 'fast',
-          images = []
+          images = [],
+          skipSynthesis = false
         } = body;
         
         enableDeliberation = enableDelib;
@@ -1611,38 +1613,43 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
           sendEvent({ type: 'progress', data: { stage: 'round2_complete', message: 'Deliberation klar' } });
         }
 
-        // SYNTHESIS (with timeout protection)
-        sendEvent({ type: 'progress', data: { stage: 'synthesis', message: 'Syntetiserar resultat...' } });
+        // SYNTHESIS (with timeout protection) - skip if debug mode
+        let synthesis: AIResponse | null = null;
         
-        const SYNTHESIS_TIMEOUT_MS = 50000; // 50 seconds for synthesis
-        const synthesisStart = Date.now();
-        
-        const synthesisPromise = enableDeliberation
-          ? superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
-          : synthesize(prompt, round1Responses, actualSynthesisModel);
-        
-        const synthesisTimeoutPromise = new Promise<AIResponse>((resolve) => {
-          setTimeout(() => {
-            resolve({
-              model: actualSynthesisModel,
-              provider: 'Syntes (Timeout)',
-              response: 'Syntesen tog för lång tid. Här är de individuella svaren från modellerna ovan.',
-              error: 'Timeout vid syntes',
-              duration: SYNTHESIS_TIMEOUT_MS,
-            });
-          }, SYNTHESIS_TIMEOUT_MS);
-        });
-        
-        const synthesis = await Promise.race([synthesisPromise, synthesisTimeoutPromise]);
-
-        sendEvent({ type: 'progress', data: { stage: 'synthesis_complete', message: 'Syntes klar' } });
+        if (skipSynthesis) {
+          sendEvent({ type: 'progress', data: { stage: 'synthesis_skipped', message: '🔧 Syntes hoppades över (debug-läge)' } });
+        } else {
+          sendEvent({ type: 'progress', data: { stage: 'synthesis', message: 'Syntetiserar resultat...' } });
+          
+          const SYNTHESIS_TIMEOUT_MS = 50000; // 50 seconds for synthesis
+          const synthesisStart = Date.now();
+          
+          const synthesisPromise = enableDeliberation
+            ? superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
+            : synthesize(prompt, round1Responses, actualSynthesisModel);
+          
+          const synthesisTimeoutPromise = new Promise<AIResponse>((resolve) => {
+            setTimeout(() => {
+              resolve({
+                model: actualSynthesisModel,
+                provider: 'Syntes (Timeout)',
+                response: 'Syntesen tog för lång tid. Här är de individuella svaren från modellerna ovan.',
+                error: 'Timeout vid syntes',
+                duration: SYNTHESIS_TIMEOUT_MS,
+              });
+            }, SYNTHESIS_TIMEOUT_MS);
+          });
+          
+          synthesis = await Promise.race([synthesisPromise, synthesisTimeoutPromise]);
+          sendEvent({ type: 'progress', data: { stage: 'synthesis_complete', message: 'Syntes klar' } });
+        }
 
         // Calculate totals
         const round1Duration = round1Responses.reduce((sum, r) => sum + r.duration, 0);
         const round2Duration = round2Responses.reduce((sum, r) => sum + r.duration, 0);
-        const totalDuration = round1Duration + round2Duration + synthesis.duration;
+        const totalDuration = round1Duration + round2Duration + (synthesis?.duration || 0);
 
-        const allResponses = [...round1Responses, ...round2Responses, synthesis];
+        const allResponses = [...round1Responses, ...round2Responses, ...(synthesis ? [synthesis] : [])];
         const totalCost = {
           inputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.inputTokens || 0), 0),
           outputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.outputTokens || 0), 0),
@@ -1668,6 +1675,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
             availableModels,
             totalDuration,
             totalCost,
+            skipSynthesis,
           }
         });
 
