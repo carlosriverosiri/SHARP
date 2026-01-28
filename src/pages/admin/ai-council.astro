@@ -4029,7 +4029,8 @@ if (!anvandare) {
       
       // Export as Markdown
       document.getElementById('exportMarkdown').addEventListener('click', function() {
-        if (!currentResponses.synthesis || !currentPrompt) {
+        const hasResults = currentResponses.synthesis || (currentResponses.rawResponses && currentResponses.rawResponses.length > 0);
+        if (!hasResults || !currentPrompt) {
           alert('Ingen session att exportera.');
           return;
         }
@@ -4105,11 +4106,15 @@ if (!anvandare) {
         
         md += `---\n\n`;
         
-        // Add synthesis
-        const synthType = deliberationEnabled ? 'SUPERSYNTES' : 'Syntes';
-        md += `## ${synthType}\n\n${currentResponses.synthesis}\n\n`;
-        
-        md += `---\n\n`;
+        // Add synthesis (if present)
+        if (currentResponses.synthesis) {
+          const synthType = deliberationEnabled ? 'SUPERSYNTES' : 'Syntes';
+          md += `## ${synthType}\n\n${currentResponses.synthesis}\n\n`;
+          md += `---\n\n`;
+        } else {
+          md += `> *Syntes hoppades över (debug-läge)*\n\n`;
+          md += `---\n\n`;
+        }
         
         // Add individual responses
         md += `## Individuella svar\n\n`;
@@ -4156,7 +4161,8 @@ if (!anvandare) {
       });
       
       document.getElementById('saveSynthesis').addEventListener('click', async function() {
-        if (!currentResponses.synthesis || !currentPrompt) return;
+        const hasResults = currentResponses.synthesis || (currentResponses.rawResponses && currentResponses.rawResponses.length > 0);
+        if (!hasResults || !currentPrompt) return;
         
         const btn = this;
         btn.disabled = true;
@@ -4612,8 +4618,9 @@ if (!anvandare) {
           
           setStatus('', false);
           
-          // Show save prompt or auto-save
-          if (currentResponses.synthesis) {
+          // Show save prompt or auto-save (works even without synthesis in debug mode)
+          const hasResults = currentResponses.synthesis || (currentResponses.rawResponses && currentResponses.rawResponses.length > 0);
+          if (hasResults) {
             if (localStorage.getItem('ai-council-autosave') === 'true') {
               // Auto-save with timestamp as name
               await saveCurrentSession('Auto: ' + new Date().toLocaleString('sv-SE'));
