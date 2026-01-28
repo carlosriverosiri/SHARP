@@ -325,42 +325,79 @@ Bifoga skärmdumpar, diagram eller bilder direkt i frågan:
 
 ### 📚 Zotero-integration (v3.2)
 
-Importera vetenskapliga artiklar direkt från ditt Zotero-bibliotek till AI Council.
+Importera vetenskapliga artiklar direkt från ditt Zotero-bibliotek till AI Council via en **stor modal** med fullständig collection-navigering.
 
 #### Konfigurera Zotero
 
 1. **Öppna AI Council** → Klicka på "📚 Zotero" i sidebaren
 2. **Hämta API-nyckel** från [zotero.org/settings/keys](https://www.zotero.org/settings/keys)
-3. **Klistra in nyckeln** → Spara
+   - Kryssa i "Allow library access"
+   - Valfritt: "Allow notes access" och "Allow write access" (för framtida export)
+3. **Klistra in nyckeln** i config-dialogen → Spara
+
+#### Stor modal med collections
+
+När du klickar på "📚 Zotero" öppnas en **stor central modal** (~90% av skärmen):
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  Zotero                                              riverosiri   ✕  │
+├────────────────────┬─────────────────────────────────────────────────┤
+│  📁 Collections 🔄 │  [Sök i biblioteket...]                    🔍   │
+├────────────────────┼─────────────────────────────────────────────────┤
+│  📚 Mitt bibliotek │  25 resultat                    ☐ Välj alla    │
+│  📁 AC-Anatomy     ├─────────────────────────────────────────────────┤
+│  📁 AC-artros      │  ☐ Artikel 1                                   │
+│    📂 AC-LUX       │     Författare, A. et al. (2024)               │
+│    📂 AC-radiologi │     Journal of Shoulder Surgery                │
+│  📁 ANATOMI        │     📄 PDF  #tag1 #tag2                        │
+│  📁 Biceps         │  ☐ Artikel 2                                   │
+│  📁 HEMSIDA        │     ...                                        │
+│    📂 Rotatorcuff  │                                                │
+│  ...               │                                                │
+├────────────────────┴─────────────────────────────────────────────────┤
+│  3 valda                   🔌 Koppla från    📥 Importera valda PDF  │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**Navigering:**
+- **Vänster sidebar:** Hela din collection-hierarki med antal items per mapp
+- **Klicka på collection:** Visar alla artiklar i den mappen
+- **Sök:** Fritext-sökning i hela biblioteket eller vald collection
 
 #### Sök och importera
 
-1. **Sök** efter titel, författare eller nyckelord
-2. **Välj** artiklar genom att klicka i checkboxar
-3. **Importera PDF** → Texten extraheras och läggs till i kontexten
+1. **Bläddra** i dina collections eller **sök** efter titel/författare/nyckelord
+2. **Välj** artiklar genom att klicka på dem (multi-select)
+3. **Importera PDF:er** → Texten extraheras och läggs till i kontexten
 
 **Funktioner:**
 
 | Funktion | Beskrivning |
 |----------|-------------|
-| **Sökning** | Sök i hela ditt Zotero-bibliotek |
+| **Collection-träd** | Hela hierarkin med alla nivåer av nesting |
+| **Sökning** | Sök i hela biblioteket eller inom collection |
+| **Multi-select** | Välj flera artiklar samtidigt |
 | **PDF-import** | Hämtar och extraherar text automatiskt |
 | **Säkerhet** | AES-256-GCM kryptering av API-nycklar |
 | **Rate limiting** | 120 req/60s med exponential backoff |
-| **Chunking** | Stora PDF:er delas upp intelligent |
 
 **Begränsningar:**
 - Max 50 MB per PDF
-- Max 100k tecken extraheras (resten trunkeras)
-- Endast "imported_file" PDF:er stöds (inte länkade)
-- Grok kan inte analysera Zotero-stöder ej bildanalys
+- Max 100k tecken extraheras per PDF (resten trunkeras)
+- Endast "imported_file" PDF:er stöds (inte länkade filer)
+- Grok stöder ej bildanalys av PDF-innehåll
 
 **Tekniska filer:**
 ```
-src/lib/zotero-crypto.ts          # Kryptering
-src/lib/zotero-rate-limiter.ts    # Rate limiting
-src/pages/api/ai-council/zotero/  # API endpoints
-supabase/migrations/013-*.sql     # Databasschema
+src/lib/zotero-crypto.ts              # Kryptering
+src/lib/zotero-rate-limiter.ts        # Rate limiting
+src/pages/api/ai-council/zotero/      # API endpoints (4 st)
+  - validate.ts                       # Validera/spara API-nyckel
+  - search.ts                         # Sök i bibliotek
+  - fetch-pdf.ts                      # Hämta PDF-text
+  - collections.ts                    # Hämta alla collections
+supabase/migrations/013-*.sql         # Databasschema
 ```
 
 ### Kopieringsknappar
@@ -838,17 +875,21 @@ npm install bottleneck
 
 ### v3.2 (2026-01-27) - Zotero-integration
 
-**Ny funktion:** Sök och importera PDF:er från Zotero-bibliotek.
+**Ny funktion:** Sök och importera PDF:er från Zotero-bibliotek via stor modal.
 
-- 📚 **Zotero-accordion** i sidebaren med sökning och import
+- 📚 **Stor Zotero-modal** (~90% av skärmen) för bättre översikt
+- 🗂️ **Collection-navigering** - Hela hierarkin med alla nivåer av nesting
+- 🔍 **Sök och bläddra** - Fritext eller inom specifik collection
+- ✅ **Multi-select** - Välj flera artiklar för batch-import
 - 🔐 **AES-256-GCM kryptering** av API-nycklar med PBKDF2
 - ⏱️ **Smart rate limiting** - 120 req/60s med exponential backoff
 - 📄 **PDF-extraktion** med pdf-parse och intelligent chunking
 - 🗄️ **Supabase-integration** med RLS för säker lagring
 
 **Tekniskt:**
-- 3 nya API-endpoints: validate, search, fetch-pdf
-- Migration 013 för zotero_configs tabell
+- 4 nya API-endpoints: validate, search, fetch-pdf, collections
+- Collections API med pagination för att hämta ALLA collections
+- Migration 013 för zotero_configs/cache tabeller
 - npm: pdf-parse dependency
 
 ---
