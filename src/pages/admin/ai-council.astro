@@ -1561,20 +1561,81 @@ if (!anvandare) {
     }
     
     /* File upload */
+    .file-upload-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      align-items: stretch;
+    }
     .file-upload-area {
+      flex: 1;
       border: 2px dashed var(--border-color);
       border-radius: 8px;
       padding: 1rem;
       text-align: center;
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
-      margin-top: 0.75rem;
     }
     .file-upload-area:hover { border-color: var(--color-primary); background: var(--bg-hover); }
     .file-upload-area.dragover { border-color: var(--color-primary); background: var(--color-primary-light); }
     .file-upload-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
     .file-upload-text { font-size: 0.8125rem; color: var(--text-muted); }
     .file-upload-text strong { color: var(--color-primary); }
+    
+    /* Camera button */
+    .camera-btn {
+      display: none; /* Hidden on desktop by default */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      min-width: 80px;
+      transition: all 0.2s;
+    }
+    .camera-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    .camera-btn:active {
+      transform: scale(0.98);
+    }
+    .camera-icon {
+      width: 28px;
+      height: 28px;
+    }
+    .camera-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    /* Show camera button on mobile/tablet */
+    @media (max-width: 1024px) {
+      .camera-btn {
+        display: flex;
+      }
+    }
+    
+    /* On very small screens, stack vertically */
+    @media (max-width: 480px) {
+      .file-upload-row {
+        flex-direction: column;
+      }
+      .camera-btn {
+        flex-direction: row;
+        min-width: 100%;
+        padding: 1rem 1.5rem;
+      }
+      .camera-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
     .file-list { margin-top: 0.75rem; }
     .file-item {
       display: flex;
@@ -2433,14 +2494,24 @@ if (!anvandare) {
               </label>
               <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
               
-              <!-- File upload -->
-              <div id="fileUploadArea" class="file-upload-area">
-                <div class="file-upload-icon">📎</div>
-                <div class="file-upload-text">
-                  <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
-                  <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
+              <!-- File upload with camera -->
+              <div class="file-upload-row">
+                <div id="fileUploadArea" class="file-upload-area">
+                  <div class="file-upload-icon">📎</div>
+                  <div class="file-upload-text">
+                    <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
+                    <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
+                  </div>
+                  <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
                 </div>
-                <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
+                <button type="button" class="camera-btn" id="cameraBtn" title="Ta foto med kamera">
+                  <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  <span class="camera-label">Kamera</span>
+                </button>
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
               </div>
               <div id="fileList" class="file-list"></div>
             </div>
@@ -3451,6 +3522,22 @@ if (!anvandare) {
         handleFiles(e.dataTransfer.files);
       });
       fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+      
+      // Camera button handler
+      const cameraBtn = document.getElementById('cameraBtn');
+      const cameraInput = document.getElementById('cameraInput');
+      
+      cameraBtn?.addEventListener('click', () => {
+        cameraInput?.click();
+      });
+      
+      cameraInput?.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleFiles(e.target.files);
+          // Reset so same photo can be taken again
+          e.target.value = '';
+        }
+      });
       
       // Paste image handler for context and prompt textareas
       function handlePaste(e) {

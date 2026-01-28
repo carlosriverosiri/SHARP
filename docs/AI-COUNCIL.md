@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-28 (v3.3 - Mobilanpassning & Diktering)
+**Senast uppdaterad:** 2026-01-28 (v3.4 - Kamerafunktion)
 
 ---
 
@@ -33,6 +33,19 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### 🟡 Planerade funktioner
 
+#### 📁 Projektmappar & Fältdokumentation (Vision Q2 2026)
+
+> **Use case:** Vinprovare åker till Frankrike, fotograferar maskiner och vingårdar, pratar med AI om varje bild, får dokumentation samlad per projekt.
+
+- [ ] **Projektmappar med bilder** - Alla bilder + sessioner samlade per projekt
+- [ ] **Bild + svar ihop** - Spara analyser tillsammans med originalbilder
+- [ ] **Bildgalleri per projekt** - Visuell översikt av alla foton
+- [ ] **Omvänd bildsök** - Identifiera maskiner/objekt via Google Vision / Perplexity
+- [ ] **PDF-export med bilder** - Generera rapport med foton + AI-analys
+- [ ] **Kontinuerlig dialog per bild** - Följdfrågor om samma foto
+
+#### 🔧 Övriga planerade funktioner
+
 - [ ] **Streaming-svar** - Visa svar i realtid istället för att vänta
 - [ ] **Dela sessioner** - Länk för att dela med kollegor
 - [ ] **Custom syntes-prompts** - Anpassa hur syntesen görs
@@ -44,6 +57,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Kamerafunktion** (v3.4) - Fotografera direkt från mobil/iPad för bildanalys
 - [x] **Diktering/Speech-to-text** (v3.3) - Mikrofon-knapp för att tala in prompts (Web Speech API)
 - [x] **Mobilanpassning** (v3.3) - Touch-vänligt UI, FAB för sessioner, scroll-profiler
 - [x] **Auto-resize textareas** (v3.3) - Textfält anpassar sig efter innehåll
