@@ -4367,6 +4367,10 @@ if (!anvandare) {
                     case 'started':
                       setStatus('🚀 Ansluten, frågar AI-modeller...', true);
                       break;
+                    case 'heartbeat':
+                      // Keep-alive signal - show elapsed time
+                      setStatus('⏳ Arbetar... (' + event.data.elapsed + 's)', true);
+                      break;
                     case 'progress':
                       setStatus('⏳ ' + event.data.message, true);
                       break;

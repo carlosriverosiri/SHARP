@@ -1385,6 +1385,29 @@ async function handleStreamingQuery(
   
   const stream = new ReadableStream({
     async start(controller) {
+      // Heartbeat to prevent Netlify Inactivity Timeout (sends ping every 5 seconds)
+      let heartbeatInterval: ReturnType<typeof setInterval> | null = null;
+      let heartbeatCount = 0;
+      
+      const startHeartbeat = () => {
+        heartbeatInterval = setInterval(() => {
+          heartbeatCount++;
+          try {
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'heartbeat', data: { count: heartbeatCount, elapsed: heartbeatCount * 5 } }) + '\n'));
+          } catch (e) {
+            // Controller might be closed
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+          }
+        }, 5000); // Every 5 seconds
+      };
+      
+      const stopHeartbeat = () => {
+        if (heartbeatInterval) {
+          clearInterval(heartbeatInterval);
+          heartbeatInterval = null;
+        }
+      };
+      
       // Helper to send progress events
       const sendEvent = (event: { type: string; data?: any }) => {
         controller.enqueue(encoder.encode(JSON.stringify(event) + '\n'));
@@ -1393,6 +1416,9 @@ async function handleStreamingQuery(
       try {
         // Send initial event immediately to keep connection alive
         sendEvent({ type: 'started', data: { timestamp: Date.now(), models: availableProviders } });
+        
+        // Start heartbeat to keep connection alive during long API calls
+        startHeartbeat();
         
         const { 
           context, 
@@ -1406,6 +1432,7 @@ async function handleStreamingQuery(
         } = body;
 
         if (!prompt?.trim()) {
+          stopHeartbeat();
           sendEvent({ type: 'error', data: { error: 'Prompt krävs' } });
           controller.close();
           return;
@@ -1414,6 +1441,7 @@ async function handleStreamingQuery(
         // Filter selected models
         const modelsToQuery = selectedModels.filter(m => availableProviders.includes(m));
         if (modelsToQuery.length === 0) {
+          stopHeartbeat();
           sendEvent({ type: 'error', data: { error: 'Inga valda modeller har API-nycklar konfigurerade.' } });
           controller.close();
           return;
@@ -1559,6 +1587,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
       } catch (error: any) {
         sendEvent({ type: 'error', data: { error: error.message } });
       } finally {
+        stopHeartbeat();
         controller.close();
       }
     }
