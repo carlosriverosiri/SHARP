@@ -1468,14 +1468,44 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         const round1Responses: AIResponse[] = [];
         const queryOrder: ModelProvider[] = [];
         
-        // Create promises that report when they complete
+        // Per-model timeout (45 seconds) to prevent function timeout (60s)
+        const MODEL_TIMEOUT_MS = 45000;
+        
+        // Create promises that report when they complete, with timeout protection
         const createTrackedQuery = async (
           provider: ModelProvider,
           queryFn: () => Promise<AIResponse>
         ): Promise<AIResponse> => {
-          const response = await queryFn();
-          sendEvent({ type: 'model_complete', data: { provider, duration: response.duration, hasError: !!response.error } });
-          return response;
+          const start = Date.now();
+          
+          // Race between actual query and timeout
+          const timeoutPromise = new Promise<AIResponse>((resolve) => {
+            setTimeout(() => {
+              resolve({
+                model: provider,
+                provider: provider === 'openai' ? 'OpenAI' : provider === 'anthropic' ? 'Anthropic' : provider === 'gemini' ? 'Google' : 'xAI',
+                response: '',
+                error: `Timeout: ${provider} svarade inte inom 45 sekunder`,
+                duration: MODEL_TIMEOUT_MS,
+              });
+            }, MODEL_TIMEOUT_MS);
+          });
+          
+          try {
+            const response = await Promise.race([queryFn(), timeoutPromise]);
+            sendEvent({ type: 'model_complete', data: { provider, duration: response.duration, hasError: !!response.error } });
+            return response;
+          } catch (e: any) {
+            const errorResponse: AIResponse = {
+              model: provider,
+              provider: provider === 'openai' ? 'OpenAI' : provider === 'anthropic' ? 'Anthropic' : provider === 'gemini' ? 'Google' : 'xAI',
+              response: '',
+              error: e.message || 'Okänt fel',
+              duration: Date.now() - start,
+            };
+            sendEvent({ type: 'model_complete', data: { provider, duration: errorResponse.duration, hasError: true } });
+            return errorResponse;
+          }
         };
 
         const queryPromises: Promise<AIResponse>[] = [];
@@ -1546,12 +1576,29 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
           sendEvent({ type: 'progress', data: { stage: 'round2_complete', message: 'Deliberation klar' } });
         }
 
-        // SYNTHESIS
+        // SYNTHESIS (with timeout protection)
         sendEvent({ type: 'progress', data: { stage: 'synthesis', message: 'Syntetiserar resultat...' } });
         
-        const synthesis = enableDeliberation
-          ? await superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
-          : await synthesize(prompt, round1Responses, actualSynthesisModel);
+        const SYNTHESIS_TIMEOUT_MS = 50000; // 50 seconds for synthesis
+        const synthesisStart = Date.now();
+        
+        const synthesisPromise = enableDeliberation
+          ? superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
+          : synthesize(prompt, round1Responses, actualSynthesisModel);
+        
+        const synthesisTimeoutPromise = new Promise<AIResponse>((resolve) => {
+          setTimeout(() => {
+            resolve({
+              model: actualSynthesisModel,
+              provider: 'Syntes (Timeout)',
+              response: 'Syntesen tog för lång tid. Här är de individuella svaren från modellerna ovan.',
+              error: 'Timeout vid syntes',
+              duration: SYNTHESIS_TIMEOUT_MS,
+            });
+          }, SYNTHESIS_TIMEOUT_MS);
+        });
+        
+        const synthesis = await Promise.race([synthesisPromise, synthesisTimeoutPromise]);
 
         sendEvent({ type: 'progress', data: { stage: 'synthesis_complete', message: 'Syntes klar' } });
 
