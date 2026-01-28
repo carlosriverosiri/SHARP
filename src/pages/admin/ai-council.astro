@@ -1755,6 +1755,33 @@ if (!anvandare) {
       border-top-color: white;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+    }
+    
+    /* Retry and Synthesize buttons */
+    .retry-btn, .synthesize-btn {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    .retry-btn {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #f59e0b;
+    }
+    .retry-btn:hover { background: #fde68a; }
+    .synthesize-btn {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+      border: none;
+    }
+    .synthesize-btn:hover { opacity: 0.9; }
+    .synthesize-btn:disabled, .retry-btn:disabled { opacity: 0.5; cursor: not-allowed;
       display: none;
     }
     .run-btn.loading .spinner { display: block; }
@@ -2744,6 +2771,12 @@ if (!anvandare) {
                 <span class="btn-text">⚡ Kör AI Council</span>
                 <span class="spinner"></span>
               </button>
+              <button type="button" id="retryFailedBtn" class="retry-btn" style="display: none;" title="Kör endast modeller som misslyckades">
+                <span>🔄 Försök igen (misslyckade)</span>
+              </button>
+              <button type="button" id="synthesizeNowBtn" class="synthesize-btn" style="display: none;" title="Syntetisera insamlade svar">
+                <span>🧪 Kör syntes nu</span>
+              </button>
             </div>
           </div>
         </section>
@@ -3234,6 +3267,12 @@ if (!anvandare) {
       const contextEl = document.getElementById('context');
       const promptEl = document.getElementById('prompt');
       const runBtn = document.getElementById('runBtn');
+      const retryFailedBtn = document.getElementById('retryFailedBtn');
+      const synthesizeNowBtn = document.getElementById('synthesizeNowBtn');
+      
+      // Track failed models for retry functionality
+      let failedModels = [];
+      let collectedResponses = {}; // Store responses across multiple runs
       const statusEl = document.getElementById('status');
       const statusTextEl = document.getElementById('statusText');
       const errorEl = document.getElementById('error');
@@ -4618,6 +4657,39 @@ if (!anvandare) {
           
           setStatus('', false);
           
+          // Track failed models and successful responses for incremental workflow
+          const providerToModel = { 'OpenAI': 'openai', 'Anthropic': 'anthropic', 'Google': 'gemini', 'Grok 4': 'grok', 'Grok 2': 'grok', 'xAI': 'grok' };
+          failedModels = [];
+          
+          data.responses.forEach(r => {
+            const modelKey = providerToModel[r.provider] || r.provider.toLowerCase();
+            if (r.error || !r.response) {
+              failedModels.push(modelKey);
+            } else {
+              // Store successful response
+              collectedResponses[modelKey] = r;
+            }
+          });
+          
+          // Show/hide retry and synthesize buttons based on state
+          const hasFailures = failedModels.length > 0;
+          const hasSuccesses = Object.keys(collectedResponses).length > 0;
+          const hasSynthesis = !!data.synthesis;
+          const isSkipSynthesis = data.skipSynthesis || skipSynthesisEl.checked;
+          
+          // Show retry button if there are failed models
+          retryFailedBtn.style.display = hasFailures ? 'flex' : 'none';
+          if (hasFailures) {
+            retryFailedBtn.querySelector('span').textContent = `🔄 Försök igen (${failedModels.length} misslyckade)`;
+          }
+          
+          // Show synthesize button if we have responses but no synthesis (in skip-synthesis mode)
+          synthesizeNowBtn.style.display = (hasSuccesses && !hasSynthesis && isSkipSynthesis) ? 'flex' : 'none';
+          if (hasSuccesses) {
+            const successCount = Object.keys(collectedResponses).length;
+            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${successCount} svar)`;
+          }
+          
           // Show save prompt or auto-save (works even without synthesis in debug mode)
           const hasResults = currentResponses.synthesis || (currentResponses.rawResponses && currentResponses.rawResponses.length > 0);
           if (hasResults) {
@@ -4636,6 +4708,83 @@ if (!anvandare) {
           setLoading(false);
         }
       }
+      
+      // Retry failed models button handler
+      retryFailedBtn.addEventListener('click', async () => {
+        if (failedModels.length === 0) return;
+        
+        // Select only the failed models
+        document.querySelectorAll('.model-checkbox').forEach(cb => {
+          const checkbox = cb.querySelector('input[type="checkbox"]');
+          const modelId = checkbox.id.replace('model-', '');
+          const shouldSelect = failedModels.includes(modelId);
+          checkbox.checked = shouldSelect;
+          cb.classList.toggle('selected', shouldSelect);
+        });
+        
+        // Enable skip synthesis for incremental collection
+        skipSynthesisEl.checked = true;
+        skipSynthesisToggle.classList.add('active');
+        
+        // Run the query
+        await runQuery();
+      });
+      
+      // Synthesize now button handler
+      synthesizeNowBtn.addEventListener('click', async () => {
+        const responses = Object.values(collectedResponses);
+        if (responses.length === 0) {
+          alert('Inga svar att syntetisera.');
+          return;
+        }
+        
+        setLoading(true);
+        setStatus('🧪 Kör syntes på insamlade svar...', true);
+        
+        try {
+          const response = await fetch('/api/ai-council/synthesize-only', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: currentPrompt,
+              responses: responses,
+              synthesisModel: synthesisModelEl.value
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Syntesfel: ' + response.statusText);
+          }
+          
+          const data = await response.json();
+          
+          if (data.synthesis) {
+            currentResponses.synthesis = data.synthesis.response || '';
+            synthesisCard.style.display = 'block';
+            
+            let synthDuration = formatDuration(data.synthesis.duration);
+            if (data.synthesis.cost && data.synthesis.cost.totalCost > 0) {
+              synthDuration += ` · $${data.synthesis.cost.totalCost.toFixed(4)}`;
+            }
+            document.getElementById('synthesisDuration').textContent = synthDuration;
+            document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
+            document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
+            
+            // Hide synthesize button after synthesis is done
+            synthesizeNowBtn.style.display = 'none';
+            
+            // Show save modal
+            setTimeout(() => showSavePromptModal(), 500);
+          }
+          
+          setStatus('', false);
+        } catch (error) {
+          showError(error.message);
+          setStatus('', false);
+        } finally {
+          setLoading(false);
+        }
+      });
       
       runBtn.addEventListener('click', runQuery);
       document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery(); });
