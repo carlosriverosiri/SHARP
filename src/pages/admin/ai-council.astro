@@ -4304,7 +4304,8 @@ if (!anvandare) {
         const profileType = profileTypeMap[currentProfile] || 'fast';
         
         try {
-          const response = await fetch('/api/ai-council/query', {
+          // Use streaming to avoid Netlify Inactivity Timeout
+          const response = await fetch('/api/ai-council/query?stream=true', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -4320,40 +4321,90 @@ if (!anvandare) {
             })
           });
           
-          // Check if response is JSON before parsing
+          // Check for HTML error responses
           const contentType = response.headers.get('content-type') || '';
-          const responseText = await response.text();
           
-          // Debug: Log the first 500 chars if it looks like HTML
-          if (responseText.startsWith('<')) {
+          if (contentType.includes('text/html') || response.status === 504) {
+            const responseText = await response.text();
             console.error('API returned HTML instead of JSON:', responseText.substring(0, 500));
-            console.error('Response status:', response.status, response.statusText);
-            console.error('Response URL:', response.url);
             
-            // Try to extract useful info from HTML
             let errorDetail = 'Okänt fel';
-            if (responseText.includes('Not Found') || responseText.includes('404')) {
-              errorDetail = 'API-endpoint hittades inte (404). Kolla att sidan är deployad korrekt på Netlify.';
-            } else if (responseText.includes('Unauthorized') || responseText.includes('401')) {
+            if (responseText.includes('Inactivity Timeout') || response.status === 504) {
+              errorDetail = '⏱️ Timeout: Serveranropet tog för lång tid. Testa att:\n• Kör lokalt (npm run dev)\n• Använd färre AI-modeller';
+            } else if (responseText.includes('Not Found') || response.status === 404) {
+              errorDetail = 'API-endpoint hittades inte (404).';
+            } else if (responseText.includes('Unauthorized') || response.status === 401) {
               errorDetail = 'Ej behörig (401). Du kanske behöver logga in igen.';
-            } else if (responseText.includes('Internal Server Error') || responseText.includes('500')) {
-              errorDetail = 'Serverfel (500). Kolla Netlify-loggarna för mer info.';
-            } else if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
-              errorDetail = 'Server returnerade en HTML-sida istället för JSON. URL: ' + response.url;
             }
             
             throw new Error(errorDetail);
           }
           
-          let data;
-          try {
+          // Handle streaming NDJSON response
+          let data = null;
+          
+          if (contentType.includes('application/x-ndjson')) {
+            // Streaming response - read line by line
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || ''; // Keep incomplete line in buffer
+              
+              for (const line of lines) {
+                if (!line.trim()) continue;
+                
+                try {
+                  const event = JSON.parse(line);
+                  
+                  switch (event.type) {
+                    case 'started':
+                      setStatus('🚀 Ansluten, frågar AI-modeller...', true);
+                      break;
+                    case 'progress':
+                      setStatus('⏳ ' + event.data.message, true);
+                      break;
+                    case 'model_complete':
+                      const modelName = { openai: 'OpenAI', anthropic: 'Anthropic', gemini: 'Gemini', grok: 'Grok' }[event.data.provider] || event.data.provider;
+                      setStatus('✓ ' + modelName + ' klar (' + formatDuration(event.data.duration) + ')', true);
+                      break;
+                    case 'error':
+                      throw new Error(event.data.error);
+                    case 'complete':
+                      data = event.data;
+                      break;
+                  }
+                } catch (parseError) {
+                  console.warn('Could not parse streaming event:', line, parseError);
+                }
+              }
+            }
+            
+            // Process any remaining buffer
+            if (buffer.trim()) {
+              try {
+                const event = JSON.parse(buffer);
+                if (event.type === 'complete') data = event.data;
+                if (event.type === 'error') throw new Error(event.data.error);
+              } catch (e) {}
+            }
+          } else {
+            // Non-streaming JSON response (fallback)
+            const responseText = await response.text();
+            if (responseText.startsWith('<')) {
+              throw new Error('Server returnerade HTML istället för JSON');
+            }
             data = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error('Failed to parse JSON:', responseText.substring(0, 500));
-            throw new Error('Kunde inte tolka API-svar som JSON: ' + responseText.substring(0, 100) + '...');
           }
           
-          if (!response.ok) throw new Error(data.error || 'Något gick fel');
+          if (!data) throw new Error('Inget svar mottaget från API');
+          if (!response.ok && data.error) throw new Error(data.error);
           
           // Update available models from API response
           if (data.availableModels) {

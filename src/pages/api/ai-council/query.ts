@@ -1373,7 +1373,211 @@ function getAvailableModels(): { model: ModelProvider; available: boolean }[] {
   ];
 }
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+// Streaming handler to avoid Netlify Inactivity Timeout
+// Sends progress events as NDJSON (newline-delimited JSON)
+async function handleStreamingQuery(
+  body: QueryRequest,
+  cookies: any,
+  availableModels: { model: ModelProvider; available: boolean }[],
+  availableProviders: ModelProvider[]
+): Promise<Response> {
+  const encoder = new TextEncoder();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      // Helper to send progress events
+      const sendEvent = (event: { type: string; data?: any }) => {
+        controller.enqueue(encoder.encode(JSON.stringify(event) + '\n'));
+      };
+      
+      try {
+        // Send initial event immediately to keep connection alive
+        sendEvent({ type: 'started', data: { timestamp: Date.now(), models: availableProviders } });
+        
+        const { 
+          context, 
+          prompt, 
+          synthesisModel = 'claude', 
+          fileContent,
+          selectedModels = availableProviders,
+          enableDeliberation = false,
+          profileType = 'fast',
+          images = []
+        } = body;
+
+        if (!prompt?.trim()) {
+          sendEvent({ type: 'error', data: { error: 'Prompt krävs' } });
+          controller.close();
+          return;
+        }
+
+        // Filter selected models
+        const modelsToQuery = selectedModels.filter(m => availableProviders.includes(m));
+        if (modelsToQuery.length === 0) {
+          sendEvent({ type: 'error', data: { error: 'Inga valda modeller har API-nycklar konfigurerade.' } });
+          controller.close();
+          return;
+        }
+
+        // User profile context (simplified for streaming)
+        let userProfileContext = '';
+        const DEFAULT_SCIENTIFIC_PROMPT = `När du svarar på vetenskapliga eller medicinska frågor:
+REFERENSHANTERING: Ge evidensbaserade svar med inline-referenser [1], [2], etc.
+REFERENSLISTA: I slutet, lägg till numrerad referenslista med klickbara länkar.
+ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-import.`;
+
+        if (profileType === 'science') {
+          userProfileContext = DEFAULT_SCIENTIFIC_PROMPT;
+        }
+
+        // Combine context
+        const contextParts = [userProfileContext, context, fileContent].filter(Boolean);
+        const fullContext = contextParts.join('\n\n---\n\n');
+
+        sendEvent({ type: 'progress', data: { stage: 'round1', message: 'Frågar AI-modeller...' } });
+
+        // ROUND 1: Query models with individual progress updates
+        const round1Responses: AIResponse[] = [];
+        const queryOrder: ModelProvider[] = [];
+        
+        // Create promises that report when they complete
+        const createTrackedQuery = async (
+          provider: ModelProvider,
+          queryFn: () => Promise<AIResponse>
+        ): Promise<AIResponse> => {
+          const response = await queryFn();
+          sendEvent({ type: 'model_complete', data: { provider, duration: response.duration, hasError: !!response.error } });
+          return response;
+        };
+
+        const queryPromises: Promise<AIResponse>[] = [];
+        
+        if (modelsToQuery.includes('openai')) {
+          queryPromises.push(createTrackedQuery('openai', () => queryOpenAI(fullContext, prompt, images)));
+          queryOrder.push('openai');
+        }
+        if (modelsToQuery.includes('anthropic')) {
+          queryPromises.push(createTrackedQuery('anthropic', () => queryAnthropic(fullContext, prompt, images)));
+          queryOrder.push('anthropic');
+        }
+        if (modelsToQuery.includes('gemini')) {
+          queryPromises.push(createTrackedQuery('gemini', () => queryGemini(fullContext, prompt, images)));
+          queryOrder.push('gemini');
+        }
+        if (modelsToQuery.includes('grok')) {
+          queryPromises.push(createTrackedQuery('grok', () => queryGrok(fullContext, prompt, images)));
+          queryOrder.push('grok');
+        }
+
+        // Wait for all Round 1 queries
+        const round1Results = await Promise.all(queryPromises);
+        round1Responses.push(...round1Results);
+
+        sendEvent({ type: 'progress', data: { stage: 'round1_complete', message: 'Runda 1 klar' } });
+
+        // Determine synthesis model
+        let actualSynthesisModel = synthesisModel;
+        const synthesisToProvider: Record<string, ModelProvider> = {
+          'claude': 'anthropic', 'openai': 'openai', 'gemini': 'gemini', 'grok': 'grok'
+        };
+        
+        if (!availableProviders.includes(synthesisToProvider[synthesisModel])) {
+          if (availableProviders.includes('anthropic')) actualSynthesisModel = 'claude';
+          else if (availableProviders.includes('openai')) actualSynthesisModel = 'openai';
+          else if (availableProviders.includes('gemini')) actualSynthesisModel = 'gemini';
+          else if (availableProviders.includes('grok')) actualSynthesisModel = 'grok';
+        }
+
+        // ROUND 2: Deliberation (optional)
+        let round2Responses: AIResponse[] = [];
+        
+        if (enableDeliberation) {
+          sendEvent({ type: 'progress', data: { stage: 'round2', message: 'Deliberation - modeller granskar varandras svar...' } });
+          
+          const deliberationPromises: Promise<AIResponse>[] = [];
+          
+          if (modelsToQuery.includes('openai')) {
+            deliberationPromises.push(createTrackedQuery('openai', () => deliberateOpenAI(prompt, round1Responses)));
+          }
+          if (modelsToQuery.includes('anthropic')) {
+            deliberationPromises.push(createTrackedQuery('anthropic', () => deliberateAnthropic(prompt, round1Responses)));
+          }
+          if (modelsToQuery.includes('gemini')) {
+            deliberationPromises.push(createTrackedQuery('gemini', () => deliberateGemini(prompt, round1Responses)));
+          }
+          if (modelsToQuery.includes('grok')) {
+            deliberationPromises.push(createTrackedQuery('grok', () => deliberateGrok(prompt, round1Responses)));
+          }
+          
+          round2Responses = await Promise.all(deliberationPromises);
+          sendEvent({ type: 'progress', data: { stage: 'round2_complete', message: 'Deliberation klar' } });
+        }
+
+        // SYNTHESIS
+        sendEvent({ type: 'progress', data: { stage: 'synthesis', message: 'Syntetiserar resultat...' } });
+        
+        const synthesis = enableDeliberation
+          ? await superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
+          : await synthesize(prompt, round1Responses, actualSynthesisModel);
+
+        sendEvent({ type: 'progress', data: { stage: 'synthesis_complete', message: 'Syntes klar' } });
+
+        // Calculate totals
+        const round1Duration = round1Responses.reduce((sum, r) => sum + r.duration, 0);
+        const round2Duration = round2Responses.reduce((sum, r) => sum + r.duration, 0);
+        const totalDuration = round1Duration + round2Duration + synthesis.duration;
+
+        const allResponses = [...round1Responses, ...round2Responses, synthesis];
+        const totalCost = {
+          inputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.inputTokens || 0), 0),
+          outputTokens: allResponses.reduce((sum, r) => sum + (r.tokens?.outputTokens || 0), 0),
+          totalCostUSD: allResponses.reduce((sum, r) => sum + (r.cost?.totalCost || 0), 0),
+        };
+
+        const hallucinationReport = enableDeliberation 
+          ? parseHallucinations(round2Responses) 
+          : undefined;
+
+        // Send final result
+        sendEvent({ 
+          type: 'complete', 
+          data: {
+            success: true,
+            responses: round1Responses,
+            round2Responses: enableDeliberation ? round2Responses : undefined,
+            deliberationEnabled: enableDeliberation,
+            hallucinationReport,
+            queriedModels: queryOrder,
+            synthesis,
+            synthesisModel: actualSynthesisModel,
+            availableModels,
+            totalDuration,
+            totalCost,
+          }
+        });
+
+      } catch (error: any) {
+        sendEvent({ type: 'error', data: { error: error.message } });
+      } finally {
+        controller.close();
+      }
+    }
+  });
+
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/x-ndjson',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
+}
+
+export const POST: APIRoute = async ({ request, cookies, url }) => {
+  // Check if streaming is requested
+  const useStreaming = url.searchParams.get('stream') === 'true';
+  
   // Check authentication
   const inloggad = await arInloggad(cookies);
   if (!inloggad) {
@@ -1406,6 +1610,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
+  }
+  
+  // If streaming is enabled, use the streaming handler
+  if (useStreaming) {
+    return handleStreamingQuery(body, cookies, availableModels, availableProviders);
   }
 
   const { 
