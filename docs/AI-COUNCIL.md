@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-27 (v3.2 - Zotero-integration)
+**Senast uppdaterad:** 2026-01-28 (v3.3 - Mobilanpassning & Diktering)
 
 ---
 
@@ -44,6 +44,9 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Diktering/Speech-to-text** (v3.3) - Mikrofon-knapp för att tala in prompts (Web Speech API)
+- [x] **Mobilanpassning** (v3.3) - Touch-vänligt UI, FAB för sessioner, scroll-profiler
+- [x] **Auto-resize textareas** (v3.3) - Textfält anpassar sig efter innehåll
 - [x] **Zotero-integration** (v3.2) - Sök och importera PDF:er från ditt Zotero-bibliotek
 - [x] **Bildanalys/Multimodal** (v3.1) - Klistra in bilder (Ctrl+V) för analys med GPT-4o, Claude, Gemini
 - [x] **Ljust tema** (v3.0) - Modernt UI inspirerat av Grok/Gemini
