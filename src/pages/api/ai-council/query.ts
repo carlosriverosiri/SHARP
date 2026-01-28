@@ -1506,7 +1506,12 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         // Determine synthesis model
         let actualSynthesisModel = synthesisModel;
         const synthesisToProvider: Record<string, ModelProvider> = {
-          'claude': 'anthropic', 'openai': 'openai', 'gemini': 'gemini', 'grok': 'grok'
+          'claude': 'anthropic', 
+          'claude-opus': 'anthropic',
+          'openai': 'openai', 
+          'gpt4o': 'openai',
+          'gemini': 'gemini', 
+          'grok': 'grok'
         };
         
         if (!availableProviders.includes(synthesisToProvider[synthesisModel])) {
@@ -1585,7 +1590,8 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         });
 
       } catch (error: any) {
-        sendEvent({ type: 'error', data: { error: error.message } });
+        console.error('Streaming query error:', error);
+        sendEvent({ type: 'error', data: { error: error.message || 'Okänt serverfel', stack: error.stack?.substring(0, 200) } });
       } finally {
         stopHeartbeat();
         controller.close();
