@@ -13,9 +13,10 @@
   # Note: Astro SSR routes use Netlify Functions internally
 
 # Longer timeout for AI Council API
-# Pro plan allows up to 15 minutes, we use 180 seconds (3 min)
+# Pro plan allows up to 15 minutes, we use 300 seconds (5 min)
+# Kodning profile with deliberation needs ~4-5 minutes
 [functions."*"]
-  timeout = 180
+  timeout = 300
 
 # Security headers (production)
 [[headers]]

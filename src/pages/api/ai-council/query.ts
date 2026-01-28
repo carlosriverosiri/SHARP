@@ -1475,8 +1475,8 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         // ROUND 1: Query models with individual progress updates
         // (round1Responses and queryOrder declared in outer scope for graceful degradation)
         
-        // Per-model timeout (45 seconds) to prevent function timeout (60s)
-        const MODEL_TIMEOUT_MS = 45000;
+        // Per-model timeout (60 seconds) - o1 and Claude can be slow
+        const MODEL_TIMEOUT_MS = 60000;
         
         // Create promises that report when they complete, with timeout protection
         const createTrackedQuery = async (
