@@ -1493,8 +1493,8 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         // ROUND 1: Query models with individual progress updates
         // (round1Responses and queryOrder declared in outer scope for graceful degradation)
         
-        // Per-model timeout (60 seconds) - o1 and Claude can be slow
-        const MODEL_TIMEOUT_MS = 60000;
+        // Per-model timeout (90 seconds) - gives APIs more time during high load
+        const MODEL_TIMEOUT_MS = 90000;
         
         // Create promises that report when they complete, with timeout protection
         const createTrackedQuery = async (
@@ -1510,7 +1510,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
                 model: provider,
                 provider: provider === 'openai' ? 'OpenAI' : provider === 'anthropic' ? 'Anthropic' : provider === 'gemini' ? 'Google' : 'xAI',
                 response: '',
-                error: `Timeout: ${provider} svarade inte inom 60 sekunder`,
+                error: `Timeout: ${provider} svarade inte inom 90 sekunder`,
                 duration: MODEL_TIMEOUT_MS,
               });
             }, MODEL_TIMEOUT_MS);
