@@ -1466,7 +1466,99 @@ if (!anvandare) {
     }
     textarea::placeholder, input::placeholder { color: var(--text-light); }
     .context-input { min-height: 120px; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.875rem; }
-    .prompt-input { min-height: 80px; }
+    .prompt-input { min-height: 80px; padding-right: 60px; }
+    
+    /* Prompt wrapper with dictation button */
+    .prompt-wrapper {
+      position: relative;
+    }
+    .dictation-btn {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: 2px solid var(--border-color);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .dictation-btn:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .dictation-btn.recording {
+      background: #fef2f2;
+      border-color: #ef4444;
+      color: #ef4444;
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+    .dictation-btn.recording .dictation-pulse {
+      display: block;
+    }
+    .dictation-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .dictation-pulse {
+      display: none;
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid #ef4444;
+      animation: pulse-expand 1.5s ease-out infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    @keyframes pulse-expand {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .dictation-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.25rem;
+    }
+    .dictation-status.recording {
+      color: #ef4444;
+      font-weight: 500;
+    }
+    .dictation-status.error {
+      color: var(--color-error);
+    }
+    .dictation-status.success {
+      color: var(--color-success);
+    }
+    
+    /* Mobile dictation improvements */
+    @media (max-width: 768px) {
+      .dictation-btn {
+        width: 52px;
+        height: 52px;
+        right: 6px;
+        bottom: 6px;
+      }
+      .dictation-icon {
+        width: 24px;
+        height: 24px;
+      }
+      .prompt-input {
+        min-height: 100px;
+        padding-right: 70px;
+        font-size: 16px; /* Förhindrar zoom på iOS */
+      }
+    }
     
     /* File upload */
     .file-upload-area {
@@ -1997,8 +2089,140 @@ if (!anvandare) {
     @media (max-width: 768px) {
       .header-inner { flex-direction: column; gap: 1rem; align-items: flex-start; }
       .actions-row { flex-direction: column; align-items: stretch; }
-      .run-btn { justify-content: center; }
+      .run-btn { justify-content: center; min-height: 48px; font-size: 1rem; }
       .notes-sidebar { width: 100%; }
+      
+      /* Larger touch targets for all interactive elements */
+      .model-checkbox {
+        min-height: 48px;
+        padding: 0.75rem 1rem;
+      }
+      .notes-btn {
+        min-height: 44px;
+        font-size: 0.875rem;
+      }
+      .note-item-btn {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .session-modal-btn {
+        min-height: 44px;
+        font-size: 0.875rem;
+      }
+      
+      /* Better mobile spacing */
+      .main { padding: 1rem; }
+      .form-group { margin-bottom: 1.25rem; }
+      .form-label { font-size: 0.9375rem; margin-bottom: 0.75rem; }
+      
+      /* Synthesis actions mobile */
+      .synthesis-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .synthesis-actions button {
+        min-height: 40px;
+        padding: 0.5rem 0.75rem;
+      }
+      
+      /* Profile selector mobile - horizontal scroll */
+      .profile-selector {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin: 0 -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .profile-selector::-webkit-scrollbar { display: none; }
+      .profile-btn {
+        flex-shrink: 0;
+        min-height: 56px;
+        padding: 0.625rem 1rem;
+      }
+      .profile-btn .profile-icon { font-size: 1.25rem; }
+      .profile-btn .profile-name { font-size: 0.875rem; }
+      
+      /* Hide tooltips on mobile */
+      .profile-tooltip { display: none !important; }
+      
+      /* Context input mobile */
+      .context-input {
+        font-size: 14px; /* Prevent zoom on iOS */
+        min-height: 100px;
+      }
+    }
+    
+    /* Mobile FAB for notes sidebar */
+    .mobile-notes-fab {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 150;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .mobile-notes-fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    .mobile-notes-fab:active {
+      transform: scale(0.95);
+    }
+    .mobile-notes-fab-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-notes-fab-badge:empty,
+    .mobile-notes-fab-badge[data-count="0"] {
+      display: none;
+    }
+    @media (max-width: 1024px) {
+      .mobile-notes-fab { display: flex; }
+    }
+    
+    /* Mobile overlay for sidebars */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 190;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .mobile-overlay.active {
+      display: block;
+      opacity: 1;
     }
   </style>
 </head>
@@ -2226,7 +2450,19 @@ if (!anvandare) {
               <label class="form-label">
                 <span class="icon">💬</span> Prompt <span class="required">*</span>
               </label>
-              <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga..." required></textarea>
+              <div class="prompt-wrapper">
+                <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga eller tryck på mikrofonen för att diktera..." required></textarea>
+                <button type="button" class="dictation-btn" id="dictationBtn" title="Diktera (tryck för att starta/stoppa)">
+                  <svg class="dictation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                  </svg>
+                  <span class="dictation-pulse"></span>
+                </button>
+              </div>
+              <div class="dictation-status" id="dictationStatus"></div>
             </div>
             
             <!-- Profile selector -->
@@ -2733,6 +2969,14 @@ if (!anvandare) {
         </div>
       </div>
     </aside>
+    
+    <!-- Mobile FAB for notes sidebar -->
+    <button class="mobile-notes-fab" id="mobileNotesFab" title="Sparade sessioner">
+      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <span class="mobile-notes-fab-badge" id="mobileNotesBadge">0</span>
+    </button>
   </div>
   
   <!-- Save prompt modal (appears after synthesis) -->
@@ -2907,6 +3151,155 @@ if (!anvandare) {
       const enableDeliberationEl = document.getElementById('enableDeliberation');
       const round1Label = document.getElementById('round1Label');
       const round2Section = document.getElementById('round2Section');
+      const dictationBtn = document.getElementById('dictationBtn');
+      const dictationStatus = document.getElementById('dictationStatus');
+      
+      // ============================================
+      // DIKTERING / SPEECH-TO-TEXT
+      // ============================================
+      let recognition = null;
+      let isRecording = false;
+      
+      function initDictation() {
+        // Check browser support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          dictationBtn.style.display = 'none';
+          console.log('Web Speech API stöds inte i denna webbläsare');
+          return;
+        }
+        
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'sv-SE'; // Svenska som standard
+        
+        let finalTranscript = '';
+        let interimTranscript = '';
+        
+        recognition.onstart = () => {
+          isRecording = true;
+          dictationBtn.classList.add('recording');
+          dictationStatus.textContent = '🎤 Lyssnar... (tala nu)';
+          dictationStatus.className = 'dictation-status recording';
+          finalTranscript = promptEl.value; // Behåll befintlig text
+        };
+        
+        recognition.onresult = (event) => {
+          interimTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += (finalTranscript ? ' ' : '') + transcript;
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+          // Update textarea with final + interim
+          promptEl.value = finalTranscript + (interimTranscript ? ' ' + interimTranscript : '');
+          // Auto-scroll to bottom
+          promptEl.scrollTop = promptEl.scrollHeight;
+        };
+        
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          stopDictation();
+          
+          if (event.error === 'not-allowed') {
+            dictationStatus.textContent = '❌ Mikrofon nekad. Tillåt mikrofon i webbläsaren.';
+          } else if (event.error === 'no-speech') {
+            dictationStatus.textContent = '⚠️ Inget tal upptäcktes. Försök igen.';
+          } else if (event.error === 'network') {
+            dictationStatus.textContent = '❌ Nätverksfel. Kontrollera internetanslutning.';
+          } else {
+            dictationStatus.textContent = `❌ Fel: ${event.error}`;
+          }
+          dictationStatus.className = 'dictation-status error';
+        };
+        
+        recognition.onend = () => {
+          if (isRecording) {
+            // Auto-restart if still in recording mode (continuous)
+            try {
+              recognition.start();
+            } catch (e) {
+              stopDictation();
+            }
+          }
+        };
+        
+        // Button click handler
+        dictationBtn.addEventListener('click', toggleDictation);
+      }
+      
+      function toggleDictation() {
+        if (isRecording) {
+          stopDictation();
+        } else {
+          startDictation();
+        }
+      }
+      
+      function startDictation() {
+        if (!recognition) {
+          dictationStatus.textContent = '❌ Diktering stöds inte i denna webbläsare';
+          dictationStatus.className = 'dictation-status error';
+          return;
+        }
+        
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error('Could not start recognition:', e);
+          dictationStatus.textContent = '❌ Kunde inte starta mikrofonen';
+          dictationStatus.className = 'dictation-status error';
+        }
+      }
+      
+      function stopDictation() {
+        isRecording = false;
+        dictationBtn.classList.remove('recording');
+        
+        if (recognition) {
+          try {
+            recognition.stop();
+          } catch (e) {
+            // Ignore stop errors
+          }
+        }
+        
+        if (promptEl.value.trim()) {
+          dictationStatus.textContent = '✓ Diktering klar - text tillagd';
+          dictationStatus.className = 'dictation-status success';
+          setTimeout(() => {
+            dictationStatus.textContent = '';
+          }, 3000);
+        } else {
+          dictationStatus.textContent = '';
+        }
+      }
+      
+      // Initialize dictation on page load
+      initDictation();
+      
+      // ============================================
+      // AUTO-RESIZE TEXTAREA
+      // ============================================
+      function autoResizeTextarea(textarea, minHeight = 80, maxHeight = 300) {
+        textarea.style.height = 'auto';
+        const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+        textarea.style.height = newHeight + 'px';
+      }
+      
+      // Auto-resize prompt textarea on input
+      promptEl.addEventListener('input', () => {
+        autoResizeTextarea(promptEl, 80, 300);
+      });
+      
+      // Auto-resize context textarea on input
+      contextEl.addEventListener('input', () => {
+        autoResizeTextarea(contextEl, 120, 400);
+      });
       
       // Profile definitions
       const profiles = {
@@ -3381,6 +3774,11 @@ if (!anvandare) {
             if (session) openSessionModal(session);
           });
         });
+        
+        // Update mobile FAB badge
+        if (typeof updateNotesBadge === 'function') {
+          updateNotesBadge();
+        }
       }
       
       // Session modal
@@ -4089,6 +4487,40 @@ if (!anvandare) {
       // Toggle mobile sidebar
       mobileMenuBtn?.addEventListener('click', () => {
         projectSidebar.classList.toggle('open');
+        mobileOverlay.classList.toggle('active', projectSidebar.classList.contains('open'));
+      });
+      
+      // Mobile FAB for notes sidebar
+      const mobileNotesFab = document.getElementById('mobileNotesFab');
+      const mobileNotesBadge = document.getElementById('mobileNotesBadge');
+      
+      // Create mobile overlay if it doesn't exist
+      let mobileOverlay = document.querySelector('.mobile-overlay');
+      if (!mobileOverlay) {
+        mobileOverlay = document.createElement('div');
+        mobileOverlay.className = 'mobile-overlay';
+        document.body.appendChild(mobileOverlay);
+      }
+      
+      // Update badge count
+      function updateNotesBadge() {
+        const count = sessions.length;
+        mobileNotesBadge.textContent = count;
+        mobileNotesBadge.dataset.count = count;
+      }
+      
+      // FAB click handler
+      mobileNotesFab?.addEventListener('click', () => {
+        notesSidebar.classList.add('open');
+        notesSidebar.classList.remove('collapsed');
+        mobileOverlay.classList.add('active');
+      });
+      
+      // Close sidebar when clicking overlay
+      mobileOverlay?.addEventListener('click', () => {
+        projectSidebar.classList.remove('open');
+        notesSidebar.classList.remove('open');
+        mobileOverlay.classList.remove('active');
       });
       
       // Close sidebar when clicking outside on mobile
@@ -4096,8 +4528,10 @@ if (!anvandare) {
         if (window.innerWidth <= 1024 && 
             projectSidebar.classList.contains('open') && 
             !projectSidebar.contains(e.target) && 
-            e.target !== mobileMenuBtn) {
+            e.target !== mobileMenuBtn &&
+            !mobileOverlay.contains(e.target)) {
           projectSidebar.classList.remove('open');
+          mobileOverlay.classList.remove('active');
         }
       });
       
