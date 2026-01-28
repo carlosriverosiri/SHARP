@@ -1539,6 +1539,16 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         round1Responses.push(...round1Results);
 
         sendEvent({ type: 'progress', data: { stage: 'round1_complete', message: 'Runda 1 klar' } });
+        
+        // Send snapshot of Round 1 results (backup in case later stages fail)
+        sendEvent({ 
+          type: 'snapshot', 
+          data: { 
+            stage: 'round1', 
+            responses: round1Responses,
+            queriedModels: queryOrder 
+          } 
+        });
 
         // Determine synthesis model
         let actualSynthesisModel = synthesisModel;
@@ -1646,32 +1656,37 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
       } catch (error: any) {
         console.error('Streaming query error:', error);
         
-        // GRACEFUL DEGRADATION: Send partial results if we have any
-        // This ensures we don't lose work from models that already responded
-        if (round1Responses && round1Responses.length > 0) {
-          const successfulResponses = round1Responses.filter(r => !r.error);
-          if (successfulResponses.length > 0) {
+        // Ultra-safe error handling - wrap in try to ensure we always respond
+        try {
+          // GRACEFUL DEGRADATION: Send partial results if we have any
+          if (round1Responses && round1Responses.length > 0) {
+            const successfulResponses = round1Responses.filter(r => !r.error);
             sendEvent({ 
               type: 'partial_complete', 
               data: {
                 success: false,
-                error: error.message || 'Partiellt fel - vissa modeller svarade',
+                error: error?.message || 'Fel uppstod',
                 responses: round1Responses,
                 round2Responses: round2Responses?.length > 0 ? round2Responses : undefined,
                 deliberationEnabled: enableDeliberation,
                 queriedModels: queryOrder,
-                synthesis: null, // Synthesis failed
+                synthesis: null,
                 availableModels,
                 partialResult: true,
                 successfulModels: successfulResponses.map(r => r.provider),
               }
             });
-            return; // Don't send error event, we sent partial results
+          } else {
+            // No results at all
+            sendEvent({ type: 'error', data: { error: error?.message || 'Okänt serverfel' } });
           }
+        } catch (innerError) {
+          // Last resort - just send basic error
+          console.error('Inner error in catch block:', innerError);
+          try {
+            sendEvent({ type: 'error', data: { error: 'Kritiskt fel - kunde inte återställa' } });
+          } catch (e) { /* Can't do anything more */ }
         }
-        
-        // No usable results, send error
-        sendEvent({ type: 'error', data: { error: error.message || 'Okänt serverfel' } });
       } finally {
         stopHeartbeat();
         controller.close();

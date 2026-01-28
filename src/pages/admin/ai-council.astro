@@ -4369,6 +4369,14 @@ if (!anvandare) {
                       // Keep-alive signal - show elapsed time
                       setStatus('⏳ Arbetar... (' + event.data.elapsed + 's)', true);
                       break;
+                    case 'snapshot':
+                      // Backup data in case function dies later
+                      if (!data) data = { responses: [], _isSnapshot: true };
+                      if (event.data.responses) data.responses = event.data.responses;
+                      if (event.data.queriedModels) data.queriedModels = event.data.queriedModels;
+                      if (event.data.round2Responses) data.round2Responses = event.data.round2Responses;
+                      console.log('Snapshot received:', event.data.stage);
+                      break;
                     case 'progress':
                       setStatus('⏳ ' + event.data.message, true);
                       break;
@@ -4411,13 +4419,21 @@ if (!anvandare) {
             data = JSON.parse(responseText);
           }
           
+          // Handle case where stream ended without complete event but we have snapshot data
           if (!data) throw new Error('Inget svar mottaget från API');
-          if (!response.ok && data.error && !data._isPartial) throw new Error(data.error);
+          
+          if (data._isSnapshot && !data.success) {
+            // We only have snapshot data - stream was interrupted
+            showError('⚠️ Anslutningen avbröts men vi har delresultat från modellerna. Se individuella svar nedan.');
+            data.partialResult = true;
+          }
+          
+          if (!response.ok && data.error && !data._isPartial && !data._isSnapshot) throw new Error(data.error);
           
           // Handle partial results (graceful degradation)
           if (data._isPartial || data.partialResult) {
-            const successModels = data.successfulModels?.join(', ') || 'Okända';
-            showError(`⚠️ Delresultat: Vissa modeller svarade (${successModels}), men syntesen misslyckades. Individuella svar visas nedan.`);
+            const successModels = data.successfulModels?.join(', ') || (data.responses?.filter(r => !r.error).map(r => r.provider).join(', ')) || 'Vissa modeller';
+            showError(`⚠️ Delresultat: ${successModels} svarade, men processen avbröts. Individuella svar visas nedan.`);
           }
           
           // Update available models from API response
