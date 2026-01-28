@@ -482,10 +482,11 @@ async function queryGrok(context: string, prompt: string, images: ImageData[] = 
       
       // Use correct pricing based on model
       const costModel = modelName === 'grok-4' ? 'grok-4' : 'grok-2-latest';
+      const displayName = modelName === 'grok-4' ? 'Grok 4' : 'Grok 2';
       
       return {
         model: modelName,
-        provider: 'xAI',
+        provider: displayName,
         response: data.choices[0]?.message?.content || 'Inget svar',
         duration: Date.now() - start,
         tokens,
@@ -494,9 +495,10 @@ async function queryGrok(context: string, prompt: string, images: ImageData[] = 
     } catch (error: any) {
       // If this is the last model, return the error
       if (modelName === modelsToTry[modelsToTry.length - 1]) {
+        const displayName = modelName === 'grok-4' ? 'Grok 4' : 'Grok 2';
         return {
           model: modelName,
-          provider: 'xAI',
+          provider: displayName,
           response: '',
           error: error.message,
           duration: Date.now() - start,
@@ -789,37 +791,53 @@ async function deliberateGemini(originalPrompt: string, allResponses: AIResponse
 
 async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]): Promise<AIResponse> {
   const start = Date.now();
-  try {
-    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'xAI');
+  
+  // Try grok-4 first, fall back to grok-2-latest
+  const modelsToTry = ['grok-4', 'grok-2-latest'];
+  
+  for (const modelName of modelsToTry) {
+    try {
+      const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'xAI');
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${XAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'grok-2-latest',
-        messages: [{ role: 'user', content: deliberationPrompt }],
-        max_tokens: 8192,
-      }),
-    });
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${XAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [{ role: 'user', content: deliberationPrompt }],
+          max_tokens: 8192,
+        }),
+      });
 
-    const parsed = await safeParseResponse(response, 'xAI/Grok');
-    if (!parsed.ok) {
-      throw new Error(parsed.error);
+      const parsed = await safeParseResponse(response, 'xAI/Grok');
+      if (!parsed.ok) {
+        // Try next model
+        if (modelName !== modelsToTry[modelsToTry.length - 1]) continue;
+        throw new Error(parsed.error);
+      }
+
+      const data = parsed.data;
+      const displayName = modelName === 'grok-4' ? 'Grok 4' : 'Grok 2';
+      return {
+        model: modelName,
+        provider: displayName,
+        response: data.choices[0]?.message?.content || 'Inget svar',
+        duration: Date.now() - start,
+      };
+    } catch (error: any) {
+      // If last model, return error
+      if (modelName === modelsToTry[modelsToTry.length - 1]) {
+        return { model: modelName, provider: 'Grok', response: '', error: error.message, duration: Date.now() - start };
+      }
+      // Otherwise try next model
+      continue;
     }
-
-    const data = parsed.data;
-    return {
-      model: 'grok-2-latest',
-      provider: 'xAI',
-      response: data.choices[0]?.message?.content || 'Inget svar',
-      duration: Date.now() - start,
-    };
-  } catch (error: any) {
-    return { model: 'grok-2-latest', provider: 'xAI', response: '', error: error.message, duration: Date.now() - start };
   }
+  
+  return { model: 'grok-4', provider: 'Grok', response: '', error: 'Alla Grok-modeller misslyckades', duration: Date.now() - start };
 }
 
 // Synthesis using Claude
@@ -1492,7 +1510,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
                 model: provider,
                 provider: provider === 'openai' ? 'OpenAI' : provider === 'anthropic' ? 'Anthropic' : provider === 'gemini' ? 'Google' : 'xAI',
                 response: '',
-                error: `Timeout: ${provider} svarade inte inom 45 sekunder`,
+                error: `Timeout: ${provider} svarade inte inom 60 sekunder`,
                 duration: MODEL_TIMEOUT_MS,
               });
             }, MODEL_TIMEOUT_MS);
