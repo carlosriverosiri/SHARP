@@ -1413,6 +1413,12 @@ async function handleStreamingQuery(
         controller.enqueue(encoder.encode(JSON.stringify(event) + '\n'));
       };
       
+      // Declare variables in outer scope for graceful degradation in catch block
+      let round1Responses: AIResponse[] = [];
+      let round2Responses: AIResponse[] = [];
+      let queryOrder: ModelProvider[] = [];
+      let enableDeliberation = false;
+      
       try {
         // Send initial event immediately to keep connection alive
         sendEvent({ type: 'started', data: { timestamp: Date.now(), models: availableProviders } });
@@ -1426,10 +1432,12 @@ async function handleStreamingQuery(
           synthesisModel = 'claude', 
           fileContent,
           selectedModels = availableProviders,
-          enableDeliberation = false,
+          enableDeliberation: enableDelib = false,
           profileType = 'fast',
           images = []
         } = body;
+        
+        enableDeliberation = enableDelib;
 
         if (!prompt?.trim()) {
           stopHeartbeat();
@@ -1465,8 +1473,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         sendEvent({ type: 'progress', data: { stage: 'round1', message: 'Frågar AI-modeller...' } });
 
         // ROUND 1: Query models with individual progress updates
-        const round1Responses: AIResponse[] = [];
-        const queryOrder: ModelProvider[] = [];
+        // (round1Responses and queryOrder declared in outer scope for graceful degradation)
         
         // Per-model timeout (45 seconds) to prevent function timeout (60s)
         const MODEL_TIMEOUT_MS = 45000;
@@ -1552,7 +1559,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         }
 
         // ROUND 2: Deliberation (optional)
-        let round2Responses: AIResponse[] = [];
+        // (round2Responses declared in outer scope for graceful degradation)
         
         if (enableDeliberation) {
           sendEvent({ type: 'progress', data: { stage: 'round2', message: 'Deliberation - modeller granskar varandras svar...' } });
@@ -1638,7 +1645,33 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
 
       } catch (error: any) {
         console.error('Streaming query error:', error);
-        sendEvent({ type: 'error', data: { error: error.message || 'Okänt serverfel', stack: error.stack?.substring(0, 200) } });
+        
+        // GRACEFUL DEGRADATION: Send partial results if we have any
+        // This ensures we don't lose work from models that already responded
+        if (round1Responses && round1Responses.length > 0) {
+          const successfulResponses = round1Responses.filter(r => !r.error);
+          if (successfulResponses.length > 0) {
+            sendEvent({ 
+              type: 'partial_complete', 
+              data: {
+                success: false,
+                error: error.message || 'Partiellt fel - vissa modeller svarade',
+                responses: round1Responses,
+                round2Responses: round2Responses?.length > 0 ? round2Responses : undefined,
+                deliberationEnabled: enableDeliberation,
+                queriedModels: queryOrder,
+                synthesis: null, // Synthesis failed
+                availableModels,
+                partialResult: true,
+                successfulModels: successfulResponses.map(r => r.provider),
+              }
+            });
+            return; // Don't send error event, we sent partial results
+          }
+        }
+        
+        // No usable results, send error
+        sendEvent({ type: 'error', data: { error: error.message || 'Okänt serverfel' } });
       } finally {
         stopHeartbeat();
         controller.close();

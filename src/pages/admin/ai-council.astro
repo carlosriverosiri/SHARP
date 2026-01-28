@@ -4380,6 +4380,12 @@ if (!anvandare) {
                       break;
                     case 'error':
                       throw new Error(event.data.error);
+                    case 'partial_complete':
+                      // Graceful degradation - we have partial results
+                      console.warn('Partial result received:', event.data.successfulModels);
+                      data = event.data;
+                      data._isPartial = true;
+                      break;
                     case 'complete':
                       data = event.data;
                       break;
@@ -4408,7 +4414,13 @@ if (!anvandare) {
           }
           
           if (!data) throw new Error('Inget svar mottaget från API');
-          if (!response.ok && data.error) throw new Error(data.error);
+          if (!response.ok && data.error && !data._isPartial) throw new Error(data.error);
+          
+          // Handle partial results (graceful degradation)
+          if (data._isPartial || data.partialResult) {
+            const successModels = data.successfulModels?.join(', ') || 'Okända';
+            showError(`⚠️ Delresultat: Vissa modeller svarade (${successModels}), men syntesen misslyckades. Individuella svar visas nedan.`);
+          }
           
           // Update available models from API response
           if (data.availableModels) {
