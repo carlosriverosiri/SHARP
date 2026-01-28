@@ -180,6 +180,7 @@ if (!anvandare) {
     .project-list {
       flex: 1;
       overflow-y: auto;
+      min-height: 0; /* Viktigt för flex overflow */
     }
     .project-item {
       display: flex;
@@ -273,10 +274,11 @@ if (!anvandare) {
       color: var(--text-light);
     }
     
-    /* Session accordions (Osorterade & Alla sessioner) */
+    /* Session accordions (Osorterade, Alla sessioner, Zotero) */
     .session-accordions {
       border-top: 1px solid var(--border-color);
-      margin-top: auto;
+      flex-shrink: 0; /* Förhindra att de krymper */
+      background: var(--bg-card); /* Samma bakgrund som sidebar */
     }
     .session-accordion {
       border-bottom: 1px solid var(--border-color);
@@ -336,7 +338,7 @@ if (!anvandare) {
       transition: max-height 0.3s ease-out;
     }
     .session-accordion.open .session-accordion-content { 
-      max-height: 300px; 
+      max-height: 200px; /* Begränsat för att ge plats åt alla accordions */
       overflow-y: auto; 
     }
     .session-item {
@@ -369,152 +371,366 @@ if (!anvandare) {
     }
     
     /* Zotero Integration */
-    .zotero-section { padding: 0.5rem 1rem; }
-    .zotero-loading { 
-      font-size: 0.75rem; 
-      color: var(--text-muted); 
-      padding: 0.5rem;
-      text-align: center;
-    }
+    .zotero-open-btn { justify-content: space-between; }
     .zotero-status { font-size: 0.625rem; }
     .zotero-status.configured { color: var(--color-success); }
-    .zotero-status.not-configured { color: var(--text-muted); }
     
-    .zotero-config-form { display: flex; flex-direction: column; gap: 0.75rem; }
-    .zotero-input {
-      width: 100%;
-      padding: 0.5rem;
-      font-size: 0.75rem;
+    /* Zotero Large Modal */
+    .zotero-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .zotero-modal.open { display: flex; }
+    
+    .zotero-modal-content {
+      background: var(--bg-card);
       border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 95%;
+      max-width: 1200px;
+      height: 85vh;
+      max-height: 800px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .zotero-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-sidebar);
+      border-radius: 16px 16px 0 0;
+    }
+    .zotero-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .zotero-logo { height: 28px; }
+    .zotero-modal-title span { font-size: 0.875rem; color: var(--text-muted); }
+    .zotero-modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      line-height: 1;
+      border-radius: 8px;
+    }
+    .zotero-modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+    
+    .zotero-modal-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    
+    /* Collections sidebar */
+    .zotero-modal-sidebar {
+      width: 280px;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-sidebar);
+    }
+    .zotero-collections-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+    .zotero-refresh-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      border-radius: 4px;
+    }
+    .zotero-refresh-btn:hover { background: var(--bg-hover); }
+    .zotero-collections-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    .zotero-collection-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
       border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      color: var(--text-primary);
+      transition: background 0.1s;
+      min-height: 2rem;
+    }
+    .zotero-collection-item:hover { background: var(--bg-hover); }
+    .zotero-collection-item.active { background: var(--accent-color); color: white; }
+    .zotero-collection-item.library { font-weight: 600; padding-left: 0.75rem !important; }
+    .zotero-collection-icon { font-size: 0.875rem; flex-shrink: 0; }
+    .zotero-collection-name { 
+      flex: 1; 
+      min-width: 0; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      white-space: nowrap;
+    }
+    .zotero-collection-count {
+      margin-left: auto;
+      font-size: 0.6875rem;
+      background: var(--bg-hover);
+      padding: 0.125rem 0.5rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+    }
+    .zotero-collection-item.active .zotero-collection-count { background: rgba(255,255,255,0.2); color: white; }
+    .zotero-default-collection {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .zotero-default-collection label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    
+    /* Main results area */
+    .zotero-modal-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .zotero-search-bar {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .zotero-modal-search {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 0.9375rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       background: var(--bg-input);
       color: var(--text-primary);
     }
-    .zotero-input:focus { outline: none; border-color: var(--accent-color); }
-    .zotero-input::placeholder { color: var(--text-light); }
+    .zotero-modal-search:focus { outline: none; border-color: var(--accent-color); }
+    .zotero-search-btn {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .zotero-search-btn:hover { opacity: 0.9; }
+    
+    .zotero-results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-sidebar);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .zotero-select-all label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    
+    .zotero-results-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .zotero-result-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 2px solid transparent;
+      margin-bottom: 0.5rem;
+    }
+    .zotero-result-item:hover { background: var(--bg-hover); }
+    .zotero-result-item.selected { 
+      background: rgba(59, 130, 246, 0.08); 
+      border-color: var(--accent-color); 
+    }
+    .zotero-result-checkbox {
+      width: 20px;
+      height: 20px;
+      margin-top: 0.125rem;
+      cursor: pointer;
+    }
+    .zotero-result-info { flex: 1; min-width: 0; }
+    .zotero-result-title {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 0.375rem;
+    }
+    .zotero-result-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+    .zotero-result-journal {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+    .zotero-result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-top: 0.5rem;
+    }
+    .zotero-result-tag {
+      font-size: 0.6875rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-hover);
+      border-radius: 4px;
+      color: var(--text-light);
+    }
+    .zotero-result-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-radius: 4px;
+    }
+    
+    /* Footer */
+    .zotero-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-sidebar);
+      border-radius: 0 0 16px 16px;
+    }
+    .zotero-footer-left { font-size: 0.875rem; color: var(--text-muted); }
+    .zotero-footer-right { display: flex; gap: 0.75rem; }
     
     .zotero-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.375rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.75rem;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      font-size: 0.875rem;
       font-weight: 500;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.15s;
     }
-    .zotero-btn-primary {
-      background: var(--accent-color);
-      color: white;
-    }
+    .zotero-btn-primary { background: var(--accent-color); color: white; }
     .zotero-btn-primary:hover { opacity: 0.9; }
     .zotero-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .zotero-btn-secondary {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
+    .zotero-btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
     .zotero-btn-secondary:hover { background: var(--border-color); }
-    .zotero-btn-danger {
-      background: transparent;
-      color: var(--color-warning);
-      border: 1px solid var(--color-warning);
+    
+    /* Config Modal (liten) */
+    .zotero-config-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1001;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
-    .zotero-btn-danger:hover { background: rgba(239, 68, 68, 0.1); }
-    
-    .zotero-search-form { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-    .zotero-search-input { flex: 1; }
-    
-    .zotero-results { max-height: 200px; overflow-y: auto; }
-    .zotero-result-item {
+    .zotero-config-modal.open { display: flex; }
+    .zotero-config-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    .zotero-config-header {
       display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.1s;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
     }
-    .zotero-result-item:hover { background: var(--bg-hover); }
-    .zotero-result-item.selected { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-color); }
-    .zotero-result-checkbox { margin-top: 0.125rem; }
-    .zotero-result-info { flex: 1; min-width: 0; }
-    .zotero-result-title {
-      font-size: 0.75rem;
-      font-weight: 500;
+    .zotero-config-header h3 { margin: 0; font-size: 1rem; }
+    .zotero-config-body { padding: 1.25rem; }
+    .zotero-config-body p { margin: 0 0 1rem; font-size: 0.875rem; color: var(--text-muted); }
+    .zotero-config-body .zotero-input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 0.9375rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-input);
       color: var(--text-primary);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
-    .zotero-result-meta {
-      font-size: 0.625rem;
-      color: var(--text-muted);
-      margin-top: 0.125rem;
-    }
-    .zotero-result-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      margin-top: 0.25rem;
-    }
-    .zotero-result-tag {
-      font-size: 0.5625rem;
-      padding: 0.125rem 0.375rem;
-      background: var(--bg-hover);
-      border-radius: 4px;
+    .zotero-help-text {
+      font-size: 0.75rem;
       color: var(--text-light);
+      margin-top: 0.75rem;
     }
-    
-    .zotero-configured-info {
+    .zotero-help-text a { color: var(--accent-color); }
+    .zotero-config-footer {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem;
-      background: var(--bg-hover);
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
-    }
-    .zotero-configured-user {
-      font-size: 0.75rem;
-      color: var(--text-primary);
-    }
-    .zotero-configured-status {
-      font-size: 0.625rem;
-      color: var(--color-success);
-    }
-    
-    .zotero-import-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.5rem;
-      padding-top: 0.5rem;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
       border-top: 1px solid var(--border-color);
     }
-    .zotero-selected-count {
-      font-size: 0.6875rem;
+    
+    .zotero-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .zotero-empty {
+      text-align: center;
+      padding: 3rem;
       color: var(--text-muted);
     }
-    
-    .zotero-help-text {
-      font-size: 0.625rem;
-      color: var(--text-light);
-      margin-top: 0.5rem;
-    }
-    .zotero-help-text a { color: var(--accent-color); text-decoration: none; }
-    .zotero-help-text a:hover { text-decoration: underline; }
-    
+    .zotero-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
     .zotero-error {
-      font-size: 0.6875rem;
-      color: var(--color-warning);
-      padding: 0.5rem;
+      padding: 1rem;
+      margin: 1rem;
       background: rgba(239, 68, 68, 0.1);
-      border-radius: 6px;
-      margin-top: 0.5rem;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      color: #ef4444;
+      font-size: 0.875rem;
     }
     
     /* Project context menu */
@@ -1851,27 +2067,106 @@ if (!anvandare) {
           </div>
         </div>
         
-        <!-- Zotero Integration -->
+        <!-- Zotero Integration - Öppnar stor modal -->
         <div class="session-accordion" id="zoteroAccordion">
-          <button class="session-accordion-header">
+          <button class="session-accordion-header zotero-open-btn" id="zoteroOpenBtn">
             <span class="session-accordion-header-left">
               <span class="session-accordion-icon">📚</span>
               <span class="session-accordion-title">Zotero</span>
             </span>
             <span class="session-accordion-count zotero-status" id="zoteroStatus">—</span>
-            <svg class="session-accordion-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
             </svg>
           </button>
-          <div class="session-accordion-content" id="zoteroContent">
-            <!-- Zotero-innehåll laddas dynamiskt -->
-            <div class="zotero-section" id="zoteroSection">
-              <div class="zotero-loading">Laddar...</div>
-            </div>
-          </div>
         </div>
       </div>
     </aside>
+    
+    <!-- Zotero Modal (stor) -->
+    <div class="zotero-modal" id="zoteroModal">
+      <div class="zotero-modal-content">
+        <div class="zotero-modal-header">
+          <div class="zotero-modal-title">
+            <img src="https://www.zotero.org/static/images/promote/zotero-logo-512x123.svg" alt="Zotero" class="zotero-logo">
+            <span id="zoteroModalUser"></span>
+          </div>
+          <button class="zotero-modal-close" id="zoteroModalClose">✕</button>
+        </div>
+        
+        <div class="zotero-modal-body">
+          <!-- Vänster: Collections -->
+          <div class="zotero-modal-sidebar">
+            <div class="zotero-collections-header">
+              <span>📁 Collections</span>
+              <button class="zotero-refresh-btn" id="zoteroRefreshCollections" title="Uppdatera">🔄</button>
+            </div>
+            <div class="zotero-collections-list" id="zoteroCollectionsList">
+              <div class="zotero-loading">Laddar...</div>
+            </div>
+            <div class="zotero-default-collection">
+              <label>
+                <input type="checkbox" id="zoteroSetDefault">
+                <span>Sätt som standard</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Höger: Sök och resultat -->
+          <div class="zotero-modal-main">
+            <div class="zotero-search-bar">
+              <input type="text" class="zotero-modal-search" id="zoteroModalSearch" placeholder="Sök i biblioteket...">
+              <button class="zotero-search-btn" id="zoteroModalSearchBtn">🔍 Sök</button>
+            </div>
+            
+            <div class="zotero-results-header" id="zoteroResultsHeader">
+              <span id="zoteroResultsCount">Välj en collection eller sök</span>
+              <div class="zotero-select-all">
+                <label>
+                  <input type="checkbox" id="zoteroSelectAll">
+                  <span>Välj alla</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="zotero-results-list" id="zoteroModalResults">
+              <!-- Resultat laddas här -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="zotero-modal-footer">
+          <div class="zotero-footer-left">
+            <span id="zoteroSelectedInfo">0 valda</span>
+          </div>
+          <div class="zotero-footer-right">
+            <button class="zotero-btn zotero-btn-secondary" id="zoteroDisconnectBtn">🔌 Koppla från</button>
+            <button class="zotero-btn zotero-btn-primary" id="zoteroImportSelectedBtn" disabled>📥 Importera valda PDF:er</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Zotero Config Modal (liten) -->
+    <div class="zotero-config-modal" id="zoteroConfigModal">
+      <div class="zotero-config-content">
+        <div class="zotero-config-header">
+          <h3>🔑 Konfigurera Zotero</h3>
+          <button class="zotero-modal-close" id="zoteroConfigClose">✕</button>
+        </div>
+        <div class="zotero-config-body">
+          <p>Klistra in din Zotero API-nyckel för att komma igång.</p>
+          <input type="text" class="zotero-input" id="zoteroApiKeyInput" placeholder="API-nyckel (24 tecken)" autocomplete="off">
+          <div class="zotero-help-text">
+            Hämta din nyckel från <a href="https://www.zotero.org/settings/keys" target="_blank">zotero.org/settings/keys</a>
+          </div>
+        </div>
+        <div class="zotero-config-footer">
+          <button class="zotero-btn zotero-btn-secondary" id="zoteroConfigCancel">Avbryt</button>
+          <button class="zotero-btn zotero-btn-primary" id="zoteroConfigSave">🔑 Spara</button>
+        </div>
+      </div>
+    </div>
     
     <div class="main-area">
       <header class="header">
@@ -3757,15 +4052,36 @@ if (!anvandare) {
       const allSessionsList = document.getElementById('allSessionsList');
       const allSessionsCount = document.getElementById('allSessionsCount');
       
-      // Zotero integration
-      const zoteroAccordion = document.getElementById('zoteroAccordion');
-      const zoteroContent = document.getElementById('zoteroContent');
-      const zoteroSection = document.getElementById('zoteroSection');
+      // Zotero integration - Modal elements
+      const zoteroOpenBtn = document.getElementById('zoteroOpenBtn');
       const zoteroStatus = document.getElementById('zoteroStatus');
+      const zoteroModal = document.getElementById('zoteroModal');
+      const zoteroModalClose = document.getElementById('zoteroModalClose');
+      const zoteroModalUser = document.getElementById('zoteroModalUser');
+      const zoteroCollectionsList = document.getElementById('zoteroCollectionsList');
+      const zoteroModalSearch = document.getElementById('zoteroModalSearch');
+      const zoteroModalSearchBtn = document.getElementById('zoteroModalSearchBtn');
+      const zoteroModalResults = document.getElementById('zoteroModalResults');
+      const zoteroResultsCount = document.getElementById('zoteroResultsCount');
+      const zoteroSelectAll = document.getElementById('zoteroSelectAll');
+      const zoteroSelectedInfo = document.getElementById('zoteroSelectedInfo');
+      const zoteroImportSelectedBtn = document.getElementById('zoteroImportSelectedBtn');
+      const zoteroDisconnectBtn = document.getElementById('zoteroDisconnectBtn');
+      const zoteroRefreshCollections = document.getElementById('zoteroRefreshCollections');
+      const zoteroSetDefault = document.getElementById('zoteroSetDefault');
+      
+      // Zotero config modal elements
+      const zoteroConfigModal = document.getElementById('zoteroConfigModal');
+      const zoteroConfigClose = document.getElementById('zoteroConfigClose');
+      const zoteroApiKeyInput = document.getElementById('zoteroApiKeyInput');
+      const zoteroConfigSave = document.getElementById('zoteroConfigSave');
+      const zoteroConfigCancel = document.getElementById('zoteroConfigCancel');
       
       let zoteroConfigured = false;
       let zoteroConfig = null;
-      let selectedZoteroItems = [];
+      let zoteroCollections = [];
+      let currentCollection = null;
+      let selectedZoteroItems = new Set();
       
       let projects = [];
       let currentProjectId = null; // null = "Osorterade"
@@ -3959,11 +4275,27 @@ if (!anvandare) {
       allSessionsAccordion?.querySelector('.session-accordion-header')?.addEventListener('click', () => {
         allSessionsAccordion.classList.toggle('open');
       });
-      zoteroAccordion?.querySelector('.session-accordion-header')?.addEventListener('click', () => {
-        zoteroAccordion.classList.toggle('open');
-        // Load Zotero state when first opened
-        if (zoteroAccordion.classList.contains('open') && !zoteroConfigured && zoteroSection.innerHTML.includes('Laddar')) {
-          initZotero();
+      // Zotero button opens modal
+      zoteroOpenBtn?.addEventListener('click', async () => {
+        // Always check configuration status first
+        const isConfigured = await checkZoteroConfig();
+        
+        if (zoteroStatus.textContent === '🔒') {
+          // Authentication error - show message
+          alert('Du måste vara inloggad för att använda Zotero.\n\nOm du ser detta meddelande, prova att logga ut och logga in igen.');
+          return;
+        }
+        
+        if (zoteroStatus.textContent === '⚠️') {
+          // Error checking config
+          alert('Kunde inte kontrollera Zotero-status.\n\nKontrollera din internetanslutning och försök igen.');
+          return;
+        }
+        
+        if (zoteroConfigured) {
+          openZoteroModal();
+        } else {
+          openZoteroConfigModal();
         }
       });
       
@@ -4265,194 +4597,340 @@ if (!anvandare) {
       };
       
       // =============================================
-      // ZOTERO INTEGRATION
+      // ZOTERO INTEGRATION (Modal-based)
       // =============================================
       
-      async function initZotero() {
+      // Check if Zotero is configured
+      async function checkZoteroConfig() {
         try {
           const response = await fetch('/api/ai-council/zotero/validate');
           const data = await response.json();
+          
+          if (response.status === 401) {
+            // Not logged in
+            console.warn('Not authenticated for Zotero');
+            zoteroStatus.textContent = '🔒';
+            zoteroStatus.title = 'Logga in för att använda Zotero';
+            return false;
+          }
           
           if (data.configured) {
             zoteroConfigured = true;
             zoteroConfig = data.config;
             zoteroStatus.textContent = '✓';
             zoteroStatus.classList.add('configured');
-            renderZoteroSearch();
+            return true;
           } else {
             zoteroConfigured = false;
             zoteroStatus.textContent = '—';
             zoteroStatus.classList.remove('configured');
-            renderZoteroConfig();
+            return false;
           }
         } catch (error) {
-          console.error('Zotero init error:', error);
-          zoteroSection.innerHTML = `
+          console.error('Zotero config check error:', error);
+          zoteroStatus.textContent = '⚠️';
+          return false;
+        }
+      }
+      
+      // Open config modal
+      function openZoteroConfigModal() {
+        zoteroApiKeyInput.value = '';
+        zoteroConfigModal.classList.add('open');
+      }
+      
+      // Close config modal
+      zoteroConfigClose?.addEventListener('click', () => zoteroConfigModal.classList.remove('open'));
+      zoteroConfigCancel?.addEventListener('click', () => zoteroConfigModal.classList.remove('open'));
+      
+      // Save API key
+      zoteroConfigSave?.addEventListener('click', async () => {
+        const apiKey = zoteroApiKeyInput.value.trim();
+        if (!apiKey) return;
+        
+        zoteroConfigSave.disabled = true;
+        zoteroConfigSave.textContent = 'Validerar...';
+        
+        try {
+          const response = await fetch('/api/ai-council/zotero/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apiKey })
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok && data.success) {
+            zoteroConfigured = true;
+            zoteroConfig = data.config;
+            zoteroStatus.textContent = '✓';
+            zoteroStatus.classList.add('configured');
+            zoteroConfigModal.classList.remove('open');
+            openZoteroModal();
+          } else {
+            alert(data.message || 'Kunde inte validera API-nyckeln');
+          }
+        } catch (error) {
+          console.error('Zotero save error:', error);
+          alert('Ett fel uppstod. Försök igen.');
+        } finally {
+          zoteroConfigSave.disabled = false;
+          zoteroConfigSave.textContent = '🔑 Spara';
+        }
+      });
+      
+      // Open main Zotero modal
+      function openZoteroModal() {
+        zoteroModal.classList.add('open');
+        zoteroModalUser.textContent = zoteroConfig?.username || '';
+        selectedZoteroItems.clear();
+        updateZoteroSelection();
+        zoteroModalResults.innerHTML = `
+          <div class="zotero-empty">
+            <div class="zotero-empty-icon">📂</div>
+            <p>Välj en collection eller sök i hela biblioteket</p>
+          </div>
+        `;
+        loadZoteroCollections();
+      }
+      
+      // Close main modal
+      zoteroModalClose?.addEventListener('click', () => zoteroModal.classList.remove('open'));
+      zoteroModal?.addEventListener('click', (e) => {
+        if (e.target === zoteroModal) zoteroModal.classList.remove('open');
+      });
+      
+      // Load collections
+      async function loadZoteroCollections() {
+        zoteroCollectionsList.innerHTML = '<div class="zotero-loading">Laddar collections...</div>';
+        
+        try {
+          const response = await fetch('/api/ai-council/zotero/collections');
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || 'Kunde inte hämta collections');
+          }
+          
+          // Build tree structure from flat list
+          const allCollections = [...(data.collections || [])];
+          Object.values(data.subCollections || {}).forEach(subs => {
+            allCollections.push(...subs);
+          });
+          
+          // Create lookup map
+          const collectionMap = new Map();
+          allCollections.forEach(c => collectionMap.set(c.key, c));
+          
+          // Build parent-children map
+          const childrenMap = new Map();
+          allCollections.forEach(c => {
+            if (c.parentKey) {
+              const children = childrenMap.get(c.parentKey) || [];
+              children.push(c);
+              childrenMap.set(c.parentKey, children);
+            }
+          });
+          
+          // Recursive function to render collections
+          function renderCollection(col, depth = 0) {
+            const isActive = currentCollection === col.key;
+            const isDefault = data.defaultCollection === col.key;
+            const indent = depth * 1.25;
+            const children = childrenMap.get(col.key) || [];
+            const hasChildren = children.length > 0;
+            
+            let html = `
+              <div class="zotero-collection-item ${isActive ? 'active' : ''}" data-key="${col.key}" style="padding-left: ${0.75 + indent}rem;">
+                <span class="zotero-collection-icon">${hasChildren ? '📁' : '📄'}</span>
+                <span class="zotero-collection-name">${escapeHtml(col.name)}${isDefault ? ' ⭐' : ''}</span>
+                <span class="zotero-collection-count">${col.numItems}</span>
+              </div>
+            `;
+            
+            // Sort children alphabetically and render
+            children.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+            children.forEach(child => {
+              html += renderCollection(child, depth + 1);
+            });
+            
+            return html;
+          }
+          
+          // Build HTML starting with library root
+          let html = `
+            <div class="zotero-collection-item library ${!currentCollection ? 'active' : ''}" data-key="">
+              <span class="zotero-collection-icon">📚</span>
+              <span class="zotero-collection-name">Mitt bibliotek</span>
+            </div>
+          `;
+          
+          // Get top-level collections (no parent)
+          const topLevel = (data.collections || []).sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+          topLevel.forEach(col => {
+            html += renderCollection(col, 1);
+          });
+          
+          zoteroCollectionsList.innerHTML = html;
+          
+          // Add click handlers
+          zoteroCollectionsList.querySelectorAll('.zotero-collection-item').forEach(el => {
+            el.addEventListener('click', () => {
+              const key = el.dataset.key;
+              currentCollection = key || null;
+              
+              // Update active state
+              document.querySelectorAll('.zotero-collection-item').forEach(e => e.classList.remove('active'));
+              el.classList.add('active');
+              
+              // Update set default checkbox
+              zoteroSetDefault.checked = data.defaultCollection === key;
+              
+              // Load items in this collection
+              if (key) {
+                searchZotero('');  // Empty search = browse collection
+              } else {
+                zoteroResultsCount.textContent = 'Sök eller välj en collection';
+                zoteroModalResults.innerHTML = `
+                  <div class="zotero-empty">
+                    <div class="zotero-empty-icon">📂</div>
+                    <p>Välj en collection eller sök i hela biblioteket</p>
+                  </div>
+                `;
+              }
+            });
+          });
+          
+        } catch (error) {
+          console.error('Failed to load collections:', error);
+          zoteroCollectionsList.innerHTML = `
             <div class="zotero-error">
-              Kunde inte ladda Zotero-status. Försök igen senare.
+              ${escapeHtml(error.message || 'Kunde inte ladda collections')}
+              <br><small>Kontrollera att du är inloggad och att API-nyckeln är giltig.</small>
             </div>
           `;
         }
       }
       
-      function renderZoteroConfig() {
-        zoteroSection.innerHTML = `
-          <div class="zotero-config-form">
-            <div>
-              <input type="text" class="zotero-input" id="zoteroApiKey" 
-                placeholder="Klistra in din Zotero API-nyckel" 
-                autocomplete="off" spellcheck="false">
-            </div>
-            <button class="zotero-btn zotero-btn-primary" id="zoteroSaveBtn">
-              🔑 Spara API-nyckel
-            </button>
-            <div class="zotero-help-text">
-              Hämta din API-nyckel från <a href="https://www.zotero.org/settings/keys" target="_blank">zotero.org/settings/keys</a>
+      // Search in Zotero
+      async function searchZotero(query) {
+        zoteroModalResults.innerHTML = '<div class="zotero-loading">Söker...</div>';
+        
+        try {
+          const params = new URLSearchParams({ limit: '25' });
+          if (query) params.set('q', query);
+          if (currentCollection) params.set('collection', currentCollection);
+          
+          const response = await fetch(`/api/ai-council/zotero/search?${params}`);
+          const data = await response.json();
+          
+          if (!response.ok) throw new Error(data.message || 'Sökningen misslyckades');
+          
+          if (data.items.length === 0) {
+            zoteroModalResults.innerHTML = `
+              <div class="zotero-empty">
+                <div class="zotero-empty-icon">📭</div>
+                <p>Inga resultat hittades</p>
+              </div>
+            `;
+            zoteroResultsCount.textContent = '0 resultat';
+          } else {
+            zoteroResultsCount.textContent = `${data.totalResults} resultat`;
+            renderZoteroResults(data.items);
+          }
+        } catch (error) {
+          console.error('Zotero search error:', error);
+          zoteroModalResults.innerHTML = `<div class="zotero-error">${escapeHtml(error.message)}</div>`;
+        }
+      }
+      
+      // Render results
+      function renderZoteroResults(items) {
+        zoteroModalResults.innerHTML = items.map(item => `
+          <div class="zotero-result-item ${selectedZoteroItems.has(item.key) ? 'selected' : ''}" data-key="${item.key}">
+            <input type="checkbox" class="zotero-result-checkbox" data-key="${item.key}" 
+              ${selectedZoteroItems.has(item.key) ? 'checked' : ''}>
+            <div class="zotero-result-info">
+              <div class="zotero-result-title">${escapeHtml(item.title)}</div>
+              <div class="zotero-result-meta">${escapeHtml(item.authors)} ${item.year ? '(' + item.year + ')' : ''}</div>
+              ${item.journal ? `<div class="zotero-result-journal">${escapeHtml(item.journal)}</div>` : ''}
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.375rem;">
+                ${item.hasPdf ? '<span class="zotero-result-pdf">📄 PDF</span>' : ''}
+                ${item.tags.length > 0 ? `
+                  <div class="zotero-result-tags">
+                    ${item.tags.slice(0, 4).map(t => `<span class="zotero-result-tag">${escapeHtml(t)}</span>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
             </div>
           </div>
-        `;
+        `).join('');
         
-        const apiKeyInput = document.getElementById('zoteroApiKey');
-        const saveBtn = document.getElementById('zoteroSaveBtn');
-        
-        saveBtn.addEventListener('click', async () => {
-          const apiKey = apiKeyInput.value.trim();
-          if (!apiKey) return;
-          
-          saveBtn.disabled = true;
-          saveBtn.textContent = 'Validerar...';
-          
-          try {
-            const response = await fetch('/api/ai-council/zotero/validate', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ apiKey })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok && data.success) {
-              zoteroConfigured = true;
-              zoteroConfig = data.config;
-              zoteroStatus.textContent = '✓';
-              zoteroStatus.classList.add('configured');
-              renderZoteroSearch();
-            } else {
-              alert(data.message || 'Kunde inte validera API-nyckeln');
-              saveBtn.disabled = false;
-              saveBtn.textContent = '🔑 Spara API-nyckel';
+        // Add click handlers
+        zoteroModalResults.querySelectorAll('.zotero-result-item').forEach(el => {
+          el.addEventListener('click', (e) => {
+            if (e.target.type !== 'checkbox') {
+              const checkbox = el.querySelector('.zotero-result-checkbox');
+              checkbox.checked = !checkbox.checked;
             }
-          } catch (error) {
-            console.error('Zotero save error:', error);
-            alert('Ett fel uppstod. Försök igen.');
-            saveBtn.disabled = false;
-            saveBtn.textContent = '🔑 Spara API-nyckel';
-          }
+            const key = el.dataset.key;
+            if (el.querySelector('.zotero-result-checkbox').checked) {
+              selectedZoteroItems.add(key);
+              el.classList.add('selected');
+            } else {
+              selectedZoteroItems.delete(key);
+              el.classList.remove('selected');
+            }
+            updateZoteroSelection();
+          });
         });
       }
       
-      function renderZoteroSearch() {
-        zoteroSection.innerHTML = `
-          <div class="zotero-configured-info">
-            <span class="zotero-configured-user">📚 ${zoteroConfig?.username || 'Zotero'}</span>
-            <button class="zotero-btn zotero-btn-danger zotero-btn-small" id="zoteroDisconnect" title="Koppla från">✕</button>
-          </div>
-          <div class="zotero-search-form">
-            <input type="text" class="zotero-input zotero-search-input" id="zoteroSearchInput" 
-              placeholder="Sök i ditt bibliotek...">
-            <button class="zotero-btn zotero-btn-primary" id="zoteroSearchBtn">🔍</button>
-          </div>
-          <div class="zotero-results" id="zoteroResults"></div>
-          <div class="zotero-import-actions" id="zoteroImportActions" style="display: none;">
-            <span class="zotero-selected-count" id="zoteroSelectedCount">0 valda</span>
-            <button class="zotero-btn zotero-btn-primary" id="zoteroImportBtn">📥 Importera PDF</button>
-          </div>
-        `;
-        
-        const searchInput = document.getElementById('zoteroSearchInput');
-        const searchBtn = document.getElementById('zoteroSearchBtn');
-        const resultsEl = document.getElementById('zoteroResults');
-        const importActions = document.getElementById('zoteroImportActions');
-        const selectedCount = document.getElementById('zoteroSelectedCount');
-        const importBtn = document.getElementById('zoteroImportBtn');
-        const disconnectBtn = document.getElementById('zoteroDisconnect');
-        
-        // Search
-        const doSearch = async () => {
-          const query = searchInput.value.trim();
-          if (!query) return;
-          
-          searchBtn.disabled = true;
-          resultsEl.innerHTML = '<div class="zotero-loading">Söker...</div>';
-          
-          try {
-            const response = await fetch(`/api/ai-council/zotero/search?q=${encodeURIComponent(query)}&limit=10`);
-            const data = await response.json();
-            
-            if (!response.ok) {
-              throw new Error(data.message || 'Sökningen misslyckades');
-            }
-            
-            if (data.items.length === 0) {
-              resultsEl.innerHTML = '<div class="zotero-loading">Inga resultat hittades</div>';
-            } else {
-              resultsEl.innerHTML = data.items.map(item => `
-                <div class="zotero-result-item" data-key="${item.key}">
-                  <input type="checkbox" class="zotero-result-checkbox" data-key="${item.key}">
-                  <div class="zotero-result-info">
-                    <div class="zotero-result-title">${escapeHtml(item.title)}</div>
-                    <div class="zotero-result-meta">${escapeHtml(item.authors)} ${item.year ? '(' + item.year + ')' : ''}</div>
-                    ${item.tags.length > 0 ? `
-                      <div class="zotero-result-tags">
-                        ${item.tags.slice(0, 3).map(t => `<span class="zotero-result-tag">${escapeHtml(t)}</span>`).join('')}
-                      </div>
-                    ` : ''}
-                  </div>
-                </div>
-              `).join('');
-              
-              // Add click handlers
-              resultsEl.querySelectorAll('.zotero-result-item').forEach(el => {
-                el.addEventListener('click', (e) => {
-                  if (e.target.type !== 'checkbox') {
-                    const checkbox = el.querySelector('.zotero-result-checkbox');
-                    checkbox.checked = !checkbox.checked;
-                  }
-                  updateSelectedCount();
-                });
-              });
-            }
-          } catch (error) {
-            console.error('Zotero search error:', error);
-            resultsEl.innerHTML = `<div class="zotero-error">${escapeHtml(error.message)}</div>`;
-          } finally {
-            searchBtn.disabled = false;
+      // Update selection info
+      function updateZoteroSelection() {
+        const count = selectedZoteroItems.size;
+        zoteroSelectedInfo.textContent = `${count} valda`;
+        zoteroImportSelectedBtn.disabled = count === 0;
+        zoteroSelectAll.checked = count > 0 && 
+          zoteroModalResults.querySelectorAll('.zotero-result-checkbox').length === count;
+      }
+      
+      // Search button click
+      zoteroModalSearchBtn?.addEventListener('click', () => {
+        searchZotero(zoteroModalSearch.value.trim());
+      });
+      zoteroModalSearch?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchZotero(zoteroModalSearch.value.trim());
+      });
+      
+      // Select all
+      zoteroSelectAll?.addEventListener('change', () => {
+        const checkboxes = zoteroModalResults.querySelectorAll('.zotero-result-checkbox');
+        checkboxes.forEach(cb => {
+          cb.checked = zoteroSelectAll.checked;
+          const item = cb.closest('.zotero-result-item');
+          if (zoteroSelectAll.checked) {
+            selectedZoteroItems.add(cb.dataset.key);
+            item.classList.add('selected');
+          } else {
+            selectedZoteroItems.delete(cb.dataset.key);
+            item.classList.remove('selected');
           }
-        };
-        
-        searchBtn.addEventListener('click', doSearch);
-        searchInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') doSearch();
         });
+        updateZoteroSelection();
+      });
+      
+      // Import selected PDFs
+      zoteroImportSelectedBtn?.addEventListener('click', async () => {
+        if (selectedZoteroItems.size === 0) return;
         
-        // Update selected count
-        function updateSelectedCount() {
-          const checked = resultsEl.querySelectorAll('.zotero-result-checkbox:checked');
-          selectedZoteroItems = Array.from(checked).map(c => c.dataset.key);
-          selectedCount.textContent = `${selectedZoteroItems.length} valda`;
-          importActions.style.display = selectedZoteroItems.length > 0 ? 'flex' : 'none';
-        }
+        zoteroImportSelectedBtn.disabled = true;
+        zoteroImportSelectedBtn.textContent = 'Importerar...';
         
-        // Import PDF
-        importBtn.addEventListener('click', async () => {
-          if (selectedZoteroItems.length === 0) return;
-          
-          importBtn.disabled = true;
-          importBtn.textContent = 'Importerar...';
-          
-          // Import first selected item (MVP: one at a time)
-          const itemKey = selectedZoteroItems[0];
-          
+        let importedCount = 0;
+        let importedText = '';
+        
+        for (const itemKey of selectedZoteroItems) {
           try {
             const response = await fetch('/api/ai-council/zotero/fetch-pdf', {
               method: 'POST',
@@ -4462,50 +4940,51 @@ if (!anvandare) {
             
             const data = await response.json();
             
-            if (response.ok && data.success) {
-              // Add the PDF content to the context
+            if (response.ok && data.success && data.pdf.textContent) {
               const pdfText = data.pdf.textContent;
               const filename = data.pdf.filename;
               
-              // Find context textarea and append
-              if (contextEl && pdfText) {
-                const prefix = contextEl.value.trim() ? '\n\n---\n\n' : '';
-                contextEl.value += prefix + `📄 **${filename}** (från Zotero):\n\n${pdfText.slice(0, 50000)}${pdfText.length > 50000 ? '\n\n[...trunkerad...]' : ''}`;
-                
-                // Show success
-                alert(`✅ Importerade "${filename}" till kontexten (${Math.round(pdfText.length / 1000)}k tecken)`);
-              }
-            } else {
-              alert(data.message || 'Kunde inte importera PDF');
+              importedText += `\n\n---\n\n📄 **${filename}** (från Zotero):\n\n${pdfText.slice(0, 30000)}${pdfText.length > 30000 ? '\n\n[...trunkerad...]' : ''}`;
+              importedCount++;
             }
           } catch (error) {
-            console.error('Zotero import error:', error);
-            alert('Ett fel uppstod vid import');
-          } finally {
-            importBtn.disabled = false;
-            importBtn.textContent = '📥 Importera PDF';
+            console.error('Import error for', itemKey, error);
           }
-        });
+        }
         
-        // Disconnect
-        disconnectBtn.addEventListener('click', async () => {
-          if (!confirm('Vill du koppla från Zotero? Din API-nyckel kommer tas bort.')) return;
-          
-          try {
-            await fetch('/api/ai-council/zotero/validate', { method: 'DELETE' });
-            zoteroConfigured = false;
-            zoteroConfig = null;
-            zoteroStatus.textContent = '—';
-            zoteroStatus.classList.remove('configured');
-            renderZoteroConfig();
-          } catch (error) {
-            console.error('Zotero disconnect error:', error);
-          }
-        });
-      }
+        if (importedCount > 0 && contextEl) {
+          contextEl.value = (contextEl.value.trim() ? contextEl.value : '') + importedText;
+          alert(`✅ Importerade ${importedCount} PDF:er till kontexten`);
+          zoteroModal.classList.remove('open');
+        } else {
+          alert('Kunde inte importera några PDF:er. Kontrollera att artiklarna har bifogade PDF-filer.');
+        }
+        
+        zoteroImportSelectedBtn.disabled = false;
+        zoteroImportSelectedBtn.textContent = '📥 Importera valda PDF:er';
+      });
       
-      // Initialize Zotero on page load (lazy)
-      // Will be initialized when accordion is opened
+      // Disconnect Zotero
+      zoteroDisconnectBtn?.addEventListener('click', async () => {
+        if (!confirm('Vill du koppla från Zotero? Din API-nyckel kommer tas bort.')) return;
+        
+        try {
+          await fetch('/api/ai-council/zotero/validate', { method: 'DELETE' });
+          zoteroConfigured = false;
+          zoteroConfig = null;
+          zoteroStatus.textContent = '—';
+          zoteroStatus.classList.remove('configured');
+          zoteroModal.classList.remove('open');
+        } catch (error) {
+          console.error('Disconnect error:', error);
+        }
+      });
+      
+      // Refresh collections
+      zoteroRefreshCollections?.addEventListener('click', loadZoteroCollections);
+      
+      // Check Zotero config on page load
+      checkZoteroConfig();
     });
   </script>
 </body>
