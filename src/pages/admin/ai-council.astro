@@ -1636,8 +1636,13 @@ if (!anvandare) {
         height: 24px;
       }
     }
-    .file-list { margin-top: 0.75rem; }
+    .file-list { 
+      margin-top: 0.75rem; 
+      max-width: 100%;
+      overflow: hidden;
+    }
     .file-item {
+      max-width: 100%;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -1659,15 +1664,34 @@ if (!anvandare) {
     .file-item-remove:hover { color: var(--color-error); }
     .file-item-icon { font-size: 1rem; flex-shrink: 0; }
     .file-item-thumbnail { 
-      width: 40px; 
-      height: 40px; 
+      width: 48px; 
+      height: 48px; 
+      max-width: 48px;
+      max-height: 48px;
       object-fit: cover; 
-      border-radius: 4px; 
+      border-radius: 6px; 
       flex-shrink: 0;
       border: 1px solid var(--border-color);
     }
     .file-item.has-thumbnail { 
       padding: 0.375rem 0.5rem;
+    }
+    .file-item img {
+      max-width: 48px !important;
+      max-height: 48px !important;
+    }
+    
+    @media (max-width: 768px) {
+      .file-item-thumbnail {
+        width: 56px;
+        height: 56px;
+        max-width: 56px;
+        max-height: 56px;
+      }
+      .file-item img {
+        max-width: 56px !important;
+        max-height: 56px !important;
+      }
     }
     
     /* Paste indicator */
