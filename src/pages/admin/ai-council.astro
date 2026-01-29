@@ -1246,6 +1246,52 @@ if (!anvandare) {
       padding: 0.875rem;
       margin-bottom: 1rem;
     }
+    .sequential-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.625rem;
+    }
+    .run-sequential-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .run-sequential-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .run-sequential-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .run-sequential-btn.running {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .sound-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .sound-toggle input {
+      width: 14px;
+      height: 14px;
+    }
     .single-model-header {
       display: flex;
       align-items: center;
@@ -1293,6 +1339,11 @@ if (!anvandare) {
       background: var(--color-primary);
       color: white;
       border-color: var(--color-primary);
+    }
+    .single-model-btn.done {
+      border-color: #22c55e;
+      color: #22c55e;
+      background: rgba(34, 197, 94, 0.1);
     }
     .single-model-btn .dot-google,
     .single-model-btn .dot-anthropic,
@@ -2943,8 +2994,17 @@ if (!anvandare) {
               <!-- Single model run buttons -->
               <div class="single-model-section">
                 <div class="single-model-header">
-                  <span class="single-model-title">🔬 Kör en modell i taget</span>
-                  <span class="single-model-hint">(för felsökning)</span>
+                  <span class="single-model-title">🔬 Kör modeller sekventiellt</span>
+                  <span class="single-model-hint">(stabilt, en åt gången)</span>
+                </div>
+                <div class="sequential-controls">
+                  <button type="button" id="runAllSequentialBtn" class="run-sequential-btn" title="Kör alla valda modeller i sekvens">
+                    ▶️ Kör alla i sekvens
+                  </button>
+                  <label class="sound-toggle" title="Spela ljud när modell är klar">
+                    <input type="checkbox" id="soundNotification" checked>
+                    <span>🔔 Ljud</span>
+                  </label>
                 </div>
                 <div class="single-model-buttons">
                   <button type="button" class="single-model-btn" data-model="gemini" title="Kör endast Gemini">
@@ -3592,6 +3652,61 @@ if (!anvandare) {
       let sessions = [];
       let useSupabase = true;
       let availableModels = { openai: true, anthropic: true, gemini: true, grok: true };
+      let isRunningSequential = false; // Track if sequential run is in progress
+      
+      // ============================================
+      // SOUND NOTIFICATION
+      // ============================================
+      const soundNotificationEl = document.getElementById('soundNotification');
+      
+      function playNotificationSound(type = 'success') {
+        if (!soundNotificationEl?.checked) return;
+        
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          if (type === 'success') {
+            // Pleasant "pling" - two ascending tones
+            oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2); // G5
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialDecayToValueAtTime(0.01, audioContext.currentTime + 0.4);
+          } else if (type === 'error') {
+            // Lower "bonk" sound
+            oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+            oscillator.frequency.setValueAtTime(165, audioContext.currentTime + 0.1); // E3
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialDecayToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          } else if (type === 'complete') {
+            // Triumphant chord for all done
+            const osc2 = audioContext.createOscillator();
+            const osc3 = audioContext.createOscillator();
+            osc2.connect(gainNode);
+            osc3.connect(gainNode);
+            oscillator.frequency.setValueAtTime(523, audioContext.currentTime); // C5
+            osc2.frequency.setValueAtTime(659, audioContext.currentTime); // E5
+            osc3.frequency.setValueAtTime(784, audioContext.currentTime); // G5
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialDecayToValueAtTime(0.01, audioContext.currentTime + 0.8);
+            osc2.start(audioContext.currentTime);
+            osc3.start(audioContext.currentTime);
+            osc2.stop(audioContext.currentTime + 0.8);
+            osc3.stop(audioContext.currentTime + 0.8);
+          }
+          
+          oscillator.type = 'sine';
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (e) {
+          console.log('Could not play notification sound:', e);
+        }
+      }
       
       // Per-model progress tracking
       let modelTimers = {}; // { openai: { startTime, intervalId }, ... }
@@ -5697,8 +5812,12 @@ if (!anvandare) {
               
               setStatus(`✓ ${modelNames[modelId]} R2 klar! (${r2Count}/${r1Count} deliberationer)`, true);
               
+              // Play success sound
+              playNotificationSound('success');
+              
               // If all models have deliberated, update state
               if (r2Count >= r1Count) {
+                playNotificationSound('complete');
                 hasRunDeliberation = true;
                 deliberateNowBtn.style.display = 'none';
                 singleDeliberationSection.style.display = 'none';
@@ -5721,6 +5840,7 @@ if (!anvandare) {
           } catch (error) {
             console.error('Single deliberation error:', error);
             showError(`${modelNames[modelId]} R2 fel: ${error.message}`);
+            playNotificationSound('error');
             if (r2Accordion) {
               const r2StatusEl = document.getElementById('status-r2-' + providerId);
               if (r2StatusEl) {
@@ -5960,6 +6080,12 @@ if (!anvandare) {
                 accordion.classList.add('open');
                 
                 setStatus(`✓ ${modelNames[modelId]} klar! (${Object.keys(collectedResponses).length} svar totalt)`, true);
+                
+                // Mark button as done
+                btn.classList.add('done');
+                
+                // Play success sound
+                playNotificationSound('success');
               }
             }
             
@@ -5985,6 +6111,7 @@ if (!anvandare) {
           } catch (error) {
             console.error('Single model error:', error);
             showError(`${modelNames[modelId]} fel: ${error.message}`);
+            playNotificationSound('error');
             if (accordion) {
               document.getElementById('status-' + providerId).textContent = 'Fel';
               document.getElementById('status-' + providerId).className = 'accordion-status error';
@@ -6006,6 +6133,182 @@ if (!anvandare) {
             setTimeout(() => setStatus('', false), 3000);
           }
         });
+      });
+      
+      // ============================================
+      // SEQUENTIAL RUN - Run all selected models one by one
+      // ============================================
+      const runAllSequentialBtn = document.getElementById('runAllSequentialBtn');
+      
+      runAllSequentialBtn.addEventListener('click', async () => {
+        const prompt = promptEl.value.trim();
+        const context = contextEl.value.trim();
+        
+        if (!prompt) {
+          showError('Ange en prompt först.');
+          return;
+        }
+        
+        // Get selected models from checkboxes
+        const selectedModels = [];
+        document.querySelectorAll('#modelSelection .model-checkbox input:checked').forEach(cb => {
+          const modelEl = cb.closest('.model-checkbox');
+          if (modelEl) {
+            const model = modelEl.dataset.model;
+            // Skip models that already have responses
+            if (model && !collectedResponses[model === 'gemini' ? 'google' : model]) {
+              selectedModels.push(model);
+            }
+          }
+        });
+        
+        if (selectedModels.length === 0) {
+          showError('Välj minst en modell att köra, eller alla valda modeller har redan svar.');
+          return;
+        }
+        
+        // IMPORTANT: Save prompt for later synthesis
+        currentPrompt = prompt;
+        
+        isRunningSequential = true;
+        runAllSequentialBtn.disabled = true;
+        runAllSequentialBtn.classList.add('running');
+        runAllSequentialBtn.textContent = `⏳ Kör ${selectedModels.length} modeller...`;
+        
+        // Disable individual buttons during sequential run
+        document.querySelectorAll('.single-model-btn').forEach(b => b.disabled = true);
+        
+        const modelNames = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
+        const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
+        
+        // Show results section
+        resultsEl.classList.add('visible');
+        
+        let completedCount = 0;
+        let errorCount = 0;
+        
+        for (const modelId of selectedModels) {
+          const providerId = providerMap[modelId];
+          
+          // Update status
+          setStatus(`🔄 Kör ${modelNames[modelId]} (${completedCount + 1}/${selectedModels.length})...`, true);
+          runAllSequentialBtn.textContent = `⏳ ${modelNames[modelId]} (${completedCount + 1}/${selectedModels.length})`;
+          
+          // Show and prepare the accordion
+          const accordion = document.getElementById('accordion-' + providerId);
+          if (accordion) {
+            accordion.style.display = 'block';
+            document.getElementById('status-' + providerId).textContent = 'Kör...';
+            document.getElementById('status-' + providerId).className = 'accordion-status waiting';
+            document.getElementById('duration-' + providerId).textContent = '0.0s';
+          }
+          
+          // Mark button as running
+          const btn = document.querySelector(`.single-model-btn[data-model="${modelId}"]`);
+          if (btn) btn.classList.add('running');
+          
+          try {
+            console.log(`🚀 Sequential: Running ${modelId}`);
+            
+            const response = await fetch('/api/ai-council/query', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                context,
+                prompt,
+                selectedModels: [modelId],
+                synthesisModel: 'gemini',
+                enableDeliberation: false,
+                skipSynthesis: true,
+              })
+            });
+            
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.responses && data.responses.length > 0) {
+              const r = data.responses[0];
+              collectedResponses[providerId] = r;
+              displayResponse(providerId, r);
+              
+              if (accordion) {
+                document.getElementById('status-' + providerId).textContent = '✓';
+                document.getElementById('status-' + providerId).className = 'accordion-status success';
+                document.getElementById('duration-' + providerId).textContent = formatDuration(r.duration);
+                accordion.classList.add('open');
+              }
+              
+              if (btn) {
+                btn.classList.remove('running');
+                btn.classList.add('done');
+              }
+              
+              completedCount++;
+              playNotificationSound('success');
+              
+              // Save progress
+              saveResponsesToStorage();
+            }
+            
+          } catch (error) {
+            console.error(`Sequential error for ${modelId}:`, error);
+            errorCount++;
+            playNotificationSound('error');
+            
+            if (accordion) {
+              document.getElementById('status-' + providerId).textContent = 'Fel';
+              document.getElementById('status-' + providerId).className = 'accordion-status error';
+            }
+            if (btn) btn.classList.remove('running');
+            
+            // Continue to next model despite error
+          }
+          
+          // Small delay between models
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        // All done
+        isRunningSequential = false;
+        runAllSequentialBtn.disabled = false;
+        runAllSequentialBtn.classList.remove('running');
+        runAllSequentialBtn.textContent = '▶️ Kör alla i sekvens';
+        
+        // Re-enable individual buttons
+        document.querySelectorAll('.single-model-btn').forEach(b => {
+          b.disabled = false;
+          b.classList.remove('running');
+        });
+        
+        // Update workflow progress
+        updateWorkflowProgress();
+        
+        // Show action buttons
+        const responseCount = Object.keys(collectedResponses).length;
+        if (responseCount > 0) {
+          synthesizeNowBtn.style.display = 'flex';
+          const synthType = hasRunDeliberation ? 'supersyntes' : 'syntes';
+          synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${responseCount} svar)`;
+        }
+        if (responseCount >= 2 && !hasRunDeliberation) {
+          deliberateNowBtn.style.display = 'flex';
+          deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${responseCount} svar)`;
+          const singleDelibSection = document.getElementById('singleDeliberationSection');
+          if (singleDelibSection) singleDelibSection.style.display = 'block';
+        }
+        
+        // Play completion sound and show final status
+        if (completedCount > 0) {
+          playNotificationSound('complete');
+          setStatus(`✅ Klart! ${completedCount}/${selectedModels.length} modeller lyckades${errorCount > 0 ? `, ${errorCount} fel` : ''}.`, true);
+        } else {
+          setStatus(`❌ Alla ${selectedModels.length} modeller misslyckades.`, true);
+        }
+        
+        setTimeout(() => setStatus('', false), 5000);
       });
       
       // Hallucination details toggle
