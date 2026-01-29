@@ -124,6 +124,12 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     }
 
     const context = contextParts.join('\n').trim();
+    
+    // Beräkna ungefärligt antal tokens (1 token ≈ 4 tecken)
+    const estimatedTokens = Math.round(context.length / 4);
+    
+    // Varning om kontexten är mycket stor (>100k tokens)
+    const isLarge = estimatedTokens > 100000;
 
     return new Response(JSON.stringify({ 
       project: {
@@ -132,6 +138,9 @@ export const GET: APIRoute = async ({ request, cookies }) => {
         description: project.description
       },
       itemCount: (items || []).length,
+      contextLength: context.length,
+      estimatedTokens,
+      isLarge,
       context 
     }), {
       status: 200,
