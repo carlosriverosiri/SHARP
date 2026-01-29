@@ -3549,12 +3549,14 @@ if (!anvandare) {
       let hasSynthesized = false; // Track if synthesis has been done
       
       // ============================================
-      // PERSISTENT STORAGE - Save responses to survive crashes
+      // PERSISTENT STORAGE - Save responses to Supabase (with localStorage fallback)
       // ============================================
       const STORAGE_KEY = 'ai-council-collected-responses';
-      const STORAGE_PROMPT_KEY = 'ai-council-current-prompt';
+      let saveDraftTimeout = null;
       
-      function saveResponsesToStorage() {
+      // Debounced save to Supabase
+      async function saveResponsesToStorage() {
+        // Also save to localStorage as immediate backup
         try {
           const data = {
             responses: collectedResponses,
@@ -3564,13 +3566,70 @@ if (!anvandare) {
             timestamp: Date.now()
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-          console.log('💾 Saved', Object.keys(collectedResponses).length, 'responses to storage');
         } catch (e) {
           console.warn('Could not save to localStorage:', e);
         }
+        
+        // Debounce Supabase saves (wait 2 seconds after last change)
+        if (saveDraftTimeout) clearTimeout(saveDraftTimeout);
+        saveDraftTimeout = setTimeout(async () => {
+          try {
+            console.log('💾 Saving draft to Supabase...');
+            const response = await fetch('/api/ai-council/draft', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({
+                prompt: currentPrompt,
+                context: contextEl.value,
+                responses: collectedResponses,
+                r2Responses: collectedR2Responses,
+                hasRunDeliberation
+              })
+            });
+            
+            if (response.ok) {
+              console.log('✅ Draft saved to Supabase');
+            } else {
+              const err = await response.json();
+              console.warn('Supabase save failed:', err.error);
+            }
+          } catch (e) {
+            console.warn('Could not save to Supabase:', e);
+          }
+        }, 2000);
+        
+        console.log('💾 Saved', Object.keys(collectedResponses).length, 'responses to localStorage');
       }
       
-      function loadResponsesFromStorage() {
+      async function loadResponsesFromStorage() {
+        // First try Supabase
+        try {
+          console.log('📂 Loading draft from Supabase...');
+          const response = await fetch('/api/ai-council/draft', { credentials: 'include' });
+          
+          if (response.ok) {
+            const data = await response.json();
+            
+            if (data.draft && data.draft.responses && Object.keys(data.draft.responses).length > 0) {
+              collectedResponses = data.draft.responses || {};
+              collectedR2Responses = data.draft.r2_responses || {};
+              hasRunDeliberation = data.draft.has_run_deliberation || false;
+              
+              // Restore prompt and context if available
+              if (data.draft.prompt) currentPrompt = data.draft.prompt;
+              if (data.draft.prompt) promptEl.value = data.draft.prompt;
+              if (data.draft.context) contextEl.value = data.draft.context;
+              
+              console.log('✅ Restored', Object.keys(collectedResponses).length, 'responses from Supabase');
+              return true;
+            }
+          }
+        } catch (e) {
+          console.warn('Could not load from Supabase:', e);
+        }
+        
+        // Fallback to localStorage
         try {
           const stored = localStorage.getItem(STORAGE_KEY);
           if (!stored) return false;
@@ -3588,7 +3647,7 @@ if (!anvandare) {
           hasRunDeliberation = data.hasRunDeliberation || false;
           hasSynthesized = data.hasSynthesized || false;
           
-          console.log('📂 Restored', Object.keys(collectedResponses).length, 'responses from storage');
+          console.log('📂 Restored', Object.keys(collectedResponses).length, 'responses from localStorage');
           return Object.keys(collectedResponses).length > 0;
         } catch (e) {
           console.warn('Could not load from localStorage:', e);
@@ -3596,9 +3655,21 @@ if (!anvandare) {
         }
       }
       
-      function clearStoredResponses() {
+      async function clearStoredResponses() {
+        // Clear localStorage
         localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(STORAGE_PROMPT_KEY);
+        
+        // Clear Supabase draft
+        try {
+          await fetch('/api/ai-council/draft', { 
+            method: 'DELETE', 
+            credentials: 'include' 
+          });
+          console.log('🗑️ Cleared draft from Supabase');
+        } catch (e) {
+          console.warn('Could not clear Supabase draft:', e);
+        }
+        
         console.log('🗑️ Cleared stored responses');
       }
       
@@ -6699,49 +6770,53 @@ if (!anvandare) {
       // =============================================
       // RESTORE SAVED RESPONSES ON PAGE LOAD
       // =============================================
-      if (loadResponsesFromStorage()) {
-        console.log('📂 Found saved responses, restoring UI...');
+      (async () => {
+        const hasRestoredResponses = await loadResponsesFromStorage();
         
-        // Show results section
-        resultsEl.classList.add('visible');
-        
-        // Display each saved response
-        const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
-        Object.entries(collectedResponses).forEach(([modelId, response]) => {
-          const providerId = providerMap[modelId];
-          const accordion = document.getElementById('accordion-' + providerId);
-          if (accordion && response) {
-            accordion.style.display = 'block';
-            displayResponse(providerId, response);
-            document.getElementById('status-' + providerId).textContent = '✓';
-            document.getElementById('status-' + providerId).className = 'accordion-status success';
-            if (response.duration) {
-              document.getElementById('duration-' + providerId).textContent = formatDuration(response.duration);
+        if (hasRestoredResponses) {
+          console.log('📂 Found saved responses, restoring UI...');
+          
+          // Show results section
+          resultsEl.classList.add('visible');
+          
+          // Display each saved response
+          const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
+          Object.entries(collectedResponses).forEach(([modelId, response]) => {
+            const providerId = providerMap[modelId];
+            const accordion = document.getElementById('accordion-' + providerId);
+            if (accordion && response) {
+              accordion.style.display = 'block';
+              displayResponse(providerId, response);
+              document.getElementById('status-' + providerId).textContent = '✓';
+              document.getElementById('status-' + providerId).className = 'accordion-status success';
+              if (response.duration) {
+                document.getElementById('duration-' + providerId).textContent = formatDuration(response.duration);
+              }
             }
-          }
-        });
-        
-        // Update workflow progress
-        updateWorkflowProgress();
-        
-        // Show action buttons
-        const responseCount = Object.keys(collectedResponses).length;
-        if (responseCount > 0) {
-          synthesizeNowBtn.style.display = 'flex';
-          synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${responseCount} svar)`;
+          });
           
-          if (responseCount >= 2 && !hasRunDeliberation) {
-            deliberateNowBtn.style.display = 'flex';
-            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${responseCount} svar)`;
-          }
+          // Update workflow progress
+          updateWorkflowProgress();
           
-          // Show restore notification
-          setStatus(`📂 Återställde ${responseCount} sparade svar. Klicka "Börja om" för att rensa.`, true);
-          setTimeout(() => setStatus('', false), 5000);
+          // Show action buttons
+          const responseCount = Object.keys(collectedResponses).length;
+          if (responseCount > 0) {
+            synthesizeNowBtn.style.display = 'flex';
+            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${responseCount} svar)`;
+            
+            if (responseCount >= 2 && !hasRunDeliberation) {
+              deliberateNowBtn.style.display = 'flex';
+              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${responseCount} svar)`;
+            }
+            
+            // Show restore notification
+            setStatus(`📂 Återställde ${responseCount} sparade svar från Supabase. Klicka "Börja om" för att rensa.`, true);
+            setTimeout(() => setStatus('', false), 5000);
+          }
         }
-      }
-      
-      console.log('✅ AI Council fully initialized');
+        
+        console.log('✅ AI Council fully initialized');
+      })();
     });
   </script>
 </body>
