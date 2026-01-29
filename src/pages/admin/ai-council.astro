@@ -3788,10 +3788,15 @@ if (!anvandare) {
       const profileSelectorEl = document.getElementById('profileSelector');
       
       function applyProfile(profileId) {
+        console.log('Applying profile:', profileId);
         const profile = profiles[profileId];
-        if (!profile) return;
+        if (!profile) {
+          console.error('Profile not found:', profileId);
+          return;
+        }
         
         currentProfile = profileId;
+        console.log('Profile settings:', profile);
         
         // Update profile buttons
         profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => {
@@ -3816,11 +3821,17 @@ if (!anvandare) {
         deliberationToggle.classList.toggle('active', profile.deliberation);
       }
       
-      profileSelectorEl.addEventListener('click', (e) => {
-        const btn = e.target.closest('.profile-btn');
-        if (!btn) return;
-        
-        applyProfile(btn.dataset.profile);
+      // Profile button click handler - using direct listeners for reliability
+      profileSelectorEl.querySelectorAll('.profile-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const profileId = btn.dataset.profile;
+          console.log('Profile clicked:', profileId);
+          if (profileId) {
+            applyProfile(profileId);
+          }
+        });
       });
       
       // Deliberation toggle handler
