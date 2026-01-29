@@ -1404,20 +1404,27 @@ async function handleStreamingQuery(
   
   const stream = new ReadableStream({
     async start(controller) {
-      // Heartbeat to prevent Netlify Inactivity Timeout (sends ping every 5 seconds)
+      // Heartbeat to prevent Netlify Inactivity Timeout
+      // AGGRESSIVE: Every 2 seconds to ensure connection stays alive
       let heartbeatInterval: ReturnType<typeof setInterval> | null = null;
       let heartbeatCount = 0;
+      const HEARTBEAT_MS = 2000; // 2 seconds - more aggressive to prevent Netlify timeout
       
       const startHeartbeat = () => {
+        // Send first heartbeat immediately
+        try {
+          controller.enqueue(encoder.encode(JSON.stringify({ type: 'heartbeat', data: { count: 0, message: 'Connection established' } }) + '\n'));
+        } catch (e) {}
+        
         heartbeatInterval = setInterval(() => {
           heartbeatCount++;
           try {
-            controller.enqueue(encoder.encode(JSON.stringify({ type: 'heartbeat', data: { count: heartbeatCount, elapsed: heartbeatCount * 5 } }) + '\n'));
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'heartbeat', data: { count: heartbeatCount, elapsed: heartbeatCount * (HEARTBEAT_MS/1000) } }) + '\n'));
           } catch (e) {
             // Controller might be closed
             if (heartbeatInterval) clearInterval(heartbeatInterval);
           }
-        }, 5000); // Every 5 seconds
+        }, HEARTBEAT_MS);
       };
       
       const stopHeartbeat = () => {
@@ -1724,8 +1731,10 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
     status: 200,
     headers: {
       'Content-Type': 'application/x-ndjson',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
       'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no', // Disable buffering for nginx/proxies
+      'Transfer-Encoding': 'chunked', // Ensure chunked transfer
     },
   });
 }
