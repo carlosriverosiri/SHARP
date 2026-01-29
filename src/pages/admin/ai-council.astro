@@ -3425,6 +3425,8 @@ if (!anvandare) {
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 AI Council script starting...');
+      
       // Configure marked
       if (typeof marked !== 'undefined') {
         marked.setOptions({ breaks: true, gfm: true });
@@ -3558,15 +3560,6 @@ if (!anvandare) {
         setTimeout(() => setStatus('', false), 2000);
       }
       
-      // Reset workflow button handler
-      resetWorkflowBtn.addEventListener('click', () => {
-        if (Object.keys(collectedResponses).length > 0) {
-          if (!confirm('Vill du verkligen starta om? Alla insamlade svar kommer att försvinna.')) {
-            return;
-          }
-        }
-        resetWorkflow();
-      });
       const statusEl = document.getElementById('status');
       const statusTextEl = document.getElementById('statusText');
       const errorEl = document.getElementById('error');
@@ -3592,6 +3585,18 @@ if (!anvandare) {
       const resetWorkflowBtn = document.getElementById('resetWorkflowBtn');
       const dictationBtn = document.getElementById('dictationBtn');
       const dictationStatus = document.getElementById('dictationStatus');
+      
+      // Reset workflow button handler (must be after resetWorkflowBtn is defined)
+      if (resetWorkflowBtn) {
+        resetWorkflowBtn.addEventListener('click', () => {
+          if (Object.keys(collectedResponses).length > 0) {
+            if (!confirm('Vill du verkligen starta om? Alla insamlade svar kommer att försvinna.')) {
+              return;
+            }
+          }
+          resetWorkflow();
+        });
+      }
       
       // ============================================
       // DIKTERING / SPEECH-TO-TEXT
@@ -5367,7 +5372,16 @@ if (!anvandare) {
         }
       });
       
-      runBtn.addEventListener('click', runQuery);
+      console.log('📌 Setting up runBtn listener...');
+      if (!runBtn) {
+        console.error('❌ runBtn not found!');
+      } else {
+        runBtn.addEventListener('click', () => {
+          console.log('🔥 Run button clicked!');
+          runQuery();
+        });
+        console.log('✅ runBtn listener attached');
+      }
       document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery(); });
       
       // Hallucination details toggle
