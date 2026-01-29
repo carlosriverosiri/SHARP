@@ -1438,6 +1438,65 @@ if (!anvandare) {
     .deliberation-toggle-desc { font-size: 0.6875rem; color: var(--text-muted); }
     .deliberation-toggle.active .deliberation-toggle-desc { color: #b45309; }
     
+    /* Workflow progress indicator */
+    .workflow-progress {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .workflow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-input);
+      border-radius: 20px;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .workflow-step.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+    .workflow-step.completed {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+    }
+    .workflow-step-arrow { color: var(--text-light); font-size: 0.875rem; }
+    .workflow-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .reset-workflow-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .reset-workflow-btn:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+    
     /* Round 2 section */
     .round-label {
       font-size: 0.75rem;
@@ -1810,8 +1869,31 @@ if (!anvandare) {
       border: none;
     }
     .synthesize-btn:hover { opacity: 0.9; }
-    .synthesize-btn:disabled, .retry-btn:disabled, .deliberate-btn:disabled { opacity: 0.5; cursor: not-allowed;
+    .expand-btn {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: white;
+      border: none;
+    }
+    .expand-btn:hover { opacity: 0.9; }
+    .synthesize-btn:disabled, .retry-btn:disabled, .deliberate-btn:disabled, .expand-btn:disabled { opacity: 0.5; cursor: not-allowed;
       display: none;
+    }
+    /* Highlight pulse animation for buttons */
+    @keyframes highlight-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+    }
+    .highlight-pulse {
+      animation: highlight-pulse 1s ease-in-out 2;
     }
     .run-btn.loading .spinner { display: block; }
     .run-btn.loading .btn-text { display: none; }
@@ -2829,6 +2911,9 @@ if (!anvandare) {
               <button type="button" id="retryFailedBtn" class="retry-btn" style="display: none;" title="Kör endast modeller som misslyckades">
                 <span>🔄 Försök igen (misslyckade)</span>
               </button>
+              <button type="button" id="expandModelsBtn" class="expand-btn" style="display: none;" title="Lägg till fler modeller till befintliga svar">
+                <span>➕ Lägg till modeller</span>
+              </button>
               <button type="button" id="deliberateNowBtn" class="deliberate-btn" style="display: none;" title="Kör deliberation (Runda 2) på insamlade svar">
                 <span>🔄 Kör deliberation</span>
               </button>
@@ -2938,6 +3023,37 @@ if (!anvandare) {
               </div>
             </div>
             <div id="synthesisContent" class="synthesis-content markdown-content"></div>
+          </div>
+          
+          <!-- Workflow progress indicator -->
+          <div id="workflowProgress" class="workflow-progress" style="display: none;">
+            <div class="workflow-steps">
+              <div class="workflow-step" data-step="round1">
+                <span class="workflow-step-icon">1️⃣</span>
+                <span class="workflow-step-label">Runda 1</span>
+              </div>
+              <div class="workflow-step-arrow">→</div>
+              <div class="workflow-step" data-step="synthesis1">
+                <span class="workflow-step-icon">🧪</span>
+                <span class="workflow-step-label">Syntes</span>
+              </div>
+              <div class="workflow-step-arrow">→</div>
+              <div class="workflow-step" data-step="round2">
+                <span class="workflow-step-icon">2️⃣</span>
+                <span class="workflow-step-label">Deliberation</span>
+              </div>
+              <div class="workflow-step-arrow">→</div>
+              <div class="workflow-step" data-step="supersynthesis">
+                <span class="workflow-step-icon">⭐</span>
+                <span class="workflow-step-label">Supersyntes</span>
+              </div>
+            </div>
+            <div class="workflow-info">
+              <span id="workflowStatus">Väntar på svar...</span>
+              <button type="button" id="resetWorkflowBtn" class="reset-workflow-btn" title="Starta om arbetsflödet">
+                🔄 Börja om
+              </button>
+            </div>
           </div>
           
           <div class="responses-section">
@@ -3331,6 +3447,7 @@ if (!anvandare) {
       const promptEl = document.getElementById('prompt');
       const runBtn = document.getElementById('runBtn');
       const retryFailedBtn = document.getElementById('retryFailedBtn');
+      const expandModelsBtn = document.getElementById('expandModelsBtn');
       const deliberateNowBtn = document.getElementById('deliberateNowBtn');
       const synthesizeNowBtn = document.getElementById('synthesizeNowBtn');
 
@@ -3339,6 +3456,117 @@ if (!anvandare) {
       let collectedResponses = {}; // Store Round 1 responses across multiple runs
       let collectedR2Responses = {}; // Store Round 2 (deliberation) responses
       let hasRunDeliberation = false; // Track if deliberation has been run
+      let hasSynthesized = false; // Track if synthesis has been done
+      
+      // Update workflow progress indicator
+      function updateWorkflowProgress() {
+        const successCount = Object.keys(collectedResponses).length;
+        const r2Count = Object.keys(collectedR2Responses).length;
+        
+        // Show workflow progress if we have any responses
+        workflowProgress.style.display = successCount > 0 ? 'block' : 'none';
+        
+        // Update step states
+        const steps = workflowProgress.querySelectorAll('.workflow-step');
+        steps.forEach(step => {
+          step.classList.remove('active', 'completed');
+        });
+        
+        // Determine current state
+        const round1Step = workflowProgress.querySelector('[data-step="round1"]');
+        const synthesis1Step = workflowProgress.querySelector('[data-step="synthesis1"]');
+        const round2Step = workflowProgress.querySelector('[data-step="round2"]');
+        const supersynthesisStep = workflowProgress.querySelector('[data-step="supersynthesis"]');
+        
+        let statusText = '';
+        
+        if (successCount > 0) {
+          round1Step.classList.add('completed');
+          statusText = `${successCount} modell(er) har svarat`;
+          
+          if (hasSynthesized && !hasRunDeliberation) {
+            synthesis1Step.classList.add('completed');
+            statusText = 'Syntes klar - kan fortsätta med deliberation';
+          } else if (!hasSynthesized && !hasRunDeliberation) {
+            synthesis1Step.classList.add('active');
+            statusText = `${successCount} svar - redo för syntes eller deliberation`;
+          }
+          
+          if (hasRunDeliberation) {
+            round1Step.classList.add('completed');
+            synthesis1Step.classList.add('completed');
+            round2Step.classList.add('completed');
+            supersynthesisStep.classList.add('active');
+            statusText = 'Deliberation klar - redo för supersyntes';
+          }
+          
+          // If we have synthesis after deliberation
+          if (hasRunDeliberation && hasSynthesized) {
+            supersynthesisStep.classList.add('completed');
+            statusText = '✓ Komplett arbetsflöde avslutat';
+          }
+        }
+        
+        workflowStatus.textContent = statusText;
+      }
+      
+      // Reset workflow
+      function resetWorkflow() {
+        collectedResponses = {};
+        collectedR2Responses = {};
+        failedModels = [];
+        hasRunDeliberation = false;
+        hasSynthesized = false;
+        
+        // Hide all workflow UI
+        workflowProgress.style.display = 'none';
+        round2Section.style.display = 'none';
+        round1Label.style.display = 'none';
+        retryFailedBtn.style.display = 'none';
+        expandModelsBtn.style.display = 'none';
+        deliberateNowBtn.style.display = 'none';
+        synthesizeNowBtn.style.display = 'none';
+        
+        // Clear accordion contents
+        document.querySelectorAll('.accordion-content .markdown-content').forEach(el => {
+          el.innerHTML = '';
+        });
+        document.querySelectorAll('.accordion-status').forEach(el => {
+          el.textContent = '';
+          el.className = 'accordion-status';
+        });
+        document.querySelectorAll('.accordion-duration').forEach(el => {
+          el.textContent = '';
+        });
+        
+        // Reset results area
+        document.getElementById('results').classList.remove('visible');
+        document.getElementById('synthesisCard').style.display = 'none';
+        document.getElementById('synthesisContent').innerHTML = '';
+        document.getElementById('costBanner').classList.remove('visible');
+        
+        // Reset all model checkboxes to default (Gemini + Claude selected)
+        document.querySelectorAll('.model-checkbox').forEach(cb => {
+          const checkbox = cb.querySelector('input[type="checkbox"]');
+          const modelId = cb.dataset.model;
+          const shouldSelect = modelId === 'gemini' || modelId === 'anthropic';
+          checkbox.checked = shouldSelect;
+          cb.classList.toggle('selected', shouldSelect);
+        });
+        
+        setStatus('🔄 Arbetsflöde återställt', true);
+        setTimeout(() => setStatus('', false), 2000);
+      }
+      
+      // Reset workflow button handler
+      resetWorkflowBtn.addEventListener('click', () => {
+        if (Object.keys(collectedResponses).length > 0) {
+          if (!confirm('Vill du verkligen starta om? Alla insamlade svar kommer att försvinna.')) {
+            return;
+          }
+        }
+        resetWorkflow();
+      });
       const statusEl = document.getElementById('status');
       const statusTextEl = document.getElementById('statusText');
       const errorEl = document.getElementById('error');
@@ -3359,6 +3587,9 @@ if (!anvandare) {
       const skipSynthesisEl = document.getElementById('skipSynthesis');
       const round1Label = document.getElementById('round1Label');
       const round2Section = document.getElementById('round2Section');
+      const workflowProgress = document.getElementById('workflowProgress');
+      const workflowStatus = document.getElementById('workflowStatus');
+      const resetWorkflowBtn = document.getElementById('resetWorkflowBtn');
       const dictationBtn = document.getElementById('dictationBtn');
       const dictationStatus = document.getElementById('dictationStatus');
       
@@ -4832,7 +5063,8 @@ if (!anvandare) {
           
           console.log('Failed models:', failedModels, 'Collected:', Object.keys(collectedResponses));
           
-          // Show/hide retry, deliberation, and synthesize buttons based on state
+          // Show/hide workflow buttons based on state
+          // NEW: Always show incremental buttons when we have responses (not just in skip-synthesis mode)
           const hasFailures = failedModels.length > 0;
           const successCount = Object.keys(collectedResponses).length;
           const hasSuccesses = successCount > 0;
@@ -4846,23 +5078,39 @@ if (!anvandare) {
             retryFailedBtn.querySelector('span').textContent = `🔄 Försök igen (${failedModels.length} misslyckade)`;
           }
           
+          // Show "expand" button to add more models
+          const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => !collectedResponses[m]);
+          expandModelsBtn.style.display = (hasSuccesses && unusedModels.length > 0) ? 'flex' : 'none';
+          if (unusedModels.length > 0) {
+            expandModelsBtn.querySelector('span').textContent = `➕ Lägg till modeller (${unusedModels.length} kvar)`;
+          }
+          
           // Show deliberation button if:
-          // - Skip synthesis mode is enabled (incremental workflow)
           // - We have at least 2 responses (deliberation needs multiple perspectives)
           // - Deliberation hasn't been run yet
-          const canRunDeliberation = isSkipSynthesis && successCount >= 2 && !hasDeliberation;
+          // - CHANGED: No longer requires skip-synthesis mode
+          const canRunDeliberation = successCount >= 2 && !hasDeliberation && !hasSynthesis;
           deliberateNowBtn.style.display = canRunDeliberation ? 'flex' : 'none';
           if (canRunDeliberation) {
             deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${successCount} svar)`;
           }
           
-          // Show synthesize button if we have responses but no synthesis (in skip-synthesis mode)
-          // Update button text based on whether deliberation has been run
-          synthesizeNowBtn.style.display = (hasSuccesses && !hasSynthesis && isSkipSynthesis) ? 'flex' : 'none';
+          // Show synthesize button if we have responses but no synthesis
+          // CHANGED: Always show when we have responses and no synthesis yet
+          const canSynthesize = hasSuccesses && !hasSynthesis;
+          synthesizeNowBtn.style.display = canSynthesize ? 'flex' : 'none';
           if (hasSuccesses) {
             const synthType = hasDeliberation ? 'supersyntes' : 'syntes';
             synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${successCount} svar)`;
           }
+          
+          // Update hasSynthesized flag if synthesis was included
+          if (hasSynthesis) {
+            hasSynthesized = true;
+          }
+          
+          // Update workflow progress indicator
+          updateWorkflowProgress();
           
           // Show save prompt or auto-save (works even without synthesis in debug mode)
           const hasResults = currentResponses.synthesis || (currentResponses.rawResponses && currentResponses.rawResponses.length > 0);
@@ -4909,6 +5157,47 @@ if (!anvandare) {
         
         // Run the query automatically
         await runQuery();
+      });
+      
+      // Expand models button handler - add more models to existing responses
+      expandModelsBtn.addEventListener('click', () => {
+        // Find models that haven't been run yet
+        const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => !collectedResponses[m]);
+        
+        if (unusedModels.length === 0) {
+          alert('Alla modeller har redan svarat.');
+          return;
+        }
+        
+        // Show a modal to select which additional models to run
+        const selectedNew = [];
+        const modelNames = {
+          'gemini': 'Gemini 2.0 Flash (~$0.10/1M)',
+          'anthropic': 'Claude Sonnet (~$3/1M)',
+          'grok': 'Grok 4 (~$5/1M)',
+          'openai': 'OpenAI o1 (~$15/1M)'
+        };
+        
+        // Update checkboxes: deselect models that already have responses, select unused ones
+        document.querySelectorAll('.model-checkbox').forEach(cb => {
+          const checkbox = cb.querySelector('input[type="checkbox"]');
+          const modelId = cb.dataset.model;
+          const isUnused = unusedModels.includes(modelId);
+          checkbox.checked = isUnused;
+          cb.classList.toggle('selected', isUnused);
+        });
+        
+        // Enable skip synthesis for incremental collection
+        skipSynthesisEl.checked = true;
+        skipSynthesisToggle.classList.add('active');
+        
+        // Scroll to run button and highlight it
+        runBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        runBtn.classList.add('highlight-pulse');
+        setTimeout(() => runBtn.classList.remove('highlight-pulse'), 2000);
+        
+        // Show info message
+        setStatus(`✓ ${unusedModels.length} modeller valda. Klicka "Kör AI Council" för att lägga till.`, true);
       });
       
       // Deliberation button handler - run Round 2 on collected responses
@@ -4978,14 +5267,21 @@ if (!anvandare) {
             
             // Hide deliberation button, update synthesize button
             deliberateNowBtn.style.display = 'none';
+            synthesizeNowBtn.style.display = 'flex';
             synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${Object.keys(collectedResponses).length} svar)`;
+            
+            // Update workflow progress
+            updateWorkflowProgress();
             
             setStatus('✓ Deliberation klar!', true);
             setTimeout(() => setStatus('', false), 2000);
           }
         } catch (error) {
-          showError(error.message);
+          showError('Deliberationsfel: ' + error.message + '. Försök igen.');
           setStatus('', false);
+          // Show deliberation button again so user can retry
+          deliberateNowBtn.style.display = 'flex';
+          deliberateNowBtn.querySelector('span').textContent = '🔄 Försök deliberation igen';
         } finally {
           setLoading(false);
         }
@@ -5039,6 +5335,10 @@ if (!anvandare) {
             
             // Hide synthesize button after synthesis is done
             synthesizeNowBtn.style.display = 'none';
+            hasSynthesized = true;
+            
+            // Update workflow progress
+            updateWorkflowProgress();
             
             // Show save modal
             setTimeout(() => showSavePromptModal(), 500);
@@ -5046,8 +5346,11 @@ if (!anvandare) {
           
           setStatus('', false);
         } catch (error) {
-          showError(error.message);
+          showError('Syntesfel: ' + error.message + '. Försök igen med "Kör syntes"-knappen.');
           setStatus('', false);
+          // Show synthesize button again so user can retry
+          synthesizeNowBtn.style.display = 'flex';
+          synthesizeNowBtn.querySelector('span').textContent = '🔄 Försök syntes igen';
         } finally {
           setLoading(false);
         }
