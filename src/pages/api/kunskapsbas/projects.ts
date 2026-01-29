@@ -101,7 +101,10 @@ export const GET: APIRoute = async ({ cookies }) => {
 
 // POST - Skapa nytt projekt
 export const POST: APIRoute = async ({ request, cookies }) => {
+  console.log('POST /api/kunskapsbas/projects called');
+  
   if (!supabaseUrl || !supabaseKey) {
+    console.error('Supabase not configured');
     return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
@@ -111,6 +114,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
   
   if (!arInloggad(cookies)) {
+    console.error('User not logged in');
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
@@ -119,15 +123,19 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const anvandare = await hamtaAnvandare(cookies);
   if (!anvandare) {
+    console.error('Could not get user');
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
+  console.log('User:', anvandare.id);
+
   try {
     const body = await request.json();
     const { name, description, icon, color } = body;
+    console.log('Request body:', { name, description, icon, color });
 
     if (!name) {
       return new Response(JSON.stringify({ error: 'Projektnamn krävs' }), {
@@ -136,6 +144,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
+    console.log('Inserting into kb_projects...');
     const { data: project, error } = await supabase
       .from('kb_projects')
       .insert({
@@ -148,7 +157,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    console.log('Project created:', project);
 
     // Lägg till tomma kategorier
     const projectWithCategories = {

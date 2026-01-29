@@ -7311,6 +7311,33 @@ if (!anvandare) {
       // RESTORE SAVED RESPONSES ON PAGE LOAD
       // =============================================
       (async () => {
+        // Check for Kunskapsbas project context from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const kbProjectId = urlParams.get('kb_project');
+        
+        if (kbProjectId) {
+          console.log('📚 Loading Kunskapsbas project context:', kbProjectId);
+          try {
+            const response = await fetch(`/api/kunskapsbas/context?project_id=${kbProjectId}`);
+            const data = await response.json();
+            
+            if (data.context && data.project) {
+              // Set the context in the textarea
+              contextEl.value = data.context;
+              
+              // Show notification
+              setStatus(`📚 Laddat kontext från projekt "${data.project.name}" (${data.itemCount} dokument)`, true);
+              setTimeout(() => setStatus('', false), 5000);
+              
+              console.log('✅ Kunskapsbas context loaded:', data.itemCount, 'items');
+            } else if (data.error) {
+              console.warn('Could not load Kunskapsbas context:', data.error);
+            }
+          } catch (error) {
+            console.error('Error loading Kunskapsbas context:', error);
+          }
+        }
+        
         const hasRestoredResponses = await loadResponsesFromStorage();
         
         if (hasRestoredResponses) {
