@@ -1238,6 +1238,72 @@ if (!anvandare) {
     .dot-grok { background: #f97316; }       /* Grok - medium-high (~$5/1M) */
     .dot-openai { background: #ef4444; }     /* OpenAI o1 - most expensive (~$15/1M) */
     
+    /* Single model run section */
+    .single-model-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(16, 185, 129, 0.05));
+      border: 1px dashed var(--border-color);
+      border-radius: 10px;
+      padding: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    .single-model-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.625rem;
+    }
+    .single-model-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .single-model-hint {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+    }
+    .single-model-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .single-model-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .single-model-btn:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+    .single-model-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .single-model-btn.running {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+    .single-model-btn .dot-google,
+    .single-model-btn .dot-anthropic,
+    .single-model-btn .dot-grok,
+    .single-model-btn .dot-openai {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
     /* Price legend */
     .price-legend {
       display: flex;
@@ -2829,6 +2895,28 @@ if (!anvandare) {
                 <span class="price-legend-item"><span class="price-dot price-cheap"></span>Billig</span>
                 <span class="price-legend-arrow">→</span>
                 <span class="price-legend-item"><span class="price-dot price-expensive"></span>Dyr</span>
+              </div>
+              
+              <!-- Single model run buttons -->
+              <div class="single-model-section">
+                <div class="single-model-header">
+                  <span class="single-model-title">🔬 Kör en modell i taget</span>
+                  <span class="single-model-hint">(för felsökning)</span>
+                </div>
+                <div class="single-model-buttons">
+                  <button type="button" class="single-model-btn" data-model="gemini" title="Kör endast Gemini">
+                    <span class="dot-google"></span> Gemini
+                  </button>
+                  <button type="button" class="single-model-btn" data-model="anthropic" title="Kör endast Claude">
+                    <span class="dot-anthropic"></span> Claude
+                  </button>
+                  <button type="button" class="single-model-btn" data-model="grok" title="Kör endast Grok">
+                    <span class="dot-grok"></span> Grok
+                  </button>
+                  <button type="button" class="single-model-btn" data-model="openai" title="Kör endast OpenAI">
+                    <span class="dot-openai"></span> OpenAI
+                  </button>
+                </div>
               </div>
               
               <!-- Models ordered by price: cheapest → most expensive (left → right) -->
@@ -5383,6 +5471,177 @@ if (!anvandare) {
         console.log('✅ runBtn listener attached');
       }
       document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runQuery(); });
+      
+      // Single model run buttons - run ONE model at a time for debugging
+      document.querySelectorAll('.single-model-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const modelId = btn.dataset.model;
+          const prompt = promptEl.value.trim();
+          const context = contextEl.value.trim();
+          
+          if (!prompt) {
+            showError('Ange en prompt först.');
+            return;
+          }
+          
+          // Disable all single model buttons while running
+          document.querySelectorAll('.single-model-btn').forEach(b => b.disabled = true);
+          btn.classList.add('running');
+          btn.textContent = '⏳ Kör...';
+          
+          const modelNames = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
+          setStatus(`🔄 Kör ${modelNames[modelId]}...`, true);
+          hideError();
+          
+          // Show results section
+          resultsEl.classList.add('visible');
+          
+          // Show and prepare the accordion for this model
+          const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
+          const providerId = providerMap[modelId];
+          const accordion = document.getElementById('accordion-' + providerId);
+          if (accordion) {
+            accordion.style.display = 'block';
+            document.getElementById('status-' + providerId).textContent = 'Kör...';
+            document.getElementById('status-' + providerId).className = 'accordion-status waiting';
+            document.getElementById('duration-' + providerId).textContent = '';
+          }
+          
+          try {
+            console.log(`🚀 Running single model: ${modelId}`);
+            const startTime = Date.now();
+            
+            const response = await fetch('/api/ai-council/query', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                context,
+                prompt,
+                selectedModels: [modelId],
+                synthesisModel: 'gemini', // Cheapest for single model
+                enableDeliberation: false,
+                skipSynthesis: true, // No synthesis for single model runs
+                profileType: 'fast'
+              })
+            });
+            
+            const duration = Date.now() - startTime;
+            console.log(`📦 Response received in ${duration}ms, status: ${response.status}`);
+            
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error('API Error:', errorText.substring(0, 500));
+              throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 100)}`);
+            }
+            
+            // Handle streaming response
+            const contentType = response.headers.get('content-type') || '';
+            let data = null;
+            
+            if (contentType.includes('text/plain') || contentType.includes('ndjson')) {
+              const reader = response.body.getReader();
+              const decoder = new TextDecoder();
+              let buffer = '';
+              
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+                
+                for (const line of lines) {
+                  if (!line.trim()) continue;
+                  try {
+                    const event = JSON.parse(line);
+                    console.log('Event:', event.type, event.data);
+                    if (event.type === 'model_complete') {
+                      setStatus(`✓ ${modelNames[modelId]} svarade (${(event.data.duration/1000).toFixed(1)}s)`, true);
+                    }
+                    if (event.type === 'complete') data = event.data;
+                    if (event.type === 'error') throw new Error(event.data.error);
+                  } catch (e) {
+                    if (e.message !== "Unexpected end of JSON input") {
+                      console.warn('Parse error:', e);
+                    }
+                  }
+                }
+              }
+            } else {
+              const text = await response.text();
+              if (text.startsWith('<')) {
+                throw new Error('Server returnerade HTML (troligen timeout eller serverproblem)');
+              }
+              data = JSON.parse(text);
+            }
+            
+            if (!data) throw new Error('Inget svar från API');
+            
+            // Process the response
+            if (data.responses && data.responses.length > 0) {
+              const r = data.responses[0];
+              if (r.error) {
+                showError(`${modelNames[modelId]} fel: ${r.error}`);
+                document.getElementById('status-' + providerId).textContent = 'Fel';
+                document.getElementById('status-' + providerId).className = 'accordion-status error';
+              } else {
+                // Success! Display and store the response
+                displayResponse(providerId, r);
+                collectedResponses[modelId] = r;
+                
+                document.getElementById('status-' + providerId).textContent = '✓';
+                document.getElementById('status-' + providerId).className = 'accordion-status success';
+                document.getElementById('duration-' + providerId).textContent = formatDuration(r.duration);
+                
+                // Open the accordion to show the response
+                accordion.classList.add('open');
+                
+                setStatus(`✓ ${modelNames[modelId]} klar! (${Object.keys(collectedResponses).length} svar totalt)`, true);
+              }
+            }
+            
+            // Update workflow progress
+            updateWorkflowProgress();
+            
+            // Show synthesize button if we have responses
+            if (Object.keys(collectedResponses).length > 0) {
+              synthesizeNowBtn.style.display = 'flex';
+              const synthType = hasRunDeliberation ? 'supersyntes' : 'syntes';
+              synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${Object.keys(collectedResponses).length} svar)`;
+            }
+            
+            // Show deliberation button if we have 2+ responses
+            if (Object.keys(collectedResponses).length >= 2 && !hasRunDeliberation) {
+              deliberateNowBtn.style.display = 'flex';
+              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${Object.keys(collectedResponses).length} svar)`;
+            }
+            
+          } catch (error) {
+            console.error('Single model error:', error);
+            showError(`${modelNames[modelId]} fel: ${error.message}`);
+            if (accordion) {
+              document.getElementById('status-' + providerId).textContent = 'Fel';
+              document.getElementById('status-' + providerId).className = 'accordion-status error';
+            }
+          } finally {
+            // Re-enable buttons
+            document.querySelectorAll('.single-model-btn').forEach(b => {
+              b.disabled = false;
+              b.classList.remove('running');
+            });
+            // Restore button texts
+            const btnTexts = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
+            document.querySelectorAll('.single-model-btn').forEach(b => {
+              const dot = b.querySelector('span');
+              b.innerHTML = '';
+              b.appendChild(dot);
+              b.appendChild(document.createTextNode(' ' + btnTexts[b.dataset.model]));
+            });
+            setTimeout(() => setStatus('', false), 3000);
+          }
+        });
+      });
       
       // Hallucination details toggle
       document.getElementById('toggleHallucinationDetails').addEventListener('click', function() {
