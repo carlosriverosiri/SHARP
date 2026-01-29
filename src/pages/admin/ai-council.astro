@@ -5517,6 +5517,15 @@ if (!anvandare) {
           return;
         }
         
+        // IMPORTANT: Ensure currentPrompt is set (fallback to input field)
+        if (!currentPrompt) {
+          currentPrompt = promptEl.value.trim();
+        }
+        if (!currentPrompt) {
+          alert('Prompt saknas. Skriv in din fråga igen.');
+          return;
+        }
+        
         setLoading(true);
         setStatus('🔄 Kör deliberation - modellerna granskar varandras svar...', true);
         
@@ -5607,6 +5616,15 @@ if (!anvandare) {
           
           if (responses.length < 2) {
             alert('Deliberation kräver minst 2 R1-svar.');
+            return;
+          }
+          
+          // IMPORTANT: Ensure currentPrompt is set (fallback to input field)
+          if (!currentPrompt) {
+            currentPrompt = promptEl.value.trim();
+          }
+          if (!currentPrompt) {
+            alert('Prompt saknas. Skriv in din fråga igen.');
             return;
           }
           
@@ -5727,6 +5745,15 @@ if (!anvandare) {
         const responses = Object.values(collectedResponses);
         if (responses.length === 0) {
           alert('Inga svar att syntetisera.');
+          return;
+        }
+        
+        // IMPORTANT: Ensure currentPrompt is set (fallback to input field)
+        if (!currentPrompt) {
+          currentPrompt = promptEl.value.trim();
+        }
+        if (!currentPrompt) {
+          alert('Prompt saknas. Skriv in din fråga igen.');
           return;
         }
         
