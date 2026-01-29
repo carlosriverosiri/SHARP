@@ -3548,6 +3548,60 @@ if (!anvandare) {
       let hasRunDeliberation = false; // Track if deliberation has been run
       let hasSynthesized = false; // Track if synthesis has been done
       
+      // ============================================
+      // PERSISTENT STORAGE - Save responses to survive crashes
+      // ============================================
+      const STORAGE_KEY = 'ai-council-collected-responses';
+      const STORAGE_PROMPT_KEY = 'ai-council-current-prompt';
+      
+      function saveResponsesToStorage() {
+        try {
+          const data = {
+            responses: collectedResponses,
+            r2Responses: collectedR2Responses,
+            hasRunDeliberation,
+            hasSynthesized,
+            timestamp: Date.now()
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          console.log('💾 Saved', Object.keys(collectedResponses).length, 'responses to storage');
+        } catch (e) {
+          console.warn('Could not save to localStorage:', e);
+        }
+      }
+      
+      function loadResponsesFromStorage() {
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (!stored) return false;
+          
+          const data = JSON.parse(stored);
+          // Only restore if less than 1 hour old
+          if (Date.now() - data.timestamp > 60 * 60 * 1000) {
+            console.log('🗑️ Stored responses expired, clearing');
+            localStorage.removeItem(STORAGE_KEY);
+            return false;
+          }
+          
+          collectedResponses = data.responses || {};
+          collectedR2Responses = data.r2Responses || {};
+          hasRunDeliberation = data.hasRunDeliberation || false;
+          hasSynthesized = data.hasSynthesized || false;
+          
+          console.log('📂 Restored', Object.keys(collectedResponses).length, 'responses from storage');
+          return Object.keys(collectedResponses).length > 0;
+        } catch (e) {
+          console.warn('Could not load from localStorage:', e);
+          return false;
+        }
+      }
+      
+      function clearStoredResponses() {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_PROMPT_KEY);
+        console.log('🗑️ Cleared stored responses');
+      }
+      
       // Update workflow progress indicator
       function updateWorkflowProgress() {
         const successCount = Object.keys(collectedResponses).length;
@@ -3606,6 +3660,7 @@ if (!anvandare) {
         collectedR2Responses = {};
         failedModels = [];
         hasRunDeliberation = false;
+        clearStoredResponses(); // Clear persistent storage too
         hasSynthesized = false;
         
         // Hide all workflow UI
@@ -5162,6 +5217,7 @@ if (!anvandare) {
             } else {
               // Store successful response
               collectedResponses[modelKey] = r;
+              saveResponsesToStorage(); // Persist immediately!
             }
           });
           
@@ -5589,6 +5645,7 @@ if (!anvandare) {
                 // Success! Display and store the response
                 displayResponse(providerId, r);
                 collectedResponses[modelId] = r;
+                saveResponsesToStorage(); // Persist immediately!
                 
                 document.getElementById('status-' + providerId).textContent = '✓';
                 document.getElementById('status-' + providerId).className = 'accordion-status success';
@@ -6638,6 +6695,53 @@ if (!anvandare) {
       
       // Check Zotero config on page load
       checkZoteroConfig();
+      
+      // =============================================
+      // RESTORE SAVED RESPONSES ON PAGE LOAD
+      // =============================================
+      if (loadResponsesFromStorage()) {
+        console.log('📂 Found saved responses, restoring UI...');
+        
+        // Show results section
+        resultsEl.classList.add('visible');
+        
+        // Display each saved response
+        const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
+        Object.entries(collectedResponses).forEach(([modelId, response]) => {
+          const providerId = providerMap[modelId];
+          const accordion = document.getElementById('accordion-' + providerId);
+          if (accordion && response) {
+            accordion.style.display = 'block';
+            displayResponse(providerId, response);
+            document.getElementById('status-' + providerId).textContent = '✓';
+            document.getElementById('status-' + providerId).className = 'accordion-status success';
+            if (response.duration) {
+              document.getElementById('duration-' + providerId).textContent = formatDuration(response.duration);
+            }
+          }
+        });
+        
+        // Update workflow progress
+        updateWorkflowProgress();
+        
+        // Show action buttons
+        const responseCount = Object.keys(collectedResponses).length;
+        if (responseCount > 0) {
+          synthesizeNowBtn.style.display = 'flex';
+          synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${responseCount} svar)`;
+          
+          if (responseCount >= 2 && !hasRunDeliberation) {
+            deliberateNowBtn.style.display = 'flex';
+            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${responseCount} svar)`;
+          }
+          
+          // Show restore notification
+          setStatus(`📂 Återställde ${responseCount} sparade svar. Klicka "Börja om" för att rensa.`, true);
+          setTimeout(() => setStatus('', false), 5000);
+        }
+      }
+      
+      console.log('✅ AI Council fully initialized');
     });
   </script>
 </body>
