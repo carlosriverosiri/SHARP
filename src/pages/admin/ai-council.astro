@@ -5611,6 +5611,9 @@ if (!anvandare) {
             return;
           }
           
+          // IMPORTANT: Save prompt for later synthesis
+          currentPrompt = prompt;
+          
           // Disable all single model buttons while running
           document.querySelectorAll('.single-model-btn').forEach(b => b.disabled = true);
           btn.classList.add('running');
