@@ -1231,10 +1231,32 @@ if (!anvandare) {
     .user-email { font-size: 0.875rem; color: var(--text-muted); }
     .model-dots { display: flex; gap: 4px; }
     .model-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .dot-openai { background: #10a37f; }
-    .dot-anthropic { background: #d97706; }
-    .dot-google { background: #4285f4; }
-    .dot-grok { background: #1d9bf0; }
+    
+    /* Price-based colors: green (cheap) → red (expensive) */
+    .dot-google { background: #22c55e; }     /* Gemini - cheapest (~$0.10/1M) */
+    .dot-anthropic { background: #eab308; }  /* Claude - medium (~$3/1M) */
+    .dot-grok { background: #f97316; }       /* Grok - medium-high (~$5/1M) */
+    .dot-openai { background: #ef4444; }     /* OpenAI o1 - most expensive (~$15/1M) */
+    
+    /* Price legend */
+    .price-legend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .price-legend-label { font-weight: 500; }
+    .price-legend-item { display: flex; align-items: center; gap: 0.25rem; }
+    .price-legend-arrow { color: var(--text-light); }
+    .price-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .price-cheap { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .price-expensive { background: linear-gradient(135deg, #f97316, #ef4444); }
     
     /* Model selection checkboxes */
     .model-selection {
@@ -1987,10 +2009,11 @@ if (!anvandare) {
     .responses-grid { display: flex; flex-direction: column; gap: 0.75rem; }
     
     .accordion { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); }
-    .accordion.openai { border-left: 3px solid #10a37f; }
-    .accordion.anthropic { border-left: 3px solid #d97706; }
-    .accordion.google { border-left: 3px solid #4285f4; }
-    .accordion.grok { border-left: 3px solid #1d9bf0; }
+    /* Price-based accordion colors matching model dots */
+    .accordion.google { border-left: 3px solid #22c55e; }    /* Gemini - cheapest */
+    .accordion.anthropic { border-left: 3px solid #eab308; } /* Claude - medium */
+    .accordion.grok { border-left: 3px solid #f97316; }      /* Grok - medium-high */
+    .accordion.openai { border-left: 3px solid #ef4444; }    /* OpenAI o1 - expensive */
     
     .accordion-header {
       width: 100%;
@@ -2543,11 +2566,11 @@ if (!anvandare) {
               👤 Min profil
             </a>
             <span class="user-email">{anvandare.email}</span>
-            <div class="model-dots">
-              <span class="model-dot dot-openai" title="OpenAI o1"></span>
-              <span class="model-dot dot-anthropic" title="Claude Sonnet"></span>
-              <span class="model-dot dot-google" title="Gemini 2.0 Flash"></span>
-              <span class="model-dot dot-grok" title="Grok 4"></span>
+            <div class="model-dots" title="Prissorterad: billigast → dyrast">
+              <span class="model-dot dot-google" title="Gemini 2.0 Flash (~$0.10/1M)"></span>
+              <span class="model-dot dot-anthropic" title="Claude Sonnet (~$3/1M)"></span>
+              <span class="model-dot dot-grok" title="Grok 4 (~$5/1M)"></span>
+              <span class="model-dot dot-openai" title="OpenAI o1 (~$15/1M)"></span>
             </div>
           </div>
         </div>
@@ -2717,14 +2740,24 @@ if (!anvandare) {
                 <span class="icon">🤖</span> Välj AI-modeller
                 <span class="optional">(eller använd profil)</span>
               </label>
+              
+              <!-- Price legend -->
+              <div class="price-legend">
+                <span class="price-legend-label">Pris:</span>
+                <span class="price-legend-item"><span class="price-dot price-cheap"></span>Billig</span>
+                <span class="price-legend-arrow">→</span>
+                <span class="price-legend-item"><span class="price-dot price-expensive"></span>Dyr</span>
+              </div>
+              
+              <!-- Models ordered by price: cheapest → most expensive (left → right) -->
               <div class="model-selection" id="modelSelection">
-                <label class="model-checkbox" data-model="openai">
-                  <input type="checkbox">
+                <label class="model-checkbox selected" data-model="gemini">
+                  <input type="checkbox" checked>
                   <span class="model-checkbox-check">✓</span>
-                  <span class="model-checkbox-dot dot-openai"></span>
+                  <span class="model-checkbox-dot dot-google"></span>
                   <div>
-                    <div class="model-checkbox-name">OpenAI o1</div>
-                    <div class="model-checkbox-desc">Djup logik & resonering</div>
+                    <div class="model-checkbox-name">Gemini 2.0 Flash</div>
+                    <div class="model-checkbox-desc">Snabbast · ~$0.10/1M</div>
                   </div>
                 </label>
                 <label class="model-checkbox selected" data-model="anthropic">
@@ -2733,16 +2766,7 @@ if (!anvandare) {
                   <span class="model-checkbox-dot dot-anthropic"></span>
                   <div>
                     <div class="model-checkbox-name">Claude Sonnet</div>
-                    <div class="model-checkbox-desc">Struktur & kod</div>
-                  </div>
-                </label>
-                <label class="model-checkbox selected" data-model="gemini">
-                  <input type="checkbox" checked>
-                  <span class="model-checkbox-check">✓</span>
-                  <span class="model-checkbox-dot dot-google"></span>
-                  <div>
-                    <div class="model-checkbox-name">Gemini 2.0 Flash</div>
-                    <div class="model-checkbox-desc">Snabbast & billigast</div>
+                    <div class="model-checkbox-desc">Struktur & kod · ~$3/1M</div>
                   </div>
                 </label>
                 <label class="model-checkbox" data-model="grok">
@@ -2751,7 +2775,16 @@ if (!anvandare) {
                   <span class="model-checkbox-dot dot-grok"></span>
                   <div>
                     <div class="model-checkbox-name">Grok 4</div>
-                    <div class="model-checkbox-desc">Referenser & realtid</div>
+                    <div class="model-checkbox-desc">Referenser · ~$5/1M</div>
+                  </div>
+                </label>
+                <label class="model-checkbox" data-model="openai">
+                  <input type="checkbox">
+                  <span class="model-checkbox-check">✓</span>
+                  <span class="model-checkbox-dot dot-openai"></span>
+                  <div>
+                    <div class="model-checkbox-name">OpenAI o1</div>
+                    <div class="model-checkbox-desc">Djup logik · ~$15/1M</div>
                   </div>
                 </label>
               </div>
@@ -2763,12 +2796,13 @@ if (!anvandare) {
                 <div class="synthesis-selector">
                   <label for="synthesisModel">Syntes-modell:</label>
                   <select id="synthesisModel">
-                    <option value="gpt4o">⚡ GPT-4o (snabb)</option>
-                    <option value="claude">🔧 Claude Sonnet (kod)</option>
-                    <option value="gemini">📚 Gemini (billig)</option>
-                    <option value="grok">🌐 Grok (vetenskap)</option>
-                    <option value="openai">🧪 OpenAI o1 (logik)</option>
-                    <option value="claude-opus">👑 Claude Opus 4.5 (bäst)</option>
+                    <!-- Ordered by price: cheapest → most expensive -->
+                    <option value="gemini">🟢 Gemini (billigast ~$0.10/1M)</option>
+                    <option value="gpt4o">🟡 GPT-4o (snabb ~$2.50/1M)</option>
+                    <option value="claude">🟡 Claude Sonnet (kod ~$3/1M)</option>
+                    <option value="grok">🟠 Grok (vetenskap ~$5/1M)</option>
+                    <option value="openai">🔴 OpenAI o1 (logik ~$15/1M)</option>
+                    <option value="claude-opus">🔴 Claude Opus 4.5 (bäst ~$15/1M)</option>
                   </select>
                 </div>
                 <label id="deliberationToggle" class="deliberation-toggle">
@@ -2909,24 +2943,25 @@ if (!anvandare) {
           <div class="responses-section">
             <div id="round1Label" class="round-label round-1" style="display: none;">Runda 1 — Initiala svar</div>
             <h3 id="responsesHeader">Individuella svar</h3>
+            <!-- Responses ordered by price: cheapest → most expensive -->
             <div class="responses-grid">
-              <div id="accordion-openai" class="accordion openai">
+              <div id="accordion-google" class="accordion google">
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
-                    <span class="accordion-dot dot-openai"></span>
-                    <span class="accordion-title">OpenAI o1</span>
-                    <span id="status-openai" class="accordion-status"></span>
+                    <span class="accordion-dot dot-google"></span>
+                    <span class="accordion-title">Gemini 2.0 Flash</span>
+                    <span id="status-google" class="accordion-status"></span>
                   </div>
                   <div class="accordion-header-right">
-                    <span id="duration-openai" class="accordion-duration"></span>
+                    <span id="duration-google" class="accordion-duration"></span>
                     <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                   </div>
                 </button>
-                <div id="content-openai" class="accordion-content">
+                <div id="content-google" class="accordion-content">
                   <div class="accordion-content-inner">
                     <div class="markdown-content"></div>
                     <div class="accordion-content-actions">
-                      <button type="button" class="copy-btn" data-copy="openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      <button type="button" class="copy-btn" data-copy="google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
                     </div>
                   </div>
                 </div>
@@ -2954,28 +2989,6 @@ if (!anvandare) {
                 </div>
               </div>
               
-              <div id="accordion-google" class="accordion google">
-                <button type="button" class="accordion-header">
-                  <div class="accordion-header-left">
-                    <span class="accordion-dot dot-google"></span>
-                    <span class="accordion-title">Gemini 2.0 Flash</span>
-                    <span id="status-google" class="accordion-status"></span>
-                  </div>
-                  <div class="accordion-header-right">
-                    <span id="duration-google" class="accordion-duration"></span>
-                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                  </div>
-                </button>
-                <div id="content-google" class="accordion-content">
-                  <div class="accordion-content-inner">
-                    <div class="markdown-content"></div>
-                    <div class="accordion-content-actions">
-                      <button type="button" class="copy-btn" data-copy="google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
               <div id="accordion-grok" class="accordion grok" style="display: none;">
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
@@ -2997,29 +3010,51 @@ if (!anvandare) {
                   </div>
                 </div>
               </div>
+              
+              <div id="accordion-openai" class="accordion openai">
+                <button type="button" class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="accordion-dot dot-openai"></span>
+                    <span class="accordion-title">OpenAI o1</span>
+                    <span id="status-openai" class="accordion-status"></span>
+                  </div>
+                  <div class="accordion-header-right">
+                    <span id="duration-openai" class="accordion-duration"></span>
+                    <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </button>
+                <div id="content-openai" class="accordion-content">
+                  <div class="accordion-content-inner">
+                    <div class="markdown-content"></div>
+                    <div class="accordion-content-actions">
+                      <button type="button" class="copy-btn" data-copy="openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
-            <!-- Round 2 Section (Deliberation) -->
+            <!-- Round 2 Section (Deliberation) - ordered by price: cheapest → most expensive -->
             <div id="round2Section" style="display: none;">
               <div class="round-label">Runda 2 — Granskning & förbättring</div>
               <div class="responses-grid">
-                <div id="accordion-r2-openai" class="accordion openai">
+                <div id="accordion-r2-google" class="accordion google">
                   <button type="button" class="accordion-header">
                     <div class="accordion-header-left">
-                      <span class="accordion-dot dot-openai"></span>
-                      <span class="accordion-title">OpenAI o1 (R2)</span>
-                      <span id="status-r2-openai" class="accordion-status"></span>
+                      <span class="accordion-dot dot-google"></span>
+                      <span class="accordion-title">Gemini (R2)</span>
+                      <span id="status-r2-google" class="accordion-status"></span>
                     </div>
                     <div class="accordion-header-right">
-                      <span id="duration-r2-openai" class="accordion-duration"></span>
+                      <span id="duration-r2-google" class="accordion-duration"></span>
                       <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                     </div>
                   </button>
-                  <div id="content-r2-openai" class="accordion-content">
+                  <div id="content-r2-google" class="accordion-content">
                     <div class="accordion-content-inner">
                       <div class="markdown-content"></div>
                       <div class="accordion-content-actions">
-                        <button type="button" class="copy-btn" data-copy="r2-openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                        <button type="button" class="copy-btn" data-copy="r2-google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
                       </div>
                     </div>
                   </div>
@@ -3047,28 +3082,6 @@ if (!anvandare) {
                   </div>
                 </div>
                 
-                <div id="accordion-r2-google" class="accordion google">
-                  <button type="button" class="accordion-header">
-                    <div class="accordion-header-left">
-                      <span class="accordion-dot dot-google"></span>
-                      <span class="accordion-title">Gemini (R2)</span>
-                      <span id="status-r2-google" class="accordion-status"></span>
-                    </div>
-                    <div class="accordion-header-right">
-                      <span id="duration-r2-google" class="accordion-duration"></span>
-                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </div>
-                  </button>
-                  <div id="content-r2-google" class="accordion-content">
-                    <div class="accordion-content-inner">
-                      <div class="markdown-content"></div>
-                      <div class="accordion-content-actions">
-                        <button type="button" class="copy-btn" data-copy="r2-google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
                 <div id="accordion-r2-grok" class="accordion grok" style="display: none;">
                   <button type="button" class="accordion-header">
                     <div class="accordion-header-left">
@@ -3086,6 +3099,28 @@ if (!anvandare) {
                       <div class="markdown-content"></div>
                       <div class="accordion-content-actions">
                         <button type="button" class="copy-btn" data-copy="r2-grok"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="accordion-r2-openai" class="accordion openai">
+                  <button type="button" class="accordion-header">
+                    <div class="accordion-header-left">
+                      <span class="accordion-dot dot-openai"></span>
+                      <span class="accordion-title">OpenAI o1 (R2)</span>
+                      <span id="status-r2-openai" class="accordion-status"></span>
+                    </div>
+                    <div class="accordion-header-right">
+                      <span id="duration-r2-openai" class="accordion-duration"></span>
+                      <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div id="content-r2-openai" class="accordion-content">
+                    <div class="accordion-content-inner">
+                      <div class="markdown-content"></div>
+                      <div class="accordion-content-actions">
+                        <button type="button" class="copy-btn" data-copy="r2-openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
                       </div>
                     </div>
                   </div>
