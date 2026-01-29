@@ -1304,6 +1304,49 @@ if (!anvandare) {
       flex-shrink: 0;
     }
     
+    /* Single deliberation buttons - same style as single-model-btn */
+    .single-deliberation-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .single-deliberation-btn:hover {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    .single-deliberation-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .single-deliberation-btn.running {
+      background: #f59e0b;
+      color: white;
+      border-color: #f59e0b;
+    }
+    .single-deliberation-btn.done {
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+    .single-deliberation-btn .dot-google,
+    .single-deliberation-btn .dot-anthropic,
+    .single-deliberation-btn .dot-grok,
+    .single-deliberation-btn .dot-openai {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
     /* Price legend */
     .price-legend {
       display: flex;
@@ -3003,11 +3046,33 @@ if (!anvandare) {
                 <span>➕ Lägg till modeller</span>
               </button>
               <button type="button" id="deliberateNowBtn" class="deliberate-btn" style="display: none;" title="Kör deliberation (Runda 2) på insamlade svar">
-                <span>🔄 Kör deliberation</span>
+                <span>🔄 Kör deliberation (alla)</span>
               </button>
               <button type="button" id="synthesizeNowBtn" class="synthesize-btn" style="display: none;" title="Syntetisera insamlade svar">
                 <span>🧪 Kör syntes nu</span>
               </button>
+            </div>
+            
+            <!-- Single-model deliberation buttons -->
+            <div id="singleDeliberationSection" class="single-model-section" style="display: none;">
+              <div class="single-model-header">
+                <span class="single-model-title">🔬 Kör deliberation en modell i taget</span>
+                <span class="single-model-hint">(stabilt, en åt gången)</span>
+              </div>
+              <div class="single-model-buttons">
+                <button type="button" class="single-deliberation-btn" data-model="gemini" title="Gemini granskar">
+                  <span class="dot-google"></span> Gemini R2
+                </button>
+                <button type="button" class="single-deliberation-btn" data-model="anthropic" title="Claude granskar">
+                  <span class="dot-anthropic"></span> Claude R2
+                </button>
+                <button type="button" class="single-deliberation-btn" data-model="grok" title="Grok granskar">
+                  <span class="dot-grok"></span> Grok R2
+                </button>
+                <button type="button" class="single-deliberation-btn" data-model="openai" title="OpenAI granskar">
+                  <span class="dot-openai"></span> OpenAI R2
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -3742,6 +3807,16 @@ if (!anvandare) {
         expandModelsBtn.style.display = 'none';
         deliberateNowBtn.style.display = 'none';
         synthesizeNowBtn.style.display = 'none';
+        const singleDelibSection = document.getElementById('singleDeliberationSection');
+        if (singleDelibSection) singleDelibSection.style.display = 'none';
+        // Reset single deliberation buttons
+        document.querySelectorAll('.single-deliberation-btn').forEach(btn => {
+          btn.classList.remove('done', 'running');
+          const modelId = btn.dataset.model;
+          const dotClass = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' }[modelId];
+          const modelName = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' }[modelId];
+          btn.innerHTML = `<span class="dot-${dotClass}"></span> ${modelName} R2`;
+        });
         
         // Clear accordion contents
         document.querySelectorAll('.accordion-content .markdown-content').forEach(el => {
@@ -5322,8 +5397,11 @@ if (!anvandare) {
           // - CHANGED: No longer requires skip-synthesis mode
           const canRunDeliberation = successCount >= 2 && !hasDeliberation && !hasSynthesis;
           deliberateNowBtn.style.display = canRunDeliberation ? 'flex' : 'none';
+          // Also show single-model deliberation section
+          const singleDelibSection = document.getElementById('singleDeliberationSection');
+          if (singleDelibSection) singleDelibSection.style.display = canRunDeliberation ? 'block' : 'none';
           if (canRunDeliberation) {
-            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${successCount} svar)`;
+            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${successCount} svar)`;
           }
           
           // Show synthesize button if we have responses but no synthesis
@@ -5496,8 +5574,10 @@ if (!anvandare) {
             
             hasRunDeliberation = true;
             
-            // Hide deliberation button, update synthesize button
+            // Hide deliberation buttons, update synthesize button
             deliberateNowBtn.style.display = 'none';
+            const singleDelibSectionFull = document.getElementById('singleDeliberationSection');
+            if (singleDelibSectionFull) singleDelibSectionFull.style.display = 'none';
             synthesizeNowBtn.style.display = 'flex';
             synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${Object.keys(collectedResponses).length} svar)`;
             
@@ -5516,6 +5596,130 @@ if (!anvandare) {
         } finally {
           setLoading(false);
         }
+      });
+      
+      // Single-model deliberation buttons - run ONE model's deliberation at a time
+      const singleDeliberationSection = document.getElementById('singleDeliberationSection');
+      document.querySelectorAll('.single-deliberation-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const modelId = btn.dataset.model;
+          const responses = Object.values(collectedResponses);
+          
+          if (responses.length < 2) {
+            alert('Deliberation kräver minst 2 R1-svar.');
+            return;
+          }
+          
+          // Disable all deliberation buttons while running
+          document.querySelectorAll('.single-deliberation-btn').forEach(b => b.disabled = true);
+          deliberateNowBtn.disabled = true;
+          btn.classList.add('running');
+          const originalText = btn.innerHTML;
+          btn.textContent = '⏳ Kör...';
+          
+          const modelNames = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
+          setStatus(`🔄 ${modelNames[modelId]} granskar andras svar...`, true);
+          hideError();
+          
+          // Show Round 2 section
+          round2Section.style.display = 'block';
+          round1Label.style.display = 'block';
+          
+          // Show and prepare the R2 accordion for this model
+          const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
+          const providerId = providerMap[modelId];
+          const r2Accordion = document.getElementById('accordion-r2-' + providerId);
+          if (r2Accordion) {
+            r2Accordion.style.display = 'block';
+            const r2StatusEl = document.getElementById('status-r2-' + providerId);
+            const r2DurationEl = document.getElementById('duration-r2-' + providerId);
+            if (r2StatusEl) {
+              r2StatusEl.textContent = 'Kör...';
+              r2StatusEl.className = 'accordion-status waiting';
+            }
+            if (r2DurationEl) r2DurationEl.textContent = '0.0s';
+          }
+          
+          try {
+            console.log(`🔄 Running single deliberation: ${modelId}`);
+            
+            const response = await fetch('/api/ai-council/deliberate-only', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: currentPrompt,
+                responses: responses,
+                selectedModel: modelId
+              })
+            });
+            
+            if (!response.ok) {
+              throw new Error('Deliberationsfel: ' + response.statusText);
+            }
+            
+            const data = await response.json();
+            
+            if (data.round2Responses && data.round2Responses.length > 0) {
+              const r2Response = data.round2Responses[0];
+              
+              // Store R2 response
+              collectedR2Responses[providerId] = r2Response;
+              
+              // Display the response
+              displayResponse('r2-' + providerId, r2Response);
+              
+              // Mark button as done
+              btn.classList.remove('running');
+              btn.classList.add('done');
+              btn.innerHTML = `<span class="dot-${providerId === 'google' ? 'google' : providerId}"></span> ✓ ${modelNames[modelId]} R2`;
+              
+              // Update counters
+              const r2Count = Object.keys(collectedR2Responses).length;
+              const r1Count = Object.keys(collectedResponses).length;
+              
+              setStatus(`✓ ${modelNames[modelId]} R2 klar! (${r2Count}/${r1Count} deliberationer)`, true);
+              
+              // If all models have deliberated, update state
+              if (r2Count >= r1Count) {
+                hasRunDeliberation = true;
+                deliberateNowBtn.style.display = 'none';
+                singleDeliberationSection.style.display = 'none';
+                synthesizeNowBtn.style.display = 'flex';
+                synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${r1Count} svar)`;
+                setStatus('✓ Alla deliberationer klara! Kör supersyntes.', true);
+              } else {
+                // Show synthesize button but indicate it's partial
+                synthesizeNowBtn.style.display = 'flex';
+                synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${r2Count}/${r1Count} R2-svar)`;
+              }
+              
+              // Update workflow progress
+              updateWorkflowProgress();
+              
+              // Save to storage
+              saveResponsesToStorage();
+            }
+            
+          } catch (error) {
+            console.error('Single deliberation error:', error);
+            showError(`${modelNames[modelId]} R2 fel: ${error.message}`);
+            if (r2Accordion) {
+              const r2StatusEl = document.getElementById('status-r2-' + providerId);
+              if (r2StatusEl) {
+                r2StatusEl.textContent = 'Fel';
+                r2StatusEl.className = 'accordion-status error';
+              }
+            }
+            btn.classList.remove('running');
+          } finally {
+            // Re-enable buttons
+            document.querySelectorAll('.single-deliberation-btn').forEach(b => {
+              b.disabled = false;
+            });
+            deliberateNowBtn.disabled = false;
+            setTimeout(() => setStatus('', false), 3000);
+          }
+        });
       });
       
       // Synthesize now button handler
@@ -5745,7 +5949,10 @@ if (!anvandare) {
             // Show deliberation button if we have 2+ responses
             if (Object.keys(collectedResponses).length >= 2 && !hasRunDeliberation) {
               deliberateNowBtn.style.display = 'flex';
-              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${Object.keys(collectedResponses).length} svar)`;
+              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${Object.keys(collectedResponses).length} svar)`;
+              // Also show single-model deliberation section
+              const singleDelibSection = document.getElementById('singleDeliberationSection');
+              if (singleDelibSection) singleDelibSection.style.display = 'block';
             }
             
           } catch (error) {
@@ -6809,7 +7016,10 @@ if (!anvandare) {
             
             if (responseCount >= 2 && !hasRunDeliberation) {
               deliberateNowBtn.style.display = 'flex';
-              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation (${responseCount} svar)`;
+              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${responseCount} svar)`;
+              // Also show single-model deliberation section
+              const singleDelibSection = document.getElementById('singleDeliberationSection');
+              if (singleDelibSection) singleDelibSection.style.display = 'block';
             }
             
             // Show restore notification

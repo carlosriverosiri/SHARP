@@ -302,7 +302,7 @@ function getDeliberationFunction(provider: string) {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { prompt, responses } = body;
+    const { prompt, responses, selectedModel } = body;
 
     if (!prompt) {
       return new Response(JSON.stringify({ error: 'Prompt saknas' }), {
@@ -327,6 +327,41 @@ export const POST: APIRoute = async ({ request }) => {
       'gemini': deliberateGemini,
       'grok': deliberateGrok,
     };
+
+    // If selectedModel is specified, only run that one model
+    if (selectedModel) {
+      const normalizedModel = selectedModel.toLowerCase();
+      let key = '';
+      if (normalizedModel.includes('openai')) key = 'openai';
+      else if (normalizedModel.includes('anthropic') || normalizedModel.includes('claude')) key = 'anthropic';
+      else if (normalizedModel.includes('google') || normalizedModel.includes('gemini')) key = 'gemini';
+      else if (normalizedModel.includes('grok')) key = 'grok';
+      
+      if (!key || !keyToFunction[key]) {
+        return new Response(JSON.stringify({ error: `Okänd modell: ${selectedModel}` }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      
+      // Run single model deliberation
+      const singleResponse = await keyToFunction[key](prompt, responses);
+      
+      return new Response(JSON.stringify({
+        success: true,
+        round2Responses: [singleResponse],
+        totalCost: {
+          inputTokens: singleResponse.tokens?.inputTokens || 0,
+          outputTokens: singleResponse.tokens?.outputTokens || 0,
+          totalCostUSD: singleResponse.cost?.totalCost || 0,
+        },
+        modelsCount: 1,
+        singleModel: true,
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     // Run deliberation for each provider that has a response
     const deliberationPromises: Promise<AIResponse>[] = [];
