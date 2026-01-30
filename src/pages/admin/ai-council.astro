@@ -4493,8 +4493,6 @@ if (!anvandare) {
           // Check if this is an image with base64 data
           const isImage = f.content && typeof f.content === 'object' && f.content.type === 'image';
           
-          console.log(`📁 File ${i}: ${f.name}, isImage: ${isImage}`);
-          
           const fileItem = document.createElement('div');
           fileItem.className = 'file-item' + (isImage ? ' has-thumbnail' : '');
           fileItem.title = f.name;
@@ -4512,8 +4510,6 @@ if (!anvandare) {
             img.alt = f.name;
             // Force thumbnail size with inline styles
             img.style.cssText = 'width: 96px !important; height: 96px !important; max-width: 96px !important; max-height: 96px !important; object-fit: cover; border-radius: 8px; border: 2px solid #e5e7eb; display: block;';
-            img.onerror = () => console.error('❌ Image failed to load:', f.name);
-            img.onload = () => console.log('✅ Image loaded:', f.name);
             fileItem.appendChild(img);
           } else {
             // Non-image: Show icon, name, size
