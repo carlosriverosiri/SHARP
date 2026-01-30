@@ -4486,36 +4486,59 @@ if (!anvandare) {
         
         console.log('📁 renderFileList called, files:', uploadedFiles.length);
         
-        fileListEl.innerHTML = uploadedFiles.map((f, i) => {
+        // Clear and rebuild
+        fileListEl.innerHTML = '';
+        
+        uploadedFiles.forEach((f, i) => {
           // Check if this is an image with base64 data
           const isImage = f.content && typeof f.content === 'object' && f.content.type === 'image';
           
-          console.log(`📁 File ${i}: ${f.name}, isImage: ${isImage}, contentType: ${typeof f.content}, content.type: ${f.content?.type}`);
+          console.log(`📁 File ${i}: ${f.name}, isImage: ${isImage}`);
+          
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item' + (isImage ? ' has-thumbnail' : '');
+          fileItem.title = f.name;
           
           if (isImage) {
             // Image: Show thumbnail with X in corner
-            console.log('🖼️ Rendering as thumbnail');
-            return '<div class="file-item has-thumbnail" title="' + escapeHtml(f.name) + '">' +
-              '<img src="' + f.content.base64 + '" class="file-item-thumbnail" alt="' + escapeHtml(f.name) + '">' +
-              '<button class="file-item-remove" data-index="' + i + '" title="Ta bort">✕</button>' +
-            '</div>';
+            const img = document.createElement('img');
+            img.src = f.content.base64;
+            img.className = 'file-item-thumbnail';
+            img.alt = f.name;
+            img.onerror = () => console.error('❌ Image failed to load:', f.name);
+            img.onload = () => console.log('✅ Image loaded:', f.name);
+            fileItem.appendChild(img);
           } else {
-            // Non-image: Show filename with remove button
-            console.log('📄 Rendering as file');
-            return '<div class="file-item">' +
-              '<span class="file-item-icon">📄</span>' +
-              '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
-              '<span class="file-item-size">' + formatSize(f.size) + '</span>' +
-              '<button class="file-item-remove" data-index="' + i + '" title="Ta bort">✕</button>' +
-            '</div>';
+            // Non-image: Show icon, name, size
+            const icon = document.createElement('span');
+            icon.className = 'file-item-icon';
+            icon.textContent = '📄';
+            fileItem.appendChild(icon);
+            
+            const name = document.createElement('span');
+            name.className = 'file-item-name';
+            name.textContent = f.name;
+            fileItem.appendChild(name);
+            
+            const size = document.createElement('span');
+            size.className = 'file-item-size';
+            size.textContent = formatSize(f.size);
+            fileItem.appendChild(size);
           }
-        }).join('');
-        
-        fileListEl.querySelectorAll('.file-item-remove').forEach(btn => {
-          btn.addEventListener('click', () => {
-            uploadedFiles.splice(parseInt(btn.dataset.index), 1);
+          
+          // Add remove button
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'file-item-remove';
+          removeBtn.dataset.index = i;
+          removeBtn.title = 'Ta bort';
+          removeBtn.textContent = '✕';
+          removeBtn.addEventListener('click', () => {
+            uploadedFiles.splice(i, 1);
             renderFileList();
           });
+          fileItem.appendChild(removeBtn);
+          
+          fileListEl.appendChild(fileItem);
         });
       }
       
