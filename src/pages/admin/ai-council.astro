@@ -4499,12 +4499,19 @@ if (!anvandare) {
           fileItem.className = 'file-item' + (isImage ? ' has-thumbnail' : '');
           fileItem.title = f.name;
           
+          // Force container styles for thumbnails
+          if (isImage) {
+            fileItem.style.cssText = 'position: relative; display: inline-block; width: 96px; height: 96px;';
+          }
+          
           if (isImage) {
             // Image: Show thumbnail with X in corner
             const img = document.createElement('img');
             img.src = f.content.base64;
             img.className = 'file-item-thumbnail';
             img.alt = f.name;
+            // Force thumbnail size with inline styles
+            img.style.cssText = 'width: 96px !important; height: 96px !important; max-width: 96px !important; max-height: 96px !important; object-fit: cover; border-radius: 8px; border: 2px solid #e5e7eb; display: block;';
             img.onerror = () => console.error('❌ Image failed to load:', f.name);
             img.onload = () => console.log('✅ Image loaded:', f.name);
             fileItem.appendChild(img);
@@ -4532,6 +4539,12 @@ if (!anvandare) {
           removeBtn.dataset.index = i;
           removeBtn.title = 'Ta bort';
           removeBtn.textContent = '✕';
+          
+          // Style remove button for thumbnails
+          if (isImage) {
+            removeBtn.style.cssText = 'position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; background: rgba(0,0,0,0.75); border: 2px solid white; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; z-index: 5;';
+          }
+          
           removeBtn.addEventListener('click', () => {
             uploadedFiles.splice(i, 1);
             renderFileList();
