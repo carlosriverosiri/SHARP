@@ -1937,9 +1937,12 @@ if (!anvandare) {
       transform: none;
     }
     .file-item-icon { font-size: 1rem; flex-shrink: 0; }
+    .file-list .file-item .file-item-thumbnail,
     .file-item-thumbnail { 
-      width: 96px; 
-      height: 96px; 
+      width: 96px !important; 
+      height: 96px !important; 
+      max-width: 96px !important;
+      max-height: 96px !important;
       object-fit: cover; 
       border-radius: 8px; 
       border: 2px solid var(--border-color);
@@ -1949,9 +1952,13 @@ if (!anvandare) {
     .file-item:hover .file-item-thumbnail {
       border-color: var(--color-primary);
     }
+    .file-list .file-item img,
     .file-item img {
+      width: 96px !important;
+      height: 96px !important;
       max-width: 96px !important;
       max-height: 96px !important;
+      object-fit: cover !important;
     }
     
     @media (max-width: 768px) {
@@ -4476,18 +4483,25 @@ if (!anvandare) {
           fileListEl.innerHTML = '';
           return;
         }
+        
+        console.log('📁 renderFileList called, files:', uploadedFiles.length);
+        
         fileListEl.innerHTML = uploadedFiles.map((f, i) => {
           // Check if this is an image with base64 data
           const isImage = f.content && typeof f.content === 'object' && f.content.type === 'image';
           
+          console.log(`📁 File ${i}: ${f.name}, isImage: ${isImage}, contentType: ${typeof f.content}, content.type: ${f.content?.type}`);
+          
           if (isImage) {
             // Image: Show thumbnail with X in corner
+            console.log('🖼️ Rendering as thumbnail');
             return '<div class="file-item has-thumbnail" title="' + escapeHtml(f.name) + '">' +
               '<img src="' + f.content.base64 + '" class="file-item-thumbnail" alt="' + escapeHtml(f.name) + '">' +
               '<button class="file-item-remove" data-index="' + i + '" title="Ta bort">✕</button>' +
             '</div>';
           } else {
             // Non-image: Show filename with remove button
+            console.log('📄 Rendering as file');
             return '<div class="file-item">' +
               '<span class="file-item-icon">📄</span>' +
               '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
