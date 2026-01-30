@@ -2038,8 +2038,8 @@ if (!anvandare) {
       display: none; /* Hidden by default, shown when .loading class is added */
     }
     
-    /* Retry and Synthesize buttons */
-    .retry-btn, .synthesize-btn {
+    /* Retry button */
+    .retry-btn {
       padding: 0.75rem 1.25rem;
       font-size: 0.875rem;
       font-weight: 500;
@@ -2049,25 +2049,11 @@ if (!anvandare) {
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s;
-    }
-    .retry-btn {
       background: #fef3c7;
       color: #92400e;
       border: 1px solid #f59e0b;
     }
     .retry-btn:hover { background: #fde68a; }
-    .deliberate-btn {
-      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-      color: white;
-      border: none;
-    }
-    .deliberate-btn:hover { opacity: 0.9; }
-    .synthesize-btn {
-      background: linear-gradient(135deg, #059669, #10b981);
-      color: white;
-      border: none;
-    }
-    .synthesize-btn:hover { opacity: 0.9; }
     .expand-btn {
       padding: 0.75rem 1.25rem;
       font-size: 0.875rem;
@@ -2083,9 +2069,120 @@ if (!anvandare) {
       border: none;
     }
     .expand-btn:hover { opacity: 0.9; }
-    .retry-btn:disabled, .expand-btn:disabled, .deliberate-btn:disabled, .synthesize-btn:disabled { 
+    .retry-btn:disabled, .expand-btn:disabled { 
       opacity: 0.5; 
       cursor: not-allowed; 
+    }
+    
+    /* Next step cards */
+    .next-step-cards {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: var(--bg-sidebar);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .next-step-header {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .next-step-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .next-step-grid { grid-template-columns: 1fr; }
+    }
+    .next-step-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 1.25rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      text-align: left;
+      background: none;
+    }
+    .next-step-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .next-step-card:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .deliberate-card {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(139, 92, 246, 0.12));
+      border-color: rgba(124, 58, 237, 0.25);
+    }
+    .deliberate-card:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.2));
+      border-color: #7c3aed;
+    }
+    .synthesize-card {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.12));
+      border-color: rgba(5, 150, 105, 0.25);
+    }
+    .synthesize-card:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.2));
+      border-color: #059669;
+    }
+    .next-step-card-icon {
+      font-size: 1.75rem;
+    }
+    .next-step-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    .deliberate-card .next-step-card-title { color: #7c3aed; }
+    .synthesize-card .next-step-card-title { color: #059669; }
+    .next-step-card-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .next-step-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .next-step-card-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+    }
+    .deliberate-card .next-step-card-count {
+      background: rgba(124, 58, 237, 0.15);
+      color: #7c3aed;
+    }
+    .synthesize-card .next-step-card-count {
+      background: rgba(5, 150, 105, 0.15);
+      color: #059669;
+    }
+    .next-step-card-time {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+    }
+    .next-step-card.done {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .next-step-card.done .next-step-card-count {
+      background: rgba(34, 197, 94, 0.2);
+      color: #16a34a;
     }
     /* Highlight pulse animation for buttons */
     @keyframes highlight-pulse {
@@ -3148,12 +3245,31 @@ if (!anvandare) {
               <button type="button" id="expandModelsBtn" class="expand-btn" style="display: none;" title="Lägg till fler modeller till befintliga svar">
                 <span>➕ Lägg till modeller</span>
               </button>
-              <button type="button" id="deliberateNowBtn" class="deliberate-btn" style="display: none;" title="Kör deliberation - AI:erna faktagranskar varandras svar">
-                <span>🔬 Kör deliberation</span>
-              </button>
-              <button type="button" id="synthesizeNowBtn" class="synthesize-btn" style="display: none;" title="Kör syntes - en AI sammanfattar alla svar">
-                <span>🧪 Kör syntes</span>
-              </button>
+            </div>
+            
+            <!-- Next step cards -->
+            <div id="nextStepCards" class="next-step-cards" style="display: none;">
+              <div class="next-step-header">Välj nästa steg</div>
+              <div class="next-step-grid">
+                <button type="button" id="deliberateNowBtn" class="next-step-card deliberate-card">
+                  <div class="next-step-card-icon">🔬</div>
+                  <div class="next-step-card-title">Faktagranskning</div>
+                  <div class="next-step-card-desc">Alla AI:er granskar varandras svar och korrigerar fel</div>
+                  <div class="next-step-card-meta">
+                    <span class="next-step-card-count" id="deliberateCount">0 svar</span>
+                    <span class="next-step-card-time">⏱️ ~60 sek</span>
+                  </div>
+                </button>
+                <button type="button" id="synthesizeNowBtn" class="next-step-card synthesize-card">
+                  <div class="next-step-card-icon">🧪</div>
+                  <div class="next-step-card-title">Sammanfattning</div>
+                  <div class="next-step-card-desc">En AI sammanfattar alla svar till en slutsats</div>
+                  <div class="next-step-card-meta">
+                    <span class="next-step-card-count" id="synthesizeCount">0 svar</span>
+                    <span class="next-step-card-time">⏱️ ~15 sek</span>
+                  </div>
+                </button>
+              </div>
             </div>
             
             <!-- Single-model deliberation buttons -->
@@ -3767,6 +3883,9 @@ if (!anvandare) {
       const expandModelsBtn = document.getElementById('expandModelsBtn');
       const deliberateNowBtn = document.getElementById('deliberateNowBtn');
       const synthesizeNowBtn = document.getElementById('synthesizeNowBtn');
+      const nextStepCards = document.getElementById('nextStepCards');
+      const deliberateCount = document.getElementById('deliberateCount');
+      const synthesizeCount = document.getElementById('synthesizeCount');
 
       // Track failed models for retry functionality
       let failedModels = [];
@@ -3967,8 +4086,11 @@ if (!anvandare) {
         round1Label.style.display = 'none';
         retryFailedBtn.style.display = 'none';
         expandModelsBtn.style.display = 'none';
-        deliberateNowBtn.style.display = 'none';
-        synthesizeNowBtn.style.display = 'none';
+        nextStepCards.style.display = 'none';
+        deliberateNowBtn.classList.remove('done');
+        deliberateNowBtn.disabled = false;
+        synthesizeNowBtn.classList.remove('done');
+        synthesizeNowBtn.disabled = false;
         const singleDelibSection = document.getElementById('singleDeliberationSection');
         if (singleDelibSection) singleDelibSection.style.display = 'none';
         // Reset single deliberation buttons
@@ -5630,27 +5752,32 @@ if (!anvandare) {
             expandModelsBtn.querySelector('span').textContent = `➕ Lägg till modeller (${unusedModels.length} kvar)`;
           }
           
-          // Show deliberation button if:
-          // - We have at least 2 responses (deliberation needs multiple perspectives)
-          // - Deliberation hasn't been run yet
-          // - CHANGED: No longer requires skip-synthesis mode
+          // Show next step cards if we have responses but no synthesis
           const canRunDeliberation = successCount >= 2 && !hasDeliberation && !hasSynthesis;
-          deliberateNowBtn.style.display = canRunDeliberation ? 'flex' : 'none';
+          const canSynthesize = hasSuccesses && !hasSynthesis;
+          
+          // Show the cards container if either option is available
+          nextStepCards.style.display = (canRunDeliberation || canSynthesize) ? 'block' : 'none';
+          
+          // Update deliberation card
+          deliberateNowBtn.disabled = !canRunDeliberation;
+          deliberateNowBtn.classList.toggle('done', hasDeliberation);
+          deliberateCount.textContent = `${successCount} svar`;
+          
+          // Update synthesize card
+          synthesizeNowBtn.disabled = !canSynthesize;
+          synthesizeNowBtn.classList.toggle('done', hasSynthesis);
+          synthesizeCount.textContent = hasDeliberation ? `${successCount}+R2 svar` : `${successCount} svar`;
+          
+          // Update card descriptions if deliberation done
+          if (hasDeliberation) {
+            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
+            synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+          }
+          
           // Also show single-model deliberation section
           const singleDelibSection = document.getElementById('singleDeliberationSection');
           if (singleDelibSection) singleDelibSection.style.display = canRunDeliberation ? 'block' : 'none';
-          if (canRunDeliberation) {
-            deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${successCount} svar)`;
-          }
-          
-          // Show synthesize button if we have responses but no synthesis
-          // CHANGED: Always show when we have responses and no synthesis yet
-          const canSynthesize = hasSuccesses && !hasSynthesis;
-          synthesizeNowBtn.style.display = canSynthesize ? 'flex' : 'none';
-          if (hasSuccesses) {
-            const synthType = hasDeliberation ? 'supersyntes' : 'syntes';
-            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${successCount} svar)`;
-          }
           
           // Update hasSynthesized flag if synthesis was included
           if (hasSynthesis) {
@@ -5822,25 +5949,29 @@ if (!anvandare) {
             
             hasRunDeliberation = true;
             
-            // Hide deliberation buttons, update synthesize button
-            deliberateNowBtn.style.display = 'none';
+            // Update cards - mark deliberation done, enable supersyntes
+            deliberateNowBtn.classList.add('done');
+            deliberateNowBtn.disabled = true;
             const singleDelibSectionFull = document.getElementById('singleDeliberationSection');
             if (singleDelibSectionFull) singleDelibSectionFull.style.display = 'none';
-            synthesizeNowBtn.style.display = 'flex';
-            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${Object.keys(collectedResponses).length} svar)`;
+            
+            // Update syntes card to show supersyntes
+            synthesizeNowBtn.disabled = false;
+            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
+            synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+            synthesizeCount.textContent = `${Object.keys(collectedResponses).length}+R2 svar`;
             
             // Update workflow progress
             updateWorkflowProgress();
             
-            setStatus('✓ Deliberation klar!', true);
-            setTimeout(() => setStatus('', false), 2000);
+            setStatus('✓ Faktagranskning klar! Kör supersyntes.', true);
+            setTimeout(() => setStatus('', false), 3000);
           }
         } catch (error) {
-          showError('Deliberationsfel: ' + error.message + '. Försök igen.');
+          showError('Fel vid faktagranskning: ' + error.message + '. Försök igen.');
           setStatus('', false);
-          // Show deliberation button again so user can retry
-          deliberateNowBtn.style.display = 'flex';
-          deliberateNowBtn.querySelector('span').textContent = '🔄 Försök deliberation igen';
+          // Re-enable deliberation button
+          deliberateNowBtn.disabled = false;
         } finally {
           setLoading(false);
         }
@@ -5943,15 +6074,18 @@ if (!anvandare) {
               if (r2Count >= r1Count) {
                 playNotificationSound('complete');
                 hasRunDeliberation = true;
-                deliberateNowBtn.style.display = 'none';
+                deliberateNowBtn.classList.add('done');
+                deliberateNowBtn.disabled = true;
                 singleDeliberationSection.style.display = 'none';
-                synthesizeNowBtn.style.display = 'flex';
-                synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${r1Count} svar)`;
-                setStatus('✓ Alla deliberationer klara! Kör supersyntes.', true);
+                synthesizeNowBtn.disabled = false;
+                synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
+                synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+                synthesizeCount.textContent = `${r1Count}+R2 svar`;
+                setStatus('✓ All faktagranskning klar! Kör supersyntes.', true);
               } else {
-                // Show synthesize button but indicate it's partial
-                synthesizeNowBtn.style.display = 'flex';
-                synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör supersyntes (${r2Count}/${r1Count} R2-svar)`;
+                // Update syntes card to show partial progress
+                synthesizeNowBtn.disabled = false;
+                synthesizeCount.textContent = `${r2Count}/${r1Count} R2`;
               }
               
               // Update workflow progress
@@ -6040,8 +6174,10 @@ if (!anvandare) {
             document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
             document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
             
-            // Hide synthesize button after synthesis is done
-            synthesizeNowBtn.style.display = 'none';
+            // Mark synthesize card as done and hide cards
+            synthesizeNowBtn.classList.add('done');
+            synthesizeNowBtn.disabled = true;
+            nextStepCards.style.display = 'none';
             hasSynthesized = true;
             
             // Update workflow progress
@@ -6053,11 +6189,10 @@ if (!anvandare) {
           
           setStatus('', false);
         } catch (error) {
-          showError('Syntesfel: ' + error.message + '. Försök igen med "Kör syntes"-knappen.');
+          showError('Syntesfel: ' + error.message + '. Försök igen.');
           setStatus('', false);
-          // Show synthesize button again so user can retry
-          synthesizeNowBtn.style.display = 'flex';
-          synthesizeNowBtn.querySelector('span').textContent = '🔄 Försök syntes igen';
+          // Re-enable synthesize button
+          synthesizeNowBtn.disabled = false;
         } finally {
           setLoading(false);
         }
@@ -6217,20 +6352,19 @@ if (!anvandare) {
             // Update workflow progress
             updateWorkflowProgress();
             
-            // Show synthesize button if we have responses
-            if (Object.keys(collectedResponses).length > 0) {
-              synthesizeNowBtn.style.display = 'flex';
-              const synthType = hasRunDeliberation ? 'supersyntes' : 'syntes';
-              synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${Object.keys(collectedResponses).length} svar)`;
-            }
-            
-            // Show deliberation button if we have 2+ responses
-            if (Object.keys(collectedResponses).length >= 2 && !hasRunDeliberation) {
-              deliberateNowBtn.style.display = 'flex';
-              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${Object.keys(collectedResponses).length} svar)`;
-              // Also show single-model deliberation section
-              const singleDelibSection = document.getElementById('singleDeliberationSection');
-              if (singleDelibSection) singleDelibSection.style.display = 'block';
+            // Show next step cards if we have responses
+            const respCount = Object.keys(collectedResponses).length;
+            if (respCount > 0) {
+              nextStepCards.style.display = 'block';
+              synthesizeNowBtn.disabled = false;
+              synthesizeCount.textContent = hasRunDeliberation ? `${respCount}+R2 svar` : `${respCount} svar`;
+              
+              if (respCount >= 2 && !hasRunDeliberation) {
+                deliberateNowBtn.disabled = false;
+                deliberateCount.textContent = `${respCount} svar`;
+                const singleDelibSection = document.getElementById('singleDeliberationSection');
+                if (singleDelibSection) singleDelibSection.style.display = 'block';
+              }
             }
             
           } catch (error) {
@@ -6411,18 +6545,19 @@ if (!anvandare) {
         // Update workflow progress
         updateWorkflowProgress();
         
-        // Show action buttons
+        // Show next step cards
         const responseCount = Object.keys(collectedResponses).length;
         if (responseCount > 0) {
-          synthesizeNowBtn.style.display = 'flex';
-          const synthType = hasRunDeliberation ? 'supersyntes' : 'syntes';
-          synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör ${synthType} (${responseCount} svar)`;
-        }
-        if (responseCount >= 2 && !hasRunDeliberation) {
-          deliberateNowBtn.style.display = 'flex';
-          deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${responseCount} svar)`;
-          const singleDelibSection = document.getElementById('singleDeliberationSection');
-          if (singleDelibSection) singleDelibSection.style.display = 'block';
+          nextStepCards.style.display = 'block';
+          synthesizeNowBtn.disabled = false;
+          synthesizeCount.textContent = hasRunDeliberation ? `${responseCount}+R2 svar` : `${responseCount} svar`;
+          
+          if (responseCount >= 2 && !hasRunDeliberation) {
+            deliberateNowBtn.disabled = false;
+            deliberateCount.textContent = `${responseCount} svar`;
+            const singleDelibSection = document.getElementById('singleDeliberationSection');
+            if (singleDelibSection) singleDelibSection.style.display = 'block';
+          }
         }
         
         // Play completion sound and show final status
@@ -7520,16 +7655,16 @@ if (!anvandare) {
           // Update workflow progress
           updateWorkflowProgress();
           
-          // Show action buttons
+          // Show next step cards
           const responseCount = Object.keys(collectedResponses).length;
           if (responseCount > 0) {
-            synthesizeNowBtn.style.display = 'flex';
-            synthesizeNowBtn.querySelector('span').textContent = `🧪 Kör syntes (${responseCount} svar)`;
+            nextStepCards.style.display = 'block';
+            synthesizeNowBtn.disabled = false;
+            synthesizeCount.textContent = `${responseCount} svar`;
             
             if (responseCount >= 2 && !hasRunDeliberation) {
-              deliberateNowBtn.style.display = 'flex';
-              deliberateNowBtn.querySelector('span').textContent = `🔄 Kör deliberation alla (${responseCount} svar)`;
-              // Also show single-model deliberation section
+              deliberateNowBtn.disabled = false;
+              deliberateCount.textContent = `${responseCount} svar`;
               const singleDelibSection = document.getElementById('singleDeliberationSection');
               if (singleDelibSection) singleDelibSection.style.display = 'block';
             }
