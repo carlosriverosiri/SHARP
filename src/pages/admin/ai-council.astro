@@ -3952,6 +3952,15 @@ if (!anvandare) {
           el.textContent = '';
         });
         
+        // Reset single model buttons
+        document.querySelectorAll('.single-model-btn').forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove('running', 'done');
+          const modelId = btn.dataset.model;
+          const modelEmoji = { gemini: '🟢', anthropic: '🟡', grok: '🟠', openai: '🔴' }[modelId];
+          btn.innerHTML = `${modelEmoji} Kör...`;
+        });
+        
         // Reset results area
         document.getElementById('results').classList.remove('visible');
         document.getElementById('synthesisCard').style.display = 'none';
@@ -6431,20 +6440,43 @@ if (!anvandare) {
       
       // New chat button - clear everything
       newChatBtn?.addEventListener('click', () => {
+        // Clear form inputs
         contextEl.value = '';
         promptEl.value = '';
-        resultsEl.classList.remove('visible');
-        synthesisCard.style.display = 'none';
-        document.getElementById('costBanner').classList.remove('visible');
-        currentPrompt = '';
-        currentResponses = {};
+        
+        // Clear uploaded files
         uploadedFiles = [];
         document.getElementById('fileList').innerHTML = '';
+        
+        // Reset all workflow state (collectedResponses, hasSynthesized, etc.)
+        resetWorkflow();
+        
+        // Hide results and synthesis
+        resultsEl.classList.remove('visible');
+        synthesisCard.style.display = 'none';
+        document.getElementById('synthesisContent').innerHTML = '';
+        document.getElementById('costBanner').classList.remove('visible');
+        
+        // Clear current state
+        currentPrompt = '';
+        currentResponses = {};
+        currentSessionId = null;
+        
+        // Hide all accordions
+        document.querySelectorAll('.result-accordion').forEach(acc => {
+          acc.style.display = 'none';
+        });
+        
+        // Clear status
+        setStatus('', false);
+        hideError();
         
         // Close mobile sidebar
         if (window.innerWidth <= 1024) {
           projectSidebar.classList.remove('open');
         }
+        
+        console.log('🗑️ New chat - all state cleared');
       });
       
       // New project button
