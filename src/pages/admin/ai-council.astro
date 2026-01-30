@@ -1876,60 +1876,92 @@ if (!anvandare) {
       }
     }
     .file-list { 
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       margin-top: 0.75rem; 
-      max-width: 100%;
-      overflow: hidden;
     }
     .file-item {
-      max-width: 100%;
+      position: relative;
+      display: inline-block;
+    }
+    .file-item.has-thumbnail .file-item-name,
+    .file-item.has-thumbnail .file-item-size {
+      display: none;
+    }
+    .file-item:not(.has-thumbnail) {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.5rem;
+      padding: 0.5rem 0.75rem;
       background: var(--bg-input);
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
+      border-radius: 8px;
       font-size: 0.8125rem;
     }
-    .file-item-name { flex: 1; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-item-name { flex: 1; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
     .file-item-size { color: var(--text-muted); font-size: 0.75rem; }
     .file-item-remove {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 22px;
+      height: 22px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      transition: background 0.15s, transform 0.15s;
+      z-index: 5;
+    }
+    .file-item-remove:hover { 
+      background: #ef4444;
+      transform: scale(1.1);
+    }
+    .file-item:not(.has-thumbnail) .file-item-remove {
+      position: static;
+      width: auto;
+      height: auto;
       background: transparent;
       border: none;
       color: var(--text-muted);
-      cursor: pointer;
-      padding: 0.25rem;
+      font-size: 14px;
     }
-    .file-item-remove:hover { color: var(--color-error); }
+    .file-item:not(.has-thumbnail) .file-item-remove:hover {
+      color: #ef4444;
+      transform: none;
+    }
     .file-item-icon { font-size: 1rem; flex-shrink: 0; }
     .file-item-thumbnail { 
-      width: 48px; 
-      height: 48px; 
-      max-width: 48px;
-      max-height: 48px;
+      width: 96px; 
+      height: 96px; 
       object-fit: cover; 
-      border-radius: 6px; 
-      flex-shrink: 0;
-      border: 1px solid var(--border-color);
+      border-radius: 8px; 
+      border: 2px solid var(--border-color);
+      display: block;
+      transition: border-color 0.15s;
     }
-    .file-item.has-thumbnail { 
-      padding: 0.375rem 0.5rem;
+    .file-item:hover .file-item-thumbnail {
+      border-color: var(--color-primary);
     }
     .file-item img {
-      max-width: 48px !important;
-      max-height: 48px !important;
+      max-width: 96px !important;
+      max-height: 96px !important;
     }
     
     @media (max-width: 768px) {
       .file-item-thumbnail {
-        width: 56px;
-        height: 56px;
-        max-width: 56px;
-        max-height: 56px;
+        width: 80px;
+        height: 80px;
       }
       .file-item img {
-        max-width: 56px !important;
-        max-height: 56px !important;
+        max-width: 80px !important;
+        max-height: 80px !important;
       }
     }
     
@@ -4447,16 +4479,22 @@ if (!anvandare) {
         fileListEl.innerHTML = uploadedFiles.map((f, i) => {
           // Check if this is an image with base64 data
           const isImage = f.content && typeof f.content === 'object' && f.content.type === 'image';
-          const thumbnail = isImage 
-            ? '<img src="' + f.content.base64 + '" class="file-item-thumbnail" alt="' + escapeHtml(f.name) + '">'
-            : '<span class="file-item-icon">📄</span>';
           
-          return '<div class="file-item' + (isImage ? ' has-thumbnail' : '') + '">' +
-            thumbnail +
-            '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
-            '<span class="file-item-size">' + formatSize(f.size) + '</span>' +
-            '<button class="file-item-remove" data-index="' + i + '">✕</button>' +
-          '</div>';
+          if (isImage) {
+            // Image: Show thumbnail with X in corner
+            return '<div class="file-item has-thumbnail" title="' + escapeHtml(f.name) + '">' +
+              '<img src="' + f.content.base64 + '" class="file-item-thumbnail" alt="' + escapeHtml(f.name) + '">' +
+              '<button class="file-item-remove" data-index="' + i + '" title="Ta bort">✕</button>' +
+            '</div>';
+          } else {
+            // Non-image: Show filename with remove button
+            return '<div class="file-item">' +
+              '<span class="file-item-icon">📄</span>' +
+              '<span class="file-item-name">' + escapeHtml(f.name) + '</span>' +
+              '<span class="file-item-size">' + formatSize(f.size) + '</span>' +
+              '<button class="file-item-remove" data-index="' + i + '" title="Ta bort">✕</button>' +
+            '</div>';
+          }
         }).join('');
         
         fileListEl.querySelectorAll('.file-item-remove').forEach(btn => {
