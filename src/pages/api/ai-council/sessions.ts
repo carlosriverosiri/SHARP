@@ -58,12 +58,14 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       .eq('user_id', anvandare.id)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
+    
+    const sessions = data || [];
 
     if (error) {
       throw error;
     }
 
-    return new Response(JSON.stringify({ sessions: data || [] }), {
+    return new Response(JSON.stringify({ sessions }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -105,17 +107,30 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const body = await request.json();
     const {
+      name,
       prompt,
       context,
       responses,
       synthesis,
+      supersynthesis,
       synthesisModel,
       totalDuration,
       tags = []
     } = body;
+    
+    // Use supersynthesis if provided, otherwise use synthesis
+    const finalSynthesis = supersynthesis || synthesis;
 
-    if (!prompt || !synthesis) {
-      return new Response(JSON.stringify({ error: 'Prompt och syntes krävs' }), {
+    if (!prompt) {
+      return new Response(JSON.stringify({ error: 'Prompt krävs' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    
+    // Allow saving without synthesis (responses only)
+    if (!finalSynthesis && (!responses || responses.length === 0)) {
+      return new Response(JSON.stringify({ error: 'Syntes eller svar krävs' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -140,7 +155,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         response_openai: responsesByProvider.openai || null,
         response_anthropic: responsesByProvider.anthropic || null,
         response_google: responsesByProvider.google || null,
-        synthesis,
+        synthesis: finalSynthesis || null,
         synthesis_model: synthesisModel || 'claude',
         total_duration_ms: totalDuration || null,
         tags: tags,

@@ -1091,6 +1091,12 @@ Det finns flera liknande verktyg som kör flera AI-modeller parallellt:
 
 ## Relaterade dokument
 
+### AI Council-specifikt
+- [ai-council/KONTEXT.md](./ai-council/KONTEXT.md) - **Kompakt teknisk kontext** (för AI-sökningar)
+- [ai-council/README.md](./ai-council/README.md) - Snabbguide för AI Council
+- [AI-COUNCIL-TODO.md](./AI-COUNCIL-TODO.md) - Projektplan för separation
+
+### Övriga
 - [AI-INTEGRATION-RESURSER.md](./AI-INTEGRATION-RESURSER.md) - Övriga AI-resurser i projektet
 - [MULTI-AI-ARBETSFLODE.md](./MULTI-AI-ARBETSFLODE.md) - Arbetsflöden för multi-AI
 - [SETUP-ARBETSDATOR.md](./SETUP-ARBETSDATOR.md) - Installationsguide
