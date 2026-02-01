@@ -54,12 +54,23 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     const { data, error } = await supabase
       .from('ai_council_sessions')
-      .select('id, prompt, synthesis, synthesis_model, total_duration_ms, created_at, tags')
+      .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
       .eq('user_id', anvandare.id)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
     
-    const sessions = data || [];
+    // Transform to include responses array and supersynthesis for frontend
+    const sessions = (data || []).map(s => ({
+      ...s,
+      // Build responses object from individual provider responses
+      responses: {
+        ...(s.response_openai && { openai: s.response_openai }),
+        ...(s.response_anthropic && { anthropic: s.response_anthropic }),
+        ...(s.response_google && { google: s.response_google }),
+      },
+      // Check if synthesis was actually a supersynthesis (has deliberation markers)
+      supersynthesis: s.synthesis?.includes('SUPERSYNTES') || s.synthesis?.includes('Runda 2') ? s.synthesis : null,
+    }));
 
     if (error) {
       throw error;
@@ -150,6 +161,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       .from('ai_council_sessions')
       .insert({
         user_id: anvandare.id,
+        name: name || null,
         prompt,
         context: context || null,
         response_openai: responsesByProvider.openai || null,

@@ -4731,10 +4731,21 @@ if (!anvandare) {
             sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
             notesSync.textContent = '💾 Lokal lagring';
           } else {
-            sessions = data.sessions || [];
-            useSupabase = true;
-            notesSync.textContent = '☁️ Supabase (tom)';
-            notesSync.className = 'notes-sync synced';
+            // Supabase connected but empty - check localStorage for old sessions
+            const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+            if (localSessions.length > 0) {
+              // Show local sessions but note they need to be migrated
+              sessions = localSessions;
+              useSupabase = true; // New sessions will go to Supabase
+              notesSync.textContent = '💾 Lokala sessioner (' + localSessions.length + ')';
+              notesSync.className = 'notes-sync';
+              notesSync.title = 'Dessa sessioner finns i din webbläsare. Nya sessioner sparas till molnet.';
+            } else {
+              sessions = [];
+              useSupabase = true;
+              notesSync.textContent = '☁️ Supabase (redo)';
+              notesSync.className = 'notes-sync synced';
+            }
           }
         } catch (e) {
           useSupabase = false;
