@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-28 (v3.4 - Kamerafunktion)
+**Senast uppdaterad:** 2026-01-30 (v3.5 - Nästa steg-kort)
 
 ---
 
@@ -160,9 +160,11 @@ Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 - **Vetenskaplig research:** Grok + Gemini + o1
 - **Snabb logisk analys:** Endast Gemini
 
-### Deliberation (Runda 2)
+### Deliberation / Faktagranskning (Runda 2)
 
-**Valfri funktion** där modellerna granskar varandras svar innan slutsyntes:
+**Valfri funktion** där modellerna granskar varandras svar innan slutsyntes.
+
+> **UI-namn:** I gränssnittet kallas denna funktion "🔬 Faktagranskning" för att vara tydligare på svenska.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -191,7 +193,36 @@ Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 - Kostar 2x så mycket (dubbla API-anrop)
 - Kräver minst 2 valda modeller
 
-**Aktivera:** Slå på "Deliberation" i gränssnittet.
+**Aktivera:** Slå på "Deliberation" i gränssnittet, eller klicka på "🔬 Faktagranskning"-kortet efter att modellerna svarat.
+
+### "Nästa steg"-kort (NY i v3.5!)
+
+Efter att modellerna har svarat visas två tydliga kort för nästa steg:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  VÄLJ NÄSTA STEG                                                    │
+├─────────────────────────────┬───────────────────────────────────────┤
+│  🔬 Faktagranskning         │  🧪 Sammanfattning                    │
+│  ───────────────────────    │  ───────────────────────              │
+│  Alla AI:er granskar        │  En AI sammanfattar alla              │
+│  varandras svar och         │  svar till en slutsats                │
+│  korrigerar fel             │                                       │
+│                             │                                       │
+│  [4 svar]  ⏱️ ~60 sek       │  [4 svar]  ⏱️ ~15 sek                 │
+└─────────────────────────────┴───────────────────────────────────────┘
+```
+
+| Kort | Tekniskt namn | Beskrivning |
+|------|---------------|-------------|
+| **🔬 Faktagranskning** | Deliberation | Alla AI:er granskar varandras svar och korrigerar fel |
+| **🧪 Sammanfattning** | Syntes | En AI sammanfattar alla svar till en slutsats |
+| **🧪 Supersyntes** | Super-syntes | Sammanfattning efter faktagranskning (högre kvalitet) |
+
+**Arbetsflöde:**
+1. Kör fråga → Modellerna svarar
+2. Välj **Faktagranskning** (Runda 2) ELLER **Sammanfattning** direkt
+3. Om du valde Faktagranskning → Kortet ändras till "🧪 Supersyntes"
 
 ### Syntes ("The Judge")
 
@@ -452,9 +483,9 @@ AI Council visar **kostnad per körning** i realtid, nu med prominent banner hö
 
 > **Tips:** Använd GPT-4o ⚡ eller Gemini 📚 för billigare iterationer under utveckling.
 
-### Sessionslogg (Supabase + localStorage)
+### Historik (Supabase + localStorage)
 
-Sessioner sparas i **Supabase** (synkas mellan enheter) med **localStorage som fallback**.
+Sessioner sparas i **Supabase** (synkas mellan enheter) med **localStorage som fallback**. Historiken visas i höger sidebar.
 
 | Funktion | Beskrivning |
 |----------|-------------|
@@ -890,6 +921,24 @@ npm install bottleneck
 
 ## Versionshistorik
 
+### v3.5 (2026-01-30) - Nästa steg-kort & Historik
+
+**UI-förbättringar:** Tydligare val mellan faktagranskning och sammanfattning.
+
+- 🔬 **Faktagranskning-kort** - Nytt kort istället för "Deliberation"-knapp
+- 🧪 **Sammanfattning-kort** - Nytt kort istället för "Syntes"-knapp  
+- 📐 **Samma storlek och layout** - Två likadana kort med tydliga beskrivningar
+- ⏱️ **Tidsuppskattning** - Visar ~60 sek / ~15 sek för varje alternativ
+- 📋 **Antal svar** - Visar hur många modellsvar som är redo
+- 📜 **Historik** - "Sessionslogg" → "Historik" med bättre visning av prompt + svar
+
+**Tekniskt:**
+- Ny CSS för `.next-step-cards`, `.deliberate-card`, `.synthesize-card`
+- Uppdaterad JavaScript för att visa/dölja kort baserat på state
+- Kort markeras som "done" efter användning
+
+---
+
 ### v3.2 (2026-01-27) - Zotero-integration
 
 **Ny funktion:** Sök och importera PDF:er från Zotero-bibliotek via stor modal.
@@ -1092,8 +1141,8 @@ Det finns flera liknande verktyg som kör flera AI-modeller parallellt:
 ## Relaterade dokument
 
 ### AI Council-specifikt
-- [ai-council/KONTEXT.md](./ai-council/KONTEXT.md) - **Kompakt teknisk kontext** (för AI-sökningar)
-- [ai-council/README.md](./ai-council/README.md) - Snabbguide för AI Council
+- [KONTEXT.md](./KONTEXT.md) - **Kompakt teknisk kontext** (för AI-sökningar)
+- [README.md](./README.md) - Snabbguide för AI Council
 - [AI-COUNCIL-TODO.md](./AI-COUNCIL-TODO.md) - Projektplan för separation
 
 ### Övriga

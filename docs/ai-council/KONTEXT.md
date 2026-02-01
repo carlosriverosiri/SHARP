@@ -47,10 +47,11 @@ src/pages/api/ai-council/
 
 ## Nyckelkoncept
 - **Parallella anrop:** Alla valda modeller körs samtidigt via `Promise.allSettled()`
-- **Syntes:** En "domarmodell" sammanfattar alla svar
-- **Deliberation:** Modellerna granskar varandras svar (runda 2)
+- **Syntes/Sammanfattning:** En "domarmodell" sammanfattar alla svar
+- **Deliberation/Faktagranskning:** Modellerna granskar varandras svar (runda 2)
 - **Hallucinationsdetektion:** Flaggar motsägelser mellan modeller
 - **Profilväljare:** Förinställda kombinationer (Snabb, Kodning, Vetenskap, etc.)
+- **"Nästa steg"-kort:** UI visar 🔬 Faktagranskning / 🧪 Sammanfattning efter modellsvar
 
 ## Kända begränsningar
 - Netlify timeout: 26s (kan orsaka "incomplete response" vid många modeller)

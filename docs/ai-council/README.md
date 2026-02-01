@@ -7,8 +7,8 @@
 | Fil | Beskrivning |
 |-----|-------------|
 | [KONTEXT.md](./KONTEXT.md) | **Teknisk kontext** - Kompakt översikt för AI-sökningar |
-| [../AI-COUNCIL.md](../AI-COUNCIL.md) | **Huvuddokumentation** - Komplett guide med versionshistorik |
-| [../AI-COUNCIL-TODO.md](../AI-COUNCIL-TODO.md) | **Projektplan** - Roadmap för separation till eget projekt |
+| [AI-COUNCIL.md](./AI-COUNCIL.md) | **Huvuddokumentation** - Komplett guide med versionshistorik |
+| [AI-COUNCIL-TODO.md](./AI-COUNCIL-TODO.md) | **Projektplan** - Roadmap för separation till eget projekt |
 
 ## Snabbguide
 
@@ -46,4 +46,4 @@ Den innehåller:
 - Vanliga problem och lösningar
 
 ---
-*Se [../AI-COUNCIL.md](../AI-COUNCIL.md) för fullständig dokumentation.*
+*Se [AI-COUNCIL.md](./AI-COUNCIL.md) för fullständig dokumentation.*
