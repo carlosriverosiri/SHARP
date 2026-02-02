@@ -2201,6 +2201,149 @@ if (!anvandare) {
       color: var(--color-success);
     }
     
+    /* Structure prompt button and preview */
+    .structure-prompt-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.5rem 0;
+    }
+    .structure-prompt-btn {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 1px solid #7dd3fc;
+      color: #0369a1;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .structure-prompt-btn:hover {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2);
+    }
+    .structure-prompt-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .structure-prompt-btn svg { flex-shrink: 0; }
+    .structure-prompt-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    /* Structured prompt preview */
+    .structured-preview {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #86efac;
+      border-radius: 12px;
+      margin-top: 1rem;
+      overflow: hidden;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .structured-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(134, 239, 172, 0.5);
+    }
+    .structured-preview-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #166534;
+    }
+    .structured-preview-meta {
+      font-size: 0.75rem;
+      color: #15803d;
+    }
+    .structured-preview-content {
+      padding: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .structured-preview-content h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #166534;
+      margin: 1rem 0 0.5rem 0;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid rgba(134, 239, 172, 0.5);
+    }
+    .structured-preview-content h2:first-child { margin-top: 0; }
+    .structured-preview-content ul {
+      margin: 0.5rem 0;
+      padding-left: 1.5rem;
+    }
+    .structured-preview-content li {
+      margin: 0.25rem 0;
+      color: var(--text-primary);
+    }
+    .structured-preview-content p {
+      margin: 0.5rem 0;
+      color: var(--text-primary);
+    }
+    .structured-preview-actions {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-top: 1px solid rgba(134, 239, 172, 0.5);
+    }
+    .structured-preview-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.2s ease;
+    }
+    .structured-preview-btn.primary {
+      background: #16a34a;
+      border: none;
+      color: white;
+    }
+    .structured-preview-btn.primary:hover {
+      background: #15803d;
+    }
+    .structured-preview-btn.secondary {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: var(--text-secondary);
+    }
+    .structured-preview-btn.secondary:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+    .structured-preview-btn.tertiary {
+      background: transparent;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+    .structured-preview-btn.tertiary:hover {
+      background: rgba(134, 239, 172, 0.2);
+    }
+    .structured-preview-btn svg { flex-shrink: 0; }
+    
     /* Mobile dictation improvements */
     @media (max-width: 768px) {
       .dictation-btn {
@@ -3579,6 +3722,52 @@ if (!anvandare) {
                 </button>
               </div>
               <div class="dictation-status" id="dictationStatus"></div>
+              
+              <!-- Strukturera prompt-knapp (visas för längre texter) -->
+              <div class="structure-prompt-container" id="structurePromptContainer" style="display: none;">
+                <button type="button" class="structure-prompt-btn" id="structurePromptBtn" title="Strukturera lång, ostrukturerad text till tydlig Markdown">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="21" y1="10" x2="3" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="21" y1="18" x2="3" y2="18"></line>
+                  </svg>
+                  <span>🎯 Strukturera prompt</span>
+                </button>
+                <span class="structure-prompt-hint">Omvandla rörig text till strukturerad Markdown</span>
+              </div>
+              
+              <!-- Förhandsvisning av strukturerad prompt -->
+              <div class="structured-preview" id="structuredPreview" style="display: none;">
+                <div class="structured-preview-header">
+                  <div class="structured-preview-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>Strukturerat förslag</span>
+                  </div>
+                  <div class="structured-preview-meta" id="structuredPreviewMeta"></div>
+                </div>
+                <div class="structured-preview-content markdown-content" id="structuredPreviewContent"></div>
+                <div class="structured-preview-actions">
+                  <button type="button" class="structured-preview-btn primary" id="applyStructuredPrompt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Använd detta
+                  </button>
+                  <button type="button" class="structured-preview-btn secondary" id="cancelStructuredPrompt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    Behåll original
+                  </button>
+                  <button type="button" class="structured-preview-btn tertiary" id="copyStructuredPrompt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Kopiera
+                  </button>
+                </div>
+              </div>
             </div>
             
             <!-- Profile selector -->
@@ -4642,8 +4831,19 @@ if (!anvandare) {
       const deliberateCount = document.getElementById('deliberateCount');
       const synthesizeCount = document.getElementById('synthesizeCount');
       
+      // Structure prompt elements
+      const structurePromptContainer = document.getElementById('structurePromptContainer');
+      const structurePromptBtn = document.getElementById('structurePromptBtn');
+      const structuredPreview = document.getElementById('structuredPreview');
+      const structuredPreviewContent = document.getElementById('structuredPreviewContent');
+      const structuredPreviewMeta = document.getElementById('structuredPreviewMeta');
+      const applyStructuredPrompt = document.getElementById('applyStructuredPrompt');
+      const cancelStructuredPrompt = document.getElementById('cancelStructuredPrompt');
+      const copyStructuredPrompt = document.getElementById('copyStructuredPrompt');
+      
       // Track how many models were used for current synthesis
       let modelsInCurrentSynthesis = 0;
+      let lastStructuredPrompt = ''; // Store structured prompt for copy/apply
 
       // Track failed models for retry functionality
       let failedModels = [];
@@ -5087,6 +5287,100 @@ if (!anvandare) {
       // Auto-resize prompt textarea on input
       promptEl.addEventListener('input', () => {
         autoResizeTextarea(promptEl, 80, 300);
+        
+        // Show/hide structure prompt button based on text length
+        const textLength = promptEl.value.trim().length;
+        structurePromptContainer.style.display = textLength > 150 ? 'flex' : 'none';
+        
+        // Hide preview if prompt changes significantly
+        if (structuredPreview.style.display !== 'none' && textLength < 100) {
+          structuredPreview.style.display = 'none';
+        }
+      });
+      
+      // ============================================
+      // STRUCTURE PROMPT FUNCTIONALITY
+      // ============================================
+      structurePromptBtn.addEventListener('click', async () => {
+        const promptText = promptEl.value.trim();
+        if (!promptText || promptText.length < 50) {
+          alert('Prompten är för kort att strukturera. Skriv minst 50 tecken.');
+          return;
+        }
+        
+        // Disable button and show loading
+        structurePromptBtn.disabled = true;
+        const originalBtnText = structurePromptBtn.querySelector('span').textContent;
+        structurePromptBtn.querySelector('span').textContent = '⏳ Strukturerar...';
+        
+        try {
+          const response = await fetch('/api/ai-council/structure-prompt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptText })
+          });
+          
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Kunde inte strukturera prompten');
+          }
+          
+          const data = await response.json();
+          lastStructuredPrompt = data.structuredPrompt;
+          
+          // Render the structured prompt
+          structuredPreviewContent.innerHTML = renderMarkdown(data.structuredPrompt);
+          
+          // Show metadata
+          const duration = (data.duration / 1000).toFixed(1);
+          const costSek = data.cost?.sek?.toFixed(3) || '0';
+          structuredPreviewMeta.textContent = `${duration}s · ~${costSek} kr`;
+          
+          // Show the preview
+          structuredPreview.style.display = 'block';
+          structuredPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          
+        } catch (error) {
+          console.error('Structure prompt error:', error);
+          alert('Kunde inte strukturera prompten: ' + error.message);
+        } finally {
+          structurePromptBtn.disabled = false;
+          structurePromptBtn.querySelector('span').textContent = originalBtnText;
+        }
+      });
+      
+      // Apply structured prompt
+      applyStructuredPrompt.addEventListener('click', () => {
+        if (lastStructuredPrompt) {
+          promptEl.value = lastStructuredPrompt;
+          autoResizeTextarea(promptEl, 80, 300);
+          structuredPreview.style.display = 'none';
+          structurePromptContainer.style.display = 'none'; // Hide since we now have structured text
+          promptEl.focus();
+          
+          // Save draft with new prompt
+          if (typeof saveDraftDebounced === 'function') {
+            saveDraftDebounced();
+          }
+        }
+      });
+      
+      // Cancel and hide preview
+      cancelStructuredPrompt.addEventListener('click', () => {
+        structuredPreview.style.display = 'none';
+        lastStructuredPrompt = '';
+      });
+      
+      // Copy structured prompt
+      copyStructuredPrompt.addEventListener('click', () => {
+        if (lastStructuredPrompt) {
+          navigator.clipboard.writeText(lastStructuredPrompt).then(() => {
+            const btn = copyStructuredPrompt;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopierat!';
+            setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+          });
+        }
       });
       
       // Auto-resize context textarea on input
