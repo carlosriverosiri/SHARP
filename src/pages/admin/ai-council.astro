@@ -1235,12 +1235,17 @@ if (!anvandare) {
     /* Full session modal */
     .full-session-modal .full-session-content {
       max-width: 1100px;
-      max-height: 95vh;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
     }
     .full-session-body {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
     }
     .full-session-section {
       background: var(--bg-card);
