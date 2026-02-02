@@ -1238,14 +1238,16 @@ if (!anvandare) {
       max-height: 90vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
-    .full-session-body {
+    .session-modal-body.full-session-body {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      flex: 1;
-      overflow-y: auto;
+      flex: 1 1 auto;
+      overflow-y: auto !important;
       min-height: 0;
+      padding: 1.5rem;
     }
     .full-session-section {
       background: var(--bg-card);
