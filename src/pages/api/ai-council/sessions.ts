@@ -304,6 +304,80 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 };
 
+// PATCH - Update session (e.g., rename)
+export const PATCH: APIRoute = async ({ request, cookies, url }) => {
+  const inloggad = await arInloggad(cookies);
+  if (!inloggad) {
+    return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const anvandare = await hamtaAnvandare(cookies);
+  if (!anvandare) {
+    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const supabase = getSupabase();
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const sessionId = url.searchParams.get('id');
+  if (!sessionId) {
+    return new Response(JSON.stringify({ error: 'Session-ID krävs' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
+    const body = await request.json();
+    const { name } = body;
+
+    // Only allow updating name for now
+    const updateData: Record<string, any> = {};
+    if (name !== undefined) {
+      updateData.name = name || null; // Allow clearing the name
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return new Response(JSON.stringify({ error: 'Ingen data att uppdatera' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { error } = await supabase
+      .from('ai_council_sessions')
+      .update(updateData)
+      .eq('id', sessionId)
+      .eq('user_id', anvandare.id); // Ensure user owns the session
+
+    if (error) {
+      throw error;
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error: any) {
+    console.error('Error updating session:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};
+
 // DELETE - Delete session
 export const DELETE: APIRoute = async ({ cookies, url }) => {
   const inloggad = await arInloggad(cookies);
