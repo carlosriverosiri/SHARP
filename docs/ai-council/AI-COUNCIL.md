@@ -546,6 +546,20 @@ När du jobbar i AI Council sparas ditt pågående arbete automatiskt till molne
 - **Byta dator** - Börja hemma, fortsätt på jobbet (eller vice versa)
 - **Återställa efter krasch** - Ingenting förloras om webbläsaren kraschar
 
+**Exempelflöde:**
+```
+🏢 PÅ JOBBET                          🏠 HEMMA
+─────────────                         ────────
+1. Skriver längre prompt              1. Öppnar AI Council
+2. Lägger till kontext                2. Allt är redan där!
+3. Kör alla modeller (R1)                - Prompten ✓
+4. Kör faktagranskning (R2)              - Kontexten ✓
+5. Genererar syntes                      - Alla AI-svar ✓
+6. Stänger webbläsaren                   - Deliberation ✓
+   (sparas automatiskt)                  - Syntesen ✓
+                                      3. Kan fortsätta arbeta
+```
+
 | Vad sparas | Beskrivning |
 |------------|-------------|
 | **Prompt** | Din aktuella fråga |

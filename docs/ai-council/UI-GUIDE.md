@@ -239,11 +239,26 @@ Efter varje körning visas en popup för att spara med valfritt namn.
 - ☁️ = Synkad med Supabase
 - 💾 = Endast lokal lagring
 
-### Cross-device sync
-- Pågående arbete (draft) sparas automatiskt
-- Synkas mellan datorer via Supabase
-- 7 dagars retention
-- Fortsätt där du var även om du byter dator
+### Cross-device sync (VIKTIG FUNKTION)
+
+Ditt arbete sparas automatiskt och synkas mellan datorer:
+
+| Vad sparas | Auto-sync |
+|------------|-----------|
+| Prompt | ✓ |
+| Kontext | ✓ |
+| AI-svar (R1) | ✓ |
+| Deliberation (R2) | ✓ |
+| Syntes | ✓ |
+
+**Arbetsflöde:**
+1. Jobba på kontoret → stäng webbläsaren
+2. Kom hem → öppna AI Council
+3. Allt är kvar! Fortsätt där du var.
+
+- Sparintervall: 2 sek efter ändring
+- Retention: 7 dagar
+- Fallback: localStorage (24h)
 
 ---
 
