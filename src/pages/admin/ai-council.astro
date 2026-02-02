@@ -3414,16 +3414,16 @@ if (!anvandare) {
               <!-- Single model run buttons -->
               <div class="single-model-section">
                 <div class="single-model-header">
-                  <span class="single-model-title">🔬 Kör modeller sekventiellt</span>
+                  <span class="single-model-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Kör modeller sekventiellt</span>
                   <span class="single-model-hint">(stabilt, en åt gången)</span>
                 </div>
                 <div class="sequential-controls">
                   <button type="button" id="runAllSequentialBtn" class="run-sequential-btn" title="Kör alla valda modeller i sekvens">
-                    ▶️ Kör alla i sekvens
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="icon-inline-sm"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Kör alla i sekvens
                   </button>
                   <label class="sound-toggle" title="Spela ljud när modell är klar">
                     <input type="checkbox" id="soundNotification" checked>
-                    <span>🔔 Ljud</span>
+                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> Ljud</span>
                   </label>
                 </div>
                 <div class="single-model-buttons">
@@ -3523,7 +3523,7 @@ if (!anvandare) {
                 <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Försök igen (misslyckade)</span>
               </button>
               <button type="button" id="expandModelsBtn" class="expand-btn" style="display: none;" title="Lägg till fler modeller till befintliga svar">
-                <span>➕ Lägg till modeller</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Lägg till modeller</span>
               </button>
             </div>
             
@@ -3532,7 +3532,7 @@ if (!anvandare) {
               <div class="next-step-header">Välj nästa steg</div>
               <div class="next-step-grid">
                 <button type="button" id="addModelsCardBtn" class="next-step-card add-models-card" style="display: none;">
-                  <div class="next-step-card-icon">➕</div>
+                  <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
                   <div class="next-step-card-title">Lägg till modeller</div>
                   <div class="next-step-card-desc">Kör fler AI:er med samma fråga utan att köra om de som redan svarat</div>
                   <div class="next-step-card-meta">
@@ -3541,21 +3541,21 @@ if (!anvandare) {
                   </div>
                 </button>
                 <button type="button" id="deliberateNowBtn" class="next-step-card deliberate-card">
-                  <div class="next-step-card-icon">🔬</div>
+                  <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></div>
                   <div class="next-step-card-title">Faktagranskning</div>
                   <div class="next-step-card-desc">Alla AI:er granskar varandras svar och korrigerar fel</div>
                   <div class="next-step-card-meta">
                     <span class="next-step-card-count" id="deliberateCount">0 svar</span>
-                    <span class="next-step-card-time">⏱️ ~60 sek</span>
+                    <span class="next-step-card-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~60 sek</span>
                   </div>
                 </button>
                 <button type="button" id="synthesizeNowBtn" class="next-step-card synthesize-card">
-                  <div class="next-step-card-icon">💡</div>
+                  <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></div>
                   <div class="next-step-card-title">Syntes</div>
                   <div class="next-step-card-desc">En AI sammanfattar alla svar till en slutsats</div>
                   <div class="next-step-card-meta">
                     <span class="next-step-card-count" id="synthesizeCount">0 svar</span>
-                    <span class="next-step-card-time">⏱️ ~15 sek</span>
+                    <span class="next-step-card-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~15 sek</span>
                   </div>
                 </button>
               </div>
@@ -3564,7 +3564,7 @@ if (!anvandare) {
             <!-- Single-model deliberation buttons -->
             <div id="singleDeliberationSection" class="single-model-section" style="display: none;">
               <div class="single-model-header">
-                <span class="single-model-title">🔬 Kör deliberation en modell i taget</span>
+                <span class="single-model-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Kör deliberation en modell i taget</span>
                 <span class="single-model-hint">(stabilt, en åt gången)</span>
               </div>
               <div class="single-model-buttons">
@@ -4098,6 +4098,13 @@ if (!anvandare) {
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🚀 AI Council script starting...');
       
+      // Global SVG icons for consistent design
+      const svgIcons = {
+        lightbulb: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>',
+        star: '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+        refresh: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>'
+      };
+      
       // Configure marked
       if (typeof marked !== 'undefined') {
         marked.setOptions({ breaks: true, gfm: true });
@@ -4466,7 +4473,7 @@ if (!anvandare) {
         // Reset synthesize card text
         synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Syntes';
         synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
-        synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '💡';
+        synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.lightbulb;
         const singleDelibSection = document.getElementById('singleDeliberationSection');
         if (singleDelibSection) singleDelibSection.style.display = 'none';
         // Reset single deliberation buttons
@@ -6461,17 +6468,17 @@ if (!anvandare) {
             synthesizeNowBtn.classList.remove('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Uppdatera syntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = `Kör ny syntes med alla ${successCount} svar (${successCount - modelsInCurrentSynthesis} nya)`;
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🔄';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.refresh;
           } else if (hasDeliberation) {
             synthesizeNowBtn.classList.add('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.star;
           } else {
             synthesizeNowBtn.classList.remove('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Syntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '💡';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.lightbulb;
           }
           
           // Also show single-model deliberation section
@@ -6664,7 +6671,7 @@ if (!anvandare) {
             synthesizeNowBtn.classList.add('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.star;
             synthesizeCount.textContent = `${Object.keys(collectedResponses).length}+R2 svar`;
             
             // Update workflow progress
@@ -6787,7 +6794,7 @@ if (!anvandare) {
                 synthesizeNowBtn.classList.add('supersynthesis');
                 synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
                 synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
-                synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
+                synthesizeNowBtn.querySelector('.next-step-card-icon').innerHTML = svgIcons.star;
                 synthesizeCount.textContent = `${r1Count}+R2 svar`;
                 setStatus('✓ All faktagranskning klar! Kör supersyntes.', true);
               } else {
