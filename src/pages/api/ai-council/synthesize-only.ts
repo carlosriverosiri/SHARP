@@ -76,7 +76,24 @@ Skapa en SYNTES som:
 4. Använder markdown för formatering
 5. Är på svenska
 
-VIKTIGT: Skriv ENDAST syntesen, ingen meta-kommentar om processen.`;
+## Avsluta ALLTID med en "Cursor Implementation Guide":
+
+\`\`\`markdown
+## Cursor Implementation Guide
+
+### Filer att skapa/ändra
+- [ ] fil1.ts - Beskrivning av ändring
+- [ ] fil2.ts - Beskrivning av ändring
+
+### Steg-för-steg
+1. Första steget...
+2. Andra steget...
+
+### Kodexempel (om relevant)
+[Inkludera konkreta kodexempel som kan kopieras direkt]
+\`\`\`
+
+VIKTIGT: Skriv ENDAST syntesen och Implementation Guide, ingen meta-kommentar om processen.`;
 }
 
 // Build super-synthesis prompt (after deliberation)
@@ -112,7 +129,24 @@ ${r.response}
 3. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
 4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
 
-Skriv din supersyntes på svenska. Var extra noggrann med att lyfta fram vad som korrigerades mellan rundorna.`;
+## Avsluta ALLTID med en "Cursor Implementation Guide":
+
+\`\`\`markdown
+## Cursor Implementation Guide
+
+### Filer att skapa/ändra
+- [ ] fil1.ts - Beskrivning av ändring
+- [ ] fil2.ts - Beskrivning av ändring
+
+### Steg-för-steg
+1. Första steget...
+2. Andra steget...
+
+### Kodexempel (om relevant)
+[Inkludera konkreta kodexempel som kan kopieras direkt]
+\`\`\`
+
+Skriv din supersyntes på svenska. Var extra noggrann med att lyfta fram vad som korrigerades mellan rundorna. Implementation Guide ska vara praktisk och direkt användbar i Cursor.`;
 }
 
 // Synthesis functions for each model
