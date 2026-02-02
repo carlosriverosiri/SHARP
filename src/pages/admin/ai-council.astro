@@ -1314,6 +1314,105 @@ if (!anvandare) {
     .full-session-response-item.expanded .full-session-response-expand {
       transform: rotate(180deg);
     }
+    
+    /* Delete confirmation modal */
+    .delete-confirm-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .delete-confirm-modal.open { display: flex; }
+    .delete-confirm-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 380px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: deleteModalIn 0.2s ease-out;
+    }
+    @keyframes deleteModalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .delete-confirm-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, #FEE2E2, #FECACA);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #DC2626;
+    }
+    .delete-confirm-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .delete-confirm-info {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .delete-confirm-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      word-break: break-word;
+    }
+    .delete-confirm-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .delete-confirm-warning {
+      font-size: 0.8rem;
+      color: #DC2626;
+      margin-bottom: 1.5rem;
+    }
+    .delete-confirm-buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .delete-confirm-btn {
+      flex: 1;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .delete-confirm-cancel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .delete-confirm-cancel:hover {
+      background: var(--bg-hover);
+    }
+    .delete-confirm-delete {
+      background: #DC2626;
+      border: 1px solid #DC2626;
+      color: white;
+    }
+    .delete-confirm-delete:hover {
+      background: #B91C1C;
+      border-color: #B91C1C;
+    }
     .session-modal-btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
     .session-modal-btn.primary:hover { background: var(--color-primary-hover); }
     
@@ -4220,6 +4319,30 @@ if (!anvandare) {
     </div>
   </div>
 
+  <!-- Delete confirmation modal -->
+  <div id="deleteConfirmModal" class="delete-confirm-modal">
+    <div class="delete-confirm-content">
+      <div class="delete-confirm-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <div class="delete-confirm-title">Radera session?</div>
+      <div class="delete-confirm-info">
+        <div id="deleteConfirmName" class="delete-confirm-name"></div>
+        <div id="deleteConfirmDate" class="delete-confirm-date"></div>
+      </div>
+      <div class="delete-confirm-warning">Denna åtgärd kan inte ångras.</div>
+      <div class="delete-confirm-buttons">
+        <button type="button" class="delete-confirm-btn delete-confirm-cancel" id="deleteConfirmCancel">Avbryt</button>
+        <button type="button" class="delete-confirm-btn delete-confirm-delete" id="deleteConfirmDelete">Radera</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Project context menu -->
   <div id="projectContextMenu" class="project-context-menu">
     <button class="context-menu-item" data-action="edit">
@@ -5643,13 +5766,48 @@ if (!anvandare) {
         }
       });
       
-      async function deleteSession(id) {
-        if (!userIsLoggedIn || !useSupabase) {
-          alert('Du måste vara inloggad för att radera sessioner.');
-          return;
-        }
+      // Delete confirmation modal
+      const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+      const deleteConfirmName = document.getElementById('deleteConfirmName');
+      const deleteConfirmDate = document.getElementById('deleteConfirmDate');
+      let pendingDeleteId = null;
+      
+      function showDeleteConfirm(session) {
+        pendingDeleteId = session.id;
         
-        if (!confirm('Vill du radera denna session permanent?')) return;
+        // Session name or prompt preview
+        const name = session.name || (session.prompt ? session.prompt.substring(0, 60) + (session.prompt.length > 60 ? '...' : '') : 'Namnlös session');
+        deleteConfirmName.textContent = name;
+        
+        // Format date nicely
+        const date = new Date(session.created_at);
+        const dateStr = date.toLocaleString('sv-SE', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        deleteConfirmDate.textContent = dateStr;
+        
+        deleteConfirmModal.classList.add('open');
+      }
+      
+      function closeDeleteConfirm() {
+        deleteConfirmModal.classList.remove('open');
+        pendingDeleteId = null;
+      }
+      
+      document.getElementById('deleteConfirmCancel').addEventListener('click', closeDeleteConfirm);
+      deleteConfirmModal.addEventListener('click', (e) => { if (e.target === deleteConfirmModal) closeDeleteConfirm(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && deleteConfirmModal.classList.contains('open')) closeDeleteConfirm(); });
+      
+      document.getElementById('deleteConfirmDelete').addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        
+        const id = pendingDeleteId;
+        closeDeleteConfirm();
         
         try {
           const res = await fetch('/api/ai-council/sessions?id=' + id, { 
@@ -5666,6 +5824,19 @@ if (!anvandare) {
         } catch (e) {
           console.error('Delete error:', e);
           alert('Kunde inte radera sessionen: ' + e.message);
+        }
+      });
+      
+      async function deleteSession(id) {
+        if (!userIsLoggedIn || !useSupabase) {
+          alert('Du måste vara inloggad för att radera sessioner.');
+          return;
+        }
+        
+        // Find the session to show details in confirmation
+        const session = sessions.find(s => s.id === id);
+        if (session) {
+          showDeleteConfirm(session);
         }
       }
       
