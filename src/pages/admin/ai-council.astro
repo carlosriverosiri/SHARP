@@ -909,9 +909,28 @@ if (!anvandare) {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.6; }
     }
-    .note-item-header { display: flex; align-items: center; margin-bottom: 0.5rem; flex-wrap: nowrap; gap: 0.5rem; }
-    .note-item-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
-    .note-item-actions { display: flex; gap: 0.25rem; flex-shrink: 0; margin-left: auto; }
+    .note-item-header { 
+      display: flex !important; 
+      align-items: center !important; 
+      justify-content: space-between !important;
+      margin-bottom: 0.5rem; 
+      flex-wrap: nowrap !important; 
+      gap: 0.5rem; 
+      position: relative;
+    }
+    .note-item-time { 
+      font-size: 0.75rem; 
+      color: var(--text-muted); 
+      font-weight: 500; 
+      white-space: nowrap; 
+      flex-shrink: 0; 
+    }
+    .note-item-actions { 
+      display: inline-flex !important; 
+      gap: 0.25rem; 
+      flex-shrink: 0; 
+      margin-left: auto !important;
+    }
     .note-item-btn {
       background: transparent;
       border: none;
