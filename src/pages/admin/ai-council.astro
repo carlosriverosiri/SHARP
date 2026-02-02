@@ -177,6 +177,14 @@ if (!anvandare) {
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+    /* Inline SVG-ikoner */
+    .icon-inline {
+      vertical-align: -2px;
+      margin-right: 4px;
+    }
+    .icon-inline-sm {
+      vertical-align: -2px;
+    }
     .project-list {
       flex: 1;
       overflow-y: auto;
@@ -3003,7 +3011,7 @@ if (!anvandare) {
       </div>
       
       <div class="project-section">
-        <div class="project-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.89A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.89A2 2 0 0 0 5 15.24z"></path></svg>Senaste projekt</div>
+        <div class="project-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.89A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.89A2 2 0 0 0 5 15.24z"></path></svg>Senaste projekt</div>
       </div>
       
       <div class="project-list" id="projectList">
@@ -3243,7 +3251,7 @@ if (!anvandare) {
                     <div class="profile-desc">~3-5 sek</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Snabb <span class="profile-tooltip-tag turbo">STANDARD</span></div>
+                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Snabb <span class="profile-tooltip-tag turbo">STANDARD</span></div>
                     <div class="profile-tooltip-why">
                       Blixtsnabbt svar med Gemini. Perfekt för enkla frågor och när du inte vill vänta.
                       Undviker Netlify timeout-problem.
@@ -3262,7 +3270,7 @@ if (!anvandare) {
                     <div class="profile-desc">Turbo + kontroll</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Patientfrågor <span class="profile-tooltip-tag turbo">TURBO</span></div>
+                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Patientfrågor <span class="profile-tooltip-tag turbo">TURBO</span></div>
                     <div class="profile-tooltip-why">
                       Optimerad för telefonsamtal med patienter. Blixtsnabb respons när du 
                       behöver svara direkt. Två modeller kontrollerar varandra för säkerhet.
@@ -3281,7 +3289,7 @@ if (!anvandare) {
                     <div class="profile-desc">Alla + Deliberation</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px;"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> Kodning (Premium)</div>
+                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> Kodning (Premium)</div>
                     <div class="profile-tooltip-why">
                       Maximal kodgranskning med alla 4 modeller + deliberation.
                       Perfekt för arkitekturbeslut, säkerhet, prestanda och läsbarhet.
@@ -3301,7 +3309,7 @@ if (!anvandare) {
                     <div class="profile-desc">3 modeller + o1</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px;"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg> Vetenskap</div>
+                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg> Vetenskap</div>
                     <div class="profile-tooltip-why">
                       Gemini (stort kontext), Claude (analys), Grok (referenser).
                       OpenAI o1 granskar och syntetiserar med djup resonering.
@@ -3320,7 +3328,7 @@ if (!anvandare) {
                     <div class="profile-desc">o1 + Claude + Grok</div>
                   </div>
                   <div class="profile-tooltip">
-                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Strategi & Beslut</div>
+                    <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Strategi & Beslut</div>
                     <div class="profile-tooltip-why">
                       För verksamhetsbeslut, investeringar och organisationsfrågor.
                       o1 resonerar, Claude strukturerar, Grok ger bred kontext.
@@ -3455,11 +3463,11 @@ if (!anvandare) {
                 </label>
               </div>
               <button type="button" id="runBtn" class="run-btn">
-                <span class="btn-text"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Kör AI Council</span>
+                <span class="btn-text"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Kör AI Council</span>
                 <span class="spinner"></span>
               </button>
               <button type="button" id="retryFailedBtn" class="retry-btn" style="display: none;" title="Kör endast modeller som misslyckades">
-                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Försök igen (misslyckade)</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Försök igen (misslyckade)</span>
               </button>
               <button type="button" id="expandModelsBtn" class="expand-btn" style="display: none;" title="Lägg till fler modeller till befintliga svar">
                 <span>➕ Lägg till modeller</span>
@@ -3661,7 +3669,7 @@ if (!anvandare) {
             <div class="workflow-info">
               <span id="workflowStatus">Väntar på svar...</span>
               <button type="button" id="resetWorkflowBtn" class="reset-workflow-btn" title="Starta om arbetsflödet">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Börja om
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Börja om
               </button>
             </div>
           </div>
@@ -3884,7 +3892,7 @@ if (!anvandare) {
         </div>
         <div class="notes-actions">
           <button type="button" class="notes-btn" id="exportNotes">📥 Export</button>
-          <button type="button" class="notes-btn danger" id="clearNotes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Rensa</button>
+          <button type="button" class="notes-btn danger" id="clearNotes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Rensa</button>
         </div>
       </div>
     </aside>
@@ -3925,7 +3933,7 @@ if (!anvandare) {
       </div>
       <div class="save-prompt-footer">
         <button type="button" class="save-prompt-btn skip" id="skipSaveBtn">Hoppa över</button>
-        <button type="button" class="save-prompt-btn save" id="confirmSaveBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Spara session</button>
+        <button type="button" class="save-prompt-btn save" id="confirmSaveBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Spara session</button>
       </div>
     </div>
   </div>
