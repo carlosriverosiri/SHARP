@@ -148,14 +148,37 @@ När syntesen är klar visas:
 │                 ingår (med färgade prickar)  användes           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  [Syntesens innehåll visas här...]                             │
+│  📊 KONSENSUSANALYS                                             │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                    │
+│  Överensstämmelse: HÖG - 3/4 modeller överens                  │
+│                                                                 │
+│  ✅ Alla modeller överens om:                                   │
+│  • [punkt 1]                                                    │
+│  • [punkt 2]                                                    │
+│                                                                 │
+│  ⚠️ Konflikter/skillnader:                                      │
+│  • [vad de är oeniga om]                                        │
+│                                                                 │
+│  💡 Unika insikter (endast en modell):                          │
+│  • [modell]: [insikt] ← Verifiera denna!                        │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                    │
+│                                                                 │
+│  [Resten av syntesen...]                                        │
 │                                                                 │
 ├─────────────────────────────────────────────────────────────────┤
 │  [📋 Kopiera] [📥 Export .md] [🔖 Spara] [→ KB]  12.3s · $0.02 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-> **Supersyntes** (efter faktagranskning) visas med ⭐-ikon och gul färg.
+> **Supersyntes** (efter faktagranskning) visas med ⭐-ikon och gul färg, och inkluderar även lösta/olösta konflikter samt förkastade påståenden.
+
+### Konsensusanalys (NY i v3.7)
+
+Varje syntes börjar nu med en konsensusanalys som visar:
+- **Överensstämmelse** (HÖG/MEDEL/LÅG)
+- **Vad alla är överens om** - säkra påståenden
+- **Konflikter** - var modellerna skiljer sig
+- **Unika insikter** - flaggas med "Verifiera!" (hög hallucinationsrisk)
 
 **Modell-prickar:**
 - 🟢 Gemini (grön)

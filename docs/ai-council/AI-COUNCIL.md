@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-02-02 (v3.6 - Cross-device sync & session-varning)
+**Senast uppdaterad:** 2026-02-02 (v3.7 - Konsensusanalys & Riktad deliberation)
 
 ---
 
@@ -57,6 +57,9 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Konsensusanalys** (v3.7) - Visar överensstämmelse och konflikter i varje syntes
+- [x] **Riktad deliberation** (v3.7) - Strukturerad konfliktanalys med kategorier (MOTSÄGELSE, UNIK_INSIKT, etc.)
+- [x] **Förkastade påståenden** (v3.7) - Hallucinationer markeras explicit i supersyntes
 - [x] **Lägg till modeller** (v3.6) - Kör fler AI:er efter syntes utan att köra om befintliga
 - [x] **Syntes-metadata** (v3.6) - Visa vilka modeller och profil som användes i syntesrubriken
 - [x] **Cross-device draft sync** (v3.6) - Pågående arbete sparas automatiskt och synkas mellan datorer (7 dagars retention)
@@ -166,7 +169,7 @@ Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 
 ### Deliberation / Faktagranskning (Runda 2)
 
-**Valfri funktion** där modellerna granskar varandras svar innan slutsyntes.
+**Valfri funktion** där modellerna granskar varandras svar med **strukturerad konfliktanalys** innan slutsyntes.
 
 > **UI-namn:** I gränssnittet kallas denna funktion "🔬 Faktagranskning" för att vara tydligare på svenska.
 
@@ -177,19 +180,52 @@ Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 │     │          │          │         │                       │
 │     └──────────┴──────────┴─────────┘                       │
 │                    ▼                                        │
-│  RUNDA 2: Granskning (var modell ser de andras svar)        │
-│  "Finns fel? Vad missades? Ge förbättrat svar."             │
+│  RUNDA 2: Riktad konfliktanalys (NY i v3.7!)                │
+│  Varje modell identifierar och kategoriserar konflikter:    │
+│  • MOTSÄGELSE - modellerna säger olika saker                │
+│  • UNIK_INSIKT - bara en modell nämner (hallucinationsrisk) │
+│  • UTAN_KÄLLA - påstående utan referens                     │
+│  • MÖJLIG_HALLUCINATION - verkar påhittat                   │
 │     │          │          │         │                       │
 │     └──────────┴──────────┴─────────┘                       │
 │                    ▼                                        │
-│  SUPERSYNTES: Baserad på båda rundorna                      │
-│  "Vad korrigerades? Vad är konsensus nu?"                   │
+│  SUPERSYNTES med KONSENSUSANALYS:                           │
+│  • Lösta konflikter (med säkerhetsgrad)                     │
+│  • Olösta konflikter (kräver manuell verifiering)           │
+│  • Förkastade påståenden (hallucinationer)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
+**Nytt i v3.7 - Strukturerad konfliktrapport:**
+```
+📊 KONSENSUSANALYS (efter riktad faktagranskning)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: [HÖG/MEDEL/LÅG]
+
+🔍 Identifierade konflikter i Runda 2:
+• MOTSÄGELSER: X st
+• UNIKA INSIKTER (hallucinationsrisk): Y st  
+
+🔄 Lösta konflikter:
+• [konflikt] → [lösning] (säkerhet: HÖG/MEDEL/LÅG)
+
+⚠️ OLÖSTA konflikter (kräver manuell verifiering):
+• [konflikt som modellerna inte kunde lösa]
+
+✅ Slutgiltig konsensus:
+• [punkt 1]
+• [punkt 2]
+
+❌ Förkastade påståenden (hallucinationer):
+• [modell]: "[påstående]" - FELAKTIGT pga [anledning]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
 **Fördelar:**
+- **Kategoriserade konflikter** - vet exakt vilken typ av problem
+- **Löst/olöst** - tydlig uppföljning av vad som behöver verifieras
 - Modeller kan felsöka varandra (särskilt bra för vetenskaplig litteratur)
-- Fel och hallucinationer upptäcks oftare
+- Hallucinationer markeras explicit som förkastade
 - Mer genomarbetade svar
 
 **Nackdelar:**
@@ -953,6 +989,48 @@ npm install bottleneck
 ---
 
 ## Versionshistorik
+
+### v3.7 (2026-02-02) - Konsensusanalys & Riktad Deliberation
+
+**Nyhet:** Anti-hallucination-system med strukturerad konfliktanalys.
+
+**Konsensusanalys i Syntes:**
+- 📊 **Konsensusanalys-box** - Visar överensstämmelse (HÖG/MEDEL/LÅG) i början av varje syntes
+- ✅ **Alla modeller överens** - Listar punkter där alla håller med
+- ⚠️ **Konflikter/skillnader** - Visar var modellerna är oeniga
+- 💡 **Unika insikter** - Flaggar påståenden från endast en modell med "Verifiera denna!"
+
+**Riktad Deliberation (Runda 2):**
+- 🔍 **Strukturerad konfliktanalys** - Modellerna kategoriserar problem:
+  - `MOTSÄGELSE` - Modeller säger olika saker
+  - `UNIK_INSIKT` - Bara en modell nämner (hög hallucinationsrisk)
+  - `UTAN_KÄLLA` - Påstående utan referens
+  - `MÖJLIG_HALLUCINATION` - Verkar påhittat
+- 🔄 **Konfliktlösning** - Varje modell föreslår lösning med säkerhetsgrad
+- ❌ **Förkastade påståenden** - Hallucinationer markeras explicit
+
+**Supersyntes:**
+- Extraherar alla konfliktblock från Runda 2
+- Visar lösta vs olösta konflikter
+- Listar förkastade påståenden separat
+
+**Tekniskt:**
+- Uppdaterad `buildDeliberationPrompt()` med konflikttyper
+- Uppdaterad `buildSynthesisPrompt()` med konsensusanalys
+- Uppdaterad `buildSuperSynthesisPrompt()` med konfliktextraktion
+
+---
+
+### v3.6 (2026-02-01) - Cross-device sync & UI-förbättringar
+
+**Nyhet:** Pågående arbete synkas mellan datorer.
+
+- 🔄 **Cross-device draft sync** - Fortsätt där du var på annan dator
+- ⚠️ **Session-utgångsvarning** - Banner när sessionen gått ut (7 dagar)
+- ➕ **Lägg till modeller** - Kör fler AI:er utan att köra om befintliga
+- 📊 **Syntes-metadata** - Visa vilka modeller och profil som användes
+
+---
 
 ### v3.5 (2026-01-30) - Nästa steg-kort & Historik
 

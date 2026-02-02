@@ -27,11 +27,11 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v3.4</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v3.7</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor — 
-            <span class="text-indigo-400">nu med diktering och fullständig mobilanpassning</span>
+            <span class="text-indigo-400">nu med konsensusanalys och riktad konfliktgranskning</span>
           </p>
         </div>
       </div>
@@ -288,10 +288,10 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               Avancerad funktion
             </span>
             <h2 class="text-3xl font-bold text-white mb-4">
-              Deliberation Mode
+              Riktad Deliberation
             </h2>
             <p class="text-slate-400 max-w-xl mx-auto">
-              Runda 2: Där AI-modellerna granskar varandras svar och korrigerar fel innan slutsyntesen.
+              Runda 2: AI-modellerna utför <strong class="text-orange-400">strukturerad konfliktanalys</strong> och kategoriserar problem efter typ.
             </p>
           </div>
           
@@ -304,25 +304,64 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
             
-            <div class="bg-slate-700/30 border border-dashed border-slate-600 rounded-xl px-8 py-4 text-slate-400">
-              <span class="font-semibold text-slate-300">Granskning:</span> "Hitta fel i de andras svar"
+            <div class="bg-orange-500/10 border border-orange-500/30 rounded-xl px-8 py-4 text-orange-300">
+              <span class="font-semibold text-orange-400">Runda 2 - Konfliktanalys:</span>
+              <div class="grid grid-cols-2 gap-2 mt-2 text-xs">
+                <span class="bg-red-500/20 px-2 py-1 rounded">MOTSÄGELSE</span>
+                <span class="bg-amber-500/20 px-2 py-1 rounded">UNIK_INSIKT</span>
+                <span class="bg-slate-500/20 px-2 py-1 rounded">UTAN_KÄLLA</span>
+                <span class="bg-purple-500/20 px-2 py-1 rounded">HALLUCINATION</span>
+              </div>
             </div>
             
             <svg class="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
             
-            <div class="bg-emerald-500/10 border-2 border-emerald-500/50 rounded-xl px-8 py-4 text-emerald-400 font-bold">
-              SUPERSYNTES
+            <div class="bg-emerald-500/10 border-2 border-emerald-500/50 rounded-xl px-8 py-4 text-center">
+              <div class="text-emerald-400 font-bold mb-1">SUPERSYNTES</div>
+              <div class="text-slate-400 text-xs">med konsensusanalys + lösta/olösta konflikter</div>
             </div>
           </div>
           
-          <div class="mt-12 grid md:grid-cols-2 gap-6">
+          <!-- New: Consensus analysis box -->
+          <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl overflow-hidden">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-700 bg-slate-800/50">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-slate-500 text-xs font-mono">konsensusanalys.exempel</span>
+            </div>
+            <pre class="p-4 text-xs text-slate-300 font-mono overflow-x-auto"><code>📊 KONSENSUSANALYS (efter riktad faktagranskning)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: HÖG - 3/4 modeller överens
+
+🔍 Identifierade konflikter i Runda 2:
+• MOTSÄGELSER: 1 st
+• UNIKA INSIKTER (hallucinationsrisk): 2 st  
+
+🔄 Lösta konflikter:
+• Prissättning → 8-20M€ (säkerhet: HÖG)
+
+⚠️ OLÖSTA konflikter:
+• ROI-uppskattning varierar kraftigt
+
+✅ Slutgiltig konsensus:
+• Använd lokala mäklare
+• Investera i bevattning dag 1
+
+❌ Förkastade påståenden:
+• Claude: "2-4M€ för 100k flaskor" - FELAKTIGT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code></pre>
+          </div>
+          
+          <div class="mt-8 grid md:grid-cols-2 gap-6">
             <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
               <h4 class="text-emerald-400 font-semibold mb-3">✅ Fördelar</h4>
               <ul class="text-slate-400 text-sm space-y-2">
-                <li>• Modeller felsöker varandra</li>
-                <li>• Hallucinationer upptäcks oftare</li>
+                <li>• <strong class="text-white">Kategoriserade konflikter</strong> - vet exakt vad som är osäkert</li>
+                <li>• <strong class="text-white">Lösta vs olösta</strong> - tydlig uppföljning</li>
+                <li>• Hallucinationer upptäcks och förkastas explicit</li>
                 <li>• Bra för vetenskaplig litteratur</li>
               </ul>
             </div>
