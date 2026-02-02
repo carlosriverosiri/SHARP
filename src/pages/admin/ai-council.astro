@@ -6110,8 +6110,9 @@ if (!anvandare) {
       
       document.getElementById('deleteSession').addEventListener('click', () => {
         if (currentModalSession) {
+          const sessionToDelete = currentModalSession;
           closeSessionModal();
-          showDeleteConfirm(currentModalSession);
+          showDeleteConfirm(sessionToDelete);
         }
       });
       
@@ -6297,8 +6298,9 @@ if (!anvandare) {
       
       document.getElementById('deleteFullSession').addEventListener('click', () => {
         if (currentModalSession) {
+          const sessionToDelete = currentModalSession;
           closeFullSessionModal();
-          showDeleteConfirm(currentModalSession);
+          showDeleteConfirm(sessionToDelete);
         }
       });
       
