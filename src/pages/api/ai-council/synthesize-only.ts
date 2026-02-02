@@ -145,33 +145,46 @@ ${r.response}
 
 ## Din uppgift (Supersyntes):
 
-**BÖRJA ALLTID med en Konsensusanalys:**
+**STEG 1: Extrahera konfliktdata från Runda 2**
+
+Runda 2-svaren innehåller strukturerade block med:
+- \`\`\`konflikt\`\`\` - identifierade konflikter (MOTSÄGELSE, UNIK_INSIKT, UTAN_KÄLLA, MÖJLIG_HALLUCINATION)
+- \`\`\`lösning\`\`\` - föreslagna lösningar med säkerhetsgrad
+
+**Samla alla unika konflikter och lösningar från alla modellers Runda 2-svar.**
+
+**STEG 2: Skapa Konsensusanalys**
 
 \`\`\`
-📊 KONSENSUSANALYS (efter faktagranskning)
+📊 KONSENSUSANALYS (efter riktad faktagranskning)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Överensstämmelse: [HÖG/MEDEL/LÅG] - [kort förklaring]
 
-🔄 Korrigeringar i Runda 2:
-• [vad som korrigerades och av vem]
+🔍 Identifierade konflikter i Runda 2:
+• MOTSÄGELSER: [antal] st
+• UNIKA INSIKTER (hallucinationsrisk): [antal] st  
+• PÅSTÅENDEN UTAN KÄLLA: [antal] st
 
-✅ Slutgiltig konsensus:
+🔄 Lösta konflikter:
+• [konflikt] → [lösning] (säkerhet: HÖG/MEDEL/LÅG)
+
+⚠️ OLÖSTA konflikter (kräver manuell verifiering):
+• [konflikt som modellerna inte kunde lösa]
+
+✅ Slutgiltig konsensus (alla modeller överens efter granskning):
 • [punkt 1]
 • [punkt 2]
 
-⚠️ Kvarstående osäkerheter:
-• [eventuella kvarvarande konflikter]
-
-💡 Stärkta/försvagade påståenden:
-• ✓ Stärkt: [påstående som fått stöd av flera efter granskning]
-• ✗ Försvagat: [påstående som ifrågasatts]
+❌ Förkastade påståenden (hallucinationer/fel som korrigerats):
+• [modell]: "[påstående]" - FELAKTIGT pga [anledning]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \`\`\`
 
-**Sedan skapa supersyntesen:**
-1. **Identifiera korrigeringar**: Vilka fel upptäcktes i Runda 2? Vad korrigerades?
-2. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
-3. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
+**STEG 3: Skapa supersyntesen**
+1. **Basera på konsensus**: Inkludera ENDAST påståenden som fått stöd efter granskning
+2. **Markera osäkerheter**: Använd ⚠️ för saker som inte kunde verifieras
+3. **Exkludera hallucinationer**: Utelämna förkastade påståenden helt
+4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation
 
 ## Avsluta ALLTID med en "Cursor Implementation Guide":
 

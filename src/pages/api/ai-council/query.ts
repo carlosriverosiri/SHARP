@@ -565,13 +565,14 @@ Skriv ditt förbättrade svar på svenska. Var konkret och specifik.`;
 // Build synthesis prompt
 function buildSynthesisPrompt(originalPrompt: string, responses: AIResponse[]): string {
   const validResponses = responses.filter(r => !r.error && r.response);
+  const modelCount = validResponses.length;
   
   return `Du är en senior teknisk expert och arkitekt. Din uppgift är att agera som "The Judge" och syntetisera följande AI-svar till en slutgiltig, bäst-i-klassen rekommendation.
 
 ## Originalfråga:
 ${originalPrompt}
 
-## Svar från olika AI-modeller:
+## Svar från olika AI-modeller (${modelCount} st):
 
 ${validResponses.map(r => `### ${r.provider} (${r.model}):
 ${r.response}
@@ -579,10 +580,29 @@ ${r.response}
 
 ## Din uppgift:
 
-1. **Identifiera konsensus**: Vad är alla modeller överens om?
-2. **Analysera skillnader**: Var skiljer sig åsikterna? Varför?
-3. **Väg för- och nackdelar**: Vilka förslag är starkast och varför?
-4. **Slutgiltig rekommendation**: Ge en konkret, actionbar rekommendation eller kodlösning som tar det bästa från varje förslag.
+**BÖRJA ALLTID med en Konsensusanalys:**
+
+\`\`\`
+📊 KONSENSUSANALYS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: [HÖG/MEDEL/LÅG] - [kort förklaring]
+
+✅ Alla modeller överens om:
+• [punkt 1]
+• [punkt 2]
+
+⚠️ Konflikter/skillnader:
+• [vad de är oeniga om och vilka modeller]
+
+💡 Unika insikter (endast en modell):
+• [modell]: [insikt] ← Verifiera denna!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\`\`\`
+
+**Sedan:**
+1. **Väg för- och nackdelar**: Vilka förslag är starkast och varför?
+2. **Markera osäkerheter**: Om något ENDAST kommer från en modell, flagga det
+3. **Slutgiltig rekommendation**: Ge en konkret, actionbar rekommendation som tar det bästa från varje förslag.
 
 ## 🖥️ Cursor-sektion (för AI-assisterad implementation)
 
@@ -638,7 +658,7 @@ ${validRound1.map(r => `### ${r.provider} (${r.model}):
 ${r.response}
 `).join('\n---\n\n')}
 
-## RUNDA 2 - Granskning och förbättring:
+## RUNDA 2 - Riktad granskning och konfliktlösning:
 
 ${validRound2.map(r => `### ${r.provider} (${r.model}) - Förbättrat svar:
 ${r.response}
@@ -646,9 +666,45 @@ ${r.response}
 
 ## Din uppgift (Supersyntes):
 
-1. **Identifiera korrigeringar**: Vilka fel upptäcktes i Runda 2? Vad korrigerades?
-2. **Analysera konsensus**: Vad är modellerna nu överens om efter granskning?
-3. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
+**STEG 1: Extrahera konfliktdata från Runda 2**
+
+Runda 2-svaren innehåller strukturerade block med:
+- \`\`\`konflikt\`\`\` - identifierade konflikter (MOTSÄGELSE, UNIK_INSIKT, UTAN_KÄLLA, MÖJLIG_HALLUCINATION)
+- \`\`\`lösning\`\`\` - föreslagna lösningar med säkerhetsgrad
+
+**Samla alla unika konflikter och lösningar från alla modellers Runda 2-svar.**
+
+**STEG 2: Skapa Konsensusanalys**
+
+\`\`\`
+📊 KONSENSUSANALYS (efter riktad faktagranskning)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: [HÖG/MEDEL/LÅG] - [kort förklaring]
+
+🔍 Identifierade konflikter i Runda 2:
+• MOTSÄGELSER: [antal] st
+• UNIKA INSIKTER (hallucinationsrisk): [antal] st  
+• PÅSTÅENDEN UTAN KÄLLA: [antal] st
+
+🔄 Lösta konflikter:
+• [konflikt] → [lösning] (säkerhet: HÖG/MEDEL/LÅG)
+
+⚠️ OLÖSTA konflikter (kräver manuell verifiering):
+• [konflikt som modellerna inte kunde lösa]
+
+✅ Slutgiltig konsensus (alla modeller överens efter granskning):
+• [punkt 1]
+• [punkt 2]
+
+❌ Förkastade påståenden (hallucinationer/fel som korrigerats):
+• [modell]: "[påstående]" - FELAKTIGT pga [anledning]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\`\`\`
+
+**STEG 3: Skapa supersyntesen**
+1. **Basera på konsensus**: Inkludera ENDAST påståenden som fått stöd efter granskning
+2. **Markera osäkerheter**: Använd ⚠️ för saker som inte kunde verifieras
+3. **Exkludera hallucinationer**: Utelämna förkastade påståenden helt
 4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
 
 ## 🖥️ Cursor-sektion (för AI-assisterad implementation)

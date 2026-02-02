@@ -52,46 +52,67 @@ function calculateCost(model: string, tokens: TokenUsage): CostInfo {
   return { inputCost, outputCost, totalCost: inputCost + outputCost };
 }
 
-// Build deliberation prompt - models review each other
+// Build deliberation prompt - models review each other with targeted conflict analysis
 function buildDeliberationPrompt(originalPrompt: string, responses: AIResponse[], currentProvider: string): string {
   const otherResponses = responses.filter(r => r.provider !== currentProvider && !r.error && r.response);
+  const allResponses = responses.filter(r => !r.error && r.response);
+  const modelCount = allResponses.length;
   
-  return `Du har tidigare svarat på en fråga. Nu har du möjlighet att granska andra AI-modellers svar och förbättra eller komplettera ditt eget svar.
+  return `Du har tidigare svarat på en fråga. Nu ska du genomföra en RIKTAD GRANSKNING av alla svar (inklusive ditt eget) för att identifiera och lösa konflikter.
 
 ## Originalfråga:
 ${originalPrompt}
 
-## Andra modellers svar:
+## Alla modellers svar (${modelCount} st):
 
-${otherResponses.map(r => `### ${r.provider} (${r.model}):
+${allResponses.map(r => `### ${r.provider} (${r.model})${r.provider === currentProvider ? ' [DITT SVAR]' : ''}:
 ${r.response}
 `).join('\n---\n\n')}
 
-## Din uppgift (Runda 2):
+## Din uppgift (Runda 2 - Riktad granskning):
 
-### STEG 1: Hallucinationskontroll
-Granska de andra modellernas svar och leta efter potentiella fel, hallucinationer eller obekräftade påståenden.
+### STEG 1: Konfliktanalys
+Analysera ALLA svar (inklusive ditt eget) och identifiera:
 
-**Om du hittar misstänkta fel, lista dem i detta exakta format:**
-\`\`\`hallucination
-KÄLLA: [Vilken modell som skrev det]
-PÅSTÅENDE: [Det exakta påståendet som kan vara fel]
-ANLEDNING: [Varför du misstänker att det är fel]
+\`\`\`konflikt
+TYPE: [MOTSÄGELSE / UNIK_INSIKT / UTAN_KÄLLA / MÖJLIG_HALLUCINATION]
+MODELL(ER): [Vilka modeller som berörs]
+PÅSTÅENDE: [Det specifika påståendet]
+KONFLIKT: [Vad konflikten/problemet är]
 \`\`\`
 
-Upprepa blocket för varje misstänkt fel du hittar. Om inga fel hittas, skriv:
-\`\`\`hallucination
-INGA_FEL_FUNNA
+**Sök specifikt efter:**
+1. **MOTSÄGELSE**: Två eller fler modeller säger MOTSATTA saker
+2. **UNIK_INSIKT**: ENDAST en modell nämner något (hög hallucinationsrisk!)
+3. **UTAN_KÄLLA**: Specifika påståenden utan referens/bevis
+4. **MÖJLIG_HALLUCINATION**: Något som verkar påhittat eller osannolikt
+
+Om inga konflikter hittas:
+\`\`\`konflikt
+TYPE: INGA_KONFLIKTER
+MODELL(ER): Alla
+PÅSTÅENDE: N/A
+KONFLIKT: Full konsensus uppnådd
 \`\`\`
 
-### STEG 2: Förbättrat svar
-Efter hallucinationskontrollen, ge ditt förbättrade svar:
+### STEG 2: Konfliktlösning
+För VARJE konflikt du identifierade, ange:
 
-1. **Korrigeringar**: Om du flaggade fel ovan, förklara rätt information
-2. **Kompletteringar**: Vad missade de andra som du kan tillföra?
-3. **Förbättrat svar**: Baserat på all input, ge ett komplett och korrekt svar
+\`\`\`lösning
+KONFLIKT_REF: [Kort beskrivning av konflikten]
+KORREKT_SVAR: [Vad som faktiskt är rätt, med förklaring]
+SÄKERHET: [HÖG/MEDEL/LÅG]
+KÄLLA: [Om möjligt, ange källa eller resonemang]
+\`\`\`
 
-Skriv ditt förbättrade svar på svenska. Var konkret och specifik.`;
+### STEG 3: Förbättrat svar
+Baserat på din konfliktanalys, ge ett FÖRBÄTTRAT och KORRIGERAT svar som:
+- Behåller det som alla var överens om
+- Korrigerar identifierade fel
+- Flaggar kvarvarande osäkerheter med ⚠️
+- Är på svenska och välstrukturerat
+
+**VIKTIGT:** Om du själv hade fel i Runda 1, erkänn det explicit och korrigera.`;
 }
 
 // Deliberation functions for each provider
