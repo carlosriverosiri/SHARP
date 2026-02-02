@@ -139,17 +139,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
     
-    // Allow saving without synthesis (responses only) - check for any content
+    // Check for any content - allow saving with just prompt for migration purposes
     const hasResponses = responses && (
       Array.isArray(responses) ? responses.length > 0 : Object.keys(responses).length > 0
     );
     
-    if (!finalSynthesis && !hasResponses) {
-      return new Response(JSON.stringify({ error: 'Syntes eller svar krävs' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    // Only require synthesis/responses for new sessions, not migrations
+    // (migrations may have incomplete data from old localStorage format)
 
     // Structure responses by provider - handle both array and object formats
     const responsesByProvider: Record<string, any> = {};
