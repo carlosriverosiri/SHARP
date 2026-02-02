@@ -52,15 +52,39 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    const { data, error } = await supabase
-      .from('ai_council_sessions')
-      .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis')
-      .eq('user_id', anvandare.id)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    // Try to fetch with new columns, fall back to basic columns if they don't exist yet
+    let data: any[] | null = null;
+    let error: any = null;
+    
+    try {
+      // First try with all columns (after migration)
+      const result = await supabase
+        .from('ai_council_sessions')
+        .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis')
+        .eq('user_id', anvandare.id)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+      
+      if (result.error && result.error.message?.includes('column')) {
+        // Columns don't exist yet, fall back to basic query
+        throw new Error('columns_not_found');
+      }
+      data = result.data;
+      error = result.error;
+    } catch (e) {
+      // Fall back to basic columns (before migration)
+      const result = await supabase
+        .from('ai_council_sessions')
+        .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
+        .eq('user_id', anvandare.id)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+      data = result.data;
+      error = result.error;
+    }
     
     // Transform to include responses array and supersynthesis for frontend
-    const sessions = (data || []).map(s => ({
+    const sessions = (data || []).map((s: any) => ({
       ...s,
       // Build responses object from individual provider responses
       responses: {
@@ -203,31 +227,65 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    const { data, error } = await supabase
-      .from('ai_council_sessions')
-      .insert({
-        user_id: anvandare.id,
-        name: name || null,
-        prompt,
-        context: context || null,
-        response_openai: responsesByProvider.openai || null,
-        response_anthropic: responsesByProvider.anthropic || null,
-        response_google: responsesByProvider.google || null,
-        response_grok: responsesByProvider.grok || null,
-        round2_responses: Object.keys(round2ByProvider).length > 0 ? round2ByProvider : null,
-        synthesis: deliberationEnabled ? null : finalSynthesis,
-        supersynthesis: deliberationEnabled ? finalSynthesis : (supersynthesis || null),
-        synthesis_model: synthesisModel || 'claude',
-        total_duration_ms: totalDuration || null,
-        tags: tags,
-        // New metadata fields
-        selected_models: selectedModels || null,
-        profile: profile || null,
-        deliberation_enabled: deliberationEnabled || false,
-        total_cost: totalCost || null,
-      })
-      .select('id, created_at')
-      .single();
+    // Try to insert with all columns, fall back to basic columns if they don't exist
+    let data: any = null;
+    let error: any = null;
+    
+    try {
+      // First try with all columns (after migration)
+      const result = await supabase
+        .from('ai_council_sessions')
+        .insert({
+          user_id: anvandare.id,
+          name: name || null,
+          prompt,
+          context: context || null,
+          response_openai: responsesByProvider.openai || null,
+          response_anthropic: responsesByProvider.anthropic || null,
+          response_google: responsesByProvider.google || null,
+          response_grok: responsesByProvider.grok || null,
+          round2_responses: Object.keys(round2ByProvider).length > 0 ? round2ByProvider : null,
+          synthesis: deliberationEnabled ? null : finalSynthesis,
+          supersynthesis: deliberationEnabled ? finalSynthesis : (supersynthesis || null),
+          synthesis_model: synthesisModel || 'claude',
+          total_duration_ms: totalDuration || null,
+          tags: tags,
+          // New metadata fields
+          selected_models: selectedModels || null,
+          profile: profile || null,
+          deliberation_enabled: deliberationEnabled || false,
+          total_cost: totalCost || null,
+        })
+        .select('id, created_at')
+        .single();
+      
+      if (result.error && result.error.message?.includes('column')) {
+        throw new Error('columns_not_found');
+      }
+      data = result.data;
+      error = result.error;
+    } catch (e) {
+      // Fall back to basic columns (before migration)
+      const result = await supabase
+        .from('ai_council_sessions')
+        .insert({
+          user_id: anvandare.id,
+          name: name || null,
+          prompt,
+          context: context || null,
+          response_openai: responsesByProvider.openai || null,
+          response_anthropic: responsesByProvider.anthropic || null,
+          response_google: responsesByProvider.google || null,
+          synthesis: finalSynthesis || null,
+          synthesis_model: synthesisModel || 'claude',
+          total_duration_ms: totalDuration || null,
+          tags: tags,
+        })
+        .select('id, created_at')
+        .single();
+      data = result.data;
+      error = result.error;
+    }
 
     if (error) {
       throw error;
