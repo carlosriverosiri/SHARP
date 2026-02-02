@@ -54,7 +54,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     const { data, error } = await supabase
       .from('ai_council_sessions')
-      .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
+      .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis')
       .eq('user_id', anvandare.id)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
@@ -64,12 +64,20 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       ...s,
       // Build responses object from individual provider responses
       responses: {
-        ...(s.response_openai && { openai: s.response_openai }),
-        ...(s.response_anthropic && { anthropic: s.response_anthropic }),
-        ...(s.response_google && { google: s.response_google }),
+        ...(s.response_openai && { OpenAI: s.response_openai }),
+        ...(s.response_anthropic && { Anthropic: s.response_anthropic }),
+        ...(s.response_google && { Google: s.response_google }),
+        ...(s.response_grok && { Grok: s.response_grok }),
       },
-      // Check if synthesis was actually a supersynthesis (has deliberation markers)
-      supersynthesis: s.synthesis?.includes('SUPERSYNTES') || s.synthesis?.includes('Runda 2') ? s.synthesis : null,
+      // Round 2 responses for deliberation
+      round2_responses: s.round2_responses || null,
+      // Metadata
+      selected_models: s.selected_models || null,
+      profile: s.profile || null,
+      deliberation_enabled: s.deliberation_enabled || false,
+      total_cost: s.total_cost || null,
+      // Use explicit supersynthesis column, or detect from synthesis content
+      supersynthesis: s.supersynthesis || (s.synthesis?.includes('SUPERSYNTES') || s.synthesis?.includes('efter riktad faktagranskning') ? s.synthesis : null),
     }));
 
     if (error) {
@@ -122,11 +130,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       prompt,
       context,
       responses,
+      round2Responses,
       synthesis,
       supersynthesis,
       synthesisModel,
       totalDuration,
-      tags = []
+      tags = [],
+      // New metadata fields
+      selectedModels,
+      profile,
+      deliberationEnabled,
+      totalCost
     } = body;
     
     // Use supersynthesis if provided, otherwise use synthesis
@@ -153,24 +167,40 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (Array.isArray(responses)) {
         // Array format: [{ provider: 'OpenAI', content: '...' }, ...]
         responses.forEach((r: any) => {
-          if (r.provider === 'OpenAI') responsesByProvider.openai = r;
-          else if (r.provider === 'Anthropic') responsesByProvider.anthropic = r;
-          else if (r.provider === 'Google') responsesByProvider.google = r;
+          const prov = (r.provider || '').toLowerCase();
+          if (prov.includes('openai') || prov === 'openai') responsesByProvider.openai = r;
+          else if (prov.includes('anthropic') || prov.includes('claude')) responsesByProvider.anthropic = r;
+          else if (prov.includes('google') || prov.includes('gemini')) responsesByProvider.google = r;
+          else if (prov.includes('grok') || prov.includes('xai')) responsesByProvider.grok = r;
         });
       } else if (typeof responses === 'object') {
         // Object format: { 'gpt-4o': { content: '...' }, 'claude-3-5-sonnet': { ... } }
         for (const [key, value] of Object.entries(responses)) {
           if (value && typeof value === 'object') {
-            if (key.includes('gpt') || key.includes('openai') || key === 'o1' || key === 'o3') {
+            const k = key.toLowerCase();
+            if (k.includes('gpt') || k.includes('openai') || k === 'o1' || k === 'o3') {
               responsesByProvider.openai = { ...value as object, model: key };
-            } else if (key.includes('claude') || key.includes('anthropic')) {
+            } else if (k.includes('claude') || k.includes('anthropic')) {
               responsesByProvider.anthropic = { ...value as object, model: key };
-            } else if (key.includes('gemini') || key.includes('google')) {
+            } else if (k.includes('gemini') || k.includes('google')) {
               responsesByProvider.google = { ...value as object, model: key };
+            } else if (k.includes('grok') || k.includes('xai')) {
+              responsesByProvider.grok = { ...value as object, model: key };
             }
           }
         }
       }
+    }
+
+    // Structure round2 responses by provider
+    const round2ByProvider: Record<string, any> = {};
+    if (round2Responses && Array.isArray(round2Responses)) {
+      round2Responses.forEach((r: any) => {
+        if (r.provider?.toLowerCase().includes('openai')) round2ByProvider.openai = r;
+        else if (r.provider?.toLowerCase().includes('anthropic') || r.provider?.toLowerCase().includes('claude')) round2ByProvider.anthropic = r;
+        else if (r.provider?.toLowerCase().includes('google') || r.provider?.toLowerCase().includes('gemini')) round2ByProvider.google = r;
+        else if (r.provider?.toLowerCase().includes('grok')) round2ByProvider.grok = r;
+      });
     }
 
     const { data, error } = await supabase
@@ -183,10 +213,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         response_openai: responsesByProvider.openai || null,
         response_anthropic: responsesByProvider.anthropic || null,
         response_google: responsesByProvider.google || null,
-        synthesis: finalSynthesis || null,
+        response_grok: responsesByProvider.grok || null,
+        round2_responses: Object.keys(round2ByProvider).length > 0 ? round2ByProvider : null,
+        synthesis: deliberationEnabled ? null : finalSynthesis,
+        supersynthesis: deliberationEnabled ? finalSynthesis : (supersynthesis || null),
         synthesis_model: synthesisModel || 'claude',
         total_duration_ms: totalDuration || null,
         tags: tags,
+        // New metadata fields
+        selected_models: selectedModels || null,
+        profile: profile || null,
+        deliberation_enabled: deliberationEnabled || false,
+        total_cost: totalCost || null,
       })
       .select('id, created_at')
       .single();
