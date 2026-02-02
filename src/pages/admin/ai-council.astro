@@ -5148,6 +5148,33 @@ if (!anvandare) {
         
         for (const session of localSessions) {
           try {
+            // Convert responses object to array format expected by API
+            let responsesArray = [];
+            if (session.responses) {
+              if (Array.isArray(session.responses)) {
+                responsesArray = session.responses;
+              } else {
+                // Convert object format to array format
+                for (const [key, value] of Object.entries(session.responses)) {
+                  if (value && typeof value === 'object') {
+                    // Map model keys to provider names
+                    let provider = 'Unknown';
+                    if (key.includes('gpt') || key.includes('openai') || key === 'o1' || key === 'o3') provider = 'OpenAI';
+                    else if (key.includes('claude') || key.includes('anthropic')) provider = 'Anthropic';
+                    else if (key.includes('gemini') || key.includes('google')) provider = 'Google';
+                    else if (key.includes('grok') || key.includes('xai')) provider = 'xAI';
+                    else if (key.includes('deepseek')) provider = 'DeepSeek';
+                    
+                    responsesArray.push({
+                      ...value,
+                      provider: provider,
+                      model: key
+                    });
+                  }
+                }
+              }
+            }
+            
             const res = await fetch('/api/ai-council/sessions', {
               method: 'POST',
               credentials: 'include',
@@ -5155,15 +5182,21 @@ if (!anvandare) {
               body: JSON.stringify({
                 prompt: session.prompt,
                 context: session.context,
-                responses: session.responses,
+                responses: responsesArray,
                 synthesis: session.synthesis,
                 supersynthesis: session.supersynthesis,
-                name: session.name
+                name: session.name,
+                synthesisModel: session.synthesis_model
               })
             });
             if (res.ok) migrated++;
-            else failed++;
+            else {
+              const errData = await res.json().catch(() => ({}));
+              console.error('Migration failed for session:', session.id, errData);
+              failed++;
+            }
           } catch (e) {
+            console.error('Migration error:', e);
             failed++;
           }
         }

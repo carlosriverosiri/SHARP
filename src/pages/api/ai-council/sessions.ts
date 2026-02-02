@@ -139,22 +139,42 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
     
-    // Allow saving without synthesis (responses only)
-    if (!finalSynthesis && (!responses || responses.length === 0)) {
+    // Allow saving without synthesis (responses only) - check for any content
+    const hasResponses = responses && (
+      Array.isArray(responses) ? responses.length > 0 : Object.keys(responses).length > 0
+    );
+    
+    if (!finalSynthesis && !hasResponses) {
       return new Response(JSON.stringify({ error: 'Syntes eller svar krävs' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // Structure responses by provider
+    // Structure responses by provider - handle both array and object formats
     const responsesByProvider: Record<string, any> = {};
-    if (Array.isArray(responses)) {
-      responses.forEach((r: any) => {
-        if (r.provider === 'OpenAI') responsesByProvider.openai = r;
-        else if (r.provider === 'Anthropic') responsesByProvider.anthropic = r;
-        else if (r.provider === 'Google') responsesByProvider.google = r;
-      });
+    if (responses) {
+      if (Array.isArray(responses)) {
+        // Array format: [{ provider: 'OpenAI', content: '...' }, ...]
+        responses.forEach((r: any) => {
+          if (r.provider === 'OpenAI') responsesByProvider.openai = r;
+          else if (r.provider === 'Anthropic') responsesByProvider.anthropic = r;
+          else if (r.provider === 'Google') responsesByProvider.google = r;
+        });
+      } else if (typeof responses === 'object') {
+        // Object format: { 'gpt-4o': { content: '...' }, 'claude-3-5-sonnet': { ... } }
+        for (const [key, value] of Object.entries(responses)) {
+          if (value && typeof value === 'object') {
+            if (key.includes('gpt') || key.includes('openai') || key === 'o1' || key === 'o3') {
+              responsesByProvider.openai = { ...value as object, model: key };
+            } else if (key.includes('claude') || key.includes('anthropic')) {
+              responsesByProvider.anthropic = { ...value as object, model: key };
+            } else if (key.includes('gemini') || key.includes('google')) {
+              responsesByProvider.google = { ...value as object, model: key };
+            }
+          }
+        }
+      }
     }
 
     const { data, error } = await supabase
