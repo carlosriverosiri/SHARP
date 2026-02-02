@@ -6,8 +6,9 @@
 
 | Fil | Beskrivning |
 |-----|-------------|
-| [KONTEXT.md](./KONTEXT.md) | **Teknisk kontext** - Kompakt översikt för AI-sökningar |
+| [UI-GUIDE.md](./UI-GUIDE.md) | **Användargränssnitt** - Layout, knappar och arbetsflöde |
 | [AI-COUNCIL.md](./AI-COUNCIL.md) | **Huvuddokumentation** - Komplett guide med versionshistorik |
+| [KONTEXT.md](./KONTEXT.md) | **Teknisk kontext** - Kompakt översikt för AI-sökningar |
 | [AI-COUNCIL-TODO.md](./AI-COUNCIL-TODO.md) | **Projektplan** - Roadmap för separation till eget projekt |
 
 ## Snabbguide

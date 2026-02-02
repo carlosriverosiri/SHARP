@@ -57,6 +57,8 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Lägg till modeller** (v3.6) - Kör fler AI:er efter syntes utan att köra om befintliga
+- [x] **Syntes-metadata** (v3.6) - Visa vilka modeller och profil som användes i syntesrubriken
 - [x] **Cross-device draft sync** (v3.6) - Pågående arbete sparas automatiskt och synkas mellan datorer (7 dagars retention)
 - [x] **Session-utgångsvarning** (v3.6) - Tydlig banner när sessionen gått ut
 - [x] **Kamerafunktion** (v3.4) - Fotografera direkt från mobil/iPad för bildanalys
