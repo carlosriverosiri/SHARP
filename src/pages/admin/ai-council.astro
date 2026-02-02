@@ -2813,7 +2813,39 @@ if (!anvandare) {
     }
     .synthesis-actions { display: flex; align-items: center; gap: 0.5rem; }
     .synthesis-duration { font-size: 0.75rem; color: var(--text-muted); }
-    .synthesis-content { color: var(--text-primary); }
+    .synthesis-content { color: var(--text-primary); position: relative; }
+    
+    /* Floating copy button - always visible at bottom right of synthesis */
+    .synthesis-card { position: relative; }
+    .synthesis-floating-copy {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 0.625rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+    .synthesis-floating-copy:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+    .synthesis-floating-copy.copied {
+      background: var(--color-success);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .synthesis-floating-copy svg { width: 16px; height: 16px; }
     
     .save-note-btn {
       background: transparent;
@@ -3952,6 +3984,10 @@ if (!anvandare) {
               </div>
             </div>
             <div id="synthesisContent" class="synthesis-content markdown-content"></div>
+            <button type="button" class="synthesis-floating-copy" id="copySynthesisFloat" title="Kopiera hela syntesen">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+              <span>Kopiera syntes</span>
+            </button>
           </div>
           
           <!-- Workflow progress indicator -->
@@ -6393,6 +6429,11 @@ if (!anvandare) {
       });
       
       document.getElementById('copySynthesis').addEventListener('click', function() {
+        if (currentResponses.synthesis) copyToClipboard(currentResponses.synthesis, this);
+      });
+      
+      // Floating copy button (prominent, always visible)
+      document.getElementById('copySynthesisFloat').addEventListener('click', function() {
         if (currentResponses.synthesis) copyToClipboard(currentResponses.synthesis, this);
       });
       
