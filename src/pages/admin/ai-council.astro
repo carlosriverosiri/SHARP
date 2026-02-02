@@ -966,7 +966,58 @@ if (!anvandare) {
     .notes-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-size: 0.8125rem; }
     .notes-sync { font-size: 0.625rem; color: var(--text-muted); padding: 0.5rem 0.75rem; text-align: center; cursor: help; }
     .notes-sync.synced { color: var(--color-success); }
-    .notes-sync.error { color: var(--color-warning); background: rgba(245, 158, 11, 0.1); border-radius: 4px; }
+    .notes-sync.error { color: var(--color-error); background: rgba(239, 68, 68, 0.1); border-radius: 4px; }
+    .notes-sync.warning { color: var(--color-warning); background: rgba(245, 158, 11, 0.1); border-radius: 4px; }
+    
+    /* Migration banner for local sessions */
+    .migration-banner {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border: 1px solid #F59E0B;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .migration-icon { font-size: 1.5rem; text-align: center; }
+    .migration-text { 
+      text-align: center;
+      color: #92400E;
+    }
+    .migration-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+    .migration-text span { font-size: 0.75rem; opacity: 0.8; }
+    .migration-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .btn-migrate {
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-migrate:hover { background: #047857; }
+    .btn-migrate:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-discard {
+      background: transparent;
+      color: #DC2626;
+      border: 1px solid #DC2626;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-discard:hover { background: #DC2626; color: white; }
     
     /* Session modal */
     .session-modal {
@@ -4957,7 +5008,9 @@ if (!anvandare) {
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
       }
       
-      // Sessions management (Supabase with localStorage fallback)
+      // Sessions management (Supabase only - no localStorage fallback)
+      let userIsLoggedIn = false;
+      
       async function loadSessions() {
         notesSync.textContent = 'Laddar...';
         notesSync.className = 'notes-sync';
@@ -4966,109 +5019,218 @@ if (!anvandare) {
           const res = await fetch('/api/ai-council/sessions', { credentials: 'include' });
           const data = await res.json();
           
-          // Handle authentication errors clearly
+          // Handle authentication errors
           if (data.error && (data.error.includes('Ej inloggad') || data.error.includes('användare'))) {
+            userIsLoggedIn = false;
             useSupabase = false;
-            sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-            notesSync.textContent = '⚠️ Session utgången';
-            notesSync.className = 'notes-sync error';
-            notesSync.title = 'Din session har gått ut. Logga in igen på /personal för molnsynk.';
+            sessions = [];
+            notesSync.textContent = '🔒 Logga in för att spara';
+            notesSync.className = 'notes-sync warning';
+            notesSync.title = 'Du måste vara inloggad för att spara sessioner.';
             console.warn('Auth error:', data.error);
-            // Show prominent logout banner
             showLogoutBanner();
-          } else if (data.sessions && data.sessions.length > 0) {
-            sessions = data.sessions;
-            useSupabase = true;
-            notesSync.textContent = '☁️ Synkad med Supabase';
-            notesSync.className = 'notes-sync synced';
+            disableSaveFeatures();
+            // Check for local sessions to migrate
+            checkAndOfferMigration();
           } else if (data.error && data.error.includes('ej konfigurerat')) {
-            // Fallback to localStorage
+            // Supabase not configured - show error
+            userIsLoggedIn = false;
             useSupabase = false;
-            sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-            notesSync.textContent = '💾 Lokal lagring';
+            sessions = [];
+            notesSync.textContent = '❌ Ej konfigurerat';
+            notesSync.className = 'notes-sync error';
+            disableSaveFeatures();
+          } else if (data.sessions) {
+            // Successfully connected to Supabase
+            userIsLoggedIn = true;
+            useSupabase = true;
+            sessions = data.sessions;
+            notesSync.textContent = '☁️ Synkad';
+            notesSync.className = 'notes-sync synced';
+            enableSaveFeatures();
+            // Check for local sessions to migrate
+            checkAndOfferMigration();
           } else {
-            // Supabase connected but empty - check localStorage for old sessions
-            const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-            if (localSessions.length > 0) {
-              // Show local sessions but note they need to be migrated
-              sessions = localSessions;
-              useSupabase = true; // New sessions will go to Supabase
-              notesSync.textContent = '💾 Lokala sessioner (' + localSessions.length + ')';
-              notesSync.className = 'notes-sync';
-              notesSync.title = 'Dessa sessioner finns i din webbläsare. Nya sessioner sparas till molnet.';
-            } else {
-              sessions = [];
-              useSupabase = true;
-              notesSync.textContent = '☁️ Supabase (redo)';
-              notesSync.className = 'notes-sync synced';
-            }
+            // Empty but connected
+            userIsLoggedIn = true;
+            useSupabase = true;
+            sessions = [];
+            notesSync.textContent = '☁️ Redo';
+            notesSync.className = 'notes-sync synced';
+            enableSaveFeatures();
+            // Check for local sessions to migrate
+            checkAndOfferMigration();
           }
         } catch (e) {
+          userIsLoggedIn = false;
           useSupabase = false;
-          sessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-          notesSync.textContent = '💾 Lokal lagring';
+          sessions = [];
+          notesSync.textContent = '❌ Anslutningsfel';
+          notesSync.className = 'notes-sync error';
           console.error('Session load error:', e);
+          disableSaveFeatures();
         }
         
         renderSessions();
       }
       
-      async function saveSession(data) {
-        if (useSupabase) {
+      function disableSaveFeatures() {
+        const saveBtn = document.getElementById('saveSessionBtn');
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.title = 'Logga in för att spara sessioner';
+          saveBtn.style.opacity = '0.5';
+          saveBtn.style.cursor = 'not-allowed';
+        }
+        const autoSaveCheckbox = document.getElementById('enableAutoSave');
+        if (autoSaveCheckbox) {
+          autoSaveCheckbox.disabled = true;
+          autoSaveCheckbox.checked = false;
+        }
+      }
+      
+      function enableSaveFeatures() {
+        const saveBtn = document.getElementById('saveSessionBtn');
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.title = 'Spara session';
+          saveBtn.style.opacity = '1';
+          saveBtn.style.cursor = 'pointer';
+        }
+        const autoSaveCheckbox = document.getElementById('enableAutoSave');
+        if (autoSaveCheckbox) {
+          autoSaveCheckbox.disabled = false;
+        }
+      }
+      
+      // Migration of old local sessions
+      function checkAndOfferMigration() {
+        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+        if (localSessions.length === 0) return;
+        
+        // Remove existing migration banner if any
+        document.querySelector('.migration-banner')?.remove();
+        
+        const banner = document.createElement('div');
+        banner.className = 'migration-banner';
+        banner.innerHTML = `
+          <div class="migration-icon">💾</div>
+          <div class="migration-text">
+            <strong>${localSessions.length} lokala sessioner hittades</strong>
+            <span>Dessa finns bara i denna webbläsare</span>
+          </div>
+          <div class="migration-actions">
+            ${userIsLoggedIn ? '<button id="migrateSessions" class="btn-migrate">Spara till molnet ☁️</button>' : ''}
+            <button id="discardLocalSessions" class="btn-discard">Radera</button>
+          </div>
+        `;
+        
+        const notesList = document.getElementById('notesList');
+        notesList.parentNode.insertBefore(banner, notesList);
+        
+        if (userIsLoggedIn) {
+          document.getElementById('migrateSessions')?.addEventListener('click', migrateLocalSessions);
+        }
+        document.getElementById('discardLocalSessions')?.addEventListener('click', discardLocalSessions);
+      }
+      
+      async function migrateLocalSessions() {
+        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
+        if (localSessions.length === 0) return;
+        
+        const btn = document.getElementById('migrateSessions');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Migrerar...';
+        }
+        
+        let migrated = 0, failed = 0;
+        
+        for (const session of localSessions) {
           try {
             const res = await fetch('/api/ai-council/sessions', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
-              body: JSON.stringify(data)
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: session.prompt,
+                context: session.context,
+                responses: session.responses,
+                synthesis: session.synthesis,
+                supersynthesis: session.supersynthesis,
+                name: session.name
+              })
             });
-            const result = await res.json();
-            if (result.success) {
-              // Set lastSavedSessionId for highlighting (use timestamp since we don't know the DB ID yet)
-              await loadSessions();
-              if (sessions.length > 0) {
-                lastSavedSessionId = sessions[0].id;
-                renderSessions();
-                // Open sidebar if collapsed to show the new session
-                if (notesSidebar.classList.contains('collapsed')) {
-                  notesSidebar.classList.remove('collapsed');
-                  localStorage.setItem('ai-council-sidebar-collapsed', 'false');
-                }
-                // Clear highlight after animation
-                setTimeout(() => { lastSavedSessionId = null; }, 2500);
-              }
-              return true;
-            }
+            if (res.ok) migrated++;
+            else failed++;
           } catch (e) {
-            console.error('Save error:', e);
+            failed++;
           }
         }
         
-        // Fallback to localStorage
-        const newId = Date.now().toString();
-        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-        localSessions.unshift({
-          id: newId,
-          name: data.name || null,
-          prompt: data.prompt,
-          responses: data.responses || null,
-          synthesis: data.synthesis,
-          supersynthesis: data.supersynthesis || null,
-          synthesis_model: data.synthesisModel,
-          created_at: new Date().toISOString()
-        });
-        localStorage.setItem('ai-council-sessions', JSON.stringify(localSessions.slice(0, 50)));
-        sessions = localSessions;
-        lastSavedSessionId = newId;
-        renderSessions();
-        // Open sidebar if collapsed to show the new session
-        if (notesSidebar.classList.contains('collapsed')) {
-          notesSidebar.classList.remove('collapsed');
-          localStorage.setItem('ai-council-sidebar-collapsed', 'false');
+        if (failed === 0) {
+          localStorage.removeItem('ai-council-sessions');
+          alert('✅ ' + migrated + ' sessioner sparade till molnet!');
+          document.querySelector('.migration-banner')?.remove();
+        } else {
+          alert(migrated + ' sparade, ' + failed + ' misslyckades. Försök igen.');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Försök igen';
+          }
         }
-        // Clear highlight after animation
-        setTimeout(() => { lastSavedSessionId = null; }, 2500);
-        return true;
+        
+        await loadSessions();
+      }
+      
+      function discardLocalSessions() {
+        if (confirm('Är du säker? De lokala sessionerna raderas permanent och kan inte återställas.')) {
+          localStorage.removeItem('ai-council-sessions');
+          document.querySelector('.migration-banner')?.remove();
+          alert('Lokala sessioner raderade.');
+        }
+      }
+      
+      async function saveSession(data) {
+        // Require login to save
+        if (!userIsLoggedIn || !useSupabase) {
+          alert('Du måste vara inloggad för att spara sessioner.\n\nGå till /personal för att logga in.');
+          return false;
+        }
+        
+        try {
+          const res = await fetch('/api/ai-council/sessions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(data)
+          });
+          const result = await res.json();
+          
+          if (result.success) {
+            await loadSessions();
+            if (sessions.length > 0) {
+              lastSavedSessionId = sessions[0].id;
+              renderSessions();
+              // Open sidebar if collapsed to show the new session
+              if (notesSidebar.classList.contains('collapsed')) {
+                notesSidebar.classList.remove('collapsed');
+                localStorage.setItem('ai-council-sidebar-collapsed', 'false');
+              }
+              // Clear highlight after animation
+              setTimeout(() => { lastSavedSessionId = null; }, 2500);
+            }
+            return true;
+          } else {
+            console.error('Save failed:', result.error);
+            alert('Kunde inte spara sessionen: ' + (result.error || 'Okänt fel'));
+            return false;
+          }
+        } catch (e) {
+          console.error('Save error:', e);
+          alert('Kunde inte spara sessionen. Kontrollera din internetanslutning.');
+          return false;
+        }
       }
       
       // Save prompt modal handlers
@@ -5122,21 +5284,29 @@ if (!anvandare) {
       });
       
       async function deleteSession(id) {
-        if (useSupabase) {
-          try {
-            await fetch('/api/ai-council/sessions?id=' + id, { method: 'DELETE', credentials: 'include' });
-            await loadSessions();
-            return;
-          } catch (e) {
-            console.error('Delete error:', e);
-          }
+        if (!userIsLoggedIn || !useSupabase) {
+          alert('Du måste vara inloggad för att radera sessioner.');
+          return;
         }
         
-        const localSessions = JSON.parse(localStorage.getItem('ai-council-sessions') || '[]');
-        const filtered = localSessions.filter(s => s.id !== id);
-        localStorage.setItem('ai-council-sessions', JSON.stringify(filtered));
-        sessions = filtered;
-        renderSessions();
+        if (!confirm('Vill du radera denna session permanent?')) return;
+        
+        try {
+          const res = await fetch('/api/ai-council/sessions?id=' + id, { 
+            method: 'DELETE', 
+            credentials: 'include' 
+          });
+          
+          if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Kunde inte radera');
+          }
+          
+          await loadSessions();
+        } catch (e) {
+          console.error('Delete error:', e);
+          alert('Kunde inte radera sessionen: ' + e.message);
+        }
       }
       
       let lastSavedSessionId = null; // Track newly saved sessions for highlighting
@@ -5180,7 +5350,7 @@ if (!anvandare) {
               '<div class="note-item-actions">' +
                 '<button class="note-item-btn" data-action="view" title="Visa">👁️</button>' +
                 '<button class="note-item-btn" data-action="copy" title="Kopiera">📋</button>' +
-                '<button class="note-item-btn" data-action="delete" title="Ta bort">✕</button>' +
+                '<button class="note-item-btn" data-action="delete" title="Radera">🗑️</button>' +
               '</div>' +
             '</div>' +
             (hasName ? '<div class="note-item-name">' + escapeHtml(s.name) + '</div>' : '') +
@@ -5308,18 +5478,26 @@ if (!anvandare) {
         a.click();
       });
       
-      // Clear
+      // Clear all sessions
       document.getElementById('clearNotes').addEventListener('click', async () => {
-        if (!confirm('Rensa alla sessioner?')) return;
+        if (!userIsLoggedIn || !useSupabase) {
+          alert('Du måste vara inloggad för att rensa sessioner.');
+          return;
+        }
         
-        if (useSupabase) {
+        if (!confirm('Vill du radera ALLA sessioner permanent? Detta kan inte ångras.')) return;
+        
+        try {
           for (const s of sessions) {
             await fetch('/api/ai-council/sessions?id=' + s.id, { method: 'DELETE', credentials: 'include' });
           }
+          // Also clear any remaining local sessions
+          localStorage.removeItem('ai-council-sessions');
+          await loadSessions();
+        } catch (e) {
+          console.error('Clear error:', e);
+          alert('Kunde inte radera alla sessioner.');
         }
-        localStorage.removeItem('ai-council-sessions');
-        sessions = [];
-        renderSessions();
       });
       
       // Accordion toggles
