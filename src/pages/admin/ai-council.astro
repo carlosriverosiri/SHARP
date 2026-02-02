@@ -2373,8 +2373,41 @@ if (!anvandare) {
     .synthesis-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .synthesis-icon { font-size: 1.5rem; }
     .synthesis-title { flex: 1; }
-    .synthesis-title h2 { font-size: 1.125rem; font-weight: 600; color: var(--color-primary); }
-    .synthesis-title span { font-size: 0.75rem; color: var(--text-muted); }
+    .synthesis-title h2 { font-size: 1.125rem; font-weight: 600; color: var(--color-primary); margin-bottom: 0.25rem; }
+    .synthesis-meta { 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      flex-wrap: wrap;
+      font-size: 0.75rem; 
+      color: var(--text-muted); 
+    }
+    .synthesis-meta-divider { color: var(--border-color); }
+    .synthesis-models-used {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    .synthesis-model-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .synthesis-model-dot.google { background: #10b981; }
+    .synthesis-model-dot.anthropic { background: #f59e0b; }
+    .synthesis-model-dot.grok { background: #3b82f6; }
+    .synthesis-model-dot.openai { background: #6b7280; }
+    .synthesis-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      background: var(--bg-input);
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      font-weight: 500;
+    }
     .synthesis-actions { display: flex; align-items: center; gap: 0.5rem; }
     .synthesis-duration { font-size: 0.75rem; color: var(--text-muted); }
     .synthesis-content { color: var(--text-primary); }
@@ -3485,7 +3518,13 @@ if (!anvandare) {
               <span class="synthesis-icon">🧠</span>
               <div class="synthesis-title">
                 <h2>Syntes</h2>
-                <span id="synthesisModelLabel">GPT-4o syntetiserar</span>
+                <div class="synthesis-meta">
+                  <span id="synthesisModelLabel">GPT-4o syntetiserar</span>
+                  <span class="synthesis-meta-divider">·</span>
+                  <span id="synthesisModelsUsed" class="synthesis-models-used" title="AI-modeller som ingår i syntesen"></span>
+                  <span class="synthesis-meta-divider">·</span>
+                  <span id="synthesisProfile" class="synthesis-profile" title="Profil/inställning"></span>
+                </div>
               </div>
               <div class="synthesis-actions">
                 <button type="button" class="copy-btn" id="copySynthesis" title="Kopiera">
@@ -4338,6 +4377,8 @@ if (!anvandare) {
       const resultsEl = document.getElementById('results');
       const synthesisCard = document.getElementById('synthesisCard');
       const synthesisModelEl = document.getElementById('synthesisModel');
+      const synthesisModelsUsedEl = document.getElementById('synthesisModelsUsed');
+      const synthesisProfileEl = document.getElementById('synthesisProfile');
       const notesSidebar = document.getElementById('notesSidebar');
       const notesToggle = document.getElementById('notesToggle');
       const notesList = document.getElementById('notesList');
@@ -4596,6 +4637,52 @@ if (!anvandare) {
         // Update deliberation
         enableDeliberationEl.checked = profile.deliberation;
         deliberationToggle.classList.toggle('active', profile.deliberation);
+      }
+      
+      // Helper: Update synthesis card meta info (models used + profile)
+      function updateSynthesisMeta(modelsUsed) {
+        // Profile names with icons
+        const profileInfo = {
+          'snabb': { icon: '⚡', name: 'Snabb' },
+          'patient': { icon: '🩺', name: 'Patient' },
+          'kod': { icon: '💻', name: 'Kodning' },
+          'vetenskap': { icon: '🔬', name: 'Forskning' },
+          'strategi': { icon: '🎯', name: 'Strategi' }
+        };
+        
+        // Model display info
+        const modelInfo = {
+          'google': { name: 'Gemini', class: 'google' },
+          'gemini': { name: 'Gemini', class: 'google' },
+          'anthropic': { name: 'Claude', class: 'anthropic' },
+          'grok': { name: 'Grok', class: 'grok' },
+          'openai': { name: 'OpenAI', class: 'openai' },
+          'OpenAI': { name: 'OpenAI', class: 'openai' },
+          'Anthropic': { name: 'Claude', class: 'anthropic' },
+          'Google': { name: 'Gemini', class: 'google' },
+          'xAI': { name: 'Grok', class: 'grok' },
+          'Grok': { name: 'Grok', class: 'grok' },
+          'Grok 4': { name: 'Grok', class: 'grok' },
+          'Grok 2': { name: 'Grok', class: 'grok' }
+        };
+        
+        // Update models used display
+        if (synthesisModelsUsedEl && modelsUsed && modelsUsed.length > 0) {
+          const modelDotsHtml = modelsUsed.map(m => {
+            const info = modelInfo[m] || { name: m, class: 'openai' };
+            return `<span class="synthesis-model-dot ${info.class}" title="${info.name}"></span>`;
+          }).join('');
+          const modelNames = modelsUsed.map(m => (modelInfo[m] || { name: m }).name);
+          // Remove duplicates
+          const uniqueNames = [...new Set(modelNames)];
+          synthesisModelsUsedEl.innerHTML = modelDotsHtml + ` <span>${uniqueNames.join(', ')}</span>`;
+        }
+        
+        // Update profile display
+        if (synthesisProfileEl) {
+          const profile = profileInfo[currentProfile] || { icon: '⚡', name: 'Snabb' };
+          synthesisProfileEl.innerHTML = `${profile.icon} ${profile.name}`;
+        }
       }
       
       // Profile button click handler - using direct listeners for reliability
@@ -5837,6 +5924,10 @@ if (!anvandare) {
             document.getElementById('synthesisDuration').textContent = synthDuration;
             document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
             document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
+            
+            // Update synthesis meta info (which models were used + profile)
+            const modelsUsed = data.responses ? data.responses.filter(r => !r.error).map(r => r.provider) : selectedModels;
+            updateSynthesisMeta(modelsUsed);
           }
           
           document.getElementById('totalDuration').textContent = formatDuration(data.totalDuration);
@@ -6460,6 +6551,10 @@ if (!anvandare) {
             document.getElementById('synthesisDuration').textContent = synthDuration;
             document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
             document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
+            
+            // Update synthesis meta info (which models were used + profile)
+            const modelsUsed = Object.keys(collectedResponses);
+            updateSynthesisMeta(modelsUsed);
             
             // Mark synthesize as done and track model count
             hasSynthesized = true;
