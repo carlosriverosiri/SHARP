@@ -1779,6 +1779,24 @@ if (!anvandare) {
       background: rgba(16, 185, 129, 0.1);
       color: #059669;
     }
+    /* Syntes workflow-step (blå) */
+    .workflow-step[data-step="synthesis1"].active {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-primary);
+    }
+    .workflow-step[data-step="synthesis1"].completed {
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--color-primary);
+    }
+    /* Supersyntes workflow-step (gul/amber) */
+    .workflow-step[data-step="supersynthesis"].active {
+      background: rgba(245, 158, 11, 0.15);
+      color: #D97706;
+    }
+    .workflow-step[data-step="supersynthesis"].completed {
+      background: rgba(245, 158, 11, 0.2);
+      color: #B45309;
+    }
     .workflow-step-arrow { color: var(--text-light); font-size: 0.875rem; }
     .workflow-info {
       display: flex;
@@ -2310,7 +2328,8 @@ if (!anvandare) {
       font-weight: 700;
     }
     .deliberate-card .next-step-card-title { color: #7c3aed; }
-    .synthesize-card .next-step-card-title { color: #059669; }
+    .synthesize-card .next-step-card-title { color: var(--color-primary); }
+    .synthesize-card.supersynthesis .next-step-card-title { color: #F59E0B; }
     .next-step-card-desc {
       font-size: 0.8125rem;
       color: var(--text-secondary);
@@ -2334,8 +2353,12 @@ if (!anvandare) {
       color: #7c3aed;
     }
     .synthesize-card .next-step-card-count {
-      background: rgba(5, 150, 105, 0.15);
-      color: #059669;
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--color-primary);
+    }
+    .synthesize-card.supersynthesis .next-step-card-count {
+      background: rgba(245, 158, 11, 0.15);
+      color: #F59E0B;
     }
     .next-step-card-time {
       font-size: 0.6875rem;
@@ -3527,8 +3550,8 @@ if (!anvandare) {
                   </div>
                 </button>
                 <button type="button" id="synthesizeNowBtn" class="next-step-card synthesize-card">
-                  <div class="next-step-card-icon">🧪</div>
-                  <div class="next-step-card-title">Sammanfattning</div>
+                  <div class="next-step-card-icon">💡</div>
+                  <div class="next-step-card-title">Syntes</div>
                   <div class="next-step-card-desc">En AI sammanfattar alla svar till en slutsats</div>
                   <div class="next-step-card-meta">
                     <span class="next-step-card-count" id="synthesizeCount">0 svar</span>
@@ -4438,12 +4461,12 @@ if (!anvandare) {
         deliberateNowBtn.classList.remove('done');
         deliberateNowBtn.disabled = false;
         deliberateNowBtn.style.display = 'flex';
-        synthesizeNowBtn.classList.remove('done');
+        synthesizeNowBtn.classList.remove('done', 'supersynthesis');
         synthesizeNowBtn.disabled = false;
         // Reset synthesize card text
-        synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Sammanfattning';
+        synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Syntes';
         synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
-        synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
+        synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '💡';
         const singleDelibSection = document.getElementById('singleDeliberationSection');
         if (singleDelibSection) singleDelibSection.style.display = 'none';
         // Reset single deliberation buttons
@@ -6435,17 +6458,20 @@ if (!anvandare) {
           
           // Update card descriptions based on state
           if (newModelsAddedSinceSynthesis) {
+            synthesizeNowBtn.classList.remove('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Uppdatera syntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = `Kör ny syntes med alla ${successCount} svar (${successCount - modelsInCurrentSynthesis} nya)`;
             synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🔄';
           } else if (hasDeliberation) {
+            synthesizeNowBtn.classList.add('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
           } else {
-            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Sammanfattning';
+            synthesizeNowBtn.classList.remove('supersynthesis');
+            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Syntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
-            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '💡';
           }
           
           // Also show single-model deliberation section
@@ -6635,8 +6661,10 @@ if (!anvandare) {
             
             // Update syntes card to show supersyntes
             synthesizeNowBtn.disabled = false;
+            synthesizeNowBtn.classList.add('supersynthesis');
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
             synthesizeCount.textContent = `${Object.keys(collectedResponses).length}+R2 svar`;
             
             // Update workflow progress
@@ -6756,8 +6784,10 @@ if (!anvandare) {
                 deliberateNowBtn.disabled = true;
                 singleDeliberationSection.style.display = 'none';
                 synthesizeNowBtn.disabled = false;
+                synthesizeNowBtn.classList.add('supersynthesis');
                 synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
                 synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+                synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '⭐';
                 synthesizeCount.textContent = `${r1Count}+R2 svar`;
                 setStatus('✓ All faktagranskning klar! Kör supersyntes.', true);
               } else {
