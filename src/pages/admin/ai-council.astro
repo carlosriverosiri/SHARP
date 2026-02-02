@@ -4271,7 +4271,7 @@ if (!anvandare) {
       <div class="session-modal-footer">
         <button type="button" class="session-modal-btn" id="copySessionSynthesis"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera syntes</button>
         <button type="button" class="session-modal-btn" id="copySessionAll"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Kopiera allt</button>
-        <button type="button" class="session-modal-btn" id="loadSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Ladda prompt</button>
+        <button type="button" class="session-modal-btn" id="loadSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Återanvänd prompt</button>
         <button type="button" class="session-modal-btn session-modal-btn-danger" id="deleteSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Radera</button>
       </div>
     </div>
@@ -4332,7 +4332,7 @@ if (!anvandare) {
       <div class="session-modal-footer" style="flex: 0 0 auto;">
         <button type="button" class="session-modal-btn" id="copyFullSessionSynthesis"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera</button>
         <button type="button" class="session-modal-btn" id="exportFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Exportera</button>
-        <button type="button" class="session-modal-btn" id="loadFullSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Ladda</button>
+        <button type="button" class="session-modal-btn" id="loadFullSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Återanvänd prompt</button>
         <button type="button" class="session-modal-btn session-modal-btn-danger" id="deleteFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Radera</button>
       </div>
     </div>
@@ -6030,8 +6030,13 @@ if (!anvandare) {
           '<span class="meta-deliberation-yes">✓ Ja (Runda 2)</span>' : 
           '<span class="meta-deliberation-no">Nej</span>';
         
-        // Cost
-        const costHTML = session.total_cost ? '$' + session.total_cost.toFixed(4) : 'Ej sparat';
+        // Cost (USD + SEK)
+        let costHTML = 'Ej sparat';
+        if (session.total_cost) {
+          const usd = session.total_cost;
+          const sek = usd * 10.5; // Approximate USD to SEK
+          costHTML = `$${usd.toFixed(4)} (~${sek.toFixed(2)} kr)`;
+        }
         
         return `
           <div class="meta-panel-item">
