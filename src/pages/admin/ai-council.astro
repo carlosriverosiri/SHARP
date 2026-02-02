@@ -1170,6 +1170,14 @@ if (!anvandare) {
       gap: 0.5rem;
     }
     .session-modal-btn:hover { background: var(--bg-hover); }
+    .session-modal-btn-danger {
+      color: #DC2626;
+      margin-left: auto;
+    }
+    .session-modal-btn-danger:hover {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
     
     /* Session metadata panel */
     .session-modal-meta-panel {
@@ -4278,7 +4286,7 @@ if (!anvandare) {
         <!-- Prompt -->
         <div class="full-session-section">
           <div class="full-session-section-header">
-            <span class="full-session-section-icon">📝</span>
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg></span>
             <span class="full-session-section-title">Prompt</span>
           </div>
           <div id="fullSessionPrompt" class="full-session-section-content"></div>
@@ -4287,7 +4295,7 @@ if (!anvandare) {
         <!-- Round 1 responses -->
         <div class="full-session-section">
           <div class="full-session-section-header">
-            <span class="full-session-section-icon">🤖</span>
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
             <span class="full-session-section-title">Runda 1 - Individuella svar</span>
           </div>
           <div id="fullSessionRound1" class="full-session-responses"></div>
@@ -4296,7 +4304,7 @@ if (!anvandare) {
         <!-- Round 2 responses (if deliberation) -->
         <div id="fullSessionRound2Section" class="full-session-section" style="display: none;">
           <div class="full-session-section-header">
-            <span class="full-session-section-icon">🔍</span>
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
             <span class="full-session-section-title">Runda 2 - Faktagranskning</span>
           </div>
           <div id="fullSessionRound2" class="full-session-responses"></div>
@@ -4305,16 +4313,17 @@ if (!anvandare) {
         <!-- Synthesis -->
         <div class="full-session-section">
           <div class="full-session-section-header" id="fullSessionSynthesisHeader">
-            <span class="full-session-section-icon">💡</span>
-            <span class="full-session-section-title">Syntes</span>
+            <span class="full-session-section-icon" id="fullSessionSynthesisIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></span>
+            <span class="full-session-section-title" id="fullSessionSynthesisTitle">Syntes</span>
           </div>
           <div id="fullSessionSynthesis" class="full-session-section-content markdown-content"></div>
         </div>
       </div>
       <div class="session-modal-footer">
-        <button type="button" class="session-modal-btn" id="copyFullSessionSynthesis">📋 Kopiera syntes</button>
-        <button type="button" class="session-modal-btn" id="exportFullSession">📥 Exportera .md</button>
-        <button type="button" class="session-modal-btn" id="loadFullSessionPrompt">💬 Ladda prompt</button>
+        <button type="button" class="session-modal-btn" id="copyFullSessionSynthesis"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera</button>
+        <button type="button" class="session-modal-btn" id="exportFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Exportera</button>
+        <button type="button" class="session-modal-btn" id="loadFullSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Ladda</button>
+        <button type="button" class="session-modal-btn session-modal-btn-danger" id="deleteFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Radera</button>
       </div>
     </div>
   </div>
@@ -6170,17 +6179,28 @@ if (!anvandare) {
           round2Section.style.display = 'none';
         }
         
-        // Synthesis
-        const synthHeader = document.getElementById('fullSessionSynthesisHeader');
+        // Synthesis - use SVG icons
+        const synthIcon = document.getElementById('fullSessionSynthesisIcon');
+        const synthTitle = document.getElementById('fullSessionSynthesisTitle');
         const synthContent = document.getElementById('fullSessionSynthesis');
+        
+        const lightbulbSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>';
+        const starSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>';
+        
         if (session.supersynthesis) {
-          synthHeader.innerHTML = '<span class="full-session-section-icon">⭐</span><span class="full-session-section-title">Supersyntes</span>';
+          synthIcon.innerHTML = starSvg;
+          synthIcon.style.color = '#F59E0B';
+          synthTitle.textContent = 'Supersyntes';
           synthContent.innerHTML = renderMarkdown(session.supersynthesis);
         } else if (session.synthesis) {
-          synthHeader.innerHTML = '<span class="full-session-section-icon">💡</span><span class="full-session-section-title">Syntes</span>';
+          synthIcon.innerHTML = lightbulbSvg;
+          synthIcon.style.color = '#3B82F6';
+          synthTitle.textContent = 'Syntes';
           synthContent.innerHTML = renderMarkdown(session.synthesis);
         } else {
-          synthHeader.innerHTML = '<span class="full-session-section-icon">💡</span><span class="full-session-section-title">Syntes</span>';
+          synthIcon.innerHTML = lightbulbSvg;
+          synthIcon.style.color = 'var(--text-muted)';
+          synthTitle.textContent = 'Syntes';
           synthContent.innerHTML = '<p style="color: var(--text-muted);">Ingen syntes sparad</p>';
         }
         
@@ -6255,6 +6275,13 @@ if (!anvandare) {
           promptEl.value = currentModalSession.prompt;
           closeFullSessionModal();
           promptEl.focus();
+        }
+      });
+      
+      document.getElementById('deleteFullSession').addEventListener('click', () => {
+        if (currentModalSession) {
+          closeFullSessionModal();
+          showDeleteConfirm(currentModalSession);
         }
       });
       
