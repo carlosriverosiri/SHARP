@@ -41,11 +41,13 @@ Välj profil baserat på din uppgift:
 
 | Profil | Ikon | Modeller | Syntes | Beskrivning |
 |--------|------|----------|--------|-------------|
-| **Snabb** | ⚡ | Gemini, Claude | Gemini | Snabbt svar för enkla frågor |
-| **Patient** | 🩺 | Gemini, Claude | Claude | Medicinska/patientfrågor |
-| **Kodning** | 💻 | Gemini, Claude, OpenAI | Claude | Programmeringsfrågor |
-| **Forskning** | 🔬 | Gemini, Claude, Grok | Claude Opus | Vetenskapliga frågor |
-| **Strategi** | 🎯 | Alla 4 | Claude Opus | Komplexa beslut |
+| **Snabb** | ⚡ (blixt) | Gemini, Claude | Gemini | Snabbt svar för enkla frågor |
+| **Patient** | 📈 (puls) | Gemini, Claude | Claude | Medicinska/patientfrågor |
+| **Kodning** | `</>` (kod) | Gemini, Claude, OpenAI | Claude | Programmeringsfrågor |
+| **Forskning** | 🧪 (provrör) | Gemini, Claude, Grok | Claude Opus | Vetenskapliga frågor |
+| **Strategi** | 📊 (diagram) | Alla 4 | Claude Opus | Komplexa beslut |
+
+> **OBS:** Alla ikoner är SVG-baserade för konsekvent design.
 
 ---
 
@@ -73,14 +75,16 @@ Om du vill köra modellerna en åt gången:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  🔬 Kör modeller sekventiellt                           │
+│  ⏱ Kör modeller sekventiellt                            │
 │                                                         │
-│  [▶️ Kör alla i sekvens]  [🔔 Ljud]                     │
+│  [▶ Kör alla i sekvens]  [🔔 Ljud]                      │
 │                                                         │
-│  [🟢 Gemini] [🟡 Claude] [🟠 Grok] [⚫ OpenAI]          │
+│  [● Gemini] [● Claude] [● Grok] [● OpenAI]              │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
+
+> Alla ikoner är rena SVG-ikoner för konsekvent design.
 
 - Klicka på individuella modellknappar för att köra en i taget
 - Eller "Kör alla i sekvens" för att köra valda modeller automatiskt
@@ -93,18 +97,20 @@ Om du vill köra modellerna en åt gången:
 │  VÄLJ NÄSTA STEG                                        │
 │                                                         │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │ ➕          │  │ 🔬          │  │ 🧪          │     │
-│  │ Lägg till   │  │ Fakta-      │  │ Samman-     │     │
-│  │ modeller    │  │ granskning  │  │ fattning    │     │
+│  │ + (plus)    │  │ 🔍 (sök)    │  │ 💡 (lampa)  │     │
+│  │ Lägg till   │  │ Fakta-      │  │ Syntes      │     │
+│  │ modeller    │  │ granskning  │  │             │     │
+│  │ (blå)       │  │ (lila)      │  │ (ljusblå)   │     │
 │  └─────────────┘  └─────────────┘  └─────────────┘     │
 └─────────────────────────────────────────────────────────┘
 ```
 
-| Kort | Funktion |
-|------|----------|
-| **Lägg till modeller** | Kör fler AI:er med samma prompt (utan att köra om befintliga) |
-| **Faktagranskning** | Runda 2: Modellerna granskar varandras svar |
-| **Sammanfattning** | Kör syntes på alla insamlade svar |
+| Kort | Färg | Funktion |
+|------|------|----------|
+| **Lägg till modeller** | Blå | Kör fler AI:er med samma prompt (utan att köra om befintliga) |
+| **Faktagranskning** | Lila | Runda 2: Modellerna granskar varandras svar |
+| **Syntes** | Ljusblå | Kör syntes på alla insamlade svar |
+| **Supersyntes** | Gul/amber | Syntes efter faktagranskning (högre kvalitet) |
 
 ### 4. Iterativt arbetsflöde (nytt i v3.6)
 
@@ -135,7 +141,7 @@ När syntesen är klar visas:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  🧠  Syntes                                                     │
+│  💡  Syntes                                                     │
 │      Claude Sonnet · ●●● Gemini, Claude, Grok · ⚡ Snabb       │
 │                      ↑                          ↑               │
 │                 Modeller som                Profil som          │
@@ -148,6 +154,8 @@ När syntesen är klar visas:
 │  [📋 Kopiera] [📥 Export .md] [🔖 Spara] [→ KB]  12.3s · $0.02 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+> **Supersyntes** (efter faktagranskning) visas med ⭐-ikon och gul färg.
 
 **Modell-prickar:**
 - 🟢 Gemini (grön)
@@ -175,6 +183,25 @@ Klicka på rubriken för att expandera/kollapsa:
 │  ► Claude Sonnet                              ✓ 8.7s          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Färgspråk
+
+Konsekvent färgkodning genom hela gränssnittet:
+
+| Element | Färg | Hex |
+|---------|------|-----|
+| **Syntes** | Ljusblå | `#EFF6FF` → `#DBEAFE` |
+| **Supersyntes** | Gul/Amber | `#FFFBEB` → `#FEF3C7` |
+| **Faktagranskning** | Lila | `#7c3aed` |
+| **Lägg till modeller** | Blå | `#3b82f6` |
+
+### Historik-kort
+Sessioner i historiken har färgad bakgrund och vänsterkant baserat på typ:
+- **Supersyntes:** Gul gradient + gul kant + ⭐
+- **Syntes:** Blå gradient + blå kant + 💡
+- **Svar:** Grå gradient + grå kant
 
 ---
 
