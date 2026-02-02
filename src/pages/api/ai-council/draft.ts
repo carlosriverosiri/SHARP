@@ -1,9 +1,23 @@
 /**
  * API: AI Council Draft - Auto-save work-in-progress responses
  * 
- * GET /api/ai-council/draft - Get current draft
- * POST /api/ai-council/draft - Save/update draft
- * DELETE /api/ai-council/draft - Clear draft
+ * VIKTIG FUNKTION: Detta möjliggör att användare kan fortsätta där de var
+ * även när de byter dator (t.ex. från hemma till jobbet). Draftet sparas
+ * per användare i Supabase och laddas automatiskt när sidan öppnas.
+ * 
+ * Endpoints:
+ * - GET /api/ai-council/draft - Get current draft
+ * - POST /api/ai-council/draft - Save/update draft  
+ * - DELETE /api/ai-council/draft - Clear draft
+ * 
+ * Vad sparas:
+ * - prompt: Den aktuella frågan
+ * - context: Kontextinformation
+ * - responses: Alla AI-svar (R1)
+ * - r2_responses: Deliberation-svar (R2)
+ * - has_run_deliberation: Om deliberation körts
+ * 
+ * Utgångstid: 7 dagar (kan ändras i DRAFT_EXPIRY_HOURS)
  */
 
 export const prerender = false;
@@ -14,6 +28,9 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Hur länge ett draft ska sparas (i timmar) - 7 dagar default
+const DRAFT_EXPIRY_HOURS = 7 * 24; // 168 timmar = 7 dagar
 
 function getSupabase() {
   if (!supabaseUrl || !supabaseServiceKey) {
@@ -59,13 +76,13 @@ export const GET: APIRoute = async ({ cookies }) => {
       throw error;
     }
 
-    // Check if draft is expired (older than 24 hours)
+    // Check if draft is expired (default: 7 days)
     if (data && data.updated_at) {
       const updatedAt = new Date(data.updated_at).getTime();
       const now = Date.now();
       const hoursSinceUpdate = (now - updatedAt) / (1000 * 60 * 60);
       
-      if (hoursSinceUpdate > 24) {
+      if (hoursSinceUpdate > DRAFT_EXPIRY_HOURS) {
         // Draft expired, delete it
         await supabase.from('ai_council_drafts').delete().eq('user_id', anvandare.id);
         return new Response(JSON.stringify({ draft: null, expired: true }), {

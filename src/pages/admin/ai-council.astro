@@ -2115,7 +2115,7 @@ if (!anvandare) {
     }
     .next-step-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
     }
     @media (max-width: 640px) {
@@ -2159,6 +2159,26 @@ if (!anvandare) {
     .synthesize-card:hover:not(:disabled) {
       background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.2));
       border-color: #059669;
+    }
+    .add-models-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(96, 165, 250, 0.12));
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+    .add-models-card:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(96, 165, 250, 0.2));
+      border-color: #3b82f6;
+    }
+    .add-models-card .next-step-card-title { color: #3b82f6; }
+    .add-models-card .model-dots {
+      display: flex;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+    .add-models-card .model-dot-unused {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.7;
     }
     .next-step-card-icon {
       font-size: 1.75rem;
@@ -2255,6 +2275,55 @@ if (!anvandare) {
       display: none;
     }
     .error.visible { display: block; }
+    
+    /* Logout banner - prominent warning when session expired */
+    .logout-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      padding: 0.875rem 1.5rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 0.9375rem;
+    }
+    .logout-banner.visible { display: flex; }
+    .logout-banner-icon { font-size: 1.25rem; }
+    .logout-banner-text { font-weight: 500; }
+    .logout-banner-btn {
+      background: white;
+      color: #d97706;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .logout-banner-btn:hover { 
+      background: #fef3c7; 
+      transform: translateY(-1px);
+    }
+    .logout-banner-dismiss {
+      background: transparent;
+      border: none;
+      color: white;
+      opacity: 0.8;
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .logout-banner-dismiss:hover { opacity: 1; }
+    /* Adjust layout when banner is visible */
+    body.has-logout-banner .layout { margin-top: 52px; }
     
     /* Results */
     .results { display: none; }
@@ -2783,6 +2852,14 @@ if (!anvandare) {
   </style>
 </head>
 <body>
+  <!-- Logout banner - shown when session expires -->
+  <div id="logoutBanner" class="logout-banner">
+    <span class="logout-banner-icon">⚠️</span>
+    <span class="logout-banner-text">Din session har gått ut. Logga in igen för att fortsätta.</span>
+    <button class="logout-banner-btn" onclick="window.location.href='/personal'">Logga in</button>
+    <button class="logout-banner-dismiss" onclick="dismissLogoutBanner()" title="Stäng">×</button>
+  </div>
+  
   <div class="layout">
     <!-- Project Sidebar (Left) -->
     <aside class="project-sidebar" id="projectSidebar">
@@ -3274,6 +3351,15 @@ if (!anvandare) {
             <div id="nextStepCards" class="next-step-cards" style="display: none;">
               <div class="next-step-header">Välj nästa steg</div>
               <div class="next-step-grid">
+                <button type="button" id="addModelsCardBtn" class="next-step-card add-models-card" style="display: none;">
+                  <div class="next-step-card-icon">➕</div>
+                  <div class="next-step-card-title">Lägg till modeller</div>
+                  <div class="next-step-card-desc">Kör fler AI:er med samma fråga utan att köra om de som redan svarat</div>
+                  <div class="next-step-card-meta">
+                    <span class="next-step-card-count" id="addModelsCount">0 kvar</span>
+                    <div class="model-dots" id="unusedModelDots"></div>
+                  </div>
+                </button>
                 <button type="button" id="deliberateNowBtn" class="next-step-card deliberate-card">
                   <div class="next-step-card-icon">🔬</div>
                   <div class="next-step-card-title">Faktagranskning</div>
@@ -3839,6 +3925,74 @@ if (!anvandare) {
       let useSupabase = true;
       let availableModels = { openai: true, anthropic: true, gemini: true, grok: true };
       let isRunningSequential = false; // Track if sequential run is in progress
+      let isLoggedOut = false; // Track if user session has expired
+      
+      // ============================================
+      // AUTH STATUS CHECK
+      // ============================================
+      const logoutBanner = document.getElementById('logoutBanner');
+      let authCheckInterval = null;
+      
+      // Check if user is still logged in
+      async function checkAuthStatus() {
+        if (isLoggedOut) return false; // Already logged out, don't spam checks
+        
+        try {
+          const res = await fetch('/api/ai-council/sessions', { 
+            credentials: 'include',
+            method: 'HEAD' // Lightweight check
+          });
+          
+          // 401 means logged out
+          if (res.status === 401) {
+            showLogoutBanner();
+            return false;
+          }
+          
+          // Also check via actual response
+          if (res.status === 200) {
+            const checkRes = await fetch('/api/ai-council/sessions', { credentials: 'include' });
+            const data = await checkRes.json();
+            if (data.error && (data.error.includes('Ej inloggad') || data.error.includes('användare'))) {
+              showLogoutBanner();
+              return false;
+            }
+          }
+          
+          return true;
+        } catch (e) {
+          console.warn('Auth check failed:', e);
+          return true; // Don't show banner on network errors
+        }
+      }
+      
+      function showLogoutBanner() {
+        if (isLoggedOut) return; // Already showing
+        isLoggedOut = true;
+        logoutBanner?.classList.add('visible');
+        document.body.classList.add('has-logout-banner');
+        
+        // Stop the periodic check
+        if (authCheckInterval) {
+          clearInterval(authCheckInterval);
+          authCheckInterval = null;
+        }
+        
+        console.warn('⚠️ Session expired - showing logout banner');
+      }
+      
+      // Global function for dismiss button
+      window.dismissLogoutBanner = function() {
+        logoutBanner?.classList.remove('visible');
+        document.body.classList.remove('has-logout-banner');
+        // Note: isLoggedOut stays true so banner can be shown again
+      };
+      
+      // Check auth status on page load
+      checkAuthStatus();
+      
+      // Periodic auth check every 2 minutes
+      authCheckInterval = setInterval(checkAuthStatus, 2 * 60 * 1000);
       
       // ============================================
       // SOUND NOTIFICATION
@@ -3906,9 +4060,15 @@ if (!anvandare) {
       const expandModelsBtn = document.getElementById('expandModelsBtn');
       const deliberateNowBtn = document.getElementById('deliberateNowBtn');
       const synthesizeNowBtn = document.getElementById('synthesizeNowBtn');
+      const addModelsCardBtn = document.getElementById('addModelsCardBtn');
+      const addModelsCount = document.getElementById('addModelsCount');
+      const unusedModelDots = document.getElementById('unusedModelDots');
       const nextStepCards = document.getElementById('nextStepCards');
       const deliberateCount = document.getElementById('deliberateCount');
       const synthesizeCount = document.getElementById('synthesizeCount');
+      
+      // Track how many models were used for current synthesis
+      let modelsInCurrentSynthesis = 0;
 
       // Track failed models for retry functionality
       let failedModels = [];
@@ -4004,9 +4164,9 @@ if (!anvandare) {
           if (!stored) return false;
           
           const data = JSON.parse(stored);
-          // Only restore if less than 1 hour old
-          if (Date.now() - data.timestamp > 60 * 60 * 1000) {
-            console.log('🗑️ Stored responses expired, clearing');
+          // Only restore if less than 24 hours old (localStorage is backup for Supabase)
+          if (Date.now() - data.timestamp > 24 * 60 * 60 * 1000) {
+            console.log('🗑️ Stored responses expired (>24h), clearing');
             localStorage.removeItem(STORAGE_KEY);
             return false;
           }
@@ -4102,6 +4262,7 @@ if (!anvandare) {
         hasRunDeliberation = false;
         clearStoredResponses(); // Clear persistent storage too
         hasSynthesized = false;
+        modelsInCurrentSynthesis = 0;
         
         // Hide all workflow UI
         workflowProgress.style.display = 'none';
@@ -4110,10 +4271,16 @@ if (!anvandare) {
         retryFailedBtn.style.display = 'none';
         expandModelsBtn.style.display = 'none';
         nextStepCards.style.display = 'none';
+        addModelsCardBtn.style.display = 'none';
         deliberateNowBtn.classList.remove('done');
         deliberateNowBtn.disabled = false;
+        deliberateNowBtn.style.display = 'flex';
         synthesizeNowBtn.classList.remove('done');
         synthesizeNowBtn.disabled = false;
+        // Reset synthesize card text
+        synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Sammanfattning';
+        synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
+        synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
         const singleDelibSection = document.getElementById('singleDeliberationSection');
         if (singleDelibSection) singleDelibSection.style.display = 'none';
         // Reset single deliberation buttons
@@ -4720,6 +4887,8 @@ if (!anvandare) {
             notesSync.className = 'notes-sync error';
             notesSync.title = 'Din session har gått ut. Logga in igen på /personal för molnsynk.';
             console.warn('Auth error:', data.error);
+            // Show prominent logout banner
+            showLogoutBanner();
           } else if (data.sessions && data.sessions.length > 0) {
             sessions = data.sessions;
             useSupabase = true;
@@ -5472,6 +5641,12 @@ if (!anvandare) {
             })
           });
           
+          // Check for 401 Unauthorized first - show logout banner
+          if (response.status === 401) {
+            showLogoutBanner();
+            throw new Error('Din session har gått ut. Logga in igen för att fortsätta.');
+          }
+          
           // Check for HTML error responses
           const contentType = response.headers.get('content-type') || '';
           
@@ -5485,7 +5660,8 @@ if (!anvandare) {
             } else if (responseText.includes('Not Found') || response.status === 404) {
               errorDetail = 'API-endpoint hittades inte (404).';
             } else if (responseText.includes('Unauthorized') || response.status === 401) {
-              errorDetail = 'Ej behörig (401). Du kanske behöver logga in igen.';
+              showLogoutBanner();
+              errorDetail = 'Din session har gått ut. Logga in igen för att fortsätta.';
             }
             
             throw new Error(errorDetail);
@@ -5596,7 +5772,13 @@ if (!anvandare) {
             data.partialResult = true;
           }
           
-          if (!response.ok && data.error && !data._isPartial && !data._isSnapshot) throw new Error(data.error);
+          if (!response.ok && data.error && !data._isPartial && !data._isSnapshot) {
+            // Check for auth errors
+            if (data.error.includes('Ej inloggad') || data.error.includes('inloggad') || data.error.includes('session')) {
+              showLogoutBanner();
+            }
+            throw new Error(data.error);
+          }
           
           // Handle partial results (graceful degradation)
           if (data._isPartial || data.partialResult) {
@@ -5811,19 +5993,44 @@ if (!anvandare) {
             retryFailedBtn.querySelector('span').textContent = `🔄 Försök igen (${failedModels.length} misslyckade)`;
           }
           
-          // Show "expand" button to add more models
-          const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => !collectedResponses[m]);
-          expandModelsBtn.style.display = (hasSuccesses && unusedModels.length > 0) ? 'flex' : 'none';
-          if (unusedModels.length > 0) {
-            expandModelsBtn.querySelector('span').textContent = `➕ Lägg till modeller (${unusedModels.length} kvar)`;
+          // Show "expand" button to add more models (use helper function for consistent key mapping)
+          const unusedModelsForBtn = getUnusedModels();
+          expandModelsBtn.style.display = (hasSuccesses && unusedModelsForBtn.length > 0) ? 'flex' : 'none';
+          if (unusedModelsForBtn.length > 0) {
+            expandModelsBtn.querySelector('span').textContent = `➕ Lägg till modeller (${unusedModelsForBtn.length} kvar)`;
           }
           
-          // Show next step cards if we have responses but no synthesis
-          const canRunDeliberation = successCount >= 2 && !hasDeliberation && !hasSynthesis;
-          const canSynthesize = hasSuccesses && !hasSynthesis;
+          // Calculate what options are available
+          const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
+            const providerKey = m === 'gemini' ? 'google' : m;
+            return !collectedResponses[providerKey];
+          });
+          const hasUnusedModels = unusedModels.length > 0;
+          const canAddModels = hasSuccesses && hasUnusedModels;
           
-          // Show the cards container if either option is available
-          nextStepCards.style.display = (canRunDeliberation || canSynthesize) ? 'block' : 'none';
+          // Check if new models have been added since last synthesis
+          const newModelsAddedSinceSynthesis = hasSynthesis && (successCount > modelsInCurrentSynthesis);
+          
+          // Deliberation: requires 2+ responses, not already done
+          const canRunDeliberation = successCount >= 2 && !hasDeliberation;
+          
+          // Synthesis: can run if we have responses AND (no synthesis yet OR new models were added)
+          const canSynthesize = hasSuccesses && (!hasSynthesis || newModelsAddedSinceSynthesis);
+          
+          // Show the cards container if ANY option is available
+          const shouldShowCards = canRunDeliberation || canSynthesize || canAddModels;
+          nextStepCards.style.display = shouldShowCards ? 'block' : 'none';
+          
+          // Update "Lägg till modeller" card
+          addModelsCardBtn.style.display = canAddModels ? 'flex' : 'none';
+          if (canAddModels) {
+            addModelsCount.textContent = `${unusedModels.length} kvar`;
+            // Show colored dots for unused models
+            const dotColors = { gemini: '#10b981', anthropic: '#f59e0b', grok: '#3b82f6', openai: '#6b7280' };
+            unusedModelDots.innerHTML = unusedModels.map(m => 
+              `<span class="model-dot-unused" style="background: ${dotColors[m]}" title="${m}"></span>`
+            ).join('');
+          }
           
           // Update deliberation card
           deliberateNowBtn.disabled = !canRunDeliberation;
@@ -5832,13 +6039,22 @@ if (!anvandare) {
           
           // Update synthesize card
           synthesizeNowBtn.disabled = !canSynthesize;
-          synthesizeNowBtn.classList.toggle('done', hasSynthesis);
+          synthesizeNowBtn.classList.toggle('done', hasSynthesis && !newModelsAddedSinceSynthesis);
           synthesizeCount.textContent = hasDeliberation ? `${successCount}+R2 svar` : `${successCount} svar`;
           
-          // Update card descriptions if deliberation done
-          if (hasDeliberation) {
+          // Update card descriptions based on state
+          if (newModelsAddedSinceSynthesis) {
+            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Uppdatera syntes';
+            synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = `Kör ny syntes med alla ${successCount} svar (${successCount - modelsInCurrentSynthesis} nya)`;
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🔄';
+          } else if (hasDeliberation) {
             synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Supersyntes';
             synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'Sammanfatta efter faktagranskning – högre kvalitet';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
+          } else {
+            synthesizeNowBtn.querySelector('.next-step-card-title').textContent = 'Sammanfattning';
+            synthesizeNowBtn.querySelector('.next-step-card-desc').textContent = 'En AI sammanfattar alla svar till en slutsats';
+            synthesizeNowBtn.querySelector('.next-step-card-icon').textContent = '🧪';
           }
           
           // Also show single-model deliberation section
@@ -5848,6 +6064,7 @@ if (!anvandare) {
           // Update hasSynthesized flag if synthesis was included
           if (hasSynthesis) {
             hasSynthesized = true;
+            modelsInCurrentSynthesis = successCount;
           }
           
           // Update workflow progress indicator
@@ -5900,24 +6117,22 @@ if (!anvandare) {
         await runQuery();
       });
       
-      // Expand models button handler - add more models to existing responses
-      expandModelsBtn.addEventListener('click', () => {
-        // Find models that haven't been run yet
-        const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => !collectedResponses[m]);
+      // Helper function to get unused models
+      function getUnusedModels() {
+        return ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
+          const providerKey = m === 'gemini' ? 'google' : m;
+          return !collectedResponses[providerKey];
+        });
+      }
+      
+      // Helper function to prepare and run additional models
+      function prepareToAddModels() {
+        const unusedModels = getUnusedModels();
         
         if (unusedModels.length === 0) {
           alert('Alla modeller har redan svarat.');
           return;
         }
-        
-        // Show a modal to select which additional models to run
-        const selectedNew = [];
-        const modelNames = {
-          'gemini': 'Gemini 2.0 Flash (~$0.10/1M)',
-          'anthropic': 'Claude Sonnet (~$3/1M)',
-          'grok': 'Grok 4 (~$5/1M)',
-          'openai': 'OpenAI o1 (~$15/1M)'
-        };
         
         // Update checkboxes: deselect models that already have responses, select unused ones
         document.querySelectorAll('.model-checkbox').forEach(cb => {
@@ -5939,7 +6154,13 @@ if (!anvandare) {
         
         // Show info message
         setStatus(`✓ ${unusedModels.length} modeller valda. Klicka "Kör AI Council" för att lägga till.`, true);
-      });
+      }
+      
+      // Expand models button handler - add more models to existing responses
+      expandModelsBtn.addEventListener('click', prepareToAddModels);
+      
+      // "Lägg till modeller" card button handler (in next-step-cards)
+      addModelsCardBtn.addEventListener('click', prepareToAddModels);
       
       // Deliberation button handler - run Round 2 on collected responses
       deliberateNowBtn.addEventListener('click', async () => {
@@ -6240,11 +6461,32 @@ if (!anvandare) {
             document.getElementById('synthesisContent').innerHTML = renderMarkdown(data.synthesis.response);
             document.getElementById('synthesisModelLabel').textContent = data.synthesis.provider;
             
-            // Mark synthesize card as done and hide cards
-            synthesizeNowBtn.classList.add('done');
-            synthesizeNowBtn.disabled = true;
-            nextStepCards.style.display = 'none';
+            // Mark synthesize as done and track model count
             hasSynthesized = true;
+            modelsInCurrentSynthesis = Object.keys(collectedResponses).length;
+            
+            // Update cards to show remaining options (e.g., add more models)
+            const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
+              const providerKey = m === 'gemini' ? 'google' : m;
+              return !collectedResponses[providerKey];
+            });
+            
+            if (unusedModels.length > 0) {
+              // Show "add models" card if there are unused models
+              synthesizeNowBtn.classList.add('done');
+              synthesizeNowBtn.disabled = true;
+              addModelsCardBtn.style.display = 'flex';
+              addModelsCount.textContent = `${unusedModels.length} kvar`;
+              const dotColors = { gemini: '#10b981', anthropic: '#f59e0b', grok: '#3b82f6', openai: '#6b7280' };
+              unusedModelDots.innerHTML = unusedModels.map(m => 
+                `<span class="model-dot-unused" style="background: ${dotColors[m]}" title="${m}"></span>`
+              ).join('');
+              // Keep cards visible but hide deliberation if done
+              deliberateNowBtn.style.display = hasRunDeliberation ? 'none' : 'flex';
+            } else {
+              // All models used - hide all cards
+              nextStepCards.style.display = 'none';
+            }
             
             // Update workflow progress
             updateWorkflowProgress();

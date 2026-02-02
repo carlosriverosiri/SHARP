@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-01-30 (v3.5 - Nästa steg-kort)
+**Senast uppdaterad:** 2026-02-02 (v3.6 - Cross-device sync & session-varning)
 
 ---
 
@@ -57,6 +57,8 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Cross-device draft sync** (v3.6) - Pågående arbete sparas automatiskt och synkas mellan datorer (7 dagars retention)
+- [x] **Session-utgångsvarning** (v3.6) - Tydlig banner när sessionen gått ut
 - [x] **Kamerafunktion** (v3.4) - Fotografera direkt från mobil/iPad för bildanalys
 - [x] **Diktering/Speech-to-text** (v3.3) - Mikrofon-knapp för att tala in prompts (Web Speech API)
 - [x] **Mobilanpassning** (v3.3) - Touch-vänligt UI, FAB för sessioner, scroll-profiler
@@ -495,6 +497,35 @@ Sessioner sparas i **Supabase** (synkas mellan enheter) med **localStorage som f
 | **Rensa** | Tar bort alla sessioner |
 
 Statusindikator visar om du är synkad med Supabase (☁️) eller använder lokal lagring (💾).
+
+### 🔄 Auto-sparad draft (synkas mellan enheter)
+
+> **VIKTIG FUNKTION:** Ditt pågående arbete sparas automatiskt och synkas mellan olika datorer.
+
+När du jobbar i AI Council sparas ditt pågående arbete automatiskt till molnet (Supabase). Detta innebär att du kan:
+
+- **Fortsätta där du var** - Stäng webbläsaren, kom tillbaka nästa dag
+- **Byta dator** - Börja hemma, fortsätt på jobbet (eller vice versa)
+- **Återställa efter krasch** - Ingenting förloras om webbläsaren kraschar
+
+| Vad sparas | Beskrivning |
+|------------|-------------|
+| **Prompt** | Din aktuella fråga |
+| **Kontext** | All kontextinformation du lagt till |
+| **Alla AI-svar** | Svar från alla modeller (R1) |
+| **Deliberation-svar** | Om du kört R2 (modellerna granskar varandra) |
+| **Status** | Om deliberation körts, syntessvar, etc. |
+
+**Tekniska detaljer:**
+
+| Inställning | Värde |
+|-------------|-------|
+| **Sparintervall** | 2 sekunder efter senaste ändring |
+| **Utgångstid** | 7 dagar (sedan senaste ändring) |
+| **Fallback** | localStorage (24 timmar) om Supabase inte fungerar |
+| **Per användare** | Varje användare har sitt eget draft |
+
+**Obs:** Draftsen rensas automatiskt när du kör en **ny fråga** eller klickar på **"Rensa allt"**.
 
 ### Projektorganisation 📁 (NY i v3.0!)
 
