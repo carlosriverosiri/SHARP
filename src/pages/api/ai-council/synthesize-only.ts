@@ -55,13 +55,14 @@ function calculateCost(model: string, tokens: TokenUsage): CostInfo {
 // Build synthesis prompt
 function buildSynthesisPrompt(originalPrompt: string, responses: AIResponse[]): string {
   const validResponses = responses.filter(r => !r.error && r.response);
+  const modelCount = validResponses.length;
   
   return `Du är en expertsyntetiserare. Analysera följande AI-modellers svar på samma fråga och skapa EN sammanhängande, förbättrad syntes.
 
 ## Originalfråga:
 ${originalPrompt}
 
-## AI-modellernas svar:
+## AI-modellernas svar (${modelCount} modeller):
 
 ${validResponses.map(r => `### ${r.provider}:
 ${r.response}
@@ -69,12 +70,32 @@ ${r.response}
 
 ## Din uppgift:
 
-Skapa en SYNTES som:
+**BÖRJA ALLTID med en Konsensusanalys:**
+
+\`\`\`
+📊 KONSENSUSANALYS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: [HÖG/MEDEL/LÅG] - [kort förklaring]
+
+✅ Alla modeller överens om:
+• [punkt 1]
+• [punkt 2]
+
+⚠️ Konflikter/skillnader:
+• [vad de är oeniga om och vilka modeller]
+
+💡 Unika insikter (endast en modell):
+• [modell]: [insikt] ← Verifiera denna!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\`\`\`
+
+**Sedan skapa en SYNTES som:**
 1. Kombinerar de bästa insikterna från alla svar
-2. Eliminerar redundans och motsägelser
-3. Är välstrukturerad och lätt att läsa
-4. Använder markdown för formatering
-5. Är på svenska
+2. Tydligt markerar om något ENDAST kommer från en modell (potentiell hallucination)
+3. Eliminerar redundans och motsägelser
+4. Är välstrukturerad och lätt att läsa
+5. Använder markdown för formatering
+6. Är på svenska
 
 ## Avsluta ALLTID med en "Cursor Implementation Guide":
 
@@ -93,7 +114,7 @@ Skapa en SYNTES som:
 [Inkludera konkreta kodexempel som kan kopieras direkt]
 \`\`\`
 
-VIKTIGT: Skriv ENDAST syntesen och Implementation Guide, ingen meta-kommentar om processen.`;
+VIKTIGT: Skriv ENDAST konsensusanalysen, syntesen och Implementation Guide, ingen meta-kommentar om processen.`;
 }
 
 // Build super-synthesis prompt (after deliberation)
@@ -124,10 +145,33 @@ ${r.response}
 
 ## Din uppgift (Supersyntes):
 
+**BÖRJA ALLTID med en Konsensusanalys:**
+
+\`\`\`
+📊 KONSENSUSANALYS (efter faktagranskning)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Överensstämmelse: [HÖG/MEDEL/LÅG] - [kort förklaring]
+
+🔄 Korrigeringar i Runda 2:
+• [vad som korrigerades och av vem]
+
+✅ Slutgiltig konsensus:
+• [punkt 1]
+• [punkt 2]
+
+⚠️ Kvarstående osäkerheter:
+• [eventuella kvarvarande konflikter]
+
+💡 Stärkta/försvagade påståenden:
+• ✓ Stärkt: [påstående som fått stöd av flera efter granskning]
+• ✗ Försvagat: [påstående som ifrågasatts]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\`\`\`
+
+**Sedan skapa supersyntesen:**
 1. **Identifiera korrigeringar**: Vilka fel upptäcktes i Runda 2? Vad korrigerades?
-2. **Analysera konsensus**: Vad är modellerna nu överens om efter granskning?
-3. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
-4. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
+2. **Väg bevis**: Vilka påståenden fick starkast stöd efter peer review?
+3. **Slutgiltig rekommendation**: Ge en definitiv, välgrundad rekommendation baserad på hela deliberationsprocessen.
 
 ## Avsluta ALLTID med en "Cursor Implementation Guide":
 

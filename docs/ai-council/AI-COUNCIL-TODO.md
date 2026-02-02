@@ -174,10 +174,62 @@ ai-council/
 
 ---
 
-## Anteckningar
+## Anti-Hallucination & Kvalitetskontroll
 
-_Lägg till tankar och idéer här..._
+> **Insikt:** Det är statistiskt osannolikt att 4 oberoende AI-modeller hallucinerar *exakt samma sak*. Multi-model-approachen ger naturlig faktakontroll. Större risk är halvsanningar från nätet där källkritik blir viktig.
+
+### Fas A: Snabb implementation (1-2 dagar)
+- [ ] **Konsensusindikator** - Visa hur mycket modellerna är överens (0-100%)
+- [ ] **Konfliktmarkering i syntes** - Tydligt visa när modeller motsäger varandra
+- [ ] **"Osäkerhetsgrad"** - Flagga påståenden där bara 1 modell säger något
+
+### Fas B: Källhantering (1 vecka)
+- [ ] **Be om källor i prompts** - Instruera modellerna att citera källor
+- [ ] **Visa källhänvisningar** - Extrahera och visa URL:er/referenser separat
+- [ ] **Flagga påståenden utan källa** - Markera med varningsikon
+- [ ] **Citatverifiering** - Kontrollera att citat är korrekta (svårt)
+
+### Fas C: Avancerad validering (2-4 veckor)
+- [ ] **Cross-model fact-check** - Låt modellerna specifikt granska varandras påståenden
+- [ ] **Confidence scoring** - Be varje modell ange säkerhet (1-10) per påstående
+- [ ] **Deliberation trace** - Spara och visa hela granskningsprocessen
+- [ ] **Red Team Mode** - En modell försöker aktivt hitta fel i andras svar
 
 ---
 
-**Senast uppdaterad:** 2026-01-28
+## Framtida funktioner (från AI Council syntes 2026-02-02)
+
+### Streaming & UX
+- [ ] **Real-time streaming** - Visa svar medan de genereras
+- [ ] **Progress med konfidensvisualisering** - Visa status per modell
+- [ ] **<5s till första svar** - Optimera för snabb feedback
+
+### Smart Routing
+- [ ] **Frågetyp-baserad routing** - Välj modeller baserat på frågan
+  - Code review → Claude + GPT-4o
+  - Arkitektur → o1 + Claude
+  - Research → Grok + Gemini
+  - Säkerhet → Claude + o1
+- [ ] **Expertisprofiler** - Förinställda modellkombinationer per domän
+
+### Integrationer
+- [ ] **MCP Server för Cursor** - Använd AI Council direkt i editorn
+- [ ] **VS Code extension** - Samma funktionalitet
+- [ ] **CLI-verktyg** - `ai-council "fråga"` från terminalen
+- [ ] **API för utvecklare** - REST/GraphQL endpoint
+
+### Mätbara mål
+- Hallucinationsreduktion: 40% inom 3 månader
+- Källtäckning: >80% av påståenden med referens
+- Responstid: <30s total
+
+---
+
+## Anteckningar
+
+- **2026-02-02:** Ny syntes om vidareutveckling. Fokus på anti-hallucination och streaming.
+- **USP:** "Deliberative Multi-AI Validation" - ingen annan tjänst låter AI:er granska varandras svar aktivt.
+
+---
+
+**Senast uppdaterad:** 2026-02-02
