@@ -779,6 +779,21 @@ if (!anvandare) {
       color: #ef4444;
       font-size: 0.875rem;
     }
+    .zotero-reconfigure-btn {
+      margin-top: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: #dc2626;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .zotero-reconfigure-btn:hover {
+      background: #b91c1c;
+    }
     
     /* Project context menu */
     .project-context-menu {
@@ -9823,6 +9838,7 @@ if (!anvandare) {
             <div class="zotero-error">
               ${escapeHtml(error.message || 'Kunde inte ladda collections')}
               <br><small>Kontrollera att du är inloggad och att API-nyckeln är giltig.</small>
+              <br><button class="zotero-reconfigure-btn" onclick="window.reconfigureZotero()">🔑 Konfigurera om API-nyckel</button>
             </div>
           `;
         }
@@ -9998,6 +10014,12 @@ if (!anvandare) {
       
       // Refresh collections
       zoteroRefreshCollections?.addEventListener('click', loadZoteroCollections);
+      
+      // Global function for reconfiguring Zotero (called from error message)
+      window.reconfigureZotero = function() {
+        zoteroModal.classList.remove('open');
+        openZoteroConfigModal();
+      };
       
       // Check Zotero config on page load
       checkZoteroConfig();
