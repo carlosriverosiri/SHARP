@@ -162,17 +162,39 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const children: ZoteroAttachment[] = await childrenResponse.json();
     
-    // Hitta PDF-attachment
-    const pdfAttachment = children.find(
+    // Hitta PDF-attachment - prioritera imported_file, men acceptera också linked_url
+    const pdfAttachments = children.filter(
       child => child.data.itemType === 'attachment' && 
-               child.data.contentType === 'application/pdf' &&
-               child.data.linkMode === 'imported_file'
+               child.data.contentType === 'application/pdf'
     );
+    
+    // Prioritera: 1) imported_file (synkad), 2) imported_url (länkad URL)
+    let pdfAttachment = pdfAttachments.find(a => a.data.linkMode === 'imported_file');
+    if (!pdfAttachment) {
+      pdfAttachment = pdfAttachments.find(a => a.data.linkMode === 'imported_url');
+    }
 
     if (!pdfAttachment) {
+      // Kolla om det finns linked_file (lokala filer som inte är synkade)
+      const linkedFiles = pdfAttachments.filter(a => a.data.linkMode === 'linked_file');
+      
+      if (linkedFiles.length > 0) {
+        return new Response(JSON.stringify({ 
+          error: 'Not Synced',
+          message: 'PDF:en finns bara lokalt på din dator och har inte synkats till Zoteros molnlagring. För att använda PDF:er via API måste de vara synkade. Öppna Zotero på din dator och synka ditt bibliotek (grön cirkel-ikon), eller kontrollera att du har tillräckligt med lagringsutrymme på zotero.org.',
+          linkedFiles: linkedFiles.map(c => ({
+            key: c.key,
+            filename: c.data.filename,
+          })),
+        }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      
       return new Response(JSON.stringify({ 
         error: 'No PDF',
-        message: 'Ingen PDF hittades för detta objekt. Endast lokalt lagrade PDF:er (imported_file) stöds.',
+        message: 'Ingen PDF hittades för detta objekt.',
         availableAttachments: children
           .filter(c => c.data.itemType === 'attachment')
           .map(c => ({

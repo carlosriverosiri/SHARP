@@ -9961,6 +9961,7 @@ if (!anvandare) {
         
         let importedCount = 0;
         let importedText = '';
+        let errorMessages = [];
         
         for (const itemKey of selectedZoteroItems) {
           try {
@@ -9978,9 +9979,12 @@ if (!anvandare) {
               
               importedText += `\n\n---\n\n📄 **${filename}** (från Zotero):\n\n${pdfText.slice(0, 30000)}${pdfText.length > 30000 ? '\n\n[...trunkerad...]' : ''}`;
               importedCount++;
+            } else if (data.message) {
+              errorMessages.push(data.message);
             }
           } catch (error) {
             console.error('Import error for', itemKey, error);
+            errorMessages.push('Nätverksfel vid hämtning');
           }
         }
         
@@ -9989,7 +9993,13 @@ if (!anvandare) {
           alert(`✅ Importerade ${importedCount} PDF:er till kontexten`);
           zoteroModal.classList.remove('open');
         } else {
-          alert('Kunde inte importera några PDF:er. Kontrollera att artiklarna har bifogade PDF-filer.');
+          // Visa detaljerat felmeddelande
+          const uniqueErrors = [...new Set(errorMessages)];
+          if (uniqueErrors.length > 0) {
+            alert('Kunde inte importera PDF:er:\n\n' + uniqueErrors.join('\n\n'));
+          } else {
+            alert('Kunde inte importera några PDF:er. Kontrollera att artiklarna har bifogade PDF-filer.');
+          }
         }
         
         zoteroImportSelectedBtn.disabled = false;
