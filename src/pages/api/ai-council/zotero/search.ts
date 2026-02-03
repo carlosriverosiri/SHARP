@@ -171,11 +171,16 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     if (tag) {
       searchParams.set('tag', tag);
     }
-    if (collection) {
-      searchParams.set('collection', collection);
-    }
 
-    const searchUrl = `${ZOTERO_API_BASE}/${libraryPath}/items?${searchParams.toString()}`;
+    // Bygg URL - för collection måste vi ändra endpoint-strukturen
+    let searchUrl: string;
+    if (collection) {
+      // Zotero API kräver: /users/{userID}/collections/{collectionKey}/items
+      searchUrl = `${ZOTERO_API_BASE}/${libraryPath}/collections/${collection}/items?${searchParams.toString()}`;
+    } else {
+      // Sök i hela biblioteket
+      searchUrl = `${ZOTERO_API_BASE}/${libraryPath}/items?${searchParams.toString()}`;
+    }
 
     // Gör sökning med rate limiting
     const response = await rateLimitedFetch(
