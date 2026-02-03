@@ -146,7 +146,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
     
     // Search for PMIDs
-    const pmids = await searchPubMed(query, Math.min(maxResults, 20));
+    const pmids = await searchPubMed(query, Math.min(maxResults, 50));
     
     // Fetch article details
     const articles = await fetchArticleDetails(pmids);

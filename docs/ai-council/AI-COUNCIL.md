@@ -615,7 +615,7 @@ src/pages/api/ai-council/pubmed-search.ts   # API-endpoint för PubMed-sökning
 
 #### Begränsningar
 
-- Max 20 artiklar per sökning (för prestanda)
+- Max 50 artiklar per sökning
 - Abstract trunkeras till ~500 tecken (fulltext måste hämtas separat)
 - Endast engelska söktermer fungerar optimalt
 - Kräver internetanslutning (ingen lokal cache)
