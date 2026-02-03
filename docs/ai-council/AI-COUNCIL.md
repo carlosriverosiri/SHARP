@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-02-02 (v3.7 - Konsensusanalys & Riktad deliberation)
+**Senast uppdaterad:** 2026-02-03 (v3.8 - PubMed-sökning för verifierade referenser)
 
 ---
 
@@ -57,6 +57,7 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **PubMed-sökning** (v3.8) - Sök PubMed och lägg till verifierade artiklar i kontexten (inga hallucinerade referenser)
 - [x] **Konsensusanalys** (v3.7) - Visar överensstämmelse och konflikter i varje syntes
 - [x] **Riktad deliberation** (v3.7) - Strukturerad konfliktanalys med kategorier (MOTSÄGELSE, UNIK_INSIKT, etc.)
 - [x] **Förkastade påståenden** (v3.7) - Hallucinationer markeras explicit i supersyntes
@@ -487,6 +488,139 @@ src/pages/api/ai-council/zotero/      # API endpoints (4 st)
   - collections.ts                    # Hämta alla collections
 supabase/migrations/013-*.sql         # Databasschema
 ```
+
+### 🔬 PubMed-sökning (v3.8)
+
+Sök i PubMed och få **verifierade vetenskapliga referenser** med riktiga PMID, DOI och länkar - helt utan hallucinationer.
+
+#### Varför PubMed-sökning?
+
+**Problemet:** När AI-modeller (särskilt via API) ombeds ge vetenskapliga referenser tenderar de att *hallucinera* - de hittar på artikeltitlar, författare och länkar som inte existerar. Grok.com fungerar bra eftersom den har inbyggd realtidssökning, men Grok API (och de flesta andra API:er) saknar detta.
+
+**Lösningen:** PubMed-sökning hämtar riktiga artiklar direkt från NCBI:s databas och lägger till dem i AI:ernas kontext. Detta ger:
+- ✅ **Verifierade referenser** - Artiklar som faktiskt existerar
+- ✅ **Riktiga PMID och DOI** - Klickbara länkar som fungerar
+- ✅ **Färsk information** - Realtidssökning, inte gammal träningsdata
+
+#### Hur det fungerar tekniskt
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     DATAFLÖDE: PubMed → AI Council                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  1. SÖKNING                                                             │
+│  ┌──────────────┐    ┌───────────────┐    ┌──────────────────────────┐ │
+│  │ Användare    │───▶│ pubmed-search │───▶│ NCBI E-utilities API     │ │
+│  │ skriver      │    │ .ts (backend) │    │ (PubMed)                 │ │
+│  │ sökterm      │    └───────────────┘    │ • esearch.fcgi (sök)     │ │
+│  └──────────────┘           │             │ • efetch.fcgi (detaljer) │ │
+│                             │             └──────────────────────────┘ │
+│                             ▼                                          │
+│  2. RESULTAT                                                           │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ Verifierade artiklar returneras:                                  │  │
+│  │ • PMID (unikt ID)                                                 │  │
+│  │ • Titel, författare, journal, år                                  │  │
+│  │ • DOI (om tillgänglig)                                            │  │
+│  │ • Abstract (trunkerat)                                            │  │
+│  │ • Riktiga PubMed-länkar                                           │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                             │                                          │
+│                             ▼                                          │
+│  3. KONTEXT-INJEKTION                                                  │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │ Valda artiklar läggs till i kontext-fältet som strukturerad text │  │
+│  │                                                                   │  │
+│  │ ## PubMed-referenser                                              │  │
+│  │ [1] Författare et al. (2024). Titel. Journal.                    │  │
+│  │     PubMed: https://pubmed.ncbi.nlm.nih.gov/12345678/             │  │
+│  │     DOI: https://doi.org/10.1234/example                          │  │
+│  │     Abstract: ...                                                 │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                             │                                          │
+│                             ▼                                          │
+│  4. AI-KÖRNING                                                         │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │                     SAMMA KONTEXT TILL ALLA                       │  │
+│  │                                                                   │  │
+│  │    ┌─────────────────────────────────────────────────────┐       │  │
+│  │    │  Prompt + Kontext (inkl. PubMed-referenser)         │       │  │
+│  │    └─────────────────────────────────────────────────────┘       │  │
+│  │              │             │             │             │          │  │
+│  │              ▼             ▼             ▼             ▼          │  │
+│  │         ┌───────┐    ┌─────────┐   ┌────────┐   ┌─────────┐      │  │
+│  │         │ GPT-4 │    │ Claude  │   │ Gemini │   │  Grok   │      │  │
+│  │         └───────┘    └─────────┘   └────────┘   └─────────┘      │  │
+│  │                                                                   │  │
+│  │  ✓ Alla modeller ser EXAKT samma referenser                      │  │
+│  │  ✓ Jämförbart underlag för konsensusanalys                       │  │
+│  │  ✓ Referenser är verifierade - inte hallucinerade                │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Vad AI:erna ser och använder
+
+| Datakälla | Beskrivning |
+|-----------|-------------|
+| **Träningsdata** | AI:ernas "förkunskaper" från träning (GPT-4: sept 2023, Claude: apr 2024, etc.) |
+| **Kontext-fältet** | Allt du klistrar in + PubMed-referenser som hämtats |
+| **Prompten** | Din fråga |
+
+**Viktigt att förstå:**
+- AI:erna använder **BÅDE** sin träningsdata **OCH** den kontext du ger dem
+- PubMed-referenserna "augmenterar" deras kunskap med färska, verifierade källor
+- Alla modeller får **samma input** → rättvis jämförelse i konsensusanalysen
+
+#### Användning
+
+1. **Klicka** på den gröna knappen **"Sök PubMed-artiklar"** under kontext-fältet
+2. **Skriv söktermer** (t.ex. "rotator cuff repair return to sport")
+3. **Klicka på artiklar** för att expandera abstract och välja dem
+4. **Klicka "Lägg till valda i kontext"** för att injicera referenserna
+5. **Skriv din prompt** och kör AI Council som vanligt
+
+#### Söktips
+
+| Sökstrategi | Exempel |
+|-------------|---------|
+| **Specifika termer** | "biceps tenodesis vs tenotomy outcomes" |
+| **MeSH-termer** | "rotator cuff[MeSH] AND arthroscopy" |
+| **Författare** | "Burkhart SS shoulder" |
+| **År-filter** | "superior capsular reconstruction 2020:2024" |
+| **Studietyp** | "anterior shoulder instability meta-analysis" |
+
+#### Fördelar gentemot AI-genererade referenser
+
+| Aspekt | PubMed-sökning | AI-genererade |
+|--------|---------------|---------------|
+| **Korrekthet** | 100% riktiga artiklar | Ofta hallucinerade |
+| **PMID/DOI** | Verifierade, klickbara | Ofta felaktiga/påhittade |
+| **Aktualitet** | Realtid (dagens artiklar) | Begränsat till träningsdata |
+| **Abstract** | Faktiskt abstract | AI:s tolkning |
+| **Källkritik** | Du väljer själv | AI bestämmer |
+
+#### Tekniska filer
+
+```
+src/pages/api/ai-council/pubmed-search.ts   # API-endpoint för PubMed-sökning
+```
+
+**NCBI E-utilities (gratis):**
+- `esearch.fcgi` - Söker efter artiklar, returnerar PMID-lista
+- `efetch.fcgi` - Hämtar fullständig metadata för PMID:s
+- Rate limit: 3 req/s utan API-nyckel (tillräckligt för normal användning)
+
+#### Begränsningar
+
+- Max 20 artiklar per sökning (för prestanda)
+- Abstract trunkeras till ~500 tecken (fulltext måste hämtas separat)
+- Endast engelska söktermer fungerar optimalt
+- Kräver internetanslutning (ingen lokal cache)
+
+---
 
 ### Kopieringsknappar
 
@@ -1003,6 +1137,29 @@ npm install bottleneck
 ---
 
 ## Versionshistorik
+
+### v3.8 (2026-02-03) - PubMed-sökning
+
+**Nyhet:** Sök vetenskapliga artiklar direkt i PubMed och lägg till verifierade referenser i kontexten.
+
+**Problemet som löses:**
+- AI-modeller via API tenderar att *hallucinera* vetenskapliga referenser
+- Grok.com fungerar (har inbyggd sökning) men Grok API gör inte det
+- Felaktiga PMID, DOI och länkar är vanligt förekommande
+
+**Lösningen:**
+- 🔬 **PubMed-sökmodal** - Sök i NCBI:s databas med 35+ miljoner artiklar
+- ✅ **Verifierade PMID och DOI** - Riktiga, klickbara länkar
+- 📄 **Abstract-preview** - Se sammanfattning innan du väljer
+- 📥 **Kontext-injektion** - Valda artiklar läggs automatiskt i kontexten
+- 🎯 **Samma underlag** - Alla AI-modeller ser exakt samma referenser
+
+**Tekniskt:**
+```
+src/pages/api/ai-council/pubmed-search.ts   # NCBI E-utilities API
+```
+
+---
 
 ### v3.7 (2026-02-02) - Konsensusanalys & Riktad Deliberation
 
