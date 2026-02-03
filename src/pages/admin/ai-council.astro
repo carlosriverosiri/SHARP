@@ -2517,29 +2517,331 @@ if (!anvandare) {
         height: 24px;
       }
     }
-    /* PubMed search button */
-    .pubmed-search-btn {
+    /* Source search button (unified) */
+    .source-search-btn {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 0.75rem;
-      padding: 0.625rem 1rem;
-      background: linear-gradient(135deg, #059669, #10b981);
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: white;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+    .source-search-btn:hover {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+    .source-search-btn svg {
+      flex-shrink: 0;
+    }
+    
+    /* Source search modal with tabs */
+    .source-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .source-modal.open { display: flex; }
+    .source-modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    }
+    .source-modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      border-radius: 16px 16px 0 0;
+      color: white;
+    }
+    .source-modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .source-modal-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      line-height: 1;
+      border-radius: 6px;
+    }
+    .source-modal-close:hover { background: rgba(255,255,255,0.3); }
+    
+    /* Source tabs */
+    .source-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-sidebar);
+      padding: 0 0.5rem;
+    }
+    .source-tab {
+      padding: 0.875rem 1.25rem;
+      background: transparent;
+      border: none;
       font-size: 0.875rem;
       font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    .source-tab:hover {
+      color: var(--text-primary);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    .source-tab.active {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+    .source-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-primary);
+      border-radius: 3px 3px 0 0;
+    }
+    .source-tab-icon { font-size: 1rem; }
+    .source-tab-count {
+      background: var(--bg-hover);
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 10px;
+    }
+    .source-tab.active .source-tab-count {
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--color-primary);
+    }
+    
+    .source-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      min-height: 350px;
+    }
+    
+    .source-search-form {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .source-search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+    .source-search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .source-search-submit {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .pubmed-search-btn:hover {
-      background: linear-gradient(135deg, #047857, #059669);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    .source-search-submit:hover { background: var(--color-primary-dark); }
+    .source-search-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .source-status {
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
     }
-    .pubmed-search-btn svg {
+    .source-status.loading {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-primary);
+    }
+    .source-status.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626;
+    }
+    
+    .source-results {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .source-result-item {
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .source-result-item:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    }
+    .source-result-item.selected {
+      border-color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    .source-result-item.selected::before {
+      content: '✓';
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 24px;
+      height: 24px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    
+    .source-result-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .source-result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-hover);
+      border-radius: 6px;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--text-muted);
       flex-shrink: 0;
     }
+    .source-result-badge.academic { background: rgba(139, 92, 246, 0.15); color: #7c3aed; }
+    .source-result-badge.official { background: rgba(16, 185, 129, 0.15); color: #059669; }
+    .source-result-badge.code { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+    .source-result-badge.news { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+    .source-result-badge.wiki { background: rgba(107, 114, 128, 0.15); color: #4b5563; }
+    
+    .source-result-credibility {
+      font-size: 0.625rem;
+      color: var(--text-light);
+      margin-left: auto;
+    }
+    .source-result-credibility.high { color: #059669; }
+    .source-result-credibility.medium { color: #d97706; }
+    .source-result-credibility.low { color: #dc2626; }
+    
+    .source-result-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+      line-height: 1.4;
+      margin-bottom: 0.375rem;
+    }
+    .source-result-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .source-result-snippet {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .source-result-link {
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    .source-result-link:hover { text-decoration: underline; }
+    
+    .source-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-sidebar);
+      border-radius: 0 0 16px 16px;
+    }
+    .source-footer-info {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .source-footer-selected {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    .source-add-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .source-add-btn:hover { background: var(--color-primary-dark); }
+    .source-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    /* Legacy PubMed button styles (hidden) */
+    .pubmed-search-btn { display: none; }
     
     /* PubMed modal */
     .pubmed-modal {
@@ -4006,13 +4308,13 @@ if (!anvandare) {
               </div>
               <div id="fileList" class="file-list"></div>
               
-              <!-- PubMed search button -->
-              <button type="button" class="pubmed-search-btn" id="pubmedSearchBtn" title="Sök vetenskapliga artiklar i PubMed">
+              <!-- Source search button (opens hybrid modal) -->
+              <button type="button" class="source-search-btn" id="sourceSearchBtn" title="Sök vetenskapliga och webbaserade källor">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <span>Sök PubMed-artiklar</span>
+                <span>🔍 Sök källor</span>
               </button>
             </div>
             
@@ -4875,23 +5177,48 @@ if (!anvandare) {
     </div>
   </div>
 
-  <!-- PubMed search modal -->
-  <div id="pubmedModal" class="pubmed-modal">
-    <div class="pubmed-modal-content">
-      <div class="pubmed-modal-header">
-        <div class="pubmed-modal-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Unified Source Search Modal (PubMed + Scholar + Google + News) -->
+  <div id="sourceModal" class="source-modal">
+    <div class="source-modal-content">
+      <div class="source-modal-header">
+        <div class="source-modal-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          Sök PubMed
+          Sök verifierade källor
         </div>
-        <button type="button" class="pubmed-modal-close" id="closePubmedModal">×</button>
+        <button type="button" class="source-modal-close" id="closeSourceModal">×</button>
       </div>
-      <div class="pubmed-modal-body">
-        <div class="pubmed-search-form">
-          <input type="text" id="pubmedQuery" class="pubmed-search-input" placeholder="T.ex. rotator cuff repair return to sport...">
-          <button type="button" id="pubmedSearchSubmit" class="pubmed-search-submit">
+      
+      <!-- Tabs for different search engines -->
+      <div class="source-tabs">
+        <button type="button" class="source-tab active" data-engine="pubmed">
+          <span class="source-tab-icon">🏥</span>
+          <span>PubMed</span>
+          <span class="source-tab-count" id="pubmedCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google_scholar">
+          <span class="source-tab-icon">🎓</span>
+          <span>Scholar</span>
+          <span class="source-tab-count" id="scholarCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google">
+          <span class="source-tab-icon">🌐</span>
+          <span>Google</span>
+          <span class="source-tab-count" id="googleCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google_news">
+          <span class="source-tab-icon">📰</span>
+          <span>Nyheter</span>
+          <span class="source-tab-count" id="newsCount">0</span>
+        </button>
+      </div>
+      
+      <div class="source-modal-body">
+        <div class="source-search-form">
+          <input type="text" id="sourceQuery" class="source-search-input" placeholder="Sök vetenskapliga artiklar, webbsidor eller nyheter...">
+          <button type="button" id="sourceSearchSubmit" class="source-search-submit">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -4899,21 +5226,27 @@ if (!anvandare) {
             Sök
           </button>
         </div>
-        <div id="pubmedStatus" class="pubmed-status"></div>
-        <div id="pubmedResults" class="pubmed-results"></div>
+        <div id="sourceStatus" class="source-status" style="display: none;"></div>
+        <div id="sourceResults" class="source-results"></div>
       </div>
-      <div class="pubmed-modal-footer">
-        <span class="pubmed-footer-info">Välj artiklar att lägga till i kontexten</span>
-        <button type="button" id="pubmedAddSelected" class="pubmed-add-btn" disabled>
+      
+      <div class="source-modal-footer">
+        <div class="source-footer-info">
+          <span id="sourceSelectedCount" class="source-footer-selected">0</span> källa(or) valda
+        </div>
+        <button type="button" id="sourceAddSelected" class="source-add-btn" disabled>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Lägg till valda i kontext
+          Lägg till i kontext
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Legacy PubMed modal (kept for compatibility, hidden) -->
+  <div id="pubmedModal" class="pubmed-modal" style="display: none !important;"></div>
 
   <!-- Delete confirmation modal -->
   <div id="deleteConfirmModal" class="delete-confirm-modal">
@@ -7137,142 +7470,309 @@ if (!anvandare) {
         return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
       
-      // PubMed search functionality
-      const pubmedModal = document.getElementById('pubmedModal');
-      const pubmedQuery = document.getElementById('pubmedQuery');
-      const pubmedSearchSubmit = document.getElementById('pubmedSearchSubmit');
-      const pubmedStatus = document.getElementById('pubmedStatus');
-      const pubmedResults = document.getElementById('pubmedResults');
-      const pubmedAddSelected = document.getElementById('pubmedAddSelected');
-      let selectedPubmedArticles = [];
+      // ============================================
+      // UNIFIED SOURCE SEARCH (PubMed + Scholar + Google + News)
+      // ============================================
+      const sourceModal = document.getElementById('sourceModal');
+      const sourceQuery = document.getElementById('sourceQuery');
+      const sourceSearchSubmit = document.getElementById('sourceSearchSubmit');
+      const sourceStatus = document.getElementById('sourceStatus');
+      const sourceResults = document.getElementById('sourceResults');
+      const sourceAddSelected = document.getElementById('sourceAddSelected');
+      const sourceSelectedCount = document.getElementById('sourceSelectedCount');
       
-      document.getElementById('pubmedSearchBtn').addEventListener('click', () => {
-        pubmedModal.classList.add('open');
-        pubmedQuery.focus();
-      });
-      
-      document.getElementById('closePubmedModal').addEventListener('click', () => {
-        pubmedModal.classList.remove('open');
-      });
-      
-      pubmedModal.addEventListener('click', (e) => {
-        if (e.target === pubmedModal) pubmedModal.classList.remove('open');
-      });
-      
-      async function searchPubMed() {
-        const query = pubmedQuery.value.trim();
-        if (!query) return;
-        
-        pubmedSearchSubmit.disabled = true;
-        pubmedStatus.innerHTML = '<span style="color: var(--color-primary);">🔍 Söker i PubMed...</span>';
-        pubmedResults.innerHTML = '';
-        selectedPubmedArticles = [];
-        updatePubmedAddButton();
-        
-        try {
-          const response = await fetch('/api/ai-council/pubmed-search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, maxResults: 10 })
-          });
-          
-          const data = await response.json();
-          
-          if (data.error) {
-            pubmedStatus.innerHTML = '<span style="color: var(--color-error);">❌ ' + escapeHtml(data.error) + '</span>';
-          } else if (data.articles.length === 0) {
-            pubmedStatus.innerHTML = '<span style="color: var(--text-muted);">Inga artiklar hittades. Prova andra söktermer.</span>';
-          } else {
-            pubmedStatus.innerHTML = '<span style="color: var(--color-success);">✓ Hittade ' + data.articles.length + ' artiklar (' + (data.searchDuration / 1000).toFixed(1) + 's)</span>';
-            renderPubmedResults(data.articles);
-          }
-        } catch (e) {
-          pubmedStatus.innerHTML = '<span style="color: var(--color-error);">❌ Sökningen misslyckades</span>';
-        } finally {
-          pubmedSearchSubmit.disabled = false;
-        }
-      }
-      
-      pubmedSearchSubmit.addEventListener('click', searchPubMed);
-      pubmedQuery.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') searchPubMed();
-      });
-      
-      function renderPubmedResults(articles) {
-        pubmedResults.innerHTML = articles.map((article, idx) => `
-          <div class="pubmed-article" data-idx="${idx}" onclick="togglePubmedArticle(${idx})">
-            <div class="pubmed-article-header">
-              <input type="checkbox" class="pubmed-article-checkbox" data-idx="${idx}" onclick="event.stopPropagation(); togglePubmedArticle(${idx})">
-              <div class="pubmed-article-info">
-                <div class="pubmed-article-title">${escapeHtml(article.title)}</div>
-                <div class="pubmed-article-meta">${escapeHtml(article.authors)} • ${escapeHtml(article.journal)} • ${article.year}</div>
-                ${article.abstract ? '<div class="pubmed-article-abstract">' + escapeHtml(article.abstract) + '</div>' : ''}
-                <div class="pubmed-article-links">
-                  <a href="${article.pubmedUrl}" target="_blank" rel="noopener" class="pubmed-article-link" onclick="event.stopPropagation()">PubMed</a>
-                  ${article.doi ? '<a href="https://doi.org/' + article.doi + '" target="_blank" rel="noopener" class="pubmed-article-link" onclick="event.stopPropagation()">DOI</a>' : ''}
-                  <span style="color: var(--text-muted); font-size: 0.75rem;">PMID: ${article.pmid}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
-        
-        // Store articles for later use
-        window.pubmedArticlesCache = articles;
-      }
-      
-      window.togglePubmedArticle = function(idx) {
-        const articleEl = pubmedResults.querySelector(`.pubmed-article[data-idx="${idx}"]`);
-        const checkbox = articleEl.querySelector('.pubmed-article-checkbox');
-        
-        // Toggle expanded state for abstract
-        articleEl.classList.toggle('expanded');
-        
-        // Toggle selection
-        const isSelected = selectedPubmedArticles.includes(idx);
-        if (isSelected) {
-          selectedPubmedArticles = selectedPubmedArticles.filter(i => i !== idx);
-          articleEl.classList.remove('selected');
-          checkbox.checked = false;
-        } else {
-          selectedPubmedArticles.push(idx);
-          articleEl.classList.add('selected');
-          checkbox.checked = true;
-        }
-        
-        updatePubmedAddButton();
+      // Cache for search results by engine
+      const searchCache = {
+        pubmed: { results: [], selected: new Set() },
+        google_scholar: { results: [], selected: new Set() },
+        google: { results: [], selected: new Set() },
+        google_news: { results: [], selected: new Set() }
       };
       
-      function updatePubmedAddButton() {
-        pubmedAddSelected.disabled = selectedPubmedArticles.length === 0;
-        pubmedAddSelected.innerHTML = selectedPubmedArticles.length > 0
-          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Lägg till ' + selectedPubmedArticles.length + ' artikel' + (selectedPubmedArticles.length > 1 ? 'ar' : '') + ' i kontext'
-          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Lägg till valda i kontext';
+      let currentEngine = 'pubmed';
+      
+      // Open source modal
+      document.getElementById('sourceSearchBtn').addEventListener('click', () => {
+        sourceModal.classList.add('open');
+        sourceQuery.focus();
+      });
+      
+      // Close modal
+      document.getElementById('closeSourceModal').addEventListener('click', () => {
+        sourceModal.classList.remove('open');
+      });
+      
+      sourceModal.addEventListener('click', (e) => {
+        if (e.target === sourceModal) sourceModal.classList.remove('open');
+      });
+      
+      // Tab switching
+      document.querySelectorAll('.source-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const engine = tab.dataset.engine;
+          if (engine === currentEngine) return;
+          
+          // Update active tab
+          document.querySelectorAll('.source-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentEngine = engine;
+          
+          // Show cached results for this engine
+          renderSourceResults(searchCache[engine].results, engine);
+        });
+      });
+      
+      // Search function
+      async function searchSources() {
+        const query = sourceQuery.value.trim();
+        if (!query) return;
+        
+        sourceSearchSubmit.disabled = true;
+        sourceStatus.style.display = 'block';
+        sourceStatus.className = 'source-status loading';
+        
+        const engineLabels = {
+          pubmed: 'PubMed',
+          google_scholar: 'Google Scholar',
+          google: 'Google',
+          google_news: 'Nyheter'
+        };
+        
+        sourceStatus.innerHTML = '🔍 Söker i ' + engineLabels[currentEngine] + '...';
+        sourceResults.innerHTML = '';
+        
+        try {
+          let response, data;
+          
+          if (currentEngine === 'pubmed') {
+            // Use existing PubMed endpoint
+            response = await fetch('/api/ai-council/pubmed-search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query, maxResults: 10 })
+            });
+            data = await response.json();
+            
+            // Transform PubMed results to unified format
+            if (data.articles) {
+              searchCache.pubmed.results = data.articles.map(article => ({
+                title: article.title,
+                link: article.pubmedUrl,
+                snippet: article.abstract || '',
+                source: { category: 'academic', icon: '🏥', label: 'PubMed', credibilityScore: 95 },
+                authors: article.authors,
+                publicationInfo: article.journal + ' (' + article.year + ')',
+                pmid: article.pmid,
+                doi: article.doi
+              }));
+            }
+          } else {
+            // Use SerpAPI endpoint for Scholar/Google/News
+            response = await fetch('/api/ai-council/web-search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query, engine: currentEngine, maxResults: 10 })
+            });
+            data = await response.json();
+            
+            if (data.results) {
+              searchCache[currentEngine].results = data.results;
+            }
+            
+            // Check if SerpAPI is not configured
+            if (data.configured === false) {
+              sourceStatus.className = 'source-status error';
+              sourceStatus.innerHTML = '⚠️ SerpAPI är inte konfigurerat. Lägg till SERPAPI_KEY i miljövariabler för att aktivera ' + engineLabels[currentEngine] + '.';
+              sourceSearchSubmit.disabled = false;
+              return;
+            }
+          }
+          
+          if (data.error) {
+            sourceStatus.className = 'source-status error';
+            sourceStatus.innerHTML = '❌ ' + escapeHtml(data.error);
+          } else {
+            const results = searchCache[currentEngine].results;
+            const duration = data.searchDuration ? (data.searchDuration / 1000).toFixed(1) : '?';
+            
+            if (results.length === 0) {
+              sourceStatus.innerHTML = 'Inga resultat hittades. Prova andra söktermer.';
+              sourceStatus.className = 'source-status';
+            } else {
+              sourceStatus.style.display = 'none';
+              renderSourceResults(results, currentEngine);
+            }
+            
+            // Update tab counts
+            updateTabCounts();
+          }
+        } catch (e) {
+          console.error('Search error:', e);
+          sourceStatus.className = 'source-status error';
+          sourceStatus.innerHTML = '❌ Sökningen misslyckades: ' + e.message;
+        } finally {
+          sourceSearchSubmit.disabled = false;
+        }
       }
       
-      pubmedAddSelected.addEventListener('click', () => {
-        if (selectedPubmedArticles.length === 0 || !window.pubmedArticlesCache) return;
+      sourceSearchSubmit.addEventListener('click', searchSources);
+      sourceQuery.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') searchSources();
+      });
+      
+      // Render results
+      function renderSourceResults(results, engine) {
+        if (!results || results.length === 0) {
+          sourceResults.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Sök för att hitta källor</div>';
+          return;
+        }
         
-        const articles = selectedPubmedArticles.map(idx => window.pubmedArticlesCache[idx]);
+        const selectedSet = searchCache[engine].selected;
         
-        // Format articles for context
-        let contextText = '\\n\\n## PubMed-referenser\\n\\n';
-        articles.forEach((article, i) => {
-          contextText += `[${i + 1}] ${article.authors} (${article.year}). ${article.title}. ${article.journal}.\\n`;
-          contextText += `    PubMed: ${article.pubmedUrl}\\n`;
-          if (article.doi) contextText += `    DOI: https://doi.org/${article.doi}\\n`;
-          if (article.abstract) contextText += `    Abstract: ${article.abstract.substring(0, 200)}...\\n`;
-          contextText += '\\n';
+        sourceResults.innerHTML = results.map((result, idx) => {
+          const isSelected = selectedSet.has(idx);
+          const credClass = result.source.credibilityScore >= 80 ? 'high' : result.source.credibilityScore >= 60 ? 'medium' : 'low';
+          const categoryClass = result.source.category || 'unknown';
+          
+          return `
+            <div class="source-result-item ${isSelected ? 'selected' : ''}" data-idx="${idx}" data-engine="${engine}">
+              <div class="source-result-header">
+                <span class="source-result-badge ${categoryClass}">${result.source.icon} ${result.source.label}</span>
+                <span class="source-result-credibility ${credClass}">${result.source.credibilityScore}/100 trovärdighet</span>
+              </div>
+              <div class="source-result-title">${escapeHtml(result.title)}</div>
+              ${result.authors || result.publicationInfo ? `
+                <div class="source-result-meta">
+                  ${result.authors ? '<span>✍️ ' + escapeHtml(result.authors) + '</span>' : ''}
+                  ${result.publicationInfo ? '<span>📅 ' + escapeHtml(result.publicationInfo) + '</span>' : ''}
+                  ${result.citationCount ? '<span>📊 ' + result.citationCount + ' citeringar</span>' : ''}
+                  ${result.date ? '<span>🕐 ' + escapeHtml(result.date) + '</span>' : ''}
+                </div>
+              ` : ''}
+              ${result.snippet ? `<div class="source-result-snippet">${escapeHtml(result.snippet.substring(0, 250))}${result.snippet.length > 250 ? '...' : ''}</div>` : ''}
+              <a href="${escapeHtml(result.link)}" target="_blank" rel="noopener" class="source-result-link" onclick="event.stopPropagation()">🔗 ${escapeHtml(new URL(result.link).hostname)}</a>
+            </div>
+          `;
+        }).join('');
+        
+        // Add click handlers for selection
+        sourceResults.querySelectorAll('.source-result-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const idx = parseInt(item.dataset.idx);
+            const eng = item.dataset.engine;
+            toggleSourceSelection(idx, eng, item);
+          });
+        });
+      }
+      
+      // Toggle selection
+      function toggleSourceSelection(idx, engine, element) {
+        const selectedSet = searchCache[engine].selected;
+        
+        if (selectedSet.has(idx)) {
+          selectedSet.delete(idx);
+          element.classList.remove('selected');
+        } else {
+          selectedSet.add(idx);
+          element.classList.add('selected');
+        }
+        
+        updateSelectedCount();
+      }
+      
+      // Update selected count
+      function updateSelectedCount() {
+        let total = 0;
+        for (const engine in searchCache) {
+          total += searchCache[engine].selected.size;
+        }
+        
+        sourceSelectedCount.textContent = total;
+        sourceAddSelected.disabled = total === 0;
+      }
+      
+      // Update tab counts
+      function updateTabCounts() {
+        document.getElementById('pubmedCount').textContent = searchCache.pubmed.results.length;
+        document.getElementById('scholarCount').textContent = searchCache.google_scholar.results.length;
+        document.getElementById('googleCount').textContent = searchCache.google.results.length;
+        document.getElementById('newsCount').textContent = searchCache.google_news.results.length;
+      }
+      
+      // Add selected sources to context
+      sourceAddSelected.addEventListener('click', () => {
+        let allSelected = [];
+        
+        for (const engine in searchCache) {
+          const { results, selected } = searchCache[engine];
+          selected.forEach(idx => {
+            allSelected.push({ ...results[idx], engine });
+          });
+        }
+        
+        if (allSelected.length === 0) return;
+        
+        // Group by engine for better formatting
+        const byEngine = {};
+        allSelected.forEach(item => {
+          if (!byEngine[item.engine]) byEngine[item.engine] = [];
+          byEngine[item.engine].push(item);
         });
         
-        // Add to context textarea
+        // Format for context
+        let contextText = '\\n\\n## 🔍 Verifierade källor\\n\\n';
+        
+        const engineLabels = {
+          pubmed: '🏥 PubMed-artiklar',
+          google_scholar: '🎓 Akademiska källor',
+          google: '🌐 Webbkällor',
+          google_news: '📰 Nyheter'
+        };
+        
+        let refNum = 1;
+        for (const engine in byEngine) {
+          contextText += '### ' + engineLabels[engine] + '\\n\\n';
+          byEngine[engine].forEach(item => {
+            contextText += `**[${refNum}]** ${item.title}\\n`;
+            contextText += `   ${item.source.icon} ${item.source.label} (trovärdighet: ${item.source.credibilityScore}/100)\\n`;
+            contextText += `   ${item.link}\\n`;
+            if (item.authors) contextText += `   ✍️ ${item.authors}\\n`;
+            if (item.publicationInfo) contextText += `   📅 ${item.publicationInfo}\\n`;
+            if (item.pmid) contextText += `   PMID: ${item.pmid}\\n`;
+            if (item.doi) contextText += `   DOI: https://doi.org/${item.doi}\\n`;
+            if (item.snippet) contextText += `   > ${item.snippet.substring(0, 200)}...\\n`;
+            contextText += '\\n';
+            refNum++;
+          });
+        }
+        
+        contextText += '---\\n\\n⚠️ *Använd dessa källor för att verifiera påståenden. Citera med [nummer] om du hänvisar.*\\n\\n';
+        
+        // Add to context
         contextEl.value += contextText;
         autoResizeTextarea(contextEl, 120, 400);
         
-        // Close modal and show feedback
-        pubmedModal.classList.remove('open');
-        alert('✓ ' + articles.length + ' artikel' + (articles.length > 1 ? 'ar' : '') + ' tillagda i kontext!');
+        // Clear selections
+        for (const engine in searchCache) {
+          searchCache[engine].selected.clear();
+        }
+        updateSelectedCount();
+        
+        // Close modal
+        sourceModal.classList.remove('open');
+        
+        // Show feedback
+        alert('✓ ' + allSelected.length + ' källa' + (allSelected.length > 1 ? 'r' : '') + ' tillagda i kontext!')
       });
+      
+      // Legacy PubMed compatibility (redirect to new modal)
+      const pubmedSearchBtn = document.getElementById('pubmedSearchBtn');
+      if (pubmedSearchBtn) {
+        pubmedSearchBtn.addEventListener('click', () => {
+          sourceModal.classList.add('open');
+          sourceQuery.focus();
+        });
+      }
       
       // Initialize sessions
       loadSessions();

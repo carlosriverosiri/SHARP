@@ -57,6 +57,11 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Hybrid-sökning med källverifiering** (v3.9) - Unified sökmodal med PubMed, Google Scholar, Google, Nyheter
+- [x] **Auto-sök för vetenskap** (v3.9) - Automatisk källsökning före AI-anrop i Vetenskap-profilen
+- [x] **Deliberation med källverifiering** (v3.9) - Faktagranskning kontrollerar mot hämtade källor
+- [x] **SerpAPI-integration** (v3.9) - Google, Scholar och News-sökning via SerpAPI
+- [x] **Trovärdighetspoäng** (v3.9) - Varje källa rankas 0-100 baserat på domäntyp
 - [x] **PubMed-sökning** (v3.8) - Sök PubMed och lägg till verifierade artiklar i kontexten (inga hallucinerade referenser)
 - [x] **Konsensusanalys** (v3.7) - Visar överensstämmelse och konflikter i varje syntes
 - [x] **Riktad deliberation** (v3.7) - Strukturerad konfliktanalys med kategorier (MOTSÄGELSE, UNIK_INSIKT, etc.)
@@ -1137,6 +1142,62 @@ npm install bottleneck
 ---
 
 ## Versionshistorik
+
+### v3.9 (2026-02-03) - Hybrid-sökning & Källverifiering
+
+**Nyhet:** Unified källsökning med automatisk verifiering för dramatiskt minskade hallucinationer.
+
+**Hybrid-sökmodal (ersätter PubMed-knappen):**
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🔍 Sök verifierade källor                              ✕  │
+├─────────────────────────────────────────────────────────────┤
+│  [🏥 PubMed] [🎓 Scholar] [🌐 Google] [📰 Nyheter]         │
+├─────────────────────────────────────────────────────────────┤
+│  [Sökfält...                                    ] [Sök]    │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ 🏥 PubMed · 95/100 trovärdighet                     │   │
+│  │ Rotator Cuff Repair: A Systematic Review            │   │
+│  │ ✍️ Smith et al. · 📅 J Shoulder Elbow (2024)       │   │
+│  │ > Background: Rotator cuff tears are common...      │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│  3 källa(or) valda                     [Lägg till i kontext]│
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Auto-sök i Vetenskap-profilen:**
+- 🔬 **Automatisk PubMed-sökning** - Hämtar 5 relevanta artiklar före AI-anrop
+- 🎓 **Google Scholar** (om SerpAPI konfigurerat) - Kompletterar med akademiska papers
+- 📊 **Trovärdighetspoäng** - Varje källa rankas 0-100 baserat på domän
+
+**Deliberation med källverifiering:**
+- Runda 2 (faktagranskning) får nu tillgång till de hämtade källorna
+- Modellerna instrueras verifiera påståenden mot källorna
+- Ny klassificering: `VERIFIERING: BEKRÄFTAD/MOTSÄGS/EJ_FUNNET`
+
+**Trovärdighetsklasser:**
+| Kategori | Poäng | Exempel |
+|----------|-------|---------|
+| 🏥 PubMed | 95 | ncbi.nlm.nih.gov |
+| 🎓 Journal | 95 | nature.com, sciencedirect.com |
+| 🏛️ Government | 90 | .gov, who.int |
+| 📖 Documentation | 85 | docs.*, developer.* |
+| 🔧 GitHub | 80 | github.com |
+| 💬 Forum | 70 | stackoverflow.com |
+| 📖 Wikipedia | 70 | wikipedia.org |
+| ✍️ Blog | 50 | medium.com, *.blog |
+
+**Tekniskt:**
+```
+src/pages/api/ai-council/web-search.ts   # SerpAPI (Google, Scholar, News)
+src/pages/api/ai-council/pubmed-search.ts # NCBI E-utilities
+SERPAPI_KEY                              # Miljövariabel (~$50/mån för 5000 sök)
+```
+
+---
 
 ### v3.8 (2026-02-03) - PubMed-sökning
 

@@ -521,11 +521,24 @@ async function queryGrok(context: string, prompt: string, images: ImageData[] = 
 }
 
 // Build deliberation prompt (Round 2) - for models to review each other
-function buildDeliberationPrompt(originalPrompt: string, responses: AIResponse[], currentProvider: string): string {
+// Enhanced with source verification capabilities
+function buildDeliberationPrompt(originalPrompt: string, responses: AIResponse[], currentProvider: string, verifiedSources?: string): string {
   const otherResponses = responses.filter(r => r.provider !== currentProvider && !r.error && r.response);
   
-  return `Du har tidigare svarat på en fråga. Nu har du möjlighet att granska andra AI-modellers svar och förbättra eller komplettera ditt eget svar.
+  // Add verified sources section if available
+  const sourcesSection = verifiedSources ? `
 
+## 🔍 VERIFIERADE KÄLLOR (från automatisk sökning)
+${verifiedSources}
+
+**VIKTIGT:** Använd dessa källor för att verifiera påståenden i svaren nedan. 
+Citera med [nummer] när du hänvisar till en källa.
+
+---
+` : '';
+  
+  return `Du har tidigare svarat på en fråga. Nu har du möjlighet att granska andra AI-modellers svar och förbättra eller komplettera ditt eget svar.
+${sourcesSection}
 ## Originalfråga:
 ${originalPrompt}
 
@@ -537,15 +550,23 @@ ${r.response}
 
 ## Din uppgift (Runda 2):
 
-### STEG 1: Hallucinationskontroll
+### STEG 1: Hallucinationskontroll & Källverifiering
 Granska de andra modellernas svar och leta efter potentiella fel, hallucinationer eller obekräftade påståenden.
-
+${verifiedSources ? '\n**ANVÄND DE VERIFIERADE KÄLLORNA OVAN för att kontrollera fakta.**\n' : ''}
 **Om du hittar misstänkta fel, lista dem i detta exakta format:**
 \`\`\`hallucination
+TYP: [MOTSÄGELSE|UTAN_KÄLLA|UNIK_INSIKT|MÖJLIG_HALLUCINATION]
 KÄLLA: [Vilken modell som skrev det]
 PÅSTÅENDE: [Det exakta påståendet som kan vara fel]
 ANLEDNING: [Varför du misstänker att det är fel]
+${verifiedSources ? 'VERIFIERING: [Om du kunde verifiera mot källorna: BEKRÄFTAD/MOTSÄGS/EJ_FUNNET]' : ''}
 \`\`\`
+
+**Klassificering av TYP:**
+- **MOTSÄGELSE**: Två eller fler modeller säger motsatt sak
+- **UTAN_KÄLLA**: Påstående som inte stöds av verifierade källor
+- **UNIK_INSIKT**: Endast en modell nämner detta (varningsflagg)
+- **MÖJLIG_HALLUCINATION**: Troligen påhittat eller felaktigt
 
 Upprepa blocket för varje misstänkt fel du hittar. Om inga fel hittas, skriv:
 \`\`\`hallucination
@@ -555,11 +576,11 @@ INGA_FEL_FUNNA
 ### STEG 2: Förbättrat svar
 Efter hallucinationskontrollen, ge ditt förbättrade svar:
 
-1. **Korrigeringar**: Om du flaggade fel ovan, förklara rätt information
+1. **Korrigeringar**: Om du flaggade fel ovan, förklara rätt information${verifiedSources ? ' med källhänvisningar' : ''}
 2. **Kompletteringar**: Vad missade de andra som du kan tillföra?
 3. **Förbättrat svar**: Baserat på all input, ge ett komplett och korrekt svar
 
-Skriv ditt förbättrade svar på svenska. Var konkret och specifik.`;
+Skriv ditt förbättrade svar på svenska. Var konkret och specifik.${verifiedSources ? ' Använd källhänvisningar [1], [2], etc.' : ''}`;
 }
 
 // Build synthesis prompt
@@ -742,10 +763,10 @@ Skriv din supersyntes på svenska. Var extra noggrann med att lyfta fram vad som
 }
 
 // Deliberation round queries (Round 2)
-async function deliberateOpenAI(originalPrompt: string, allResponses: AIResponse[]): Promise<AIResponse> {
+async function deliberateOpenAI(originalPrompt: string, allResponses: AIResponse[], verifiedSources?: string): Promise<AIResponse> {
   const start = Date.now();
   try {
-    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'OpenAI');
+    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'OpenAI', verifiedSources);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -776,10 +797,10 @@ async function deliberateOpenAI(originalPrompt: string, allResponses: AIResponse
   }
 }
 
-async function deliberateAnthropic(originalPrompt: string, allResponses: AIResponse[]): Promise<AIResponse> {
+async function deliberateAnthropic(originalPrompt: string, allResponses: AIResponse[], verifiedSources?: string): Promise<AIResponse> {
   const start = Date.now();
   try {
-    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'Anthropic');
+    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'Anthropic', verifiedSources);
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -812,10 +833,10 @@ async function deliberateAnthropic(originalPrompt: string, allResponses: AIRespo
   }
 }
 
-async function deliberateGemini(originalPrompt: string, allResponses: AIResponse[]): Promise<AIResponse> {
+async function deliberateGemini(originalPrompt: string, allResponses: AIResponse[], verifiedSources?: string): Promise<AIResponse> {
   const start = Date.now();
   try {
-    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'Google');
+    const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'Google', verifiedSources);
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_AI_API_KEY}`,
@@ -846,7 +867,7 @@ async function deliberateGemini(originalPrompt: string, allResponses: AIResponse
   }
 }
 
-async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]): Promise<AIResponse> {
+async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[], verifiedSources?: string): Promise<AIResponse> {
   const start = Date.now();
   
   // Try grok-4 first, fall back to grok-2-latest
@@ -854,7 +875,7 @@ async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]
   
   for (const modelName of modelsToTry) {
     try {
-      const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'xAI');
+      const deliberationPrompt = buildDeliberationPrompt(originalPrompt, allResponses, 'xAI', verifiedSources);
 
       const response = await fetch('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
@@ -1962,7 +1983,57 @@ SVARSSTIL:
     // Combine user profile context, provided context, and file content
     // Note: Images are now sent directly to multimodal APIs, not as text description
     const contextParts = [userProfileContext, context, fileContent].filter(Boolean);
-    const fullContext = contextParts.join('\n\n---\n\n');
+    let fullContext = contextParts.join('\n\n---\n\n');
+
+    // AUTO-SEARCH: For science profile, automatically fetch relevant sources
+    // This dramatically reduces hallucinations by grounding AI responses in real sources
+    let verifiedSourcesContext = ''; // Store for deliberation round
+    
+    if (profileType === 'science') {
+      try {
+        const { performAutoSearch, formatSearchResultsAsContext } = await import('./web-search');
+        
+        // Search PubMed and optionally Scholar (if SerpAPI is configured)
+        const autoSearchResults = await performAutoSearch(prompt, ['google_scholar'], 3);
+        
+        // Also search PubMed directly (doesn't require SerpAPI)
+        const pubmedResponse = await fetch(new URL('/api/ai-council/pubmed-search', request.url).toString(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: prompt, maxResults: 5 })
+        });
+        
+        if (pubmedResponse.ok) {
+          const pubmedData = await pubmedResponse.json();
+          if (pubmedData.articles && pubmedData.articles.length > 0) {
+            // Add PubMed results to auto-search
+            autoSearchResults.unshift({
+              engine: 'pubmed' as any,
+              results: pubmedData.articles.map((article: any) => ({
+                title: article.title,
+                link: article.pubmedUrl,
+                snippet: article.abstract || '',
+                source: { category: 'academic', icon: '🏥', label: 'PubMed', credibilityScore: 95 },
+                authors: article.authors,
+                publicationInfo: `${article.journal} (${article.year})`,
+                pmid: article.pmid,
+                doi: article.doi
+              }))
+            });
+          }
+        }
+        
+        // Format and add to context
+        const autoSearchContext = formatSearchResultsAsContext(autoSearchResults);
+        if (autoSearchContext) {
+          fullContext = fullContext + autoSearchContext;
+          verifiedSourcesContext = autoSearchContext; // Store for deliberation
+        }
+      } catch (autoSearchError) {
+        // Auto-search failed, continue without it
+        console.log('Auto-search failed (continuing without):', autoSearchError);
+      }
+    }
 
     // Build query promises for selected models only
     const queryPromises: Promise<AIResponse>[] = [];
@@ -2004,23 +2075,26 @@ SVARSSTIL:
       else if (availableProviders.includes('grok')) actualSynthesisModel = 'grok';
     }
 
-    // ROUND 2: Deliberation (optional)
+    // ROUND 2: Deliberation (optional) - with source verification if available
     let round2Responses: AIResponse[] = [];
     
     if (enableDeliberation) {
       const deliberationPromises: Promise<AIResponse>[] = [];
       
+      // Pass verified sources to deliberation for fact-checking
+      const sourcesForVerification = verifiedSourcesContext || undefined;
+      
       if (modelsToQuery.includes('openai')) {
-        deliberationPromises.push(deliberateOpenAI(prompt, round1Responses));
+        deliberationPromises.push(deliberateOpenAI(prompt, round1Responses, sourcesForVerification));
       }
       if (modelsToQuery.includes('anthropic')) {
-        deliberationPromises.push(deliberateAnthropic(prompt, round1Responses));
+        deliberationPromises.push(deliberateAnthropic(prompt, round1Responses, sourcesForVerification));
       }
       if (modelsToQuery.includes('gemini')) {
-        deliberationPromises.push(deliberateGemini(prompt, round1Responses));
+        deliberationPromises.push(deliberateGemini(prompt, round1Responses, sourcesForVerification));
       }
       if (modelsToQuery.includes('grok')) {
-        deliberationPromises.push(deliberateGrok(prompt, round1Responses));
+        deliberationPromises.push(deliberateGrok(prompt, round1Responses, sourcesForVerification));
       }
       
       round2Responses = await Promise.all(deliberationPromises);
