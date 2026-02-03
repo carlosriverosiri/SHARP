@@ -9963,6 +9963,16 @@ if (!anvandare) {
         let importedText = '';
         let errorMessages = [];
         
+        // Hämta item-metadata för fallback
+        const itemMetadata = {};
+        zoteroModalResults.querySelectorAll('.zotero-result-item').forEach(el => {
+          const key = el.dataset.key;
+          const title = el.querySelector('.zotero-result-title')?.textContent || '';
+          const meta = el.querySelector('.zotero-result-meta')?.textContent || '';
+          const journal = el.querySelector('.zotero-result-journal')?.textContent || '';
+          itemMetadata[key] = { title, meta, journal };
+        });
+        
         for (const itemKey of selectedZoteroItems) {
           try {
             const response = await fetch('/api/ai-council/zotero/fetch-pdf', {
@@ -9976,8 +9986,15 @@ if (!anvandare) {
             if (response.ok && data.success && data.pdf.textContent) {
               const pdfText = data.pdf.textContent;
               const filename = data.pdf.filename;
+              const meta = itemMetadata[itemKey];
               
-              importedText += `\n\n---\n\n📄 **${filename}** (från Zotero):\n\n${pdfText.slice(0, 30000)}${pdfText.length > 30000 ? '\n\n[...trunkerad...]' : ''}`;
+              // Inkludera referensinfo + text
+              let content = `\n\n---\n\n📄 **${meta?.title || filename}**`;
+              if (meta?.meta) content += `\n*${meta.meta}*`;
+              if (meta?.journal) content += ` - ${meta.journal}`;
+              content += `\n\n${pdfText.slice(0, 30000)}${pdfText.length > 30000 ? '\n\n[...trunkerad...]' : ''}`;
+              
+              importedText += content;
               importedCount++;
             } else if (data.message) {
               // Lägg till debug-info om tillgänglig

@@ -301,15 +301,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         
       } catch (parseError) {
         console.error('PDF parse error:', parseError);
-        return new Response(JSON.stringify({ 
-          error: 'Parse Error',
-          message: 'Kunde inte extrahera text från PDF. Filen kan vara skyddad eller korrupt.',
-          itemKey,
-          filename: pdfAttachment.data.filename,
-        }), {
-          status: 422,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        // Fortsätt med tom text men returnera success så användaren kan få referensinfo
+        textContent = '[PDF:en kunde inte läsas - den kan vara skannad eller skyddad]';
       }
     }
 
