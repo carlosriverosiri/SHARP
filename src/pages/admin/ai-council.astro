@@ -2181,6 +2181,150 @@ if (!anvandare) {
     }
     .input-card-inner { background: var(--bg-card); border-radius: 14px; padding: 1.5rem; }
     .form-group { margin-bottom: 1.5rem; }
+    .form-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+    .form-label-row .form-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .field-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      flex-shrink: 0;
+      margin-left: auto;
+      visibility: visible;
+    }
+    .field-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      opacity: 1;
+      visibility: visible;
+    }
+    .field-action-btn.visible { opacity: 1; }
+    .field-action-btn:hover { opacity: 1; background: var(--bg-hover); }
+    .field-action-btn.preview:hover { color: #8b5cf6; }
+    .field-action-btn.copy:hover { color: var(--color-primary); }
+    .field-action-btn.delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .field-action-btn svg { width: 16px; height: 16px; }
+    
+    /* Preview modal */
+    .preview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .preview-modal.open { display: flex; }
+    .preview-modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    }
+    .preview-modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-sidebar);
+      border-radius: 16px 16px 0 0;
+    }
+    .preview-modal-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+    .preview-modal-close {
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      line-height: 1;
+      border-radius: 6px;
+    }
+    .preview-modal-close:hover { background: var(--border-color); color: var(--text-primary); }
+    .preview-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text-primary);
+      background: var(--bg-input);
+      margin: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .preview-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background: var(--bg-sidebar);
+      border-radius: 0 0 16px 16px;
+    }
+    .preview-modal-btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+    .preview-modal-btn.secondary {
+      background: var(--bg-hover);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .preview-modal-btn.secondary:hover { background: var(--border-color); }
+    .preview-modal-btn.primary {
+      background: var(--color-primary);
+      color: white;
+    }
+    .preview-modal-btn.primary:hover { background: var(--color-primary-dark); }
     .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem; }
     .form-label .icon { margin-right: 0.5rem; }
     .form-label .optional { color: var(--text-muted); font-weight: 400; }
@@ -4281,48 +4425,32 @@ if (!anvandare) {
           <div class="input-card-inner">
             <!-- Context -->
             <div class="form-group">
-              <label class="form-label">
+              <div class="form-label-row" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%;">
+                <label class="form-label">
                 <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></span> Kontext
                 <span class="optional">(valfritt - kod, dokumentation)</span>
-              </label>
-              <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
-              
-              <!-- File upload with camera -->
-              <div class="file-upload-row">
-                <div id="fileUploadArea" class="file-upload-area">
-                  <div class="file-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></div>
-                  <div class="file-upload-text">
-                    <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
-                    <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
-                  </div>
-                  <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
+                </label>
+                <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
+                  <button type="button" class="field-action-btn preview" id="previewContextBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                  <button type="button" class="field-action-btn copy" id="copyContextBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                  <button type="button" class="field-action-btn delete" id="clearContextBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
                 </div>
-                <button type="button" class="camera-btn" id="cameraBtn" title="Ta foto med kamera">
-                  <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle cx="12" cy="13" r="4"></circle>
-                  </svg>
-                  <span class="camera-label">Kamera</span>
-                </button>
-                <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
               </div>
-              <div id="fileList" class="file-list"></div>
-              
-              <!-- Source search button (opens hybrid modal) -->
-              <button type="button" class="source-search-btn" id="sourceSearchBtn" title="Sök vetenskapliga och webbaserade källor">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <span>🔍 Sök källor</span>
-              </button>
+              <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
             </div>
             
             <!-- Prompt -->
             <div class="form-group">
-              <label class="form-label">
+              <div class="form-label-row" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%;">
+                <label class="form-label">
                 <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span> Prompt <span class="required">*</span>
-              </label>
+                </label>
+                <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
+                  <button type="button" class="field-action-btn preview" id="previewPromptBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                  <button type="button" class="field-action-btn copy" id="copyPromptBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                  <button type="button" class="field-action-btn delete" id="clearPromptBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+                </div>
+              </div>
               <div class="prompt-wrapper">
                 <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga eller tryck på mikrofonen för att diktera..." required></textarea>
                 <button type="button" class="dictation-btn" id="dictationBtn" title="Diktera (tryck för att starta/stoppa)">
@@ -4383,6 +4511,36 @@ if (!anvandare) {
                 </div>
               </div>
             </div>
+            
+            <!-- Source search -->
+            <button type="button" class="source-search-btn" id="sourceSearchBtn" title="Sök vetenskapliga och webbaserade källor">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <span>Sök källor</span>
+            </button>
+            
+            <!-- File upload with camera -->
+            <div class="file-upload-row">
+              <div id="fileUploadArea" class="file-upload-area">
+                <div class="file-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></div>
+                <div class="file-upload-text">
+                  <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
+                  <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
+                </div>
+                <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
+              </div>
+              <button type="button" class="camera-btn" id="cameraBtn" title="Ta foto med kamera">
+                <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span class="camera-label">Kamera</span>
+              </button>
+              <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+            </div>
+            <div id="fileList" class="file-list"></div>
             
             <!-- Profile selector -->
             <div class="form-group">
@@ -5248,6 +5406,27 @@ if (!anvandare) {
   <!-- Legacy PubMed modal (kept for compatibility, hidden) -->
   <div id="pubmedModal" class="pubmed-modal" style="display: none !important;"></div>
 
+  <!-- Preview Modal -->
+  <div id="previewModal" class="preview-modal">
+    <div class="preview-modal-content">
+      <div class="preview-modal-header">
+        <div class="preview-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <span id="previewModalTitle">Förhandsgranskning</span>
+        </div>
+        <button type="button" class="preview-modal-close" id="closePreviewModal">×</button>
+      </div>
+      <div class="preview-modal-body" id="previewModalBody"></div>
+      <div class="preview-modal-footer">
+        <button type="button" class="preview-modal-btn secondary" id="previewModalCopy">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Kopiera
+        </button>
+        <button type="button" class="preview-modal-btn primary" id="previewModalClose">Stäng</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Delete confirmation modal -->
   <div id="deleteConfirmModal" class="delete-confirm-modal">
     <div class="delete-confirm-content">
@@ -5525,6 +5704,103 @@ if (!anvandare) {
       const applyStructuredPrompt = document.getElementById('applyStructuredPrompt');
       const cancelStructuredPrompt = document.getElementById('cancelStructuredPrompt');
       const copyStructuredPrompt = document.getElementById('copyStructuredPrompt');
+      
+      // Field action button visibility
+      function updateFieldActionVisibility() {
+        const contextHasContent = contextEl && contextEl.value.trim().length > 0;
+        const promptHasContent = promptEl && promptEl.value.trim().length > 0;
+        
+        if (clearContextBtn) clearContextBtn.classList.toggle('visible', contextHasContent);
+        if (copyContextBtn) copyContextBtn.classList.toggle('visible', contextHasContent);
+        if (previewContextBtn) previewContextBtn.classList.toggle('visible', contextHasContent);
+        
+        if (clearPromptBtn) clearPromptBtn.classList.toggle('visible', promptHasContent);
+        if (copyPromptBtn) copyPromptBtn.classList.toggle('visible', promptHasContent);
+        if (previewPromptBtn) previewPromptBtn.classList.toggle('visible', promptHasContent);
+      }
+      
+      contextEl?.addEventListener('input', updateFieldActionVisibility);
+      promptEl?.addEventListener('input', updateFieldActionVisibility);
+      
+      // Clear buttons
+      clearContextBtn?.addEventListener('click', () => {
+        if (!confirm('Rensa kontexten?')) return;
+        contextEl.value = '';
+        autoResizeTextarea(contextEl, 120, 400);
+        updateFieldActionVisibility();
+        saveDraftDebounced();
+      });
+      
+      clearPromptBtn?.addEventListener('click', () => {
+        if (!confirm('Rensa prompten?')) return;
+        promptEl.value = '';
+        autoResizeTextarea(promptEl, 80, 300);
+        updateFieldActionVisibility();
+        saveDraftDebounced();
+        if (structurePromptContainer) structurePromptContainer.style.display = 'none';
+        if (structuredPreview) structuredPreview.style.display = 'none';
+      });
+      
+      // Copy buttons
+      copyContextBtn?.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(contextEl.value);
+        copyContextBtn.style.color = '#10b981';
+        setTimeout(() => copyContextBtn.style.color = '', 1000);
+      });
+      
+      copyPromptBtn?.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(promptEl.value);
+        copyPromptBtn.style.color = '#10b981';
+        setTimeout(() => copyPromptBtn.style.color = '', 1000);
+      });
+      
+      // Preview modal elements
+      const previewModal = document.getElementById('previewModal');
+      const previewModalTitle = document.getElementById('previewModalTitle');
+      const previewModalBody = document.getElementById('previewModalBody');
+      const closePreviewModal = document.getElementById('closePreviewModal');
+      const previewModalClose = document.getElementById('previewModalClose');
+      const previewModalCopy = document.getElementById('previewModalCopy');
+      let currentPreviewText = '';
+      
+      function showPreviewModal(title, text) {
+        currentPreviewText = text || '';
+        previewModalTitle.textContent = title;
+        previewModalBody.textContent = text || '(tom)';
+        previewModal.classList.add('open');
+      }
+      
+      function hidePreviewModal() {
+        previewModal.classList.remove('open');
+      }
+      
+      closePreviewModal?.addEventListener('click', hidePreviewModal);
+      previewModalClose?.addEventListener('click', hidePreviewModal);
+      previewModal?.addEventListener('click', (e) => {
+        if (e.target === previewModal) hidePreviewModal();
+      });
+      
+      previewModalCopy?.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(currentPreviewText);
+        previewModalCopy.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopierad!';
+        previewModalCopy.style.color = '#10b981';
+        setTimeout(() => {
+          previewModalCopy.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera';
+          previewModalCopy.style.color = '';
+        }, 1500);
+      });
+      
+      // Preview buttons
+      previewContextBtn?.addEventListener('click', () => {
+        showPreviewModal('Kontext', contextEl.value);
+      });
+      
+      previewPromptBtn?.addEventListener('click', () => {
+        showPreviewModal('Prompt', promptEl.value);
+      });
+      
+      // Initial visibility
+      setTimeout(updateFieldActionVisibility, 100);
       
       // Track how many models were used for current synthesis
       let modelsInCurrentSynthesis = 0;
@@ -7480,6 +7756,8 @@ if (!anvandare) {
       const sourceResults = document.getElementById('sourceResults');
       const sourceAddSelected = document.getElementById('sourceAddSelected');
       const sourceSelectedCount = document.getElementById('sourceSelectedCount');
+      const sourceSearchBtn = document.getElementById('sourceSearchBtn');
+      const closeSourceModal = document.getElementById('closeSourceModal');
       
       // Cache for search results by engine
       const searchCache = {
@@ -7492,19 +7770,26 @@ if (!anvandare) {
       let currentEngine = 'pubmed';
       
       // Open source modal
-      document.getElementById('sourceSearchBtn').addEventListener('click', () => {
-        sourceModal.classList.add('open');
-        sourceQuery.focus();
-      });
+      if (sourceSearchBtn && sourceModal) {
+        sourceSearchBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          sourceModal.classList.add('open');
+          sourceQuery?.focus();
+        });
+      }
       
       // Close modal
-      document.getElementById('closeSourceModal').addEventListener('click', () => {
-        sourceModal.classList.remove('open');
-      });
+      if (closeSourceModal && sourceModal) {
+        closeSourceModal.addEventListener('click', () => {
+          sourceModal.classList.remove('open');
+        });
+      }
       
-      sourceModal.addEventListener('click', (e) => {
-        if (e.target === sourceModal) sourceModal.classList.remove('open');
-      });
+      if (sourceModal) {
+        sourceModal.addEventListener('click', (e) => {
+          if (e.target === sourceModal) sourceModal.classList.remove('open');
+        });
+      }
       
       // Tab switching
       document.querySelectorAll('.source-tab').forEach(tab => {
@@ -7759,7 +8044,7 @@ if (!anvandare) {
         updateSelectedCount();
         
         // Close modal
-        sourceModal.classList.remove('open');
+        if (sourceModal) sourceModal.classList.remove('open');
         
         // Show feedback
         alert('✓ ' + allSelected.length + ' källa' + (allSelected.length > 1 ? 'r' : '') + ' tillagda i kontext!')
@@ -7767,10 +8052,10 @@ if (!anvandare) {
       
       // Legacy PubMed compatibility (redirect to new modal)
       const pubmedSearchBtn = document.getElementById('pubmedSearchBtn');
-      if (pubmedSearchBtn) {
+      if (pubmedSearchBtn && sourceModal) {
         pubmedSearchBtn.addEventListener('click', () => {
           sourceModal.classList.add('open');
-          sourceQuery.focus();
+          sourceQuery?.focus();
         });
       }
       
