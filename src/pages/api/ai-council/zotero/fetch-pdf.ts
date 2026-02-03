@@ -283,20 +283,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     if (extractText) {
       try {
-        // Dynamisk import av pdf-parse
-        const pdfParse = (await import('pdf-parse')).default;
-        
-        // pdf-parse options för bättre kompatibilitet
-        const options = {
-          // Begränsa till max 50 sidor för prestanda
-          max: 50,
-        };
+        // pdf-parse v1 - importera kärnmodulen för att undvika test-körning
+        const pdf = await import('pdf-parse/lib/pdf-parse.js');
+        const pdfParse = (pdf as any).default || (pdf as any);
         
         console.log(`[Zotero PDF] Parsing PDF, buffer size: ${pdfBuffer.length} bytes`);
-        const pdfData = await pdfParse(pdfBuffer, options);
+        
+        const pdfData = await pdfParse(pdfBuffer);
+        
         console.log(`[Zotero PDF] Parsed successfully, text length: ${pdfData.text?.length || 0}`);
         
-        textContent = pdfData.text;
+        textContent = pdfData.text || '';
         
         // Begränsa textlängd för att inte överbelasta AI
         const MAX_TEXT_LENGTH = 100000; // ~100k tecken
