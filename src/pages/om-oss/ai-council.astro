@@ -27,11 +27,11 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v3.7</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v3.8</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor — 
-            <span class="text-indigo-400">nu med konsensusanalys och riktad konfliktgranskning</span>
+            <span class="text-emerald-400">nu med PubMed-sökning för verifierade vetenskapliga referenser</span>
           </p>
         </div>
       </div>
@@ -89,6 +89,26 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               </div>
               <div class="text-right">
                 <span class="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs rounded-full">Nyckelfunktion</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- PubMed search highlight - NEW! -->
+          <div class="mt-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+              <div class="text-4xl">🔬</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="text-white font-bold text-lg">PubMed-sökning</h3>
+                  <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">NY!</span>
+                </div>
+                <p class="text-slate-300 text-sm">
+                  Sök direkt i <strong class="text-emerald-400">PubMed</strong> (35+ miljoner artiklar) och lägg till <strong class="text-white">verifierade referenser</strong> i kontexten. 
+                  Alla AI-modeller ser samma artiklar — <strong class="text-white">inga hallucinerade länkar</strong>, bara riktiga PMID och DOI.
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="inline-block px-3 py-1 bg-emerald-500/30 text-emerald-300 text-xs rounded-full font-semibold">v3.8</span>
               </div>
             </div>
           </div>
@@ -553,11 +573,11 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           
           <!-- Rad 3: 4 block -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">🔄</div>
-              <h4 class="text-white font-semibold mb-1">Auto-spara</h4>
-              <p class="text-emerald-400 text-xs">NY!</p>
-              <p class="text-slate-500 text-sm mt-1">Spara automatiskt</p>
+            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border-2 border-emerald-500/50 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">🔬</div>
+              <h4 class="text-white font-semibold mb-1">PubMed-sökning</h4>
+              <p class="text-emerald-400 text-xs font-bold">NY! v3.8</p>
+              <p class="text-slate-500 text-sm mt-1">Verifierade refs</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
@@ -785,6 +805,53 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto space-y-4">
           
+          <!-- PubMed search - NEW v3.8! -->
+          <div class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+              <div class="text-3xl">🔬</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <h3 class="text-emerald-400 font-bold text-lg">PubMed-sökning (2026-02-03)</h3>
+                  <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">NY! v3.8</span>
+                </div>
+                <p class="text-slate-300 text-sm mb-4">
+                  Sök i <strong class="text-emerald-400">PubMed</strong> (NCBI E-utilities) och få <strong class="text-white">verifierade vetenskapliga referenser</strong> 
+                  med riktiga PMID, DOI och klickbara länkar — helt utan AI-hallucinationer.
+                </p>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                  <div class="space-y-2">
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300"><strong class="text-white">35+ miljoner artiklar</strong> i realtid</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300"><strong class="text-white">Verifierade PMID/DOI</strong> - inga falska länkar</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300"><strong class="text-white">Abstract-preview</strong> innan val</span>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300">Upp till <strong class="text-white">50 artiklar</strong> per sökning</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300"><strong class="text-white">Multi-select</strong> och lägg till i kontext</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-emerald-400">✓</span>
+                      <span class="text-slate-300">Alla AI:er får <strong class="text-white">samma underlag</strong></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <!-- v3.0 UI Redesign - NEW! -->
           <div class="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-violet-500/10 border-2 border-blue-500/40 rounded-xl p-6">
             <div class="flex items-start gap-4">
@@ -971,7 +1038,8 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="bg-emerald-500/5 border border-emerald-500/30 rounded-xl p-6">
               <h3 class="text-emerald-400 font-semibold mb-4">✅ Klart (Q1 2026)</h3>
               <ul class="text-slate-400 text-sm space-y-2">
-                <li>✓ Kamerafunktion 📷 <span class="text-orange-400">NY!</span></li>
+                <li>✓ PubMed-sökning 🔬 <span class="text-emerald-400 font-bold">NY!</span></li>
+                <li>✓ Kamerafunktion 📷</li>
                 <li>✓ Diktering/Speech-to-text 🎤</li>
                 <li>✓ Mobilanpassning 📱</li>
                 <li>✓ Spara-modal med eget namn 💾</li>
@@ -1202,6 +1270,11 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                   <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
                   <td class="text-center text-red-400 p-4">✗</td>
                 </tr>
+                <tr class="bg-emerald-500/5">
+                  <td class="text-white font-semibold p-4">🔬 PubMed-sökning (verifierade refs)</td>
+                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
+                  <td class="text-center text-red-400 p-4">✗</td>
+                </tr>
                 <tr>
                   <td class="text-slate-300 p-4">Self-hosted (egna API-nycklar)</td>
                   <td class="text-center text-emerald-400 p-4">✓</td>
@@ -1217,7 +1290,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           </div>
           
           <p class="text-slate-500 text-sm text-center mt-6">
-            AI Council är byggt specifikt för Södermalms Ortopedi med fokus på <strong class="text-indigo-400">snabbhet</strong>, <strong class="text-indigo-400">kostnadskontroll</strong>, <strong class="text-indigo-400">vetenskaplig granskning</strong> och <strong class="text-indigo-400">enkel referenshantering med Zotero-integration</strong>.
+            AI Council är byggt specifikt för Södermalms Ortopedi med fokus på <strong class="text-indigo-400">snabbhet</strong>, <strong class="text-indigo-400">kostnadskontroll</strong>, <strong class="text-indigo-400">vetenskaplig granskning</strong>, <strong class="text-emerald-400">PubMed-sökning</strong> och <strong class="text-indigo-400">enkel referenshantering med Zotero-integration</strong>.
           </p>
         </div>
       </div>
