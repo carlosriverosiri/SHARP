@@ -9980,7 +9980,17 @@ if (!anvandare) {
               importedText += `\n\n---\n\n📄 **${filename}** (från Zotero):\n\n${pdfText.slice(0, 30000)}${pdfText.length > 30000 ? '\n\n[...trunkerad...]' : ''}`;
               importedCount++;
             } else if (data.message) {
-              errorMessages.push(data.message);
+              // Lägg till debug-info om tillgänglig
+              let errorMsg = data.message;
+              if (data.debug) {
+                console.log('Zotero PDF debug:', data.debug);
+                if (data.debug.pdfAttachments && data.debug.pdfAttachments.length > 0) {
+                  errorMsg += '\n\nPDF-filer som hittades:\n' + data.debug.pdfAttachments.map(p => 
+                    `- ${p.filename || 'Utan namn'} (${p.linkMode})`
+                  ).join('\n');
+                }
+              }
+              errorMessages.push(errorMsg);
             }
           } catch (error) {
             console.error('Import error for', itemKey, error);

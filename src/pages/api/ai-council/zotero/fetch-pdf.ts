@@ -162,6 +162,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const children: ZoteroAttachment[] = await childrenResponse.json();
     
+    // Logga alla barn för debugging
+    console.log(`[Zotero] Item ${itemKey} has ${children.length} children:`, 
+      children.map(c => ({
+        key: c.key,
+        type: c.data.itemType,
+        contentType: c.data.contentType,
+        linkMode: c.data.linkMode,
+        filename: c.data.filename
+      }))
+    );
+    
     // Hitta PDF-attachment - prioritera imported_file, men acceptera också linked_url
     const pdfAttachments = children.filter(
       child => child.data.itemType === 'attachment' && 
@@ -192,17 +203,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         });
       }
       
+      const attachments = children.filter(c => c.data.itemType === 'attachment');
+      const pdfCount = pdfAttachments.length;
+      
+      let detailedMessage = 'Ingen importerbar PDF hittades för detta objekt.';
+      if (pdfCount === 0) {
+        detailedMessage = 'Artikeln har ingen PDF bifogad. Du kan lägga till en PDF i Zotero genom att dra filen till artikeln.';
+      } else {
+        detailedMessage = `Artikeln har ${pdfCount} PDF-attachment(s) men ingen av dem är synkad till Zoteros molnlagring. Öppna Zotero och synka ditt bibliotek.`;
+      }
+      
       return new Response(JSON.stringify({ 
         error: 'No PDF',
-        message: 'Ingen PDF hittades för detta objekt.',
-        availableAttachments: children
-          .filter(c => c.data.itemType === 'attachment')
-          .map(c => ({
+        message: detailedMessage,
+        debug: {
+          totalChildren: children.length,
+          totalAttachments: attachments.length,
+          pdfAttachments: pdfAttachments.map(c => ({
+            key: c.key,
+            filename: c.data.filename,
+            linkMode: c.data.linkMode,
+          })),
+          otherAttachments: attachments.filter(a => a.data.contentType !== 'application/pdf').map(c => ({
             key: c.key,
             filename: c.data.filename,
             contentType: c.data.contentType,
-            linkMode: c.data.linkMode,
           })),
+        }
       }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },
