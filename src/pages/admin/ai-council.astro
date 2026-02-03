@@ -7053,7 +7053,12 @@ if (!anvandare) {
       
       // Helpers
       function formatDuration(ms) { return ms < 1000 ? ms + 'ms' : (ms / 1000).toFixed(1) + 's'; }
-      function renderMarkdown(content) { return typeof marked !== 'undefined' && marked.parse ? marked.parse(content || '') : '<p>' + (content || '').replace(/\n/g, '<br>') + '</p>'; }
+      function renderMarkdown(content) { 
+        let html = typeof marked !== 'undefined' && marked.parse ? marked.parse(content || '') : '<p>' + (content || '').replace(/\n/g, '<br>') + '</p>';
+        // Make all links open in new tab
+        html = html.replace(/<a\s+href=/g, '<a target="_blank" rel="noopener noreferrer" href=');
+        return html;
+      }
       function setStatus(text, show) { statusEl.classList.toggle('visible', show); statusTextEl.textContent = text; }
       function showError(text) { errorEl.classList.add('visible'); errorEl.textContent = text; }
       function hideError() { errorEl.classList.remove('visible'); }
