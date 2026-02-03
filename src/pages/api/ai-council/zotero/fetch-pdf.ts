@@ -285,7 +285,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       try {
         // Dynamisk import av pdf-parse
         const pdfParse = (await import('pdf-parse')).default;
-        const pdfData = await pdfParse(pdfBuffer);
+        
+        // pdf-parse options för bättre kompatibilitet
+        const options = {
+          // Begränsa till max 50 sidor för prestanda
+          max: 50,
+        };
+        
+        console.log(`[Zotero PDF] Parsing PDF, buffer size: ${pdfBuffer.length} bytes`);
+        const pdfData = await pdfParse(pdfBuffer, options);
+        console.log(`[Zotero PDF] Parsed successfully, text length: ${pdfData.text?.length || 0}`);
         
         textContent = pdfData.text;
         
@@ -299,10 +308,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         // Städa upp texten
         textContent = cleanExtractedText(textContent);
         
-      } catch (parseError) {
-        console.error('PDF parse error:', parseError);
+      } catch (parseError: any) {
+        console.error('[Zotero PDF] Parse error:', parseError?.message || parseError);
+        console.error('[Zotero PDF] Stack:', parseError?.stack);
         // Fortsätt med tom text men returnera success så användaren kan få referensinfo
-        textContent = '[PDF:en kunde inte läsas - den kan vara skannad eller skyddad]';
+        textContent = `[PDF:en kunde inte läsas automatiskt - fel: ${parseError?.message || 'okänt fel'}]`;
       }
     }
 
