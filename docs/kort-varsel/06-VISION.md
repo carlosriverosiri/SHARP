@@ -145,6 +145,29 @@ När en patient avbokar och tiden förblir tom **förlorar kliniken hela intäkt
 
 ---
 
+## Personalportalen som kortlek (framtid)
+
+> Personalportalen ses som en rad små kort som tillsammans skapar stor nytta.
+
+### Servicekort att lägga till
+
+🔲 **FASS-API (biverkningar)**
+- Snabb sökning på läkemedel
+- Fokus på biverkningar och varningsflaggor
+- Ingen dosering i detta kort (endast säkerhetsinfo)
+
+🔲 **Pendeltåg i realtid (Trafiklab)**
+- Real Time API för avgångar, störningar och positioner
+- Begränsat till **Södra Station** (snabb översikt på väg hem)
+- Möjlighet att trigga SMS vid större störningar
+
+🔲 **Parkerings-API (servicenätter)**
+- Visar senaste servicenatt i närområdet
+- Hjälper personal som kör bil att hitta parkering
+- Begränsat till gator runt kliniken
+
+---
+
 ## Teknisk Arkitektur
 
 ### Nuvarande stack (beprövad, enkel, skalbar)

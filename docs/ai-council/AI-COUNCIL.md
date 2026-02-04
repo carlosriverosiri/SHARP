@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-02-03 (v3.8 - PubMed-sökning för verifierade referenser)
+**Senast uppdaterad:** 2026-02-03 (v3.9 - Hybrid-sökning & källverifiering)
 
 ---
 
@@ -479,7 +479,7 @@ När du klickar på "📚 Zotero" öppnas en **stor central modal** (~90% av sk�
 **Begränsningar:**
 - Max 50 MB per PDF
 - Max 100k tecken extraheras per PDF (resten trunkeras)
-- Endast "imported_file" PDF:er stöds (inte länkade filer)
+- Endast synkade PDF:er stöds: "imported_file" och "imported_url" (inte "linked_file")
 - Grok stöder ej bildanalys av PDF-innehåll
 
 **Tekniska filer:**
@@ -581,11 +581,12 @@ Sök i PubMed och få **verifierade vetenskapliga referenser** med riktiga PMID,
 
 #### Användning
 
-1. **Klicka** på den gröna knappen **"Sök PubMed-artiklar"** under kontext-fältet
-2. **Skriv söktermer** (t.ex. "rotator cuff repair return to sport")
-3. **Klicka på artiklar** för att expandera abstract och välja dem
-4. **Klicka "Lägg till valda i kontext"** för att injicera referenserna
-5. **Skriv din prompt** och kör AI Council som vanligt
+1. **Klicka** på **"Sök verifierade källor"** under kontext-fältet (hybrid-sökmodal)
+2. **Välj fliken** 🏥 **PubMed** för vetenskapliga artiklar
+3. **Skriv söktermer** (t.ex. "rotator cuff repair return to sport")
+4. **Klicka på artiklar** för att expandera abstract och välja dem
+5. **Klicka "Lägg till valda i kontext"** för att injicera referenserna
+6. **Skriv din prompt** och kör AI Council som vanligt
 
 #### Söktips
 
@@ -775,6 +776,7 @@ OPENAI_API_KEY=sk-proj-...
 ANTHROPIC_API_KEY=sk-ant-api03-...
 GOOGLE_AI_API_KEY=AIza...
 XAI_API_KEY=xai-...  # Valfritt - för Grok
+SERPAPI_KEY=...      # Valfritt - hybrid-sökning (Google/Scholar/News)
 ```
 
 ### Skaffa API-nycklar
