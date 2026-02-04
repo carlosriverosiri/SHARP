@@ -24,6 +24,36 @@ const SESSION_SECRET = import.meta.env.PERSONAL_SESSION_SECRET || 'default-sessi
 const USE_SUPABASE = true;
 
 // ============================================
+// JWT-HJÄLPER (för snabb lokal validering)
+// ============================================
+type JwtPayload = {
+  exp?: number;
+  sub?: string;
+  email?: string;
+  app_metadata?: { role?: string };
+};
+
+function decodeJwtPayload(token: string): JwtPayload | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
+    const json = Buffer.from(padded, 'base64').toString('utf8');
+    return JSON.parse(json) as JwtPayload;
+  } catch {
+    return null;
+  }
+}
+
+function accessTokenIsValid(accessToken: string, leewaySeconds = 60): boolean {
+  const payload = decodeJwtPayload(accessToken);
+  if (!payload?.exp) return false;
+  const now = Math.floor(Date.now() / 1000);
+  return payload.exp - leewaySeconds > now;
+}
+
+// ============================================
 // TYPER
 // ============================================
 
@@ -68,6 +98,15 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
 
   const accessToken = cookies.get('sb-access-token')?.value;
   if (!accessToken) return null;
+
+  const payload = decodeJwtPayload(accessToken);
+  if (payload?.sub && payload?.email && accessTokenIsValid(accessToken)) {
+    return {
+      id: payload.sub,
+      email: payload.email,
+      roll: payload.app_metadata?.role === 'admin' ? 'admin' : 'personal'
+    };
+  }
 
   try {
     const { data: { user }, error } = await supabase.auth.getUser(accessToken);
@@ -174,10 +213,8 @@ async function kontrolleraSupabaseSession(cookies: AstroCookies): Promise<boolea
   if (!accessToken) return false;
 
   try {
-    // Försök använda access token
-    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
-    
-    if (!error && user) {
+    // Snabb lokal kontroll av JWT (undviker nätverksanrop vid giltig token)
+    if (accessTokenIsValid(accessToken)) {
       return true;
     }
     
