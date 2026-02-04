@@ -89,6 +89,156 @@ Personalen får ofta telefonsamtal med frågor som:
 
 ---
 
+## 🧩 Tampermonkey: Ring/SMS-modal (autofyll)
+
+Ett Tampermonkey‑script kan användas för att klicka på mobilnummer i externa system och få en modal med två val:
+- **Ring** (via `tel:`)
+- **SMS** (öppnar `/personal/lankar-sms` med telefonnumret förifyllt)
+
+### URL‑parametrar som stöds
+Sidan `/personal/lankar-sms` kan ta emot:
+- `phone` (t.ex. `+46701234567` eller `0701234567`)
+- `mobil`
+- `tel`
+
+Exempel:
+```
+/personal/lankar-sms?phone=+46701234567
+```
+
+### Effekt
+- Telefonnumret fylls automatiskt i **Mobilnummer**‑fältet.
+- Personalen kan direkt klicka på **SMS** för diagnos/operation/formulär för att fylla meddelandet.
+
+### Exempel: Tampermonkey‑script (SMS‑knappen)
+```javascript
+copyButton.textContent = 'SMS';
+
+copyButton.onclick = () => {
+  let smsNumber = number.startsWith('07') ? '+46' + number.substring(1) : number;
+  const smsUrl = `/personal/lankar-sms?phone=${encodeURIComponent(smsNumber)}`;
+  window.open(smsUrl, '_blank');
+  closeModal();
+};
+```
+
+**Tips:** Använd full domän om scriptet körs utanför personalportalen:
+```
+https://sodermalm.netlify.app/personal/lankar-sms?phone=+46701234567
+```
+
+### Hela scriptet (referens)
+```javascript
+// ==UserScript==
+// @name         Infinity Telefonval – Custom modal med Ring/SMS
+// @namespace    http://tampermonkey.net/
+// @version      1.2
+// @description  Vid klick på mobilnummer: centrerad modal med Ring eller SMS.
+// @author       Grok-hjälp
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  let overlay = document.createElement('div');
+  overlay.id = 'infinity-modal-overlay';
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 9998; display: none;
+    justify-content: center; align-items: center;
+  `;
+
+  let modal = document.createElement('div');
+  modal.style.cssText = `
+    background: white; padding: 24px; border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); text-align: center;
+    min-width: 300px; z-index: 9999;
+  `;
+
+  let numberDisplay = document.createElement('p');
+  numberDisplay.style.cssText = 'font-size: 18px; margin: 0 0 24px 0; font-weight: bold;';
+
+  let buttonContainer = document.createElement('div');
+  buttonContainer.style.cssText = 'display: flex; gap: 16px; justify-content: center;';
+
+  let ringButton = document.createElement('button');
+  ringButton.textContent = 'Ring';
+  ringButton.style.cssText = `
+    padding: 12px 24px; font-size: 16px; background: #007bff; color: white;
+    border: none; border-radius: 8px; cursor: pointer;
+  `;
+
+  let copyButton = document.createElement('button');
+  copyButton.textContent = 'SMS';
+  copyButton.style.cssText = `
+    padding: 12px 24px; font-size: 16px; background: #28a745; color: white;
+    border: none; border-radius: 8px; cursor: pointer;
+  `;
+
+  buttonContainer.appendChild(ringButton);
+  buttonContainer.appendChild(copyButton);
+  modal.appendChild(numberDisplay);
+  modal.appendChild(buttonContainer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  function showModal(number, href) {
+    let formatted = number.replace(/(\+46|0)/, '+46 ').replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4').trim();
+    numberDisplay.textContent = formatted;
+
+    overlay.style.display = 'flex';
+
+    let closeModal = () => {
+      overlay.style.display = 'none';
+      ringButton.onclick = null;
+      copyButton.onclick = null;
+      overlay.onclick = null;
+      document.onkeydown = null;
+    };
+
+    ringButton.onclick = () => {
+      closeModal();
+      location.href = href;
+    };
+
+    copyButton.onclick = () => {
+      let smsNumber = number.startsWith('07') ? '+46' + number.substring(1) : number;
+      const smsUrl = `https://sodermalm.netlify.app/personal/lankar-sms?phone=${encodeURIComponent(smsNumber)}`;
+      window.open(smsUrl, '_blank');
+      closeModal();
+    };
+
+    overlay.onclick = (e) => {
+      if (e.target === overlay) closeModal();
+    };
+
+    document.onkeydown = (e) => {
+      if (e.key === 'Escape') closeModal();
+    };
+  }
+
+  document.addEventListener('click', function(e) {
+    let link = e.target.closest('a[href^="tel:"]');
+    if (!link) return;
+
+    let href = link.href;
+    let number = href.substring(4);
+
+    let isMobile = number.startsWith('+467') || number.startsWith('07');
+    if (!isMobile) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    showModal(number, href);
+  }, true);
+})();
+```
+
+---
+
 ## 📝 SMS-mallar
 
 Varje kategori har en fördefinierad mall som fylls i automatiskt:
