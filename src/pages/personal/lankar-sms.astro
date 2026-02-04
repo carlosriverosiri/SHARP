@@ -15,7 +15,9 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
-  return Astro.redirect('/personal');
+  const url = new URL(Astro.request.url);
+  const next = `${url.pathname}${url.search}`;
+  return Astro.redirect(`/personal?next=${encodeURIComponent(next)}`);
 }
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
@@ -56,6 +58,22 @@ const baseDomain = "www.specialist.se";
 
 // Kontrollera om 46elks är konfigurerat
 const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_API_PASSWORD);
+
+// Prefill telefon från query-param (SSR)
+const requestUrl = new URL(Astro.request.url);
+const phoneParam = requestUrl.searchParams.get('phone')
+  || requestUrl.searchParams.get('mobil')
+  || requestUrl.searchParams.get('tel')
+  || '';
+
+const normalizePhone = (raw: string) => {
+  let value = raw.replace(/\D/g, '');
+  if (value.startsWith('46')) value = value.substring(2);
+  if (value.startsWith('0')) value = value.substring(1);
+  return value;
+};
+
+const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
 ---
 
 <!DOCTYPE html>
@@ -746,6 +764,7 @@ const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_
                       type="tel" 
                       id="sms-phone" 
                       class="phone-input"
+                      value={initialPhone}
                       placeholder="701234567"
                       pattern="[0-9]{9}"
                       maxlength="10"
@@ -824,6 +843,7 @@ const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_
       const charBarFill = document.getElementById('char-bar-fill');
       const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
       const messageArea = document.getElementById('sms-message-area');
+      const urlParams = new URLSearchParams(window.location.search);
 
       // Show toast
       function showToast(text: string, isError = false) {
@@ -832,6 +852,23 @@ const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_
         toast.style.background = isError ? '#ef4444' : '#16a34a';
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // Prefill phone from query param (e.g. ?phone=0701234567 or ?phone=+46701234567)
+      function normalizePhoneInput(raw: string) {
+        let value = raw.replace(/\D/g, '');
+        if (value.startsWith('46')) value = value.substring(2);
+        if (value.startsWith('0')) value = value.substring(1);
+        return value;
+      }
+
+      if (smsPhone) {
+        const phoneParam = urlParams.get('phone') || urlParams.get('mobil') || urlParams.get('tel');
+        if (phoneParam) {
+          smsPhone.value = normalizePhoneInput(phoneParam);
+          updateCharCounter();
+          smsPhone.focus();
+        }
       }
 
       // Copy functionality
