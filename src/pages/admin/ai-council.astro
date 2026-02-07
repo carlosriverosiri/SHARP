@@ -69,6 +69,7 @@ if (!anvandare) {
       --color-primary: #2563eb;
       --color-primary-hover: #1d4ed8;
       --color-primary-light: rgba(37, 99, 235, 0.1);
+      --accent-color: #2563eb;
       
       /* Borders */
       --border-color: #e5e7eb;
@@ -226,6 +227,98 @@ if (!anvandare) {
     }
     .project-item:hover .project-item-pin { opacity: 1; }
     .project-item-pin.pinned { opacity: 1; color: var(--color-warning); }
+    
+    /* Prompt library */
+    .prompt-library-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.5rem;
+    }
+    .prompt-library-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+    }
+    .prompt-library-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .prompt-library-title svg { color: var(--text-muted); }
+    .prompt-library-add-btn {
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 4px;
+      background: var(--bg-input);
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .prompt-library-add-btn:hover { background: var(--accent-color); color: white; }
+    .prompt-library-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .prompt-library-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .prompt-library-item:hover { background: var(--bg-hover); border-left-color: var(--accent-color); }
+    .prompt-library-item-icon { flex-shrink: 0; color: var(--text-muted); }
+    .prompt-library-item-content { flex: 1; min-width: 0; }
+    .prompt-library-item-name {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prompt-library-item-preview {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prompt-library-item-actions {
+      display: flex;
+      gap: 0.25rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .prompt-library-item:hover .prompt-library-item-actions { opacity: 1; }
+    .prompt-library-item-btn {
+      padding: 0.25rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .prompt-library-item-btn:hover { background: var(--bg-input); color: var(--text-primary); }
+    .prompt-library-item-btn.delete:hover { color: #ef4444; }
+    .prompt-library-empty {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
     
     /* History accordion in sidebar */
     .history-accordion {
@@ -485,7 +578,8 @@ if (!anvandare) {
     
     /* Collections sidebar */
     .zotero-modal-sidebar {
-      width: 280px;
+      width: 340px;
+      min-width: 280px;
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
@@ -666,8 +760,18 @@ if (!anvandare) {
       gap: 0.25rem;
       font-size: 0.6875rem;
       padding: 0.25rem 0.5rem;
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
+      background: rgba(239, 68, 68, 0.1);
+      color: #dc2626; font-weight: 500;
+      border-radius: 4px;
+    }
+    .zotero-result-abstract {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(59, 130, 246, 0.1);
+      color: #2563eb;
       border-radius: 4px;
     }
     
@@ -699,7 +803,11 @@ if (!anvandare) {
     }
     .zotero-btn-primary { background: var(--accent-color); color: white; }
     .zotero-btn-primary:hover { opacity: 0.9; }
-    .zotero-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .zotero-btn-primary:disabled { 
+      background: var(--bg-hover); 
+      color: var(--text-muted); 
+      cursor: not-allowed; 
+    }
     .zotero-btn-secondary { background: var(--bg-hover); color: var(--text-primary); }
     .zotero-btn-secondary:hover { background: var(--border-color); }
     
@@ -928,6 +1036,32 @@ if (!anvandare) {
     
     .notes-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .notes-list { flex: 1; overflow-y: auto; padding: 0; background: var(--bg-card); }
+    .notes-filter {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card);
+    }
+    .notes-filter-btn {
+      flex: 1;
+      padding: 0.375rem 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+    .notes-filter-btn:hover { background: var(--bg-input); color: var(--text-secondary); }
+    .notes-filter-btn.active { background: var(--accent-color); color: white; }
+    .notes-filter-btn svg { width: 12px; height: 12px; }
     
     .note-item {
       background: var(--bg-card);
@@ -1717,7 +1851,7 @@ if (!anvandare) {
     .dot-google { background: #22c55e; }     /* Gemini - cheapest (~$0.10/1M) */
     .dot-anthropic { background: #eab308; }  /* Claude - medium (~$3/1M) */
     .dot-grok { background: #f97316; }       /* Grok - medium-high (~$5/1M) */
-    .dot-openai { background: #ef4444; }     /* OpenAI o1 - most expensive (~$15/1M) */
+    .dot-openai { background: #10b981; }     /* OpenAI GPT-5.2 - good value (~$1.75/1M) */
     
     /* Single model run section */
     .single-model-section {
@@ -2225,6 +2359,7 @@ if (!anvandare) {
     .field-action-btn.preview:hover { color: #8b5cf6; }
     .field-action-btn.copy:hover { color: var(--color-primary); }
     .field-action-btn.delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .field-action-btn.save:hover { color: #10b981; background: rgba(16, 185, 129, 0.1); }
     .field-action-btn svg { width: 16px; height: 16px; }
     
     /* Preview modal */
@@ -2348,6 +2483,52 @@ if (!anvandare) {
     }
     textarea::placeholder, input::placeholder { color: var(--text-light); }
     .context-input { min-height: 120px; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.875rem; }
+    
+    /* Token indicator - compact */
+    .token-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .token-indicator:hover {
+      background: var(--bg-input);
+    }
+    .token-indicator .token-count {
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .token-indicator .token-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      transition: background 0.3s;
+    }
+    .token-indicator .token-dot.warning { background: #f59e0b; }
+    .token-indicator .token-dot.error { background: #ef4444; }
+    .token-warning-banner {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: #92400e;
+      display: none;
+    }
+    .token-warning-banner.visible { display: flex; align-items: center; gap: 0.5rem; }
+    .token-warning-banner.error {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: #991b1b;
+    }
+    .token-warning-banner svg { flex-shrink: 0; }
     .prompt-input { min-height: 80px; padding-right: 60px; }
     
     /* Prompt wrapper with dictation button */
@@ -3849,7 +4030,7 @@ if (!anvandare) {
     .accordion.google { border-left: 3px solid #22c55e; }    /* Gemini - cheapest */
     .accordion.anthropic { border-left: 3px solid #eab308; } /* Claude - medium */
     .accordion.grok { border-left: 3px solid #f97316; }      /* Grok - medium-high */
-    .accordion.openai { border-left: 3px solid #ef4444; }    /* OpenAI o1 - expensive */
+    .accordion.openai { border-left: 3px solid #10b981; }    /* OpenAI GPT-5.2 */
     
     .accordion-header {
       width: 100%;
@@ -4259,6 +4440,34 @@ if (!anvandare) {
         </button>
       </div>
       
+      <!-- Prompt library -->
+      <div class="prompt-library-section">
+        <div class="prompt-library-header">
+          <div class="prompt-library-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            Promptbibliotek
+          </div>
+          <button type="button" class="prompt-library-add-btn" id="addPromptBtn" title="LÃ¤gg till prompt">+</button>
+        </div>
+        <div class="prompt-library-list" id="promptLibraryList">
+          <!-- Prompter laddas dynamiskt -->
+        </div>
+      </div>
+      
+      <!-- Context library -->
+      <div class="prompt-library-section context-library-section">
+        <div class="prompt-library-header">
+          <div class="prompt-library-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Kontextbibliotek
+          </div>
+          <button type="button" class="prompt-library-add-btn" id="addContextBtn" title="Spara kontext">+</button>
+        </div>
+        <div class="prompt-library-list" id="contextLibraryList">
+          <!-- Kontexter laddas dynamiskt -->
+        </div>
+      </div>
+      
       <div class="project-section">
         <div class="project-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.89A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.89A2 2 0 0 0 5 15.24z"></path></svg>Senaste projekt</div>
       </div>
@@ -4313,7 +4522,7 @@ if (!anvandare) {
             <img src="https://www.zotero.org/static/images/promote/zotero-logo-512x123.svg" alt="Zotero" class="zotero-logo">
             <span id="zoteroModalUser"></span>
           </div>
-          <button class="zotero-modal-close" id="zoteroModalClose">✕</button>
+          <button class="zotero-modal-close" id="zoteroModalClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
         
         <div class="zotero-modal-body">
@@ -4338,7 +4547,7 @@ if (!anvandare) {
           <div class="zotero-modal-main">
             <div class="zotero-search-bar">
               <input type="text" class="zotero-modal-search" id="zoteroModalSearch" placeholder="Sök i biblioteket...">
-              <button class="zotero-search-btn" id="zoteroModalSearchBtn">🔍 Sök</button>
+              <button class="zotero-search-btn" id="zoteroModalSearchBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Sök</button>
             </div>
             
             <div class="zotero-results-header" id="zoteroResultsHeader">
@@ -4362,8 +4571,8 @@ if (!anvandare) {
             <span id="zoteroSelectedInfo">0 valda</span>
           </div>
           <div class="zotero-footer-right">
-            <button class="zotero-btn zotero-btn-secondary" id="zoteroDisconnectBtn">🔌 Koppla från</button>
-            <button class="zotero-btn zotero-btn-primary" id="zoteroImportSelectedBtn" disabled>📥 Importera valda PDF:er</button>
+            <button class="zotero-btn zotero-btn-secondary" id="zoteroDisconnectBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg> Koppla från</button>
+            <button class="zotero-btn zotero-btn-primary" id="zoteroImportSelectedBtn" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Importera valda PDF:er</button>
           </div>
         </div>
       </div>
@@ -4373,8 +4582,8 @@ if (!anvandare) {
     <div class="zotero-config-modal" id="zoteroConfigModal">
       <div class="zotero-config-content">
         <div class="zotero-config-header">
-          <h3>🔑 Konfigurera Zotero</h3>
-          <button class="zotero-modal-close" id="zoteroConfigClose">✕</button>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg> Konfigurera Zotero</h3>
+          <button class="zotero-modal-close" id="zoteroConfigClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
         <div class="zotero-config-body">
           <p>Klistra in din Zotero API-nyckel för att komma igång.</p>
@@ -4385,7 +4594,7 @@ if (!anvandare) {
         </div>
         <div class="zotero-config-footer">
           <button class="zotero-btn zotero-btn-secondary" id="zoteroConfigCancel">Avbryt</button>
-          <button class="zotero-btn zotero-btn-primary" id="zoteroConfigSave">🔑 Spara</button>
+          <button class="zotero-btn zotero-btn-primary" id="zoteroConfigSave"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg> Spara</button>
         </div>
       </div>
     </div>
@@ -4414,7 +4623,7 @@ if (!anvandare) {
               <span class="model-dot dot-google" title="Gemini 2.0 Flash (~$0.10/1M)"></span>
               <span class="model-dot dot-anthropic" title="Claude Sonnet (~$3/1M)"></span>
               <span class="model-dot dot-grok" title="Grok 4 (~$5/1M)"></span>
-              <span class="model-dot dot-openai" title="OpenAI o1 (~$15/1M)"></span>
+              <span class="model-dot dot-openai" title="OpenAI GPT-5.2 (~$1.75/1M)"></span>
             </div>
           </div>
         </div>
@@ -4430,13 +4639,24 @@ if (!anvandare) {
                 <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></span> Kontext
                 <span class="optional">(valfritt - kod, dokumentation)</span>
                 </label>
+                <div class="token-indicator" id="tokenIndicator" title="Klicka fÃ¶r detaljer">
+                  <span class="token-dot" id="tokenDot"></span>
+                  <span class="token-count"><span id="tokenCount">0</span> tok</span>
+                </div>
                 <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
                   <button type="button" class="field-action-btn preview" id="previewContextBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
                   <button type="button" class="field-action-btn copy" id="copyContextBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                  <button type="button" class="field-action-btn save" id="saveContextBtn" title="Spara till bibliotek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></button>
                   <button type="button" class="field-action-btn delete" id="clearContextBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
                 </div>
               </div>
               <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
+              
+              <!-- Token warning (visas endast vid problem) -->
+              <div class="token-warning-banner" id="tokenWarning">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span id="tokenWarningText"></span>
+              </div>
             </div>
             
             <!-- Prompt -->
@@ -4448,6 +4668,7 @@ if (!anvandare) {
                 <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
                   <button type="button" class="field-action-btn preview" id="previewPromptBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
                   <button type="button" class="field-action-btn copy" id="copyPromptBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                  <button type="button" class="field-action-btn save" id="savePromptBtn" title="Spara till bibliotek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></button>
                   <button type="button" class="field-action-btn delete" id="clearPromptBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
                 </div>
               </div>
@@ -4599,7 +4820,7 @@ if (!anvandare) {
                       Perfekt för arkitekturbeslut, säkerhet, prestanda och läsbarhet.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> o1 + Claude + Gemini + Grok</div>
+                      <div><strong>Modeller:</strong> GPT-5.2 + Claude + Gemini + Grok</div>
                       <div><strong>Syntes:</strong> Claude Opus 4.5</div>
                       <div><strong>Deliberation:</strong> ✓ Aktiverad</div>
                       <div><strong>Tid:</strong> ~30-60 sek</div>
@@ -4610,17 +4831,17 @@ if (!anvandare) {
                   <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg></span>
                   <div>
                     <div class="profile-name">Vetenskap</div>
-                    <div class="profile-desc">3 modeller + o1</div>
+                    <div class="profile-desc">3 modeller + GPT-5.2</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg> Vetenskap</div>
                     <div class="profile-tooltip-why">
                       Gemini (stort kontext), Claude (analys), Grok (referenser).
-                      OpenAI o1 granskar och syntetiserar med djup resonering.
+                      GPT-5.2 granskar och syntetiserar med djup resonering.
                     </div>
                     <div class="profile-tooltip-config">
                       <div><strong>Modeller:</strong> Gemini + Claude + Grok</div>
-                      <div><strong>Syntes:</strong> OpenAI o1 (resonering)</div>
+                      <div><strong>Syntes:</strong> GPT-5.2 (resonering)</div>
                       <div><strong>Tid:</strong> ~20-40 sek</div>
                     </div>
                   </div>
@@ -4629,16 +4850,16 @@ if (!anvandare) {
                   <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
                   <div>
                     <div class="profile-name">Strategi</div>
-                    <div class="profile-desc">o1 + Claude + Grok</div>
+                    <div class="profile-desc">GPT-5.2 + Claude + Grok</div>
                   </div>
                   <div class="profile-tooltip">
                     <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Strategi & Beslut</div>
                     <div class="profile-tooltip-why">
                       För verksamhetsbeslut, investeringar och organisationsfrågor.
-                      o1 resonerar, Claude strukturerar, Grok ger bred kontext.
+                      GPT-5.2 resonerar, Claude strukturerar, Grok ger bred kontext.
                     </div>
                     <div class="profile-tooltip-config">
-                      <div><strong>Modeller:</strong> o1 + Claude + Grok</div>
+                      <div><strong>Modeller:</strong> GPT-5.2 + Claude + Grok</div>
                       <div><strong>Syntes:</strong> Claude Opus 4.5</div>
                       <div><strong>Tid:</strong> ~20-40 sek</div>
                     </div>
@@ -4727,7 +4948,7 @@ if (!anvandare) {
                   <span class="model-checkbox-check">✓</span>
                   <span class="model-checkbox-dot dot-openai"></span>
                   <div>
-                    <div class="model-checkbox-name">OpenAI o1</div>
+                    <div class="model-checkbox-name">OpenAI GPT-5.2</div>
                     <div class="model-checkbox-desc">Djup logik · ~$15/1M</div>
                   </div>
                 </label>
@@ -4745,7 +4966,8 @@ if (!anvandare) {
                     <option value="gpt4o">🟡 GPT-4o (snabb ~$2.50/1M)</option>
                     <option value="claude">🟡 Claude Sonnet (kod ~$3/1M)</option>
                     <option value="grok">🟠 Grok (vetenskap ~$5/1M)</option>
-                    <option value="openai">🔴 OpenAI o1 (logik ~$15/1M)</option>
+                    <option value="openai">🟢 GPT-5.2 (logik ~$1.75/1M)</option>
+                    <option value="openai-pro">🔴 GPT-5.2 Pro (premium ~$21/1M)</option>
                     <option value="claude-opus">🔴 Claude Opus 4.5 (bäst ~$15/1M)</option>
                   </select>
                 </div>
@@ -4987,7 +5209,7 @@ if (!anvandare) {
             <h3 id="responsesHeader">Individuella svar</h3>
             <!-- Responses ordered by price: cheapest → most expensive -->
             <div class="responses-grid">
-              <div id="accordion-google" class="accordion google">
+              <div id="accordion-google" class="accordion google" style="display: none;">
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="accordion-dot dot-google"></span>
@@ -5009,7 +5231,7 @@ if (!anvandare) {
                 </div>
               </div>
               
-              <div id="accordion-anthropic" class="accordion anthropic">
+              <div id="accordion-anthropic" class="accordion anthropic" style="display: none;">
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="accordion-dot dot-anthropic"></span>
@@ -5053,11 +5275,11 @@ if (!anvandare) {
                 </div>
               </div>
               
-              <div id="accordion-openai" class="accordion openai">
+              <div id="accordion-openai" class="accordion openai" style="display: none;">
                 <button type="button" class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="accordion-dot dot-openai"></span>
-                    <span class="accordion-title">OpenAI o1</span>
+                    <span class="accordion-title">OpenAI GPT-5.2</span>
                     <span id="status-openai" class="accordion-status"></span>
                   </div>
                   <div class="accordion-header-right">
@@ -5080,7 +5302,7 @@ if (!anvandare) {
             <div id="round2Section" style="display: none;">
               <div class="round-label">Runda 2 — Granskning & förbättring</div>
               <div class="responses-grid">
-                <div id="accordion-r2-google" class="accordion google">
+                <div id="accordion-r2-google" class="accordion google" style="display: none;">
                   <button type="button" class="accordion-header">
                     <div class="accordion-header-left">
                       <span class="accordion-dot dot-google"></span>
@@ -5102,7 +5324,7 @@ if (!anvandare) {
                   </div>
                 </div>
                 
-                <div id="accordion-r2-anthropic" class="accordion anthropic">
+                <div id="accordion-r2-anthropic" class="accordion anthropic" style="display: none;">
                   <button type="button" class="accordion-header">
                     <div class="accordion-header-left">
                       <span class="accordion-dot dot-anthropic"></span>
@@ -5146,11 +5368,11 @@ if (!anvandare) {
                   </div>
                 </div>
                 
-                <div id="accordion-r2-openai" class="accordion openai">
+                <div id="accordion-r2-openai" class="accordion openai" style="display: none;">
                   <button type="button" class="accordion-header">
                     <div class="accordion-header-left">
                       <span class="accordion-dot dot-openai"></span>
-                      <span class="accordion-title">OpenAI o1 (R2)</span>
+                      <span class="accordion-title">OpenAI GPT-5.2 (R2)</span>
                       <span id="status-r2-openai" class="accordion-status"></span>
                     </div>
                     <div class="accordion-header-right">
@@ -5195,6 +5417,18 @@ if (!anvandare) {
       </div>
       <div class="notes-content">
         <div id="notesSync" class="notes-sync">Laddar...</div>
+        <div class="notes-filter" id="notesFilter">
+          <button type="button" class="notes-filter-btn active" data-filter="all" title="Visa alla">Alla</button>
+          <button type="button" class="notes-filter-btn" data-filter="supersynthesis" title="Supersynteser">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </button>
+          <button type="button" class="notes-filter-btn" data-filter="synthesis" title="Synteser">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+          </button>
+          <button type="button" class="notes-filter-btn" data-filter="response" title="Endast svar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </button>
+        </div>
         <div id="notesList" class="notes-list">
           <div class="notes-empty">Inga sparade sessioner.</div>
         </div>
@@ -5809,6 +6043,7 @@ if (!anvandare) {
       // Track failed models for retry functionality
       let failedModels = [];
       let collectedResponses = {}; // Store Round 1 responses across multiple runs
+      let lastQueryHash = ''; // Track if prompt/context changed to reset collected responses
       let collectedR2Responses = {}; // Store Round 2 (deliberation) responses
       let hasRunDeliberation = false; // Track if deliberation has been run
       let hasSynthesized = false; // Track if synthesis has been done
@@ -6045,8 +6280,9 @@ if (!anvandare) {
           btn.disabled = false;
           btn.classList.remove('running', 'done');
           const modelId = btn.dataset.model;
-          const modelEmoji = { gemini: '🟢', anthropic: '🟡', grok: '🟠', openai: '🔴' }[modelId];
-          btn.innerHTML = `${modelEmoji} Kör...`;
+          const dotClass = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' }[modelId];
+          const modelName = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' }[modelId];
+          btn.innerHTML = `<span class="dot-${dotClass}"></span> ${modelName}`;
         });
         
         // Reset results area
@@ -6349,6 +6585,98 @@ if (!anvandare) {
         autoResizeTextarea(contextEl, 120, 400);
       });
       
+      // Token counting and meter
+      const tokenLimits = { gpt52: 256000, claude: 200000, gemini: 1000000, grok: 131072 };
+      
+      function estimateTokens(text) {
+        if (!text) return 0;
+        return Math.ceil(text.length / 4);
+      }
+      
+      function updateTokenMeter() {
+        const contextText = contextEl?.value || '';
+        const promptText = promptEl?.value || '';
+        const tokens = estimateTokens(contextText + promptText);
+        
+        const tokenCountEl = document.getElementById('tokenCount');
+        const tokenDotEl = document.getElementById('tokenDot');
+        const tokenWarningEl = document.getElementById('tokenWarning');
+        const tokenWarningTextEl = document.getElementById('tokenWarningText');
+        
+        // Format token count nicely
+        if (tokenCountEl) {
+          if (tokens >= 1000) {
+            tokenCountEl.textContent = (tokens / 1000).toFixed(1) + 'K';
+          } else {
+            tokenCountEl.textContent = tokens.toLocaleString('sv-SE');
+          }
+        }
+        
+        // Get currently selected models
+        const selectedModels = [];
+        document.querySelectorAll('.model-checkbox.selected').forEach(cb => {
+          selectedModels.push(cb.dataset.model);
+        });
+        
+        // Model limits mapping
+        const modelToLimit = {
+          'openai': 256000,    // GPT-5.2
+          'anthropic': 200000, // Claude
+          'gemini': 1000000,   // Gemini
+          'grok': 131072       // Grok
+        };
+        const modelToName = {
+          'openai': 'GPT-5.2 (256K)',
+          'anthropic': 'Claude (200K)',
+          'gemini': 'Gemini (1M)',
+          'grok': 'Grok (128K)'
+        };
+        
+        // Check only selected models
+        const warnings = [];
+        let hasError = false;
+        let hasWarning = false;
+        
+        selectedModels.forEach(model => {
+          const limit = modelToLimit[model];
+          if (!limit) return;
+          const pct = (tokens / limit) * 100;
+          if (pct >= 90) {
+            hasError = true;
+            warnings.push(modelToName[model]);
+          } else if (pct >= 70) {
+            hasWarning = true;
+          }
+        });
+        
+        // Update dot color
+        if (tokenDotEl) {
+          tokenDotEl.classList.remove('warning', 'error');
+          if (hasError) tokenDotEl.classList.add('error');
+          else if (hasWarning) tokenDotEl.classList.add('warning');
+        }
+        
+        // Update warning banner
+        if (tokenWarningEl && tokenWarningTextEl) {
+          if (warnings.length > 0) {
+            tokenWarningEl.classList.add('visible');
+            tokenWarningEl.classList.toggle('error', hasError);
+            tokenWarningTextEl.textContent = 'Kontexten (~' + tokenCountEl.textContent + ' tokens) overskrider: ' + warnings.join(', ');
+          } else {
+            tokenWarningEl.classList.remove('visible', 'error');
+          }
+        }
+      }
+      
+      // Update token meter when models change
+      document.querySelectorAll('.model-checkbox').forEach(cb => {
+        cb.addEventListener('click', () => setTimeout(updateTokenMeter, 50));
+      });
+      
+      promptEl?.addEventListener('input', updateTokenMeter);promptEl?.addEventListener('input', updateTokenMeter);
+      contextEl?.addEventListener('input', updateTokenMeter);
+      setTimeout(updateTokenMeter, 100);
+      
       // Profile definitions
       const profiles = {
         snabb: {
@@ -6376,7 +6704,7 @@ if (!anvandare) {
         vetenskap: {
           name: 'Vetenskap',
           // Gemini (stort kontext), Claude (analys), Grok (referenser)
-          // o1 som syntes för djup logisk granskning av vetenskapliga påståenden
+          // GPT-5.2 som syntes för djup logisk granskning av vetenskapliga påståenden
           models: ['gemini', 'anthropic', 'grok'],
           synthesis: 'openai',
           deliberation: false  // Kan aktiveras manuellt vid behov
@@ -6384,7 +6712,7 @@ if (!anvandare) {
         strategi: {
           name: 'Strategi',
           // For business decisions, investments, organizational questions
-          // o1 for reasoning, Claude for structure, Grok for broad context
+          // GPT-5.2 for reasoning, Claude for structure, Grok for broad context
           models: ['openai', 'anthropic', 'grok'],
           synthesis: 'claude-opus',
           deliberation: false  // Can enable manually if needed
@@ -6748,6 +7076,325 @@ if (!anvandare) {
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
       }
       
+      // Prompt library management (Supabase)
+      let savedPrompts = [];
+      let promptLibraryReady = false;
+      
+      async function loadPromptLibrary() {
+        const list = document.getElementById('promptLibraryList');
+        if (!list) return;
+        list.innerHTML = '<div class="prompt-library-empty">Laddar...</div>';
+        
+        try {
+          const res = await fetch('/api/ai-council/prompts', { credentials: 'include' });
+          const data = await res.json();
+          
+          if (data.error) {
+            if (data.error.includes('Ej inloggad')) {
+              list.innerHTML = '<div class="prompt-library-empty">Logga in fÃ¶r att spara prompter</div>';
+              return;
+            }
+          }
+          
+          savedPrompts = data.prompts || [];
+          promptLibraryReady = true;
+          renderPromptLibrary();
+        } catch (e) {
+          console.error('Error loading prompts:', e);
+          list.innerHTML = '<div class="prompt-library-empty">Kunde inte ladda prompter</div>';
+        }
+      }
+      
+      function renderPromptLibrary() {
+        const list = document.getElementById('promptLibraryList');
+        if (!list) return;
+        
+        if (savedPrompts.length === 0) {
+          list.innerHTML = '<div class="prompt-library-empty">Inga sparade prompter.<br>Klicka + for att lagga till.</div>';
+          return;
+        }
+        
+        const icons = {
+          doc: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>',
+          eye: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+          copy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
+          trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+        };
+        
+        list.innerHTML = savedPrompts.map((p, i) => {
+          const preview = (p.prompt || '').substring(0, 40);
+          return '<div class="prompt-library-item" data-id="' + p.id + '" data-index="' + i + '">' +
+            '<span class="prompt-library-item-icon">' + icons.doc + '</span>' +
+            '<div class="prompt-library-item-content">' +
+              '<div class="prompt-library-item-name">' + escapeHtml(p.name) + '</div>' +
+              '<div class="prompt-library-item-preview">' + escapeHtml(preview) + (preview.length >= 40 ? '...' : '') + '</div>' +
+            '</div>' +
+            '<div class="prompt-library-item-actions">' +
+              '<button class="prompt-library-item-btn" data-action="view" title="Forhandsgranska">' + icons.eye + '</button>' +
+              '<button class="prompt-library-item-btn" data-action="copy" title="Kopiera till prompt">' + icons.copy + '</button>' +
+              '<button class="prompt-library-item-btn delete" data-action="delete" title="Radera">' + icons.trash + '</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+        
+        // Event listeners for prompt items
+        list.querySelectorAll('.prompt-library-item').forEach(item => {
+          // Click on item = insert into prompt field and track usage
+          item.addEventListener('click', async (e) => {
+            if (e.target.closest('.prompt-library-item-btn')) return;
+            const idx = parseInt(item.dataset.index);
+            const id = item.dataset.id;
+            const p = savedPrompts[idx];
+            if (p && promptEl) {
+              promptEl.value = p.prompt;
+              promptEl.dispatchEvent(new Event('input'));
+              setStatus('Prompt infogad: ' + p.name, true);
+              setTimeout(() => setStatus('', false), 2000);
+              // Track usage in background
+              fetch('/api/ai-council/prompts?id=' + id, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ incrementUse: true })
+              }).catch(() => {});
+            }
+          });
+          
+          // Action buttons
+          item.querySelectorAll('.prompt-library-item-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              e.stopPropagation();
+              const idx = parseInt(item.dataset.index);
+              const id = item.dataset.id;
+              const p = savedPrompts[idx];
+              const action = btn.dataset.action;
+              
+              if (action === 'view' && p) {
+                showPreviewModal('Prompt: ' + p.name, p.prompt);
+              } else if (action === 'copy' && p) {
+                if (promptEl) {
+                  promptEl.value = p.prompt;
+                  promptEl.dispatchEvent(new Event('input'));
+                }
+              } else if (action === 'delete') {
+                if (confirm('Radera prompten "' + p.name + '"?')) {
+                  try {
+                    const res = await fetch('/api/ai-council/prompts?id=' + id, {
+                      method: 'DELETE',
+                      credentials: 'include'
+                    });
+                    if (res.ok) {
+                      savedPrompts.splice(idx, 1);
+                      renderPromptLibrary();
+                    }
+                  } catch (e) {
+                    alert('Kunde inte radera prompten');
+                  }
+                }
+              }
+            });
+          });
+        });
+      }
+      
+      // Add prompt button
+      document.getElementById('addPromptBtn')?.addEventListener('click', async () => {
+        if (!promptLibraryReady) {
+          alert('Logga in fÃ¶r att spara prompter');
+          return;
+        }
+        
+        const name = prompt('Namn på prompten:');
+        if (!name) return;
+        
+        const promptText = promptEl?.value || '';
+        if (!promptText.trim()) {
+          alert('Skriv en prompt först, sedan kan du spara den.');
+          return;
+        }
+        
+        try {
+          const res = await fetch('/api/ai-council/prompts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ name: name.trim(), prompt: promptText })
+          });
+          
+          const data = await res.json();
+          if (data.error) {
+            alert('Kunde inte spara: ' + data.error);
+            return;
+          }
+          
+          savedPrompts.unshift(data.prompt);
+          renderPromptLibrary();
+          setStatus('Prompt sparad: ' + name, true);
+          setTimeout(() => setStatus('', false), 2000);
+        } catch (e) {
+          alert('Kunde inte spara prompten');
+        }
+      });
+      
+      // Save prompt button (in the prompt field actions)
+      document.getElementById('savePromptBtn')?.addEventListener('click', () => {
+        document.getElementById('addPromptBtn')?.click();
+      });
+      
+      // Initial load
+      loadPromptLibrary();
+      // Context library management (Supabase)
+      let savedContexts = [];
+      let contextLibraryReady = false;
+      
+      async function loadContextLibrary() {
+        const list = document.getElementById('contextLibraryList');
+        if (!list) return;
+        list.innerHTML = '<div class="prompt-library-empty">Laddar...</div>';
+        
+        try {
+          const res = await fetch('/api/ai-council/contexts', { credentials: 'include' });
+          const data = await res.json();
+          
+          if (data.error) {
+            console.warn('Context library error:', data.error);
+            list.innerHTML = '<div class="prompt-library-empty">Logga in fÃ¶r att anvÃ¤nda</div>';
+            return;
+          }
+          
+          savedContexts = data.contexts || [];
+          contextLibraryReady = true;
+          renderContextLibrary();
+        } catch (e) {
+          console.error('Failed to load context library:', e);
+          list.innerHTML = '<div class="prompt-library-empty">Kunde inte ladda</div>';
+        }
+      }
+      
+      function renderContextLibrary() {
+        const list = document.getElementById('contextLibraryList');
+        if (!list) return;
+        
+        if (savedContexts.length === 0) {
+          list.innerHTML = '<div class="prompt-library-empty">Inga sparade kontexter</div>';
+          return;
+        }
+        
+        list.innerHTML = savedContexts.map(ctx => `
+          <div class="prompt-library-item" data-id="${ctx.id}" title="${ctx.name}">
+            <span class="prompt-library-item-text">${ctx.name}</span>
+            <div class="prompt-library-item-actions">
+              <button class="prompt-library-action view" title="FÃ¶rhandsgranska">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+              <button class="prompt-library-action copy" title="Kopiera">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+              <button class="prompt-library-action delete" title="Radera">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            </div>
+          </div>
+        `).join('');
+        
+        // Add click handlers
+        list.querySelectorAll('.prompt-library-item').forEach(item => {
+          const ctxId = item.dataset.id;
+          const ctx = savedContexts.find(c => c.id === ctxId);
+          if (!ctx) return;
+          
+          // Click item to insert into context field
+          item.addEventListener('click', async (e) => {
+            if (e.target.closest('.prompt-library-action')) return;
+            const contextEl = document.getElementById('context');
+            if (contextEl) {
+              contextEl.value = ctx.content;
+              contextEl.dispatchEvent(new Event('input'));
+            }
+            // Update use count
+            try {
+              await fetch(`/api/ai-council/contexts?id=${ctxId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ incrementUse: true }),
+                credentials: 'include'
+              });
+            } catch (e) {}
+          });
+          
+          // View button
+          item.querySelector('.view')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            alert('Kontext: ' + ctx.name + '\n\n' + ctx.content);
+          });
+          
+          // Copy button
+          item.querySelector('.copy')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(ctx.content);
+          });
+          
+          // Delete button
+          item.querySelector('.delete')?.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (!confirm('Radera kontext "' + ctx.name + '"?')) return;
+            try {
+              await fetch(`/api/ai-council/contexts?id=${ctxId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+              });
+              savedContexts = savedContexts.filter(c => c.id !== ctxId);
+              renderContextLibrary();
+            } catch (e) {
+              alert('Kunde inte radera');
+            }
+          });
+        });
+      }
+      
+      // Add context button (in sidebar)
+      document.getElementById('addContextBtn')?.addEventListener('click', async () => {
+        const contextEl = document.getElementById('context');
+        const contextText = contextEl?.value?.trim();
+        
+        if (!contextText) {
+          alert('Skriv eller klistra in en kontext fÃ¶rst');
+          return;
+        }
+        
+        const name = prompt('Namn pÃ¥ kontexten:');
+        if (!name) return;
+        
+        try {
+          const res = await fetch('/api/ai-council/contexts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, context: contextText }),
+            credentials: 'include'
+          });
+          
+          const data = await res.json();
+          if (data.error) {
+            alert('Fel: ' + data.error);
+            return;
+          }
+          
+          await loadContextLibrary();
+          setStatus('Kontext sparad!', true);
+          setTimeout(() => setStatus('', false), 2000);
+        } catch (e) {
+          alert('Kunde inte spara kontexten');
+        }
+      });
+      
+      // Save context button (in the context field actions)
+      document.getElementById('saveContextBtn')?.addEventListener('click', () => {
+        document.getElementById('addContextBtn')?.click();
+      });
+      
+      // Initial load
+      loadContextLibrary();
+      
       // Sessions management (Supabase only - no localStorage fallback)
       let userIsLoggedIn = false;
       
@@ -6899,7 +7546,7 @@ if (!anvandare) {
                   if (value && typeof value === 'object') {
                     // Map model keys to provider names
                     let provider = 'Unknown';
-                    if (key.includes('gpt') || key.includes('openai') || key === 'o1' || key === 'o3') provider = 'OpenAI';
+                    if (key.includes('gpt') || key.includes('openai') || key === 'gpt-5' || key.includes('gpt-5')) provider = 'OpenAI';
                     else if (key.includes('claude') || key.includes('anthropic')) provider = 'Anthropic';
                     else if (key.includes('gemini') || key.includes('google')) provider = 'Google';
                     else if (key.includes('grok') || key.includes('xai')) provider = 'xAI';
@@ -7277,6 +7924,17 @@ if (!anvandare) {
       }
       
       let lastSavedSessionId = null; // Track newly saved sessions for highlighting
+      let currentFilter = 'all'; // Current history filter
+      
+      // Filter event listeners
+      document.querySelectorAll('.notes-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentFilter = btn.dataset.filter;
+          document.querySelectorAll('.notes-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderSessions();
+        });
+      });
       
       function renderSessions() {
         if (sessions.length === 0) {
@@ -7295,7 +7953,24 @@ if (!anvandare) {
           chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>'
         };
         
-        notesList.innerHTML = sessions.map((s, index) => {
+        // Filter sessions based on current filter
+        let filteredSessions = sessions;
+        if (currentFilter !== 'all') {
+          filteredSessions = sessions.filter(s => {
+            if (currentFilter === 'supersynthesis') return s.supersynthesis;
+            if (currentFilter === 'synthesis') return s.synthesis && !s.supersynthesis;
+            if (currentFilter === 'response') return !s.synthesis && !s.supersynthesis;
+            return true;
+          });
+        }
+        
+        if (filteredSessions.length === 0) {
+          const filterLabels = { all: 'inga', supersynthesis: 'inga supersynteser', synthesis: 'inga synteser', response: 'inga enkelsvar' };
+          notesList.innerHTML = '<div class="notes-empty">Hittade ' + filterLabels[currentFilter] + '.</div>';
+          return;
+        }
+        
+        notesList.innerHTML = filteredSessions.map((s, index) => {
           const date = new Date(s.created_at);
           const timeStr = date.toLocaleString('sv-SE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
           
@@ -7402,7 +8077,7 @@ if (!anvandare) {
       
       // Model display names and colors
       const modelDisplayNames = {
-        openai: 'OpenAI o1',
+        openai: 'OpenAI GPT-5.2',
         anthropic: 'Claude',
         google: 'Gemini',
         grok: 'Grok'
@@ -7418,7 +8093,7 @@ if (!anvandare) {
       const synthesisModelDisplayNames = {
         'claude': 'Claude Sonnet',
         'claude-opus': 'Claude Opus 4.5',
-        'openai': 'OpenAI o1',
+        'openai': 'OpenAI GPT-5.2',
         'gpt4o': 'GPT-4o',
         'gemini': 'Gemini',
         'grok': 'Grok'
@@ -8171,7 +8846,7 @@ if (!anvandare) {
         ['openai', 'anthropic', 'google', 'xai'].forEach(provider => {
           const checkbox = document.querySelector(`input[value="${provider}"]`);
           if (checkbox && checkbox.checked) {
-            const label = { openai: 'OpenAI o1', anthropic: 'Claude Sonnet', google: 'Gemini 2.0 Flash', xai: 'Grok 4' }[provider];
+            const label = { openai: 'OpenAI GPT-5.2', anthropic: 'Claude Sonnet', google: 'Gemini 2.0 Flash', xai: 'Grok 4' }[provider];
             usedModels.push(label);
           }
         });
@@ -8240,7 +8915,7 @@ if (!anvandare) {
         md += `## Individuella svar\n\n`;
         
         const modelNames = {
-          openai: 'OpenAI o1',
+          openai: 'OpenAI GPT-5.2',
           anthropic: 'Claude Sonnet',
           google: 'Gemini 2.0 Flash',
           grok: 'Grok 4'
@@ -8318,7 +8993,7 @@ if (!anvandare) {
         // Clear any existing timers
         stopAllModelTimers();
         
-        const modelDisplayNames = { openai: 'OpenAI o1', anthropic: 'Claude', google: 'Gemini', grok: 'Grok' };
+        const modelDisplayNames = { openai: 'OpenAI GPT-5.2', anthropic: 'Claude', google: 'Gemini', grok: 'Grok' };
         const modelToProvider = { openai: 'openai', anthropic: 'anthropic', gemini: 'google', grok: 'grok' };
         
         models.forEach(model => {
@@ -8385,6 +9060,8 @@ if (!anvandare) {
         // Update accordion title with actual model name from response
         if (titleEl && data.model) {
           const modelDisplayNames = {
+            'gpt-5.2': 'OpenAI GPT-5.2',
+            'gpt-5.2-pro': 'GPT-5.2 Pro',
             'o1': 'OpenAI o1',
             'gpt-4o': 'GPT-4o',
             'claude-sonnet-4-20250514': 'Claude Sonnet 4',
@@ -8437,6 +9114,18 @@ if (!anvandare) {
         currentPrompt = prompt;
         hideError();
         setLoading(true);
+        
+        // CRITICAL: Reset collected responses if prompt/context changed
+        const queryHash = btoa(unescape(encodeURIComponent(prompt + '|' + context))).slice(0, 32);
+        if (queryHash !== lastQueryHash) {
+          console.log('New query detected - clearing previous responses');
+          collectedResponses = {};
+          collectedR2Responses = {};
+          hasRunDeliberation = false;
+          hasSynthesized = false;
+          clearStoredResponses();
+        }
+        lastQueryHash = queryHash;
         
         const modelNames = selectedModels.map(m => ({ openai: 'OpenAI', anthropic: 'Claude', gemini: 'Gemini', grok: 'Grok' }[m])).join(', ');
         setStatus('Runda 1: Skickar till ' + modelNames + '...', true);
@@ -8706,7 +9395,7 @@ if (!anvandare) {
           const synthLabel = { 
             claude: 'Claude Sonnet', 
             'claude-opus': 'Claude Opus 4.5', 
-            openai: 'OpenAI o1', 
+            openai: 'OpenAI GPT-5.2', 
             gpt4o: 'GPT-4o',
             gemini: 'Gemini', 
             grok: 'Grok' 
@@ -10672,7 +11361,8 @@ if (!anvandare) {
               <div class="zotero-result-meta">${escapeHtml(item.authors)} ${item.year ? '(' + item.year + ')' : ''}</div>
               ${item.journal ? `<div class="zotero-result-journal">${escapeHtml(item.journal)}</div>` : ''}
               <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.375rem;">
-                ${item.hasPdf ? '<span class="zotero-result-pdf">📄 PDF</span>' : ''}
+                ${item.hasPdf ? '<span class="zotero-result-pdf"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg> PDF</span>' : ''}
+                ${item.abstract && item.abstract.split(' ').length >= 20 ? '<span class="zotero-result-abstract"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> ' + item.abstract.split(' ').length + ' ord</span>' : ''}
                 ${item.tags.length > 0 ? `
                   <div class="zotero-result-tags">
                     ${item.tags.slice(0, 4).map(t => `<span class="zotero-result-tag">${escapeHtml(t)}</span>`).join('')}
@@ -10742,7 +11432,7 @@ if (!anvandare) {
         if (selectedZoteroItems.size === 0) return;
         
         zoteroImportSelectedBtn.disabled = true;
-        zoteroImportSelectedBtn.textContent = 'Importerar...';
+        zoteroImportSelectedBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spin"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg> Importerar...';
         
         let importedCount = 0;
         let importedText = '';
@@ -10763,6 +11453,7 @@ if (!anvandare) {
             const response = await fetch('/api/ai-council/zotero/fetch-pdf', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
               body: JSON.stringify({ itemKey })
             });
             
@@ -10815,9 +11506,9 @@ if (!anvandare) {
         }
         
         zoteroImportSelectedBtn.disabled = false;
-        zoteroImportSelectedBtn.textContent = '📥 Importera valda PDF:er';
+        zoteroImportSelectedBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Importera valda PDF:er';
       });
-      
+
       // Disconnect Zotero
       zoteroDisconnectBtn?.addEventListener('click', async () => {
         if (!confirm('Vill du koppla från Zotero? Din API-nyckel kommer tas bort.')) return;

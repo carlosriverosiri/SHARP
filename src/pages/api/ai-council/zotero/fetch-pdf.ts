@@ -213,6 +213,50 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         detailedMessage = `Artikeln har ${pdfCount} PDF-attachment(s) men ingen av dem är synkad till Zoteros molnlagring. Öppna Zotero och synka ditt bibliotek.`;
       }
       
+      // Try to fetch abstract as fallback when no PDF exists
+      try {
+        const itemUrl = `${ZOTERO_API_BASE}/${libraryPath}/items/${itemKey}?format=json`;
+        const itemResponse = await rateLimitedFetch(
+          itemUrl,
+          {
+            headers: {
+              'Zotero-API-Version': '3',
+              'Authorization': `Bearer ${apiKey}`,
+            },
+          },
+          user.id
+        );
+        
+        if (itemResponse.ok) {
+          const itemData = await itemResponse.json();
+          const abstractText = itemData.data?.abstractNote;
+          const title = itemData.data?.title || 'Utan titel';
+          
+          if (abstractText && abstractText.trim().length > 50) {
+            const wordCount = abstractText.trim().split(/\s+/).length;
+            return new Response(JSON.stringify({ 
+              success: true,
+              type: 'abstract',
+              pdf: {
+                itemKey,
+                filename: title,
+                contentType: 'text/abstract',
+                textContent: abstractText,
+                textLength: abstractText.length,
+                wordCount: wordCount,
+                truncated: false,
+              },
+              message: `Ingen PDF hittades, men abstract med ${wordCount} ord importerades.`
+            }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+        }
+      } catch (abstractError) {
+        console.warn('Could not fetch abstract as fallback:', abstractError);
+      }
+      
       return new Response(JSON.stringify({ 
         error: 'No PDF',
         message: detailedMessage,
@@ -284,8 +328,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (extractText) {
       try {
         // pdf-parse v1 - importera kärnmodulen för att undvika test-körning
-        const pdf = await import('pdf-parse/lib/pdf-parse.js');
-        const pdfParse = (pdf as any).default || (pdf as any);
+        const pdfModule = await import('pdf-parse');
+        const pdfParse = (pdfModule as any).default || pdfModule;
         
         console.log(`[Zotero PDF] Parsing PDF, buffer size: ${pdfBuffer.length} bytes`);
         

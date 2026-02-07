@@ -27,7 +27,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </span>
           </h1>
           <p class="text-xl md:text-2xl text-slate-300 font-light mb-4">
-            Master Mind Tool <span class="text-sm text-slate-500">v3.9</span>
+            Master Mind Tool <span class="text-sm text-slate-500">v3.10</span>
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
             Multi-modell AI-rådgivning med automatisk syntes för komplexa tekniska och vetenskapliga frågor — 
@@ -602,7 +602,36 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </div>
           </div>
           
-          <!-- Rad 4: Mobile & Dictation - NEW! -->
+          <!-- Rad 4: Libraries - NEW! -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <div class="bg-gradient-to-b from-violet-500/10 to-slate-800/50 border-2 border-violet-500/40 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">ðŸ“š</div>
+              <h4 class="text-white font-semibold mb-1">Bibliotek</h4>
+              <p class="text-violet-400 text-xs font-bold">NY! v3.10</p>
+              <p class="text-slate-500 text-sm mt-1">Spara prompter & kontext</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-indigo-500/10 to-slate-800/50 border border-indigo-500/30 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">ðŸ”</div>
+              <h4 class="text-white font-semibold mb-1">Historikfilter</h4>
+              <p class="text-indigo-400 text-xs">NY!</p>
+              <p class="text-slate-500 text-sm mt-1">Filtrera sessioner</p>
+            </div>
+
+            <div class="bg-slate-800/50 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">ðŸ§ª</div>
+              <h4 class="text-white font-semibold mb-1">GPT-5.2</h4>
+              <p class="text-slate-500 text-sm">ErsÃ¤tter o1</p>
+            </div>
+            
+            <div class="bg-slate-800/50 rounded-xl p-5 text-center">
+              <div class="text-2xl mb-3">ðŸ“‹</div>
+              <h4 class="text-white font-semibold mb-1">Abstract</h4>
+              <p class="text-slate-500 text-sm">Zotero fallback</p>
+            </div>
+          </div>
+          
+          <!-- Rad 5: Mobile & Dictation -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div class="bg-gradient-to-b from-pink-500/10 to-slate-800/50 border border-pink-500/30 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3">🎤</div>
@@ -705,6 +734,91 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             </div>
           </div>
           
+
+          <!-- Prompt & Context Library Feature - NEW! -->
+          <div class="mt-6 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border-2 border-violet-500/40 rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-white font-semibold flex items-center gap-2">
+                <span>ðŸ“š</span> Prompt- och kontextbibliotek
+                <span class="text-xs bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full font-bold">NY!</span>
+              </h4>
+            </div>
+            <p class="text-slate-400 text-sm mb-4">
+              Spara dina <span class="text-violet-400 font-semibold">favoritprompter</span> och <span class="text-violet-400 font-semibold">forskningskontexter</span> 
+              fÃ¶r att snabbt Ã¥teranvÃ¤nda dem. Allt synkas mellan alla dina enheter via Supabase.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300"><strong class="text-white">Promptbibliotek</strong> - spara och Ã¥teranvÃ¤nd prompter</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300"><strong class="text-white">Kontextbibliotek</strong> - spara studiesamlingar</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300"><strong class="text-white">SnabbÃ¥tkomst</strong> - ett klick fÃ¶r att ladda</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300">FÃ¶rhandsgranska, kopiera, radera</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300">Historikfilter (Syntes/Supersyntes)</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-slate-300">Synkas mellan alla enheter</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Prompta prompten Feature - Unique! -->
+          <div class="mt-6 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-2 border-amber-500/40 rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-white font-semibold flex items-center gap-2">
+                <span>ðŸŽ¯</span> Prompta prompten
+                <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">UNIK!</span>
+              </h4>
+            </div>
+            <p class="text-slate-400 text-sm mb-4">
+              <strong class="text-amber-400">Diktera fritt</strong> och lÃ¥t AI strukturera din rÃ¶riga tanke till en 
+              <strong class="text-white">tydlig, vÃ¤lformulerad prompt</strong>. Perfekt nÃ¤r du "tÃ¤nker hÃ¶gt".
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-amber-400">1.</span>
+                  <span class="text-slate-300">ðŸŽ¤ Diktera din tanke (hur rÃ¶rig som helst)</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-amber-400">2.</span>
+                  <span class="text-slate-300">ðŸŽ¯ Klicka "Strukturera prompt"</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-amber-400">3.</span>
+                  <span class="text-slate-300">ðŸ“ Granska fÃ¶rhandsgranskningen</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-amber-400">4.</span>
+                  <span class="text-slate-300">âš¡ KÃ¶r med strukturerad prompt</span>
+                </div>
+              </div>
+            </div>
+            <p class="text-slate-500 text-xs mt-4 pt-4 border-t border-slate-700">
+              <strong class="text-amber-400">Resultat:</strong> RÃ¶rig diktering â†’ Rubrik + punktlistor + tydliga frÃ¥gor â†’ BÃ¤ttre AI-svar
+            </p>
+          </div>
+
           <!-- Scientific Context Feature -->
           <div class="mt-6 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 rounded-xl p-6">
             <h4 class="text-white font-semibold mb-4 flex items-center gap-2">

@@ -15,6 +15,18 @@ import { rateLimitedFetch, getRateLimitStatus } from '../../../../lib/zotero-rat
 
 const ZOTERO_API_BASE = 'https://api.zotero.org';
 
+interface ZoteroAttachment {
+  key: string;
+  data: {
+    key: string;
+    itemType: string;
+    parentItem: string;
+    contentType?: string;
+    filename?: string;
+    linkMode?: string;
+  };
+}
+
 interface ZoteroItem {
   key: string;
   version: number;
@@ -210,13 +222,57 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     const items: ZoteroItem[] = await response.json();
     const totalResults = parseInt(response.headers.get('Total-Results') || '0');
 
-    // Kolla vilka items som har PDF attachments (via ytterligare API-anrop om behövs)
-    // För MVP: markera alla som potentiellt har PDF
+    // Filtrera bort attachments och notes
+    const mainItems = items.filter(item => 
+      item.data.itemType !== 'attachment' && item.data.itemType !== 'note'
+    );
+    
+    // HÃ¤mta PDF-attachments fÃ¶r att veta vilka items som har PDF
+    const itemsWithPdf = new Set<string>();
+    
+    if (mainItems.length > 0) {
+      try {
+        const attachmentParams = new URLSearchParams({
+          format: 'json',
+          itemType: 'attachment',
+          limit: '100',
+        });
+        
+        let attachmentUrl: string;
+        if (collection) {
+          attachmentUrl = `${ZOTERO_API_BASE}/${libraryPath}/collections/${collection}/items?${attachmentParams.toString()}`;
+        } else {
+          attachmentUrl = `${ZOTERO_API_BASE}/${libraryPath}/items?${attachmentParams.toString()}`;
+        }
+        
+        const attachmentResponse = await rateLimitedFetch(
+          attachmentUrl,
+          {
+            headers: {
+              'Zotero-API-Version': '3',
+              'Authorization': `Bearer ${apiKey}`,
+            },
+          },
+          user.id
+        );
+        
+        if (attachmentResponse.ok) {
+          const attachments = await attachmentResponse.json();
+          for (const att of attachments) {
+            if (att.data?.parentItem && 
+                (att.data.contentType === 'application/pdf' || 
+                 att.data.filename?.toLowerCase().endsWith('.pdf'))) {
+              itemsWithPdf.add(att.data.parentItem);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Could not fetch attachments:', e);
+      }
+    }
     
     // Formatera resultat
-    const formattedItems = items
-      .filter(item => item.data.itemType !== 'attachment' && item.data.itemType !== 'note')
-      .map(item => ({
+    const formattedItems = mainItems.map(item => ({
         key: item.key,
         itemType: item.data.itemType,
         title: item.data.title || 'Utan titel',
@@ -226,7 +282,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
         doi: item.data.DOI,
         url: item.data.url,
         journal: item.data.publicationTitle || item.data.journalAbbreviation,
-        hasPdf: true, // Optimistiskt antagande, verifieras vid hämtning
+        hasPdf: itemsWithPdf.has(item.key),
         tags: (item.data.tags || []).map(t => t.tag),
       }));
 

@@ -48,6 +48,8 @@ interface AIResponse {
 // Pricing per 1M tokens (USD) - Updated January 2026
 const PRICING = {
   // OpenAI
+  'gpt-5.2': { input: 1.75, output: 14.00 },
+  'gpt-5.2-pro': { input: 21.00, output: 168.00 },
   'o1': { input: 15.00, output: 60.00 },
   'gpt-4o': { input: 2.50, output: 10.00 },
   // Anthropic
@@ -99,7 +101,7 @@ async function safeParseResponse(response: Response, provider: string): Promise<
 type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
 
 // Synthesis model options - separate from query models
-type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'gpt4o' | 'gemini' | 'grok';
+type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'openai-pro' | 'gpt4o' | 'gemini' | 'grok';
 
 interface ImageData {
   name: string;
@@ -219,7 +221,7 @@ function parseHallucinations(round2Responses: AIResponse[]): HallucinationReport
 async function queryOpenAI(context: string, prompt: string, images: ImageData[] = []): Promise<AIResponse> {
   const start = Date.now();
   const hasImages = images.length > 0;
-  const model = hasImages ? 'gpt-4o' : 'o1'; // GPT-4o supports vision, o1 does not
+  const model = hasImages ? 'gpt-4o' : 'gpt-5.2'; // GPT-5.2 has much higher rate limits than o1
   
   try {
     const fullPrompt = context 
@@ -775,8 +777,9 @@ async function deliberateOpenAI(originalPrompt: string, allResponses: AIResponse
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'o1',
+        model: 'gpt-5.2',
         messages: [{ role: 'user', content: deliberationPrompt }],
+        max_tokens: 8192,
       }),
     });
 
@@ -787,13 +790,13 @@ async function deliberateOpenAI(originalPrompt: string, allResponses: AIResponse
 
     const data = await response.json();
     return {
-      model: 'o1',
+      model: 'gpt-5.2',
       provider: 'OpenAI',
       response: data.choices[0]?.message?.content || 'Inget svar',
       duration: Date.now() - start,
     };
   } catch (error: any) {
-    return { model: 'o1', provider: 'OpenAI', response: '', error: error.message, duration: Date.now() - start };
+    return { model: 'gpt-5.2', provider: 'OpenAI', response: '', error: error.message, duration: Date.now() - start };
   }
 }
 
@@ -997,7 +1000,7 @@ async function synthesizeWithOpenAI(
   
   if (validResponses.length === 0) {
     return {
-      model: 'o1',
+      model: 'gpt-5.2',
       provider: 'OpenAI (Syntes)',
       response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
       duration: Date.now() - start,
@@ -1014,7 +1017,7 @@ async function synthesizeWithOpenAI(
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'o1',
+        model: 'gpt-5.2',
         messages: [
           { role: 'user', content: synthesisPrompt }
         ],
@@ -1034,17 +1037,84 @@ async function synthesizeWithOpenAI(
     };
     
     return {
-      model: 'o1',
+      model: 'gpt-5.2',
       provider: 'OpenAI (Syntes)',
       response: content,
       duration: Date.now() - start,
       tokens,
-      cost: calculateCost('o1', tokens),
+      cost: calculateCost('gpt-5.2', tokens),
     };
   } catch (error: any) {
     return {
-      model: 'o1',
+      model: 'gpt-5.2',
       provider: 'OpenAI (Syntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+// Synthesis using GPT-5.2 Pro (premium reasoning model)
+async function synthesizeWithOpenAIPro(
+  originalPrompt: string,
+  responses: AIResponse[]
+): Promise<AIResponse> {
+  const start = Date.now();
+  
+  const validResponses = responses.filter(r => !r.error && r.response);
+  
+  if (validResponses.length === 0) {
+    return {
+      model: 'gpt-5.2-pro',
+      provider: 'GPT-5.2 Pro (Syntes)',
+      response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
+      duration: Date.now() - start,
+    };
+  }
+
+  const synthesisPrompt = buildSynthesisPrompt(originalPrompt, responses);
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-5.2-pro',
+        messages: [
+          { role: 'user', content: synthesisPrompt }
+        ],
+        max_tokens: 16384,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const responseContent = data.choices[0]?.message?.content || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.prompt_tokens || 0,
+      outputTokens: data.usage?.completion_tokens || 0,
+    };
+    
+    return {
+      model: 'gpt-5.2-pro',
+      provider: 'GPT-5.2 Pro (Syntes)',
+      response: responseContent,
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('gpt-5.2-pro', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'gpt-5.2-pro',
+      provider: 'GPT-5.2 Pro (Syntes)',
       response: '',
       error: error.message,
       duration: Date.now() - start,
@@ -1376,13 +1446,13 @@ async function superSynthesize(
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
-          body: JSON.stringify({ model: 'o1', messages: [{ role: 'user', content: superPrompt }] }),
+          body: JSON.stringify({ model: 'gpt-5.2', messages: [{ role: 'user', content: superPrompt }], max_tokens: 8192 }),
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return { model: 'o1', provider: 'OpenAI o1 (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+        return { model: 'gpt-5.2', provider: 'GPT-5.2 (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'o1', provider: 'OpenAI o1 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'gpt-5.2', provider: 'OpenAI o1 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'gpt4o':
@@ -1659,7 +1729,8 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         const synthesisToProvider: Record<string, ModelProvider> = {
           'claude': 'anthropic', 
           'claude-opus': 'anthropic',
-          'openai': 'openai', 
+          'openai': 'openai',
+          'openai-pro': 'openai',
           'gpt4o': 'openai',
           'gemini': 'gemini', 
           'grok': 'grok'
@@ -2064,6 +2135,7 @@ SVARSSTIL:
     const synthesisToProvider: Record<string, ModelProvider> = {
       'claude': 'anthropic',
       'openai': 'openai',
+      'openai-pro': 'openai',
       'gemini': 'gemini',
       'grok': 'grok',
     };

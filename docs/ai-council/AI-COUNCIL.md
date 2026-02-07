@@ -27,6 +27,50 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 ---
 
+## Väg framåt: Roadmap för källkvalitet
+
+Målet är att minska hallucinationer genom bättre källflöde, inte genom att byta modell. Den här planen är avsedd att vara en gemensam riktning när vi diskuterar nästa steg i Cursor.
+
+### Nivå 1 – Stabilt research‑läge (kort sikt)
+
+**Möjligt nu**
+- Auto‑sök per profil (vetenskap = PubMed + Scholar/Google).
+- Strikt källformat i kontext (titel + URL + kort excerpt).
+- Tydlig policy: påståenden utan källa markeras som osäkra.
+
+**Behövs för nästa nivå**
+- Käll‑cache per prompt (så vi inte söker om samma sak).
+- Enkla heuristiker för ranking (review/meta > RCT > case).
+
+### Nivå 2 – Agentic Search Light (medel)
+
+**Möjligt nu**
+- Server‑styrd “extra sök” efter runda 1 när konflikt/utan källa hittas.
+
+**Behövs för nästa nivå**
+- En kontrollerad loop: round1 → analys → sök → round2 (verifiering).
+- Tydliga gränser för antal sökningar per fråga.
+
+### Nivå 3 – Agentic Search Pro (lång sikt)
+
+**Möjligt om API-stöd finns**
+- Modell‑styrd tool‑calling (web_search/pubmed/zotero).
+
+**Behövs**
+- Tool‑policys, kostnadstak och fallback om sök misslyckas.
+- Förfinad ranking så att modellen inte drunknar i källor.
+
+### Nivå 4 – Intern kunskapsmotor
+
+**Mål**
+- Återanvänd verifierade källor och tidigare sessioner automatiskt.
+
+**Behövs**
+- Embeddings + vector‑sök (t.ex. pgvector i Supabase).
+- “Verifierade källor” som förstahandsmaterial för nya frågor.
+
+---
+
 ## 🚀 Utvecklingsplan
 
 > **Obs:** Denna sektion visar planerade och pågående förbättringar. Implementerade funktioner flyttas till Versionshistorik.
@@ -654,7 +698,8 @@ AI Council visar **kostnad per körning** i realtid, nu med prominent banner hö
 
 | Modell | Input/1M | Output/1M |
 |--------|----------|-----------|
-| OpenAI o1 | $15.00 | $60.00 |
+| GPT-5.2 | $1.75 | $14.00 |
+| GPT-5.2 Pro | $21.00 | $168.00 |
 | GPT-4o | $2.50 | $10.00 |
 | Claude Sonnet | $3.00 | $15.00 |
 | Claude Opus 4.5 | $15.00 | $75.00 |
