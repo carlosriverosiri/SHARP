@@ -44,6 +44,7 @@ if (!anvandare) {
       --bg-sidebar: #f1f3f5;
       --bg-hover: #e9ecef;
       --bg-active: #e1e4e8;
+      --bg-tertiary: #f3f4f6;
       
       --text-primary: #1f2937;
       --text-secondary: #4b5563;
@@ -311,6 +312,18 @@ if (!anvandare) {
       background: var(--bg-hover);
     }
     
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 8px;
+    }
+    
+    .btn-ghost:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+    
     /* Content Area */
     .content-area {
       flex: 1;
@@ -385,10 +398,448 @@ if (!anvandare) {
       margin-bottom: 8px;
     }
     
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
     .empty-text {
       font-size: 14px;
       color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+    .empty-features {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       margin-bottom: 24px;
+      text-align: left;
+    }
+    .feature-item {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    /* Category Cards for project overview */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .category-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .category-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .category-card-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .category-card-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .category-card-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .category-card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--color-primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .category-card-badge:empty { display: none; }
+    
+    /* Project header in overview */
+    .project-overview-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+    .project-overview-info h2 {
+      font-size: 24px;
+      margin: 0 0 4px 0;
+    }
+    .project-overview-info p {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 14px;
+    }
+    .project-overview-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    
+    /* Quick stats */
+    .quick-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+      border-radius: 10px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    /* Category Cards for project overview */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .category-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .category-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .category-card-icon { font-size: 24px; margin-bottom: 8px; }
+    .category-card-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+    .category-card-count { font-size: 12px; color: var(--text-muted); }
+    .category-card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--color-primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .category-card-badge:empty { display: none; }
+    
+    /* Project header in overview */
+    .project-overview-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+    .project-overview-info h2 { font-size: 24px; margin: 0 0 4px 0; }
+    .project-overview-info p { color: var(--text-muted); margin: 0; font-size: 14px; }
+    .project-overview-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    
+    /* Quick stats */
+    .quick-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+      border-radius: 10px;
+    }
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-value { font-size: 20px; font-weight: 600; color: var(--color-primary); }
+    .stat-label { font-size: 12px; color: var(--text-muted); }
+    
+    /* Dashboard with draggable project blocks */
+    .projects-dashboard {
+      padding: 24px;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .dashboard-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .dashboard-title h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .dashboard-title svg {
+      color: var(--color-primary);
+    }
+    
+    /* Project blocks - Portal card style */
+    .projects-dashboard .project-blocks {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+      gap: 20px !important;
+    }
+    
+    .project-block {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: grab;
+      transition: all 0.25s ease;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .project-block:hover {
+      border-color: rgba(37, 99, 235, 0.3);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      transform: translateY(-3px);
+    }
+    
+    .project-block.dragging {
+      opacity: 0.6;
+      cursor: grabbing;
+      transform: scale(1.02) rotate(1deg);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+    }
+    
+    .project-block.drag-over {
+      border: 2px dashed var(--color-primary);
+      background: rgba(37, 99, 235, 0.02);
+    }
+    
+    /* Icon box - top left */
+    .project-block-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    
+    .project-block-icon svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+    
+    /* Constrain ALL SVGs inside project blocks */
+    .project-block svg {
+      max-width: 24px;
+      max-height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .project-block-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .project-block-icon.icon-blue { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important; }
+    .project-block-icon.icon-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+    .project-block-icon.icon-green { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
+    .project-block-icon.icon-orange { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); }
+    .project-block-icon.icon-pink { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
+    .project-block-icon.icon-teal { background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%); }
+    .project-block-icon.icon-red { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
+    
+    /* Header row */
+    .project-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    
+    .project-block-title h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .project-block-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    
+    /* Description */
+    .project-block-description {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* Tags */
+    .project-block-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+    
+    .project-tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .project-tag:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .project-tag.has-items {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--color-primary);
+      border-color: rgba(37, 99, 235, 0.15);
+    }
+    
+    .project-tag .tag-count {
+      margin-left: 4px;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+    
+    /* Action buttons */
+    .project-block-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .project-block:hover .project-block-actions {
+      opacity: 1;
+    }
+    
+    .project-block-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .project-block-btn:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .project-block-btn.delete:hover {
+      background: #ef4444;
+    }
+    
+    .project-block-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Footer */
+    .project-block-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      font-size: 12px;
+    }
+    
+    .project-block-footer .doc-count {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .project-block-footer .doc-count svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+    
+    .project-block-footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s;
+    }
+    
+    .project-block-footer a:hover {
+      gap: 6px;
+    }
+    
+    .project-block-footer a svg {
+      width: 14px;
+      height: 14px;
     }
     
     /* Editor Panel */
@@ -514,6 +965,78 @@ if (!anvandare) {
       resize: vertical;
     }
     
+    /* Mic button styles */
+    .input-with-mic {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    
+    .input-with-mic .form-input {
+      flex: 1;
+    }
+    
+    .textarea-with-mic {
+      align-items: flex-start;
+    }
+    
+    .textarea-with-mic .form-textarea {
+      flex: 1;
+      min-height: 80px;
+    }
+    
+    .mic-btn {
+      padding: 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    
+    .mic-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--primary);
+    }
+    
+    .mic-btn.recording {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: #ef4444;
+      color: #ef4444;
+      animation: pulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .mic-btn.processing {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+    
+    .dictation-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(59, 130, 246, 0.08);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .dictation-hint svg {
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+    
     .modal-footer {
       padding: 16px 24px;
       border-top: 1px solid var(--border-color);
@@ -627,7 +1150,11 @@ if (!anvandare) {
           <span class="breadcrumb-item">Kunskapsbas</span>
         </div>
         <div class="main-actions">
+          <a href="/admin/ai-council/profil" class="btn btn-ghost" style="text-decoration: none;" title="Min profil">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </a>
           <a href="/admin/ai-council" class="btn btn-secondary" style="text-decoration: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             AI Council
           </a>
           <button class="btn btn-primary" onclick="openNewItemModal()" id="new-item-btn" style="display: none;">
@@ -642,14 +1169,22 @@ if (!anvandare) {
       
       <div class="content-area" id="content-area">
         <div class="empty-state">
+          <div style="margin-bottom: 16px; color: var(--color-primary);"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
           <div class="empty-title">Välkommen till Kunskapsbasen</div>
-          <div class="empty-text">Skapa ditt första projekt för att börja organisera din forskning</div>
+          <div class="empty-text">
+            Organisera din forskning i projekt med kategorier för:<br>
+            <strong>Dokument</strong> · <strong>Litteratur</strong> · <strong>Ljud</strong> · <strong>AI-sessioner</strong> · <strong>Prompter</strong> · <strong>Radata</strong></div>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; text-align: left;">
+            <div style="font-size: 13px; color: var(--text-secondary);">✓ Koppla till AI Council för smart analys</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">✓ Importera från Zotero</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">✓ Markdown-stöd i alla dokument</div>
+          </div>
           <button class="btn btn-primary" onclick="openNewProjectModal()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            Skapa projekt
+            Skapa ditt första projekt
           </button>
         </div>
       </div>
@@ -685,11 +1220,39 @@ if (!anvandare) {
       <div class="modal-body">
         <div class="form-group">
           <label class="form-label">Projektnamn</label>
-          <input type="text" class="form-input" id="project-name" placeholder="T.ex. Impingement-forskning">
+          <div class="input-with-mic">
+            <input type="text" class="form-input" id="project-name" placeholder="T.ex. Impingement-forskning">
+            <button type="button" class="mic-btn" onclick="startDictation('project-name')" title="Diktera">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">Beskrivning (valfritt)</label>
-          <textarea class="form-input form-textarea" id="project-description" placeholder="Kort beskrivning av projektet..."></textarea>
+          <div class="input-with-mic textarea-with-mic">
+            <textarea class="form-input form-textarea" id="project-description" placeholder="Diktera en beskrivning - AI sammanfattar automatiskt"></textarea>
+            <button type="button" class="mic-btn" id="mic-btn-description" onclick="startDictation('project-description', true)" title="Diktera och sammanfatta med AI">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="dictation-hint" id="dictation-hint-description">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>AI sammanfattar din diktering till en kort beskrivning som passar i projektblocket</span>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -729,15 +1292,156 @@ if (!anvandare) {
     var currentItems = [];
     var currentItemId = null;
     
+    // Category SVG icons for modern look
+    var CATEGORY_ICONS = {
+      dokument: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
+      litteratur: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+      ljud: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>',
+      ai_fragor: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
+      prompter: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>',
+      radata: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>'
+    };
+    
     // Category metadata
     var CATEGORIES = {
-      dokument: { label: 'Dokument' },
-      litteratur: { label: 'Litteratur' },
-      ljud: { label: 'Ljudsammanfattningar' },
-      ai_fragor: { label: 'AI-frågor' },
-      prompter: { label: 'Prompter' },
-      radata: { label: 'Rådata' }
+      dokument: { label: 'Dokument', description: 'Anteckningar, sammanfattningar' },
+      litteratur: { label: 'Litteratur', description: 'Zotero, referenser, PDF:er' },
+      ljud: { label: 'Ljudsammanfattningar', description: 'Transkriberade inspelningar' },
+      ai_fragor: { label: 'AI-sessioner', description: 'Sparade AI Council-samtal' },
+      prompter: { label: 'Prompter', description: 'Ateranvandbara prompter' },
+      radata: { label: 'Radata', description: 'Ovrigt material' }
     };
+    
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      if (!text) return '';
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Speech recognition for dictation
+    var recognition = null;
+    var currentDictationTarget = null;
+    var isRecording = false;
+    
+    function startDictation(targetId, summarizeWithAI) {
+      // Check browser support
+      var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Din webblÃ¤sare stÃ¶der inte rÃ¶stinmatning. Prova Chrome eller Edge.');
+        return;
+      }
+      
+      var targetElement = document.getElementById(targetId);
+      var micBtn = targetElement.parentElement.querySelector('.mic-btn');
+      
+      // If already recording, stop
+      if (isRecording && currentDictationTarget === targetId) {
+        stopDictation();
+        return;
+      }
+      
+      // Stop any existing recording
+      if (recognition) {
+        recognition.stop();
+      }
+      
+      recognition = new SpeechRecognition();
+      recognition.lang = 'sv-SE';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      currentDictationTarget = targetId;
+      isRecording = true;
+      micBtn.classList.add('recording');
+      
+      var finalTranscript = '';
+      var interimTranscript = '';
+      
+      recognition.onresult = function(event) {
+        interimTranscript = '';
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        targetElement.value = finalTranscript + interimTranscript;
+      };
+      
+      recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        stopDictation();
+        if (event.error === 'not-allowed') {
+          alert('MikrofontillgÃ¥ng nekades. Kontrollera webblÃ¤sarens behÃ¶righeter.');
+        }
+      };
+      
+      recognition.onend = function() {
+        if (isRecording) {
+          // Recognition ended but we wanted to continue - restart
+          try {
+            recognition.start();
+          } catch (e) {
+            stopDictation();
+          }
+        } else if (summarizeWithAI && finalTranscript.trim()) {
+          // Summarize with AI
+          summarizeDictation(targetElement, finalTranscript.trim());
+        }
+      };
+      
+      try {
+        recognition.start();
+        showToast('Lyssnar... Klicka igen f\u00f6r att stoppa');
+      } catch (e) {
+        console.error('Could not start recognition:', e);
+        stopDictation();
+      }
+    }
+    
+    function stopDictation() {
+      isRecording = false;
+      if (recognition) {
+        recognition.stop();
+      }
+      // Remove recording class from all mic buttons
+      document.querySelectorAll('.mic-btn.recording').forEach(function(btn) {
+        btn.classList.remove('recording');
+      });
+    }
+    
+    async function summarizeDictation(targetElement, text) {
+      var micBtn = targetElement.parentElement.querySelector('.mic-btn');
+      micBtn.classList.add('processing');
+      
+      try {
+        // Use OpenAI to summarize
+        var res = await fetch('/api/ai-council/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            prompt: 'Sammanfatta fÃ¶ljande diktering till EN kort mening (max 15 ord) som beskriver ett forskningsprojekt. Svara ENDAST med sammanfattningen, ingen inledning:\n\n' + text,
+            selectedModels: ['gpt-4o-mini'],
+            runMode: 'parallel'
+          })
+        });
+        
+        var data = await res.json();
+        if (data.responses && data.responses['gpt-4o-mini']) {
+          targetElement.value = data.responses['gpt-4o-mini'].content.trim();
+          showToast('Beskrivning sammanfattad!');
+        }
+      } catch (e) {
+        console.error('Error summarizing:', e);
+        showToast('Kunde inte sammanfatta - beh\u00e5ller original');
+      } finally {
+        micBtn.classList.remove('processing');
+      }
+    }
     
     // Init
     document.addEventListener('DOMContentLoaded', function() {
@@ -756,7 +1460,12 @@ if (!anvandare) {
         }
         
         projects = data.projects || [];
+        
         renderTree();
+        // Show dashboard view by default
+        if (projects.length > 0 && !currentProjectId) {
+          renderDashboard();
+        }
       } catch (err) {
         console.error('Error loading projects:', err);
         showToast('Kunde inte ladda projekt');
@@ -800,6 +1509,171 @@ if (!anvandare) {
         `;
       }).join('');
     }
+    
+    // Render dashboard view with draggable project blocks
+    function renderDashboard() {
+      // Dashboard rendering
+      if (projects.length === 0) {
+        return;
+      }
+      
+      var iconColors = ['blue', 'purple', 'green', 'orange', 'pink', 'teal', 'red'];
+      
+      var content = document.getElementById('content-area');
+      content.innerHTML = '<div class="projects-dashboard">' +
+        '<div class="dashboard-header">' +
+          '<div class="dashboard-title">' +
+            '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>' +
+            '<h1>Mina projekt</h1>' +
+          '</div>' +
+          '<button class="btn btn-primary" onclick="openNewProjectModal()">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
+            ' Nytt projekt' +
+          '</button>' +
+        '</div>' +
+        '<div class="project-blocks" id="projectBlocks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">' +
+          projects.map(function(project, idx) {
+            var totalCount = project.categories ? project.categories.reduce(function(sum, c) { return sum + c.count; }, 0) : 0;
+            var iconColor = iconColors[idx % iconColors.length];
+            var description = project.description || 'Klicka f\u00f6r att \u00f6ppna projektet och hantera dina dokument.';
+            
+            // Build category tags
+            var tagsHtml = (project.categories || []).map(function(cat) {
+              var hasItems = cat.count > 0 ? ' has-items' : '';
+              var countHtml = cat.count > 0 ? '<span class="tag-count">' + cat.count + '</span>' : '';
+              return '<span class="project-tag' + hasItems + '" onclick="event.stopPropagation(); selectCategory(\'' + project.id + '\', \'' + cat.key + '\')" style="font-size: 11px; padding: 4px 8px; border-radius: 6px; background: #f3f4f6; color: #4b5563; cursor: pointer;">' + 
+                cat.label + countHtml + 
+              '</span>';
+            }).join('');
+            
+            return '<div class="project-block" draggable="true" data-id="' + project.id + '" data-index="' + idx + '" onclick="toggleProject(\'' + project.id + '\')" style="background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">' +
+              '<div class="project-block-icon icon-' + iconColor + '" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; background: ' + (iconColor === 'blue' ? 'linear-gradient(135deg, #3b82f6, #1d4ed8)' : iconColor === 'purple' ? 'linear-gradient(135deg, #8b5cf6, #6d28d9)' : iconColor === 'green' ? 'linear-gradient(135deg, #10b981, #047857)' : iconColor === 'orange' ? 'linear-gradient(135deg, #f59e0b, #b45309)' : iconColor === 'pink' ? 'linear-gradient(135deg, #ec4899, #be185d)' : iconColor === 'teal' ? 'linear-gradient(135deg, #14b8a6, #0f766e)' : 'linear-gradient(135deg, #ef4444, #b91c1c)') + ';">' +
+                '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>' +
+              '</div>' +
+              '<div class="project-block-header">' +
+                '<div class="project-block-title">' +
+                  '<h3>' + escapeHtml(project.name) + (totalCount > 0 ? '<span class="project-block-badge">' + totalCount + ' dok</span>' : '') + '</h3>' +
+                '</div>' +
+                '<div class="project-block-actions">' +
+                  '<button class="project-block-btn" onclick="event.stopPropagation(); toggleProject(\'' + project.id + '\')" title="\u00d6ppna">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
+                  '</button>' +
+                  '<button class="project-block-btn delete" onclick="event.stopPropagation(); confirmDeleteProject(\'' + project.id + '\')" title="Radera">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' +
+                  '</button>' +
+                '</div>' +
+              '</div>' +
+              '<div class="project-block-description">' + escapeHtml(description) + '</div>' +
+              '<div class="project-block-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">' + tagsHtml + '</div>' +
+              '<div class="project-block-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 12px;">' +
+                '<span class="doc-count" style="color: #6b7280; display: flex; align-items: center; gap: 4px;">' +
+                  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>' +
+                  totalCount + ' dokument' +
+                '</span>' +
+                '<a href="/admin/ai-council?kb_project=' + project.id + '" onclick="event.stopPropagation()">' +
+                  'Fr\u00e5ga AI ' +
+                  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' +
+                '</a>' +
+              '</div>' +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+      
+      // Setup drag and drop
+      setupDragAndDrop();
+    }
+    
+    // Setup drag and drop for project blocks
+    function setupDragAndDrop() {
+      var blocks = document.querySelectorAll('.project-block');
+      var draggedItem = null;
+      
+      blocks.forEach(function(block) {
+        block.addEventListener('dragstart', function(e) {
+          draggedItem = this;
+          this.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        block.addEventListener('dragend', function() {
+          this.classList.remove('dragging');
+          draggedItem = null;
+          document.querySelectorAll('.project-block').forEach(function(b) {
+            b.classList.remove('drag-over');
+          });
+        });
+        
+        block.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          if (this !== draggedItem) {
+            this.classList.add('drag-over');
+          }
+        });
+        
+        block.addEventListener('dragleave', function() {
+          this.classList.remove('drag-over');
+        });
+        
+        block.addEventListener('drop', function(e) {
+          e.preventDefault();
+          this.classList.remove('drag-over');
+          
+          if (draggedItem && this !== draggedItem) {
+            var container = document.getElementById('projectBlocks');
+            var allBlocks = Array.from(container.children);
+            var draggedIdx = allBlocks.indexOf(draggedItem);
+            var targetIdx = allBlocks.indexOf(this);
+            
+            if (draggedIdx < targetIdx) {
+              this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            } else {
+              this.parentNode.insertBefore(draggedItem, this);
+            }
+            
+            // Update projects array order
+            var newOrder = Array.from(container.querySelectorAll('.project-block')).map(function(b) {
+              return b.dataset.id;
+            });
+            
+            // Reorder projects array
+            projects.sort(function(a, b) {
+              return newOrder.indexOf(a.id) - newOrder.indexOf(b.id);
+            });
+            
+            // Save new order to backend
+            saveProjectOrder(newOrder);
+          }
+        });
+      });
+    }
+    
+    // Save project order
+    async function saveProjectOrder(orderArray) {
+      for (var i = 0; i < orderArray.length; i++) {
+        try {
+          await fetch('/api/kunskapsbas/projects', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ id: orderArray[i], sort_order: i })
+          });
+        } catch (e) {
+          console.error('Failed to update order:', e);
+        }
+      }
+    }
+    
+    // Confirm delete project
+    function confirmDeleteProject(projectId) {
+      var project = projects.find(function(p) { return p.id === projectId; });
+      if (!project) return;
+      
+      if (confirm('Radera projektet "' + project.name + '"?\n\nAlla dokument i projektet kommer att tas bort.')) {
+        deleteProject(projectId);
+      }
+    }
+    
     
     // Toggle project
     function toggleProject(projectId) {
@@ -854,29 +1728,48 @@ if (!anvandare) {
       if (!project) return;
       
       const totalDocs = (project.categories || []).reduce((sum, c) => sum + c.count, 0);
+      const nonEmptyCategories = (project.categories || []).filter(c => c.count > 0).length;
       
       const content = document.getElementById('content-area');
       content.innerHTML = `
-        <div style="max-width: 600px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
-            <div>
-              <h2 style="font-size: 24px; margin-bottom: 4px;">${project.name}</h2>
-              ${project.description ? `<p style="color: var(--text-muted); margin: 0;">${project.description}</p>` : ''}
+        <div style="max-width: 800px;">
+          <div class="project-overview-header">
+            <div class="project-overview-info">
+              <h2>${project.icon || '📁'} ${project.name}</h2>
+              ${project.description ? `<p>${project.description}</p>` : '<p>Klicka på en kategori för att se innehållet</p>'}
             </div>
-            <a href="/admin/ai-council?kb_project=${project.id}" class="btn btn-primary" style="text-decoration: none; white-space: nowrap;">
-              Fråga AI
-            </a>
+            <div class="project-overview-actions">
+              <a href="/admin/ai-council?kb_project=${project.id}" class="btn btn-primary" style="text-decoration: none;">
+                🤖 Fråga AI
+              </a>
+            </div>
           </div>
           
-          <div style="display: grid; gap: 8px;">
-            ${(project.categories || []).map(cat => `
-              <div class="item-card" onclick="selectCategory('${project.id}', '${cat.key}')" style="padding: 12px 16px;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <span class="item-title" style="margin: 0;">${cat.label}</span>
-                  <span style="color: var(--text-muted); font-size: 13px;">${cat.count}</span>
+          <div class="quick-stats">
+            <div class="stat-item">
+              <span class="stat-value">${totalDocs}</span>
+              <span class="stat-label">Dokument totalt</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">${nonEmptyCategories}</span>
+              <span class="stat-label">Aktiva kategorier</span>
+            </div>
+          </div>
+          
+          <h3 style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Kategorier</h3>
+          
+          <div class="category-grid">
+            ${(project.categories || []).map(cat => {
+              const meta = CATEGORIES[cat.key] || {};
+              return `
+                <div class="category-card" onclick="selectCategory('${project.id}', '${cat.key}')">
+                  ${cat.count > 0 ? `<span class="category-card-badge">${cat.count}</span>` : ''}
+                  <div class="category-card-icon">${meta.icon || '📁'}</div>
+                  <div class="category-card-name">${cat.label}</div>
+                  <div class="category-card-count">${meta.description || ''}</div>
                 </div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
         </div>
       `;

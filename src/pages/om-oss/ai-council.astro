@@ -131,7 +131,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <span class="text-emerald-400 text-xl font-bold">O</span>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-white">OpenAI o1</h3>
+                <h3 class="text-lg font-semibold text-white">GPT-5.2</h3>
                 <p class="text-slate-500 text-sm">OpenAI</p>
                 <p class="text-slate-400 text-sm mt-2">Djup resonering & steg-för-steg logik</p>
               </div>
@@ -212,11 +212,22 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="flex items-center gap-3 mb-3">
                 <span class="text-2xl">🧪</span>
                 <div>
-                  <h4 class="text-white font-semibold">OpenAI o1</h4>
+                  <h4 class="text-white font-semibold">GPT-5.2</h4>
                   <p class="text-slate-500 text-xs">Resonering</p>
                 </div>
               </div>
               <p class="text-slate-400 text-sm">Step-by-step logik för komplexa vetenskapliga frågor.</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-800/50 border border-emerald-500/30 rounded-xl p-5">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">💎</span>
+                <div>
+                  <h4 class="text-white font-semibold">GPT-5.2 Pro</h4>
+                  <p class="text-emerald-400 text-xs">Premium</p>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">OpenAIs kraftfullaste modell.</p>
             </div>
             
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
@@ -283,13 +294,13 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
 │                         AI COUNCIL API                                    │
 │    ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐                           │
 │    │OpenAI  │ │ Claude │ │ Gemini │ │ Grok 4 │   ← Parallell             │
-│    │   o1   │ │ Sonnet │ │ 2.0    │ │  Fast  │     körning               │
+│    │ GPT5.2 │ │ Sonnet │ │ 2.0    │ │  Fast  │     körning               │
 │    └────┬───┘ └────┬───┘ └────┬───┘ └────┬───┘                           │
 │         └──────────┴──────────┴──────────┘                               │
 │                             ▼                                            │
 │              ┌────────────────────────────┐                              │
 │              │    SYNTES ("Domaren")      │                              │
-│              │   6 valbara modeller       │                              │
+│              │   7 valbara modeller       │                              │
 │              └────────────────────────────┘                              │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                      SUPABASE (Datalagring)                               │
@@ -605,27 +616,27 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           <!-- Rad 4: Libraries - NEW! -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <div class="bg-gradient-to-b from-violet-500/10 to-slate-800/50 border-2 border-violet-500/40 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">ðŸ“š</div>
+              <div class="text-2xl mb-3">📚</div>
               <h4 class="text-white font-semibold mb-1">Bibliotek</h4>
               <p class="text-violet-400 text-xs font-bold">NY! v3.10</p>
               <p class="text-slate-500 text-sm mt-1">Spara prompter & kontext</p>
             </div>
             
             <div class="bg-gradient-to-b from-indigo-500/10 to-slate-800/50 border border-indigo-500/30 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">ðŸ”</div>
+              <div class="text-2xl mb-3">📝</div>
               <h4 class="text-white font-semibold mb-1">Historikfilter</h4>
               <p class="text-indigo-400 text-xs">NY!</p>
               <p class="text-slate-500 text-sm mt-1">Filtrera sessioner</p>
             </div>
 
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">ðŸ§ª</div>
+              <div class="text-2xl mb-3">🧪</div>
               <h4 class="text-white font-semibold mb-1">GPT-5.2</h4>
-              <p class="text-slate-500 text-sm">ErsÃ¤tter o1</p>
+              <p class="text-slate-500 text-sm">Ersätter o1</p>
             </div>
             
             <div class="bg-slate-800/50 rounded-xl p-5 text-center">
-              <div class="text-2xl mb-3">ðŸ“‹</div>
+              <div class="text-2xl mb-3">📚</div>
               <h4 class="text-white font-semibold mb-1">Abstract</h4>
               <p class="text-slate-500 text-sm">Zotero fallback</p>
             </div>
@@ -681,7 +692,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               </div>
               <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-lg p-3 text-center">
                 <div class="text-indigo-400 font-semibold">🔬 Vetenskap</div>
-                <div class="text-indigo-300 text-xs">o1 syntes</div>
+                <div class="text-indigo-300 text-xs">GPT-5.2 syntes</div>
               </div>
               <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-center">
                 <div class="text-amber-400 font-semibold">📊 Strategi</div>
@@ -739,40 +750,40 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           <div class="mt-6 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border-2 border-violet-500/40 rounded-xl p-6">
             <div class="flex items-center justify-between mb-4">
               <h4 class="text-white font-semibold flex items-center gap-2">
-                <span>ðŸ“š</span> Prompt- och kontextbibliotek
+                <span>📚</span> Prompt- och kontextbibliotek
                 <span class="text-xs bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full font-bold">NY!</span>
               </h4>
             </div>
             <p class="text-slate-400 text-sm mb-4">
               Spara dina <span class="text-violet-400 font-semibold">favoritprompter</span> och <span class="text-violet-400 font-semibold">forskningskontexter</span> 
-              fÃ¶r att snabbt Ã¥teranvÃ¤nda dem. Allt synkas mellan alla dina enheter via Supabase.
+              för att snabbt återanvända dem. Allt synkas mellan alla dina enheter via Supabase.
             </p>
             <div class="grid md:grid-cols-2 gap-4 text-sm">
               <div class="space-y-2">
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
-                  <span class="text-slate-300"><strong class="text-white">Promptbibliotek</strong> - spara och Ã¥teranvÃ¤nd prompter</span>
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Promptbibliotek</strong> - spara och återanvänd prompter</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-emerald-400">✓</span>
                   <span class="text-slate-300"><strong class="text-white">Kontextbibliotek</strong> - spara studiesamlingar</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
-                  <span class="text-slate-300"><strong class="text-white">SnabbÃ¥tkomst</strong> - ett klick fÃ¶r att ladda</span>
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Snabbåtkomst</strong> - ett klick för att ladda</span>
                 </div>
               </div>
               <div class="space-y-2">
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
-                  <span class="text-slate-300">FÃ¶rhandsgranska, kopiera, radera</span>
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300">Förhandsgranska, kopiera, radera</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-emerald-400">✓</span>
                   <span class="text-slate-300">Historikfilter (Syntes/Supersyntes)</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400">âœ“</span>
+                  <span class="text-emerald-400">✓</span>
                   <span class="text-slate-300">Synkas mellan alla enheter</span>
                 </div>
               </div>
@@ -784,38 +795,38 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           <div class="mt-6 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-2 border-amber-500/40 rounded-xl p-6">
             <div class="flex items-center justify-between mb-4">
               <h4 class="text-white font-semibold flex items-center gap-2">
-                <span>ðŸŽ¯</span> Prompta prompten
+                <span>🎯</span> Prompta prompten
                 <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">UNIK!</span>
               </h4>
             </div>
             <p class="text-slate-400 text-sm mb-4">
-              <strong class="text-amber-400">Diktera fritt</strong> och lÃ¥t AI strukturera din rÃ¶riga tanke till en 
-              <strong class="text-white">tydlig, vÃ¤lformulerad prompt</strong>. Perfekt nÃ¤r du "tÃ¤nker hÃ¶gt".
+              <strong class="text-amber-400">Diktera fritt</strong> och låt AI strukturera din röriga tanke till en 
+              <strong class="text-white">tydlig, välformulerad prompt</strong>. Perfekt när du "tänker högt".
             </p>
             <div class="grid md:grid-cols-2 gap-4 text-sm">
               <div class="space-y-2">
                 <div class="flex items-start gap-2">
                   <span class="text-amber-400">1.</span>
-                  <span class="text-slate-300">ðŸŽ¤ Diktera din tanke (hur rÃ¶rig som helst)</span>
+                  <span class="text-slate-300">🎤 Diktera din tanke (hur rörig som helst)</span>
                 </div>
                 <div class="flex items-start gap-2">
                   <span class="text-amber-400">2.</span>
-                  <span class="text-slate-300">ðŸŽ¯ Klicka "Strukturera prompt"</span>
+                  <span class="text-slate-300">🎯 Klicka "Strukturera prompt"</span>
                 </div>
               </div>
               <div class="space-y-2">
                 <div class="flex items-start gap-2">
                   <span class="text-amber-400">3.</span>
-                  <span class="text-slate-300">ðŸ“ Granska fÃ¶rhandsgranskningen</span>
+                  <span class="text-slate-300">📚 Granska förhandsgranskningen</span>
                 </div>
                 <div class="flex items-start gap-2">
                   <span class="text-amber-400">4.</span>
-                  <span class="text-slate-300">âš¡ KÃ¶r med strukturerad prompt</span>
+                  <span class="text-slate-300">⚡ Kör med strukturerad prompt</span>
                 </div>
               </div>
             </div>
             <p class="text-slate-500 text-xs mt-4 pt-4 border-t border-slate-700">
-              <strong class="text-amber-400">Resultat:</strong> RÃ¶rig diktering â†’ Rubrik + punktlistor + tydliga frÃ¥gor â†’ BÃ¤ttre AI-svar
+              <strong class="text-amber-400">Resultat:</strong> Rörig diktering → Rubrik + punktlistor + tydliga frågor → Bättre AI-svar
             </p>
           </div>
 
@@ -856,6 +867,42 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <p class="text-slate-500 text-xs mt-4">
               Standardmallen fungerar för alla - vill du anpassa? Fyll i "Vetenskaplig kontext" på profilsidan.
             </p>
+          </div>
+
+          <!-- Kunskapsbas-koppling Feature - NEW! -->
+          <div class="mt-6 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-white font-semibold flex items-center gap-2">
+                <span>📚</span> Kunskapsbas-koppling (RAG)
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">NY!</span>
+              </h4>
+            </div>
+            <p class="text-slate-400 text-sm mb-4">
+              Koppla dina <span class="text-emerald-400 font-semibold">kunskapsbas-projekt</span> till AI Council. 
+              Alla dokument inkluderas <strong class="text-white">automatiskt som kontext</strong> vid fragor.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Automatisk kontext</strong> - inga manuella uppladdningar</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Token-estimering</strong> - se storlek innan du fragar</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Per-projekt</strong> - olika KB for olika amnen</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span class="text-slate-300"><strong class="text-white">Hogerklick</strong> - koppla via projektmenyn</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -926,7 +973,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="text-3xl">🔍</div>
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-emerald-400 font-bold text-lg">Hybrid-sökning & källverifiering (2026-02-03)</h3>
+                  <h3 class="text-emerald-400 font-bold text-lg">Hybrid-sökning & källverifiering</h3>
                   <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">NY! v3.9</span>
                 </div>
                 <p class="text-slate-300 text-sm mb-4">
@@ -974,7 +1021,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               <div class="text-3xl">🎨</div>
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
-                  <h3 class="text-blue-400 font-bold text-lg">UI Redesign v3.0 (2026-01-27)</h3>
+                  <h3 class="text-blue-400 font-bold text-lg">UI Redesign v3.0</h3>
                   <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">STOR UPPDATERING</span>
                 </div>
                 <p class="text-slate-300 text-sm mb-4">
@@ -1019,7 +1066,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">💾</div>
               <div>
-                <h3 class="text-orange-400 font-semibold mb-2">Spara-modal & Export (2026-01-27)</h3>
+                <h3 class="text-orange-400 font-semibold mb-2">Spara-modal & Export</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Nytt:</strong> Efter varje körning visas en <strong class="text-orange-400">framträdande spara-dialog</strong> 
                   där du kan ge sessionen ett eget namn. Plus <strong class="text-blue-400">Export .md</strong> för att ladda ned hela sessionen som Markdown.
@@ -1036,7 +1083,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">🔍</div>
               <div>
-                <h3 class="text-red-400 font-semibold mb-2">Hallucinationsdetektion (2026-01-27)</h3>
+                <h3 class="text-red-400 font-semibold mb-2">Hallucinationsdetektion</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Nytt:</strong> AI Council analyserar nu automatiskt när modellerna motsäger varandra 
                   och skapar en <strong class="text-red-400">Trovärdighetsrapport</strong> med konfidensgrader.
@@ -1053,7 +1100,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">🔬</div>
               <div>
-                <h3 class="text-indigo-400 font-semibold mb-2">Vetenskaplig kontext med Zotero (2026-01-26)</h3>
+                <h3 class="text-indigo-400 font-semibold mb-2">Vetenskaplig kontext med Zotero</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Nytt:</strong> 🔬 Vetenskap-profilen inkluderar nu automatiskt stöd för 
                   <strong class="text-indigo-400">inline-referenser</strong>, <strong class="text-indigo-400">DOI/PubMed-länkar</strong> 
@@ -1072,7 +1119,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">👤</div>
               <div>
-                <h3 class="text-violet-400 font-semibold mb-2">Användarprofiler (2026-01-26)</h3>
+                <h3 class="text-violet-400 font-semibold mb-2">Användarprofiler</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Nytt:</strong> AI Council anpassar nu svaren efter din bakgrund. 
                   Ange din <strong class="text-violet-400">tekniska nivå</strong>, <strong class="text-violet-400">IT-kunskaper</strong> 
@@ -1090,7 +1137,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">⚡</div>
               <div>
-                <h3 class="text-emerald-400 font-semibold mb-2">Profilväljare (2026-01-26)</h3>
+                <h3 class="text-emerald-400 font-semibold mb-2">Profilväljare</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Nytt:</strong> 5 förinställda profiler för olika användningsfall.
                   <strong class="text-emerald-400">Snabb är nu standard</strong> - inte den dyraste modellen.
@@ -1107,7 +1154,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">🚀</div>
               <div>
-                <h3 class="text-cyan-400 font-semibold mb-2">Grok 4 (2026-01-26)</h3>
+                <h3 class="text-cyan-400 font-semibold mb-2">Grok 4</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Grok 2 → Grok 4:</strong> 
                   Uppgraderad till xAI:s senaste flaggskeppsmodell med <strong class="text-emerald-400">256K tokens kontext</strong>, 
@@ -1125,7 +1172,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             <div class="flex items-start gap-4">
               <div class="text-2xl">📝</div>
               <div>
-                <h3 class="text-blue-400 font-semibold mb-2">Gemini 2.0 Flash (2026-01-26)</h3>
+                <h3 class="text-blue-400 font-semibold mb-2">Gemini 2.0 Flash</h3>
                 <p class="text-slate-400 text-sm mb-3">
                   <strong class="text-slate-300">Gemini 1.5 Pro → Gemini 2.0 Flash:</strong> 
                   Google fasade ut Gemini 1.5 Pro från sitt v1beta API. Vi har uppgraderat till 
@@ -1172,6 +1219,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <li>✓ Kostnadsvisning i realtid 💰</li>
                 <li>✓ PDF & filuppladdning</li>
                 <li>✓ Supabase sessionslogg</li>
+                <li>✓ Kunskapsbas-koppling 📚 <span class="text-emerald-400 font-bold">NY!</span></li>
               </ul>
             </div>
             
@@ -1184,6 +1232,112 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <li>○ Bildanalys via multimodala API:er</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision Section - NEW! -->
+    <section class="py-16 bg-gradient-to-b from-indigo-900/20 via-slate-800/30 to-transparent">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <span class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-indigo-400 text-sm mb-4">
+              Programförklaring
+            </span>
+            <h2 class="text-3xl font-bold text-white mb-4">
+              Framtidsvisionen
+            </h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">
+              AI är en verktygslåda - som en hammare eller skalpell. Målet är att <strong class="text-indigo-400">förstärka mänsklig expertis</strong>, inte ersätta den.
+            </p>
+          </div>
+          
+          <!-- Three Pillars -->
+          <div class="grid md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-slate-900/50 border border-red-500/30 rounded-xl p-6">
+              <div class="text-3xl mb-4">🛡️</div>
+              <h3 class="text-lg font-semibold text-white mb-2">Multi-modell</h3>
+              <p class="text-slate-400 text-sm mb-3">
+                Olika AI-modeller granskar varandras svar. Det är statistiskt osannolikt att fyra oberoende system hallucinerar samma sak.
+              </p>
+              <p class="text-red-400 text-xs font-semibold">Anti-hallucination</p>
+            </div>
+            
+            <div class="bg-slate-900/50 border border-pink-500/30 rounded-xl p-6">
+              <div class="text-3xl mb-4">🎤</div>
+              <h3 class="text-lg font-semibold text-white mb-2">Voice-first</h3>
+              <p class="text-slate-400 text-sm mb-3">
+                Stanford-studie: Röst är <strong class="text-pink-400">3x snabbare</strong> än tangentbord (163 vs 53 ord/min) med 20% lägre felfrekvens.
+              </p>
+              <p class="text-pink-400 text-xs font-semibold">hci.stanford.edu/research/speech/</p>
+            </div>
+            
+            <div class="bg-gradient-to-b from-emerald-500/10 to-slate-900/50 border-2 border-emerald-500/40 rounded-xl p-6">
+              <div class="text-3xl mb-4">📚</div>
+              <h3 class="text-lg font-semibold text-white mb-2">RAG</h3>
+              <p class="text-slate-400 text-sm mb-3">
+                Återanvänd din egen rådata. Bygg en personlig kunskapsbas som AI kan söka i.
+              </p>
+              <p class="text-emerald-400 text-xs font-semibold">Kommande feature</p>
+            </div>
+          </div>
+          
+          <!-- Token Growth Table -->
+          <div class="bg-slate-900 border border-slate-700 rounded-xl overflow-hidden mb-8">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-700 bg-slate-800/50">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-slate-500 text-xs font-mono">token-utveckling.md</span>
+            </div>
+            <div class="p-6">
+              <h4 class="text-emerald-400 font-bold mb-4">Varför RAG är oundvikligt</h4>
+              <p class="text-slate-400 text-sm mb-4">
+                RAG är <strong class="text-white">mjukvara</strong>, inte hårdvara. Digitalkameror krävde nya sensorer för varje megapixel-ökning. 
+                RAG är bara kod - samma teknik, mer av den.
+              </p>
+              <table class="w-full text-sm mb-4">
+                <thead>
+                  <tr class="text-slate-500">
+                    <th class="text-left py-2">År</th>
+                    <th class="text-left py-2">Modell</th>
+                    <th class="text-right py-2">Tokens</th>
+                    <th class="text-right py-2">Ökning</th>
+                  </tr>
+                </thead>
+                <tbody class="text-slate-300">
+                  <tr class="border-t border-slate-800"><td class="py-2">2018</td><td>GPT-1</td><td class="text-right">512</td><td class="text-right text-slate-500">-</td></tr>
+                  <tr class="border-t border-slate-800"><td class="py-2">2019</td><td>GPT-2</td><td class="text-right">1 024</td><td class="text-right text-emerald-400">2x</td></tr>
+                  <tr class="border-t border-slate-800"><td class="py-2">2021</td><td>GPT-3</td><td class="text-right">2 048</td><td class="text-right text-emerald-400">2x</td></tr>
+                  <tr class="border-t border-slate-800"><td class="py-2">2023</td><td>GPT-3.5</td><td class="text-right">16 000</td><td class="text-right text-emerald-400">8x</td></tr>
+                  <tr class="border-t border-slate-800"><td class="py-2">2024</td><td>GPT-4 Turbo</td><td class="text-right">128 000</td><td class="text-right text-emerald-400">8x</td></tr>
+                  <tr class="border-t border-slate-800 bg-emerald-500/5"><td class="py-2 font-semibold">2025</td><td class="font-semibold">GPT-5.2</td><td class="text-right font-semibold">400 000</td><td class="text-right text-emerald-400">3x</td></tr>
+                  <tr class="border-t border-slate-800 bg-emerald-500/10"><td class="py-2 font-bold text-emerald-400">2025</td><td class="font-bold text-emerald-400">GPT-4.1 API</td><td class="text-right font-bold text-emerald-400">1 000 000+</td><td class="text-right text-emerald-400">2.5x</td></tr>
+                </tbody>
+              </table>
+              <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 text-center">
+                <p class="text-emerald-300 font-semibold">512 → 1 000 000+ tokens på 7 år</p>
+                <p class="text-slate-400 text-sm">En ökning på ca <strong class="text-white">2000x</strong></p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Implication -->
+          <div class="bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 rounded-xl p-6 text-center">
+            <p class="text-slate-300 text-lg mb-2">
+              Det som idag kräver noggrann urvalsstrategi
+            </p>
+            <p class="text-slate-500 text-sm mb-4">
+              "Vilka 10 artiklar ska jag inkludera?"
+            </p>
+            <div class="text-2xl mb-4">↓</div>
+            <p class="text-indigo-300 text-lg mb-2">
+              Blir inom några år trivialt
+            </p>
+            <p class="text-indigo-400 font-semibold">
+              "Inkludera allt"
+            </p>
           </div>
         </div>
       </div>
@@ -1406,7 +1560,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
           </div>
           
           <p class="text-slate-500 text-sm text-center mt-6">
-            AI Council är byggt specifikt för Södermalms Ortopedi med fokus på <strong class="text-indigo-400">snabbhet</strong>, <strong class="text-indigo-400">kostnadskontroll</strong>, <strong class="text-indigo-400">vetenskaplig granskning</strong>, <strong class="text-emerald-400">hybrid-sökning</strong> och <strong class="text-indigo-400">enkel referenshantering med Zotero-integration</strong>.
+            AI Council är byggt för verksamheter som kräver precision med fokus på <strong class="text-indigo-400">snabbhet</strong>, <strong class="text-indigo-400">kostnadskontroll</strong>, <strong class="text-indigo-400">vetenskaplig granskning</strong>, <strong class="text-emerald-400">hybrid-sökning</strong> och <strong class="text-indigo-400">enkel referenshantering med Zotero-integration</strong>.
           </p>
         </div>
       </div>
@@ -1416,7 +1570,7 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
     <section class="py-16">
       <div class="container mx-auto px-4 text-center">
         <p class="text-slate-500 mb-6">
-          AI Council är ett internt verktyg för personal på Södermalms Ortopedi.
+          AI Council är ett internt verktyg som bygger mikroinstrument för effektivare drift.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
           <a href="/personal/" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">

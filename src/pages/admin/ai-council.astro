@@ -313,6 +313,43 @@ if (!anvandare) {
     }
     .prompt-library-item-btn:hover { background: var(--bg-input); color: var(--text-primary); }
     .prompt-library-item-btn.delete:hover { color: #ef4444; }
+    
+    /* Hover preview for library items */
+    .prompt-library-item { position: relative; }
+    .prompt-library-item::after {
+      content: attr(data-preview);
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 8px;
+      z-index: 200;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.6875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.15s, visibility 0.15s;
+      max-width: 280px;
+      min-width: 180px;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .prompt-library-item:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0.5s;
+    }
+    .prompt-library-item[data-preview=""]::after,
+    .prompt-library-item:not([data-preview])::after {
+      display: none;
+    }
+    
     .prompt-library-empty {
       padding: 1rem;
       text-align: center;
@@ -1214,19 +1251,64 @@ if (!anvandare) {
       vertical-align: middle;
     }
     .note-item-arrow svg { vertical-align: middle; }
-    .note-item-type {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.375rem;
-      font-weight: 500;
-      display: flex;
+    .note-item-type-badge {
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      display: inline-flex;
       align-items: center;
-      gap: 0.375rem;
+      gap: 0.25rem;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .note-item-type-badge.type-supersynthesis {
+      background: rgba(245, 158, 11, 0.15);
+      color: #B45309;
+    }
+    .note-item-type-badge.type-synthesis {
+      background: rgba(37, 99, 235, 0.1);
+      color: #1D4ED8;
+    }
+    .note-item-type-badge.type-response {
+      background: rgba(107, 114, 128, 0.1);
+      color: #6B7280;
     }
     .note-item-type-icon { display: flex; align-items: center; }
-    .note-item-type-icon svg { vertical-align: middle; }
-    .type-supersynthesis .note-item-type-icon { color: #F59E0B; }
-    .type-synthesis .note-item-type-icon { color: var(--color-primary); }
+    .note-item-type-icon svg { width: 10px; height: 10px; }
+    
+    /* Hover preview tooltip */
+    .note-item { position: relative; }
+    .note-item::after {
+      content: attr(data-preview);
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      z-index: 100;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.15s, visibility 0.15s;
+      max-height: 100px;
+      overflow: hidden;
+      white-space: normal;
+    }
+    .note-item:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0.4s;
+    }
+    .note-item[data-preview=""]::after { display: none; }
     
     .notes-actions {
       padding: 0.75rem;
@@ -5699,6 +5781,9 @@ if (!anvandare) {
     <button class="context-menu-item" data-action="context">
       📝 Redigera kontext
     </button>
+    <button class="context-menu-item" data-action="kb-link">
+      📚 Koppla kunskapsbas
+    </button>
     <div class="context-menu-divider"></div>
     <button class="context-menu-item" data-action="pin">
       📌 Fäst/ta bort
@@ -5761,6 +5846,36 @@ if (!anvandare) {
         <button class="icon-picker-option" data-icon="❤️">❤️</button>
       </div>
     </div>
+
+  <!-- KB Link Modal -->
+  <div id="kbLinkModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 480px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">📚 Koppla kunskapsbas</div>
+        <button type="button" class="session-modal-close" id="closeKbLinkModal">×</button>
+      </div>
+      <div class="session-modal-body">
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">
+          Valj ett kunskapsbas-projekt. Alla dokument i projektet inkluderas automatiskt som kontext vid fragor.
+        </p>
+        <div id="kbProjectList" style="max-height: 300px; overflow-y: auto; margin-bottom: 16px;">
+          <div style="color: var(--text-muted); padding: 20px; text-align: center;">Laddar projekt...</div>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+          <input type="checkbox" id="kbAutoInclude" checked>
+          Inkludera automatiskt vid fragor
+        </label>
+      </div>
+      <div class="session-modal-footer">
+        <button type="button" class="modal-btn modal-btn-secondary" id="kbUnlinkBtn">
+          Ta bort koppling
+        </button>
+        <button type="button" class="modal-btn modal-btn-primary" id="kbSaveBtn">
+          Spara
+        </button>
+      </div>
+    </div>
+  </div>
   </div>
 
   <script is:inline>
@@ -7117,13 +7232,14 @@ if (!anvandare) {
         const icons = {
           doc: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>',
           eye: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+          edit: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>',
           copy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
           trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
         };
         
         list.innerHTML = savedPrompts.map((p, i) => {
           const preview = (p.prompt || '').substring(0, 40);
-          return '<div class="prompt-library-item" data-id="' + p.id + '" data-index="' + i + '">' +
+          return '<div class="prompt-library-item" data-id="' + p.id + '" data-index="' + i + '" data-preview="' + escapeHtml((p.prompt || '').substring(0, 150)) + '">' +
             '<span class="prompt-library-item-icon">' + icons.doc + '</span>' +
             '<div class="prompt-library-item-content">' +
               '<div class="prompt-library-item-name">' + escapeHtml(p.name) + '</div>' +
@@ -7131,6 +7247,7 @@ if (!anvandare) {
             '</div>' +
             '<div class="prompt-library-item-actions">' +
               '<button class="prompt-library-item-btn" data-action="view" title="Forhandsgranska">' + icons.eye + '</button>' +
+              '<button class="prompt-library-item-btn" data-action="edit" title="Redigera">' + icons.edit + '</button>' +
               '<button class="prompt-library-item-btn" data-action="copy" title="Kopiera till prompt">' + icons.copy + '</button>' +
               '<button class="prompt-library-item-btn delete" data-action="delete" title="Radera">' + icons.trash + '</button>' +
             '</div>' +
@@ -7171,6 +7288,8 @@ if (!anvandare) {
               
               if (action === 'view' && p) {
                 showPreviewModal('Prompt: ' + p.name, p.prompt);
+              } else if (action === 'edit' && p) {
+                openPromptEditModal(p, idx);
               } else if (action === 'copy' && p) {
                 if (promptEl) {
                   promptEl.value = p.prompt;
@@ -7281,7 +7400,7 @@ if (!anvandare) {
         }
         
         list.innerHTML = savedContexts.map(ctx => `
-          <div class="prompt-library-item" data-id="${ctx.id}" title="${ctx.name}">
+          <div class="prompt-library-item" data-id="${ctx.id}" title="${ctx.name}" data-preview="${(ctx.content || '').substring(0, 150)}">
             <span class="prompt-library-item-text">${ctx.name}</span>
             <div class="prompt-library-item-actions">
               <button class="prompt-library-action view" title="FÃ¶rhandsgranska">
@@ -7910,7 +8029,76 @@ if (!anvandare) {
         }
       }
       
-      async function deleteSession(id) {
+      // Save session to knowledge base
+    async function saveToKnowledgeBase(session) {
+      if (!userIsLoggedIn) {
+        alert('Du maste vara inloggad for att spara till kunskapsbasen.');
+        return;
+      }
+      
+      try {
+        // Fetch available projects from knowledge base
+        const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
+        const data = await res.json();
+        
+        if (!data.projects || data.projects.length === 0) {
+          alert('Du har inga projekt i kunskapsbasen. Skapa ett projekt forst pa /admin/kunskapsbas');
+          return;
+        }
+        
+        // Create select dialog
+        const projectOptions = data.projects.map(p => p.name + ' (' + p.id.substring(0, 8) + ')').join('\n');
+        const selected = prompt('Valj ett projekt att spara till:\n\n' + projectOptions + '\n\nSkriv projektets namn:');
+        
+        if (!selected) return;
+        
+        // Find matching project
+        const project = data.projects.find(p => p.name.toLowerCase().includes(selected.toLowerCase()));
+        
+        if (!project) {
+          alert('Kunde inte hitta projektet "' + selected + '"');
+          return;
+        }
+        
+        // Prepare content
+        const content = session.supersynthesis || session.synthesis || 
+          (session.responses ? Object.values(session.responses).map(r => r.content).join('\n\n---\n\n') : '');
+        
+        const title = session.name || ('AI-session ' + new Date(session.created_at).toLocaleString('sv-SE'));
+        
+        // Save to knowledge base
+        const saveRes = await fetch('/api/kunskapsbas/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            project_id: project.id,
+            category: 'ai_fragor',
+            title: title,
+            content: '## Prompt\n\n' + (session.prompt || '') + '\n\n## Svar\n\n' + content,
+            summary: (session.prompt || '').substring(0, 200),
+            metadata: {
+              session_id: session.id,
+              models: session.selected_models || [],
+              has_synthesis: !!session.synthesis,
+              has_supersynthesis: !!session.supersynthesis
+            }
+          })
+        });
+        
+        if (saveRes.ok) {
+          alert('Session sparad till kunskapsbasen!\n\nProjekt: ' + project.name);
+        } else {
+          const errData = await saveRes.json();
+          alert('Fel: ' + (errData.error || 'Kunde inte spara'));
+        }
+      } catch (e) {
+        console.error('Error saving to KB:', e);
+        alert('Nagot gick fel vid sparande till kunskapsbasen.');
+      }
+    }
+    
+        async function deleteSession(id) {
         if (!userIsLoggedIn || !useSupabase) {
           alert('Du måste vara inloggad för att radera sessioner.');
           return;
@@ -7950,7 +8138,8 @@ if (!anvandare) {
           arrow: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
           star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
           lightbulb: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>',
-          chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>'
+          chat: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
+          kb: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>'
         };
         
         // Filter sessions based on current filter
@@ -8005,18 +8194,19 @@ if (!anvandare) {
             ? '<div class="note-item-name" data-session-id="' + s.id + '" title="Klicka för att redigera">' + escapeHtml(s.name) + '</div>'
             : '<div class="note-item-name note-item-name-placeholder" data-session-id="' + s.id + '" title="Klicka för att namnge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Namnge session...</div>';
           
-          return '<div class="note-item ' + typeClass + (isNew ? ' new-item' : '') + '" data-id="' + s.id + '">' +
+          return '<div class="note-item ' + typeClass + (isNew ? ' new-item' : '') + '" data-id="' + s.id + '" data-preview="' + escapeHtml((answerText || '').substring(0, 200)) + '">' +
             '<div class="note-item-header">' +
               '<span class="note-item-time">' + timeStr + '</span>' +
+              '<span class="note-item-type-badge ' + typeClass + '"><span class="note-item-type-icon">' + typeIcon + '</span>' + typeLabel + '</span>' +
               '<div class="note-item-actions">' +
                 '<button class="note-item-btn" data-action="view" title="Visa" aria-label="Visa session">' + icons.eye + '</button>' +
                 '<button class="note-item-btn" data-action="copy" title="Kopiera" aria-label="Kopiera till urklipp">' + icons.copy + '</button>' +
+                '<button class="note-item-btn" data-action="kb" title="Spara till kunskapsbas" aria-label="Spara till kunskapsbas">' + icons.kb + '</button>' +
                 '<button class="note-item-btn" data-action="delete" title="Radera" aria-label="Radera session">' + icons.trash + '</button>' +
               '</div>' +
             '</div>' +
             titleHTML +
             '<div class="note-item-prompt"><span class="note-item-arrow">' + icons.arrow + '</span> ' + escapeHtml(promptPreview) + (promptPreview.length >= 50 ? '...' : '') + '</div>' +
-            '<div class="note-item-type"><span class="note-item-type-icon">' + typeIcon + '</span> ' + typeLabel + '</div>' +
           '</div>';
         }).join('');
         
@@ -8038,6 +8228,11 @@ if (!anvandare) {
               // Eye icon = full detailed view
               const session = sessions.find(s => s.id === id);
               if (session) openFullSessionModal(session);
+            }
+            else if (action === 'kb') {
+              // Save to knowledge base
+              const session = sessions.find(s => s.id === id);
+              if (session) saveToKnowledgeBase(session);
             }
           });
         });
@@ -9098,7 +9293,21 @@ if (!anvandare) {
       
       // Run query
       async function runQuery() {
-        const context = contextEl.value.trim();
+        // Get KB context if project has link
+        let kbContext = '';
+        if (currentProject?.kb_project_id && currentProject?.auto_include_kb) {
+          try {
+            const kbRes = await fetch('/api/ai-council/kb-context?projectId=' + currentProject.id);
+            const kbData = await kbRes.json();
+            if (kbData.context) {
+              kbContext = kbData.context + '\n\n';
+              console.log('KB context loaded:', kbData.itemCount, 'items,', kbData.tokens, 'tokens');
+            }
+          } catch (e) {
+            console.warn('Could not load KB context:', e);
+          }
+        }
+        const context = kbContext + contextEl.value.trim();
         const prompt = promptEl.value.trim();
         const synthesisModel = synthesisModelEl.value;
         const selectedModels = getSelectedModels();
@@ -10993,6 +11202,10 @@ if (!anvandare) {
               }
               break;
               
+            case 'kb-link':
+              openKbLinkModal(contextMenuProjectId);
+              break;
+              
             case 'color':
               // Mark current color as selected
               colorPickerModal.querySelectorAll('.color-picker-option').forEach(opt => {
@@ -11694,6 +11907,162 @@ if (!anvandare) {
         });
       }
     });
-  </script>
+  
+      // =============================================
+      // KB LINK MODAL FUNCTIONALITY  
+      // =============================================
+      
+      const kbLinkModal = document.getElementById('kbLinkModal');
+      const closeKbLinkModalBtn = document.getElementById('closeKbLinkModal');
+      const kbProjectList = document.getElementById('kbProjectList');
+      const kbAutoInclude = document.getElementById('kbAutoInclude');
+      const kbSaveBtn = document.getElementById('kbSaveBtn');
+      const kbUnlinkBtn = document.getElementById('kbUnlinkBtn');
+      let currentKbLinkProjectId = null;
+      let selectedKbProjectId = null;
+      
+      async function openKbLinkModal(projectId) {
+        currentKbLinkProjectId = projectId;
+        selectedKbProjectId = null;
+        
+        const project = projects.find(p => p.id === projectId);
+        
+        if (kbLinkModal) kbLinkModal.classList.add('open');
+        if (kbProjectList) kbProjectList.innerHTML = '<div style="color: var(--text-muted); padding: 20px; text-align: center;">Laddar kunskapsbas-projekt...</div>';
+        
+        try {
+          const res = await fetch('/api/ai-council/kb-context', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'listKbProjects' })
+          });
+          const { kbProjects, error } = await res.json();
+          
+          if (error || !kbProjects || kbProjects.length === 0) {
+            if (kbProjectList) kbProjectList.innerHTML = '<div style="color: var(--text-muted); padding: 20px; text-align: center;">Inga kunskapsbas-projekt hittades.<br><a href="/admin/kunskapsbas" style="color: var(--color-primary);">Skapa ett projekt</a></div>';
+            return;
+          }
+          
+          if (kbProjectList) {
+            kbProjectList.innerHTML = kbProjects.map(kb => {
+              const isSelected = project?.kb_project_id === kb.id;
+              return '<div class="kb-project-option' + (isSelected ? ' selected' : '') + '" data-kb-id="' + kb.id + '" style="display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s;' + (isSelected ? ' background: #eff6ff; border-color: var(--color-primary);' : '') + '">' +
+                '<span style="font-size: 24px;">' + (kb.icon || String.fromCodePoint(0x1F4C1)) + '</span>' +
+                '<div style="flex: 1; min-width: 0;">' +
+                  '<div style="font-weight: 500; color: var(--text-primary);">' + kb.name + '</div>' +
+                  '<div style="font-size: 12px; color: var(--text-muted);">' + kb.itemCount + ' dokument - ~' + (kb.tokens || 0).toLocaleString() + ' tokens</div>' +
+                '</div>' +
+                (isSelected ? '<span style="color: var(--color-primary); font-weight: 600;">' + String.fromCodePoint(0x2713) + '</span>' : '') +
+              '</div>';
+            }).join('');
+          }
+          
+          if (project?.kb_project_id) {
+            selectedKbProjectId = project.kb_project_id;
+            if (kbAutoInclude) kbAutoInclude.checked = project.auto_include_kb !== false;
+          } else {
+            if (kbAutoInclude) kbAutoInclude.checked = true;
+          }
+          
+          // Add click handlers
+          if (kbProjectList) {
+            kbProjectList.querySelectorAll('.kb-project-option').forEach(el => {
+              el.addEventListener('click', () => {
+                kbProjectList.querySelectorAll('.kb-project-option').forEach(opt => {
+                  opt.classList.remove('selected');
+                  opt.style.background = '';
+                  opt.style.borderColor = 'var(--border-color)';
+                  const checkmark = opt.querySelector('span:last-child');
+                  if (checkmark && checkmark.textContent === String.fromCodePoint(0x2713)) checkmark.remove();
+                });
+                el.classList.add('selected');
+                el.style.background = '#eff6ff';
+                el.style.borderColor = 'var(--color-primary)';
+                el.insertAdjacentHTML('beforeend', '<span style="color: var(--color-primary); font-weight: 600;">' + String.fromCodePoint(0x2713) + '</span>');
+                selectedKbProjectId = el.dataset.kbId;
+              });
+            });
+          }
+          
+        } catch (err) {
+          console.error('Error loading KB projects:', err);
+          if (kbProjectList) kbProjectList.innerHTML = '<div style="color: var(--color-danger); padding: 20px; text-align: center;">Kunde inte ladda projekt</div>';
+        }
+      }
+      
+      if (closeKbLinkModalBtn) {
+        closeKbLinkModalBtn.addEventListener('click', () => {
+          if (kbLinkModal) kbLinkModal.classList.remove('open');
+        });
+      }
+      
+      if (kbSaveBtn) {
+        kbSaveBtn.addEventListener('click', async () => {
+          if (!currentKbLinkProjectId) return;
+          
+          try {
+            const res = await fetch('/api/ai-council/kb-context', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'linkKbProject',
+                projectId: currentKbLinkProjectId,
+                kbProjectId: selectedKbProjectId,
+                autoInclude: kbAutoInclude ? kbAutoInclude.checked : true
+              })
+            });
+            
+            const result = await res.json();
+            if (result.success) {
+              const project = projects.find(p => p.id === currentKbLinkProjectId);
+              if (project) {
+                project.kb_project_id = selectedKbProjectId;
+                project.auto_include_kb = kbAutoInclude ? kbAutoInclude.checked : true;
+              }
+              if (kbLinkModal) kbLinkModal.classList.remove('open');
+              if (typeof showToast === 'function') showToast('Kunskapsbas kopplad!', 'success');
+            } else {
+              if (typeof showToast === 'function') showToast('Kunde inte spara', 'error');
+            }
+          } catch (err) {
+            console.error('Error saving KB link:', err);
+            if (typeof showToast === 'function') showToast('Nagot gick fel', 'error');
+          }
+        });
+      }
+      
+      if (kbUnlinkBtn) {
+        kbUnlinkBtn.addEventListener('click', async () => {
+          if (!currentKbLinkProjectId) return;
+          
+          try {
+            const res = await fetch('/api/ai-council/kb-context', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'linkKbProject',
+                projectId: currentKbLinkProjectId,
+                kbProjectId: null,
+                autoInclude: false
+              })
+            });
+            
+            const result = await res.json();
+            if (result.success) {
+              const project = projects.find(p => p.id === currentKbLinkProjectId);
+              if (project) {
+                project.kb_project_id = null;
+                project.auto_include_kb = false;
+              }
+              if (kbLinkModal) kbLinkModal.classList.remove('open');
+              if (typeof showToast === 'function') showToast('Kunskapsbas-koppling borttagen', 'success');
+            }
+          } catch (err) {
+            console.error('Error unlinking KB:', err);
+          }
+        });
+      }
+      
+    </script>
 </body>
 </html>

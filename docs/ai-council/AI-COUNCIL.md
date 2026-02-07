@@ -2,7 +2,7 @@
 
 > Multi-modell AI-rådgivning med automatisk syntes
 
-**Senast uppdaterad:** 2026-02-03 (v3.9 - Hybrid-sökning & källverifiering)
+**Senast uppdaterad:** 2026-02-07 (v3.10 - Kunskapsbas & bibliotek)
 
 ---
 
@@ -101,6 +101,7 @@ Målet är att minska hallucinationer genom bättre källflöde, inte genom att 
 
 ### ✅ Nyligen implementerat
 
+- [x] **Kunskapsbas-koppling (RAG Fas 1)** (v3.10) - Koppla KB-projekt till AI Council för automatisk kontextinkludering
 - [x] **Hybrid-sökning med källverifiering** (v3.9) - Unified sökmodal med PubMed, Google Scholar, Google, Nyheter
 - [x] **Auto-sök för vetenskap** (v3.9) - Automatisk källsökning före AI-anrop i Vetenskap-profilen
 - [x] **Deliberation med källverifiering** (v3.9) - Faktagranskning kontrollerar mot hämtade källor
@@ -184,7 +185,7 @@ Målet är att minska hallucinationer genom bättre källflöde, inte genom att 
 
 | Modell | Leverantör | Styrka | Användning |
 |--------|------------|--------|------------|
-| **o1** | OpenAI | Djup resonering, steg-för-steg-analys | Komplexa logiska problem |
+| **GPT-5.2** | OpenAI | Djup resonering, steg-för-steg-analys | Komplexa logiska problem |
 | **Claude Sonnet** | Anthropic | Struktur, kod, tydliga förklaringar | Kodgenerering, dokumentation |
 | **Gemini 2.0 Flash** | Google | Snabb, prisvärd, multimodal | Snabba svar, kostnadseffektivt |
 | **Grok 4** | xAI | 256K kontext, djup analys, vetenskapligt | Litteratursyntes, evidensgranskning |
@@ -205,16 +206,16 @@ Välj en förinställd profil för snabb konfiguration:
 
 **Profilernas styrkor:**
 - **Kodning:** Alla 4 modeller + deliberation för maximal kodgranskning från olika perspektiv
-- **Vetenskap:** o1 som syntes för djup logisk granskning av vetenskapliga påståenden
-- **Strategi:** o1 resonerar, Claude strukturerar, Grok ger bred kontext - perfekt för affärsbeslut
+- **Vetenskap:** GPT-5.2 som syntes för djup logisk granskning av vetenskapliga påståenden
+- **Strategi:** GPT-5.2 resonerar, Claude strukturerar, Grok ger bred kontext - perfekt för affärsbeslut
 
 ### Välj modeller manuellt
 
 Du kan också välja modeller manuellt genom checkboxar. Blanda fritt!
 
 **Exempelkombinationer:**
-- **Kodgranskning:** Claude + OpenAI o1
-- **Vetenskaplig research:** Grok + Gemini + o1
+- **Kodgranskning:** Claude + OpenAI GPT-5.2
+- **Vetenskaplig research:** Grok + Gemini + GPT-5.2
 - **Snabb logisk analys:** Endast Gemini
 
 ### Deliberation / Faktagranskning (Runda 2)
