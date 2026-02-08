@@ -1568,6 +1568,88 @@ if (!anvandare) {
       }
     }
     
+    // ========================================
+    // BROWSER HISTORY MANAGEMENT
+    // Makes back button work like File Explorer
+    // ========================================
+    
+    // Update URL without page reload
+    function updateURL() {
+      var params = new URLSearchParams();
+      if (currentProjectId) {
+        params.set('project', currentProjectId);
+      }
+      if (currentCategory) {
+        params.set('category', currentCategory);
+      }
+      var newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+      return newUrl;
+    }
+    
+    // Push state to history (for forward navigation)
+    function pushHistoryState() {
+      var url = updateURL();
+      var state = { projectId: currentProjectId, category: currentCategory };
+      history.pushState(state, '', url);
+    }
+    
+    // Replace state without adding to history (for initial load)
+    function replaceHistoryState() {
+      var url = updateURL();
+      var state = { projectId: currentProjectId, category: currentCategory };
+      history.replaceState(state, '', url);
+    }
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(event) {
+      var state = event.state || {};
+      var targetProjectId = state.projectId || null;
+      var targetCategory = state.category || null;
+      
+      // Navigate to the correct view without pushing new history
+      navigateToState(targetProjectId, targetCategory, false);
+    });
+    
+    // Navigate to a specific state
+    function navigateToState(projectId, category, addToHistory) {
+      currentProjectId = projectId;
+      currentCategory = category;
+      
+      if (addToHistory === undefined) addToHistory = true;
+      
+      if (!projectId) {
+        // Dashboard view
+        renderDashboard();
+        renderTree();
+        updateBreadcrumb();
+        document.getElementById('new-item-btn').style.display = 'none';
+      } else if (!category) {
+        // Project overview
+        showProjectOverview();
+        renderTree();
+        updateBreadcrumb();
+        document.getElementById('new-item-btn').style.display = 'none';
+      } else {
+        // Category view
+        renderTree();
+        updateBreadcrumb();
+        loadItems();
+        document.getElementById('new-item-btn').style.display = 'none';
+      }
+      
+      if (addToHistory) {
+        pushHistoryState();
+      }
+    }
+    
+    // Parse URL on page load
+    function parseURLState() {
+      var params = new URLSearchParams(window.location.search);
+      var projectId = params.get('project');
+      var category = params.get('category');
+      return { projectId: projectId, category: category };
+    }
+    
     // Init
     document.addEventListener('DOMContentLoaded', function() {
       loadProjects();
@@ -1586,11 +1668,32 @@ if (!anvandare) {
         
         projects = data.projects || [];
         
+        // Check URL for initial state
+        var urlState = parseURLState();
+        if (urlState.projectId) {
+          // Verify project exists
+          var projectExists = projects.some(function(p) { return p.id === urlState.projectId; });
+          if (projectExists) {
+            currentProjectId = urlState.projectId;
+            currentCategory = urlState.category;
+          }
+        }
+        
         renderTree();
-        // Show dashboard view by default
-        if (projects.length > 0 && !currentProjectId) {
+        
+        // Navigate to correct view based on state
+        if (currentCategory) {
+          updateBreadcrumb();
+          loadItems();
+        } else if (currentProjectId) {
+          showProjectOverview();
+          updateBreadcrumb();
+        } else if (projects.length > 0) {
           renderDashboard();
         }
+        
+        // Set initial history state
+        replaceHistoryState();
       } catch (err) {
         console.error('Error loading projects:', err);
         showToast('Kunde inte ladda projekt');
@@ -1696,6 +1799,11 @@ if (!anvandare) {
       
       // Setup drag and drop
       setupDragAndDrop();
+    }
+    
+    // Called when clicking on a project block from dashboard
+    function openProjectFromDashboard(projectId) {
+      navigateToState(projectId, null, true);
     }
     
     // Setup drag and drop for project blocks
@@ -1836,29 +1944,20 @@ if (!anvandare) {
     
     // Toggle project
     function toggleProject(projectId) {
-      if (currentProjectId === projectId) {
+      if (currentProjectId === projectId && !currentCategory) {
         // If clicking the same project, just toggle expansion
         const el = document.querySelector(`.project[data-id="${projectId}"]`);
         el?.classList.toggle('expanded');
       } else {
-        currentProjectId = projectId;
-        currentCategory = null;
-        renderTree();
-        updateBreadcrumb();
-        showProjectOverview();
+        // Navigate to project overview with history
+        navigateToState(projectId, null, true);
       }
     }
     
     // Select category
     function selectCategory(projectId, category) {
-      currentProjectId = projectId;
-      currentCategory = category;
-      renderTree();
-      updateBreadcrumb();
-      loadItems();
-      
-      // Button is now in content area, hide header button
-      document.getElementById('new-item-btn').style.display = 'none';
+      // Navigate to category with history
+      navigateToState(projectId, category, true);
     }
     
     // Update breadcrumb
@@ -1954,15 +2053,12 @@ if (!anvandare) {
         </div>
       `;
       
-      // Add event listener for back button
+      // Add event listener for back button - use browser history
       const backBtn = document.getElementById('backToDashboardBtn');
       if (backBtn) {
         backBtn.addEventListener('click', function(e) {
           e.preventDefault();
-          currentProjectId = null;
-          currentCategory = null;
-          renderDashboard();
-          renderTree();
+          history.back();
         });
       }
       
@@ -2020,12 +2116,9 @@ if (!anvandare) {
       });
     }
     
-    // Go back to project overview
+    // Go back to project overview - use browser history
     function goBackToProject() {
-      currentCategory = null;
-      document.getElementById('new-item-btn').style.display = 'none';
-      showProjectOverview();
-      renderTree();
+      history.back();
     }
     
     // Load items
