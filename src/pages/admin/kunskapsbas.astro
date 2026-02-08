@@ -1844,23 +1844,39 @@ if (!anvandare) {
       breadcrumb.innerHTML = html;
     }
     
-    // Show project overview
+    // Category hero colors
+    var CATEGORY_COLORS = {
+      dokument: { bg: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', light: '#eff6ff' },
+      litteratur: { bg: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', light: '#f5f3ff' },
+      ljud: { bg: 'linear-gradient(135deg, #f59e0b, #b45309)', light: '#fffbeb' },
+      ai_fragor: { bg: 'linear-gradient(135deg, #10b981, #047857)', light: '#ecfdf5' },
+      prompter: { bg: 'linear-gradient(135deg, #ec4899, #be185d)', light: '#fdf2f8' },
+      radata: { bg: 'linear-gradient(135deg, #6b7280, #374151)', light: '#f9fafb' }
+    };
+    
+    // Show project overview with category blocks
     function showProjectOverview() {
       const project = projects.find(p => p.id === currentProjectId);
       if (!project) return;
       
       const totalDocs = (project.categories || []).reduce((sum, c) => sum + c.count, 0);
-      const nonEmptyCategories = (project.categories || []).filter(c => c.count > 0).length;
+      
+      // Sort categories: non-empty first, then empty
+      const sortedCategories = [...(project.categories || [])].sort((a, b) => {
+        if (a.count > 0 && b.count === 0) return -1;
+        if (a.count === 0 && b.count > 0) return 1;
+        return 0;
+      });
       
       const content = document.getElementById('content-area');
       content.innerHTML = `
-        <div style="max-width: 800px;">
-          <div class="project-overview-header">
-            <div class="project-overview-info">
-              <h2>${project.icon || '📁'} ${project.name}</h2>
-              ${project.description ? `<p>${project.description}</p>` : '<p>Klicka på en kategori för att se innehållet</p>'}
+        <div style="max-width: 1000px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap;">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 600; color: #1f2937; margin: 0 0 4px 0;">${escapeHtml(project.name)}</h2>
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">${totalDocs} dokument totalt</p>
             </div>
-            <div class="project-overview-actions">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="btn btn-secondary" id="backToDashboardBtn" style="display: flex; align-items: center; gap: 6px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 Alla projekt
@@ -1872,28 +1888,27 @@ if (!anvandare) {
             </div>
           </div>
           
-          <div class="quick-stats">
-            <div class="stat-item">
-              <span class="stat-value">${totalDocs}</span>
-              <span class="stat-label">Dokument totalt</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${nonEmptyCategories}</span>
-              <span class="stat-label">Aktiva kategorier</span>
-            </div>
-          </div>
-          
-          <h3 style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Kategorier</h3>
-          
-          <div class="category-grid">
-            ${(project.categories || []).map(cat => {
+          <div id="categoryBlocks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+            ${sortedCategories.map(cat => {
               const meta = CATEGORIES[cat.key] || {};
+              const colors = CATEGORY_COLORS[cat.key] || { bg: 'linear-gradient(135deg, #6b7280, #374151)', light: '#f9fafb' };
+              const isEmpty = cat.count === 0;
+              const opacity = isEmpty ? '0.5' : '1';
+              
               return `
-                <div class="category-card" onclick="selectCategory('${project.id}', '${cat.key}')">
-                  ${cat.count > 0 ? `<span class="category-card-badge">${cat.count}</span>` : ''}
-                  <div class="category-card-icon">${meta.icon || '📁'}</div>
-                  <div class="category-card-name">${cat.label}</div>
-                  <div class="category-card-count">${meta.description || ''}</div>
+                <div class="cat-block" data-category="${cat.key}" draggable="true" 
+                     onclick="selectCategory('${project.id}', '${cat.key}')"
+                     style="background: #fff; border: 1px solid ${isEmpty ? '#e5e7eb' : '#d1d5db'}; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; opacity: ${opacity}; display: flex; flex-direction: column;">
+                  <div style="background: ${colors.bg}; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: white; font-size: 13px; font-weight: 600;">${cat.label}</span>
+                    ${isEmpty ? `<button class="cat-delete-btn" onclick="event.stopPropagation();" title="Radera" style="width: 22px; height: 22px; border: none; background: rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>` : ''}
+                  </div>
+                  <div style="padding: 12px 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 60px;">
+                    <div style="font-size: 20px; font-weight: 700; color: ${isEmpty ? '#9ca3af' : '#1f2937'};">${cat.count}</div>
+                    <div style="font-size: 11px; color: #6b7280;">${cat.count === 1 ? 'dokument' : 'dokument'}</div>
+                  </div>
                 </div>
               `;
             }).join('')}
@@ -1913,7 +1928,58 @@ if (!anvandare) {
         });
       }
       
+      // Setup drag and drop for category blocks
+      setupCategoryDragDrop();
+      
       document.getElementById('new-item-btn').style.display = 'none';
+    }
+    
+    // Setup drag and drop for category blocks
+    function setupCategoryDragDrop() {
+      const blocks = document.querySelectorAll('.cat-block');
+      let draggedItem = null;
+      
+      blocks.forEach(block => {
+        block.addEventListener('dragstart', function(e) {
+          draggedItem = this;
+          this.style.opacity = '0.4';
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        block.addEventListener('dragend', function() {
+          this.style.opacity = this.dataset.empty === 'true' ? '0.5' : '1';
+          draggedItem = null;
+          blocks.forEach(b => b.classList.remove('drag-over'));
+        });
+        
+        block.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          if (this !== draggedItem) {
+            this.classList.add('drag-over');
+          }
+        });
+        
+        block.addEventListener('dragleave', function() {
+          this.classList.remove('drag-over');
+        });
+        
+        block.addEventListener('drop', function(e) {
+          e.preventDefault();
+          this.classList.remove('drag-over');
+          if (draggedItem && this !== draggedItem) {
+            const container = this.parentNode;
+            const allBlocks = [...container.querySelectorAll('.cat-block')];
+            const draggedIdx = allBlocks.indexOf(draggedItem);
+            const targetIdx = allBlocks.indexOf(this);
+            
+            if (draggedIdx < targetIdx) {
+              container.insertBefore(draggedItem, this.nextSibling);
+            } else {
+              container.insertBefore(draggedItem, this);
+            }
+          }
+        });
+      });
     }
     
     // Load items
