@@ -1064,6 +1064,11 @@ if (!anvandare) {
       font-weight: 600;
       color: var(--text-secondary);
     }
+    .notes-header-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     .notes-toggle {
       background: transparent;
       border: none;
@@ -1378,10 +1383,18 @@ if (!anvandare) {
     .notes-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
     .notes-btn.danger:hover { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
     .notes-empty { text-align: center; padding: 2rem 1rem; color: var(--text-light); font-size: 0.8125rem; }
-    .notes-sync { font-size: 0.625rem; color: var(--text-muted); padding: 0.5rem 0.75rem; text-align: center; cursor: help; }
+    .notes-sync { 
+      font-size: 0.7rem; 
+      color: var(--text-muted); 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: help;
+    }
+    .notes-sync svg { width: 12px; height: 12px; }
     .notes-sync.synced { color: var(--color-success); }
-    .notes-sync.error { color: var(--color-error); background: rgba(239, 68, 68, 0.1); border-radius: 4px; }
-    .notes-sync.warning { color: var(--color-warning); background: rgba(245, 158, 11, 0.1); border-radius: 4px; }
+    .notes-sync.error { color: var(--color-error); }
+    .notes-sync.warning { color: var(--color-warning); }
     .notes-project-filter {
       padding: 0 0.75rem 0.5rem 0.75rem;
     }
@@ -5612,15 +5625,17 @@ if (!anvandare) {
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           Historik
         </div>
-        <button type="button" class="notes-toggle" id="notesToggle" title="Minimera">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
-        </button>
+        <div class="notes-header-meta">
+          <div id="notesSync" class="notes-sync">Laddar...</div>
+          <button type="button" class="notes-toggle" id="notesToggle" title="Minimera">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+          </button>
+        </div>
       </div>
       <div class="notes-content">
         <div class="notes-search">
           <input type="text" class="notes-search-input" placeholder="Sök i sessioner..." id="projectSearch">
         </div>
-        <div id="notesSync" class="notes-sync">Laddar...</div>
         <div class="notes-project-filter">
           <select id="sessionProjectFilter" class="notes-project-select" title="Filtrera historik per projekt">
             <option value="all">Alla projekt</option>
@@ -7653,9 +7668,21 @@ if (!anvandare) {
       const urlSessionId = new URLSearchParams(window.location.search).get('session_id');
       let openedSessionFromUrl = false;
       
+      function setNotesSyncStatus(state, label, title) {
+        if (!notesSync) return;
+        const icons = {
+          synced: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+          warning: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
+          error: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>',
+          loading: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>'
+        };
+        notesSync.className = 'notes-sync' + (state ? ' ' + state : '');
+        notesSync.innerHTML = `${icons[state] || icons.loading}<span>${label}</span>`;
+        notesSync.title = title || label;
+      }
+      
       async function loadSessions() {
-        notesSync.textContent = 'Laddar...';
-        notesSync.className = 'notes-sync';
+        setNotesSyncStatus('loading', 'Laddar...');
         
         try {
           const res = await fetch('/api/ai-council/sessions', { credentials: 'include' });
@@ -7666,9 +7693,7 @@ if (!anvandare) {
             userIsLoggedIn = false;
             useSupabase = false;
             sessions = [];
-            notesSync.textContent = '🔒 Logga in för att spara';
-            notesSync.className = 'notes-sync warning';
-            notesSync.title = 'Du måste vara inloggad för att spara sessioner.';
+            setNotesSyncStatus('warning', 'Logga in', 'Du måste vara inloggad för att spara sessioner.');
             console.warn('Auth error:', data.error);
             showLogoutBanner();
             disableSaveFeatures();
@@ -7679,16 +7704,14 @@ if (!anvandare) {
             userIsLoggedIn = false;
             useSupabase = false;
             sessions = [];
-            notesSync.textContent = '❌ Ej konfigurerat';
-            notesSync.className = 'notes-sync error';
+            setNotesSyncStatus('error', 'Ej konfigurerat');
             disableSaveFeatures();
           } else if (data.sessions) {
             // Successfully connected to Supabase
             userIsLoggedIn = true;
             useSupabase = true;
             sessions = data.sessions;
-            notesSync.textContent = '☁️ Synkad';
-            notesSync.className = 'notes-sync synced';
+            setNotesSyncStatus('synced', 'Synkad');
             enableSaveFeatures();
             // Check for local sessions to migrate
             checkAndOfferMigration();
@@ -7697,8 +7720,7 @@ if (!anvandare) {
             userIsLoggedIn = true;
             useSupabase = true;
             sessions = [];
-            notesSync.textContent = '☁️ Redo';
-            notesSync.className = 'notes-sync synced';
+            setNotesSyncStatus('synced', 'Redo');
             enableSaveFeatures();
             // Check for local sessions to migrate
             checkAndOfferMigration();
@@ -7707,8 +7729,7 @@ if (!anvandare) {
           userIsLoggedIn = false;
           useSupabase = false;
           sessions = [];
-          notesSync.textContent = '❌ Anslutningsfel';
-          notesSync.className = 'notes-sync error';
+          setNotesSyncStatus('error', 'Anslutningsfel');
           console.error('Session load error:', e);
           disableSaveFeatures();
         }
