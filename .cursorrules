@@ -9,7 +9,24 @@ Use these by typing @filename in chat:
 - @11_diagnosis_master_en.md (Creates the English Master Page in /en/ with Zotero matching)
 - @13_translate_to_english.md (Translates current Swedish page to English structure)
 
+## Ikonsystem - VIKTIGT
+Projektet anvander Feather Icons-stil (stroke-based, 24x24 viewBox).
+**ALLTID anvand Icon-komponenten** for ikoner:
+
+```astro
+import Icon from '../components/Icon.astro';
+<Icon name="trash" size={16} />
+```
+
+Tillgangliga ikoner: trash, edit, eye, plus, x, check, search, folder, file-text, user, settings, etc.
+Se docs/IKONER.md for komplett lista.
+
+ALDRIG anvand:
+- Emojis som ikoner
+- Inkompletta SVG:er (saknar stroke-attribut)
+- Andra ikonsystem
+
 ## Multi-AI Council Mode
-För komplexa problem, skriv **COUNCIL:** eller **RÅDET:** före din fråga.
-AI:n svarar då från tre perspektiv (Implementatör, Arkitekt, Kritiker) + syntes.
+For komplexa problem, skriv **COUNCIL:** eller **RADET:** fore din fraga.
+AI:n svarar da fran tre perspektiv (Implementator, Arkitekt, Kritiker) + syntes.
 Dokumentation: @MULTI-AI-ARBETSFLODE.md
