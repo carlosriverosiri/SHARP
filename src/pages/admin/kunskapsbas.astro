@@ -13,6 +13,7 @@
 export const prerender = false;
 
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+import '../../styles/global.css';
 
 // Check authentication
 if (!await arInloggad(Astro.cookies)) {
@@ -346,87 +347,6 @@ if (!anvandare) {
     .main-actions {
       display: flex;
       gap: 8px;
-    }
-    
-    .btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-    }
-    
-    .btn-primary {
-      background: var(--color-primary);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: var(--color-primary-hover);
-    }
-    
-    .btn-secondary {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-    }
-    
-    .btn-secondary:hover {
-      background: var(--bg-hover);
-    }
-    
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-      border: none;
-      padding: 8px;
-    }
-    
-    .btn-ghost:hover {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-    }
-    
-    .btn-success {
-      background: #10b981;
-      color: white;
-      border: none;
-    }
-    
-    .btn-success:hover {
-      background: #059669;
-    }
-    
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-      border: none;
-    }
-    
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-    
-    /* Consistent button icon sizing */
-    .btn svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-    
-    .btn-sm {
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-    
-    .btn-sm svg {
-      width: 14px;
-      height: 14px;
     }
     
     /* Content Area */

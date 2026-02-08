@@ -26,13 +26,24 @@ ALDRIG anvand:
 - Inkompletta SVG:er (saknar stroke-attribut)
 - Andra ikonsystem
 
-## Knappsystem - VIKTIGT
-Anvand alltid dessa CSS-klasser for knappar:
+## Knappsystem - VIKTIGT (GLOBAL CSS)
+Knappstilarna finns i **src/styles/global.css** och ger enhetlig design pa hela sajten.
 
+Tillgangliga klasser:
 - `.btn.btn-primary` - Huvudaktion (bla)
 - `.btn.btn-secondary` - Sekundar (vit med ram)
 - `.btn.btn-success` - Positiv (gron)
 - `.btn.btn-danger` - Destruktiv (rod)
+- `.btn.btn-ghost` - Transparent
+- `.btn.btn-sm` - Liten storlek
+- `.btn.btn-lg` - Stor storlek
+
+**For admin-sidor som inte anvander BaseLayout:**
+```astro
+---
+import '../../styles/global.css';
+---
+```
 
 Exempel:
 ```html
@@ -40,7 +51,7 @@ Exempel:
 <button class="btn btn-secondary">Tillbaka</button>
 ```
 
-Se docs/UI-KOMPONENTER.md for komplett dokumentation.
+ALDRIG definiera .btn-klasser inline i <style>-taggar!
 
 ## Navigation - VIKTIGT
 Tillbaka-knappar ska GA EN NIVA UPP i hierarkin:

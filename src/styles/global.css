@@ -1,6 +1,108 @@
 @import "tailwindcss";
 
-/* Anpassade komponenter */
+/* ========================================
+   GLOBALA KNAPPSTILAR
+   Anvands pa hela sajten for enhetlig design
+   ======================================== */
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border: none;
+  text-decoration: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* Primary - Bla (huvudaktion) */
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* Secondary - Vit med ram */
+.btn-secondary {
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+/* Success - Gron (positiv aktion) */
+.btn-success {
+  background-color: #10b981;
+  color: white;
+}
+.btn-success:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+/* Danger - Rod (destruktiv aktion) */
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+/* Ghost - Transparent */
+.btn-ghost {
+  background-color: transparent;
+  color: #6b7280;
+}
+.btn-ghost:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Storlekar */
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+}
+.btn-sm svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+.btn-lg svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ========================================
+   ANDRA KOMPONENTER
+   ======================================== */
+
 .icon-button {
   width: 2.5rem;
   height: 2.5rem;
