@@ -1449,7 +1449,7 @@ if (!anvandare) {
       // Check browser support
       var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert('Din webblÃ¤sare stÃ¶der inte rÃ¶stinmatning. Prova Chrome eller Edge.');
+        alert('Din webbläsare stöder inte röstinmatning. Prova Chrome eller Edge.');
         return;
       }
       
@@ -1495,7 +1495,7 @@ if (!anvandare) {
         console.error('Speech recognition error:', event.error);
         stopDictation();
         if (event.error === 'not-allowed') {
-          alert('MikrofontillgÃ¥ng nekades. Kontrollera webblÃ¤sarens behÃ¶righeter.');
+          alert('Mikrofontillgång nekades. Kontrollera webbläsarens behörigheter.');
         }
       };
       
@@ -1544,7 +1544,7 @@ if (!anvandare) {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
-            prompt: 'Sammanfatta fÃ¶ljande diktering till EN kort mening (max 15 ord) som beskriver ett forskningsprojekt. Svara ENDAST med sammanfattningen, ingen inledning:\n\n' + text,
+            prompt: 'Sammanfatta följande diktering till EN kort mening (max 15 ord) som beskriver ett forskningsprojekt. Svara ENDAST med sammanfattningen, ingen inledning:\n\n' + text,
             selectedModels: ['gpt-4o-mini'],
             runMode: 'parallel'
           })
@@ -2262,7 +2262,7 @@ if (!anvandare) {
     }
     
     async function handleUrlDrop(url) {
-      showProgress('Sparar bokmÃ¤rke...');
+      showProgress('Sparar bokmärke...');
       
       try {
         // Create a document with the URL
@@ -2275,7 +2275,7 @@ if (!anvandare) {
             project_id: currentProjectId,
             category: currentCategory,
             title: title,
-            content: '## Bokmarke\n\n' + url + '\n\n---\n\n*Tillagd ' + new Date().toLocaleString('sv-SE') + '*'
+            content: '## bokmärke\n\n' + url + '\n\n---\n\n*Tillagd ' + new Date().toLocaleString('sv-SE') + '*'
           })
         });
         
@@ -2283,13 +2283,13 @@ if (!anvandare) {
         if (data.error) throw new Error(data.error);
         
         hideProgress();
-        showToast('BokmÃ¤rke sparat!');
+        showToast('Bokmärke sparat!');
         loadItems();
         loadProjects();
       } catch (err) {
         console.error('Error saving bookmark:', err);
         hideProgress();
-        showToast('Kunde inte spara bokmÃ¤rket');
+        showToast('Kunde inte spara bokmärket');
       }
     }
     
@@ -2382,7 +2382,7 @@ if (!anvandare) {
     function startDocumentDictation() {
       var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert('Din webblÃ¤sare stÃ¶der inte rÃ¶stinmatning. Prova Chrome eller Edge.');
+        alert('Din webbläsare stöder inte röstinmatning. Prova Chrome eller Edge.');
         return;
       }
       
@@ -2413,14 +2413,14 @@ if (!anvandare) {
             interim += event.results[i][0].transcript;
           }
         }
-        showProgress('HÃ¶rt: ' + (docTranscript + interim).substring(0, 100) + '...');
+        showProgress('Inspelat: ' + (docTranscript + interim).substring(0, 100) + '...');
       };
       
       docRecognition.onerror = function(event) {
         console.error('Speech error:', event.error);
         stopDocumentDictation();
         if (event.error === 'not-allowed') {
-          alert('MikrofontillgÃ¥ng nekades.');
+          alert('Mikrofontillgång nekades.');
         }
       };
       
@@ -2464,7 +2464,7 @@ if (!anvandare) {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
-            prompt: 'Du fÃ¥r en transkribering av en dikterad anteckning. Skapa:\n1. En kort titel (max 8 ord)\n2. En strukturerad sammanfattning i markdown\n\nSvara i detta format:\nTITEL: [titeln]\n---\n[sammanfattningen]\n\nTranskribering:\n' + docTranscript,
+            prompt: 'Du får en transkribering av en dikterad anteckning. Skapa:\n1. En kort titel (max 8 ord)\n2. En strukturerad sammanfattning i markdown\n\nSvara i detta format:\nTITEL: [titeln]\n---\n[sammanfattningen]\n\nTranskribering:\n' + docTranscript,
             selectedModels: ['gpt-4o-mini'],
             runMode: 'parallel'
           })

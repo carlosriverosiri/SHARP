@@ -59,6 +59,31 @@ Tillbaka-knappar ska GA EN NIVA UPP i hierarkin:
 - Projekt -> Dashboard (RATT)
 - Kategori -> AI Council (FEL!)
 
+## Teckenkodning - VIKTIGT (UTF-8)
+Alla filer ska anvanda UTF-8-kodning. Svenska tecken (a, a, o) MASTE sparas korrekt.
+
+**Vid scripts som skriver filer:**
+- Anvand ALLTID `fs.writeFileSync(path, content, 'utf8')` i Node.js
+- Undvik PowerShell heredocs for svenska text
+- Testa att svenska tecken visas korrekt efter redigering
+
+**Om mojibake uppstar (t.ex. "Ã¶" istallet for "o"):**
+Kor: `node scripts/fix-mojibake.cjs`
+
+**BaseLayout.astro har redan:**
+```html
+<meta charset="UTF-8" />
+```
+
+## Teckenkodning - VIKTIGT (UTF-8)
+Alla filer ska anvanda UTF-8. Svenska tecken (a, a, o) maste sparas korrekt.
+
+**Vid scripts som skriver filer:**
+- Anvand ALLTID fs.writeFileSync(path, content, 'utf8') i Node.js
+- Testa att svenska tecken visas korrekt efter redigering
+
+**Om mojibake uppstar:** Kor node scripts/fix-mojibake.cjs
+
 ## Multi-AI Council Mode
 For komplexa problem, skriv **COUNCIL:** eller **RADET:** fore din fraga.
 AI:n svarar da fran tre perspektiv (Implementator, Arkitekt, Kritiker) + syntes.
