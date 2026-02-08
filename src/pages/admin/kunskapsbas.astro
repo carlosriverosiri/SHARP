@@ -1110,6 +1110,68 @@ if (!anvandare) {
       z-index: 2000;
     }
     
+    
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.2s;
+      background: #fafbfc;
+      margin-bottom: 20px;
+    }
+    
+    .drop-zone.drag-over {
+      border-color: #2563eb;
+      background: rgba(37, 99, 235, 0.05);
+    }
+    
+    .drop-zone-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      color: #9ca3af;
+    }
+    
+    .drop-zone-text {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .drop-zone-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    /* Dictate button recording state */
+    .btn-dictate.recording {
+      background: #ef4444;
+      animation: pulse-red 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+    
+    .btn-dictate.processing {
+      background: #f59e0b;
+    }
+    
+    /* Upload progress */
+    .upload-progress {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #4b5563;
+    }
+    
     .toast.show {
       transform: translateY(0);
       opacity: 1;
@@ -2065,18 +2127,53 @@ if (!anvandare) {
       const content = document.getElementById('content-area');
       const cat = CATEGORIES[currentCategory];
       
-      if (currentItems.length === 0) {
-        content.innerHTML = `
-          <div class="empty-state">
+      // Drop zone HTML (always shown)
+      const dropZoneHtml = `
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <div class="drop-zone-text">
+            Dra och slapp filer, bilder eller lankar har<br>
+            <small style="color: #9ca3af;">eller valj ett alternativ nedan</small>
+          </div>
+          <div class="drop-zone-actions">
             <button class="btn btn-primary" onclick="openNewItemModal()">
               Nytt dokument
             </button>
+            <button class="btn btn-secondary btn-dictate" id="dictateBtn" onclick="startDocumentDictation()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+              Diktera
+            </button>
+            <label class="btn btn-secondary" style="cursor: pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              Valj fil
+              <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)" multiple accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp">
+            </label>
           </div>
-        `;
+          <div id="uploadProgress" class="upload-progress" style="display: none;"></div>
+        </div>
+      `;
+      
+      if (currentItems.length === 0) {
+        content.innerHTML = dropZoneHtml;
+        setupDropZone();
         return;
       }
       
-      content.innerHTML = `
+      content.innerHTML = dropZoneHtml + `
         <div class="items-list">
           ${currentItems.map(item => `
             <div class="item-card ${currentItemId === item.id ? 'active' : ''}" onclick="openItem('${item.id}')">
@@ -2089,6 +2186,307 @@ if (!anvandare) {
           `).join('')}
         </div>
       `;
+      setupDropZone();
+    }
+    
+    // ========================================
+    // DRAG & DROP + DICTATION
+    // ========================================
+    
+    function setupDropZone() {
+      const dropZone = document.getElementById('dropZone');
+      if (!dropZone) return;
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
+      });
+      
+      dropZone.addEventListener('drop', handleDrop, false);
+    }
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      
+      // Check for URL/bookmark
+      const url = dt.getData('text/uri-list') || dt.getData('text/plain');
+      if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        handleUrlDrop(url);
+        return;
+      }
+      
+      // Check for files
+      if (dt.files && dt.files.length > 0) {
+        handleFiles(dt.files);
+      }
+    }
+    
+    async function handleUrlDrop(url) {
+      showProgress('Sparar bokmÃ¤rke...');
+      
+      try {
+        // Create a document with the URL
+        const title = new URL(url).hostname + ' - ' + new Date().toLocaleDateString('sv-SE');
+        
+        const res = await fetch('/api/kunskapsbas/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: currentProjectId,
+            category: currentCategory,
+            title: title,
+            content: '## Bokmarke\n\n' + url + '\n\n---\n\n*Tillagd ' + new Date().toLocaleString('sv-SE') + '*'
+          })
+        });
+        
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        
+        hideProgress();
+        showToast('BokmÃ¤rke sparat!');
+        loadItems();
+        loadProjects();
+      } catch (err) {
+        console.error('Error saving bookmark:', err);
+        hideProgress();
+        showToast('Kunde inte spara bokmÃ¤rket');
+      }
+    }
+    
+    function handleFileSelect(event) {
+      handleFiles(event.target.files);
+    }
+    
+    async function handleFiles(files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        showProgress('Laddar upp ' + file.name + '... (' + (i + 1) + '/' + files.length + ')');
+        
+        try {
+          let content = '';
+          let title = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+          
+          // Handle different file types
+          if (file.type.startsWith('image/')) {
+            // For images, create a placeholder (real implementation would upload to storage)
+            content = '## Bild: ' + file.name + '\n\n[Bild uppladdad]\n\n*Storlek: ' + formatFileSize(file.size) + '*';
+          } else if (file.type === 'application/pdf') {
+            content = '## PDF: ' + file.name + '\n\n[PDF-dokument]\n\n*Storlek: ' + formatFileSize(file.size) + '*';
+          } else if (file.type.startsWith('text/') || file.name.endsWith('.md') || file.name.endsWith('.txt')) {
+            // Read text files
+            content = await readFileAsText(file);
+          } else {
+            content = '## Fil: ' + file.name + '\n\n[Uppladdad fil]\n\n*Typ: ' + file.type + ', Storlek: ' + formatFileSize(file.size) + '*';
+          }
+          
+          // Create document
+          const res = await fetch('/api/kunskapsbas/items', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              project_id: currentProjectId,
+              category: currentCategory,
+              title: title,
+              content: content
+            })
+          });
+          
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          
+        } catch (err) {
+          console.error('Error uploading file:', err);
+          showToast('Kunde inte ladda upp ' + file.name);
+        }
+      }
+      
+      hideProgress();
+      showToast(files.length + ' fil(er) uppladdade!');
+      loadItems();
+      loadProjects();
+    }
+    
+    function readFileAsText(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = (e) => reject(e);
+        reader.readAsText(file);
+      });
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+    
+    function showProgress(message) {
+      const el = document.getElementById('uploadProgress');
+      if (el) {
+        el.textContent = message;
+        el.style.display = 'block';
+      }
+    }
+    
+    function hideProgress() {
+      const el = document.getElementById('uploadProgress');
+      if (el) el.style.display = 'none';
+    }
+    
+    // Dictation for creating documents
+    var docRecognition = null;
+    var docIsRecording = false;
+    var docTranscript = '';
+    
+    function startDocumentDictation() {
+      var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Din webblÃ¤sare stÃ¶der inte rÃ¶stinmatning. Prova Chrome eller Edge.');
+        return;
+      }
+      
+      var btn = document.getElementById('dictateBtn');
+      
+      if (docIsRecording) {
+        stopDocumentDictation();
+        return;
+      }
+      
+      docRecognition = new SpeechRecognition();
+      docRecognition.lang = 'sv-SE';
+      docRecognition.continuous = true;
+      docRecognition.interimResults = true;
+      
+      docIsRecording = true;
+      docTranscript = '';
+      btn.classList.add('recording');
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Stoppa';
+      showToast('Lyssnar... Tala nu!');
+      
+      docRecognition.onresult = function(event) {
+        var interim = '';
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            docTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        showProgress('HÃ¶rt: ' + (docTranscript + interim).substring(0, 100) + '...');
+      };
+      
+      docRecognition.onerror = function(event) {
+        console.error('Speech error:', event.error);
+        stopDocumentDictation();
+        if (event.error === 'not-allowed') {
+          alert('MikrofontillgÃ¥ng nekades.');
+        }
+      };
+      
+      docRecognition.onend = function() {
+        if (docIsRecording) {
+          try { docRecognition.start(); } catch (e) { stopDocumentDictation(); }
+        }
+      };
+      
+      try {
+        docRecognition.start();
+      } catch (e) {
+        console.error('Could not start:', e);
+        stopDocumentDictation();
+      }
+    }
+    
+    async function stopDocumentDictation() {
+      docIsRecording = false;
+      if (docRecognition) docRecognition.stop();
+      
+      var btn = document.getElementById('dictateBtn');
+      btn.classList.remove('recording');
+      btn.classList.add('processing');
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"></circle></svg> Bearbetar...';
+      
+      if (!docTranscript.trim()) {
+        btn.classList.remove('processing');
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> Diktera';
+        hideProgress();
+        showToast('Ingen text inspelad');
+        return;
+      }
+      
+      showProgress('AI sammanfattar din diktering...');
+      
+      try {
+        // Use AI to summarize and create title
+        var res = await fetch('/api/ai-council/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            prompt: 'Du fÃ¥r en transkribering av en dikterad anteckning. Skapa:\n1. En kort titel (max 8 ord)\n2. En strukturerad sammanfattning i markdown\n\nSvara i detta format:\nTITEL: [titeln]\n---\n[sammanfattningen]\n\nTranskribering:\n' + docTranscript,
+            selectedModels: ['gpt-4o-mini'],
+            runMode: 'parallel'
+          })
+        });
+        
+        var data = await res.json();
+        var aiResponse = data.responses && data.responses['gpt-4o-mini'] ? data.responses['gpt-4o-mini'].content : null;
+        
+        var title = 'Dikterad anteckning ' + new Date().toLocaleDateString('sv-SE');
+        var content = docTranscript;
+        
+        if (aiResponse) {
+          var titleMatch = aiResponse.match(/TITEL:\s*(.+)/i);
+          if (titleMatch) title = titleMatch[1].trim();
+          
+          var contentMatch = aiResponse.split('---');
+          if (contentMatch.length > 1) {
+            content = contentMatch.slice(1).join('---').trim();
+          }
+          content += '\n\n---\n\n## Originaltranskribering\n\n' + docTranscript;
+        }
+        
+        // Create the document
+        var createRes = await fetch('/api/kunskapsbas/items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: currentProjectId,
+            category: currentCategory,
+            title: title,
+            content: content
+          })
+        });
+        
+        var createData = await createRes.json();
+        if (createData.error) throw new Error(createData.error);
+        
+        hideProgress();
+        showToast('Dokument skapat!');
+        loadItems();
+        loadProjects();
+        
+      } catch (err) {
+        console.error('Error creating dictated doc:', err);
+        showToast('Kunde inte skapa dokument');
+      }
+      
+      btn.classList.remove('processing');
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> Diktera';
+      hideProgress();
     }
     
     // Open item
