@@ -1525,8 +1525,8 @@ if (!anvandare) {
           '<div class="dashboard-title">' +
             '<h1>Mina projekt</h1>' +
           '</div>' +
-          '<button class="btn btn-primary" onclick="openNewProjectModal()" style="display: flex; align-items: center; gap: 6px; font-weight: 500;">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>' +
+          '<button onclick="openNewProjectModal()" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; font-size: 13px; font-weight: 500; background: transparent; color: #6b7280; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s;">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
             'Nytt projekt' +
           '</button>' +
         '</div>' +
@@ -1754,7 +1754,7 @@ if (!anvandare) {
               ${project.description ? `<p>${project.description}</p>` : '<p>Klicka på en kategori för att se innehållet</p>'}
             </div>
             <div class="project-overview-actions">
-              <button class="btn btn-secondary" onclick="renderDashboard()" style="display: flex; align-items: center; gap: 6px;">
+              <button class="btn btn-secondary" id="backToDashboardBtn" style="display: flex; align-items: center; gap: 6px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 Alla projekt
               </button>
@@ -1793,6 +1793,18 @@ if (!anvandare) {
           </div>
         </div>
       `;
+      
+      // Add event listener for back button
+      const backBtn = document.getElementById('backToDashboardBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          currentProjectId = null;
+          currentCategory = null;
+          renderDashboard();
+          renderTree();
+        });
+      }
       
       document.getElementById('new-item-btn').style.display = 'none';
     }
