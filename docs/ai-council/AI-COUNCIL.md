@@ -19,6 +19,16 @@ AI Council är ett internt verktyg för att ställa komplexa frågor till flera 
 
 **Nytt i v3.0:** Ljust, modernt gränssnitt inspirerat av Grok/Gemini med projektsidebar för att organisera dina sessioner.
 
+## PCP-modellen (Project, Context, Prompt)
+
+AI Council är byggt kring PCP för att hålla allt logiskt och spårbart:
+
+- **Project** – Samlar relaterade frågor, dokument och historik.
+- **Context** – Bakgrund, dokumentation och källor som ska påverka svaret.
+- **Prompt** – Den konkreta frågan som skickas till AI-modellerna.
+
+Det här är vår huvudmodell och ska genomsyra alla sidor, demos och arbetsflöden.
+
 ## Åtkomst
 
 **URL:** `/admin/ai-council`

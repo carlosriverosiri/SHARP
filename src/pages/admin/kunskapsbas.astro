@@ -5,7 +5,7 @@
  * 
  * Features:
  * - Projektbaserad trädstruktur (som File Explorer)
- * - Fasta kategorier: dokument, litteratur, ljud, ai_fragor, prompter, radata
+     * - Fasta kategorier: dokument, litteratur, ljud, ai_fragor, prompter, radata, bilder, syntes
  * - Markdown-editor
  * - Molnbaserat via Supabase
  */
@@ -14,6 +14,7 @@ export const prerender = false;
 
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 import '../../styles/global.css';
+import QuickPrompt from '../../components/QuickPrompt.astro';
 
 // Check authentication
 if (!await arInloggad(Astro.cookies)) {
@@ -227,6 +228,14 @@ if (!anvandare) {
       color: var(--text-sidebar-active);
     }
     
+    .project-header:not(.active) {
+      opacity: 0.6;
+    }
+    
+    .project-header:hover {
+      opacity: 1;
+    }
+    
     .project-chevron {
       width: 16px;
       font-size: 12px;
@@ -261,13 +270,9 @@ if (!anvandare) {
     
     /* Kategorier */
     .categories {
-      display: none;
+      display: block;
       padding-left: 32px;
       margin-top: 4px;
-    }
-    
-    .project.expanded .categories {
-      display: block;
     }
     
     .category {
@@ -290,6 +295,14 @@ if (!anvandare) {
     .category.active {
       background: var(--bg-sidebar-active);
       color: var(--text-sidebar-active);
+    }
+    
+    .category:not(.active) {
+      opacity: 0.6;
+    }
+    
+    .category:hover {
+      opacity: 1;
     }
     
     .category-name {
@@ -398,12 +411,113 @@ if (!anvandare) {
       overflow: hidden;
     }
     
+    /* Category navigation (in category view) */
+    :global(.category-nav) {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      max-width: 900px;
+      margin: 0 auto 16px;
+    }
+    
+    :global(.category-card) {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.15s;
+      opacity: 0.55;
+      text-align: center;
+      appearance: none;
+    }
+    
+    :global(.category-card:hover) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    :global(.category-card.active) {
+      opacity: 1;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+    
+    :global(.category-card-hero) {
+      padding: 8px 12px;
+      background: var(--cat-bg, #e5e7eb);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    
+    :global(.category-card-body) {
+      padding: 10px 12px;
+    }
+    
+    :global(.category-card-count) {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    
+    :global(.category-card.inactive .category-card-count) {
+      color: #9ca3af;
+    }
+    
+    /* Large drop zone (category view) */
+    :global(.category-drop-zone) {
+      max-width: 900px;
+      margin: 0 auto 16px;
+    }
+    
+    :global(.category-drop-zone .drop-zone) {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px 20px;
+      border-radius: 16px;
+      border: 2px dashed #cbd5e1;
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    :global(.category-drop-zone .drop-zone.drag-over) {
+      border-color: var(--color-primary);
+      background: rgba(37, 99, 235, 0.04);
+    }
+    
     .item-meta {
       display: flex;
       gap: 16px;
       margin-top: 8px;
       font-size: 12px;
       color: var(--text-muted);
+    }
+    .synthesis-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .synthesis-badge.synthesis {
+      background: rgba(59, 130, 246, 0.12);
+      color: #1d4ed8;
+    }
+    .synthesis-badge.supersynthesis {
+      background: rgba(245, 158, 11, 0.2);
+      color: #b45309;
     }
     
     /* Empty State */
@@ -1211,22 +1325,40 @@ if (!anvandare) {
       color: var(--color-primary);
       border-color: var(--color-primary);
     }
-        /* AI Council-style input card for project view */
-    .input-card {
-      background: linear-gradient(135deg, #2563eb, #7c3aed, #059669);
-      padding: 2px;
-      border-radius: 16px;
+    /* Project overview layout */
+    :global(.project-overview) {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    :global(.editable-title) {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 1rem 0;
+      line-height: 1.2;
+    }
+    
+    /* Summary block - match AI Council */
+    :global(.summary-block) {
+      width: 100%;
+      border: 2px solid #7c3aed;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.08), var(--shadow-sm);
+      padding: 20px;
       margin-bottom: 1.5rem;
     }
     
-    .input-card-inner {
+    :global(.summary-block-inner) {
       background: var(--bg-secondary);
-      border-radius: 14px;
-      padding: 1.5rem;
+      width: 100%;
     }
     
-    .form-group {
+    :global(.form-group) {
       margin-bottom: 1rem;
+      width: 100%;
     }
     
     .form-group:last-child {
@@ -1240,7 +1372,41 @@ if (!anvandare) {
       margin-bottom: 0.5rem;
     }
     
-    .form-label {
+    :global(.summary-header) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 0.5rem;
+    }
+    
+    :global(.summary-actions) {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    :global(.summary-action-btn) {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    :global(.summary-action-btn:hover) {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+      background: var(--bg-hover);
+    }
+    
+    :global(.form-label) {
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--text-primary);
@@ -1249,72 +1415,80 @@ if (!anvandare) {
       gap: 0.5rem;
     }
     
-    .form-label .icon {
+    :global(.form-label .icon) {
       color: var(--text-muted);
     }
     
-    .form-label .optional {
+    :global(.form-label .optional) {
       color: var(--text-muted);
       font-weight: 400;
       font-size: 0.8125rem;
     }
     
-    .description-input {
+    :global(.description-input) {
       width: 100%;
-      min-height: 100px;
-      padding: 1rem;
-      padding-right: 60px;
+      min-height: 280px;
+      padding: 16px 72px 16px 16px;
       border: 1px solid var(--border-color);
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.9375rem;
       line-height: 1.6;
       resize: vertical;
-      background: var(--bg-primary);
+      background: var(--bg-input);
       color: var(--text-primary);
       font-family: inherit;
+      display: block;
     }
     
-    .description-input:focus {
+    :global(.description-input:focus) {
       outline: none;
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
     
-    .description-input::placeholder {
+    :global(.description-input::placeholder) {
       color: var(--text-muted);
     }
     
     /* Input wrapper with dictation button */
-    .input-wrapper {
+    :global(.input-wrapper) {
       position: relative;
+      width: 100%;
     }
     
-    .dictation-btn {
+    :global(.dictation-btn) {
       position: absolute;
-      right: 12px;
-      bottom: 12px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--bg-primary);
-      border: 2px solid var(--border-color);
+      right: 14px;
+      bottom: 14px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       color: var(--text-muted);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
     }
     
-    .dictation-btn:hover {
+    :global(.dictation-btn:hover) {
       border-color: var(--color-primary);
       color: var(--color-primary);
     }
     
-    .dictation-btn.recording {
+    :global(.dictation-btn svg) {
+      width: 20px;
+      height: 20px;
+    }
+    
+    :global(.dictation-btn.recording) {
       background: #ef4444;
       border-color: #ef4444;
       color: white;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
       animation: pulse-recording 1.5s ease-in-out infinite;
     }
     
@@ -1323,27 +1497,42 @@ if (!anvandare) {
       50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
     }
     
-    .dictation-status {
+    :global(.dictation-status) {
       font-size: 0.75rem;
       color: var(--text-muted);
       margin-top: 0.5rem;
       min-height: 1.5rem;
     }
     
-    .dictation-status.error { color: #ef4444; }
-    .dictation-status.success { color: #10b981; }
+    :global(.dictation-status.error) { color: #ef4444; }
+    :global(.dictation-status.success) { color: #10b981; }
+
+    .summary-modal-content {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      max-height: 260px;
+      overflow: auto;
+    }
     
     /* Action buttons row */
-    .input-actions {
+    :global(.input-actions) {
       display: flex;
       gap: 0.75rem;
       margin-top: 1rem;
-      flex-wrap: wrap;
+      justify-content: flex-end;
+      width: 100%;
     }
     
-    .input-actions .btn {
-      flex: 1;
-      min-width: 120px;
+    :global(.input-actions .btn) {
+      flex: 0 0 auto;
+      min-width: 260px;
+      font-weight: 700;
     }
     
     /* Zotero and sources row */
@@ -1464,7 +1653,7 @@ if (!anvandare) {
           <div class="empty-title">Välkommen till Kunskapsbasen</div>
           <div class="empty-text">
             Organisera din forskning i projekt med kategorier för:<br>
-            <strong>Dokument</strong> · <strong>Litteratur</strong> · <strong>Ljud</strong> · <strong>AI-sessioner</strong> · <strong>Prompter</strong> · <strong>Radata</strong></div>
+          <strong>Dokument</strong> · <strong>Litteratur</strong> · <strong>Ljud</strong> · <strong>AI-sessioner</strong> · <strong>Prompter</strong> · <strong>Rådata</strong> · <strong>Bilder</strong> · <strong>Syntes</strong></div>
           <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; text-align: left;">
             <div style="font-size: 13px; color: var(--text-secondary);">✓ Koppla till AI Council för smart analys</div>
             <div style="font-size: 13px; color: var(--text-secondary);">✓ Importera från Zotero</div>
@@ -1595,6 +1784,22 @@ if (!anvandare) {
     </div>
   </div>
   
+  <!-- Summary Modal -->
+  <div class="modal-overlay" id="summary-modal">
+    <div class="modal" style="max-width: 520px;">
+      <div class="modal-header">
+        <div class="modal-title">AI-sammanfattning</div>
+      </div>
+      <div class="modal-body">
+        <div class="summary-modal-content" id="summary-modal-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('summary-modal')">Stäng</button>
+        <button class="btn btn-primary" onclick="applyProjectSummary()">Använd i fältet</button>
+      </div>
+    </div>
+  </div>
+  
   <!-- Toast -->
   <div class="toast" id="toast"></div>
   
@@ -1605,6 +1810,7 @@ if (!anvandare) {
     var currentCategory = null;
     var currentItems = [];
     var currentItemId = null;
+    var pendingSummaryText = '';
     
     // Category SVG icons for modern look
     var CATEGORY_ICONS = {
@@ -1613,7 +1819,9 @@ if (!anvandare) {
       ljud: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>',
       ai_fragor: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
       prompter: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>',
-      radata: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>'
+      radata: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>',
+      bilder: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>',
+      syntes: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
     };
     
     // Category metadata
@@ -1622,8 +1830,10 @@ if (!anvandare) {
       litteratur: { label: 'Litteratur', description: 'Zotero, referenser, PDF:er' },
       ljud: { label: 'Ljudsammanfattningar', description: 'Transkriberade inspelningar' },
       ai_fragor: { label: 'AI-sessioner', description: 'Sparade AI Council-samtal' },
-      prompter: { label: 'Prompter', description: 'Ateranvandbara prompter' },
-      radata: { label: 'Radata', description: 'Ovrigt material' }
+      prompter: { label: 'Prompter', description: 'Återanvändbara prompter' },
+      radata: { label: 'Rådata', description: 'Övrigt material' },
+      bilder: { label: 'Bilder', description: 'Diagram, foton, skärmdumpar' },
+      syntes: { label: 'Synteser', description: 'Syntes och supersyntes' }
     };
     
     // Escape HTML to prevent XSS
@@ -2133,14 +2343,8 @@ if (!anvandare) {
     
     // Toggle project
     function toggleProject(projectId) {
-      if (currentProjectId === projectId && !currentCategory) {
-        // If clicking the same project, just toggle expansion
-        const el = document.querySelector(`.project[data-id="${projectId}"]`);
-        el?.classList.toggle('expanded');
-      } else {
-        // Navigate to project overview with history
-        navigateToState(projectId, null, true);
-      }
+      // Always navigate to project overview with history
+      navigateToState(projectId, null, true);
     }
     
     // Select category
@@ -2177,15 +2381,17 @@ if (!anvandare) {
       ljud: { bg: 'linear-gradient(135deg, #f59e0b, #b45309)', light: '#fffbeb' },
       ai_fragor: { bg: 'linear-gradient(135deg, #10b981, #047857)', light: '#ecfdf5' },
       prompter: { bg: 'linear-gradient(135deg, #ec4899, #be185d)', light: '#fdf2f8' },
-      radata: { bg: 'linear-gradient(135deg, #6b7280, #374151)', light: '#f9fafb' }
+      radata: { bg: 'linear-gradient(135deg, #6b7280, #374151)', light: '#f9fafb' },
+      bilder: { bg: 'linear-gradient(135deg, #06b6d4, #0e7490)', light: '#ecfeff' },
+      syntes: { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', light: '#fffbeb' }
     };
+    var synthesisCountCache = {};
+    var isUpdatingSynthesisBlock = false;
     
     // Show project overview with category blocks
     function showProjectOverview() {
       const project = projects.find(p => p.id === currentProjectId);
       if (!project) return;
-      
-      const totalDocs = (project.categories || []).reduce((sum, c) => sum + c.count, 0);
       
       // Sort categories: non-empty first, then empty
       const sortedCategories = [...(project.categories || [])].sort((a, b) => {
@@ -2196,12 +2402,12 @@ if (!anvandare) {
       
       const content = document.getElementById('content-area');
       content.innerHTML = `
-        <div style="max-width: 800px; margin: 0 auto;">
+        <div class="project-overview">
           <!-- Editable project name -->
-          <h2 class="editable-title" id="projectTitle" title="Klicka för att redigera" style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin: 0 0 1.5rem 0; cursor: text; padding: 4px 8px; margin-left: -8px; border-radius: 6px; transition: background 0.15s;">${escapeHtml(project.name)}</h2>
+          <h2 class="editable-title" id="projectTitle" title="Klicka för att redigera">${escapeHtml(project.name)}</h2>
           
           <!-- Category blocks FIRST -->
-          <div id="categoryBlocks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem;">
+          <div id="categoryBlocks" style="display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.25rem; max-width: 900px;">
             ${sortedCategories.map(cat => {
               const colors = CATEGORY_COLORS[cat.key] || { bg: 'linear-gradient(135deg, #6b7280, #374151)', light: '#f9fafb' };
               const isEmpty = cat.count === 0;
@@ -2214,27 +2420,42 @@ if (!anvandare) {
                     <span style="color: white; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">${cat.label}</span>
                   </div>
                   <div style="padding: 10px 12px; text-align: center;">
-                    <div style="font-size: 22px; font-weight: 700; color: ${isEmpty ? '#9ca3af' : '#1f2937'};">${cat.count}</div>
+                    <div class="cat-count" style="font-size: 22px; font-weight: 700; color: ${isEmpty ? '#9ca3af' : '#1f2937'};">${cat.count}</div>
                   </div>
                 </div>
               `;
             }).join('')}
           </div>
           
-          <!-- AI Council-style input card -->
-          <div class="input-card">
-            <div class="input-card-inner">
-              <!-- Description with dictation -->
+          <!-- Summary input (AI Council style) -->
+          <div class="summary-block" style="border: 2px solid #7c3aed; border-radius: 18px; padding: 20px;">
+            <div class="summary-block-inner">
               <div class="form-group">
-                <div class="form-label-row">
+                <div class="summary-header">
                   <label class="form-label">
                     <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></span>
-                    Beskrivning
+                    Sammanfattning
                     <span class="optional">(valfritt)</span>
                   </label>
+                  <div class="summary-actions">
+                    <button type="button" class="summary-action-btn" id="summaryCopyBtn" title="Kopiera">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                    <button type="button" class="summary-action-btn" id="summaryClearBtn" title="Rensa">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <div class="input-wrapper">
-                  <textarea id="projectDescription" class="description-input" placeholder="Beskriv projektet... Tryck på mikrofonen för att diktera.">${escapeHtml(project.description || '')}</textarea>
+                <div class="input-wrapper" style="width: 100%;">
+                  <textarea id="projectSummary" class="description-input" style="width: 100%;" placeholder="Sammanfatta projektet... Du kan diktera om du vill.">${escapeHtml(project.description || '')}</textarea>
                   <button type="button" class="dictation-btn" id="projectDictationBtn" title="Diktera">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
@@ -2247,50 +2468,57 @@ if (!anvandare) {
                 <div class="dictation-status" id="projectDictationStatus"></div>
                 
                 <div class="input-actions">
-                  <button type="button" class="btn btn-secondary" id="summarizeDescriptionBtn">
+                  <button type="button" class="btn btn-warning btn-lg" id="improveSummaryBtn" style="font-size: 1.05rem; padding: 0.9rem 1.6rem;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><line x1="4" y1="10" x2="20" y2="10"></line><line x1="10" y1="4" x2="10" y2="20"></line></svg>
-                    Sammanfatta
-                  </button>
-                  <button type="button" class="btn btn-primary" id="saveDescriptionBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                    Spara
+                    Strukturera sammanfattningen
                   </button>
                 </div>
-              </div>
-              
-              <!-- Sources button -->
-              <button type="button" class="btn btn-primary" id="searchSourcesBtn" style="width: 100%; margin-top: 0.5rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                Sök källor
-              </button>
-              
-              <!-- File upload area -->
-              <div class="drop-zone" id="projectDropZone" style="margin-top: 1rem;" onclick="document.getElementById('projectFileInput').click()">
-                <div class="drop-zone-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                  </svg>
-                </div>
-                <div class="drop-zone-text">
-                  <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in<br>
-                  <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD - Filer läggs i Litteratur</span>
-                </div>
-                <input type="file" id="projectFileInput" style="display: none;" multiple accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp,.json">
               </div>
             </div>
           </div>
-          
-          <!-- Quick link to AI Council -->
-          <a href="/admin/ai-council?kb_project=${project.id}" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 1rem; padding: 12px; background: var(--bg-tertiary); border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.875rem; transition: all 0.15s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='var(--bg-tertiary)'">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            Ã–ppna i AI Council för avancerade frågor
-          </a>
         </div>
       `;
       
       // Setup event listeners
       setupProjectOverviewListeners();
+      updateSynthesisBlockCount();
       document.getElementById('new-item-btn').style.display = 'none';
+    }
+    
+    async function updateSynthesisBlockCount() {
+      const block = document.querySelector('.cat-block[data-category="syntes"]');
+      if (!block || !currentProjectId) return;
+      if (isUpdatingSynthesisBlock) return;
+      
+      try {
+        isUpdatingSynthesisBlock = true;
+        const res = await fetch(`/api/ai-council/sessions?project_id=${currentProjectId}`, { credentials: 'include' });
+        const data = await res.json();
+        const count = (data.sessions || []).filter(s => s.synthesis || s.supersynthesis).length;
+        synthesisCountCache[currentProjectId] = count;
+        
+        const project = projects.find(p => p.id === currentProjectId);
+        if (project && Array.isArray(project.categories)) {
+          const idx = project.categories.findIndex(c => c.key === 'syntes');
+          if (idx !== -1 && project.categories[idx].count !== count) {
+            project.categories[idx].count = count;
+            showProjectOverview();
+            renderTree();
+            return;
+          }
+        }
+        const countEl = block.querySelector('.cat-count');
+        
+        if (countEl) {
+          countEl.textContent = count;
+          countEl.style.color = count === 0 ? '#9ca3af' : '#1f2937';
+        }
+        block.style.opacity = count === 0 ? '0.6' : '1';
+      } catch (err) {
+        console.warn('Could not update synthesis count:', err);
+      } finally {
+        isUpdatingSynthesisBlock = false;
+      }
     }
         // Setup listeners for project overview
     function setupProjectOverviewListeners() {
@@ -2348,28 +2576,64 @@ if (!anvandare) {
         });
       }
       
-      // Save description
-      document.getElementById('saveDescriptionBtn')?.addEventListener('click', async function() {
-        const desc = document.getElementById('projectDescription').value;
+      // Summary actions
+      document.getElementById('summaryCopyBtn')?.addEventListener('click', async function() {
+        const textarea = document.getElementById('projectSummary');
+        const text = textarea?.value || '';
+        if (!text.trim()) {
+          showToast('Ingen text att kopiera');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast('Kopierat!');
+        } catch (err) {
+          console.error('Copy error:', err);
+          showToast('Kunde inte kopiera');
+        }
+      });
+      
+      document.getElementById('summaryClearBtn')?.addEventListener('click', function() {
+        const textarea = document.getElementById('projectSummary');
+        if (textarea) {
+          textarea.value = '';
+          showToast('Sammanfattning rensad');
+        }
+      });
+      
+      // Auto-save summary (debounced)
+      let summarySaveTimer = null;
+      async function saveSummaryNow() {
+        const summary = document.getElementById('projectSummary')?.value || '';
         try {
           const res = await fetch('/api/kunskapsbas/projects', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: project.id, description: desc })
+            body: JSON.stringify({ id: project.id, description: summary })
           });
           const data = await res.json();
           if (data.error) throw new Error(data.error);
-          project.description = desc;
-          showToast('Beskrivning sparad!');
+          project.description = summary;
         } catch (err) {
-          console.error('Error saving description:', err);
+          console.error('Error saving summary:', err);
           showToast('Kunde inte spara');
         }
-      });
+      }
       
-      // Summarize description with AI
-      document.getElementById('summarizeDescriptionBtn')?.addEventListener('click', async function() {
-        const textarea = document.getElementById('projectDescription');
+      const summaryTextarea = document.getElementById('projectSummary');
+      if (summaryTextarea) {
+        summaryTextarea.addEventListener('input', function() {
+          if (summarySaveTimer) clearTimeout(summarySaveTimer);
+          summarySaveTimer = setTimeout(() => {
+            saveSummaryNow();
+            showToast('Sparar automatiskt...');
+          }, 900);
+        });
+      }
+      
+      // Structure summary with AI (short, polished)
+      document.getElementById('improveSummaryBtn')?.addEventListener('click', async function() {
+        const textarea = document.getElementById('projectSummary');
         const text = textarea.value.trim();
         if (!text) {
           showToast('Skriv eller diktera en text först');
@@ -2377,39 +2641,41 @@ if (!anvandare) {
         }
         
         this.disabled = true;
-        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"></circle></svg> Sammanfattar...';
+        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"></circle></svg> Strukturerar...';
         
         try {
-          const res = await fetch('/api/ai-council/ask', {
+          const res = await fetch('/api/kunskapsbas/structure-summary', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify({
-              prompt: 'Sammanfatta följande text till en strukturerad projektbeskrivning i Markdown-format. Använd rubriker, punktlistor och framhäv viktiga delar. Svara ENDAST med sammanfattningen:\n\n' + text,
-              selectedModels: ['gpt-4o-mini'],
-              runMode: 'parallel'
+              summary: text
             })
           });
           
           const data = await res.json();
-          const aiResponse = data.responses?.['gpt-4o-mini']?.content;
+          if (!res.ok || data.error) {
+            throw new Error(data.error || data.message || `Request failed (${res.status})`);
+          }
+          const aiResponse = data.structuredSummary;
           
           if (aiResponse) {
-            textarea.value = aiResponse;
-            showToast('Sammanfattning klar!');
+            textarea.value = aiResponse.trim();
+            showToast('Sammanfattning strukturerad!');
+            saveSummaryNow();
           } else {
-            showToast('Kunde inte sammanfatta');
+            showToast('Kunde inte strukturera texten');
           }
         } catch (err) {
           console.error('Summarize error:', err);
-          showToast('Fel vid sammanfattning');
+          showToast('Fel vid strukturering: ' + (err?.message || 'okänt fel'));
         }
         
         this.disabled = false;
-        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg> Sammanfatta till Markdown';
+        this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><line x1="4" y1="10" x2="20" y2="10"></line><line x1="10" y1="4" x2="10" y2="20"></line></svg> Strukturera';
       });
       
-      // Dictation for project description
+      // Dictation for project summary
       let projectRecognition = null;
       let projectIsRecording = false;
       
@@ -2422,7 +2688,7 @@ if (!anvandare) {
         
         const btn = this;
         const status = document.getElementById('projectDictationStatus');
-        const textarea = document.getElementById('projectDescription');
+        const textarea = document.getElementById('projectSummary');
         
         if (projectIsRecording) {
           projectIsRecording = false;
@@ -2430,6 +2696,7 @@ if (!anvandare) {
           if (projectRecognition) projectRecognition.stop();
           status.textContent = 'Diktering stoppad';
           status.className = 'dictation-status';
+          saveSummaryNow();
           return;
         }
         
@@ -2481,49 +2748,6 @@ if (!anvandare) {
         }
       });
       
-      // Search sources / Zotero
-      document.getElementById('searchSourcesBtn')?.addEventListener('click', function() {
-        window.location.href = '/admin/ai-council?kb_project=' + project.id + '&open_zotero=1';
-      });
-      
-      // File drop zone
-      const dropZone = document.getElementById('projectDropZone');
-      if (dropZone) {
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-          dropZone.addEventListener(eventName, function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-          }, false);
-        });
-        
-        ['dragenter', 'dragover'].forEach(eventName => {
-          dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-          dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
-        });
-        
-        dropZone.addEventListener('drop', async function(e) {
-          const files = e.dataTransfer.files;
-          if (files.length > 0) {
-            currentCategory = 'litteratur';
-            await handleFiles(files);
-            currentCategory = null;
-            showProjectOverview();
-          }
-        });
-      }
-      
-      // File input
-      document.getElementById('projectFileInput')?.addEventListener('change', async function(e) {
-        if (e.target.files.length > 0) {
-          currentCategory = 'litteratur';
-          await handleFiles(e.target.files);
-          currentCategory = null;
-          showProjectOverview();
-        }
-      });
     }
         // Setup drag and drop for category blocks
     function setupCategoryDragDrop() {
@@ -2582,6 +2806,11 @@ if (!anvandare) {
     async function loadItems() {
       if (!currentProjectId || !currentCategory) return;
       
+      if (currentCategory === 'syntes') {
+        await loadSyntheses();
+        return;
+      }
+      
       const content = document.getElementById('content-area');
       content.innerHTML = '<div class="loading"><div class="spinner"></div>Laddar...</div>';
       
@@ -2601,45 +2830,67 @@ if (!anvandare) {
     function renderItems() {
       const content = document.getElementById('content-area');
       const cat = CATEGORIES[currentCategory];
+      const project = projects.find(p => p.id === currentProjectId);
+      const categories = project?.categories || [];
+      
+      const categoryNavHtml = `
+        <div class="category-nav">
+          ${categories.map(c => {
+            const colors = CATEGORY_COLORS[c.key] || { bg: '#9ca3af' };
+            const isActive = c.key === currentCategory;
+            const isEmpty = c.count === 0;
+            return `
+              <button class="category-card ${isActive ? 'active' : 'inactive'}" style="--cat-bg: ${colors.bg};" onclick="selectCategory('${project.id}', '${c.key}')">
+                <div class="category-card-hero">${c.label}</div>
+                <div class="category-card-body">
+                  <div class="category-card-count" style="color: ${isEmpty ? '#9ca3af' : '#1f2937'};">${c.count}</div>
+                </div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
       
       // Drop zone HTML (always shown)
       const dropZoneHtml = `
-        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-          <div class="drop-zone-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-            </svg>
+        <div class="category-drop-zone">
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="drop-zone-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+              </svg>
+            </div>
+            <div class="drop-zone-text">
+              <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in<br>
+              <span style="font-size: 0.8rem;">PNG, JPG, PDF, TXT, MD • Dra länkar för att spara bokmärken</span>
+            </div>
+            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)" multiple accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp,.json">
+            <div id="uploadProgress" class="upload-progress" style="display: none;"></div>
           </div>
-          <div class="drop-zone-text">
-            <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in<br>
-            <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD • Dra länkar för att spara bokmärken</span>
+          <div class="drop-zone-actions">
+            <button class="btn btn-primary" onclick="openNewItemModal()">
+              Nytt dokument
+            </button>
+            <button class="btn btn-secondary btn-dictate" id="dictateBtn" onclick="startDocumentDictation()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+              Diktera
+            </button>
           </div>
-          <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)" multiple accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp,.json">
-          <div id="uploadProgress" class="upload-progress" style="display: none;"></div>
-        </div>
-        <div class="drop-zone-actions">
-          <button class="btn btn-primary" onclick="openNewItemModal()">
-            Nytt dokument
-          </button>
-          <button class="btn btn-secondary btn-dictate" id="dictateBtn" onclick="startDocumentDictation()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" y1="19" x2="12" y2="23"></line>
-              <line x1="8" y1="23" x2="16" y2="23"></line>
-            </svg>
-            Diktera
-          </button>
         </div>
       `;
       
       if (currentItems.length === 0) {
-        content.innerHTML = dropZoneHtml;
+        content.innerHTML = categoryNavHtml + dropZoneHtml;
         setupDropZone();
         return;
       }
       
-      content.innerHTML = dropZoneHtml + `
+      content.innerHTML = categoryNavHtml + dropZoneHtml + `
         <div class="items-list">
           ${currentItems.map(item => `
             <div class="item-card ${currentItemId === item.id ? 'active' : ''}" onclick="openItem('${item.id}')">
@@ -2653,6 +2904,54 @@ if (!anvandare) {
         </div>
       `;
       setupDropZone();
+    }
+    
+    async function loadSyntheses() {
+      const content = document.getElementById('content-area');
+      content.innerHTML = '<div class="loading"><div class="spinner"></div>Laddar synteser...</div>';
+      
+      try {
+        const res = await fetch(`/api/ai-council/sessions?project_id=${currentProjectId}`, { credentials: 'include' });
+        const data = await res.json();
+        const sessions = (data.sessions || []).filter(s => s.synthesis || s.supersynthesis);
+        renderSyntheses(sessions);
+      } catch (err) {
+        console.error('Error loading syntheses:', err);
+        showToast('Kunde inte ladda synteser');
+      }
+    }
+    
+    function renderSyntheses(sessions) {
+      const content = document.getElementById('content-area');
+      if (!sessions || sessions.length === 0) {
+        content.innerHTML = '<div class="empty-state"><div class="empty-title">Inga synteser ännu</div><div class="empty-text">Kör en AI Council-syntes kopplad till projektet för att den ska visas här.</div></div>';
+        return;
+      }
+      
+      content.innerHTML = `
+        <div class="items-list">
+          ${sessions.map(s => {
+            const date = new Date(s.created_at);
+            const dateStr = date.toLocaleString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const typeClass = s.supersynthesis ? 'supersynthesis' : 'synthesis';
+            const typeLabel = s.supersynthesis ? 'Supersyntes' : 'Syntes';
+            const promptPreview = (s.prompt || '').substring(0, 120).trim();
+            const contextPreview = (s.context || '').substring(0, 120).trim();
+            return `
+              <div class="item-card" onclick="window.open('/admin/ai-council?session_id=${s.id}', '_blank')">
+                <div class="item-title">${typeLabel}</div>
+                <div class="item-summary"><strong>Prompt:</strong> ${escapeHtml(promptPreview)}${promptPreview.length >= 120 ? '...' : ''}</div>
+                ${contextPreview ? `<div class="item-summary"><strong>Kontext:</strong> ${escapeHtml(contextPreview)}${contextPreview.length >= 120 ? '...' : ''}</div>` : ''}
+                <div class="item-meta">
+                  <span class="synthesis-badge ${typeClass}">${typeLabel}</span>
+                  <span>${dateStr}</span>
+                  <span>Öppna i AI Council</span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
     }
     
     // ========================================
@@ -3059,6 +3358,24 @@ if (!anvandare) {
       document.getElementById(id).classList.remove('open');
     }
     
+    function openSummaryModal(text) {
+      pendingSummaryText = text;
+      const content = document.getElementById('summary-modal-content');
+      if (content) {
+        content.textContent = text;
+      }
+      document.getElementById('summary-modal').classList.add('open');
+    }
+    
+    function applyProjectSummary() {
+      const textarea = document.getElementById('projectSummary');
+      if (textarea && pendingSummaryText) {
+        textarea.value = pendingSummaryText;
+        showToast('Sammanfattning infogad!');
+      }
+      closeModal('summary-modal');
+    }
+    
     // Create project
     async function createProject() {
       console.log('createProject called');
@@ -3197,5 +3514,6 @@ if (!anvandare) {
       });
     });
   </script>
-</body>
+    <QuickPrompt />
+  </body>
 </html>

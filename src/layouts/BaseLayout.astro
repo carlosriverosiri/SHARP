@@ -4,6 +4,7 @@ import "../styles/global.css";
 import Footer from "../components/footer.astro";
 import Header from "../components/Header.astro";
 import FooterMap from "../components/FooterMap.astro";
+import QuickPrompt from "../components/QuickPrompt.astro";
 
 // Props med default-värden
 interface Props {
@@ -147,6 +148,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <Footer />
 
     <FooterMap />
+    <QuickPrompt />
 
     <!-- Netlify Identity: Redirect till admin efter inloggning (endast om widget laddats) -->
     <script is:inline>
@@ -162,5 +164,6 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
         }
       });
     </script>
+    
   </body>
 </html>

@@ -14,7 +14,9 @@ const CATEGORIES = {
   ljud: { icon: '🎙️', label: 'Ljudsammanfattningar' },
   ai_fragor: { icon: '🤖', label: 'AI-frågor' },
   prompter: { icon: '💡', label: 'Prompter' },
-  radata: { icon: '📦', label: 'Rådata' }
+  radata: { icon: '📦', label: 'Rådata' },
+  bilder: { icon: '🖼️', label: 'Bilder' },
+  syntes: { icon: '🧠', label: 'Syntes' }
 };
 
 // GET - Hämta alla projekt med antal items per kategori

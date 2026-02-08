@@ -13,6 +13,7 @@
 export const prerender = false;
 
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+import QuickPrompt from '../../components/QuickPrompt.astro';
 
 // Check authentication
 if (!await arInloggad(Astro.cookies)) {
@@ -1035,11 +1036,12 @@ if (!anvandare) {
     
     /* Notes sidebar */
     .notes-sidebar {
-      width: 320px;
+      width: 360px;
       background: var(--bg-sidebar);
-      border-left: 1px solid var(--border-color);
+      border-left: none;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
     .notes-sidebar.collapsed { width: 48px; }
     .notes-sidebar.collapsed .notes-content,
@@ -1071,8 +1073,33 @@ if (!anvandare) {
     }
     .notes-toggle:hover { color: var(--text-primary); }
     
-    .notes-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .notes-list { flex: 1; overflow-y: auto; padding: 0; background: var(--bg-card); }
+    .notes-content { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      overflow: hidden;
+      padding-right: 0;
+      background: var(--bg-sidebar);
+    }
+    .notes-list { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 0; 
+      background: var(--bg-sidebar); 
+      scrollbar-gutter: stable;
+    }
+    .notes-list::-webkit-scrollbar {
+      width: 10px;
+    }
+    .notes-list::-webkit-scrollbar-track {
+      background: var(--bg-sidebar);
+    }
+    .notes-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
     .notes-filter {
       display: flex;
       gap: 0.25rem;
@@ -1104,7 +1131,7 @@ if (!anvandare) {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 0.75rem;
+      padding: 0.75rem 1.75rem 0.75rem 0.75rem;
       margin-bottom: 0.5rem;
       font-size: 0.8125rem;
       cursor: pointer;
@@ -1155,6 +1182,7 @@ if (!anvandare) {
       gap: 0.25rem; 
       flex-shrink: 0; 
       margin-left: auto !important;
+      margin-right: 6px;
     }
     .note-item-btn {
       background: transparent;
@@ -1254,12 +1282,32 @@ if (!anvandare) {
     .note-item-type-badge {
       font-size: 0.625rem;
       font-weight: 600;
-      padding: 0.125rem 0.5rem;
-      border-radius: 4px;
+      padding: 0.35rem 0.55rem;
+      min-width: 28px;
+      min-height: 24px;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.25rem;
       white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .note-item-project {
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.35rem 0.55rem;
+      min-width: 28px;
+      min-height: 24px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+      background: rgba(37, 99, 235, 0.08);
+      color: #1d4ed8;
       text-transform: uppercase;
       letter-spacing: 0.02em;
     }
@@ -1276,7 +1324,8 @@ if (!anvandare) {
       color: #6B7280;
     }
     .note-item-type-icon { display: flex; align-items: center; }
-    .note-item-type-icon svg { width: 10px; height: 10px; }
+    .note-item-type-icon svg { width: 12px; height: 12px; }
+    .note-item-project svg { width: 12px; height: 12px; }
     
     /* Hover preview tooltip */
     .note-item { position: relative; }
@@ -1333,6 +1382,18 @@ if (!anvandare) {
     .notes-sync.synced { color: var(--color-success); }
     .notes-sync.error { color: var(--color-error); background: rgba(239, 68, 68, 0.1); border-radius: 4px; }
     .notes-sync.warning { color: var(--color-warning); background: rgba(245, 158, 11, 0.1); border-radius: 4px; }
+    .notes-project-filter {
+      padding: 0 0.75rem 0.5rem 0.75rem;
+    }
+    .notes-project-select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
     
     /* Migration banner for local sessions */
     .migration-banner {
@@ -4479,6 +4540,60 @@ if (!anvandare) {
       display: block;
       opacity: 1;
     }
+    
+    .notes-search {
+      padding: 0 0.75rem 0.5rem;
+    }
+    .notes-search-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.8rem;
+    }
+    
+    .new-chat-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+    }
+    .new-chat-inline:hover {
+      background: #1d4ed8;
+    }
+    
+    .project-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0 0.75rem;
+    }
+    
+    .project-section-btn {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+    }
+    
+    .project-section-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
   </style>
 </head>
 <body>
@@ -4497,29 +4612,19 @@ if (!anvandare) {
         <span class="project-sidebar-logo">AI Council</span>
       </div>
       
-      <div class="project-sidebar-actions">
-        <button class="project-action-btn primary" id="newChatBtn" title="Starta ny chat">
-          ✨ Ny chat
-        </button>
-        <button class="project-action-btn" id="newProjectBtn" title="Skapa nytt projekt">
-          📁 +
-        </button>
-        <a href="/admin/kunskapsbas" class="project-action-btn" title="Kunskapsbas" style="text-decoration: none;">
-          📚 KB
-        </a>
-      </div>
-      
-      <div class="project-search">
-        <input type="text" class="project-search-input" placeholder="Sök i sessioner..." id="projectSearch">
-      </div>
-      
-      <!-- Zotero - Flyttad högst upp för enkel åtkomst -->
+      <!-- Zotero - högst upp -->
       <div class="sidebar-tools">
         <button class="sidebar-tool-btn zotero-btn" id="zoteroOpenBtn" title="Öppna Zotero-bibliotek">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
           <span>Zotero</span>
           <span class="zotero-status-badge" id="zoteroStatus">—</span>
         </button>
+      </div>
+      
+      <div class="project-sidebar-actions">
+        <a href="/admin/kunskapsbas" class="project-action-btn" title="Projektöversikt" style="text-decoration: none;">
+          📁 Projekt
+        </a>
       </div>
       
       <!-- Prompt library -->
@@ -4551,7 +4656,10 @@ if (!anvandare) {
       </div>
       
       <div class="project-section">
-        <div class="project-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.89A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.89A2 2 0 0 0 5 15.24z"></path></svg>Senaste projekt</div>
+        <div class="project-section-header">
+          <div class="project-section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.89A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.89A2 2 0 0 0 5 15.24z"></path></svg>Projekt</div>
+          <a href="/admin/kunskapsbas" class="project-section-btn">Projektöversikt</a>
+        </div>
       </div>
       
       <div class="project-list" id="projectList">
@@ -4714,6 +4822,11 @@ if (!anvandare) {
       <main class="main">
         <section class="input-card">
           <div class="input-card-inner">
+            <div style="display:flex; align-items:center; justify-content:flex-start; margin-bottom: 0.75rem;">
+              <button class="new-chat-inline" id="newChatBtn" title="Starta ny chat">
+                ✨ Ny chat
+              </button>
+            </div>
             <!-- Context -->
             <div class="form-group">
               <div class="form-label-row" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%;">
@@ -5069,6 +5182,12 @@ if (!anvandare) {
                     <div class="deliberation-toggle-desc">Hoppa över syntes (debug)</div>
                   </div>
                 </label>
+                <div class="synthesis-selector">
+                  <label for="kbProjectSelect">Projekt (valfritt):</label>
+                  <select id="kbProjectSelect">
+                    <option value="unsorted">Övrigt</option>
+                  </select>
+                </div>
               </div>
               <button type="button" id="runBtn" class="run-btn">
                 <span class="btn-text"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Kör AI Council</span>
@@ -5241,9 +5360,9 @@ if (!anvandare) {
                   <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
                   <span>Spara</span>
                 </button>
-                <button type="button" class="save-note-btn" id="saveToKB" title="Spara till Kunskapsbas" style="background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981;">
+                <button type="button" class="save-note-btn" id="saveToKB" title="Spara i projekt" style="background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981;">
                   <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                  <span>→ KB</span>
+                  <span>→ Projekt</span>
                 </button>
                 <span id="synthesisDuration" class="synthesis-duration"></span>
               </div>
@@ -5498,7 +5617,16 @@ if (!anvandare) {
         </button>
       </div>
       <div class="notes-content">
+        <div class="notes-search">
+          <input type="text" class="notes-search-input" placeholder="Sök i sessioner..." id="projectSearch">
+        </div>
         <div id="notesSync" class="notes-sync">Laddar...</div>
+        <div class="notes-project-filter">
+          <select id="sessionProjectFilter" class="notes-project-select" title="Filtrera historik per projekt">
+            <option value="all">Alla projekt</option>
+            <option value="unsorted">Övrigt</option>
+          </select>
+        </div>
         <div class="notes-filter" id="notesFilter">
           <button type="button" class="notes-filter-btn active" data-filter="all" title="Visa alla">Alla</button>
           <button type="button" class="notes-filter-btn" data-filter="supersynthesis" title="Supersynteser">
@@ -6043,6 +6171,12 @@ if (!anvandare) {
       const nextStepCards = document.getElementById('nextStepCards');
       const deliberateCount = document.getElementById('deliberateCount');
       const synthesizeCount = document.getElementById('synthesizeCount');
+      const kbProjectSelect = document.getElementById('kbProjectSelect');
+      const sessionProjectFilter = document.getElementById('sessionProjectFilter');
+      
+      let kbProjects = [];
+      let kbProjectMap = {};
+      let currentProjectFilter = 'all';
       
       // Structure prompt elements
       const structurePromptContainer = document.getElementById('structurePromptContainer');
@@ -7516,6 +7650,8 @@ if (!anvandare) {
       
       // Sessions management (Supabase only - no localStorage fallback)
       let userIsLoggedIn = false;
+      const urlSessionId = new URLSearchParams(window.location.search).get('session_id');
+      let openedSessionFromUrl = false;
       
       async function loadSessions() {
         notesSync.textContent = 'Laddar...';
@@ -7578,6 +7714,14 @@ if (!anvandare) {
         }
         
         renderSessions();
+        
+        if (urlSessionId && !openedSessionFromUrl) {
+          const match = sessions.find(s => s.id === urlSessionId);
+          if (match) {
+            openedSessionFromUrl = true;
+            openFullSessionModal(match);
+          }
+        }
       }
       
       function disableSaveFeatures() {
@@ -7813,6 +7957,9 @@ if (!anvandare) {
         // Check if deliberation was run
         const hasDeliberation = currentResponses.round2Responses && currentResponses.round2Responses.length > 0;
         
+        const selectedKbProject = kbProjectSelect ? kbProjectSelect.value : 'unsorted';
+        const kbProjectId = selectedKbProject && selectedKbProject !== 'unsorted' ? selectedKbProject : null;
+        
         await saveSession({
           name: name,
           prompt: currentPrompt,
@@ -7827,7 +7974,8 @@ if (!anvandare) {
           selectedModels: selectedModels,
           profile: profileName,
           deliberationEnabled: hasDeliberation,
-          totalCost: currentResponses.totalCost || null
+          totalCost: currentResponses.totalCost || null,
+          kbProjectId
         });
         closeSavePromptModal();
       }
@@ -8142,15 +8290,27 @@ if (!anvandare) {
           kb: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>'
         };
         
-        // Filter sessions based on current filter
+        // Filter sessions based on project filter
+        let projectFilteredSessions = sessions;
+        if (currentProjectFilter !== 'all') {
+          if (currentProjectFilter === 'unsorted') {
+            projectFilteredSessions = sessions.filter(s => !s.kb_project_id);
+          } else {
+            projectFilteredSessions = sessions.filter(s => s.kb_project_id === currentProjectFilter);
+          }
+        }
+        
+        // Filter sessions based on type filter
         let filteredSessions = sessions;
         if (currentFilter !== 'all') {
-          filteredSessions = sessions.filter(s => {
+          filteredSessions = projectFilteredSessions.filter(s => {
             if (currentFilter === 'supersynthesis') return s.supersynthesis;
             if (currentFilter === 'synthesis') return s.synthesis && !s.supersynthesis;
             if (currentFilter === 'response') return !s.synthesis && !s.supersynthesis;
             return true;
           });
+        } else {
+          filteredSessions = projectFilteredSessions;
         }
         
         if (filteredSessions.length === 0) {
@@ -8166,17 +8326,15 @@ if (!anvandare) {
           // Get best available answer and determine type class
           let answerText = '';
           let typeIcon = icons.chat;
-          let typeLabel = 'Svar';
+          let typeLabel = '';
           let typeClass = 'type-response';
           if (s.supersynthesis) {
             answerText = s.supersynthesis;
             typeIcon = icons.star;
-            typeLabel = 'Supersyntes';
             typeClass = 'type-supersynthesis';
           } else if (s.synthesis) {
             answerText = s.synthesis;
             typeIcon = icons.lightbulb;
-            typeLabel = 'Syntes';
             typeClass = 'type-synthesis';
           } else if (s.responses) {
             const firstResponse = Object.values(s.responses)[0];
@@ -8186,6 +8344,8 @@ if (!anvandare) {
           }
           
           const promptPreview = (s.prompt || '').substring(0, 50).trim();
+          const projectName = s.kb_project_name || kbProjectMap[s.kb_project_id] || (s.kb_project_id ? 'Okänt projekt' : 'Övrigt');
+          const projectBadge = projectName ? '<span class="note-item-project" title="' + escapeHtml(projectName) + '">' + icons.kb + '</span>' : '';
           const hasName = s.name && s.name.trim();
           const isNew = (index === 0 && lastSavedSessionId === s.id);
           
@@ -8194,14 +8354,16 @@ if (!anvandare) {
             ? '<div class="note-item-name" data-session-id="' + s.id + '" title="Klicka för att redigera">' + escapeHtml(s.name) + '</div>'
             : '<div class="note-item-name note-item-name-placeholder" data-session-id="' + s.id + '" title="Klicka för att namnge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Namnge session...</div>';
           
+          const typeTitle = typeClass === 'type-supersynthesis' ? 'SUPERSYNTES' : typeClass === 'type-synthesis' ? 'SYNTES' : 'SVAR';
           return '<div class="note-item ' + typeClass + (isNew ? ' new-item' : '') + '" data-id="' + s.id + '" data-preview="' + escapeHtml((answerText || '').substring(0, 200)) + '">' +
             '<div class="note-item-header">' +
               '<span class="note-item-time">' + timeStr + '</span>' +
-              '<span class="note-item-type-badge ' + typeClass + '"><span class="note-item-type-icon">' + typeIcon + '</span>' + typeLabel + '</span>' +
+              projectBadge +
+              '<span class="note-item-type-badge ' + typeClass + '" title="' + typeTitle + '"><span class="note-item-type-icon">' + typeIcon + '</span>' + typeLabel + '</span>' +
               '<div class="note-item-actions">' +
                 '<button class="note-item-btn" data-action="view" title="Visa" aria-label="Visa session">' + icons.eye + '</button>' +
                 '<button class="note-item-btn" data-action="copy" title="Kopiera" aria-label="Kopiera till urklipp">' + icons.copy + '</button>' +
-                '<button class="note-item-btn" data-action="kb" title="Spara till kunskapsbas" aria-label="Spara till kunskapsbas">' + icons.kb + '</button>' +
+                '<button class="note-item-btn" data-action="kb" title="Spara i projekt" aria-label="Spara i projekt">' + icons.kb + '</button>' +
                 '<button class="note-item-btn" data-action="delete" title="Radera" aria-label="Radera session">' + icons.trash + '</button>' +
               '</div>' +
             '</div>' +
@@ -8256,6 +8418,24 @@ if (!anvandare) {
           });
         });
         
+        // Prevent preview tooltip when hovering badges
+        notesList.querySelectorAll('.note-item-type-badge, .note-item-project').forEach(badge => {
+          badge.addEventListener('mouseenter', () => {
+            const item = badge.closest('.note-item');
+            if (!item) return;
+            if (!item.dataset.previewBackup) item.dataset.previewBackup = item.dataset.preview || '';
+            item.dataset.preview = '';
+          });
+          badge.addEventListener('mouseleave', () => {
+            const item = badge.closest('.note-item');
+            if (!item) return;
+            if (item.dataset.previewBackup !== undefined) {
+              item.dataset.preview = item.dataset.previewBackup;
+              delete item.dataset.previewBackup;
+            }
+          });
+        });
+        
         // Update mobile FAB badge
         if (typeof updateNotesBadge === 'function') {
           updateNotesBadge();
@@ -8297,6 +8477,7 @@ if (!anvandare) {
       function buildMetaPanelHTML(session) {
         const date = new Date(session.created_at);
         const dateStr = date.toLocaleString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const projectName = session.kb_project_name || kbProjectMap[session.kb_project_id] || (session.kb_project_id ? 'Okänt projekt' : 'Övrigt');
         
         // Models that participated
         let modelsHTML = '<div class="meta-panel-models">';
@@ -8345,6 +8526,10 @@ if (!anvandare) {
           <div class="meta-panel-item">
             <span class="meta-panel-label">Datum</span>
             <span class="meta-panel-value">${dateStr}</span>
+          </div>
+          <div class="meta-panel-item">
+            <span class="meta-panel-label">Projekt</span>
+            <span class="meta-panel-value">${escapeHtml(projectName)}</span>
           </div>
           <div class="meta-panel-item">
             <span class="meta-panel-label">Profil</span>
@@ -10696,7 +10881,6 @@ if (!anvandare) {
       const projectSidebar = document.getElementById('projectSidebar');
       const mobileMenuBtn = document.getElementById('mobileMenuBtn');
       const newChatBtn = document.getElementById('newChatBtn');
-      const newProjectBtn = document.getElementById('newProjectBtn');
       const projectSearch = document.getElementById('projectSearch');
       const projectList = document.getElementById('projectList');
       // Session accordions
@@ -10740,6 +10924,7 @@ if (!anvandare) {
       
       let projects = [];
       let currentProjectId = null; // null = "Osorterade"
+      const isKbProjectMode = true;
       
       // Toggle mobile sidebar
       mobileMenuBtn?.addEventListener('click', () => {
@@ -10833,41 +11018,10 @@ if (!anvandare) {
         console.log('🗑️ New chat - all state cleared');
       });
       
-      // New project button
-      newProjectBtn?.addEventListener('click', async () => {
-        const name = prompt('Projektnamn:');
-        if (!name) return;
-        
-        const description = prompt('Beskrivning (valfritt):') || '';
-        const context = prompt('Automatisk kontext för alla frågor (valfritt):') || '';
-        
-        try {
-          const res = await fetch('/api/ai-council/projects', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ name, description, context })
-          });
-          
-          if (res.ok) {
-            const data = await res.json();
-            if (data.project) {
-              projects.unshift(data.project);
-              renderProjects();
-              selectProject(data.project.id);
-            }
-          } else {
-            console.error('Failed to create project');
-          }
-        } catch (err) {
-          console.error('Error creating project:', err);
-        }
-      });
-      
       // Load projects
       async function loadProjects() {
         try {
-          const res = await fetch('/api/ai-council/projects', { credentials: 'include' });
+          const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
           if (res.ok) {
             const data = await res.json();
             projects = data.projects || [];
@@ -10880,42 +11034,35 @@ if (!anvandare) {
       
       // Render projects in sidebar
       function renderProjects() {
-        const pinnedProjects = projects.filter(p => p.is_pinned);
-        const recentProjects = projects.filter(p => !p.is_pinned).slice(0, 5);
+        const sortedProjects = [...projects].sort((a, b) => {
+          const aDate = new Date(a.updated_at || a.created_at || 0).getTime();
+          const bDate = new Date(b.updated_at || b.created_at || 0).getTime();
+          return bDate - aDate;
+        });
         
         let html = '';
         
-        // Pinned projects
-        pinnedProjects.forEach(p => {
+        sortedProjects.forEach(p => {
+          const totalCount = Array.isArray(p.categories)
+            ? p.categories.reduce((sum, c) => sum + (c.count || 0), 0)
+            : 0;
+          const dateStr = p.updated_at || p.created_at
+            ? new Date(p.updated_at || p.created_at).toLocaleDateString('sv-SE')
+            : '';
           html += `
             <div class="project-item ${currentProjectId === p.id ? 'active' : ''}" data-project-id="${p.id}">
               <span class="project-item-icon">${p.icon || '📁'}</span>
               <div class="project-item-info">
                 <div class="project-item-name">${escapeHtml(p.name)}</div>
-                <div class="project-item-count">${p.description || ''}</div>
+                <div class="project-item-count">${totalCount} dokument${dateStr ? ' · ' + dateStr : ''}</div>
               </div>
-              <button class="project-item-pin pinned" title="Ta bort markering">📌</button>
-            </div>
-          `;
-        });
-        
-        // Recent projects (non-pinned)
-        recentProjects.forEach(p => {
-          html += `
-            <div class="project-item ${currentProjectId === p.id ? 'active' : ''}" data-project-id="${p.id}">
-              <span class="project-item-icon">${p.icon || '📁'}</span>
-              <div class="project-item-info">
-                <div class="project-item-name">${escapeHtml(p.name)}</div>
-                <div class="project-item-count">${p.description || ''}</div>
-              </div>
-              <button class="project-item-pin" title="Fäst projekt">📌</button>
             </div>
           `;
         });
         
         // Show empty state if no projects
         if (!html) {
-          html = '<div class="session-empty" style="padding: 0.75rem 1.25rem;">Inga projekt ännu. Klicka 📁+ för att skapa.</div>';
+          html = '<div class="session-empty" style="padding: 0.75rem 1.25rem;">Inga projekt ännu. Skapa ett i Projektöversikt.</div>';
         }
         
         projectList.innerHTML = html;
@@ -10923,31 +11070,9 @@ if (!anvandare) {
         // Add click handlers
         projectList.querySelectorAll('.project-item').forEach(item => {
           item.addEventListener('click', (e) => {
-            if (e.target.classList.contains('project-item-pin')) return;
-            selectProject(item.dataset.projectId || null);
-          });
-        });
-        
-        // Pin/unpin handlers
-        projectList.querySelectorAll('.project-item-pin').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const projectId = btn.closest('.project-item').dataset.projectId;
-            const project = projects.find(p => p.id === projectId);
-            if (project) {
-              project.is_pinned = !project.is_pinned;
-              renderProjects();
-              // Update in backend
-              try {
-                await fetch('/api/ai-council/projects', {
-                  method: 'PUT',
-                  headers: { 'Content-Type': 'application/json' },
-                  credentials: 'include',
-                  body: JSON.stringify({ id: projectId, is_pinned: project.is_pinned })
-                });
-              } catch (err) {
-                console.error('Error updating project:', err);
-              }
+            const id = item.dataset.projectId || null;
+            if (id) {
+              window.location.href = `/admin/kunskapsbas?project=${id}`;
             }
           });
         });
@@ -10955,30 +11080,8 @@ if (!anvandare) {
       
       // Select a project
       function selectProject(projectId) {
-        currentProjectId = projectId;
-        
-        // Update active state
-        projectList.querySelectorAll('.project-item').forEach(item => {
-          item.classList.toggle('active', (item.dataset.projectId || null) === projectId);
-        });
-        
-        // If project has auto-context, add it to context field
         if (projectId) {
-          const project = projects.find(p => p.id === projectId);
-          if (project && project.context) {
-            // Prepend project context if not already there
-            if (!contextEl.value.includes('<!-- PROJECT CONTEXT -->')) {
-              contextEl.value = '<!-- PROJECT CONTEXT -->\n' + project.context + '\n<!-- END PROJECT CONTEXT -->\n\n' + contextEl.value;
-            }
-          }
-        }
-        
-        // Filter history by project
-        loadHistoryForProject(projectId);
-        
-        // Close mobile sidebar
-        if (window.innerWidth <= 1024) {
-          projectSidebar.classList.remove('open');
+          window.location.href = `/admin/kunskapsbas?project=${projectId}`;
         }
       }
       
@@ -11159,6 +11262,7 @@ if (!anvandare) {
       
       // Right-click on project items
       projectList.addEventListener('contextmenu', (e) => {
+        if (isKbProjectMode) return;
         const projectItem = e.target.closest('.project-item');
         if (!projectItem || !projectItem.dataset.projectId) return;
         
@@ -11303,9 +11407,55 @@ if (!anvandare) {
           console.error('Error deleting project:', err);
         }
       }
+
+      // Load KB projects for session tagging/filtering
+      async function loadKbProjects() {
+        try {
+          const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
+          const data = await res.json();
+          kbProjects = (data.projects || []).map(p => ({ id: p.id, name: p.name }));
+          kbProjectMap = {};
+          kbProjects.forEach(p => { kbProjectMap[p.id] = p.name; });
+          renderKbProjectSelectors();
+        } catch (err) {
+          console.error('KB projects load error:', err);
+        }
+      }
+
+      function renderKbProjectSelectors() {
+        if (kbProjectSelect) {
+          const current = kbProjectSelect.value || 'unsorted';
+          kbProjectSelect.innerHTML = `
+            <option value="unsorted">Övrigt</option>
+            ${kbProjects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}
+          `;
+          const urlProjectId = new URLSearchParams(window.location.search).get('kb_project');
+          if (urlProjectId && kbProjects.find(p => p.id === urlProjectId)) {
+            kbProjectSelect.value = urlProjectId;
+          } else {
+            kbProjectSelect.value = kbProjects.find(p => p.id === current) ? current : 'unsorted';
+          }
+        }
+        if (sessionProjectFilter) {
+          const current = sessionProjectFilter.value || 'all';
+          sessionProjectFilter.innerHTML = `
+            <option value="all">Alla projekt</option>
+            <option value="unsorted">Övrigt</option>
+            ${kbProjects.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}
+          `;
+          sessionProjectFilter.value = kbProjects.find(p => p.id === current) ? current : current;
+          currentProjectFilter = sessionProjectFilter.value || 'all';
+        }
+      }
+
+      sessionProjectFilter?.addEventListener('change', () => {
+        currentProjectFilter = sessionProjectFilter.value || 'all';
+        renderSessions();
+      });
       
       // Load projects on page load
       loadProjects();
+      loadKbProjects();
       
       // Update session accordions when sessions change
       const originalLoadSessions = loadSessions;
@@ -12064,5 +12214,6 @@ if (!anvandare) {
       }
       
     </script>
-</body>
+    <QuickPrompt />
+  </body>
 </html>

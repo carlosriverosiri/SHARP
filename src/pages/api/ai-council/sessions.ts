@@ -51,6 +51,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
   try {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
+    const projectId = url.searchParams.get('project_id');
 
     // Try to fetch with new columns, fall back to basic columns if they don't exist yet
     let data: any[] | null = null;
@@ -58,25 +59,39 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     
     try {
       // First try with all columns (after migration)
-      const result = await supabase
+      let query = supabase
         .from('ai_council_sessions')
-        .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis')
-        .eq('user_id', anvandare.id)
+        .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis, kb_project_id, kb_projects(name)')
+        .eq('user_id', anvandare.id);
+      const result = await query
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
       
-      if (result.error && result.error.message?.includes('column')) {
-        // Columns don't exist yet, fall back to basic query
-        throw new Error('columns_not_found');
+      if (result.error) {
+        const msg = result.error.message || '';
+        if (
+          msg.includes('column') ||
+          msg.includes('relationship') ||
+          msg.includes('schema cache') ||
+          msg.includes('kb_projects') ||
+          msg.includes('kb_project_id')
+        ) {
+          // Columns/relations don't exist yet, fall back to basic query
+          throw new Error('columns_not_found');
+        }
       }
       data = result.data;
       error = result.error;
     } catch (e) {
       // Fall back to basic columns (before migration)
-      const result = await supabase
+      let query = supabase
         .from('ai_council_sessions')
         .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
-        .eq('user_id', anvandare.id)
+        .eq('user_id', anvandare.id);
+      if (projectId) {
+        query = query.eq('kb_project_id', projectId);
+      }
+      const result = await query
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
       data = result.data;
@@ -86,6 +101,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     // Transform to include responses array and supersynthesis for frontend
     const sessions = (data || []).map((s: any) => ({
       ...s,
+      kb_project_id: s.kb_project_id || null,
+      kb_project_name: s.kb_projects?.name || null,
       // Build responses object from individual provider responses
       responses: {
         ...(s.response_openai && { OpenAI: s.response_openai }),
@@ -164,7 +181,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       selectedModels,
       profile,
       deliberationEnabled,
-      totalCost
+      totalCost,
+      kbProjectId
     } = body;
     
     // Use supersynthesis if provided, otherwise use synthesis
@@ -255,6 +273,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           profile: profile || null,
           deliberation_enabled: deliberationEnabled || false,
           total_cost: totalCost || null,
+          kb_project_id: kbProjectId || null,
         })
         .select('id, created_at')
         .single();
