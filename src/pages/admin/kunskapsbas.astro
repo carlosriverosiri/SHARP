@@ -1219,26 +1219,17 @@ if (!anvandare) {
     
     <!-- Main Area -->
     <main class="main-area">
-      <div class="main-header">
+      <div class="main-header" style="padding: 12px 24px;">
         <div class="breadcrumb" id="breadcrumb">
           <span class="breadcrumb-item">Kunskapsbas</span>
         </div>
-        <div class="main-actions">
-          <a href="/admin/ai-council/profil" class="btn btn-ghost" style="text-decoration: none;" title="Min profil">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          </a>
-          <a href="/admin/ai-council" class="btn btn-secondary" style="text-decoration: none;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            AI Council
-          </a>
-          <button class="btn btn-primary" onclick="openNewItemModal()" id="new-item-btn" style="display: none;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Nytt dokument
-          </button>
-        </div>
+        <button class="btn btn-primary" onclick="openNewItemModal()" id="new-item-btn" style="display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nytt dokument
+        </button>
       </div>
       
       <div class="content-area" id="content-area">
@@ -1617,13 +1608,9 @@ if (!anvandare) {
       var iconColors = ['blue', 'purple', 'green', 'orange', 'pink', 'teal', 'red'];
       
       var content = document.getElementById('content-area');
-      content.innerHTML = '<div class="projects-dashboard">' +
-        '<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">' +
-          '<h1 style="font-size: 24px; font-weight: 600; color: #1f2937; margin: 0;">Mina projekt</h1>' +
-          '<button onclick="openNewProjectModal()" style="display: flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 13px; font-weight: 500; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
-            'Nytt projekt' +
-          '</button>' +
+      content.innerHTML = '<div class="projects-dashboard" style="max-width: 1200px;">' +
+        '<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">' +
+          '<h1 style="font-size: 22px; font-weight: 600; color: #1f2937; margin: 0;">Mina projekt</h1>' +
         '</div>' +
         '<div class="project-blocks" id="projectBlocks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">' +
           projects.map(function(project, idx) {
@@ -1663,6 +1650,10 @@ if (!anvandare) {
               '</div>' +
             '</div>';
           }).join('') +
+          '<div class="project-block add-new" onclick="openNewProjectModal()" style="background: transparent; border: 2px dashed #d1d5db; border-radius: 12px; min-height: 180px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; color: #9ca3af;">' +
+            '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
+            '<span style="font-size: 14px; font-weight: 500;">Nytt projekt</span>' +
+          '</div>' +
         '</div>' +
       '</div>';
       
