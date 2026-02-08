@@ -26,6 +26,28 @@ ALDRIG anvand:
 - Inkompletta SVG:er (saknar stroke-attribut)
 - Andra ikonsystem
 
+## Knappsystem - VIKTIGT
+Anvand alltid dessa CSS-klasser for knappar:
+
+- `.btn.btn-primary` - Huvudaktion (bla)
+- `.btn.btn-secondary` - Sekundar (vit med ram)
+- `.btn.btn-success` - Positiv (gron)
+- `.btn.btn-danger` - Destruktiv (rod)
+
+Exempel:
+```html
+<button class="btn btn-primary">Skapa</button>
+<button class="btn btn-secondary">Tillbaka</button>
+```
+
+Se docs/UI-KOMPONENTER.md for komplett dokumentation.
+
+## Navigation - VIKTIGT
+Tillbaka-knappar ska GA EN NIVA UPP i hierarkin:
+- Kategori -> Projekt (RATT)
+- Projekt -> Dashboard (RATT)
+- Kategori -> AI Council (FEL!)
+
 ## Multi-AI Council Mode
 For komplexa problem, skriv **COUNCIL:** eller **RADET:** fore din fraga.
 AI:n svarar da fran tre perspektiv (Implementator, Arkitekt, Kritiker) + syntes.

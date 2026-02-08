@@ -392,6 +392,43 @@ if (!anvandare) {
       color: var(--text-primary);
     }
     
+    .btn-success {
+      background: #10b981;
+      color: white;
+      border: none;
+    }
+    
+    .btn-success:hover {
+      background: #059669;
+    }
+    
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      border: none;
+    }
+    
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    
+    /* Consistent button icon sizing */
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    
+    .btn-sm svg {
+      width: 14px;
+      height: 14px;
+    }
+    
     /* Content Area */
     .content-area {
       flex: 1;
@@ -1650,7 +1687,7 @@ if (!anvandare) {
               '</div>' +
             '</div>';
           }).join('') +
-          '<div class="project-block add-new" onclick="openNewProjectModal()" style="background: transparent; border: 2px dashed #d1d5db; border-radius: 12px; min-height: 180px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; color: #9ca3af;">' +
+          '<div class="project-block add-new" onclick="openNewProjectModal()" style="background: transparent; border: 2px dashed #10b981; border-radius: 12px; min-height: 180px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; color: #10b981;" onmouseover="this.style.background=\'rgba(16,185,129,0.08)\';this.style.borderStyle=\'solid\';" onmouseout="this.style.background=\'transparent\';this.style.borderStyle=\'dashed\';">' +
             '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>' +
             '<span style="font-size: 14px; font-weight: 500;">Nytt projekt</span>' +
           '</div>' +
@@ -1820,7 +1857,8 @@ if (!anvandare) {
       updateBreadcrumb();
       loadItems();
       
-      document.getElementById('new-item-btn').style.display = 'flex';
+      // Button is now in content area, hide header button
+      document.getElementById('new-item-btn').style.display = 'none';
     }
     
     // Update breadcrumb
@@ -1980,6 +2018,14 @@ if (!anvandare) {
           }
         });
       });
+    }
+    
+    // Go back to project overview
+    function goBackToProject() {
+      currentCategory = null;
+      document.getElementById('new-item-btn').style.display = 'none';
+      showProjectOverview();
+      renderTree();
     }
     
     // Load items
