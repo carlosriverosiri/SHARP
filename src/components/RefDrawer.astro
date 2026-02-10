@@ -37,59 +37,60 @@ const labels = t[lang];
 </aside>
 
 <script>
-  // Körs på klienten
-  const triggers = document.querySelectorAll('.ref-trigger');
-  const drawer = document.getElementById('ref-drawer');
-  const backdrop = document.getElementById('ref-drawer-backdrop');
-  const closeBtn = document.getElementById('close-drawer');
-  const textEl = document.getElementById('drawer-text');
-  const linkEl = document.getElementById('drawer-link');
+  (function initRefDrawer() {
+    const triggers = document.querySelectorAll('.ref-trigger');
+    const drawer = document.getElementById('ref-drawer');
+    const backdrop = document.getElementById('ref-drawer-backdrop');
+    const closeBtn = document.getElementById('close-drawer');
+    const textEl = document.getElementById('drawer-text');
+    const linkEl = document.getElementById('drawer-link');
 
-  if (!drawer || !backdrop || !closeBtn || !textEl || !linkEl) return;
+    if (!drawer || !backdrop || !closeBtn || !textEl || !linkEl) return;
 
-  const safeDrawer = drawer as HTMLElement;
-  const safeBackdrop = backdrop as HTMLElement;
-  const safeCloseBtn = closeBtn as HTMLElement;
-  const safeTextEl = textEl as HTMLElement;
-  const safeLinkEl = linkEl as HTMLAnchorElement;
+    const safeDrawer = drawer as HTMLElement;
+    const safeBackdrop = backdrop as HTMLElement;
+    const safeCloseBtn = closeBtn as HTMLElement;
+    const safeTextEl = textEl as HTMLElement;
+    const safeLinkEl = linkEl as HTMLAnchorElement;
 
-  function openDrawer(dataset: DOMStringMap) {
-    safeTextEl.textContent = dataset.text || '';
-    if (dataset.url) {
-      safeLinkEl.href = dataset.url;
-      safeLinkEl.style.display = 'inline-block';
-    } else {
-      safeLinkEl.style.display = 'none';
+    function openDrawer(dataset: DOMStringMap) {
+      safeTextEl.textContent = dataset.text || '';
+      if (dataset.url) {
+        safeLinkEl.href = dataset.url;
+        safeLinkEl.style.display = 'inline-block';
+      } else {
+        safeLinkEl.style.display = 'none';
+      }
+
+      safeDrawer.classList.remove('hidden');
+      safeBackdrop.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        safeDrawer.classList.add('open');
+        safeBackdrop.classList.add('open');
+      });
     }
-    
-    safeDrawer.classList.remove('hidden');
-    safeBackdrop.classList.remove('hidden');
-    // Liten fördröjning för CSS transition
-    requestAnimationFrame(() => {
-      safeDrawer.classList.add('open');
-      safeBackdrop.classList.add('open');
+
+    function closeDrawerFn() {
+      safeDrawer.classList.remove('open');
+      safeBackdrop.classList.remove('open');
+      setTimeout(() => {
+        safeDrawer.classList.add('hidden');
+        safeBackdrop.classList.add('hidden');
+      }, 300);
+    }
+
+    triggers.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLElement | null;
+        if (target) {
+          openDrawer(target.dataset);
+        }
+      });
     });
-  }
 
-  function closeDrawerFn() {
-    safeDrawer.classList.remove('open');
-    safeBackdrop.classList.remove('open');
-    setTimeout(() => {
-      safeDrawer.classList.add('hidden');
-      safeBackdrop.classList.add('hidden');
-    }, 300); // Matcha CSS transition tid
-  }
-
-  triggers.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const target = e.currentTarget as HTMLElement | null;
-      if (!target) return;
-      openDrawer(target.dataset);
-    });
-  });
-
-  safeCloseBtn.addEventListener('click', closeDrawerFn);
-  safeBackdrop.addEventListener('click', closeDrawerFn);
+    safeCloseBtn.addEventListener('click', closeDrawerFn);
+    safeBackdrop.addEventListener('click', closeDrawerFn);
+  })();
 </script>
 
 <style>
