@@ -1355,6 +1355,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = trigger.getAttribute('data-target');
+        if (!targetId) return;
         const targetContent = document.getElementById(targetId);
         const icon = trigger.querySelector('.mobile-accordion-icon');
         

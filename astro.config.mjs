@@ -27,7 +27,7 @@ const shortLinksData = JSON.parse(readFileSync(shortLinksPath, 'utf-8'));
 const redirects = {};
 Object.entries(shortLinksData)
   .filter(([key]) => !key.startsWith('_'))  // Ignorera _comment, _description, etc.
-  .forEach(([category, items]) => {
+  .forEach(([_category, items]) => {
     items.forEach(link => {
       // Ignorera _comment-fält i enskilda objekt
       if (link.shortCode && link.target) {

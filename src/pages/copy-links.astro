@@ -337,23 +337,26 @@ const baseDomain = "www.specialist.se";
    * Client-side JavaScript för kopiera-funktionalitet och sökfilter
    */
   document.addEventListener('DOMContentLoaded', () => {
-    const toast = document.getElementById('toast');
-    const copyButtons = document.querySelectorAll('.copy-btn');
+    const toast = document.getElementById('toast') as HTMLElement | null;
+    const copyButtons = document.querySelectorAll<HTMLButtonElement>('.copy-btn');
     
     // Kopiera-funktionalitet för alla knappar
     copyButtons.forEach(btn => {
       btn.addEventListener('click', async () => {
-        const url = btn.getAttribute('data-url');
+        const url = btn.getAttribute('data-url') ?? '';
+        if (!url) return;
         
         try {
           // Kopiera URL till urklipp
           await navigator.clipboard.writeText(url);
           
           // Visa toast-notifikation
-          toast.classList.remove('translate-x-full');
-          setTimeout(() => {
-            toast.classList.add('translate-x-full');
-          }, 2000);
+          if (toast) {
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+              toast.classList.add('translate-x-full');
+            }, 2000);
+          }
           
           // Ändra knapptext tillfälligt
           const originalText = btn.innerHTML;
@@ -381,10 +384,11 @@ const baseDomain = "www.specialist.se";
     });
 
     // Sökfunktionalitet
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
     const categorySections = document.querySelectorAll('.category-section');
     const noResults = document.getElementById('no-results');
-    
+    if (!searchInput) return;
+
     searchInput.addEventListener('input', (e) => {
       const target = e.target as HTMLInputElement;
       const searchTerm = target.value.toLowerCase().trim();
@@ -604,7 +608,7 @@ const baseDomain = "www.specialist.se";
       jsonOutput.textContent = jsonString;
       
       // Sätt kategori-namn i instruktionerna
-      const outputCategoryName = document.getElementById('output-category-name') as HTMLStrongElement;
+      const outputCategoryName = document.getElementById('output-category-name') as HTMLElement | null;
       if (outputCategoryName) {
         outputCategoryName.textContent = `"${category}"`;
       }
@@ -634,10 +638,12 @@ const baseDomain = "www.specialist.se";
         copyJsonBtn.classList.add('bg-green-600');
         
         // Visa toast också
-        toast?.classList.remove('translate-x-full');
-        setTimeout(() => {
-          toast?.classList.add('translate-x-full');
-        }, 2000);
+        if (toast) {
+          toast.classList.remove('translate-x-full');
+          setTimeout(() => {
+            toast.classList.add('translate-x-full');
+          }, 2000);
+        }
         
         // Återställ knappen
         setTimeout(() => {
@@ -875,23 +881,26 @@ const baseDomain = "www.specialist.se";
    * Client-side JavaScript för kopiera-funktionalitet och sökfilter
    */
   document.addEventListener('DOMContentLoaded', () => {
-    const toast = document.getElementById('toast');
-    const copyButtons = document.querySelectorAll('.copy-btn');
+    const toast = document.getElementById('toast') as HTMLElement | null;
+    const copyButtons = document.querySelectorAll<HTMLButtonElement>('.copy-btn');
     
     // Kopiera-funktionalitet för alla knappar
     copyButtons.forEach(btn => {
       btn.addEventListener('click', async () => {
-        const url = btn.getAttribute('data-url');
+        const url = btn.getAttribute('data-url') ?? '';
+        if (!url) return;
         
         try {
           // Kopiera URL till urklipp
           await navigator.clipboard.writeText(url);
           
           // Visa toast-notifikation
-          toast.classList.remove('translate-x-full');
-          setTimeout(() => {
-            toast.classList.add('translate-x-full');
-          }, 2000);
+          if (toast) {
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+              toast.classList.add('translate-x-full');
+            }, 2000);
+          }
           
           // Ändra knapptext tillfälligt
           const originalText = btn.innerHTML;
@@ -1142,7 +1151,7 @@ const baseDomain = "www.specialist.se";
       jsonOutput.textContent = jsonString;
       
       // Sätt kategori-namn i instruktionerna
-      const outputCategoryName = document.getElementById('output-category-name') as HTMLStrongElement;
+      const outputCategoryName = document.getElementById('output-category-name') as HTMLElement | null;
       if (outputCategoryName) {
         outputCategoryName.textContent = `"${category}"`;
       }
@@ -1172,10 +1181,12 @@ const baseDomain = "www.specialist.se";
         copyJsonBtn.classList.add('bg-green-600');
         
         // Visa toast också
-        toast?.classList.remove('translate-x-full');
-        setTimeout(() => {
-          toast?.classList.add('translate-x-full');
-        }, 2000);
+        if (toast) {
+          toast.classList.remove('translate-x-full');
+          setTimeout(() => {
+            toast.classList.add('translate-x-full');
+          }, 2000);
+        }
         
         // Återställ knappen
         setTimeout(() => {

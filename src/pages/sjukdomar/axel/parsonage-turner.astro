@@ -193,9 +193,9 @@ const faqSchema = {
   <meta slot="head" property="article:tag" content="Axelsmärta" />
 
   <!-- Structured Data -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [

@@ -379,9 +379,9 @@ const faqSchema = {
   <meta slot="head" property="article:tag" content="Ortopedi" />
 
   <!-- Structured Data -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
@@ -514,7 +514,6 @@ const faqSchema = {
             src={videoUrl}
             title={videoTitle}
             class="w-full h-full"
-            frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>

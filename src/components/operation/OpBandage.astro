@@ -14,17 +14,9 @@ interface Props {
 }
 
 const { 
-  stygnBorttagning = "7-14 dagar",
   visaStygn = true,
   extraInfo
 } = Astro.props;
-
-// Bilddata för bildspelet
-const bandageImages = [
-  { src: bandageStygn.src, alt: "Stygn efter operation", title: "Stygn" },
-  { src: bandageInre.src, alt: "Inre bandage", title: "Inre bandage" },
-  { src: bandageYttre.src, alt: "Yttre bandage", title: "Yttre bandage" }
-];
 ---
 
 <!-- Mobil: ta bort rundade hörn/shadow, minimal padding -->
@@ -311,7 +303,7 @@ const bandageImages = [
   </div>
 </section>
 
-<script define:vars={{ bandageStygnSrc: bandageStygn.src, bandageInreSrc: bandageInre.src, bandageYttreSrc: bandageYttre.src, hematomSrc: hematomOverarm.src }}>
+<script is:inline define:vars={{ bandageStygnSrc: bandageStygn.src, bandageInreSrc: bandageInre.src, bandageYttreSrc: bandageYttre.src, hematomSrc: hematomOverarm.src }}>
   // Hematom-lightbox
   document.addEventListener('DOMContentLoaded', () => {
     const hematomThumbnail = document.getElementById('hematom-thumbnail');

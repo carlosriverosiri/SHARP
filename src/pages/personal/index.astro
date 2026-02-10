@@ -43,15 +43,12 @@ if (Astro.request.method === 'POST') {
       // Inloggning med lösenord
       const password = formData.get('password')?.toString() || '';
       const email = formData.get('email')?.toString() || '';
-      const next = formData.get('next')?.toString() || '';
-      const safeNextPost = next.startsWith('/personal') ? next : '';
-      
       console.log('📧 Försöker logga in:', { email, hasPassword: !!password });
       
       const result = await loggaIn(Astro.cookies, password, email, Astro.request);
       
       if (result.success) {
-        return Astro.redirect(safeNextPost || safeNext || '/personal/oversikt');
+        return Astro.redirect((((formData.get('next')?.toString() || '').startsWith('/personal') ? (formData.get('next')?.toString() || '') : '') || safeNext || '/personal/oversikt'));
       } else {
         errorMessage = result.error || 'Inloggning misslyckades';
       }

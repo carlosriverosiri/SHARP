@@ -10,22 +10,27 @@ const sortedQuestions = allQuestions.sort((a, b) =>
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
+type CategoryConfig = {
+  name: string;
+  color: string;
+  link: string;
+  questions: typeof allQuestions;
+};
+
 // Gruppera per kategori (vi specialiserar oss på axel, knä och armbåge)
-const categories = {
+const categories: Record<string, CategoryConfig> = {
   axel: { name: 'Axel', color: 'sky', link: '/fraga-doktorn/axel/', questions: [] as typeof allQuestions },
   kna: { name: 'Knä', color: 'emerald', link: '/fraga-doktorn/kna/', questions: [] as typeof allQuestions },
   armbage: { name: 'Armbåge', color: 'amber', link: '/fraga-doktorn/armbage/', questions: [] as typeof allQuestions },
 };
 
 // Fyll kategorierna
-sortedQuestions.forEach(q => {
-  if (categories[q.data.category]) {
-    categories[q.data.category].questions.push(q);
+sortedQuestions.forEach((q) => {
+  const categoryKey = String(q.data.category);
+  if (categories[categoryKey]) {
+    categories[categoryKey].questions.push(q);
   }
 });
-
-// Alla kategorier visas alltid (även tomma, med länk till undersida)
-const allCategories = Object.entries(categories);
 
 // Räkna totalt antal frågor
 const totalQuestions = sortedQuestions.length;
@@ -391,8 +396,11 @@ function formatDate(date: Date) {
         <!-- JavaScript för att upptäcka personuppgifter -->
         <script>
           document.addEventListener('DOMContentLoaded', function() {
-            const warningDiv = document.getElementById('privacy-warning');
-            const form = document.getElementById('fraga-form');
+            const warningDiv = document.getElementById('privacy-warning') as HTMLElement | null;
+            const form = document.getElementById('fraga-form') as HTMLFormElement | null;
+            if (!warningDiv || !form) return;
+            const safeWarningDiv = warningDiv;
+            const safeForm = form;
             
             // Alla textfält som ska kontrolleras
             const textFields = [
@@ -405,7 +413,7 @@ function formatDate(date: Date) {
               document.getElementById('debut'),
               document.getElementById('utlosande'),
               document.getElementById('lokalisation')
-            ].filter(Boolean);
+            ].filter((field): field is HTMLInputElement | HTMLTextAreaElement => field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement);
             
             // Mönster för att upptäcka känslig information
             const patterns = [
@@ -416,7 +424,7 @@ function formatDate(date: Date) {
               /[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,}/     // E-postadress
             ];
             
-            function checkForPrivateInfo(text) {
+            function checkForPrivateInfo(text: string) {
               return patterns.some(pattern => pattern.test(text));
             }
             
@@ -429,9 +437,9 @@ function formatDate(date: Date) {
               const hasPrivateInfo = checkForPrivateInfo(allText);
               
               if (hasPrivateInfo) {
-                warningDiv.classList.remove('hidden');
+                safeWarningDiv.classList.remove('hidden');
               } else {
-                warningDiv.classList.add('hidden');
+                safeWarningDiv.classList.add('hidden');
               }
             }
             
@@ -441,7 +449,7 @@ function formatDate(date: Date) {
             });
             
             // Varning vid submit om personuppgifter finns
-            form.addEventListener('submit', function(e) {
+            safeForm.addEventListener('submit', function(e) {
               const allText = getAllText();
               
               if (checkForPrivateInfo(allText)) {

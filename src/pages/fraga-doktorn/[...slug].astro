@@ -161,8 +161,8 @@ const medicalSchema = {
 >
   
   <!-- Structured Data för SEO -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(medicalSchema)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(medicalSchema)} />
   
   <!-- Article meta för Facebook -->
   <meta slot="head" property="article:author" content={question.data.author} />

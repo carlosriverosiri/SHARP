@@ -72,7 +72,7 @@ if (Astro.request.method === 'POST') {
 }
 
 // Hämta alla resurser
-const { data: resurser, error } = await supabaseAdmin
+const { data: resurser } = await supabaseAdmin
   .from('resurser')
   .select('*')
   .order('skapad_vid', { ascending: false });
@@ -968,7 +968,7 @@ const kategoriAlternativ = [
     </div>
   </div>
 
-  <script define:vars={{ supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL, supabaseAnonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY }}>
+  <script is:inline define:vars={{ supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL, supabaseAnonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY }}>
     // Modal-hantering
     function openModal(type) {
       document.getElementById(type + '-modal').classList.add('active');
@@ -1061,7 +1061,7 @@ const kategoriAlternativ = [
         const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { data: _uploadData, error: uploadError } = await supabase.storage
           .from('dokument')
           .upload(filnamn, selectedFile);
 

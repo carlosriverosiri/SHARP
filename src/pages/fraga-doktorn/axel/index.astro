@@ -2,21 +2,16 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { 
-  getTopicsByBodyPart, 
   getAllCategories, 
   getTopicsByCategory,
   categoryLabels, 
-  categoryDescriptions,
-  type Topic 
+  categoryDescriptions
 } from '../../../data/topics';
 
 // Hämta alla frågor för axel
 const allQuestions = await getCollection('fraga-doktorn', ({ data }) => 
   data.published && data.category === 'axel'
 );
-
-// Hämta alla axel-ämnen
-const axelTopics = getTopicsByBodyPart('axel');
 
 // Räkna frågor per ämne
 function countQuestionsForTopic(topicId: string): number {

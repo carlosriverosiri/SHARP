@@ -85,11 +85,11 @@ const medicalClinic = {
 
 <!-- Structured Data - BreadcrumbList -->
 {breadcrumbList && (
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
 )}
 
 <!-- Structured Data - MedicalClinic -->
-<script type="application/ld+json" set:html={JSON.stringify(medicalClinic)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(medicalClinic)} />
 
 <!-- Fonts - Non-blocking load -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -97,8 +97,6 @@ const medicalClinic = {
 <link
   href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
   rel="stylesheet"
-  media="print"
-  onload="this.media='all'"
 />
 <noscript>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />

@@ -5,7 +5,6 @@
  */
 
 const fs = require('fs');
-const path = require('path');
 
 // UTF-8 mojibake patterns: UTF-8 bytes misinterpreted as Windows-1252
 const replacements = [

@@ -238,7 +238,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             const allContentPanels = document.querySelectorAll('.content-panel');
             const allTabButtons = document.querySelectorAll('.tab-btn');
 
-            function showContent(contentId) {
+            function showContent(contentId: string) {
                 allContentPanels.forEach(panel => {
                     panel.classList.add('hidden');
                 });

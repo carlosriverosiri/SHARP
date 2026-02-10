@@ -26,16 +26,6 @@ function extractCDATA(text, tag) {
 }
 
 // Funktion för att extrahera vanlig tagg
-function extractTag(text, tag) {
-  const regex = new RegExp(`<${tag}><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>`);
-  const match = text.match(regex);
-  if (match) return match[1].trim();
-  
-  const regex2 = new RegExp(`<${tag}>([^<]*)<\\/${tag}>`);
-  const match2 = text.match(regex2);
-  return match2 ? match2[1].trim() : '';
-}
-
 // Funktion för att konvertera HTML till Markdown
 function htmlToMarkdown(html) {
   if (!html) return '';
@@ -121,7 +111,7 @@ if (!fs.existsSync(outputDir)) {
 let imported = 0;
 let skipped = 0;
 
-acLedPosts.forEach((item, index) => {
+acLedPosts.forEach((item) => {
   const title = extractCDATA(item, 'title');
   const content = extractCDATA(item, 'content:encoded');
   const postDate = extractCDATA(item, 'wp:post_date');

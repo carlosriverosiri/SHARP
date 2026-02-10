@@ -1097,9 +1097,11 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
     let currentStep = 1;
 
     // Step button click handlers
-    document.querySelectorAll('.step-btn').forEach(btn => {
+    document.querySelectorAll<HTMLElement>('.step-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
-        currentStep = parseInt(btn.dataset.step);
+        const stepValue = Number(btn.dataset.step);
+        if (!Number.isFinite(stepValue)) return;
+        currentStep = stepValue;
         renderPhoneContent();
         
         // Highlight active step
@@ -1181,8 +1183,8 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
     }
 
     // Make goToStep available globally for onclick
-    window.goToStep = function(step) {
-      currentStep = step;
+    (window as any).goToStep = function(step: number) {
+      currentStep = Number(step);
       renderPhoneContent();
     };
 
@@ -1190,111 +1192,120 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
     renderPhoneContent();
 
     // --- Priority Cascade Simulation ---
-    const simState = {
+    const simState: { running: boolean; time: number; intervalId: number | null } = {
       running: false,
       time: 0,
       intervalId: null
     };
 
-    const cascadeRules = [
+    const cascadeRules: Array<{ id: string; start: number; duration: number; msg: string }> = [
       { id: 'group1', start: 0, duration: 60, msg: 'Skickar till Akut...' },
       { id: 'group2', start: 60, duration: 30, msg: 'Skickar till Sjukskrivna...' },
       { id: 'group3', start: 90, duration: 20, msg: 'Skickar till Smärtpatienter...' },
       { id: 'group4', start: 110, duration: 1000, msg: 'Skickar till Standardkö (10min intervall)...' }
     ];
 
-    const startSimBtn = document.getElementById('startSimBtn');
-    const resetSimBtn = document.getElementById('resetSimBtn');
-    const simTimer = document.getElementById('simTimer');
-    const simStatus = document.getElementById('simStatus');
+    const startSimBtn = document.getElementById('startSimBtn') as HTMLButtonElement | null;
+    const resetSimBtn = document.getElementById('resetSimBtn') as HTMLButtonElement | null;
+    const simTimer = document.getElementById('simTimer') as HTMLElement | null;
+    const simStatus = document.getElementById('simStatus') as HTMLElement | null;
 
-    if (startSimBtn) {
-      startSimBtn.addEventListener('click', startSimulation);
-      resetSimBtn.addEventListener('click', resetSimulation);
-    }
+    if (startSimBtn && resetSimBtn && simStatus) {
+      const safeStartSimBtn = startSimBtn;
+      const safeResetSimBtn = resetSimBtn;
+      const safeSimStatus = simStatus;
 
-    function startSimulation() {
-      if (simState.running) return;
-      simState.running = true;
-      simState.time = 0;
-      
-      startSimBtn.disabled = true;
-      startSimBtn.classList.add('opacity-50');
-      resetSimBtn.disabled = false;
-      simStatus.innerText = "Kampanj Aktiv: Söker patienter...";
-      simStatus.className = "font-mono text-rose-400 font-bold bg-slate-900 p-2.5 rounded border border-rose-500 text-sm animate-pulse";
+      safeStartSimBtn.addEventListener('click', startSimulation);
+      safeResetSimBtn.addEventListener('click', resetSimulation);
 
-      simState.intervalId = setInterval(() => {
-        simState.time += 2;
-        updateSimUI(simState.time);
-      }, 100);
-    }
+      function startSimulation() {
+        if (simState.running) return;
+        simState.running = true;
+        simState.time = 0;
+        
+        safeStartSimBtn.disabled = true;
+        safeStartSimBtn.classList.add('opacity-50');
+        safeResetSimBtn.disabled = false;
+        safeSimStatus.innerText = "Kampanj Aktiv: Söker patienter...";
+        safeSimStatus.className = "font-mono text-rose-400 font-bold bg-slate-900 p-2.5 rounded border border-rose-500 text-sm animate-pulse";
 
-    function resetSimulation() {
-      clearInterval(simState.intervalId);
-      simState.running = false;
-      simState.time = 0;
-      updateSimUI(0, true);
-      
-      startSimBtn.disabled = false;
-      startSimBtn.classList.remove('opacity-50');
-      resetSimBtn.disabled = true;
-      simStatus.innerText = "Väntar på start...";
-      simStatus.className = "font-mono text-emerald-400 font-bold bg-slate-900 p-2.5 rounded border border-slate-700 text-sm";
-    }
+        simState.intervalId = window.setInterval(() => {
+          simState.time += 2;
+          updateSimUI(simState.time);
+        }, 100);
+      }
 
-    function updateSimUI(currentTime, isReset = false) {
-      if (simTimer) simTimer.innerText = currentTime + " min";
-
-      cascadeRules.forEach(rule => {
-        const elGroup = document.getElementById(rule.id);
-        const elBar = document.getElementById(rule.id.replace('group', 'bar'));
-        const elMsg = document.getElementById(rule.id.replace('group', 'msg'));
-
-        if (!elGroup || !elBar || !elMsg) return;
-
-        if (isReset) {
-          elGroup.classList.remove('border-rose-500', 'border-blue-500', 'bg-slate-700', 'shadow-md', 'opacity-100');
-          elGroup.classList.add('border-transparent', 'bg-slate-800', 'opacity-50');
-          elBar.style.width = '0%';
-          elMsg.innerText = '';
-          return;
+      function resetSimulation() {
+        if (simState.intervalId !== null) {
+          window.clearInterval(simState.intervalId);
         }
+        simState.running = false;
+        simState.time = 0;
+        updateSimUI(0, true);
+        
+        safeStartSimBtn.disabled = false;
+        safeStartSimBtn.classList.remove('opacity-50');
+        safeResetSimBtn.disabled = true;
+        safeSimStatus.innerText = "Väntar på start...";
+        safeSimStatus.className = "font-mono text-emerald-400 font-bold bg-slate-900 p-2.5 rounded border border-slate-700 text-sm";
+      }
 
-        if (currentTime >= rule.start) {
-          elGroup.classList.remove('opacity-50', 'bg-slate-800', 'border-transparent');
-          elGroup.classList.add('opacity-100', 'bg-slate-700');
+      function updateSimUI(currentTime: number, isReset = false) {
+        if (simTimer) simTimer.innerText = currentTime + " min";
 
-          let progress = 0;
-          if (rule.id === 'group4') {
-            progress = ((currentTime - rule.start) % 10) * 10;
-            if (currentTime > rule.start) elMsg.innerText = rule.msg + ` (Batch ${Math.floor((currentTime - rule.start) / 10) + 1})`;
-            elGroup.classList.add('border-blue-500', 'shadow-md');
-          } else {
-            const timeInGroup = currentTime - rule.start;
-            progress = Math.min((timeInGroup / rule.duration) * 100, 100);
-            
-            if (progress < 100) {
-              elGroup.classList.add('border-rose-500', 'shadow-md');
-              elMsg.innerText = rule.msg;
-            } else {
-              elGroup.classList.remove('border-rose-500', 'shadow-md');
-              elGroup.classList.add('border-slate-600');
-              elMsg.innerText = "Fönster stängt. Inget svar.";
-            }
+        cascadeRules.forEach((rule) => {
+          const elGroup = document.getElementById(rule.id);
+          const elBar = document.getElementById(rule.id.replace('group', 'bar'));
+          const elMsg = document.getElementById(rule.id.replace('group', 'msg'));
+
+          if (!elGroup || !elBar || !elMsg) return;
+
+          if (isReset) {
+            elGroup.classList.remove('border-rose-500', 'border-blue-500', 'bg-slate-700', 'shadow-md', 'opacity-100');
+            elGroup.classList.add('border-transparent', 'bg-slate-800', 'opacity-50');
+            elBar.style.width = '0%';
+            elMsg.innerText = '';
+            return;
           }
-          elBar.style.width = progress + '%';
-        }
-      });
+
+          if (currentTime >= rule.start) {
+            elGroup.classList.remove('opacity-50', 'bg-slate-800', 'border-transparent');
+            elGroup.classList.add('opacity-100', 'bg-slate-700');
+
+            let progress = 0;
+            if (rule.id === 'group4') {
+              progress = ((currentTime - rule.start) % 10) * 10;
+              if (currentTime > rule.start) elMsg.innerText = rule.msg + ` (Batch ${Math.floor((currentTime - rule.start) / 10) + 1})`;
+              elGroup.classList.add('border-blue-500', 'shadow-md');
+            } else {
+              const timeInGroup = currentTime - rule.start;
+              progress = Math.min((timeInGroup / rule.duration) * 100, 100);
+              
+              if (progress < 100) {
+                elGroup.classList.add('border-rose-500', 'shadow-md');
+                elMsg.innerText = rule.msg;
+              } else {
+                elGroup.classList.remove('border-rose-500', 'shadow-md');
+                elGroup.classList.add('border-slate-600');
+                elMsg.innerText = "Fönster stängt. Inget svar.";
+              }
+            }
+            elBar.style.width = progress + '%';
+          }
+        });
+      }
     }
 
     // --- Chart.js Initialization ---
     window.addEventListener('load', () => {
-      const ctxFill = document.getElementById('fillRateChart');
-      const ctxEff = document.getElementById('efficiencyChart');
+      const ctxFill = document.getElementById('fillRateChart') as HTMLCanvasElement | null;
+      const ctxEff = document.getElementById('efficiencyChart') as HTMLCanvasElement | null;
+      const ChartCtor = (window as any).Chart;
 
-      if (ctxFill) {
-        new Chart(ctxFill.getContext('2d'), {
+      if (ctxFill && ChartCtor) {
+        const fillContext = ctxFill.getContext('2d');
+        if (fillContext) {
+          new ChartCtor(fillContext, {
           type: 'doughnut',
           data: {
             labels: ['Fyllda via SMS', 'Manuellt Fyllda', 'Missade'],
@@ -1314,11 +1325,14 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
               }
             }
           }
-        });
+          });
+        }
       }
 
-      if (ctxEff) {
-        new Chart(ctxEff.getContext('2d'), {
+      if (ctxEff && ChartCtor) {
+        const effContext = ctxEff.getContext('2d');
+        if (effContext) {
+          new ChartCtor(effContext, {
           type: 'bar',
           data: {
             labels: ['Kampanj A', 'Kampanj B', 'Kampanj C', 'Kampanj D', 'Snitt'],
@@ -1347,7 +1361,8 @@ const description = "Se hur vårt smarta SMS-system hjälper dig att få en tidi
               legend: { display: false }
             }
           }
-        });
+          });
+        }
       }
     });
   </script>

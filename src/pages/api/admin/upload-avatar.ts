@@ -59,7 +59,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const buffer = new Uint8Array(arrayBuffer);
 
     // Ladda upp till Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+    const { data: _uploadData, error: uploadError } = await supabaseAdmin.storage
       .from('avatars')
       .upload(fileName, buffer, {
         contentType: file.type,

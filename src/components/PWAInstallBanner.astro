@@ -37,7 +37,7 @@
    */
   
   function isMobile(): boolean {
-    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const userAgent = navigator.userAgent || (window as any).opera || '';
     const isAndroid = /android/i.test(userAgent);
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -51,6 +51,7 @@
     const dismissBtn = document.getElementById('pwa-dismiss-btn');
     
     if (!banner || !dismissBtn) return;
+    const safeBanner = banner as HTMLElement;
 
     // Kolla om användaren har stängt bannern (per sida)
     const pathname = window.location.pathname;
@@ -59,19 +60,19 @@
 
     function showBanner() {
       if (isMobile() && !isDismissed) {
-        banner.style.display = 'block';
-        document.body.style.paddingTop = banner.offsetHeight + 'px';
+        safeBanner.style.display = 'block';
+        document.body.style.paddingTop = safeBanner.offsetHeight + 'px';
       }
     }
 
     function hideBanner() {
-      banner.style.transition = 'opacity 0.3s ease-in-out, height 0.3s ease-in-out';
-      banner.style.opacity = '0';
-      banner.style.height = '0';
-      banner.style.overflow = 'hidden';
+      safeBanner.style.transition = 'opacity 0.3s ease-in-out, height 0.3s ease-in-out';
+      safeBanner.style.opacity = '0';
+      safeBanner.style.height = '0';
+      safeBanner.style.overflow = 'hidden';
       
       setTimeout(() => {
-        banner.style.display = 'none';
+        safeBanner.style.display = 'none';
         localStorage.setItem(dismissKey, 'true');
         document.body.style.paddingTop = '';
       }, 300);

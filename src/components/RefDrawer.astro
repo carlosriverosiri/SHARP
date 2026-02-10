@@ -2,6 +2,7 @@
 // src/components/RefDrawer.astro
 interface Props {
   lang?: 'sv' | 'en';
+  references?: { id: string; text: string; url?: string }[];
 }
 
 const { lang = 'sv' } = Astro.props;
@@ -44,39 +45,51 @@ const labels = t[lang];
   const textEl = document.getElementById('drawer-text');
   const linkEl = document.getElementById('drawer-link');
 
-  function openDrawer(dataset) {
-    textEl.textContent = dataset.text;
+  if (!drawer || !backdrop || !closeBtn || !textEl || !linkEl) return;
+
+  const safeDrawer = drawer as HTMLElement;
+  const safeBackdrop = backdrop as HTMLElement;
+  const safeCloseBtn = closeBtn as HTMLElement;
+  const safeTextEl = textEl as HTMLElement;
+  const safeLinkEl = linkEl as HTMLAnchorElement;
+
+  function openDrawer(dataset: DOMStringMap) {
+    safeTextEl.textContent = dataset.text || '';
     if (dataset.url) {
-        linkEl.href = dataset.url;
-        linkEl.style.display = 'inline-block';
+      safeLinkEl.href = dataset.url;
+      safeLinkEl.style.display = 'inline-block';
     } else {
-        linkEl.style.display = 'none';
+      safeLinkEl.style.display = 'none';
     }
     
-    drawer.classList.remove('hidden');
-    backdrop.classList.remove('hidden');
+    safeDrawer.classList.remove('hidden');
+    safeBackdrop.classList.remove('hidden');
     // Liten fördröjning för CSS transition
     requestAnimationFrame(() => {
-      drawer.classList.add('open');
-      backdrop.classList.add('open');
+      safeDrawer.classList.add('open');
+      safeBackdrop.classList.add('open');
     });
   }
 
   function closeDrawerFn() {
-    drawer.classList.remove('open');
-    backdrop.classList.remove('open');
+    safeDrawer.classList.remove('open');
+    safeBackdrop.classList.remove('open');
     setTimeout(() => {
-      drawer.classList.add('hidden');
-      backdrop.classList.add('hidden');
+      safeDrawer.classList.add('hidden');
+      safeBackdrop.classList.add('hidden');
     }, 300); // Matcha CSS transition tid
   }
 
   triggers.forEach(btn => {
-    btn.addEventListener('click', (e) => openDrawer(e.target.dataset));
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement | null;
+      if (!target) return;
+      openDrawer(target.dataset);
+    });
   });
 
-  closeBtn.addEventListener('click', closeDrawerFn);
-  backdrop.addEventListener('click', closeDrawerFn);
+  safeCloseBtn.addEventListener('click', closeDrawerFn);
+  safeBackdrop.addEventListener('click', closeDrawerFn);
 </script>
 
 <style>

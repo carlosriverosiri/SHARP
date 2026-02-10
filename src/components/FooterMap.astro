@@ -38,6 +38,8 @@
     script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
     script.crossOrigin = '';
     script.onload = () => {
+    const L = (window as any).L;
+    if (!L) return;
       // Koordinater för Södermalms Ortopedi, Fatburs Brunnsgata 17
       const lat = 59.3140;
       const lng = 18.0669;

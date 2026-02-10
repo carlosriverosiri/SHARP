@@ -103,7 +103,6 @@ function formateraPlatser(antal: number, fyllda: number): string {
 
 // Kontrollera om kampanjen är avslutad
 const kampanjAvslutad = kampanj?.status === 'avslutad';
-const kampanjFylld = kampanj?.status === 'fylld';
 
 // Kontrollera om tidsgränsen passerat
 let tidsgransPasserad = false;
@@ -651,7 +650,7 @@ const fornamn = mottagare?.namn?.split(' ')[0] || '';
     )}
   </div>
   
-  <script define:vars={{ kod }}>
+  <script is:inline define:vars={{ kod }}>
     const checkbox = document.getElementById('preop-checkbox');
     const btnYes = document.getElementById('btn-yes');
     const btnNo = document.getElementById('btn-no');

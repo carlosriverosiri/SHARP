@@ -2144,8 +2144,6 @@ if (!anvandare) {
         return;
       }
       
-      var iconColors = ['blue', 'purple', 'green', 'orange', 'pink', 'teal', 'red'];
-      
       var content = document.getElementById('content-area');
       content.innerHTML = '<div class="projects-dashboard" style="max-width: 1200px;">' +
         '<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">' +
@@ -2154,7 +2152,6 @@ if (!anvandare) {
         '<div class="project-blocks" id="projectBlocks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">' +
           projects.map(function(project, idx) {
             var totalCount = project.categories ? project.categories.reduce(function(sum, c) { return sum + c.count; }, 0) : 0;
-            var iconColor = iconColors[idx % iconColors.length];
             var description = project.description || 'Klicka f\u00f6r att \u00f6ppna projektet och hantera dina dokument.';
             
             // Build category tags
@@ -2829,7 +2826,6 @@ if (!anvandare) {
     // Render items
     function renderItems() {
       const content = document.getElementById('content-area');
-      const cat = CATEGORIES[currentCategory];
       const project = projects.find(p => p.id === currentProjectId);
       const categories = project?.categories || [];
       
@@ -3476,6 +3472,20 @@ if (!anvandare) {
       }
     }
     
+    // Expose handlers used by inline attributes
+    window.openProjectFromDashboard = openProjectFromDashboard;
+    window.confirmDeleteProject = confirmDeleteProject;
+    window.openProject = openProject;
+    window.copyProject = copyProject;
+    window.selectCategory = selectCategory;
+    window.goBackToProject = goBackToProject;
+    window.setupCategoryDragDrop = setupCategoryDragDrop;
+    window.handleFileSelect = handleFileSelect;
+    window.startDocumentDictation = startDocumentDictation;
+    window.openItem = openItem;
+    window.openSummaryModal = openSummaryModal;
+    window.CATEGORY_ICONS = CATEGORY_ICONS;
+
     // Utilities
     function formatDate(dateStr) {
       const date = new Date(dateStr);

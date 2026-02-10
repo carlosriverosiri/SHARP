@@ -15,9 +15,7 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
-  const url = new URL(Astro.request.url);
-  const next = `${url.pathname}${url.search}`;
-  return Astro.redirect(`/personal?next=${encodeURIComponent(next)}`);
+  return Astro.redirect(`/personal?next=${encodeURIComponent(`${new URL(Astro.request.url).pathname}${new URL(Astro.request.url).search}`)}`);
 }
 
 const anvandare = await hamtaAnvandare(Astro.cookies);

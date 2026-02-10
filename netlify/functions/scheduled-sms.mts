@@ -83,7 +83,7 @@ function formateraDatum(datum: string, tid: string): string {
   return `${dag} ${datumStr} kl ${tid.slice(0, 5)}`;
 }
 
-export default async function handler(req: Request, context: Context) {
+export default async function handler(_req: Request, _context: Context) {
   console.log('⏰ Scheduled SMS function starting...');
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {

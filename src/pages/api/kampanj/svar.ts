@@ -177,8 +177,7 @@ export const POST: APIRoute = async ({ request }) => {
         await notifieraPersonal(
           resultat.kampanj_id, 
           resultat.mottagare_namn,
-          resultat.plats_nummer,
-          resultat.antal_platser
+          resultat.plats_nummer
         );
       }
 
@@ -248,8 +247,7 @@ export const POST: APIRoute = async ({ request }) => {
 async function notifieraPersonal(
   kampanjId: string, 
   patientNamn: string,
-  platsNummer?: number,
-  antalPlatser?: number
+  platsNummer?: number
 ) {
   try {
     // Hämta kampanjinfo

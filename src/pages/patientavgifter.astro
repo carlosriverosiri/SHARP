@@ -62,7 +62,7 @@ const schemaData = {
 <BaseLayout title="Patientavgifter & Prislista | Södermalms Ortopedi">
 
     <!-- Injicera strukturerad data -->
-    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
     <style>
         /* Sätt Inter som standardfont */
