@@ -54,7 +54,6 @@ function calculateCost(model: string, tokens: TokenUsage): CostInfo {
 
 // Build deliberation prompt - models review each other with targeted conflict analysis
 function buildDeliberationPrompt(originalPrompt: string, responses: AIResponse[], currentProvider: string): string {
-  const otherResponses = responses.filter(r => r.provider !== currentProvider && !r.error && r.response);
   const allResponses = responses.filter(r => !r.error && r.response);
   const modelCount = allResponses.length;
   
@@ -308,16 +307,6 @@ async function deliberateGrok(originalPrompt: string, allResponses: AIResponse[]
   }
   
   return { model: 'grok-4', provider: 'Grok', response: '', error: 'Alla Grok-modeller misslyckades', duration: Date.now() - start };
-}
-
-// Map provider names to deliberation functions
-function getDeliberationFunction(provider: string) {
-  const normalized = provider.toLowerCase();
-  if (normalized.includes('openai') || normalized === 'openai') return deliberateOpenAI;
-  if (normalized.includes('anthropic') || normalized.includes('claude')) return deliberateAnthropic;
-  if (normalized.includes('google') || normalized.includes('gemini')) return deliberateGemini;
-  if (normalized.includes('grok') || normalized.includes('xai')) return deliberateGrok;
-  return null;
 }
 
 export const POST: APIRoute = async ({ request }) => {

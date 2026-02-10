@@ -1,0 +1,440 @@
+<section class="input-card">
+  <div class="input-card-inner">
+    <div style="display:flex; align-items:center; justify-content:flex-start; gap: 0.75rem; margin-bottom: 0.75rem;">
+      <button class="new-chat-inline" id="newChatBtn" title="Starta ny chat">
+        ✨ Ny chat
+      </button>
+      <div class="synthesis-selector" style="margin: 0;">
+        <select id="kbProjectSelect" class="kb-project-select kb-project-select--empty" aria-label="Välj projekt">
+          <option value="" selected disabled>Välj projekt</option>
+          <option value="__create__">＋ Skapa nytt projekt</option>
+          <option value="unsorted">Övrigt</option>
+        </select>
+      </div>
+    </div>
+    <!-- Context -->
+    <div class="form-group">
+      <div class="form-label-row" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%;">
+        <label class="form-label">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></span> Kontext
+        <span class="optional">(valfritt - kod, dokumentation)</span>
+        </label>
+        <div class="token-indicator" id="tokenIndicator" title="Klicka för detaljer">
+          <span class="token-dot" id="tokenDot"></span>
+          <span class="token-count"><span id="tokenCount">0</span> tok</span>
+        </div>
+        <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
+          <button type="button" class="field-action-btn preview" id="previewContextBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+          <button type="button" class="field-action-btn copy" id="copyContextBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          <button type="button" class="field-action-btn save" id="saveContextBtn" title="Spara till bibliotek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></button>
+          <button type="button" class="field-action-btn delete" id="clearContextBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div>
+      <textarea id="context" class="context-input" placeholder="Klistra in kod, dokumentation eller bakgrundsinfo..."></textarea>
+      
+      <!-- Token warning (visas endast vid problem) -->
+      <div class="token-warning-banner" id="tokenWarning">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span id="tokenWarningText"></span>
+      </div>
+    </div>
+    
+    <!-- Prompt -->
+    <div class="form-group">
+      <div class="form-label-row" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; width:100%;">
+        <label class="form-label">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span> Prompt <span class="required">*</span>
+        </label>
+        <div class="field-actions" style="display:flex; align-items:center; gap:0.375rem; margin-left:auto;">
+          <button type="button" class="field-action-btn preview" id="previewPromptBtn" title="Förhandsgranska"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+          <button type="button" class="field-action-btn copy" id="copyPromptBtn" title="Kopiera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+          <button type="button" class="field-action-btn save" id="savePromptBtn" title="Spara till bibliotek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></button>
+          <button type="button" class="field-action-btn delete" id="clearPromptBtn" title="Rensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+        </div>
+      </div>
+      <div class="prompt-wrapper">
+        <textarea id="prompt" class="prompt-input" placeholder="Ställ din fråga eller tryck på mikrofonen för att diktera..." required></textarea>
+        <button type="button" class="dictation-btn" id="dictationBtn" title="Diktera (tryck för att starta/stoppa)">
+          <svg class="dictation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <span class="dictation-pulse"></span>
+        </button>
+      </div>
+      <div class="dictation-status" id="dictationStatus"></div>
+      
+      <!-- Strukturera prompt-knapp (visas för längre texter) -->
+      <div class="structure-prompt-container" id="structurePromptContainer" style="display: none;">
+        <button type="button" class="structure-prompt-btn" id="structurePromptBtn" title="Strukturera lång, ostrukturerad text till tydlig Markdown">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="21" y1="10" x2="3" y2="10"></line>
+            <line x1="21" y1="6" x2="3" y2="6"></line>
+            <line x1="21" y1="14" x2="3" y2="14"></line>
+            <line x1="21" y1="18" x2="3" y2="18"></line>
+          </svg>
+          <span>🎯 Strukturera prompt</span>
+        </button>
+        <span class="structure-prompt-hint">Omvandla rörig text till strukturerad Markdown</span>
+      </div>
+      
+      <!-- Förhandsvisning av strukturerad prompt -->
+      <div class="structured-preview" id="structuredPreview" style="display: none;">
+        <div class="structured-preview-header">
+          <div class="structured-preview-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Strukturerat förslag</span>
+          </div>
+          <div class="structured-preview-meta" id="structuredPreviewMeta"></div>
+        </div>
+        <div class="structured-preview-content markdown-content" id="structuredPreviewContent"></div>
+        <div class="structured-preview-actions">
+          <button type="button" class="structured-preview-btn primary" id="applyStructuredPrompt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Använd detta
+          </button>
+          <button type="button" class="structured-preview-btn secondary" id="cancelStructuredPrompt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Behåll original
+          </button>
+          <button type="button" class="structured-preview-btn tertiary" id="copyStructuredPrompt">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Kopiera
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Source search -->
+    <button type="button" class="source-search-btn" id="sourceSearchBtn" title="Sök vetenskapliga och webbaserade källor">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>Sök källor</span>
+    </button>
+    
+    <!-- File upload with camera -->
+    <div class="file-upload-row">
+      <div id="fileUploadArea" class="file-upload-area">
+        <div class="file-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></div>
+        <div class="file-upload-text">
+          <strong>Klicka</strong>, dra filer, eller <strong>Ctrl+V</strong> för att klistra in bilder<br>
+          <span style="font-size: 0.75rem;">PNG, JPG, PDF, TXT, MD, JSON • Bilder skickas till multimodala AI:er</span>
+        </div>
+        <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.md,.json,.js,.ts,.py,.html,.css" style="display:none">
+      </div>
+      <button type="button" class="camera-btn" id="cameraBtn" title="Ta foto med kamera">
+        <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span class="camera-label">Kamera</span>
+      </button>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+    </div>
+    <div id="fileList" class="file-list"></div>
+    
+    <!-- Profile selector -->
+    <div class="form-group">
+      <label class="form-label">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span> Välj profil
+      </label>
+      <div class="profile-selector" id="profileSelector">
+        <button type="button" class="profile-btn turbo" data-profile="snabb">
+          <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>
+          <div>
+            <div class="profile-name">Snabb</div>
+            <div class="profile-desc">~3-5 sek</div>
+          </div>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Snabb <span class="profile-tooltip-tag turbo">STANDARD</span></div>
+            <div class="profile-tooltip-why">
+              Blixtsnabbt svar med Gemini. Perfekt för enkla frågor och när du inte vill vänta.
+              Undviker Netlify timeout-problem.
+            </div>
+            <div class="profile-tooltip-config">
+              <div><strong>Modell:</strong> Gemini 2.0 Flash</div>
+              <div><strong>Syntes:</strong> Gemini (direkt)</div>
+              <div><strong>Tid:</strong> ~2-5 sek</div>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="profile-btn turbo" data-profile="patient">
+          <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></span>
+          <div>
+            <div class="profile-name">Patientfrågor</div>
+            <div class="profile-desc">Turbo + kontroll</div>
+          </div>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> Patientfrågor <span class="profile-tooltip-tag turbo">TURBO</span></div>
+            <div class="profile-tooltip-why">
+              Optimerad för telefonsamtal med patienter. Blixtsnabb respons när du 
+              behöver svara direkt. Två modeller kontrollerar varandra för säkerhet.
+            </div>
+            <div class="profile-tooltip-config">
+              <div><strong>Modeller:</strong> Gemini 2.0 Flash + Claude Sonnet</div>
+              <div><strong>Syntes:</strong> GPT-4o (snabbast)</div>
+              <div><strong>Deliberation:</strong> Av (för snabbhet)</div>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="profile-btn" data-profile="vetenskap">
+          <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg></span>
+          <div>
+            <div class="profile-name">Vetenskap</div>
+            <div class="profile-desc">3 modeller + GPT-5.2</div>
+          </div>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg> Vetenskap</div>
+            <div class="profile-tooltip-why">
+              Gemini (stort kontext), Claude (analys), Grok (referenser).
+              GPT-5.2 granskar och syntetiserar med djup resonering.
+            </div>
+            <div class="profile-tooltip-config">
+              <div><strong>Modeller:</strong> Gemini + Claude + Grok</div>
+              <div><strong>Syntes:</strong> GPT-5.2 (resonering)</div>
+              <div><strong>Tid:</strong> ~20-40 sek</div>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="profile-btn" data-profile="kod">
+          <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></span>
+          <div>
+            <div class="profile-name">Kodning</div>
+            <div class="profile-desc">Alla + Deliberation</div>
+          </div>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> Kodning (Premium)</div>
+            <div class="profile-tooltip-why">
+              Maximal kodgranskning med alla 4 modeller + deliberation.
+              Perfekt för arkitekturbeslut, säkerhet, prestanda och läsbarhet.
+            </div>
+            <div class="profile-tooltip-config">
+              <div><strong>Modeller:</strong> GPT-5.2 + Claude + Gemini + Grok</div>
+              <div><strong>Syntes:</strong> Claude Opus 4.5</div>
+              <div><strong>Deliberation:</strong> ✓ Aktiverad</div>
+              <div><strong>Tid:</strong> ~30-60 sek</div>
+            </div>
+          </div>
+        </button>
+        <button type="button" class="profile-btn" data-profile="strategi">
+          <span class="profile-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
+          <div>
+            <div class="profile-name">Strategi</div>
+            <div class="profile-desc">GPT-5.2 + Claude + Grok</div>
+          </div>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Strategi & Beslut</div>
+            <div class="profile-tooltip-why">
+              För verksamhetsbeslut, investeringar och organisationsfrågor.
+              GPT-5.2 resonerar, Claude strukturerar, Grok ger bred kontext.
+            </div>
+            <div class="profile-tooltip-config">
+              <div><strong>Modeller:</strong> GPT-5.2 + Claude + Grok</div>
+              <div><strong>Syntes:</strong> Claude Opus 4.5</div>
+              <div><strong>Tid:</strong> ~20-40 sek</div>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Model selection -->
+    <div class="form-group">
+      <label class="form-label">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></span> Välj AI-modeller
+        <span class="optional">(eller använd profil)</span>
+      </label>
+      
+      <!-- Price legend -->
+      <div class="price-legend">
+        <span class="price-legend-label">Pris:</span>
+        <span class="price-legend-item"><span class="price-dot price-cheap"></span>Billig</span>
+        <span class="price-legend-arrow">→</span>
+        <span class="price-legend-item"><span class="price-dot price-expensive"></span>Dyr</span>
+      </div>
+      
+      <!-- Models ordered by price: cheapest → most expensive (left → right) -->
+      <div class="model-selection" id="modelSelection">
+        <label class="model-checkbox" data-model="gemini">
+          <input type="checkbox">
+          <span class="model-checkbox-check">✓</span>
+          <span class="model-checkbox-dot dot-google"></span>
+          <div>
+            <div class="model-checkbox-name">Gemini 2.0 Flash</div>
+            <div class="model-checkbox-desc">Snabbast · ~$0.10/1M</div>
+          </div>
+        </label>
+        <label class="model-checkbox" data-model="anthropic">
+          <input type="checkbox">
+          <span class="model-checkbox-check">✓</span>
+          <span class="model-checkbox-dot dot-anthropic"></span>
+          <div>
+            <div class="model-checkbox-name">Claude Sonnet</div>
+            <div class="model-checkbox-desc">Struktur & kod · ~$3/1M</div>
+          </div>
+        </label>
+        <label class="model-checkbox" data-model="grok">
+          <input type="checkbox">
+          <span class="model-checkbox-check">✓</span>
+          <span class="model-checkbox-dot dot-grok"></span>
+          <div>
+            <div class="model-checkbox-name">Grok 4</div>
+            <div class="model-checkbox-desc">Referenser · ~$5/1M</div>
+          </div>
+        </label>
+        <label class="model-checkbox" data-model="openai">
+          <input type="checkbox">
+          <span class="model-checkbox-check">✓</span>
+          <span class="model-checkbox-dot dot-openai"></span>
+          <div>
+            <div class="model-checkbox-name">OpenAI GPT-5.2</div>
+            <div class="model-checkbox-desc">Djup logik · ~$15/1M</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Single model run buttons -->
+      <div class="single-model-section">
+        <div class="single-model-header">
+          <span class="single-model-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Kör modeller sekventiellt</span>
+          <span class="single-model-hint">(stabilt, en åt gången)</span>
+        </div>
+        <div class="sequential-controls">
+          <button type="button" id="runAllSequentialBtn" class="run-sequential-btn" title="Kör alla valda modeller i sekvens">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="icon-inline-sm"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Kör alla i sekvens
+          </button>
+          <label class="sound-toggle" title="Spela ljud när modell är klar">
+            <input type="checkbox" id="soundNotification" checked>
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> Ljud</span>
+          </label>
+        </div>
+        <div class="single-model-buttons">
+          <button type="button" class="single-model-btn" data-model="gemini" title="Kör endast Gemini">
+            <span class="dot-google"></span> Gemini
+          </button>
+          <button type="button" class="single-model-btn" data-model="anthropic" title="Kör endast Claude">
+            <span class="dot-anthropic"></span> Claude
+          </button>
+          <button type="button" class="single-model-btn" data-model="grok" title="Kör endast Grok">
+            <span class="dot-grok"></span> Grok
+          </button>
+          <button type="button" class="single-model-btn" data-model="openai" title="Kör endast OpenAI">
+            <span class="dot-openai"></span> OpenAI
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="actions-row">
+      <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+        <div class="synthesis-selector">
+          <label for="synthesisModel">Syntes-modell:</label>
+          <select id="synthesisModel">
+            <option value="" selected>Välj syntesmodell</option>
+            <!-- Ordered by price: cheapest → most expensive -->
+            <option value="gemini">🟢 Gemini (billigast ~$0.10/1M)</option>
+            <option value="gpt4o">🟡 GPT-4o (snabb ~$2.50/1M)</option>
+            <option value="claude">🟡 Claude Sonnet (kod ~$3/1M)</option>
+            <option value="grok">🟠 Grok (vetenskap ~$5/1M)</option>
+            <option value="openai">🟢 GPT-5.2 (logik ~$1.75/1M)</option>
+            <option value="openai-pro">🔴 GPT-5.2 Pro (premium ~$21/1M)</option>
+            <option value="claude-opus">🔴 Claude Opus 4.5 (bäst ~$15/1M)</option>
+          </select>
+        </div>
+        <label id="deliberationToggle" class="deliberation-toggle">
+          <input type="checkbox" id="enableDeliberation">
+          <span class="deliberation-toggle-switch"></span>
+          <div>
+            <div class="deliberation-toggle-label">Deliberation</div>
+            <div class="deliberation-toggle-desc">Runda 2: Modeller granskar varandra</div>
+          </div>
+        </label>
+        <label id="skipSynthesisToggle" class="deliberation-toggle skip-synthesis-toggle" title="För debugging - kör endast modellerna utan syntes">
+          <input type="checkbox" id="skipSynthesis">
+          <span class="deliberation-toggle-switch"></span>
+          <div>
+            <div class="deliberation-toggle-label">🔧 Testa</div>
+            <div class="deliberation-toggle-desc">Hoppa över syntes (debug)</div>
+          </div>
+        </label>
+      </div>
+      <button type="button" id="runBtn" class="run-btn">
+        <span class="btn-text"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Kör AI Council</span>
+        <span class="spinner"></span>
+      </button>
+      <button type="button" id="retryFailedBtn" class="retry-btn" style="display: none;" title="Kör endast modeller som misslyckades">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Försök igen (misslyckade)</span>
+      </button>
+      <button type="button" id="expandModelsBtn" class="expand-btn" style="display: none;" title="Lägg till fler modeller till befintliga svar">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Lägg till modeller</span>
+      </button>
+    </div>
+    
+    <!-- Next step cards -->
+    <div id="nextStepCards" class="next-step-cards" style="display: none;">
+      <div class="next-step-header">Välj nästa steg</div>
+      <div class="next-step-grid">
+        <button type="button" id="addModelsCardBtn" class="next-step-card add-models-card" style="display: none;">
+          <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>
+          <div class="next-step-card-title">Lägg till modeller</div>
+          <div class="next-step-card-desc">Kör fler AI:er med samma fråga utan att köra om de som redan svarat</div>
+          <div class="next-step-card-meta">
+            <span class="next-step-card-count" id="addModelsCount">0 kvar</span>
+            <div class="model-dots" id="unusedModelDots"></div>
+          </div>
+        </button>
+        <button type="button" id="deliberateNowBtn" class="next-step-card deliberate-card">
+          <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></div>
+          <div class="next-step-card-title">Faktagranskning</div>
+          <div class="next-step-card-desc">Alla AI:er granskar varandras svar och korrigerar fel</div>
+          <div class="next-step-card-meta">
+            <span class="next-step-card-count" id="deliberateCount">0 svar</span>
+            <span class="next-step-card-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~60 sek</span>
+          </div>
+        </button>
+        <button type="button" id="synthesizeNowBtn" class="next-step-card synthesize-card">
+          <div class="next-step-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></div>
+          <div class="next-step-card-title">Syntes</div>
+          <div class="next-step-card-desc">En AI sammanfattar alla svar till en slutsats</div>
+          <div class="next-step-card-meta">
+            <span class="next-step-card-count" id="synthesizeCount">0 svar</span>
+            <span class="next-step-card-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~15 sek</span>
+          </div>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Single-model deliberation buttons -->
+    <div id="singleDeliberationSection" class="single-model-section" style="display: none;">
+      <div class="single-model-header">
+        <span class="single-model-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline-sm"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Kör deliberation en modell i taget</span>
+        <span class="single-model-hint">(stabilt, en åt gången)</span>
+      </div>
+      <div class="single-model-buttons">
+        <button type="button" class="single-deliberation-btn" data-model="gemini" title="Gemini granskar">
+          <span class="dot-google"></span> Gemini R2
+        </button>
+        <button type="button" class="single-deliberation-btn" data-model="anthropic" title="Claude granskar">
+          <span class="dot-anthropic"></span> Claude R2
+        </button>
+        <button type="button" class="single-deliberation-btn" data-model="grok" title="Grok granskar">
+          <span class="dot-grok"></span> Grok R2
+        </button>
+        <button type="button" class="single-deliberation-btn" data-model="openai" title="OpenAI granskar">
+          <span class="dot-openai"></span> OpenAI R2
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -9,7 +9,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { arInloggad } from '../../../lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { generateSystemPrompt } from './profile';
 
@@ -1122,6 +1122,8 @@ async function synthesizeWithOpenAIPro(
   }
 }
 
+void synthesizeWithOpenAIPro;
+
 // Synthesis using Gemini
 async function synthesizeWithGemini(
   originalPrompt: string,
@@ -1543,7 +1545,6 @@ function getAvailableModels(): { model: ModelProvider; available: boolean }[] {
 // Sends progress events as NDJSON (newline-delimited JSON)
 async function handleStreamingQuery(
   body: QueryRequest,
-  cookies: any,
   availableModels: { model: ModelProvider; available: boolean }[],
   availableProviders: ModelProvider[]
 ): Promise<Response> {
@@ -1777,7 +1778,6 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
           sendEvent({ type: 'progress', data: { stage: 'synthesis', message: 'Syntetiserar resultat...' } });
           
           const SYNTHESIS_TIMEOUT_MS = 50000; // 50 seconds for synthesis
-          const synthesisStart = Date.now();
           
           const synthesisPromise = enableDeliberation
             ? superSynthesize(prompt, round1Responses, round2Responses, actualSynthesisModel)
@@ -1927,7 +1927,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   
   // If streaming is enabled, use the streaming handler
   if (useStreaming) {
-    return handleStreamingQuery(body, cookies, availableModels, availableProviders);
+    return handleStreamingQuery(body, availableModels, availableProviders);
   }
 
   const { 

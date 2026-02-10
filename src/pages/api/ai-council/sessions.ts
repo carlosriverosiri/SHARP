@@ -51,7 +51,6 @@ export const GET: APIRoute = async ({ cookies, url }) => {
   try {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
-    const projectId = url.searchParams.get('project_id');
 
     // Try to fetch with new columns, fall back to basic columns if they don't exist yet
     let data: any[] | null = null;
@@ -88,9 +87,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
         .from('ai_council_sessions')
         .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
         .eq('user_id', anvandare.id);
-      if (projectId) {
-        query = query.eq('kb_project_id', projectId);
-      }
+      // kb_project_id may not exist yet in older schemas, so skip filtering
       const result = await query
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
@@ -196,10 +193,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     
     // Check for any content - allow saving with just prompt for migration purposes
-    const hasResponses = responses && (
-      Array.isArray(responses) ? responses.length > 0 : Object.keys(responses).length > 0
-    );
-    
     // Only require synthesis/responses for new sessions, not migrations
     // (migrations may have incomplete data from old localStorage format)
 

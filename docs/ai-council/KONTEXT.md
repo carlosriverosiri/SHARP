@@ -11,7 +11,7 @@
 
 ## Filstruktur
 ```
-src/pages/admin/ai-council.astro     # Huvudsida (7500+ rader)
+src/pages/admin/ai-council.astro     # Huvudsida (~832 rader)
 src/pages/admin/kunskapsbas.astro    # Kunskapsbas-verktyg
 src/pages/api/ai-council/
   ├── query.ts                       # Huvudendpoint: kör alla modeller parallellt
@@ -26,6 +26,58 @@ src/pages/api/ai-council/
       ├── search.ts                  # Sök i bibliotek
       ├── collections.ts             # Hämta collections
       └── fetch-pdf.ts               # Extrahera PDF-text
+
+src/lib/ai-council/                  # Klientside-moduler för AI Council
+  ├── auth-status.ts                 # Logout-banner + auth-status
+  ├── dictation.ts                   # Speech-to-text
+  ├── dom-helpers.ts                 # Samlade DOM-refs
+  ├── file-uploads.ts                # Filer, kamera, paste
+  ├── html-utils.ts                  # HTML-escape
+  ├── kb-context-loader.ts           # Ladda KB-kontext från URL
+  ├── kb-link-modal.ts               # Koppla projekt till KB
+  ├── kb-projects-ui.ts              # KB-projekt select/filter
+  ├── kb-save.ts                     # Spara syntes till KB
+  ├── libraries.ts                   # Prompt/kontext-bibliotek
+  ├── model-progress.ts              # Tidsmätning + status
+  ├── model-selection.ts             # Modell/profil/tokens
+  ├── notes-actions.ts               # Notes/export/copy/spara
+  ├── page-load.ts                   # Initial page-load
+  ├── project-context-menu.ts        # Högerklicksmeny projekt
+  ├── project-sidebar.ts             # Render + actions
+  ├── project-selection-storage.ts   # Återställ valt projekt
+  ├── project-sidebar-state.ts       # State + selection
+  ├── project-sidebar-ui.ts          # Sidebar/mobil overlay/new chat
+  ├── prompt-tools.ts                # Diktering/struktur/källsök
+  ├── prompt-edit-modal.ts           # Redigera prompt (modal)
+  ├── response-rendering.ts          # Render svar/syntes/kostnad
+  ├── response-storage.ts            # Draft + localStorage
+  ├── restore-responses.ts           # Återställ sparade svar
+  ├── run-controls.ts                # Run-knapp + tangenter
+  ├── run-modules.ts                 # Samlad init av körning
+  ├── run-query.ts                   # Huvudkörning + streaming
+  ├── save-session-modal.ts          # Spara-session modal/autosave
+  ├── sequential-run.ts              # Sekventiell körning
+  ├── sessions.ts                    # Sessionsdata + modaler
+  ├── sessions-setup.ts              # Init sessioner + notes
+  ├── sidebar-modules.ts             # Sidebar-init (Zotero/KB)
+  ├── single-model-run.ts            # Kör en modell
+  ├── sound-notifications.ts         # Ljudnotiser
+  ├── source-search.ts               # Källsök (PubMed/Scholar/etc)
+  ├── status-notifications.ts        # Auth + ljud
+  ├── structure-prompt.ts            # Strukturera prompt
+  ├── synthesize-run.ts              # Syntes/supersyntes
+  ├── synthesis-meta.ts              # Meta-rad för syntes
+  ├── textarea-utils.ts              # Auto-resize
+  ├── toast.ts                       # Toast-notiser
+  ├── types.ts                       # Delade typer
+  ├── ui-assets.ts                   # SVG + marked config
+  ├── ui-helpers.ts                  # Format/status/preview
+  ├── workflow-controls.ts           # Reset/skip-synthesis
+  ├── workflow-progress.ts           # "Nästa steg"-logik
+  └── workflow-state.ts              # State + reset
+
+src/styles/
+  └── ai-council-page.css            # Utdragen CSS från sidan
 ```
 
 ## Databastabeller (Supabase)
@@ -52,6 +104,15 @@ src/pages/api/ai-council/
 - **Hallucinationsdetektion:** Flaggar motsägelser mellan modeller
 - **Profilväljare:** Förinställda kombinationer (Snabb, Kodning, Vetenskap, etc.)
 - **"Nästa steg"-kort:** UI visar 🔬 Faktagranskning / 🧪 Sammanfattning efter modellsvar
+- **Projektval:** Vald AI Council‑projekt sparas i `localStorage` och används vid KB‑auto‑include
+
+## Fördelar med ny organisation
+- **Snabbare utveckling:** Mindre, tydliga moduler gör att du hittar rätt snabbare och kan ändra en del utan att scrolla i en jättestor fil.
+- **Färre fel över tid:** Smalare ansvar per modul minskar risken att oavsiktligt påverka andra delar.
+- **Lättare felsökning:** När något går fel kan du snabbt peka ut ansvarig modul (t.ex. `run-query.ts` eller `notes-actions.ts`).
+- **Bättre återanvändning:** Delad logik (t.ex. storage, textarea-utils) kan användas utan kopiering.
+- **Renare diffar:** Ändringar blir lokala och ger mindre merge‑konflikter.
+- **Enklare optimering:** Prestanda förbättras inte automatiskt, men det blir lättare att hitta och optimera flaskhalsar.
 
 ## Kända begränsningar
 - Netlify timeout: 26s (kan orsaka "incomplete response" vid många modeller)
@@ -74,4 +135,4 @@ ZOTERO_ENCRYPTION_KEY
 | Modell svarar inte | Kolla rate limits hos provider, vänta och försök igen |
 
 ---
-*Senast uppdaterad: 2026-01-30*
+*Senast uppdaterad: 2026-02-10*

@@ -477,17 +477,6 @@ async function superSynthesize(
   round2Responses: AIResponse[],
   synthesisModel: SynthesisModel = 'claude'
 ): Promise<AIResponse> {
-  const superPrompt = buildSuperSynthesisPrompt(prompt, round1Responses, round2Responses);
-  
-  // Create a fake "response" object to reuse synthesize functions
-  // The prompt already contains all the context needed
-  const fakeResponse: AIResponse = {
-    model: 'combined',
-    provider: 'Combined',
-    response: superPrompt,
-    duration: 0,
-  };
-  
   // Use the appropriate model for super synthesis
   // Note: We're passing the super prompt directly since it already includes all context
   switch (synthesisModel) {

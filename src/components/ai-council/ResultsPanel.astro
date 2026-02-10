@@ -1,0 +1,343 @@
+<div id="status" class="status">
+  <span class="status-dot"></span>
+  <span id="statusText" class="status-text">Förbereder...</span>
+</div>
+
+<div id="error" class="error"></div>
+
+<section id="results" class="results">
+  <!-- Cost banner at top -->
+  <div id="costBanner" class="cost-banner">
+    <div class="cost-banner-main">
+      <div class="cost-banner-left">
+        <span class="cost-banner-icon">💰</span>
+        <span id="costBannerAmount" class="cost-banner-amount">$0.00</span>
+        <span id="costBannerSek" class="cost-banner-sek">(~0 kr)</span>
+      </div>
+      <div class="cost-banner-right">
+        <div class="cost-banner-stat">
+          <span>⏱️</span>
+          <span id="costBannerTime" class="cost-banner-stat-value">0s</span>
+        </div>
+        <div class="cost-banner-stat">
+          <span>📥</span>
+          <span id="costBannerTokensIn" class="cost-banner-stat-value">0</span>
+          <span>in</span>
+        </div>
+        <div class="cost-banner-stat">
+          <span>📤</span>
+          <span id="costBannerTokensOut" class="cost-banner-stat-value">0</span>
+          <span>out</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Hallucination Report (shown when deliberation is enabled) -->
+  <div id="hallucinationReport" class="hallucination-report" style="display: none;">
+    <div class="hallucination-header">
+      <span class="hallucination-icon">🔍</span>
+      <div class="hallucination-title">
+        <h2>Trovärdighetsrapport</h2>
+        <span id="hallucinationSubtitle">Baserat på modellernas granskning av varandra</span>
+      </div>
+    </div>
+    <div class="hallucination-summary">
+      <div id="hallucinationStatus" class="hallucination-status hallucination-status-good">
+        <span class="status-icon">✅</span>
+        <span class="status-text">Inga säkra fel upptäckta</span>
+      </div>
+      <div class="hallucination-counts">
+        <div class="hallucination-count high" id="hallucinationHigh" style="display: none;">
+          <span class="count-badge">🔴</span>
+          <span class="count-num">0</span>
+          <span class="count-label">säkra</span>
+        </div>
+        <div class="hallucination-count medium" id="hallucinationMedium" style="display: none;">
+          <span class="count-badge">🟠</span>
+          <span class="count-num">0</span>
+          <span class="count-label">troliga</span>
+        </div>
+        <div class="hallucination-count low" id="hallucinationLow" style="display: none;">
+          <span class="count-badge">🟡</span>
+          <span class="count-num">0</span>
+          <span class="count-label">misstänkta</span>
+        </div>
+      </div>
+    </div>
+    <div id="hallucinationDetails" class="hallucination-details" style="display: none;">
+      <button type="button" class="hallucination-toggle" id="toggleHallucinationDetails">
+        <span>▼ Visa detaljer</span>
+      </button>
+      <div id="hallucinationList" class="hallucination-list" style="display: none;"></div>
+    </div>
+  </div>
+  
+  <div id="synthesisCard" class="synthesis-card" style="display: none;">
+    <div class="synthesis-header">
+      <span class="synthesis-icon">🧠</span>
+      <div class="synthesis-title">
+        <h2>Syntes</h2>
+        <div class="synthesis-meta">
+          <span id="synthesisModelLabel">GPT-4o syntetiserar</span>
+          <span class="synthesis-meta-divider">·</span>
+          <span id="synthesisModelsUsed" class="synthesis-models-used" title="AI-modeller som ingår i syntesen"></span>
+          <span class="synthesis-meta-divider">·</span>
+          <span id="synthesisProfile" class="synthesis-profile" title="Profil/inställning"></span>
+        </div>
+      </div>
+      <div class="synthesis-actions">
+        <button type="button" class="copy-btn" id="copySynthesis" title="Kopiera">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+          <span>Kopiera</span>
+        </button>
+        <button type="button" class="export-md-btn" id="exportMarkdown" title="Exportera som Markdown">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          <span>Export .md</span>
+        </button>
+        <button type="button" class="save-note-btn" id="saveSynthesis" title="Spara">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>
+          <span>Spara</span>
+        </button>
+        <button type="button" class="save-note-btn" id="saveToKB" title="Spara i projekt" style="background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+          <span>→ Projekt</span>
+        </button>
+        <span id="synthesisDuration" class="synthesis-duration"></span>
+      </div>
+    </div>
+    <div id="synthesisContent" class="synthesis-content markdown-content"></div>
+    <button type="button" class="synthesis-floating-copy" id="copySynthesisFloat" title="Kopiera hela syntesen">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+      <span>Kopiera syntes</span>
+    </button>
+  </div>
+  
+  <!-- Workflow progress indicator -->
+  <div id="workflowProgress" class="workflow-progress" style="display: none;">
+    <div class="workflow-steps">
+      <div class="workflow-step" data-step="round1">
+        <span class="workflow-step-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
+        <span class="workflow-step-label">Runda 1</span>
+      </div>
+      <div class="workflow-step-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="workflow-step" data-step="synthesis1">
+        <span class="workflow-step-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></span>
+        <span class="workflow-step-label">Syntes</span>
+      </div>
+      <div class="workflow-step-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="workflow-step" data-step="round2">
+        <span class="workflow-step-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+        <span class="workflow-step-label">Deliberation</span>
+      </div>
+      <div class="workflow-step-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="workflow-step" data-step="supersynthesis">
+        <span class="workflow-step-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span>
+        <span class="workflow-step-label">Supersyntes</span>
+      </div>
+    </div>
+    <div class="workflow-info">
+      <span id="workflowStatus">Väntar på svar...</span>
+      <button type="button" id="resetWorkflowBtn" class="reset-workflow-btn" title="Starta om arbetsflödet">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>Börja om
+      </button>
+    </div>
+  </div>
+  
+  <div class="responses-section">
+    <div id="round1Label" class="round-label round-1" style="display: none;">Runda 1 — Initiala svar</div>
+    <h3 id="responsesHeader">Individuella svar</h3>
+    <!-- Responses ordered by price: cheapest → most expensive -->
+    <div class="responses-grid">
+      <div id="accordion-google" class="accordion google" style="display: none;">
+        <button type="button" class="accordion-header">
+          <div class="accordion-header-left">
+            <span class="accordion-dot dot-google"></span>
+            <span class="accordion-title">Gemini 2.0 Flash</span>
+            <span id="status-google" class="accordion-status"></span>
+          </div>
+          <div class="accordion-header-right">
+            <span id="duration-google" class="accordion-duration"></span>
+            <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+        <div id="content-google" class="accordion-content">
+          <div class="accordion-content-inner">
+            <div class="markdown-content"></div>
+            <div class="accordion-content-actions">
+              <button type="button" class="copy-btn" data-copy="google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="accordion-anthropic" class="accordion anthropic" style="display: none;">
+        <button type="button" class="accordion-header">
+          <div class="accordion-header-left">
+            <span class="accordion-dot dot-anthropic"></span>
+            <span class="accordion-title">Claude Sonnet</span>
+            <span id="status-anthropic" class="accordion-status"></span>
+          </div>
+          <div class="accordion-header-right">
+            <span id="duration-anthropic" class="accordion-duration"></span>
+            <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+        <div id="content-anthropic" class="accordion-content">
+          <div class="accordion-content-inner">
+            <div class="markdown-content"></div>
+            <div class="accordion-content-actions">
+              <button type="button" class="copy-btn" data-copy="anthropic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="accordion-grok" class="accordion grok" style="display: none;">
+        <button type="button" class="accordion-header">
+          <div class="accordion-header-left">
+            <span class="accordion-dot dot-grok"></span>
+            <span class="accordion-title">Grok 4</span>
+            <span id="status-grok" class="accordion-status"></span>
+          </div>
+          <div class="accordion-header-right">
+            <span id="duration-grok" class="accordion-duration"></span>
+            <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+        <div id="content-grok" class="accordion-content">
+          <div class="accordion-content-inner">
+            <div class="markdown-content"></div>
+            <div class="accordion-content-actions">
+              <button type="button" class="copy-btn" data-copy="grok"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="accordion-openai" class="accordion openai" style="display: none;">
+        <button type="button" class="accordion-header">
+          <div class="accordion-header-left">
+            <span class="accordion-dot dot-openai"></span>
+            <span class="accordion-title">OpenAI GPT-5.2</span>
+            <span id="status-openai" class="accordion-status"></span>
+          </div>
+          <div class="accordion-header-right">
+            <span id="duration-openai" class="accordion-duration"></span>
+            <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+        <div id="content-openai" class="accordion-content">
+          <div class="accordion-content-inner">
+            <div class="markdown-content"></div>
+            <div class="accordion-content-actions">
+              <button type="button" class="copy-btn" data-copy="openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Round 2 Section (Deliberation) - ordered by price: cheapest → most expensive -->
+    <div id="round2Section" style="display: none;">
+      <div class="round-label">Runda 2 — Granskning & förbättring</div>
+      <div class="responses-grid">
+        <div id="accordion-r2-google" class="accordion google" style="display: none;">
+          <button type="button" class="accordion-header">
+            <div class="accordion-header-left">
+              <span class="accordion-dot dot-google"></span>
+              <span class="accordion-title">Gemini (R2)</span>
+              <span id="status-r2-google" class="accordion-status"></span>
+            </div>
+            <div class="accordion-header-right">
+              <span id="duration-r2-google" class="accordion-duration"></span>
+              <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </button>
+          <div id="content-r2-google" class="accordion-content">
+            <div class="accordion-content-inner">
+              <div class="markdown-content"></div>
+              <div class="accordion-content-actions">
+                <button type="button" class="copy-btn" data-copy="r2-google"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="accordion-r2-anthropic" class="accordion anthropic" style="display: none;">
+          <button type="button" class="accordion-header">
+            <div class="accordion-header-left">
+              <span class="accordion-dot dot-anthropic"></span>
+              <span class="accordion-title">Claude (R2)</span>
+              <span id="status-r2-anthropic" class="accordion-status"></span>
+            </div>
+            <div class="accordion-header-right">
+              <span id="duration-r2-anthropic" class="accordion-duration"></span>
+              <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </button>
+          <div id="content-r2-anthropic" class="accordion-content">
+            <div class="accordion-content-inner">
+              <div class="markdown-content"></div>
+              <div class="accordion-content-actions">
+                <button type="button" class="copy-btn" data-copy="r2-anthropic"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="accordion-r2-grok" class="accordion grok" style="display: none;">
+          <button type="button" class="accordion-header">
+            <div class="accordion-header-left">
+              <span class="accordion-dot dot-grok"></span>
+              <span class="accordion-title">Grok (R2)</span>
+              <span id="status-r2-grok" class="accordion-status"></span>
+            </div>
+            <div class="accordion-header-right">
+              <span id="duration-r2-grok" class="accordion-duration"></span>
+              <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </button>
+          <div id="content-r2-grok" class="accordion-content">
+            <div class="accordion-content-inner">
+              <div class="markdown-content"></div>
+              <div class="accordion-content-actions">
+                <button type="button" class="copy-btn" data-copy="r2-grok"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="accordion-r2-openai" class="accordion openai" style="display: none;">
+          <button type="button" class="accordion-header">
+            <div class="accordion-header-left">
+              <span class="accordion-dot dot-openai"></span>
+              <span class="accordion-title">OpenAI GPT-5.2 (R2)</span>
+              <span id="status-r2-openai" class="accordion-status"></span>
+            </div>
+            <div class="accordion-header-right">
+              <span id="duration-r2-openai" class="accordion-duration"></span>
+              <svg class="accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </button>
+          <div id="content-r2-openai" class="accordion-content">
+            <div class="accordion-content-inner">
+              <div class="markdown-content"></div>
+              <div class="accordion-content-actions">
+                <button type="button" class="copy-btn" data-copy="r2-openai"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg><span>Kopiera</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="total-stats">
+    <div class="total-duration">Total tid: <span id="totalDuration">-</span></div>
+    <div class="total-cost" id="totalCostContainer" style="display: none;">
+      💰 Kostnad: <span id="totalCost">-</span>
+      <span class="cost-details" id="costDetails"></span>
+    </div>
+  </div>
+</section>

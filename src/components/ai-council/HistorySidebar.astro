@@ -1,0 +1,53 @@
+<!-- Notes sidebar -->
+<aside id="notesSidebar" class="notes-sidebar">
+  <div class="notes-header">
+    <div class="notes-header-title">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      Historik
+      <div id="notesSync" class="notes-sync">Laddar...</div>
+    </div>
+    <div class="notes-header-actions">
+      <button type="button" class="notes-toggle" id="notesToggle" title="Minimera">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+      </button>
+    </div>
+  </div>
+  <div class="notes-content">
+    <div class="notes-search">
+      <input type="text" class="notes-search-input" placeholder="Sök i sessioner..." id="projectSearch">
+    </div>
+    <div class="notes-project-filter">
+      <select id="sessionProjectFilter" class="notes-project-select" title="Filtrera historik per projekt">
+        <option value="all">Alla projekt</option>
+        <option value="unsorted">Övrigt</option>
+      </select>
+    </div>
+    <div class="notes-filter" id="notesFilter">
+      <button type="button" class="notes-filter-btn active" data-filter="all" title="Visa alla">Alla</button>
+      <button type="button" class="notes-filter-btn" data-filter="supersynthesis" title="Supersynteser">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      </button>
+      <button type="button" class="notes-filter-btn" data-filter="synthesis" title="Synteser">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+      </button>
+      <button type="button" class="notes-filter-btn" data-filter="response" title="Endast svar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </button>
+    </div>
+    <div id="notesList" class="notes-list">
+      <div class="notes-empty">Inga sparade sessioner.</div>
+    </div>
+    <div class="notes-actions">
+      <button type="button" class="notes-btn" id="exportNotes">📥 Export</button>
+      <button type="button" class="notes-btn danger" id="clearNotes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Rensa</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile FAB for notes sidebar -->
+<button class="mobile-notes-fab" id="mobileNotesFab" title="Sparade sessioner">
+  <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+  <span class="mobile-notes-fab-badge" id="mobileNotesBadge">0</span>
+</button>

@@ -1,0 +1,84 @@
+    <!-- Zotero Modal (stor) -->
+    <div class="zotero-modal" id="zoteroModal">
+      <div class="zotero-modal-content">
+        <div class="zotero-modal-header">
+          <div class="zotero-modal-title">
+            <img src="https://www.zotero.org/static/images/promote/zotero-logo-512x123.svg" alt="Zotero" class="zotero-logo">
+            <span id="zoteroModalUser"></span>
+          </div>
+          <button class="zotero-modal-close" id="zoteroModalClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+        
+        <div class="zotero-modal-body">
+          <!-- Vänster: Collections -->
+          <div class="zotero-modal-sidebar">
+            <div class="zotero-collections-header">
+              <span>📁 Collections</span>
+              <button class="zotero-refresh-btn" id="zoteroRefreshCollections" title="Uppdatera"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
+            </div>
+            <div class="zotero-collections-list" id="zoteroCollectionsList">
+              <div class="zotero-loading">Laddar...</div>
+            </div>
+            <div class="zotero-default-collection">
+              <label>
+                <input type="checkbox" id="zoteroSetDefault">
+                <span>Sätt som standard</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Höger: Sök och resultat -->
+          <div class="zotero-modal-main">
+            <div class="zotero-search-bar">
+              <input type="text" class="zotero-modal-search" id="zoteroModalSearch" placeholder="Sök i biblioteket...">
+              <button class="zotero-search-btn" id="zoteroModalSearchBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Sök</button>
+            </div>
+            
+            <div class="zotero-results-header" id="zoteroResultsHeader">
+              <span id="zoteroResultsCount">Välj en collection eller sök</span>
+              <div class="zotero-select-all">
+                <label>
+                  <input type="checkbox" id="zoteroSelectAll">
+                  <span>Välj alla</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="zotero-results-list" id="zoteroModalResults">
+              <!-- Resultat laddas här -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="zotero-modal-footer">
+          <div class="zotero-footer-left">
+            <span id="zoteroSelectedInfo">0 valda</span>
+          </div>
+          <div class="zotero-footer-right">
+            <button class="zotero-btn zotero-btn-secondary" id="zoteroDisconnectBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg> Koppla från</button>
+            <button class="zotero-btn zotero-btn-primary" id="zoteroImportSelectedBtn" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Importera valda PDF:er</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Zotero Config Modal (liten) -->
+    <div class="zotero-config-modal" id="zoteroConfigModal">
+      <div class="zotero-config-content">
+        <div class="zotero-config-header">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg> Konfigurera Zotero</h3>
+          <button class="zotero-modal-close" id="zoteroConfigClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+        <div class="zotero-config-body">
+          <p>Klistra in din Zotero API-nyckel för att komma igång.</p>
+          <input type="text" class="zotero-input" id="zoteroApiKeyInput" placeholder="API-nyckel (24 tecken)" autocomplete="off">
+          <div class="zotero-help-text">
+            Hämta din nyckel från <a href="https://www.zotero.org/settings/keys" target="_blank">zotero.org/settings/keys</a>
+          </div>
+        </div>
+        <div class="zotero-config-footer">
+          <button class="zotero-btn zotero-btn-secondary" id="zoteroConfigCancel">Avbryt</button>
+          <button class="zotero-btn zotero-btn-primary" id="zoteroConfigSave"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg> Spara</button>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,9 @@
+{
+  "entryPoints": ["src/lib/ai-council"],
+  "entryPointStrategy": "expand",
+  "out": "docs/ai-council/api",
+  "tsconfig": "tsconfig.typedoc.json",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "includeVersion": true
+}

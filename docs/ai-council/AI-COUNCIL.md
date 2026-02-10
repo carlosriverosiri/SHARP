@@ -6,6 +6,20 @@
 
 ---
 
+## Core‑modul (för fristående app/Next.js)
+
+Se `docs/ai-council/CORE-MODULE.md` för förslag på struktur, API och auto‑dokumentation.
+
+## Pausad effektivisering – nästa steg
+
+Refaktoreringen av `ai-council.astro` är pausad medan du jobbar i AI Council. Nuvarande radantal är ~832 (senast uppmätt).
+
+**När du vill fortsätta effektiviseringen:**
+- Fortsätt med att flytta kvarvarande inline‑logik från `ai-council.astro` till små moduler.
+- Prioritera workflow‑state/stubs och andra state‑relaterade block som fortfarande ligger i sidan.
+- Kör `npx astro check` efter varje större block.
+- Uppdatera `docs/ai-council/KONTEXT.md` med nytt radantal och nya moduler.
+
 ## Översikt
 
 AI Council är ett internt verktyg för att ställa komplexa frågor till flera AI-modeller samtidigt och få en syntetiserad rekommendation. Verktyget är designat för att hjälpa med:

@@ -45,7 +45,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     // Hämta access token från cookie
     const accessToken = cookies.get('sb-access-token')?.value;
-    const refreshToken = cookies.get('sb-refresh-token')?.value;
 
     if (!accessToken) {
       return new Response(JSON.stringify({ 

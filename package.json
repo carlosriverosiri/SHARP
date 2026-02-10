@@ -7,9 +7,11 @@
     "build": "npx astro build && npx pagefind --site dist",
     "preview": "npx astro preview",
     "postbuild": "npx pagefind --site dist",
+    "docs:typedoc": "typedoc",
     "astro": "npx astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.6",
     "@astrojs/netlify": "^6.6.4",
     "@astrojs/sitemap": "^3.6.0",
     "@supabase/supabase-js": "^2.90.1",
@@ -18,10 +20,12 @@
     "chart.js": "^4.5.1",
     "pdf-parse": "^1.1.1",
     "sharp": "^0.33.5",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "pagefind": "^1.4.0",
-    "terser": "^5.44.1"
+    "terser": "^5.44.1",
+    "typedoc": "^0.28.16"
   }
 }

@@ -15,18 +15,6 @@ import { rateLimitedFetch, getRateLimitStatus } from '../../../../lib/zotero-rat
 
 const ZOTERO_API_BASE = 'https://api.zotero.org';
 
-interface ZoteroAttachment {
-  key: string;
-  data: {
-    key: string;
-    itemType: string;
-    parentItem: string;
-    contentType?: string;
-    filename?: string;
-    linkMode?: string;
-  };
-}
-
 interface ZoteroItem {
   key: string;
   version: number;

@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/lib/ai-council/**/*.ts"],
+  "exclude": ["src/components/**", "src/pages/**", "**/*.astro"]
+}

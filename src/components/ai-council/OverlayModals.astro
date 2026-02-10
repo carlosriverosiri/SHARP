@@ -1,0 +1,374 @@
+  <!-- Save prompt modal (appears after synthesis) -->
+  <div id="savePromptModal" class="save-prompt-modal">
+    <div class="save-prompt-content">
+      <div class="save-prompt-header">
+        <span class="save-prompt-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></span>
+        <div class="save-prompt-title">Spara session?</div>
+        <div class="save-prompt-subtitle">Din AI Council-körning är klar!</div>
+      </div>
+      <div class="save-prompt-body">
+        <div class="save-prompt-input-group">
+          <label class="save-prompt-label">Ge sessionen ett namn (valfritt)</label>
+          <input type="text" id="saveSessionName" class="save-prompt-input" placeholder="T.ex. 'Litteratursökning brosk' eller 'Arkitekturbeslut SMS'">
+        </div>
+        <div class="save-prompt-input-group">
+          <label class="save-prompt-label">Prompt (förhandsgranskning)</label>
+          <div id="savePromptPreview" class="save-prompt-preview"></div>
+        </div>
+        <label class="save-prompt-autosave">
+          <input type="checkbox" id="enableAutoSave">
+          <span class="save-prompt-autosave-check">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+          </span>
+          <span class="save-prompt-autosave-text">Aktivera auto-spara (spara automatiskt efter varje körning)</span>
+        </label>
+      </div>
+      <div class="save-prompt-footer">
+        <button type="button" class="save-prompt-btn skip" id="skipSaveBtn">Hoppa över</button>
+        <button type="button" class="save-prompt-btn save" id="confirmSaveBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-inline"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Spara session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit prompt modal -->
+  <div id="promptEditModal" class="session-modal prompt-edit-modal">
+    <div class="session-modal-content" style="max-width: 520px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">Redigera prompt</div>
+        <button type="button" class="session-modal-close" id="promptEditClose">×</button>
+      </div>
+      <div class="session-modal-body">
+        <div class="save-prompt-input-group">
+          <label class="save-prompt-label">Namn</label>
+          <input type="text" id="promptEditName" class="save-prompt-input" placeholder="Promptnamn">
+        </div>
+        <div class="save-prompt-input-group">
+          <label class="save-prompt-label">Prompt</label>
+          <textarea id="promptEditText" class="prompt-edit-textarea" placeholder="Redigera prompt..."></textarea>
+        </div>
+      </div>
+      <div class="session-modal-footer">
+        <button type="button" class="session-modal-btn" id="promptEditCancel">Avbryt</button>
+        <button type="button" class="session-modal-btn" id="promptEditSave">Spara</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session modal (quick view) -->
+  <div id="sessionModal" class="session-modal">
+    <div class="session-modal-content">
+      <div class="session-modal-header">
+        <div>
+          <div class="session-modal-title">Sparad session</div>
+          <div id="sessionModalMeta" class="session-modal-meta"></div>
+        </div>
+        <button type="button" class="session-modal-close" id="closeSessionModal">×</button>
+      </div>
+      <div class="session-modal-body">
+        <!-- Metadata panel -->
+        <div id="sessionModalMetaPanel" class="session-modal-meta-panel"></div>
+        <div class="session-modal-prompt">
+          <div class="session-modal-prompt-label">Prompt</div>
+          <div id="sessionModalPrompt" class="session-modal-prompt-text"></div>
+        </div>
+        <div id="sessionModalSynthesis" class="session-modal-synthesis markdown-content"></div>
+      </div>
+      <div class="session-modal-footer">
+        <button type="button" class="session-modal-btn" id="copySessionSynthesis"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera syntes</button>
+        <button type="button" class="session-modal-btn" id="copySessionAll"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Kopiera allt</button>
+        <button type="button" class="session-modal-btn" id="loadSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Återanvänd prompt</button>
+        <button type="button" class="session-modal-btn session-modal-btn-danger" id="deleteSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Radera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full session modal (detailed view) -->
+  <div id="fullSessionModal" class="session-modal full-session-modal">
+    <div class="session-modal-content full-session-content" style="max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="session-modal-header" style="flex: 0 0 auto;">
+        <div>
+          <div class="session-modal-title">Fullständig session</div>
+          <div id="fullSessionModalMeta" class="session-modal-meta"></div>
+        </div>
+        <button type="button" class="session-modal-close" id="closeFullSessionModal">×</button>
+      </div>
+      <div id="fullSessionScrollContainer" style="flex: 1 1 0; overflow-y: auto; min-height: 0;">
+        <div class="session-modal-body full-session-body" style="padding: 1.5rem;">
+        <!-- Metadata panel -->
+        <div id="fullSessionMetaPanel" class="session-modal-meta-panel"></div>
+        
+        <!-- Prompt -->
+        <div class="full-session-section">
+          <div class="full-session-section-header">
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg></span>
+            <span class="full-session-section-title">Prompt</span>
+          </div>
+          <div id="fullSessionPrompt" class="full-session-section-content"></div>
+        </div>
+        
+        <!-- Round 1 responses -->
+        <div class="full-session-section">
+          <div class="full-session-section-header">
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+            <span class="full-session-section-title">Runda 1 - Individuella svar</span>
+          </div>
+          <div id="fullSessionRound1" class="full-session-responses"></div>
+        </div>
+        
+        <!-- Round 2 responses (if deliberation) -->
+        <div id="fullSessionRound2Section" class="full-session-section" style="display: none;">
+          <div class="full-session-section-header">
+            <span class="full-session-section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            <span class="full-session-section-title">Runda 2 - Faktagranskning</span>
+          </div>
+          <div id="fullSessionRound2" class="full-session-responses"></div>
+        </div>
+        
+        <!-- Synthesis -->
+        <div class="full-session-section">
+          <div class="full-session-section-header" id="fullSessionSynthesisHeader">
+            <span class="full-session-section-icon" id="fullSessionSynthesisIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></span>
+            <span class="full-session-section-title" id="fullSessionSynthesisTitle">Syntes</span>
+          </div>
+          <div id="fullSessionSynthesis" class="full-session-section-content markdown-content"></div>
+        </div>
+        </div>
+      </div>
+      <div class="session-modal-footer" style="flex: 0 0 auto;">
+        <button type="button" class="session-modal-btn" id="copyFullSessionSynthesis"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Kopiera</button>
+        <button type="button" class="session-modal-btn" id="exportFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Exportera</button>
+        <button type="button" class="session-modal-btn" id="loadFullSessionPrompt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Återanvänd prompt</button>
+        <button type="button" class="session-modal-btn session-modal-btn-danger" id="deleteFullSession"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Radera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unified Source Search Modal (PubMed + Scholar + Google + News) -->
+  <div id="sourceModal" class="source-modal">
+    <div class="source-modal-content">
+      <div class="source-modal-header">
+        <div class="source-modal-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          Sök verifierade källor
+        </div>
+        <button type="button" class="source-modal-close" id="closeSourceModal">×</button>
+      </div>
+      
+      <!-- Tabs for different search engines -->
+      <div class="source-tabs">
+        <button type="button" class="source-tab active" data-engine="pubmed">
+          <span class="source-tab-icon">🏥</span>
+          <span>PubMed</span>
+          <span class="source-tab-count" id="pubmedCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google_scholar">
+          <span class="source-tab-icon">🎓</span>
+          <span>Scholar</span>
+          <span class="source-tab-count" id="scholarCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google">
+          <span class="source-tab-icon">🌐</span>
+          <span>Google</span>
+          <span class="source-tab-count" id="googleCount">0</span>
+        </button>
+        <button type="button" class="source-tab" data-engine="google_news">
+          <span class="source-tab-icon">📰</span>
+          <span>Nyheter</span>
+          <span class="source-tab-count" id="newsCount">0</span>
+        </button>
+      </div>
+      
+      <div class="source-modal-body">
+        <div class="source-search-form">
+          <input type="text" id="sourceQuery" class="source-search-input" placeholder="Sök vetenskapliga artiklar, webbsidor eller nyheter...">
+          <button type="button" id="sourceSearchSubmit" class="source-search-submit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Sök
+          </button>
+        </div>
+        <div id="sourceStatus" class="source-status" style="display: none;"></div>
+        <div id="sourceResults" class="source-results"></div>
+      </div>
+      
+      <div class="source-modal-footer">
+        <div class="source-footer-info">
+          <span id="sourceSelectedCount" class="source-footer-selected">0</span> källa(or) valda
+        </div>
+        <button type="button" id="sourceAddSelected" class="source-add-btn" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Lägg till i kontext
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legacy PubMed modal (kept for compatibility, hidden) -->
+  <div id="pubmedModal" class="pubmed-modal" style="display: none !important;"></div>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="preview-modal">
+    <div class="preview-modal-content">
+      <div class="preview-modal-header">
+        <div class="preview-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <span id="previewModalTitle">Förhandsgranskning</span>
+        </div>
+        <button type="button" class="preview-modal-close" id="closePreviewModal">×</button>
+      </div>
+      <div class="preview-modal-body" id="previewModalBody"></div>
+      <div class="preview-modal-footer">
+        <button type="button" class="preview-modal-btn secondary" id="previewModalCopy">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Kopiera
+        </button>
+        <button type="button" class="preview-modal-btn primary" id="previewModalClose">Stäng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div id="deleteConfirmModal" class="delete-confirm-modal">
+    <div class="delete-confirm-content">
+      <div class="delete-confirm-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <div class="delete-confirm-title">Radera session?</div>
+      <div class="delete-confirm-info">
+        <div id="deleteConfirmName" class="delete-confirm-name"></div>
+        <div id="deleteConfirmDate" class="delete-confirm-date"></div>
+      </div>
+      <div class="delete-confirm-warning">Denna åtgärd kan inte ångras.</div>
+      <div class="delete-confirm-buttons">
+        <button type="button" class="delete-confirm-btn delete-confirm-cancel" id="deleteConfirmCancel">Avbryt</button>
+        <button type="button" class="delete-confirm-btn delete-confirm-delete" id="deleteConfirmDelete">Radera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Project context menu -->
+  <div id="projectContextMenu" class="project-context-menu">
+    <button class="context-menu-item" data-action="edit">
+      ✏️ Redigera projekt
+    </button>
+    <button class="context-menu-item" data-action="color">
+      🎨 Ändra färg
+    </button>
+    <button class="context-menu-item" data-action="icon">
+      😀 Ändra ikon
+    </button>
+    <button class="context-menu-item" data-action="context">
+      📝 Redigera kontext
+    </button>
+    <button class="context-menu-item" data-action="kb-link">
+      📚 Koppla kunskapsbas
+    </button>
+    <div class="context-menu-divider"></div>
+    <button class="context-menu-item" data-action="pin">
+      📌 Fäst/ta bort
+    </button>
+    <div class="context-menu-divider"></div>
+    <button class="context-menu-item danger" data-action="delete">
+      🗑️ Ta bort projekt
+    </button>
+  </div>
+  
+  <!-- Color picker modal -->
+  <div id="colorPickerModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 320px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">Välj färg</div>
+        <button type="button" class="session-modal-close" id="closeColorPicker">×</button>
+      </div>
+      <div class="color-picker-grid">
+        <button class="color-picker-option" style="background: #2563eb;" data-color="#2563eb"></button>
+        <button class="color-picker-option" style="background: #7c3aed;" data-color="#7c3aed"></button>
+        <button class="color-picker-option" style="background: #db2777;" data-color="#db2777"></button>
+        <button class="color-picker-option" style="background: #dc2626;" data-color="#dc2626"></button>
+        <button class="color-picker-option" style="background: #ea580c;" data-color="#ea580c"></button>
+        <button class="color-picker-option" style="background: #ca8a04;" data-color="#ca8a04"></button>
+        <button class="color-picker-option" style="background: #16a34a;" data-color="#16a34a"></button>
+        <button class="color-picker-option" style="background: #059669;" data-color="#059669"></button>
+        <button class="color-picker-option" style="background: #0891b2;" data-color="#0891b2"></button>
+        <button class="color-picker-option" style="background: #0284c7;" data-color="#0284c7"></button>
+        <button class="color-picker-option" style="background: #6366f1;" data-color="#6366f1"></button>
+        <button class="color-picker-option" style="background: #64748b;" data-color="#64748b"></button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Icon picker modal -->
+  <div id="iconPickerModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 320px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">Välj ikon</div>
+        <button type="button" class="session-modal-close" id="closeIconPicker">×</button>
+      </div>
+      <div class="icon-picker-grid">
+        <button class="icon-picker-option" data-icon="📁">📁</button>
+        <button class="icon-picker-option" data-icon="💻">💻</button>
+        <button class="icon-picker-option" data-icon="🔬">🔬</button>
+        <button class="icon-picker-option" data-icon="📊">📊</button>
+        <button class="icon-picker-option" data-icon="🏥">🏥</button>
+        <button class="icon-picker-option" data-icon="📝">📝</button>
+        <button class="icon-picker-option" data-icon="🎯">🎯</button>
+        <button class="icon-picker-option" data-icon="⚙️">⚙️</button>
+        <button class="icon-picker-option" data-icon="🔧">🔧</button>
+        <button class="icon-picker-option" data-icon="📱">📱</button>
+        <button class="icon-picker-option" data-icon="🌐">🌐</button>
+        <button class="icon-picker-option" data-icon="🔒">🔒</button>
+        <button class="icon-picker-option" data-icon="💡">💡</button>
+        <button class="icon-picker-option" data-icon="📚">📚</button>
+        <button class="icon-picker-option" data-icon="🎨">🎨</button>
+        <button class="icon-picker-option" data-icon="🚀">🚀</button>
+        <button class="icon-picker-option" data-icon="⭐">⭐</button>
+        <button class="icon-picker-option" data-icon="❤️">❤️</button>
+      </div>
+    </div>
+
+  <!-- KB Link Modal -->
+  <div id="kbLinkModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 480px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title">📚 Koppla kunskapsbas</div>
+        <button type="button" class="session-modal-close" id="closeKbLinkModal">×</button>
+      </div>
+      <div class="session-modal-body">
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">
+          Valj ett kunskapsbas-projekt. Alla dokument i projektet inkluderas automatiskt som kontext vid fragor.
+        </p>
+        <div id="kbProjectList" style="max-height: 300px; overflow-y: auto; margin-bottom: 16px;">
+          <div style="color: var(--text-muted); padding: 20px; text-align: center;">Laddar projekt...</div>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+          <input type="checkbox" id="kbAutoInclude" checked>
+          Inkludera automatiskt vid fragor
+        </label>
+      </div>
+      <div class="session-modal-footer">
+        <button type="button" class="modal-btn modal-btn-secondary" id="kbUnlinkBtn">
+          Ta bort koppling
+        </button>
+        <button type="button" class="modal-btn modal-btn-primary" id="kbSaveBtn">
+          Spara
+        </button>
+      </div>
+    </div>
+  </div>
+  </div>
