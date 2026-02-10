@@ -1,3 +1,34 @@
+## Stack & Coding Standards
+
+**Stack:** Astro (SSR/SSG), TypeScript (strict), Tailwind CSS, Supabase.
+**Framtida migration:** AI Council-verktyget ska kunna migreras till Next.js. All ny logik i `src/lib/ai-core/` och `src/lib/ai-council/` ska vara UI-agnostisk (ren TypeScript, inga DOM-importer i ai-core).
+
+### TypeScript
+- Alltid strict typing. Ingen `any` utan kommentar om varfor.
+- Alla funktionsparametrar och returvarden ska ha explicita typer.
+- Anvand nullish coalescing (`??`) och optional chaining (`?.`) istallet for manuella null-checkar.
+
+### Astro
+- Serverlojik i frontmatter (`---`-blocket). Client-side JS bara nar interaktivitet kravs.
+- Komponenter i `src/components/`, sidlogik i `src/pages/`.
+- Islands architecture: minimera client-side JS, anvand `client:load` / `client:visible` sparsamt.
+
+### Modularisering (migrationsvanlighet)
+- **`src/lib/ai-core/`** — UI-agnostik karnlogik (typer, validering, payloads, formatering). Ingen DOM, inget Astro-specifikt. Ska funka i Next.js utan andringar.
+- **`src/lib/ai-council/`** — Astro-specifik UI-logik (DOM-hantering, event listeners, rendering). Importerar fran ai-core.
+- Ny logik ska alltid hamna i ratt lager. Fraga: "Behover detta DOM?" Ja → ai-council. Nej → ai-core.
+
+### Tillganglighet (a11y)
+- Alla interaktiva element ska ha `aria-label` eller synlig text.
+- Formularelement ska ha tillhorande `<label>`.
+- Fokushantering vid modaler och dynamiskt innehall.
+
+### Verifiering
+- Kor `npx astro check` efter varje storre block.
+- Uppdatera `docs/ai-council/KONTEXT.md` nar moduler laggs till eller andras.
+
+---
+
 ## Prompt Library Reference
 Use these by typing @filename in chat:
 - @00_add_new_prompt.md (System: Takes raw text and saves it as a new numbered prompt)
@@ -74,15 +105,6 @@ Kor: `node scripts/fix-mojibake.cjs`
 ```html
 <meta charset="UTF-8" />
 ```
-
-## Teckenkodning - VIKTIGT (UTF-8)
-Alla filer ska anvanda UTF-8. Svenska tecken (a, a, o) maste sparas korrekt.
-
-**Vid scripts som skriver filer:**
-- Anvand ALLTID fs.writeFileSync(path, content, 'utf8') i Node.js
-- Testa att svenska tecken visas korrekt efter redigering
-
-**Om mojibake uppstar:** Kor node scripts/fix-mojibake.cjs
 
 ## Multi-AI Council Mode
 For komplexa problem, skriv **COUNCIL:** eller **RADET:** fore din fraga.
