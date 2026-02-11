@@ -62,7 +62,7 @@ export function initProjectPicker() {
     modal!.classList.add('open');
 
     try {
-      const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
+      const res = await fetch('/api/ai-council/projects', { credentials: 'include' });
       const data = await res.json();
       const projects: KbProjectBasic[] = (data.projects || []).map((p: any) => ({
         id: p.id,

@@ -1,4 +1,4 @@
-import type { AiCouncilSession } from './types';
+﻿import type { AiCouncilSession } from './types';
 
 type SessionsInitOptions = {
   notesList: HTMLElement | null;
@@ -41,6 +41,13 @@ export function initSessions({
   getCurrentProjectFilter,
   pickProject
 }: SessionsInitOptions) {
+  // Use global toast if available, fall back to alert
+  const showToast = (msg: string, type: 'success' | 'error' | 'info' = 'success') => {
+    const fn = (window as any).__showToast;
+    if (fn) fn(msg, type);
+    else alert(msg);
+  };
+
   let lastSavedSessionId: string | null = null;
   let currentFilter = 'all';
   let notesListHandlersAttached = false;
@@ -194,10 +201,10 @@ export function initSessions({
 
     if (failed === 0) {
       localStorage.removeItem('ai-council-sessions');
-      alert('✅ ' + migrated + ' sessioner sparade till molnet!');
+      showToast(migrated + ' sessioner sparade till molnet!', 'success');
       document.querySelector('.migration-banner')?.remove();
     } else {
-      alert(migrated + ' sparade, ' + failed + ' misslyckades. Försök igen.');
+      showToast(migrated + ' sparade, ' + failed + ' misslyckades.', 'error');
       if (btn) {
         btn.disabled = false;
         btn.textContent = 'Försök igen';
@@ -211,7 +218,7 @@ export function initSessions({
     if (confirm('Är du säker? De lokala sessionerna raderas permanent och kan inte återställas.')) {
       localStorage.removeItem('ai-council-sessions');
       document.querySelector('.migration-banner')?.remove();
-      alert('Lokala sessioner raderade.');
+      showToast('Lokala sessioner raderade.', 'info');
     }
   }
 
@@ -274,7 +281,7 @@ export function initSessions({
 
   async function saveSession(data: any) {
     if (!getUserIsLoggedIn() || !getUseSupabase()) {
-      alert('Du måste vara inloggad för att spara sessioner.\n\nGå till /personal för att logga in.');
+      showToast('Du måste vara inloggad. Gå till /personal för att logga in.', 'error');
       return false;
     }
 
@@ -303,11 +310,11 @@ export function initSessions({
       }
 
       console.error('Save failed:', result.error);
-      alert('Kunde inte spara sessionen: ' + (result.error || 'Okänt fel'));
+      showToast('Kunde inte spara: ' + (result.error || 'Okänt fel'), 'error');
       return false;
     } catch (e) {
       console.error('Save error:', e);
-      alert('Kunde inte spara sessionen. Kontrollera din internetanslutning.');
+      showToast('Kunde inte spara sessionen. Kontrollera internetanslutningen.', 'error');
       return false;
     }
   }
@@ -365,7 +372,7 @@ export function initSessions({
       await loadSessions();
     } catch (e: any) {
       console.error('Delete error:', e);
-      alert('Kunde inte radera sessionen: ' + e.message);
+      showToast('Kunde inte radera sessionen: ' + e.message, 'error');
     }
   });
 
@@ -476,7 +483,7 @@ export function initSessions({
 
   async function saveToKnowledgeBase(session: any) {
     if (!getUserIsLoggedIn()) {
-      alert('Du måste vara inloggad för att spara till kunskapsbasen.');
+      showToast('Du måste vara inloggad för att flytta sessionen till ett projekt.', 'error');
       return;
     }
 
@@ -485,49 +492,36 @@ export function initSessions({
       return;
     }
 
-    const project = await pickProject({ title: '📁 Spara session till projekt' });
+    const project = await pickProject({ title: '📁 Flytta till projekt' });
     if (!project) return;
 
     try {
-      const content = session.supersynthesis || session.synthesis ||
-        (session.responses ? Object.values(session.responses).map((r: any) => r.content).join('\n\n---\n\n') : '');
-
-      const title = session.name || ('AI-session ' + new Date(session.created_at).toLocaleString('sv-SE'));
-
-      const saveRes = await fetch('/api/kunskapsbas/items', {
-        method: 'POST',
+      const saveRes = await fetch(`/api/ai-council/sessions?id=${session.id}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({
-          project_id: project.id,
-          category: 'ai_fragor',
-          title: title,
-          content: '## Prompt\n\n' + (session.prompt || '') + '\n\n## Svar\n\n' + content,
-          summary: (session.prompt || '').substring(0, 200),
-          metadata: {
-            session_id: session.id,
-            models: session.selected_models || [],
-            has_synthesis: !!session.synthesis,
-            has_supersynthesis: !!session.supersynthesis
-          }
-        })
+        body: JSON.stringify({ project_id: project.id })
       });
 
       if (saveRes.ok) {
-        alert('✅ Session sparad!\n\nProjekt: ' + project.name);
+        session.kb_project_id = project.id;
+        session.kb_project_name = project.name;
+        renderSessions();
+        document.dispatchEvent(new CustomEvent('ai-council:projects-changed'));
+        showToast('Session flyttad till projekt: ' + project.name, 'success');
       } else {
-        const errData = await saveRes.json();
-        alert('Fel: ' + (errData.error || 'Kunde inte spara'));
+        const errData = await saveRes.json().catch(() => ({}));
+        showToast(errData.error || 'Kunde inte flytta sessionen', 'error');
       }
     } catch (e) {
-      console.error('Error saving to KB:', e);
-      alert('Något gick fel vid sparande till kunskapsbasen.');
+      console.error('Error moving session to project:', e);
+      showToast('Något gick fel. Försök igen.', 'error');
     }
   }
 
   async function deleteSession(id: string) {
     if (!getUserIsLoggedIn() || !getUseSupabase()) {
-      alert('Du måste vara inloggad för att radera sessioner.');
+      showToast('Du måste vara inloggad för att radera sessioner.', 'error');
       return;
     }
 
@@ -638,7 +632,7 @@ export function initSessions({
           '<div class="note-item-actions">' +
             '<button class="note-item-btn" data-action="view" title="Visa" aria-label="Visa session">' + icons.eye + '</button>' +
             '<button class="note-item-btn" data-action="copy" title="Kopiera" aria-label="Kopiera till urklipp">' + icons.copy + '</button>' +
-            '<button class="note-item-btn" data-action="kb" title="Spara i projekt" aria-label="Spara i projekt">' + icons.kb + '</button>' +
+            '<button class="note-item-btn" data-action="kb" title="' + (projectName && projectName !== 'Övrigt' ? 'Projekt: ' + escapeHtml(projectName) : 'Flytta till projekt') + '" aria-label="Flytta till projekt">' + icons.kb + '</button>' +
             '<button class="note-item-btn" data-action="delete" title="Radera" aria-label="Radera session">' + icons.trash + '</button>' +
           '</div>' +
         '</div>' +
@@ -854,7 +848,7 @@ export function initSessions({
     if (currentModalSession) {
       const text = currentModalSession.supersynthesis || currentModalSession.synthesis || '';
       navigator.clipboard.writeText(text);
-      alert('Syntes kopierad!');
+      showToast('Syntes kopierad!', 'success');
     }
   });
 
@@ -863,7 +857,7 @@ export function initSessions({
       const synth = currentModalSession.supersynthesis || currentModalSession.synthesis || '';
       const text = '## Prompt\n\n' + currentModalSession.prompt + '\n\n## Syntes\n\n' + synth;
       navigator.clipboard.writeText(text);
-      alert('Prompt + syntes kopierat!');
+      showToast('Prompt + syntes kopierat!', 'success');
     }
   });
 
@@ -1011,7 +1005,7 @@ export function initSessions({
     if (currentModalSession) {
       const text = currentModalSession.supersynthesis || currentModalSession.synthesis || '';
       navigator.clipboard.writeText(text);
-      alert('Syntes kopierad!');
+      showToast('Syntes kopierad!', 'success');
     }
   });
 

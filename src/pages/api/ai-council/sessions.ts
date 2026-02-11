@@ -352,12 +352,15 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
 
   try {
     const body = await request.json();
-    const { name } = body;
+    const { name, project_id } = body;
 
-    // Only allow updating name for now
+    // Allow updating name and project_id
     const updateData: Record<string, any> = {};
     if (name !== undefined) {
       updateData.name = name || null; // Allow clearing the name
+    }
+    if (project_id !== undefined) {
+      updateData.kb_project_id = project_id || null; // Allow moving to/from project
     }
 
     if (Object.keys(updateData).length === 0) {

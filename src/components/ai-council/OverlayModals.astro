@@ -386,3 +386,84 @@
     </div>
   </div>
   </div>
+
+  <!-- Global toast notification (replaces browser alert) -->
+  <div id="globalToast" class="global-toast" role="alert" aria-live="assertive">
+    <div class="global-toast-content">
+      <span class="global-toast-icon" id="globalToastIcon"></span>
+      <span class="global-toast-message" id="globalToastMessage"></span>
+    </div>
+  </div>
+
+  <style>
+    .global-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      z-index: 100000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .global-toast.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .global-toast-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-card, #ffffff);
+      border: 1px solid var(--border-color, #e5e7eb);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      font-size: 0.9375rem;
+      color: var(--text-primary, #111827);
+      max-width: 420px;
+      min-width: 200px;
+    }
+    .global-toast-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .global-toast-message {
+      line-height: 1.4;
+    }
+  </style>
+
+  <script>
+    // Global toast function - replaces alert() for non-blocking centered notifications
+    (function() {
+      const toast = document.getElementById('globalToast');
+      const iconEl = document.getElementById('globalToastIcon');
+      const msgEl = document.getElementById('globalToastMessage');
+      let hideTimer: ReturnType<typeof setTimeout> | null = null;
+
+      function showToast(message: string, type: 'success' | 'error' | 'info' = 'success', duration = 2500) {
+        if (!toast || !iconEl || !msgEl) return;
+        if (hideTimer) clearTimeout(hideTimer);
+
+        const icons: Record<string, string> = { success: '✅', error: '❌', info: 'ℹ️' };
+        iconEl.textContent = icons[type] || icons.info;
+        msgEl.textContent = message;
+        toast.classList.add('visible');
+
+        hideTimer = setTimeout(() => {
+          toast.classList.remove('visible');
+          hideTimer = null;
+        }, duration);
+
+        // Click to dismiss
+        toast.onclick = () => {
+          toast.classList.remove('visible');
+          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+        };
+      }
+
+      // Expose globally so other scripts can use it
+      (window as any).__showToast = showToast;
+    })();
+  </script>
