@@ -18,6 +18,7 @@ type SessionsInitOptions = {
   setUseSupabase: (value: boolean) => void;
   getKbProjectMap: () => Record<string, string>;
   getCurrentProjectFilter: () => string;
+  pickProject?: (options?: { title?: string }) => Promise<{ id: string; name: string } | null>;
 };
 
 export function initSessions({
@@ -37,7 +38,8 @@ export function initSessions({
   getUseSupabase,
   setUseSupabase,
   getKbProjectMap,
-  getCurrentProjectFilter
+  getCurrentProjectFilter,
+  pickProject
 }: SessionsInitOptions) {
   let lastSavedSessionId: string | null = null;
   let currentFilter = 'all';
@@ -474,31 +476,19 @@ export function initSessions({
 
   async function saveToKnowledgeBase(session: any) {
     if (!getUserIsLoggedIn()) {
-      alert('Du maste vara inloggad for att spara till kunskapsbasen.');
+      alert('Du måste vara inloggad för att spara till kunskapsbasen.');
       return;
     }
 
+    if (!pickProject) {
+      console.warn('Project picker not available');
+      return;
+    }
+
+    const project = await pickProject({ title: '📁 Spara session till projekt' });
+    if (!project) return;
+
     try {
-      const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
-      const data = await res.json();
-
-      if (!data.projects || data.projects.length === 0) {
-        alert('Du har inga projekt i kunskapsbasen. Skapa ett projekt forst pa /admin/kunskapsbas');
-        return;
-      }
-
-      const projectOptions = data.projects.map((p: any) => p.name + ' (' + p.id.substring(0, 8) + ')').join('\n');
-      const selected = prompt('Valj ett projekt att spara till:\n\n' + projectOptions + '\n\nSkriv projektets namn:');
-
-      if (!selected) return;
-
-      const project = data.projects.find((p: any) => p.name.toLowerCase().includes(selected.toLowerCase()));
-
-      if (!project) {
-        alert('Kunde inte hitta projektet "' + selected + '"');
-        return;
-      }
-
       const content = session.supersynthesis || session.synthesis ||
         (session.responses ? Object.values(session.responses).map((r: any) => r.content).join('\n\n---\n\n') : '');
 
@@ -524,14 +514,14 @@ export function initSessions({
       });
 
       if (saveRes.ok) {
-        alert('Session sparad till kunskapsbasen!\n\nProjekt: ' + project.name);
+        alert('✅ Session sparad!\n\nProjekt: ' + project.name);
       } else {
         const errData = await saveRes.json();
         alert('Fel: ' + (errData.error || 'Kunde inte spara'));
       }
     } catch (e) {
       console.error('Error saving to KB:', e);
-      alert('Nagot gick fel vid sparande till kunskapsbasen.');
+      alert('Något gick fel vid sparande till kunskapsbasen.');
     }
   }
 

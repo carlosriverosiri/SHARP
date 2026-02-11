@@ -25,6 +25,7 @@ type SessionsSetupOptions = {
   synthesisModelEl: HTMLSelectElement | HTMLInputElement | null;
   getCurrentPrompt: () => string;
   getCurrentResponses: () => any;
+  pickProject?: (options?: { title?: string }) => Promise<{ id: string; name: string } | null>;
 };
 
 export function initSessionsSetup(options: SessionsSetupOptions) {
@@ -50,7 +51,8 @@ export function initSessionsSetup(options: SessionsSetupOptions) {
     contextEl,
     synthesisModelEl,
     getCurrentPrompt,
-    getCurrentResponses
+    getCurrentResponses,
+    pickProject
   } = options;
 
   const sessionsApi = initSessions({
@@ -70,7 +72,8 @@ export function initSessionsSetup(options: SessionsSetupOptions) {
     getUseSupabase,
     setUseSupabase,
     getKbProjectMap,
-    getCurrentProjectFilter
+    getCurrentProjectFilter,
+    pickProject
   });
 
   initNotesActions({

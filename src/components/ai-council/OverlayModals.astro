@@ -342,6 +342,19 @@
       </div>
     </div>
 
+  <!-- Project Picker Modal (shared by save-to-KB, sessions, etc.) -->
+  <div id="projectPickerModal" class="session-modal">
+    <div class="session-modal-content" style="max-width: 420px;">
+      <div class="session-modal-header">
+        <div class="session-modal-title" id="projectPickerTitle">📁 Välj projekt</div>
+        <button type="button" class="session-modal-close" id="closeProjectPicker">×</button>
+      </div>
+      <div class="session-modal-body" style="padding: 0;">
+        <div id="projectPickerList" style="max-height: 340px; overflow-y: auto;"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- KB Link Modal -->
   <div id="kbLinkModal" class="session-modal">
     <div class="session-modal-content" style="max-width: 480px;">

@@ -240,6 +240,7 @@ if (!anvandare) {
     import { initSidebarModules } from '../../lib/ai-council/sidebar-modules.ts';
     import { initToast } from '../../lib/ai-council/toast.ts';
     import { initPromptEditModal } from '../../lib/ai-council/prompt-edit-modal.ts';
+    import { initProjectPicker } from '../../lib/ai-council/project-picker.ts';
     import type { AiCouncilProject, AiCouncilSession, CurrentResponses } from '../../lib/ai-council/types.ts';
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -351,6 +352,8 @@ if (!anvandare) {
         container: toastContainer
       });
       const { refreshAccordionHeight } = initAccordionUi();
+      const projectPicker = initProjectPicker();
+      const pickProject = projectPicker?.pickProject ?? (async () => null);
       
       // State
       let currentResponses: CurrentResponses = { openai: '', anthropic: '', google: '', grok: '', synthesis: '', isSuperSynthesis: false };
@@ -609,7 +612,8 @@ if (!anvandare) {
         contextEl,
         synthesisModelEl,
         getCurrentPrompt: () => currentPrompt,
-        getCurrentResponses: () => currentResponses
+        getCurrentResponses: () => currentResponses,
+        pickProject
       });
       loadSessions = sessionsSetup.loadSessions;
       renderSessions = sessionsSetup.renderSessions;
@@ -861,7 +865,8 @@ if (!anvandare) {
       initSaveToKb({
         buttonEl: saveToKbBtn,
         getCurrentPrompt: () => currentPrompt,
-        getSynthesisContentEl: () => synthesisContentEl
+        getSynthesisContentEl: () => synthesisContentEl,
+        pickProject
       });
       
     });
