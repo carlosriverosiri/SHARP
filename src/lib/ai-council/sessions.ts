@@ -612,7 +612,11 @@ export function initSessions({
         }
       }
 
-      const promptPreview = (s.prompt || '').substring(0, 50).trim();
+            // Strip markdown headings like "## K`arnfr`aga" or "## Bakgrund" from preview
+      let rawPrompt = (s.prompt || '').trim();
+      rawPrompt = rawPrompt.replace(/^#{1,4}\s*(K.{1,10}rnfr.{1,3}ga|Bakgrund|Kontext|Specifika krav|Begr.{1,10}nsningar)\s*\n?/i, '').trim();
+      rawPrompt = rawPrompt.replace(/^#{1,4}\s+/gm, '').trim();
+      const promptPreview = rawPrompt.substring(0, 50).trim();
       const projectId = s.kb_project_id || '';
       const projectName = s.kb_project_name || (projectId ? kbProjectMap[projectId] : '') || (projectId ? 'Okänt projekt' : 'Övrigt');
       const projectBadge = projectName ? '<span class="note-item-project" title="' + escapeHtml(projectName) + '">' + icons.kb + '</span>' : '';
