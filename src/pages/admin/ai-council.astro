@@ -1,4 +1,4 @@
----
+﻿---
 /**
  * AI Council - Master Mind Tool
  * URL: /admin/ai-council
@@ -625,6 +625,8 @@ if (!anvandare) {
 
       const kbProjectsUi = initKbProjectsUi({
         kbProjectSelect,
+        kbProjectPickerBtn: document.getElementById('kbProjectPickerBtn'),
+        kbProjectBtnText: document.getElementById('kbProjectBtnText'),
         sessionProjectFilter,
         escapeHtml,
         getKbProjects: () => kbProjects,
@@ -632,7 +634,8 @@ if (!anvandare) {
         setKbProjectMap: (next) => { kbProjectMap = next; },
         getCurrentProjectFilter: () => currentProjectFilter,
         setCurrentProjectFilter: (value) => { currentProjectFilter = value; },
-        renderSessions: () => renderSessions()
+        renderSessions: () => renderSessions(),
+        pickProject
       });
       
       const {
