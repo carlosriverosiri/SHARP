@@ -55,6 +55,11 @@ export function initKbProjectsUi({
     if (!pickProject) return;
     const selected = await pickProject({ title: '\uD83D\uDCC1 V\u00e4lj projekt f\u00f6r session' });
     if (!selected) return;
+    if (selected.id === '__none__') {
+      if (kbProjectSelect) { (kbProjectSelect as HTMLInputElement).value = ''; }
+      updateBtnText();
+      return;
+    }
     if (kbProjectSelect) { (kbProjectSelect as HTMLInputElement).value = selected.id; }
     updateBtnText(selected.name);
     const existing = getKbProjects().find(p => p.id === selected.id);
@@ -115,12 +120,15 @@ export function initKbProjectsUi({
     if (!pickProject) return;
     const selected = await pickProject({ title: '\uD83D\uDCC1 Filtrera per projekt' });
     if (!selected) return;
-    if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = selected.id; }
-    if (sessionProjectFilterText) {
-      sessionProjectFilterText.textContent = selected.name;
-      sessionProjectFilterBtn.classList.remove('kb-project-btn--empty');
+    if (selected.id === '__none__') {
+      if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = 'all'; }
+      if (sessionProjectFilterText) { sessionProjectFilterText.textContent = 'Alla projekt'; sessionProjectFilterBtn!.classList.add('kb-project-btn--empty'); }
+      setCurrentProjectFilter('all');
+    } else {
+      if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = selected.id; }
+      if (sessionProjectFilterText) { sessionProjectFilterText.textContent = selected.name; sessionProjectFilterBtn!.classList.remove('kb-project-btn--empty'); }
+      setCurrentProjectFilter(selected.id);
     }
-    setCurrentProjectFilter(selected.id);
     renderSessions();
   });
 

@@ -150,7 +150,10 @@ export function initProjectPicker() {
         id: p.id, name: p.name, icon: p.icon || '\uD83D\uDCC1'
       }));
 
-      let html = '';
+      let html = '<button type="button" class="project-picker-item project-picker-none" data-project-id="__none__" data-project-name="" data-project-icon="">' +
+        '<span class="project-picker-icon" style="opacity:0.4">\u2716</span>' +
+        '<span class="project-picker-name" style="color:var(--text-muted,#9ca3af)">Inget projekt</span>' +
+        '</button>';
       if (projects.length > 0) {
         html = projects.map(p =>
           '<button type="button" class="project-picker-item" data-project-id="' + escapeAttr(p.id) + '" data-project-name="' + escapeAttr(p.name) + '" data-project-icon="' + escapeAttr(p.icon || '\uD83D\uDCC1') + '">' +

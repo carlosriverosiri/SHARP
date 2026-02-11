@@ -508,7 +508,7 @@ export function initSessions({
         session.kb_project_name = project.name;
         renderSessions();
         document.dispatchEvent(new CustomEvent('ai-council:projects-changed'));
-        showToast('Session flyttad till projekt: ' + project.name, 'success');
+        showToast(isRemove ? 'Session borttagen fr\u00e5n projekt' : 'Session flyttad till projekt: ' + project.name, 'success');
       } else {
         const errData = await saveRes.json().catch(() => ({}));
         showToast(errData.error || 'Kunde inte flytta sessionen', 'error');
