@@ -4337,3 +4337,8 @@
 .kb-project-btn--empty .kb-project-btn-text {
   color: var(--text-muted, #9ca3af);
 }
+/* Project filter button in history sidebar */
+.notes-project-filter .kb-project-btn {
+  width: 100%;
+  justify-content: flex-start;
+}

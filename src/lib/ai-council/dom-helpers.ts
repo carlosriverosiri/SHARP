@@ -1,4 +1,4 @@
-export type DomRefs = {
+﻿export type DomRefs = {
   // Toast + auth status
   toastContainer: HTMLElement | null;
   logoutBanner: HTMLElement | null;
@@ -31,7 +31,7 @@ export type DomRefs = {
   deliberateCount: HTMLElement | null;
   synthesizeCount: HTMLElement | null;
   kbProjectSelect: HTMLSelectElement | null;
-  sessionProjectFilter: HTMLSelectElement | null;
+  sessionProjectFilter: HTMLInputElement | null;
   structurePromptContainer: HTMLElement | null;
   structurePromptBtn: HTMLButtonElement | null;
   structuredPreview: HTMLElement | null;
@@ -156,7 +156,7 @@ export function getDomRefs(): DomRefs {
 
     // KB selectors
     kbProjectSelect: document.getElementById('kbProjectSelect') as HTMLSelectElement | null,
-    sessionProjectFilter: document.getElementById('sessionProjectFilter') as HTMLSelectElement | null,
+    sessionProjectFilter: document.getElementById('sessionProjectFilter') as HTMLInputElement | null,
 
     // Structure prompt
     structurePromptContainer: document.getElementById('structurePromptContainer') as HTMLElement | null,

@@ -4,7 +4,9 @@ type KbProjectsUiOptions = {
   kbProjectSelect: HTMLInputElement | HTMLSelectElement | null;
   kbProjectPickerBtn: HTMLElement | null;
   kbProjectBtnText: HTMLElement | null;
-  sessionProjectFilter: HTMLSelectElement | null;
+  sessionProjectFilter: HTMLInputElement | HTMLSelectElement | null;
+  sessionProjectFilterBtn: HTMLElement | null;
+  sessionProjectFilterText: HTMLElement | null;
   escapeHtml: (value: string) => string;
   getKbProjects: () => KbProject[];
   setKbProjects: (projects: KbProject[]) => void;
@@ -20,6 +22,8 @@ export function initKbProjectsUi({
   kbProjectPickerBtn,
   kbProjectBtnText,
   sessionProjectFilter,
+  sessionProjectFilterBtn,
+  sessionProjectFilterText,
   escapeHtml,
   getKbProjects,
   setKbProjects,
@@ -75,13 +79,21 @@ export function initKbProjectsUi({
       }
     }
     if (sessionProjectFilter) {
-      const current = sessionProjectFilter.value || getCurrentProjectFilter() || 'all';
-      sessionProjectFilter.innerHTML =
-        '<option value="all">Alla projekt</option>' +
-        '<option value="unsorted">\u00d6vrigt</option>' +
-        kbProjects.map(p => '<option value="' + p.id + '">' + escapeHtml(p.name) + '</option>').join('');
-      sessionProjectFilter.value = kbProjects.find(p => p.id === current) ? current : current;
-      setCurrentProjectFilter(sessionProjectFilter.value || 'all');
+      const current = (sessionProjectFilter as HTMLInputElement).value || getCurrentProjectFilter() || 'all';
+      // Update button text
+      if (sessionProjectFilterText) {
+        if (current === 'all') {
+          sessionProjectFilterText.textContent = 'Alla projekt';
+          sessionProjectFilterBtn?.classList.add('kb-project-btn--empty');
+        } else if (current === 'unsorted') {
+          sessionProjectFilterText.textContent = '\u00d6vrigt';
+          sessionProjectFilterBtn?.classList.remove('kb-project-btn--empty');
+        } else {
+          const proj = kbProjects.find(p => p.id === current);
+          sessionProjectFilterText.textContent = proj ? proj.name : 'Alla projekt';
+          sessionProjectFilterBtn?.classList.remove('kb-project-btn--empty');
+        }
+      }
     }
   }
 
@@ -98,8 +110,17 @@ export function initKbProjectsUi({
     }
   }
 
-  sessionProjectFilter?.addEventListener('change', () => {
-    setCurrentProjectFilter(sessionProjectFilter.value || 'all');
+  // Filter button opens a picker-style menu
+  sessionProjectFilterBtn?.addEventListener('click', async () => {
+    if (!pickProject) return;
+    const selected = await pickProject({ title: '\uD83D\uDCC1 Filtrera per projekt' });
+    if (!selected) return;
+    if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = selected.id; }
+    if (sessionProjectFilterText) {
+      sessionProjectFilterText.textContent = selected.name;
+      sessionProjectFilterBtn.classList.remove('kb-project-btn--empty');
+    }
+    setCurrentProjectFilter(selected.id);
     renderSessions();
   });
 
