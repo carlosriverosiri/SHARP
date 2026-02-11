@@ -1,4 +1,6 @@
 import type { ModelResponse } from './types';
+import { getProviderDisplayName, mapSelectionKeyToProvider } from '../ai-core/model-mapping';
+import { getAccordionDom, getSingleDeliberationSection } from './response-dom';
 
 type SequentialRunOptions = {
   runAllSequentialBtn: HTMLButtonElement | null;
@@ -61,7 +63,7 @@ export function initSequentialRun({
       const modelEl = cb.closest('.model-checkbox') as HTMLElement | null;
       const model = modelEl?.dataset.model;
       const collectedResponses = getCollectedResponses();
-      if (model && !collectedResponses[model === 'gemini' ? 'google' : model]) {
+      if (model && !collectedResponses[mapSelectionKeyToProvider(model)]) {
         selectedModels.push(model);
       }
     });
@@ -80,25 +82,21 @@ export function initSequentialRun({
 
     document.querySelectorAll('.single-model-btn').forEach(b => (b as HTMLButtonElement).disabled = true);
 
-    const modelNames = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
-    const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
-
     if (resultsEl) resultsEl.classList.add('visible');
 
     let completedCount = 0;
     let errorCount = 0;
 
     for (const modelId of selectedModels) {
-      const providerId = providerMap[modelId as keyof typeof providerMap];
+      const providerId = mapSelectionKeyToProvider(modelId);
+      const displayName = getProviderDisplayName(providerId);
 
-      setStatus(`🔄 Kör ${modelNames[modelId as keyof typeof modelNames]} (${completedCount + 1}/${selectedModels.length})...`, true);
-      runAllSequentialBtn.textContent = `⏳ ${modelNames[modelId as keyof typeof modelNames]} (${completedCount + 1}/${selectedModels.length})`;
+      setStatus(`🔄 Kör ${displayName} (${completedCount + 1}/${selectedModels.length})...`, true);
+      runAllSequentialBtn.textContent = `⏳ ${displayName} (${completedCount + 1}/${selectedModels.length})`;
 
-      const accordion = document.getElementById('accordion-' + providerId);
-      if (accordion) {
-        accordion.style.display = 'block';
-        const statusEl = document.getElementById('status-' + providerId);
-        const durationEl = document.getElementById('duration-' + providerId);
+      const { accordionEl, statusEl, durationEl } = getAccordionDom(providerId);
+      if (accordionEl) {
+        accordionEl.style.display = 'block';
         if (statusEl) {
           statusEl.textContent = 'Kör...';
           statusEl.className = 'accordion-status waiting';
@@ -137,15 +135,13 @@ export function initSequentialRun({
           collectedResponses[providerId] = r;
           displayResponse(providerId, r);
 
-          if (accordion) {
-            const statusEl = document.getElementById('status-' + providerId);
-            const durationEl = document.getElementById('duration-' + providerId);
+          if (accordionEl) {
             if (statusEl) {
               statusEl.textContent = '✓';
               statusEl.className = 'accordion-status success';
             }
             if (durationEl) durationEl.textContent = formatDuration(r.duration);
-            accordion.classList.add('open');
+            accordionEl.classList.add('open');
           }
 
           if (btn) {
@@ -162,8 +158,7 @@ export function initSequentialRun({
         errorCount++;
         playNotificationSound('error');
 
-        if (accordion) {
-          const statusEl = document.getElementById('status-' + providerId);
+        if (accordionEl) {
           if (statusEl) {
             statusEl.textContent = 'Fel';
             statusEl.className = 'accordion-status error';
@@ -201,7 +196,7 @@ export function initSequentialRun({
       if (responseCount >= 2 && !getHasRunDeliberation()) {
         if (deliberateNowBtn) deliberateNowBtn.disabled = false;
         if (deliberateCount) deliberateCount.textContent = `${responseCount} svar`;
-        const singleDelibSection = document.getElementById('singleDeliberationSection');
+        const singleDelibSection = getSingleDeliberationSection();
         if (singleDelibSection) singleDelibSection.style.display = 'block';
       }
     }

@@ -1,5 +1,6 @@
 import type { ModelResponse } from './types';
-import { mapProviderToKey } from '../ai-core/model-mapping';
+import { mapProviderToKey, getProviderDisplayName, mapSelectionKeyToProvider } from '../ai-core/model-mapping';
+import { getAccordionDom } from './response-dom';
 
 type DeliberationRunOptions = {
   deliberateNowBtn: HTMLButtonElement | null;
@@ -94,10 +95,8 @@ export function initDeliberationRun({
     const modelsWithResponses = Object.keys(getCollectedResponses());
     modelsWithResponses.forEach(modelKey => {
       const normalizedKey = modelKey === 'gemini' ? 'google' : modelKey;
-      const r2StatusEl = document.getElementById('status-r2-' + normalizedKey);
-      const r2DurationEl = document.getElementById('duration-r2-' + normalizedKey);
-      const r2Accordion = document.getElementById('accordion-r2-' + normalizedKey);
-      if (r2Accordion) (r2Accordion as HTMLElement).style.display = 'block';
+      const { r2AccordionEl, r2StatusEl, r2DurationEl } = getAccordionDom(normalizedKey);
+      if (r2AccordionEl) r2AccordionEl.style.display = 'block';
       if (r2StatusEl) {
         r2StatusEl.textContent = 'Väntar...';
         r2StatusEl.className = 'accordion-status waiting';
@@ -176,20 +175,17 @@ export function initDeliberationRun({
       btn.classList.add('running');
       btn.textContent = '⏳ Kör...';
 
-      const modelNames: Record<string, string> = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
-      setStatus(`🔄 ${modelNames[modelId || ''] || 'Modell'} granskar andras svar...`, true);
+      const providerId = mapSelectionKeyToProvider(modelId || '');
+      const displayName = getProviderDisplayName(providerId);
+      setStatus(`🔄 ${displayName} granskar andras svar...`, true);
       hideError();
 
       if (round2Section) round2Section.style.display = 'block';
       if (round1Label) round1Label.style.display = 'block';
 
-      const providerMap: Record<string, string> = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
-      const providerId = providerMap[modelId || ''] || '';
-      const r2Accordion = providerId ? document.getElementById('accordion-r2-' + providerId) : null;
-      if (r2Accordion) {
-        (r2Accordion as HTMLElement).style.display = 'block';
-        const r2StatusEl = document.getElementById('status-r2-' + providerId);
-        const r2DurationEl = document.getElementById('duration-r2-' + providerId);
+      const { r2AccordionEl, r2StatusEl, r2DurationEl } = getAccordionDom(providerId);
+      if (r2AccordionEl) {
+        r2AccordionEl.style.display = 'block';
         if (r2StatusEl) {
           r2StatusEl.textContent = 'Kör...';
           r2StatusEl.className = 'accordion-status waiting';
@@ -223,12 +219,12 @@ export function initDeliberationRun({
           btn.classList.remove('running');
           btn.classList.add('done');
           const dotClass = providerId === 'google' ? 'google' : providerId;
-          btn.innerHTML = `<span class="dot-${dotClass}"></span> ✓ ${modelNames[modelId || ''] || 'Modell'} R2`;
+          btn.innerHTML = `<span class="dot-${dotClass}"></span> ✓ ${displayName} R2`;
 
           const r2Count = Object.keys(getCollectedR2Responses()).length;
           const r1Count = Object.keys(getCollectedResponses()).length;
 
-          setStatus(`✓ ${modelNames[modelId || ''] || 'Modell'} R2 klar! (${r2Count}/${r1Count} deliberationer)`, true);
+          setStatus(`✓ ${displayName} R2 klar! (${r2Count}/${r1Count} deliberationer)`, true);
           playNotificationSound('success');
 
           if (r2Count >= r1Count) {
@@ -251,10 +247,9 @@ export function initDeliberationRun({
         }
       } catch (error: any) {
         console.error('Single deliberation error:', error);
-        showError(`${modelNames[modelId || ''] || 'Modell'} R2 fel: ${error.message}`);
+        showError(`${displayName} R2 fel: ${error.message}`);
         playNotificationSound('error');
-        if (r2Accordion && providerId) {
-          const r2StatusEl = document.getElementById('status-r2-' + providerId);
+        if (r2AccordionEl && providerId) {
           if (r2StatusEl) {
             r2StatusEl.textContent = 'Fel';
             r2StatusEl.className = 'accordion-status error';

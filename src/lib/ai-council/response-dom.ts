@@ -112,6 +112,10 @@ export function getTotalsDom(): TotalsDom {
   };
 }
 
+export function getSingleDeliberationSection(): HTMLElement | null {
+  return document.getElementById('singleDeliberationSection');
+}
+
 export function getHallucinationDom(): HallucinationDom {
   return {
     reportEl: document.getElementById('hallucinationReport'),

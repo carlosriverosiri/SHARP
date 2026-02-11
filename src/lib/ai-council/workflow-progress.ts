@@ -1,5 +1,5 @@
 import type { CurrentResponses, ModelResponse } from './types';
-import { mapProviderToKey } from '../ai-core/model-mapping';
+import { mapProviderToKey, getUnusedSelectionKeys, getModelDotColor } from '../ai-core/model-mapping';
 
 type WorkflowProgressOptions = {
   retryFailedBtn: HTMLElement | null;
@@ -61,11 +61,7 @@ export function initWorkflowProgress({
   let failedModels: string[] = [];
 
   function getUnusedModels() {
-    const collectedResponses = getCollectedResponses();
-    return ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
-      const providerKey = m === 'gemini' ? 'google' : m;
-      return !collectedResponses[providerKey];
-    });
+    return getUnusedSelectionKeys(getCollectedResponses());
   }
 
   function prepareToAddModels() {
@@ -168,10 +164,7 @@ export function initWorkflowProgress({
       }
     }
 
-    const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
-      const providerKey = m === 'gemini' ? 'google' : m;
-      return !collectedResponses[providerKey];
-    });
+    const unusedModels = getUnusedSelectionKeys(collectedResponses);
     const hasUnusedModels = unusedModels.length > 0;
     const canAddModels = hasSuccesses && hasUnusedModels;
 
@@ -188,9 +181,8 @@ export function initWorkflowProgress({
     }
     if (canAddModels && addModelsCount && unusedModelDots) {
       addModelsCount.textContent = `${unusedModels.length} kvar`;
-      const dotColors = { gemini: '#10b981', anthropic: '#f59e0b', grok: '#3b82f6', openai: '#6b7280' };
       unusedModelDots.innerHTML = unusedModels.map(m =>
-        `<span class="model-dot-unused" style="background: ${dotColors[m as keyof typeof dotColors]}" title="${m}"></span>`
+        `<span class="model-dot-unused" style="background: ${getModelDotColor(m)}" title="${m}"></span>`
       ).join('');
     }
 

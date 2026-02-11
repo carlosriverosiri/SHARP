@@ -1,4 +1,6 @@
 import type { ModelResponse } from './types';
+import { getProviderDisplayName, mapSelectionKeyToProvider } from '../ai-core/model-mapping';
+import { getAccordionDom, getSingleDeliberationSection } from './response-dom';
 
 type SingleModelRunOptions = {
   promptEl: HTMLTextAreaElement | HTMLInputElement | null;
@@ -64,19 +66,16 @@ export function initSingleModelRun({
       btn.classList.add('running');
       (btn as HTMLButtonElement).textContent = '⏳ Kör...';
 
-      const modelNames = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
-      setStatus(`🔄 Kör ${modelNames[modelId as keyof typeof modelNames]}...`, true);
+      const providerId = mapSelectionKeyToProvider(modelId);
+      const displayName = getProviderDisplayName(providerId);
+      setStatus(`🔄 Kör ${displayName}...`, true);
       hideError();
 
       if (resultsEl) resultsEl.classList.add('visible');
 
-      const providerMap = { gemini: 'google', anthropic: 'anthropic', grok: 'grok', openai: 'openai' };
-      const providerId = providerMap[modelId as keyof typeof providerMap];
-      const accordion = document.getElementById('accordion-' + providerId);
-      if (accordion) {
-        accordion.style.display = 'block';
-        const statusEl = document.getElementById('status-' + providerId);
-        const durationEl = document.getElementById('duration-' + providerId);
+      const { accordionEl, statusEl, durationEl } = getAccordionDom(providerId);
+      if (accordionEl) {
+        accordionEl.style.display = 'block';
         if (statusEl) {
           statusEl.textContent = 'Kör...';
           statusEl.className = 'accordion-status waiting';
@@ -134,7 +133,7 @@ export function initSingleModelRun({
                   const event = JSON.parse(line);
                   console.log('Event:', event.type, event.data);
                   if (event.type === 'model_complete') {
-                    setStatus(`✓ ${modelNames[modelId as keyof typeof modelNames]} svarade (${(event.data.duration / 1000).toFixed(1)}s)`, true);
+                    setStatus(`✓ ${displayName} svarade (${(event.data.duration / 1000).toFixed(1)}s)`, true);
                   }
                   if (event.type === 'complete') data = event.data;
                   if (event.type === 'error') throw new Error(event.data.error);
@@ -159,8 +158,7 @@ export function initSingleModelRun({
         if (data.responses && data.responses.length > 0) {
           const r = data.responses[0];
           if (r.error) {
-            showError(`${modelNames[modelId as keyof typeof modelNames]} fel: ${r.error}`);
-            const statusEl = document.getElementById('status-' + providerId);
+            showError(`${displayName} fel: ${r.error}`);
             if (statusEl) {
               statusEl.textContent = 'Fel';
               statusEl.className = 'accordion-status error';
@@ -168,20 +166,18 @@ export function initSingleModelRun({
           } else {
             displayResponse(providerId, r);
             const collectedResponses = getCollectedResponses();
-            collectedResponses[modelId] = r;
+            collectedResponses[providerId] = r;
             saveResponsesToStorage();
 
-            const statusEl = document.getElementById('status-' + providerId);
-            const durationEl = document.getElementById('duration-' + providerId);
             if (statusEl) {
               statusEl.textContent = '✓';
               statusEl.className = 'accordion-status success';
             }
             if (durationEl) durationEl.textContent = formatDuration(r.duration);
 
-            accordion?.classList.add('open');
+            accordionEl?.classList.add('open');
 
-            setStatus(`✓ ${modelNames[modelId as keyof typeof modelNames]} klar! (${Object.keys(collectedResponses).length} svar totalt)`, true);
+            setStatus(`✓ ${displayName} klar! (${Object.keys(collectedResponses).length} svar totalt)`, true);
             btn.classList.add('done');
             playNotificationSound('success');
           }
@@ -202,16 +198,15 @@ export function initSingleModelRun({
           if (respCount >= 2 && !getHasRunDeliberation()) {
             if (deliberateNowBtn) deliberateNowBtn.disabled = false;
             if (deliberateCount) deliberateCount.textContent = `${respCount} svar`;
-            const singleDelibSection = document.getElementById('singleDeliberationSection');
+            const singleDelibSection = getSingleDeliberationSection();
             if (singleDelibSection) singleDelibSection.style.display = 'block';
           }
         }
       } catch (error: any) {
         console.error('Single model error:', error);
-        showError(`${modelNames[modelId as keyof typeof modelNames]} fel: ${error.message}`);
+        showError(`${displayName} fel: ${error.message}`);
         playNotificationSound('error');
-        if (accordion) {
-          const statusEl = document.getElementById('status-' + providerId);
+        if (accordionEl) {
           if (statusEl) {
             statusEl.textContent = 'Fel';
             statusEl.className = 'accordion-status error';
@@ -223,12 +218,13 @@ export function initSingleModelRun({
           button.disabled = false;
           button.classList.remove('running');
         });
-        const btnTexts = { gemini: 'Gemini', anthropic: 'Claude', grok: 'Grok', openai: 'OpenAI' };
         document.querySelectorAll('.single-model-btn').forEach(b => {
           const dot = b.querySelector('span');
+          const btnModelId = (b as HTMLElement).dataset.model || '';
+          const btnProviderId = mapSelectionKeyToProvider(btnModelId);
           b.innerHTML = '';
           if (dot) b.appendChild(dot);
-          b.appendChild(document.createTextNode(' ' + btnTexts[(b as HTMLElement).dataset.model as keyof typeof btnTexts]));
+          b.appendChild(document.createTextNode(' ' + getProviderDisplayName(btnProviderId)));
         });
         setTimeout(() => setStatus('', false), 3000);
       }

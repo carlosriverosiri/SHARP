@@ -1,4 +1,5 @@
 import type { ModelResponse } from './types';
+import { getUnusedSelectionKeys, getModelDotColor } from '../ai-core/model-mapping';
 
 type SynthesizeRunOptions = {
   synthesizeNowBtn: HTMLButtonElement | null;
@@ -120,10 +121,7 @@ export function initSynthesizeRun({
         setHasSynthesized(true);
         setModelsInCurrentSynthesis(modelsUsed.length);
 
-        const unusedModels = ['gemini', 'anthropic', 'grok', 'openai'].filter(m => {
-          const providerKey = m === 'gemini' ? 'google' : m;
-          return !collectedResponses[providerKey];
-        });
+        const unusedModels = getUnusedSelectionKeys(collectedResponses);
 
         if (unusedModels.length > 0) {
           synthesizeNowBtn.classList.add('done');
@@ -131,14 +129,8 @@ export function initSynthesizeRun({
           if (addModelsCardBtn) addModelsCardBtn.style.display = 'flex';
           if (addModelsCount) addModelsCount.textContent = `${unusedModels.length} kvar`;
           if (unusedModelDots) {
-            const dotColors: Record<string, string> = {
-              gemini: '#10b981',
-              anthropic: '#f59e0b',
-              grok: '#3b82f6',
-              openai: '#6b7280'
-            };
             unusedModelDots.innerHTML = unusedModels.map(m =>
-              `<span class="model-dot-unused" style="background: ${dotColors[m]}" title="${m}"></span>`
+              `<span class="model-dot-unused" style="background: ${getModelDotColor(m)}" title="${m}"></span>`
             ).join('');
           }
           if (deliberateNowBtn) {
