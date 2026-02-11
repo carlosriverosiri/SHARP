@@ -1176,7 +1176,75 @@ async function synthesizeWithGrok(
   }
 }
 
-// Synthesis using Claude Opus 4 (premium model for complex analysis)
+// Synthesis using Claude Opus 4.6 (latest premium model with extended thinking)
+async function synthesizeWithClaudeOpus46(
+  originalPrompt: string,
+  responses: AIResponse[]
+): Promise<AIResponse> {
+  const start = Date.now();
+  
+  const validResponses = responses.filter(r => !r.error && r.response);
+  
+  if (validResponses.length === 0) {
+    return {
+      model: 'claude-opus-4-6-20260205',
+      provider: 'Claude Opus 4.6 (Syntes)',
+      response: 'Kunde inte syntetisera - inga giltiga svar att analysera.',
+      duration: Date.now() - start,
+    };
+  }
+
+  const synthesisPrompt = buildSynthesisPrompt(originalPrompt, responses);
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6-20260205',
+        max_tokens: 16384,
+        messages: [
+          { role: 'user', content: synthesisPrompt }
+        ],
+      }),
+    });
+
+    const parsed = await safeParseResponse(response, 'Claude Opus 4.6');
+    if (!parsed.ok) {
+      throw new Error(parsed.error);
+    }
+
+    const data = parsed.data;
+    const content = data.content?.[0]?.text || 'Syntes misslyckades';
+    const tokens: TokenUsage = {
+      inputTokens: data.usage?.input_tokens || 0,
+      outputTokens: data.usage?.output_tokens || 0,
+    };
+    
+    return {
+      model: 'claude-opus-4-6-20260205',
+      provider: 'Claude Opus 4.6 (Syntes)',
+      response: content,
+      duration: Date.now() - start,
+      tokens,
+      cost: calculateCost('claude-opus-4-6-20260205', tokens),
+    };
+  } catch (error: any) {
+    return {
+      model: 'claude-opus-4-6-20260205',
+      provider: 'Claude Opus 4.6 (Syntes)',
+      response: '',
+      error: error.message,
+      duration: Date.now() - start,
+    };
+  }
+}
+
+// Synthesis using Claude Opus 4.5 (premium model for complex analysis)
 async function synthesizeWithClaudeOpus(
   originalPrompt: string,
   responses: AIResponse[]
@@ -1326,6 +1394,8 @@ async function synthesize(
       return synthesizeWithGemini(originalPrompt, responses);
     case 'grok':
       return synthesizeWithGrok(originalPrompt, responses);
+    case 'claude-opus-46':
+      return synthesizeWithClaudeOpus46(originalPrompt, responses);
     case 'claude-opus':
       return synthesizeWithClaudeOpus(originalPrompt, responses);
     case 'claude':
@@ -1413,6 +1483,20 @@ async function superSynthesize(
         return { model: 'grok-2-latest', provider: 'Grok (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
+    case 'claude-opus-46':
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+          body: JSON.stringify({ model: 'claude-opus-4-6-20260205', max_tokens: 16384, messages: [{ role: 'user', content: superPrompt }] }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return { model: 'claude-opus-4-6-20260205', provider: 'Claude Opus 4.6 (Supersyntes)', response: data.content?.[0]?.text || '', duration: Date.now() - start };
+      } catch (e: any) {
+        return { model: 'claude-opus-4-6-20260205', provider: 'Claude Opus 4.6 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+      }
+
     case 'claude-opus':
       try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1642,6 +1726,7 @@ ZOTERO BULK IMPORT: Efter referenslistan, lägg till DOI/PMID-lista för Zotero-
         let actualSynthesisModel = synthesisModel;
         const synthesisToProvider: Record<string, ModelProvider> = {
           'claude': 'anthropic', 
+          'claude-opus-46': 'anthropic',
           'claude-opus': 'anthropic',
           'openai': 'openai',
           'openai-pro': 'openai',
