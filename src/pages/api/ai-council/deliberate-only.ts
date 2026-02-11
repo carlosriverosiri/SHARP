@@ -14,43 +14,8 @@ const ANTHROPIC_API_KEY = import.meta.env.ANTHROPIC_API_KEY;
 const GOOGLE_AI_API_KEY = import.meta.env.GOOGLE_AI_API_KEY;
 const XAI_API_KEY = import.meta.env.XAI_API_KEY;
 
-interface TokenUsage {
-  inputTokens: number;
-  outputTokens: number;
-}
-
-interface CostInfo {
-  inputCost: number;
-  outputCost: number;
-  totalCost: number;
-}
-
-interface AIResponse {
-  model: string;
-  provider: string;
-  response: string;
-  error?: string;
-  duration: number;
-  tokens?: TokenUsage;
-  cost?: CostInfo;
-}
-
-// Cost calculation
-const MODEL_PRICING: Record<string, { input: number; output: number }> = {
-  'o1': { input: 15, output: 60 },
-  'gpt-4o': { input: 2.5, output: 10 },
-  'claude-sonnet-4-20250514': { input: 3, output: 15 },
-  'gemini-2.0-flash': { input: 0.1, output: 0.4 },
-  'grok-4': { input: 3, output: 15 },
-  'grok-2-latest': { input: 2, output: 10 },
-};
-
-function calculateCost(model: string, tokens: TokenUsage): CostInfo {
-  const pricing = MODEL_PRICING[model] || { input: 0, output: 0 };
-  const inputCost = (tokens.inputTokens / 1_000_000) * pricing.input;
-  const outputCost = (tokens.outputTokens / 1_000_000) * pricing.output;
-  return { inputCost, outputCost, totalCost: inputCost + outputCost };
-}
+import type { TokenUsage, AIResponse } from '../../../lib/ai-core/types';
+import { calculateCost } from '../../../lib/ai-core/pricing';
 
 // Build deliberation prompt - models review each other with targeted conflict analysis
 function buildDeliberationPrompt(originalPrompt: string, responses: AIResponse[], currentProvider: string): string {

@@ -23,56 +23,8 @@ const ANTHROPIC_API_KEY = import.meta.env.ANTHROPIC_API_KEY;
 const GOOGLE_AI_API_KEY = import.meta.env.GOOGLE_AI_API_KEY;
 const XAI_API_KEY = import.meta.env.XAI_API_KEY;
 
-interface TokenUsage {
-  inputTokens: number;
-  outputTokens: number;
-}
-
-interface CostInfo {
-  inputCost: number;
-  outputCost: number;
-  totalCost: number;
-  currency: 'USD';
-}
-
-interface AIResponse {
-  model: string;
-  provider: string;
-  response: string;
-  error?: string;
-  duration: number;
-  tokens?: TokenUsage;
-  cost?: CostInfo;
-}
-
-// Pricing per 1M tokens (USD) - Updated January 2026
-const PRICING = {
-  // OpenAI
-  'gpt-5.2': { input: 1.75, output: 14.00 },
-  'gpt-5.2-pro': { input: 21.00, output: 168.00 },
-  'o1': { input: 15.00, output: 60.00 },
-  'gpt-4o': { input: 2.50, output: 10.00 },
-  // Anthropic
-  'claude-sonnet-4-20250514': { input: 3.00, output: 15.00 },
-  'claude-opus-4-5-20250514': { input: 15.00, output: 75.00 },
-  // Google
-  'gemini-2.0-flash': { input: 0.10, output: 0.40 },
-  // xAI - Grok models
-  'grok-4': { input: 3.00, output: 15.00 },
-  'grok-2-latest': { input: 2.00, output: 10.00 },
-} as const;
-
-function calculateCost(model: string, tokens: TokenUsage): CostInfo {
-  const pricing = PRICING[model as keyof typeof PRICING] || { input: 0, output: 0 };
-  const inputCost = (tokens.inputTokens / 1_000_000) * pricing.input;
-  const outputCost = (tokens.outputTokens / 1_000_000) * pricing.output;
-  return {
-    inputCost,
-    outputCost,
-    totalCost: inputCost + outputCost,
-    currency: 'USD',
-  };
-}
+import type { TokenUsage, AIResponse, ModelProvider, SynthesisModel, ImageData, QueryRequest, Hallucination, HallucinationReport } from '../../../lib/ai-core/types';
+import { calculateCost } from '../../../lib/ai-core/pricing';
 
 // Safe JSON parse that handles HTML error responses
 async function safeParseResponse(response: Response, provider: string): Promise<{ ok: boolean; data?: any; error?: string }> {
@@ -98,46 +50,7 @@ async function safeParseResponse(response: Response, provider: string): Promise<
   }
 }
 
-type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
-
-// Synthesis model options - separate from query models
-type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'openai-pro' | 'gpt4o' | 'gemini' | 'grok';
-
-interface ImageData {
-  name: string;
-  base64: string; // data:image/png;base64,...
-  mimeType: string;
-}
-
-interface QueryRequest {
-  context: string;
-  prompt: string;
-  synthesisModel?: SynthesisModel;
-  fileContent?: string; // Extracted text from uploaded files
-  selectedModels?: ModelProvider[]; // Which models to query
-  enableDeliberation?: boolean; // Enable round 2 where models review each other
-  profileType?: 'fast' | 'coding' | 'science' | 'patient' | 'strategy'; // Which preset profile to use
-  images?: ImageData[]; // Base64 encoded images for multimodal queries
-  skipSynthesis?: boolean; // Debug mode: skip synthesis step
-}
-
-// Hallucination detection
-interface Hallucination {
-  id: string;
-  claim: string;           // The suspected claim
-  source: string;          // Which model wrote it
-  flaggedBy: string;       // Which model flagged it
-  reason: string;          // Why it's suspected
-  confidence: 'high' | 'medium' | 'low';
-}
-
-interface HallucinationReport {
-  total: number;
-  high: number;    // 3+ models flagged
-  medium: number;  // 2 models flagged
-  low: number;     // 1 model flagged
-  items: Hallucination[];
-}
+// Types imported from ai-core/types above
 
 // Parse hallucinations from deliberation responses
 function parseHallucinations(round2Responses: AIResponse[]): HallucinationReport {

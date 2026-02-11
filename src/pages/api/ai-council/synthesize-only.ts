@@ -13,44 +13,8 @@ const ANTHROPIC_API_KEY = import.meta.env.ANTHROPIC_API_KEY;
 const GOOGLE_AI_API_KEY = import.meta.env.GOOGLE_AI_API_KEY;
 const XAI_API_KEY = import.meta.env.XAI_API_KEY;
 
-type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'gpt4o' | 'gemini' | 'grok';
-
-interface TokenUsage {
-  inputTokens: number;
-  outputTokens: number;
-}
-
-interface CostInfo {
-  inputCost: number;
-  outputCost: number;
-  totalCost: number;
-}
-
-interface AIResponse {
-  model: string;
-  provider: string;
-  response: string;
-  error?: string;
-  duration: number;
-  tokens?: TokenUsage;
-  cost?: CostInfo;
-}
-
-// Cost calculation
-const MODEL_PRICING: Record<string, { input: number; output: number }> = {
-  'gpt-4o': { input: 2.5, output: 10 },
-  'claude-sonnet-4-20250514': { input: 3, output: 15 },
-  'claude-opus-4-20250514': { input: 15, output: 75 },
-  'gemini-2.0-flash': { input: 0.1, output: 0.4 },
-  'grok-4': { input: 3, output: 15 },
-};
-
-function calculateCost(model: string, tokens: TokenUsage): CostInfo {
-  const pricing = MODEL_PRICING[model] || { input: 0, output: 0 };
-  const inputCost = (tokens.inputTokens / 1_000_000) * pricing.input;
-  const outputCost = (tokens.outputTokens / 1_000_000) * pricing.output;
-  return { inputCost, outputCost, totalCost: inputCost + outputCost };
-}
+import type { TokenUsage, AIResponse, SynthesisModel } from '../../../lib/ai-core/types';
+import { calculateCost } from '../../../lib/ai-core/pricing';
 
 // Build synthesis prompt
 function buildSynthesisPrompt(originalPrompt: string, responses: AIResponse[]): string {
