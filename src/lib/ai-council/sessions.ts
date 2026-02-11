@@ -1,4 +1,4 @@
-﻿import type { AiCouncilSession } from './types';
+import type { AiCouncilSession } from './types';
 
 type SessionsInitOptions = {
   notesList: HTMLElement | null;
@@ -495,20 +495,23 @@ export function initSessions({
     const project = await pickProject({ title: '📁 Flytta till projekt' });
     if (!project) return;
 
+    const isRemove = project.id === '__none__';
+    const projectIdToSend = isRemove ? null : project.id;
+
     try {
       const saveRes = await fetch(`/api/ai-council/sessions?id=${session.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ project_id: project.id })
+        body: JSON.stringify({ project_id: projectIdToSend })
       });
 
       if (saveRes.ok) {
-        session.kb_project_id = project.id;
-        session.kb_project_name = project.name;
+        session.kb_project_id = isRemove ? null : project.id;
+        session.kb_project_name = isRemove ? null : project.name;
         renderSessions();
         document.dispatchEvent(new CustomEvent('ai-council:projects-changed'));
-        showToast(isRemove ? 'Session borttagen fr\u00e5n projekt' : 'Session flyttad till projekt: ' + project.name, 'success');
+        showToast(isRemove ? 'Session borttagen från projekt' : 'Session flyttad till projekt: ' + project.name, 'success');
       } else {
         const errData = await saveRes.json().catch(() => ({}));
         showToast(errData.error || 'Kunde inte flytta sessionen', 'error');
@@ -636,7 +639,7 @@ export function initSessions({
           '<div class="note-item-actions">' +
             '<button class="note-item-btn" data-action="view" title="Visa" aria-label="Visa session">' + icons.eye + '</button>' +
             '<button class="note-item-btn" data-action="copy" title="Kopiera" aria-label="Kopiera till urklipp">' + icons.copy + '</button>' +
-            '<button class="note-item-btn" data-action="kb" title="' + (projectName && projectName !== 'Övrigt' ? 'Projekt: ' + escapeHtml(projectName) : 'Flytta till projekt') + '" aria-label="Flytta till projekt">' + icons.kb + '</button>' +
+            '<button class="note-item-btn" data-action="kb" title="' + (projectName && projectName !== 'Övrigt' ? 'Projekt: ' + escapeHtml(projectName) + ' – klicka för att byta eller avvälja' : 'Flytta till projekt') + '" aria-label="Byt eller avvälj projekt">' + icons.kb + '</button>' +
             '<button class="note-item-btn" data-action="delete" title="Radera" aria-label="Radera session">' + icons.trash + '</button>' +
           '</div>' +
         '</div>' +
@@ -737,7 +740,9 @@ export function initSessions({
   const profileDisplayNames: Record<string, string> = {
     snabb: '⚡ Snabb',
     patient: '🏥 Patient',
+    bild: '🖼️ Bildanalys',
     kodning: '💻 Kodning',
+    kod: '💻 Kodning',
     vetenskap: '🔬 Vetenskap',
     strategi: '📊 Strategi',
     custom: '🔧 Anpassad'
@@ -870,6 +875,14 @@ export function initSessions({
       promptEl.value = currentModalSession.prompt;
       closeSessionModal();
       promptEl.focus();
+    }
+  });
+
+  document.getElementById('changeSessionProject')?.addEventListener('click', async () => {
+    if (currentModalSession) {
+      const session = currentModalSession;
+      await saveToKnowledgeBase(session);
+      document.getElementById('sessionModalMetaPanel')!.innerHTML = buildMetaPanelHTML(session);
     }
   });
 
@@ -1059,6 +1072,14 @@ export function initSessions({
       promptEl.value = currentModalSession.prompt;
       closeFullSessionModal();
       promptEl.focus();
+    }
+  });
+
+  document.getElementById('changeFullSessionProject')?.addEventListener('click', async () => {
+    if (currentModalSession) {
+      const session = currentModalSession;
+      await saveToKnowledgeBase(session);
+      document.getElementById('fullSessionMetaPanel')!.innerHTML = buildMetaPanelHTML(session);
     }
   });
 

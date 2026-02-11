@@ -63,6 +63,12 @@ export function initModelSelection({
       synthesis: 'gpt4o',
       deliberation: false
     },
+    bild: {
+      name: 'Bildanalys',
+      models: ['openai', 'anthropic', 'gemini'],
+      synthesis: 'claude-opus',
+      deliberation: true
+    },
     kod: {
       name: 'Kodning',
       models: ['openai', 'anthropic', 'gemini', 'grok'],

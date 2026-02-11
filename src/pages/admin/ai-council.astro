@@ -1,4 +1,4 @@
-﻿---
+---
 /**
  * AI Council - Master Mind Tool
  * URL: /admin/ai-council
@@ -558,7 +558,9 @@ if (!anvandare) {
         contextEl,
         synthesisModelEl,
         kbProjectSelect,
-        getSaveSession: () => saveSession
+        getSaveSession: () => saveSession,
+        pickProject,
+        getKbProjectMap: () => kbProjectMap
       });
 
       workflowProgress = initWorkflowProgress({

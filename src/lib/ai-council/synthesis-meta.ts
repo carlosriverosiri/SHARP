@@ -13,6 +13,7 @@ export function initSynthesisMeta({
     const profileInfo: Record<string, { icon: string; name: string }> = {
       snabb: { icon: '⚡', name: 'Snabb' },
       patient: { icon: '🩺', name: 'Patient' },
+      bild: { icon: '🖼️', name: 'Bildanalys' },
       kod: { icon: '💻', name: 'Kodning' },
       vetenskap: { icon: '🔬', name: 'Forskning' },
       strategi: { icon: '🎯', name: 'Strategi' }

@@ -4,6 +4,9 @@
  * GET /api/ai-council/sessions - List user's sessions
  * POST /api/ai-council/sessions - Save a new session
  * DELETE /api/ai-council/sessions?id=xxx - Delete a session
+ * PATCH /api/ai-council/sessions?id=xxx - Update session name/project
+ * 
+ * All project references use kb_projects (unified project system).
  */
 
 export const prerender = false;
@@ -52,30 +55,20 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    // Try to fetch with new columns, fall back to basic columns if they don't exist yet
     let data: any[] | null = null;
     let error: any = null;
     
     try {
-      // First try with all columns (after migration)
-      let query = supabase
+      const result = await supabase
         .from('ai_council_sessions')
         .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google, response_grok, round2_responses, selected_models, profile, deliberation_enabled, total_cost, supersynthesis, kb_project_id, kb_projects(name)')
-        .eq('user_id', anvandare.id);
-      const result = await query
+        .eq('user_id', anvandare.id)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
       
       if (result.error) {
         const msg = result.error.message || '';
-        if (
-          msg.includes('column') ||
-          msg.includes('relationship') ||
-          msg.includes('schema cache') ||
-          msg.includes('kb_projects') ||
-          msg.includes('kb_project_id')
-        ) {
-          // Columns/relations don't exist yet, fall back to basic query
+        if (msg.includes('column') || msg.includes('relationship') || msg.includes('schema cache') || msg.includes('kb_projects') || msg.includes('kb_project_id')) {
           throw new Error('columns_not_found');
         }
       }
@@ -83,44 +76,35 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       error = result.error;
     } catch (e) {
       // Fall back to basic columns (before migration)
-      let query = supabase
+      const result = await supabase
         .from('ai_council_sessions')
         .select('id, name, prompt, context, synthesis, synthesis_model, total_duration_ms, created_at, tags, response_openai, response_anthropic, response_google')
-        .eq('user_id', anvandare.id);
-      // kb_project_id may not exist yet in older schemas, so skip filtering
-      const result = await query
+        .eq('user_id', anvandare.id)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
       data = result.data;
       error = result.error;
     }
     
-    // Transform to include responses array and supersynthesis for frontend
     const sessions = (data || []).map((s: any) => ({
       ...s,
       kb_project_id: s.kb_project_id || null,
       kb_project_name: s.kb_projects?.name || null,
-      // Build responses object from individual provider responses
       responses: {
         ...(s.response_openai && { OpenAI: s.response_openai }),
         ...(s.response_anthropic && { Anthropic: s.response_anthropic }),
         ...(s.response_google && { Google: s.response_google }),
         ...(s.response_grok && { Grok: s.response_grok }),
       },
-      // Round 2 responses for deliberation
       round2_responses: s.round2_responses || null,
-      // Metadata
       selected_models: s.selected_models || null,
       profile: s.profile || null,
       deliberation_enabled: s.deliberation_enabled || false,
       total_cost: s.total_cost || null,
-      // Use explicit supersynthesis column, or detect from synthesis content
       supersynthesis: s.supersynthesis || (s.synthesis?.includes('SUPERSYNTES') || s.synthesis?.includes('efter riktad faktagranskning') ? s.synthesis : null),
     }));
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return new Response(JSON.stringify({ sessions }), {
       status: 200,
@@ -139,68 +123,56 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 export const POST: APIRoute = async ({ request, cookies }) => {
   const inloggad = await arInloggad(cookies);
   if (!inloggad) {
-    return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const anvandare = await hamtaAnvandare(cookies);
   if (!anvandare) {
-    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const supabase = getSupabase();
   if (!supabase) {
-    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
   try {
     const body = await request.json();
     const {
-      name,
-      prompt,
-      context,
-      responses,
-      round2Responses,
-      synthesis,
-      supersynthesis,
-      synthesisModel,
-      totalDuration,
-      tags = [],
-      // New metadata fields
-      selectedModels,
-      profile,
-      deliberationEnabled,
-      totalCost,
-      kbProjectId
+      name, prompt, context, responses, round2Responses,
+      synthesis, supersynthesis, synthesisModel, totalDuration,
+      tags = [], selectedModels, profile, deliberationEnabled, totalCost,
+      projectId, kbProjectId // projectId is the new unified field, kbProjectId is legacy
     } = body;
     
-    // Use supersynthesis if provided, otherwise use synthesis
     const finalSynthesis = supersynthesis || synthesis;
 
     if (!prompt) {
-      return new Response(JSON.stringify({ error: 'Prompt krävs' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(JSON.stringify({ error: 'Prompt krävs' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
-    
-    // Check for any content - allow saving with just prompt for migration purposes
-    // Only require synthesis/responses for new sessions, not migrations
-    // (migrations may have incomplete data from old localStorage format)
 
-    // Structure responses by provider - handle both array and object formats
+    // Resolve project ID: prefer projectId, fall back to kbProjectId (legacy)
+    const resolvedKbProjectId = projectId || kbProjectId || null;
+
+    // Validate project exists in kb_projects
+    if (resolvedKbProjectId) {
+      const { data: proj } = await supabase
+        .from('kb_projects')
+        .select('id')
+        .eq('id', resolvedKbProjectId)
+        .eq('user_id', anvandare.id)
+        .single();
+      if (!proj) {
+        return new Response(JSON.stringify({ error: 'Projektet finns inte. Välj ett projekt via projektväljaren.' }), {
+          status: 400, headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    // Structure responses by provider
     const responsesByProvider: Record<string, any> = {};
     if (responses) {
       if (Array.isArray(responses)) {
-        // Array format: [{ provider: 'OpenAI', content: '...' }, ...]
         responses.forEach((r: any) => {
           const prov = (r.provider || '').toLowerCase();
           if (prov.includes('openai') || prov === 'openai') responsesByProvider.openai = r;
@@ -209,25 +181,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           else if (prov.includes('grok') || prov.includes('xai')) responsesByProvider.grok = r;
         });
       } else if (typeof responses === 'object') {
-        // Object format: { 'gpt-4o': { content: '...' }, 'claude-3-5-sonnet': { ... } }
         for (const [key, value] of Object.entries(responses)) {
           if (value && typeof value === 'object') {
             const k = key.toLowerCase();
-            if (k.includes('gpt') || k.includes('openai') || k === 'o1' || k === 'o3') {
-              responsesByProvider.openai = { ...value as object, model: key };
-            } else if (k.includes('claude') || k.includes('anthropic')) {
-              responsesByProvider.anthropic = { ...value as object, model: key };
-            } else if (k.includes('gemini') || k.includes('google')) {
-              responsesByProvider.google = { ...value as object, model: key };
-            } else if (k.includes('grok') || k.includes('xai')) {
-              responsesByProvider.grok = { ...value as object, model: key };
-            }
+            if (k.includes('gpt') || k.includes('openai') || k === 'o1' || k === 'o3') responsesByProvider.openai = { ...value as object, model: key };
+            else if (k.includes('claude') || k.includes('anthropic')) responsesByProvider.anthropic = { ...value as object, model: key };
+            else if (k.includes('gemini') || k.includes('google')) responsesByProvider.google = { ...value as object, model: key };
+            else if (k.includes('grok') || k.includes('xai')) responsesByProvider.grok = { ...value as object, model: key };
           }
         }
       }
     }
 
-    // Structure round2 responses by provider
     const round2ByProvider: Record<string, any> = {};
     if (round2Responses && Array.isArray(round2Responses)) {
       round2Responses.forEach((r: any) => {
@@ -238,12 +203,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    // Try to insert with all columns, fall back to basic columns if they don't exist
     let data: any = null;
     let error: any = null;
     
     try {
-      // First try with all columns (after migration)
       const result = await supabase
         .from('ai_council_sessions')
         .insert({
@@ -260,24 +223,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           supersynthesis: deliberationEnabled ? finalSynthesis : (supersynthesis || null),
           synthesis_model: synthesisModel || 'claude',
           total_duration_ms: totalDuration || null,
-          tags: tags,
-          // New metadata fields
+          tags,
           selected_models: selectedModels || null,
           profile: profile || null,
           deliberation_enabled: deliberationEnabled || false,
           total_cost: totalCost || null,
-          kb_project_id: kbProjectId || null,
+          kb_project_id: resolvedKbProjectId,
         })
         .select('id, created_at')
         .single();
       
-      if (result.error && result.error.message?.includes('column')) {
-        throw new Error('columns_not_found');
-      }
+      if (result.error && result.error.message?.includes('column')) throw new Error('columns_not_found');
       data = result.data;
       error = result.error;
     } catch (e) {
-      // Fall back to basic columns (before migration)
       const result = await supabase
         .from('ai_council_sessions')
         .insert({
@@ -291,7 +250,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           synthesis: finalSynthesis || null,
           synthesis_model: synthesisModel || 'claude',
           total_duration_ms: totalDuration || null,
-          tags: tags,
+          tags,
         })
         .select('id, created_at')
         .single();
@@ -299,74 +258,72 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       error = result.error;
     }
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return new Response(JSON.stringify({ success: true, session: data }), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
+      status: 201, headers: { 'Content-Type': 'application/json' },
     });
   } catch (error: any) {
     console.error('Error saving session:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+    const msg = error?.message || '';
+    const isFkError = msg.includes('foreign key') || msg.includes('fkey');
+    return new Response(JSON.stringify({ error: isFkError ? 'Projektet finns inte. Välj ett projekt via projektväljaren.' : msg }), {
+      status: isFkError ? 400 : 500, headers: { 'Content-Type': 'application/json' },
     });
   }
 };
 
-// PATCH - Update session (e.g., rename)
+// PATCH - Update session (rename, change project)
 export const PATCH: APIRoute = async ({ request, cookies, url }) => {
   const inloggad = await arInloggad(cookies);
   if (!inloggad) {
-    return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const anvandare = await hamtaAnvandare(cookies);
   if (!anvandare) {
-    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const supabase = getSupabase();
   if (!supabase) {
-    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
   const sessionId = url.searchParams.get('id');
   if (!sessionId) {
-    return new Response(JSON.stringify({ error: 'Session-ID krävs' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Session-ID krävs' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
   try {
     const body = await request.json();
     const { name, project_id } = body;
 
-    // Allow updating name and project_id
     const updateData: Record<string, any> = {};
     if (name !== undefined) {
-      updateData.name = name || null; // Allow clearing the name
+      updateData.name = name || null;
     }
     if (project_id !== undefined) {
-      updateData.kb_project_id = project_id || null; // Allow moving to/from project
+      const kbProjectId = project_id || null;
+      if (kbProjectId) {
+        const { data: proj } = await supabase
+          .from('kb_projects')
+          .select('id')
+          .eq('id', kbProjectId)
+          .eq('user_id', anvandare.id)
+          .single();
+        if (!proj) {
+          return new Response(JSON.stringify({ error: 'Projektet finns inte.' }), {
+            status: 400, headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      }
+      updateData.kb_project_id = kbProjectId;
     }
 
     if (Object.keys(updateData).length === 0) {
       return new Response(JSON.stringify({ error: 'Ingen data att uppdatera' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
+        status: 400, headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -374,21 +331,19 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
       .from('ai_council_sessions')
       .update(updateData)
       .eq('id', sessionId)
-      .eq('user_id', anvandare.id); // Ensure user owns the session
+      .eq('user_id', anvandare.id);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      status: 200, headers: { 'Content-Type': 'application/json' },
     });
   } catch (error: any) {
     console.error('Error updating session:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+    const msg = error?.message || '';
+    const isFkError = msg.includes('foreign key') || msg.includes('fkey');
+    return new Response(JSON.stringify({ error: isFkError ? 'Projektet finns inte.' : msg }), {
+      status: isFkError ? 400 : 500, headers: { 'Content-Type': 'application/json' },
     });
   }
 };
@@ -397,34 +352,22 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
 export const DELETE: APIRoute = async ({ cookies, url }) => {
   const inloggad = await arInloggad(cookies);
   if (!inloggad) {
-    return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const anvandare = await hamtaAnvandare(cookies);
   if (!anvandare) {
-    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
   const supabase = getSupabase();
   if (!supabase) {
-    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 
   const sessionId = url.searchParams.get('id');
   if (!sessionId) {
-    return new Response(JSON.stringify({ error: 'Session-ID krävs' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: 'Session-ID krävs' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 
   try {
@@ -432,21 +375,17 @@ export const DELETE: APIRoute = async ({ cookies, url }) => {
       .from('ai_council_sessions')
       .delete()
       .eq('id', sessionId)
-      .eq('user_id', anvandare.id); // Ensure user owns the session
+      .eq('user_id', anvandare.id);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      status: 200, headers: { 'Content-Type': 'application/json' },
     });
   } catch (error: any) {
     console.error('Error deleting session:', error);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      status: 500, headers: { 'Content-Type': 'application/json' },
     });
   }
 };

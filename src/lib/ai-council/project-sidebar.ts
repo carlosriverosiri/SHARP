@@ -89,7 +89,7 @@ export function initProjectSidebar({
 
   async function loadProjects() {
     try {
-      const res = await fetch('/api/ai-council/projects', { credentials: 'include' });
+      const res = await fetch('/api/kunskapsbas/projects', { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         setProjects(data.projects || []);
@@ -113,7 +113,7 @@ export function initProjectSidebar({
 
   async function updateProject(projectId: string, data: Record<string, unknown>) {
     try {
-      const res = await fetch('/api/ai-council/projects', {
+      const res = await fetch('/api/kunskapsbas/projects', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -140,7 +140,7 @@ export function initProjectSidebar({
 
   async function deleteProject(projectId: string) {
     try {
-      const res = await fetch('/api/ai-council/projects?id=' + projectId, {
+      const res = await fetch('/api/kunskapsbas/projects?id=' + projectId, {
         method: 'DELETE',
         credentials: 'include'
       });

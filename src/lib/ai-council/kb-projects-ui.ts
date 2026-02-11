@@ -1,4 +1,4 @@
-﻿import type { KbProject } from './types';
+import type { KbProject } from './types';
 
 type KbProjectsUiOptions = {
   kbProjectSelect: HTMLInputElement | HTMLSelectElement | null;
@@ -118,12 +118,16 @@ export function initKbProjectsUi({
   // Filter button opens a picker-style menu
   sessionProjectFilterBtn?.addEventListener('click', async () => {
     if (!pickProject) return;
-    const selected = await pickProject({ title: '\uD83D\uDCC1 Filtrera per projekt' });
+    const selected = await pickProject({ title: '\uD83D\uDCC1 Filtrera per projekt', forFilter: true });
     if (!selected) return;
-    if (selected.id === '__none__') {
+    if (selected.id === '__all__') {
       if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = 'all'; }
       if (sessionProjectFilterText) { sessionProjectFilterText.textContent = 'Alla projekt'; sessionProjectFilterBtn!.classList.add('kb-project-btn--empty'); }
       setCurrentProjectFilter('all');
+    } else if (selected.id === '__unsorted__') {
+      if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = 'unsorted'; }
+      if (sessionProjectFilterText) { sessionProjectFilterText.textContent = '\u00d6vrigt'; sessionProjectFilterBtn!.classList.remove('kb-project-btn--empty'); }
+      setCurrentProjectFilter('unsorted');
     } else {
       if (sessionProjectFilter) { (sessionProjectFilter as HTMLInputElement).value = selected.id; }
       if (sessionProjectFilterText) { sessionProjectFilterText.textContent = selected.name; sessionProjectFilterBtn!.classList.remove('kb-project-btn--empty'); }

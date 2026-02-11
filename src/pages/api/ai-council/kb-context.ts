@@ -1,4 +1,4 @@
-﻿import type { APIRoute } from 'astro';
+import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 
@@ -50,10 +50,10 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    // Hamta AI Council-projekt med KB-koppling
+    // Hamta KB-projekt direkt (unified project system)
     const { data: project, error: projectError } = await supabase
-      .from('ai_council_projects')
-      .select('id, name, kb_project_id, auto_include_kb')
+      .from('kb_projects')
+      .select('id, name, icon, auto_include_kb, context')
       .eq('id', projectId)
       .eq('user_id', anvandare.id)
       .single();
@@ -65,31 +65,26 @@ export const GET: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    // Om ingen KB-koppling eller auto_include_kb ar false
-    if (!project.kb_project_id || !project.auto_include_kb) {
+    // Om auto_include_kb ar false
+    if (!project.auto_include_kb) {
       return new Response(JSON.stringify({ 
-        context: null,
-        kbProjectId: project.kb_project_id,
+        context: project.context || null,
+        kbProjectId: project.id,
         autoInclude: project.auto_include_kb,
-        message: 'Ingen aktiv KB-koppling'
+        message: 'Auto-include av KB-items ar avaktiverat'
       }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Hamta KB-projekt info
-    const { data: kbProject } = await supabase
-      .from('kb_projects')
-      .select('id, name, icon')
-      .eq('id', project.kb_project_id)
-      .single();
+    const kbProject = { id: project.id, name: project.name, icon: project.icon };
 
     // Hamta alla kb_items for projektet
     const { data: items, error: itemsError } = await supabase
       .from('kb_items')
       .select('id, title, content, summary, category, created_at')
-      .eq('project_id', project.kb_project_id)
+      .eq('project_id', project.id)
       .order('category')
       .order('is_pinned', { ascending: false })
       .order('created_at', { ascending: false });
@@ -250,12 +245,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    if (action === 'linkKbProject') {
-      // Koppla/avkoppla KB-projekt
+    if (action === 'linkKbProject' || action === 'toggleAutoInclude') {
+      // Uppdatera auto_include_kb pa kb_projects (unified)
       const { error } = await supabase
-        .from('ai_council_projects')
+        .from('kb_projects')
         .update({ 
-          kb_project_id: kbProjectId || null,
           auto_include_kb: autoInclude ?? false
         })
         .eq('id', projectId)

@@ -1,7 +1,9 @@
-﻿/**
+/**
  * Shared project picker modal.
  * Shows a list of KB projects as clickable cards and resolves with the selected project.
  * Includes inline "Create new project" functionality.
+ * 
+ * All projects come from kb_projects (unified project system).
  */
 
 type KbProjectBasic = { id: string; name: string; icon?: string };
@@ -36,7 +38,6 @@ export function initProjectPicker() {
   listEl.addEventListener('click', async (e) => {
     const target = e.target as HTMLElement | null;
 
-    // Handle "Create new project" button
     const createBtn = target?.closest('#pickerCreateProjectBtn') as HTMLElement | null;
     if (createBtn) {
       e.stopPropagation();
@@ -44,7 +45,6 @@ export function initProjectPicker() {
       return;
     }
 
-    // Handle "Save new project" button
     const saveBtn = target?.closest('#pickerSaveNewProject') as HTMLElement | null;
     if (saveBtn) {
       e.stopPropagation();
@@ -52,7 +52,6 @@ export function initProjectPicker() {
       return;
     }
 
-    // Handle "Cancel new project" button
     const cancelBtn = target?.closest('#pickerCancelNewProject') as HTMLElement | null;
     if (cancelBtn) {
       e.stopPropagation();
@@ -63,7 +62,6 @@ export function initProjectPicker() {
       return;
     }
 
-    // Handle project selection
     const item = target?.closest('[data-project-id]') as HTMLElement | null;
     if (!item) return;
 
@@ -136,10 +134,11 @@ export function initProjectPicker() {
     }
   }
 
-  async function pickProject(options?: { title?: string }): Promise<KbProjectBasic | null> {
+  async function pickProject(options?: { title?: string; forFilter?: boolean }): Promise<KbProjectBasic | null> {
     if (titleEl && options?.title) { titleEl.textContent = options.title; }
     else if (titleEl) { titleEl.textContent = '\uD83D\uDCC1 V\u00e4lj projekt'; }
 
+    const forFilter = !!options?.forFilter;
     listEl!.innerHTML = '<div style="color: var(--text-muted); padding: 20px; text-align: center;">Laddar projekt...</div>';
     modal!.classList.add('open');
 
@@ -150,12 +149,24 @@ export function initProjectPicker() {
         id: p.id, name: p.name, icon: p.icon || '\uD83D\uDCC1'
       }));
 
-      let html = '<button type="button" class="project-picker-item project-picker-none" data-project-id="__none__" data-project-name="" data-project-icon="">' +
-        '<span class="project-picker-icon" style="opacity:0.4">\u2716</span>' +
-        '<span class="project-picker-name" style="color:var(--text-muted,#9ca3af)">Inget projekt</span>' +
-        '</button>';
+      let html = '';
+      if (forFilter) {
+        html += '<button type="button" class="project-picker-item project-picker-none" data-project-id="__all__" data-project-name="Alla projekt" data-project-icon="">' +
+          '<span class="project-picker-icon" style="opacity:0.6">\u2200</span>' +
+          '<span class="project-picker-name">Alla projekt</span>' +
+          '</button>';
+        html += '<button type="button" class="project-picker-item project-picker-none" data-project-id="__unsorted__" data-project-name="\u00d6vrigt" data-project-icon="">' +
+          '<span class="project-picker-icon" style="opacity:0.6">\u2716</span>' +
+          '<span class="project-picker-name" style="color:var(--text-muted,#9ca3af)">\u00d6vrigt (projektl\u00f6sa)</span>' +
+          '</button>';
+      } else {
+        html += '<button type="button" class="project-picker-item project-picker-none" data-project-id="__none__" data-project-name="" data-project-icon="">' +
+          '<span class="project-picker-icon" style="opacity:0.4">\u2716</span>' +
+          '<span class="project-picker-name" style="color:var(--text-muted,#9ca3af)">Inget projekt</span>' +
+          '</button>';
+      }
       if (projects.length > 0) {
-        html = projects.map(p =>
+        html += projects.map(p =>
           '<button type="button" class="project-picker-item" data-project-id="' + escapeAttr(p.id) + '" data-project-name="' + escapeAttr(p.name) + '" data-project-icon="' + escapeAttr(p.icon || '\uD83D\uDCC1') + '">' +
           '<span class="project-picker-icon">' + (p.icon || '\uD83D\uDCC1') + '</span>' +
           '<span class="project-picker-name">' + escapeHtml(p.name) + '</span>' +
