@@ -4,6 +4,8 @@ import { getSynthesisLabel } from '../ai-core/synthesis-label';
 import { getProviderDisplayName, getSelectedModelLabels, mapAccordionProviderToSelectionKey, mapProviderToKey } from '../ai-core/model-mapping';
 import { getStatusText } from '../ai-core/status-text';
 import { prepareRunQuery } from '../ai-core/prepare-run';
+import { parseNdjsonStream } from '../ai-core/stream-parser';
+import type { StreamEvent } from '../ai-core/stream-parser';
 import { getAccordionDom, getTotalsDom } from './response-dom';
 
 type RunQueryOptions = {
@@ -245,84 +247,57 @@ export function initRunQuery(options: RunQueryOptions) {
       let data: any = null;
 
       if (contentType.includes('application/x-ndjson')) {
-        const reader = response.body?.getReader();
-        if (!reader) throw new Error('Kunde inte läsa streaming-svar.');
-        const decoder = new TextDecoder();
-        let buffer = '';
+        if (!response.body) throw new Error('Kunde inte läsa streaming-svar.');
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        let snapshotData: any = null;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (!line.trim()) continue;
-
-            try {
-              const event = JSON.parse(line);
-
-              switch (event.type) {
-                case 'started':
-                  setStatus('🚀 Ansluten, frågar AI-modeller...', true);
-                  startModelWaiting(selectedModels);
-                  break;
-                case 'heartbeat': {
-                  const waitingCount = getWaitingCount();
-                  if (waitingCount > 0) {
-                    setStatus(getStatusText('waiting-models', { waitingCount, elapsedSeconds: event.data.elapsed }), true);
-                  } else {
-                    setStatus(getStatusText('working', { elapsedSeconds: event.data.elapsed }), true);
-                  }
-                  break;
-                }
-                case 'snapshot':
-                  if (!data) data = { responses: [], _isSnapshot: true };
-                  if (event.data.responses) data.responses = event.data.responses;
-                  if (event.data.queriedModels) data.queriedModels = event.data.queriedModels;
-                  if (event.data.round2Responses) data.round2Responses = event.data.round2Responses;
-                  console.log('Snapshot received:', event.data.stage);
-                  break;
-                case 'progress':
-                  setStatus('⏳ ' + event.data.message, true);
-                  break;
-                case 'model_complete': {
-      const modelKey = mapProviderToKey(event.data.provider);
-                  markModelComplete(modelKey, event.data.duration, event.data.hasError);
-
-      const providerName = typeof event.data.provider === 'string' ? event.data.provider : String(event.data.provider ?? '');
-      const modelDisplayName = getProviderDisplayName(providerName);
-      setStatus(getStatusText('model-complete', { modelName: modelDisplayName, durationText: formatDuration(event.data.duration) }), true);
-                  break;
-                }
-                case 'error':
-                  stopAllModelTimers();
-                  throw new Error(event.data.error);
-                case 'partial_complete':
-                  stopAllModelTimers();
-                  console.warn('Partial result received:', event.data.successfulModels);
-                  data = event.data;
-                  data._isPartial = true;
-                  break;
-                case 'complete':
-                  stopAllModelTimers();
-                  data = event.data;
-                  break;
+        data = await parseNdjsonStream(response.body, (event: StreamEvent) => {
+          switch (event.type) {
+            case 'started':
+              setStatus('🚀 Ansluten, frågar AI-modeller...', true);
+              startModelWaiting(selectedModels);
+              break;
+            case 'heartbeat': {
+              const waitingCount = getWaitingCount();
+              if (waitingCount > 0) {
+                setStatus(getStatusText('waiting-models', { waitingCount, elapsedSeconds: event.elapsed }), true);
+              } else {
+                setStatus(getStatusText('working', { elapsedSeconds: event.elapsed }), true);
               }
-            } catch (parseError) {
-              console.warn('Could not parse streaming event:', line, parseError);
+              break;
             }
+            case 'snapshot':
+              if (!snapshotData) snapshotData = { responses: [], _isSnapshot: true };
+              if (event.data.responses) snapshotData.responses = event.data.responses;
+              if (event.data.queriedModels) snapshotData.queriedModels = event.data.queriedModels;
+              if (event.data.round2Responses) snapshotData.round2Responses = event.data.round2Responses;
+              console.log('Snapshot received:', event.data.stage);
+              break;
+            case 'progress':
+              setStatus('⏳ ' + event.message, true);
+              break;
+            case 'model_complete': {
+              const modelKey = mapProviderToKey(event.provider);
+              markModelComplete(modelKey, event.duration, event.hasError);
+              const modelDisplayName = getProviderDisplayName(event.provider);
+              setStatus(getStatusText('model-complete', { modelName: modelDisplayName, durationText: formatDuration(event.duration) }), true);
+              break;
+            }
+            case 'partial_complete':
+              stopAllModelTimers();
+              console.warn('Partial result received:', event.data.successfulModels);
+              break;
+            case 'complete':
+              stopAllModelTimers();
+              break;
           }
-        }
+        });
 
-        if (buffer.trim()) {
-          try {
-            const event = JSON.parse(buffer);
-            if (event.type === 'complete') data = event.data;
-            if (event.type === 'error') throw new Error(event.data.error);
-          } catch (e) {}
+        if (!data && snapshotData) {
+          data = snapshotData;
+        }
+        if (data && data._isPartial === undefined && snapshotData) {
+          // Merge snapshot flag if stream ended without complete
         }
       } else {
         const responseText = await response.text();

@@ -11,7 +11,7 @@
 
 ## Filstruktur
 ```
-src/pages/admin/ai-council.astro     # Huvudsida (~832 rader)
+src/pages/admin/ai-council.astro     # Huvudsida (~847 rader)
 src/pages/admin/kunskapsbas.astro    # Kunskapsbas-verktyg
 src/pages/api/ai-council/
   ├── query.ts                       # Huvudendpoint: kör alla modeller parallellt
@@ -76,6 +76,26 @@ src/lib/ai-council/                  # Klientside-moduler för AI Council
   ├── workflow-progress.ts           # "Nästa steg"-logik
   └── workflow-state.ts              # State + reset
 
+src/lib/ai-core/                     # UI-agnostisk kärnlogik (Next.js-redo)
+  ├── types.ts                       # ProviderId, CostInfo, ModelResponse, CoreOptions
+  ├── index.ts                       # Entry point + re-exports
+  ├── currency.ts                    # SEK/USD formatering baserat på locale
+  ├── file-utils.ts                  # buildFilePayload (text/bild-separation)
+  ├── model-mapping.ts               # Provider/modell-namn-mappning
+  ├── prepare-run.ts                 # prepareRunQuery (validering+payload+hash)
+  ├── query-hash.ts                  # buildQueryHash
+  ├── request-payload.ts             # buildRunQueryPayload
+  ├── response-state.ts              # buildInitialResponses
+  ├── status-text.ts                 # getStatusText (lokaliserade statusmeddelanden)
+  ├── synthesis-label.ts             # getSynthesisLabel
+  ├── utils.ts                       # getProfileType
+  ├── validation.ts                  # validateRunQuery
+  └── adapters/                      # Provider-adaptrar (skelett)
+      ├── openai.ts
+      ├── anthropic.ts
+      ├── google.ts
+      └── grok.ts
+
 src/styles/
   └── ai-council-page.css            # Utdragen CSS från sidan
 ```
@@ -135,4 +155,4 @@ ZOTERO_ENCRYPTION_KEY
 | Modell svarar inte | Kolla rate limits hos provider, vänta och försök igen |
 
 ---
-*Senast uppdaterad: 2026-02-10*
+*Senast uppdaterad: 2026-02-11*
