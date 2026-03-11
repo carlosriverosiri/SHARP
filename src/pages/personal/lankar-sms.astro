@@ -1240,11 +1240,6 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
     async function loadDynamicLinks() {
       if (!dynamicContainer) return;
       try {
-        const editId = (saveAddLink as any).dataset.editId;
-        const method = editId ? 'PUT' : 'POST';
-        const body = editId 
-          ? JSON.stringify({ id: editId, name, short_code: code, target, category: cat, is_external: ext })
-          : JSON.stringify({ name, short_code: code, target, category: cat, is_external: ext });
         const res = await fetch('/api/personal/kort-lankar', { credentials: 'include' });
         const data = await res.json();
         const links = data.links || [];
