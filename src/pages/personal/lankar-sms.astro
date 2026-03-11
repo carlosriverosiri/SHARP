@@ -797,6 +797,8 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
             </section>
           ))}
 
+          <div id="dynamicLinksContainer"></div>
+
           <div id="no-results" class="message warning" style="display: none;">
             Inga resultat hittades för din sökning.
           </div>
@@ -1246,80 +1248,92 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         updateCategoryDropdown(links);
         if (links.length === 0) { dynamicContainer.innerHTML = ''; return; }
 
-        const grouped: Record<string, any[]> = {};
-        links.forEach((l: any) => {
-          if (!grouped[l.category]) grouped[l.category] = [];
-          grouped[l.category].push(l);
+        // Inject into existing category sections where possible
+        const existingSections = document.querySelectorAll('.category-section[data-category]');
+        const existingCats = new Map<string, HTMLElement>();
+        existingSections.forEach(s => {
+          const cat = (s as HTMLElement).dataset.category || '';
+          if (cat) existingCats.set(cat, s.querySelector('.links-list') as HTMLElement);
         });
 
-        const catIcons: Record<string, string> = { 'Diagnoser': '\uD83E\uDE7A', 'Operationer': '\uD83D\uDD2A', 'Rehab': '\uD83C\uDFCB\uFE0F', 'Fr\u00e5geformul\u00e4r': '\uD83D\uDCCB', 'Info': '\u2139\uFE0F' };
+        // Remove previously injected dynamic items
+        document.querySelectorAll('.dynamic-link-item').forEach(el => el.remove());
 
-        let html = '<div style="margin-top:0.5rem;border-top:1px solid #e5e7eb;padding-top:0.75rem;"><div style="font-size:0.7rem;text-transform:uppercase;color:#9ca3af;font-weight:600;margin-bottom:0.5rem;">Egna l\u00e4nkar</div>';
-        for (const [cat, items] of Object.entries(grouped)) {
-          html += '<section class="category-section"><h2>' + (catIcons[cat] || '\uD83D\uDCC4') + ' ' + cat + '</h2><div class="links-list">';
-          items.forEach((item: any) => {
-            const url = 'www.specialist.se' + item.short_code;
-            html += '<div class="link-item dynamic-link-item" data-name="' + item.name + '" data-url="' + url + '" data-category="' + cat + '" data-template="Hej! Se denna l\u00e4nk: {l\u00e4nk} /S\u00f6dermalms Ortopedi">' +
-              '<div class="link-info"><div class="link-name">' + item.name + '<span class="dynamic-badge">Egen</span></div><div class="link-url">' + url + '</div></div>' +
-              '<div class="link-actions"><button type="button" class="btn btn-copy" data-url="' + url + '" title="Kopiera"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Kopiera</button>' +
-              '<button type="button" class="btn-edit-link" data-id="' + item.id + '" title="Redigera">\u270F\uFE0F</button>' + '<button type="button" class="btn-delete-link" data-id="' + item.id + '" title="Ta bort">\uD83D\uDDD1\uFE0F</button></div></div>';
-          });
-          html += '</div></section>';
+        const grouped: Record<string, any[]> = {};
+        links.forEach((l: any) => { if (!grouped[l.category]) grouped[l.category] = []; grouped[l.category].push(l); });
+
+        const baseDomain = 'www.specialist.se';
+        const catIcons: Record<string, string> = { 'Diagnoser': '\uD83E\uDE7A', 'Operationer': '\uD83D\uDD2A', 'Rehab': '\uD83C\uDFCB\uFE0F', 'Info': '\u2139\uFE0F' };
+        const copyIcon = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>';
+
+        function makeLinkHtml(item: any, cat: string) {
+          const url = baseDomain + item.short_code;
+          const esc = (s: string) => s.replace(/"/g, '&quot;');
+          return '<div class="link-item dynamic-link-item" data-name="' + esc(item.name) + '" data-url="' + url + '" data-category="' + cat + '" data-template="Hej! Se denna l\u00e4nk: {l\u00e4nk} /S\u00f6dermalms Ortopedi">' +
+            '<div class="link-info"><div class="link-name">' + item.name + ' <span class="dynamic-badge">Egen</span></div><div class="link-url">' + url + '</div></div>' +
+            '<div class="link-actions">' +
+            '<button type="button" class="btn btn-copy" data-url="' + url + '" title="Kopiera l\u00e4nk">' + copyIcon + 'Kopiera</button>' +
+            '<button type="button" class="btn-edit-link" data-id="' + item.id + '" title="Redigera">\u270F\uFE0F</button>' +
+            '<button type="button" class="btn-delete-link" data-id="' + item.id + '" title="Ta bort">\uD83D\uDDD1\uFE0F</button>' +
+            '</div></div>';
         }
-        html += '</div>';
-        dynamicContainer.innerHTML = html;
 
-        // Attach delete handlers
-        dynamicContainer.querySelectorAll('.btn-delete-link').forEach(btn => {
+        let newCatsHtml = '';
+        for (const [cat, items] of Object.entries(grouped)) {
+          const existingList = existingCats.get(cat);
+          if (existingList) {
+            // Inject into existing category
+            items.forEach((item: any) => { existingList.insertAdjacentHTML('beforeend', makeLinkHtml(item, cat)); });
+          } else {
+            // Create new category section
+            const icon = catIcons[cat] || '\uD83D\uDCC4';
+            newCatsHtml += '<section class="category-section" data-category="' + cat + '"><h2><span>' + icon + '</span> ' + cat + '</h2><div class="links-list">';
+            items.forEach((item: any) => { newCatsHtml += makeLinkHtml(item, cat); });
+            newCatsHtml += '</div></section>';
+          }
+        }
+        dynamicContainer.innerHTML = newCatsHtml;
+
+        // Attach handlers to ALL dynamic items (both injected and new)
+        document.querySelectorAll('.dynamic-link-item .btn-delete-link').forEach(btn => {
           btn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            const id = (btn as HTMLElement).dataset.id;
             if (!confirm('Ta bort denna l\u00e4nk?')) return;
             try {
-              await fetch('/api/personal/kort-lankar?id=' + id, { method: 'DELETE', credentials: 'include' });
+              await fetch('/api/personal/kort-lankar?id=' + (btn as HTMLElement).dataset.id, { method: 'DELETE', credentials: 'include' });
               loadDynamicLinks();
               dlToast('L\u00e4nk borttagen');
             } catch (err) { alert('Kunde inte ta bort'); }
           });
         });
 
-        // Attach edit handlers
-        dynamicContainer.querySelectorAll('.btn-edit-link').forEach(btn => {
+        document.querySelectorAll('.dynamic-link-item .btn-edit-link').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const el = btn as HTMLElement;
-            const id = el.dataset.id || '';
-            const lname = el.dataset.lname || el.closest('.link-item')?.querySelector('.link-name')?.textContent?.replace('Egen','').trim() || '';
-            const code = el.dataset.code || '';
-            const target = el.dataset.target || '';
-            const cat = el.dataset.cat || 'Info';
-            // Show edit form (reuse add form)
+            const item = el.closest('.link-item') as HTMLElement;
             addLinkForm!.style.display = 'block';
-            (document.getElementById('newLinkName') as HTMLInputElement).value = lname;
-            (document.getElementById('newLinkCode') as HTMLInputElement).value = code;
-            (document.getElementById('newLinkTarget') as HTMLInputElement).value = target;
-            const catSel = document.getElementById('newLinkCategory') as HTMLSelectElement;
-            if (catSel) { for (const o of catSel.options) { if (o.value === cat) { catSel.value = cat; break; } } }
-            // Change save button to update mode
+            (document.getElementById('newLinkName') as HTMLInputElement).value = item?.dataset.name || '';
+            (document.getElementById('newLinkCode') as HTMLInputElement).value = '';
+            (document.getElementById('newLinkTarget') as HTMLInputElement).value = '';
             saveAddLink!.textContent = 'Uppdatera';
-            (saveAddLink as any).dataset.editId = id;
+            (saveAddLink as any).dataset.editId = el.dataset.id;
             window.scrollTo({ top: addLinkForm!.offsetTop - 100, behavior: 'smooth' });
           });
         });
 
-        // Attach copy handlers for dynamic links
-        dynamicContainer.querySelectorAll('.btn-copy').forEach(btn => {
+        document.querySelectorAll('.dynamic-link-item .btn-copy').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const url = (btn as HTMLElement).dataset.url || '';
             navigator.clipboard.writeText(url).then(() => dlToast('Kopierad: ' + url));
           });
         });
+
       } catch (err) {
         console.error('Error loading dynamic links:', err);
       }
     }
-
 
     // Category handling - allow creating new categories
     const catSelect = document.getElementById('newLinkCategory') as HTMLSelectElement;
