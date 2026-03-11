@@ -124,10 +124,10 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
     .btn-save:hover { background: #1d4ed8; }
     .dynamic-link-item { position: relative; }
     .dynamic-badge { display: inline-block; font-size: 0.625rem; background: #dbeafe; color: #1d4ed8; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem; font-weight: 600; }
-    .btn-delete-link { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.75rem; padding: 0.25rem; opacity: 0.6; }
-    .btn-delete-link:hover { opacity: 1; }
-    .btn-edit-link { background: none; border: none; color: #2563eb; cursor: pointer; font-size: 0.75rem; padding: 0.25rem; opacity: 0.6; }
-    .btn-edit-link:hover { opacity: 1; }
+    .btn.btn-delete-link { padding: 0.5rem; background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .btn.btn-delete-link:hover { background: #fee2e2; }
+    .btn.btn-edit-link { padding: 0.5rem; background: #f0f9ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .btn.btn-edit-link:hover { background: #dbeafe; }
 
     body {
       font-family: system-ui, -apple-system, sans-serif;
@@ -1272,9 +1272,10 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
           return '<div class="link-item dynamic-link-item" data-name="' + esc(item.name) + '" data-url="' + url + '" data-category="' + cat + '" data-template="Hej! Se denna l\u00e4nk: {l\u00e4nk} /S\u00f6dermalms Ortopedi">' +
             '<div class="link-info"><div class="link-name">' + item.name + ' <span class="dynamic-badge">Egen</span></div><div class="link-url">' + url + '</div></div>' +
             '<div class="link-actions">' +
-            '<button type="button" class="btn btn-copy" data-url="' + url + '" title="Kopiera l\u00e4nk">' + copyIcon + 'Kopiera</button>' +
-            '<button type="button" class="btn-edit-link" data-id="' + item.id + '" title="Redigera">\u270F\uFE0F</button>' +
-            '<button type="button" class="btn-delete-link" data-id="' + item.id + '" title="Ta bort">\uD83D\uDDD1\uFE0F</button>' +
+            '<button type="button" class="btn btn-copy" data-url="' + url + '" title="Kopiera l\u00e4nk"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg> Kopiera</button>' +
+            '<button type="button" class="btn btn-sms" title="Fyll i SMS"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg> SMS</button>' +
+            '<button type="button" class="btn btn-edit-link" data-id="' + item.id + '" title="Redigera"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' +
+            '<button type="button" class="btn btn-delete-link" data-id="' + item.id + '" title="Ta bort"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>' +
             '</div></div>';
         }
 
