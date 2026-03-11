@@ -1173,6 +1173,12 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       }
     });
 
+    // Simple toast for dynamic links
+    function dlToast(msg: string) {
+      const t = document.getElementById('toast');
+      if (t) { t.textContent = msg; t.style.background = '#16a34a'; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
+    }
+
     // === Dynamic links from Supabase ===
     const addLinkBtn = document.getElementById('addLinkBtn');
     const addLinkForm = document.getElementById('addLinkForm');
@@ -1277,7 +1283,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
             try {
               await fetch('/api/personal/kort-lankar?id=' + id, { method: 'DELETE', credentials: 'include' });
               loadDynamicLinks();
-              showToast('L\u00e4nk borttagen');
+              dlToast('L\u00e4nk borttagen');
             } catch (err) { alert('Kunde inte ta bort'); }
           });
         });
@@ -1311,7 +1317,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const url = (btn as HTMLElement).dataset.url || '';
-            navigator.clipboard.writeText(url).then(() => showToast('Kopierad: ' + url));
+            navigator.clipboard.writeText(url).then(() => dlToast('Kopierad: ' + url));
           });
         });
       } catch (err) {
