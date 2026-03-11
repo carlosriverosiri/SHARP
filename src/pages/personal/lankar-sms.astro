@@ -116,6 +116,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       font-size: 0.8125rem;
     }
     .add-link-input:focus { border-color: #2563eb; outline: none; box-shadow: 0 0 0 2px rgba(37,99,235,0.15); }
+    .add-link-category-row { display: flex; gap: 0.5rem; }
     .add-link-check { font-size: 0.8125rem; display: flex; align-items: center; gap: 0.5rem; }
     .add-link-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.25rem; }
     .btn-cancel { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.375rem 0.75rem; font-size: 0.8125rem; cursor: pointer; }
@@ -733,13 +734,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
               <input type="text" id="newLinkName" placeholder="Namn (t.ex. Distal bicepsruptur)" class="add-link-input">
               <input type="text" id="newLinkCode" placeholder="Kortkod (t.ex. /d/biceps-dist)" class="add-link-input">
               <input type="text" id="newLinkTarget" placeholder="Mål-URL (t.ex. /sjukdomar/axel/...)" class="add-link-input">
-              <select id="newLinkCategory" class="add-link-input">
-                <option value="Diagnoser">Diagnoser</option>
-                <option value="Operationer">Operationer</option>
-                <option value="Rehab">Rehab</option>
-                <option value="Frågeformulär">Frågeformulär</option>
-                <option value="Info" selected>Info</option>
-              </select>
+              <div class="add-link-category-row"><select id="newLinkCategory" class="add-link-input" style="flex:1"><option value="Diagnoser">Diagnoser</option><option value="Operationer">Operationer</option><option value="Rehab">Rehab</option><option value="Info" selected>Info</option><option value="__new__">+ Ny kategori...</option></select><input type="text" id="newCategoryInput" class="add-link-input" placeholder="Kategorinamn..." style="display:none;flex:1"></div>
               <label class="add-link-check"><input type="checkbox" id="newLinkExternal"> Extern URL</label>
               <div class="add-link-actions">
                 <button type="button" id="cancelAddLink" class="btn btn-cancel">Avbryt</button>
@@ -1194,7 +1189,8 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       const name = (document.getElementById('newLinkName') as HTMLInputElement).value.trim();
       const code = (document.getElementById('newLinkCode') as HTMLInputElement).value.trim();
       const target = (document.getElementById('newLinkTarget') as HTMLInputElement).value.trim();
-      const cat = (document.getElementById('newLinkCategory') as HTMLSelectElement).value;
+      let cat = (document.getElementById('newLinkCategory') as HTMLSelectElement).value;
+      if (cat === '__new__') { cat = (document.getElementById('newCategoryInput') as HTMLInputElement).value.trim(); if (!cat) { alert('Ange kategorinamn'); return; } }
       const ext = (document.getElementById('newLinkExternal') as HTMLInputElement).checked;
       if (!name || !code || !target) { alert('Fyll i namn, kortkod och URL'); return; }
 
@@ -1232,6 +1228,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         const res = await fetch('/api/personal/kort-lankar', { credentials: 'include' });
         const data = await res.json();
         const links = data.links || [];
+        updateCategoryDropdown(links);
         if (links.length === 0) { dynamicContainer.innerHTML = ''; return; }
 
         const grouped: Record<string, any[]> = {};
@@ -1284,6 +1281,29 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       }
     }
 
+
+    // Category handling - allow creating new categories
+    const catSelect = document.getElementById('newLinkCategory') as HTMLSelectElement;
+    const catInput = document.getElementById('newCategoryInput') as HTMLInputElement;
+    catSelect?.addEventListener('change', () => {
+      if (catSelect.value === '__new__') {
+        catInput!.style.display = 'block';
+        catInput!.focus();
+      } else {
+        catInput!.style.display = 'none';
+      }
+    });
+
+    // After loading dynamic links, update category dropdown with any new categories
+    function updateCategoryDropdown(links: any[]) {
+      if (!catSelect) return;
+      const existing = new Set(['Diagnoser', 'Operationer', 'Rehab', 'Info']);
+      links.forEach((l: any) => existing.add(l.category));
+      const current = catSelect.value;
+      const opts = Array.from(existing).sort().map(c => '<option value="' + c + '">' + c + '</option>').join('');
+      catSelect.innerHTML = opts + '<option value="__new__">+ Ny kategori...</option>';
+      if (existing.has(current)) catSelect.value = current;
+    }
     // Load on page init
     loadDynamicLinks();
   </script>
