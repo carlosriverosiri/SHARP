@@ -46,11 +46,12 @@ Modulärt system för operationsbeskrivningar med återanvändbara komponenter.
 ### 2. Kortlänkssystem
 System för korta SMS-vänliga länkar till patientinformation.
 
-**Single Source of Truth:** `src/data/shortLinks.json`
+**Driftkälla (personalverktyg):** Supabase-tabellen `kort_lankar`  
+**Historisk seed/redirect-källa:** `src/data/shortLinks.json`
 
-**Admin-verktyg:** `src/pages/copy-links.astro`
-- Sök och kopiera kortlänkar
-- Link Generator för nya länkar
+**Admin-verktyg:** `src/pages/personal/lankar-sms.astro`
+- Sök, kopiera och skicka länkar via SMS
+- Skapa/redigera/arkivera länkar i Supabase (`kort_lankar`)
 
 **Prefix-struktur:**
 | Prefix | Kategori |
@@ -60,7 +61,7 @@ System för korta SMS-vänliga länkar till patientinformation.
 | `/r/` | Rehab |
 | `/ff/` | Frågeformulär |
 
-**Dokumentation:** `docs/KOPIERA-LANKAR.md`
+**Dokumentation:** `docs/LANKAR-OCH-SMS.md`
 
 ---
 
@@ -118,7 +119,7 @@ Diagnosinformation med referenser och FAQ.
 **Admin-undermeny:**
 - Senast redigerade
 - Obesvarade frågor
-- Kopiera länkar
+- Länkar & SMS
 
 ### footer.astro
 4-kolumns footer med kontaktinfo, adress, patientlänkar.
@@ -154,7 +155,7 @@ Diagnosinformation med referenser och FAQ.
 | Försäkringsbolag | `/vara-forsakringsbolag` | ✅ |
 | Vårdgivare | `/vardgivare` | ✅ |
 | Om oss | `/om-oss` | ✅ |
-| Kopiera länkar | `/copy-links` | ✅ |
+| Kopiera länkar | `/copy-links` | 🔁 Redirect till `/personal/lankar-sms` |
 | Senast redigerade | `/senast-redigerade` | ✅ |
 | Sök | `/sok` | ✅ |
 
@@ -214,7 +215,7 @@ SHARP/
 │   │   └── fraga-doktorn/  # 649 markdown-filer
 │   │
 │   ├── data/
-│   │   ├── shortLinks.json # Kortlänkar (SSOT)
+│   │   ├── shortLinks.json # Kortlänkar (seed + redirects)
 │   │   ├── conditions.ts   # Diagnosdata
 │   │   └── topics.ts       # Ämnesdata
 │   │
@@ -241,7 +242,7 @@ SHARP/
 │   ├── BILDHANTERING.md    # Bildoptimering
 │   ├── CHANGELOG.md
 │   ├── CHECKLIST.md
-│   ├── KOPIERA-LANKAR.md   # Kortlänkssystem
+│   ├── LANKAR-OCH-SMS.md   # Kortlänkssystem (Supabase-first)
 │   ├── OPERATION-SIDOR.md  # Operationssystem
 │   └── ...
 │
@@ -287,7 +288,7 @@ SHARP/
 | Dokument | Innehåll |
 |----------|----------|
 | `docs/OPERATION-SIDOR.md` | Hur man skapar/redigerar operationssidor |
-| `docs/KOPIERA-LANKAR.md` | Kortlänkssystemet och Link Generator |
+| `docs/LANKAR-OCH-SMS.md` | Kortlänkssystem i personalportalen (Supabase-first) |
 | `docs/BILDHANTERING.md` | Bildformat, storlekar, optimering |
 | `docs/CHECKLIST.md` | Checklista för nya sidor |
 | `README.md` | Snabbstart och deployment |
@@ -300,13 +301,13 @@ SHARP/
 1. Skapa sida i `src/pages/operation/[kroppsdel]/`
 2. Importera komponenter från `src/components/operation/`
 3. Lägg till i Header.astro (meny)
-4. Lägg till kortlänk i `src/data/shortLinks.json`
+4. Lägg till kortlänk i `/personal/lankar-sms` (skrivs till `kort_lankar`)
 
 ### Lägga till ny kortlänk
-1. Öppna `/copy-links` i webbläsaren
-2. Använd Link Generator längst ner
-3. Kopiera JSON och lägg till i `shortLinks.json`
-4. Pusha till GitHub
+1. Öppna `/personal/lankar-sms`
+2. Klicka **Ny länk**
+3. Ange namn, kortkod, mål-URL, kategori och typ
+4. Spara (länken lagras i `kort_lankar`)
 
 ### Lägga till ny diagnossida
 1. Skapa sida i `src/pages/sjukdomar/[kroppsdel]/`

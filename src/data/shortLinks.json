@@ -1,9 +1,9 @@
 {
   "_comment": "=======================================================================",
-  "_description": "KORTLÄNKAR - Single Source of Truth",
+  "_description": "KORTLÄNKAR - seed/redirect-källa",
   "_usage": [
-    "Detta är den ENDA filen du behöver redigera för att lägga till nya kortlänkar.",
-    "Både astro.config.mjs (redirects) och copy-links.astro (UI) använder denna fil.",
+    "Personalverktyget /personal/lankar-sms använder Supabase-tabellen kort_lankar som primär källa.",
+    "Denna JSON används för redirects i astro.config.mjs samt import/seed till kort_lankar.",
     "",
     "STRUKTUR:",
     "  name      = Beskrivande namn som visas i UI",
@@ -18,12 +18,12 @@
     "  /ff/ = Frågeformulär (externa)",
     "  /i/  = Info (administrativa riktlinjer, patientinfo etc.)",
     "",
-    "LÄGG TILL NY LÄNK:",
-    "  1. Lägg till objekt i rätt kategori nedan",
-    "  2. Pusha till GitHub",
-    "  3. Klart! Redirect och UI uppdateras automatiskt"
+    "LÄGG TILL NY LÄNK (rekommenderat flöde):",
+    "  1. Lägg till länken i /personal/lankar-sms",
+    "  2. (Valfritt) håll denna JSON uppdaterad om redirect-seed behöver spegla standardlänkar",
+    "  3. Pusha till GitHub"
   ],
-  "_lastUpdated": "2026-01-04",
+  "_lastUpdated": "2026-03-11",
   
   "Diagnoser": [
     {

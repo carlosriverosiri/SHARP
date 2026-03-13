@@ -6,16 +6,16 @@ import tailwindcss from '@tailwindcss/vite';
 import { readFileSync } from 'fs';
 
 // ============================================================================
-// KORTLÄNKAR - Single Source of Truth
+// KORTLÄNKAR - Redirect/seed-källa
 // ============================================================================
-// Alla kortlänkar definieras i src/data/shortLinks.json
-// Denna fil läser JSON-filen och genererar redirects automatiskt.
+// Redirects genereras från src/data/shortLinks.json.
+// Personalverktyget /personal/lankar-sms använder Supabase-tabellen kort_lankar.
+// JSON-filen används därför främst som seed/import + redirect-källa.
 //
 // FÖR ATT LÄGGA TILL NYA LÄNKAR:
-//   1. Öppna src/data/shortLinks.json
-//   2. Lägg till ny länk i rätt kategori
+//   1. Lägg till eller redigera länken i /personal/lankar-sms
+//   2. Vid behov uppdatera seed i src/data/shortLinks.json
 //   3. Pusha till GitHub
-//   4. Klart! Både redirect och copy-links UI uppdateras automatiskt.
 // ============================================================================
 
 // Läs shortLinks.json och generera redirects dynamiskt
@@ -44,8 +44,11 @@ export default defineConfig({
   // Detta gör att /om-oss/ai-council/ redirectar till /om-oss/ai-council
   trailingSlash: 'never',
 
-  // Dynamiskt genererade redirects från shortLinks.json
-  redirects,
+  // Dynamiskt genererade redirects från shortLinks.json + manuella ompekningar
+  redirects: {
+    ...redirects,
+    '/copy-links': '/personal/lankar-sms',
+  },
 
   integrations: [
     sitemap({

@@ -1,8 +1,8 @@
 # 📎 Länkar & SMS - Personalverktyg
 
 > **Sida:** `/personal/lankar-sms`  
-> **Status:** ✅ Implementerat  
-> **Senast uppdaterad:** 2026-01-22
+> **Status:** ✅ Implementerat (Supabase-first v2)  
+> **Senast uppdaterad:** 2026-03-11
 
 ---
 
@@ -12,6 +12,8 @@
 
 1. **Kopiera kortlänkar** - Snabbt kopiera korta URLs till patientinformation
 2. **Skicka SMS** - Skicka fördefinierade meddelanden med länkar till patienter
+
+`/copy-links` är nu en redirect till `/personal/lankar-sms`.
 
 ### Varför detta verktyg?
 
@@ -23,6 +25,35 @@ Personalen får ofta telefonsamtal med frågor som:
 **Tidigare lösning:** Förklara muntligt eller leta upp långa webbadresser och diktera dem.
 
 **Nu:** Välj länk → Skriv in mobilnummer → Klicka Skicka. Patienten får ett SMS inom sekunder.
+
+---
+
+## 🧭 V2-riktning
+
+UI:t på `/personal/lankar-sms` kör nu **Supabase-first**:
+
+- länkar hämtas från `kort_lankar` via `/api/personal/kort-lankar`
+- listan renderas dynamiskt i klienten
+- sök + typfilter + arkivfilter går mot samma datakälla
+- systemlänkar kan arkiveras men inte raderas
+
+### V2-datamodell
+
+Tabellen `kort_lankar` använder följande fält:
+
+- `link_type` (`internal`, `external`, `form`, `booking`)
+- `is_system` (förinstallerad/systemhanterad länk)
+- `is_active` (arkiverad eller aktiv)
+- `sort_order` (ordning i UI)
+- `sms_template` (valfri länkspecifik SMS-mall)
+- `description` (intern kommentar)
+
+### Praktisk konsekvens i UI
+
+- samma kortlayout för alla länkar
+- samma CRUD-flöde för både system- och egna länkar
+- arkivera/återställ inbyggt i listan
+- SMS-panelen bygger på vald länk från samma bibliotek
 
 ---
 
@@ -66,6 +97,13 @@ Personalen får ofta telefonsamtal med frågor som:
 | Grupperat per kategori | Förifyller automatiskt vid länkval |
 | Kopiera-knapp för varje länk | Teckenräknare med färgkodning |
 | SMS-knapp för att fylla i panelen | Kostnadsindikator |
+
+### Formulär i "Ny länk"
+
+- Standardkategorier: `Diagnoser`, `Operationer`, `Rehab`, `Frågeformulär`, `Bokningar`, `Info`
+- Egna kategorier kan skapas direkt i formuläret
+- `link_type` styr badge/filtrering (`internal`, `external`, `form`, `booking`)
+- "Extern URL" synkas med vald länktype så att `external` alltid sparas konsekvent
 
 ---
 
@@ -306,27 +344,33 @@ Varje kategori har en fördefinierad mall som fylls i automatiskt:
 src/
 ├── pages/
 │   ├── personal/
-│   │   └── lankar-sms.astro      ← Huvudsida (SSR)
+│   │   └── lankar-sms.astro      ← Huvudsida (SSR + dynamisk länklista)
 │   └── api/
+│       ├── personal/
+│       │   └── kort-lankar.ts    ← CRUD + filter + arkivering för länkbiblioteket
 │       └── sms/
 │           └── skicka.ts         ← API-endpoint (serverless)
 └── data/
-    └── shortLinks.json           ← Länkdefinitioner (Single Source of Truth)
+    └── shortLinks.json           ← Historisk källa för import/seed och redirects
+
+supabase/
+└── migrations/
+    ├── 021-kort-lankar.sql       ← Ursprunglig tabell
+    └── 022-kort-lankar-v2.sql    ← V2-fält för enhetligt länksystem
+
+scripts/
+└── import-short-links-to-supabase.cjs
 ```
 
 ### Dataflöde
 
 ```
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│   Användare  │───▶│  Frontend    │───▶│  API Route   │───▶│   46elks     │
-│   (browser)  │    │  (Astro SSR) │    │  /api/sms/   │    │   SMS API    │
-└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-                           │                    │
-                           ▼                    ▼
-                    ┌──────────────┐    ┌──────────────┐
-                    │ shortLinks   │    │  Rate Limit  │
-                    │    .json     │    │   (memory)   │
-                    └──────────────┘    └──────────────┘
+┌──────────────┐    ┌──────────────┐    ┌──────────────────────────┐
+│   Användare  │───▶│  Frontend    │───▶│ /api/personal/kort-lankar│───▶ Supabase
+│   (browser)  │    │  (Astro SSR) │    └──────────────────────────┘
+└──────────────┘    └──────────────┘
+                           │
+                           └──────────────▶ /api/sms/skicka ─────────▶ 46elks
 ```
 
 ### API-endpoint: `/api/sms/skicka`
@@ -415,29 +459,54 @@ Content-Type: application/json
 
 ## 🔗 Länkbiblioteket
 
-### Single Source of Truth
+### Nuvarande läge
 
-Alla länkar definieras i **`src/data/shortLinks.json`**.
+Länkbiblioteket i UI:t läser nu från **en primär källa**:
 
-Samma fil används av:
-1. **Redirect-systemet** (astro.config.mjs) - kortlänkar fungerar
-2. **Kopiera länkar-sidan** (lankar-sms.astro) - visas i UI
-3. **Gamla /copy-links** (om den finns kvar) - samma data
+1. **`kort_lankar` i Supabase** (alla länkar som visas/filtreras/redigeras i UI)
 
-### Lägga till ny länk
+`shortLinks.json` används inte längre för rendering av listan i `/personal/lankar-sms`.
 
-1. Öppna `src/data/shortLinks.json`
-2. Lägg till ny länk i rätt kategori:
-```json
-{
-  "name": "Ny diagnos",
-  "shortCode": "/d/ny",
-  "target": "/sjukdomar/axel/ny-diagnos",
-  "isExternal": false
-}
+### Driftprincip
+
+Alla standardlänkar bör finnas i `kort_lankar` och markeras som:
+
+- `is_system = true`
+- `is_active = true`
+
+`shortLinks.json` används främst som:
+
+- importkälla
+- seed-data
+- backup för redirect-logik under övergången
+
+### Import av standardlänkar till Supabase
+
+När migration `022-kort-lankar-v2.sql` är körd kan standardlänkar föras in med:
+
+```bash
+node scripts/import-short-links-to-supabase.cjs
 ```
-3. Pusha till GitHub
-4. Klart! Länken syns automatiskt i UI och redirect fungerar.
+
+Scriptet:
+
+- läser `src/data/shortLinks.json`
+- mappar kategori till `link_type`
+- sätter `is_system = true`
+- sätter `is_active = true`
+- upsertar på `short_code`
+
+Efter import är Supabase den aktiva källan för länkbiblioteket i UI.
+
+### Automatisk sådd vid tom tabell
+
+Om `kort_lankar` är tom vid första laddning av `/personal/lankar-sms` försöker API:t automatiskt:
+
+1. läsa standardlänkar från `src/data/shortLinks.json`
+2. `upsert`-spara dem i `kort_lankar`
+3. returnera den nyskapade listan till UI:t
+
+Det gör att sidan inte blir tom även om man glömt att köra importscripten manuellt.
 
 ### Kategorier och prefix
 
@@ -460,6 +529,10 @@ Samma fil används av:
 ### "SMS-tjänsten är inte konfigurerad"
 **Orsak:** Miljövariabler saknas.
 **Lösning:** Lägg till `ELKS_API_USER` och `ELKS_API_PASSWORD` i Netlify.
+
+### "Inga länkar visas"
+**Orsak:** `kort_lankar` är tom, Supabase saknas i miljövariabler eller API:t kan inte nå databasen.
+**Lösning:** Kontrollera `PUBLIC_SUPABASE_URL` + nycklar. API:t försöker autoså standardlänkar, men om det misslyckas kör migration + importscript manuellt.
 
 ### "Fel API-nycklar"
 **Orsak:** Felaktiga värden i miljövariablerna.

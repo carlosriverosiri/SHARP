@@ -74,7 +74,8 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 ## Content & informationsflöden
 
 - **Astro content collections** i `src/content/`.
-- Data‑katalog `src/data/` (t.ex. `shortLinks.json`).
+- **Supabase-tabellen `kort_lankar`** är primär källa för länkbiblioteket i `/personal/lankar-sms`.
+- Data‑katalog `src/data/` innehåller seed/metadata (t.ex. `shortLinks.json`).
 - **Dynamiska redirects** genereras från `shortLinks.json` i `astro.config.mjs`.
 - **Pagefind** genererar sökindex under build.
 

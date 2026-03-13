@@ -1,7 +1,7 @@
 # 🔐 Personalportal för Södermalms Ortopedi
 
 > **Status:** ✅ Implementerad  
-> **Senast uppdaterad:** 2026-01-22
+> **Senast uppdaterad:** 2026-03-11
 
 ---
 
@@ -38,6 +38,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 /personal/lankar-sms          → Kopiera länkar & Skicka SMS
 /personal/resurser            → Dokument och resurser
 /personal/aterstall-losenord  → Återställ lösenord
+/copy-links                   → Redirect till /personal/lankar-sms
 /api/sms/skicka               → API för SMS-sändning
 ```
 
@@ -54,6 +55,8 @@ src/
 │   └── supabase.ts               # Supabase-klient
 ├── pages/
 │   ├── api/
+│   │   ├── personal/
+│   │   │   └── kort-lankar.ts    # CRUD + filter + arkivering för länkbibliotek
 │   │   └── sms/
 │   │       └── skicka.ts         # SMS API (46elks)
 │   └── personal/
@@ -63,7 +66,7 @@ src/
 │       ├── resurser.astro        # Resurser
 │       └── aterstall-losenord.astro
 └── data/
-    └── shortLinks.json           # Länkdefinitioner
+    └── shortLinks.json           # Historisk seed/redirect-källa
 ```
 
 ---

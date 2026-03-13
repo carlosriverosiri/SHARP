@@ -1,4 +1,4 @@
-﻿---
+---
 /**
  * Kopiera Länkar & Skicka SMS - Personalverktyg
  * 
@@ -20,15 +20,13 @@ if (!await arInloggad(Astro.cookies)) {
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
 
-// Importera kortlänkar från central JSON-fil
-import shortLinksData from '../../data/shortLinks.json';
-
 // Ikoner för varje kategori
 const categoryIcons: Record<string, string> = {
   "Diagnoser": "🩺",
   "Operationer": "🔪",
   "Rehab": "🏋️",
   "Frågeformulär": "📋",
+  "Bokningar": "📅",
   "Info": "ℹ️"
 };
 
@@ -38,21 +36,16 @@ const smsMallar: Record<string, string> = {
   "Operationer": "Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi",
   "Rehab": "Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi",
   "Frågeformulär": "Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi",
+  "Bokningar": "Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi",
   "Info": "Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi"
 };
 
-// Filtrera bort metadata-nycklar och bygg länklista
-const categories = Object.entries(shortLinksData)
-  .filter(([key]) => !key.startsWith('_'))
-  .map(([categoryName, items]) => ({
-    category: categoryName,
-    icon: categoryIcons[categoryName] || "📄",
-    smsMall: smsMallar[categoryName] || "Hej! Se denna länk: {länk} /Södermalms Ortopedi",
-    items: (items as Array<{name: string; shortCode: string; target: string; isExternal: boolean}>)
-      .filter(item => item.shortCode && item.name)
-  }));
-
-const baseDomain = "www.specialist.se";
+const defaultCategoryOrder = ['Diagnoser', 'Operationer', 'Rehab', 'Frågeformulär', 'Bokningar', 'Info'];
+const defaultCategories = defaultCategoryOrder.map((categoryName) => ({
+  category: categoryName,
+  icon: categoryIcons[categoryName] || "📄",
+  smsMall: smsMallar[categoryName] || "Hej! Se denna länk: {länk} /Södermalms Ortopedi",
+}));
 
 // Kontrollera om 46elks är konfigurerat
 const elksConfigured = !!(import.meta.env.ELKS_API_USER && import.meta.env.ELKS_API_PASSWORD);
@@ -124,33 +117,86 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
     .btn-save:hover { background: #1d4ed8; }
     .dynamic-link-item { position: relative; }
     .dynamic-badge { display: inline-block; font-size: 0.625rem; background: #dbeafe; color: #1d4ed8; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem; font-weight: 600; }
-    .btn.btn-delete-link { padding: 0.5rem; background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-    .btn.btn-delete-link:hover { background: #fee2e2; }
-    /* Ensure dynamic link items match static ones exactly */
-    .dynamic-link-item {
-      display: flex !important;
-      align-items: center !important;
-      padding: 0.875rem 1rem !important;
-      border-bottom: 1px solid #f1f5f9 !important;
-      cursor: pointer;
-    }
-    .dynamic-link-item:hover { background: #f8fafc; }
-    .dynamic-link-item .link-info { flex: 1; min-width: 0; }
-    .dynamic-link-item .link-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; }
-    .dynamic-link-item .link-url { font-size: 0.75rem; color: #94a3b8; font-family: monospace; margin-top: 2px; }
+    .dynamic-link-item .link-name { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem; }
     .dynamic-link-item .link-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
-    .dynamic-link-item .btn { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 0.875rem; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 500; cursor: pointer; }
-    .dynamic-link-item .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .dynamic-link-item .btn-copy { background: #024264; color: white; border: none; }
-    .dynamic-link-item .btn-copy:hover { background: #01334d; }
-    .dynamic-link-item .btn-sms { background: #0ea5e9; color: white; border: none; }
-    .dynamic-link-item .btn-sms:hover { background: #0284c7; }
-    .dynamic-link-item .btn-edit-link { padding: 0.5rem; background: #f0f9ff; color: #2563eb; border: 1px solid #bfdbfe; }
-    .dynamic-link-item .btn-edit-link:hover { background: #dbeafe; }
-    .dynamic-link-item .btn-delete-link { padding: 0.5rem; background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-    .dynamic-link-item .btn-delete-link:hover { background: #fee2e2; }
     .btn.btn-edit-link { padding: 0.5rem; background: #f0f9ff; color: #2563eb; border: 1px solid #bfdbfe; }
     .btn.btn-edit-link:hover { background: #dbeafe; }
+    .btn.btn-delete-link { padding: 0.5rem; background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .btn.btn-delete-link:hover { background: #fee2e2; }
+    .btn.btn-archive-link { padding: 0.5rem; background: #fff7ed; color: #c2410c; border: 1px solid #fdba74; }
+    .btn.btn-archive-link:hover { background: #ffedd5; }
+    .btn.btn-restore-link { padding: 0.5rem; background: #ecfdf5; color: #047857; border: 1px solid #86efac; }
+    .btn.btn-restore-link:hover { background: #d1fae5; }
+    .dynamic-badge-system { background: #dbeafe; color: #1d4ed8; }
+    .dynamic-badge-custom { background: #dcfce7; color: #166534; }
+    .dynamic-badge-type { background: #f1f5f9; color: #475569; }
+    .dynamic-badge-archived { background: #fef3c7; color: #92400e; }
+    .dynamic-link-item.is-archived {
+      opacity: 0.72;
+      background: #f8fafc;
+    }
+    .dynamic-link-item.is-archived .link-url {
+      color: #94a3b8 !important;
+    }
+    .confirm-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.5);
+      padding: 1rem;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .confirm-modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .confirm-modal-backdrop[hidden] {
+      display: none;
+    }
+    .confirm-modal {
+      width: min(100%, 440px);
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      padding: 1.25rem;
+    }
+    .confirm-modal h3 {
+      font-size: 1.05rem;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+    .confirm-modal p {
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .confirm-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .confirm-modal-btn {
+      border: none;
+      border-radius: 0.65rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .confirm-modal-btn.cancel {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .confirm-modal-btn.confirm {
+      background: #dc2626;
+      color: white;
+    }
 
     body {
       font-family: system-ui, -apple-system, sans-serif;
@@ -332,6 +378,34 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       width: 20px;
       height: 20px;
       color: #94a3b8;
+    }
+
+    .link-filters {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .link-filter-select {
+      width: 100%;
+      padding: 0.7rem 0.875rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: white;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .link-filter-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #475569;
+      white-space: nowrap;
     }
     
     .category-section h2 {
@@ -650,6 +724,21 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
       .link-actions { flex-direction: column; }
+      .link-filters {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+      .dynamic-link-item {
+        flex-direction: column;
+        align-items: stretch !important;
+      }
+      .dynamic-link-item .link-actions {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin-left: 0;
+        margin-top: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -745,8 +834,19 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
             <input 
               type="text" 
               id="search-input"
-              placeholder="Sök diagnos, operation eller rehab..."
+              placeholder="Sök länk, kortkod eller kategori..."
             />
+          </div>
+
+          <div class="link-filters">
+            <select id="linkTypeFilter" class="link-filter-select">
+              <option value="">Alla typer</option>
+              <option value="internal">Interna länkar</option>
+              <option value="external">Externa länkar</option>
+              <option value="form">Formulär</option>
+              <option value="booking">Bokning</option>
+            </select>
+            <label class="link-filter-check"><input type="checkbox" id="showArchivedToggle"> Visa arkiverade</label>
           </div>
 
           <button type="button" id="addLinkBtn" class="btn-add-link" title="Lägg till ny länk">
@@ -759,7 +859,16 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
               <input type="text" id="newLinkName" placeholder="Namn (t.ex. Distal bicepsruptur)" class="add-link-input">
               <input type="text" id="newLinkCode" placeholder="Kortkod (t.ex. /d/biceps-dist)" class="add-link-input">
               <input type="text" id="newLinkTarget" placeholder="Mål-URL (t.ex. /sjukdomar/axel/...)" class="add-link-input">
-              <div class="add-link-category-row"><select id="newLinkCategory" class="add-link-input" style="flex:1"><option value="Diagnoser">Diagnoser</option><option value="Operationer">Operationer</option><option value="Rehab">Rehab</option><option value="Info" selected>Info</option><option value="__new__">+ Ny kategori...</option></select><input type="text" id="newCategoryInput" class="add-link-input" placeholder="Kategorinamn..." style="display:none;flex:1"></div>
+              <div class="add-link-category-row"><select id="newLinkCategory" class="add-link-input" style="flex:1"><option value="Diagnoser">Diagnoser</option><option value="Operationer">Operationer</option><option value="Rehab">Rehab</option><option value="Frågeformulär">Frågeformulär</option><option value="Bokningar">Bokningar</option><option value="Info" selected>Info</option><option value="__new__">+ Ny kategori...</option></select><input type="text" id="newCategoryInput" class="add-link-input" placeholder="Kategorinamn..." style="display:none;flex:1"></div>
+              <select id="newLinkType" class="add-link-input">
+                <option value="internal" selected>Intern länk</option>
+                <option value="external">Extern länk</option>
+                <option value="form">Formulär</option>
+                <option value="booking">Bokning</option>
+              </select>
+              <textarea id="newLinkSmsTemplate" class="add-link-input" placeholder="Valfri SMS-mall. Använd {namn} och {länk} om du vill."></textarea>
+              <textarea id="newLinkDescription" class="add-link-input" placeholder="Intern beskrivning eller kommentar (valfritt)"></textarea>
+              <label class="add-link-check"><input type="checkbox" id="newLinkActive" checked> Aktiv länk</label>
               <label class="add-link-check"><input type="checkbox" id="newLinkExternal"> Extern URL</label>
               <div class="add-link-actions">
                 <button type="button" id="cancelAddLink" class="btn btn-cancel">Avbryt</button>
@@ -767,63 +876,10 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
               </div>
             </div>
           </div>
-
-          <div id="dynamicLinksContainer"></div>
-
-          {categories.map((cat) => (
-            <section class="category-section" data-category={cat.category}>
-              <h2>
-                <span>{cat.icon}</span>
-                {cat.category}
-              </h2>
-              <div class="links-list">
-                {cat.items.map((item) => (
-                  <div 
-                    class="link-item"
-                    data-name={item.name}
-                    data-url={`${baseDomain}${item.shortCode}`}
-                    data-category={cat.category}
-                    data-template={cat.smsMall}
-                  >
-                    <div class="link-info">
-                      <div class="link-name">{item.name}</div>
-                      <div class="link-url">{baseDomain}{item.shortCode}</div>
-                    </div>
-                    <div class="link-actions">
-                      <button 
-                        type="button" 
-                        class="btn btn-copy"
-                        data-url={`${baseDomain}${item.shortCode}`}
-                        title="Kopiera länk"
-                      >
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                        </svg>
-                        Kopiera
-                      </button>
-                      {elksConfigured && (
-                        <button 
-                          type="button" 
-                          class="btn btn-sms"
-                          title="Fyll i SMS"
-                        >
-                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                          </svg>
-                          SMS
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
-
-          <div id="dynamicLinksContainer"></div>
+          <div id="dynamicLinksContainer" aria-live="polite"></div>
 
           <div id="no-results" class="message warning" style="display: none;">
-            Inga resultat hittades för din sökning.
+            Inga länkar hittades i länkbiblioteket.
           </div>
         </div>
 
@@ -864,7 +920,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
                 <div class="sms-field">
                   <label for="sms-category">📁 Kategori</label>
                   <select id="sms-category">
-                    {categories.map((cat) => (
+                    {defaultCategories.map((cat) => (
                       <option value={cat.category} data-template={cat.smsMall}>
                         {cat.icon} {cat.category}
                       </option>
@@ -914,26 +970,116 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
   <!-- Toast -->
   <div class="toast" id="toast">✓ Kopierad!</div>
 
+  <div class="confirm-modal-backdrop" id="confirmModalBackdrop" hidden>
+    <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <h3 id="confirmModalTitle">Ta bort länk?</h3>
+      <p id="confirmModalText">Den här länken kommer att tas bort.</p>
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-modal-btn cancel" id="confirmModalCancel">Avbryt</button>
+        <button type="button" class="confirm-modal-btn confirm" id="confirmModalConfirm">Ta bort</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const toast = document.getElementById('toast');
-      const searchInput = document.getElementById('search-input') as HTMLInputElement;
-      const categorySections = document.querySelectorAll('.category-section');
-      const noResults = document.getElementById('no-results');
-      
-      // SMS elements
-      const smsForm = document.getElementById('sms-form') as HTMLFormElement;
-      const smsPhone = document.getElementById('sms-phone') as HTMLInputElement;
-      const smsCategory = document.getElementById('sms-category') as HTMLSelectElement;
-      const smsText = document.getElementById('sms-text') as HTMLTextAreaElement;
-      const charCount = document.getElementById('char-count');
-      const smsCost = document.getElementById('sms-cost');
-      const charBarFill = document.getElementById('char-bar-fill');
-      const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
-      const messageArea = document.getElementById('sms-message-area');
-      const urlParams = new URLSearchParams(window.location.search);
+      const toast = document.getElementById('toast') as HTMLDivElement | null;
+      const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+      const noResultsEl = document.getElementById('no-results') as HTMLDivElement | null;
+      const dynamicContainer = document.getElementById('dynamicLinksContainer') as HTMLDivElement | null;
+      const linkTypeFilter = document.getElementById('linkTypeFilter') as HTMLSelectElement | null;
+      const showArchivedToggle = document.getElementById('showArchivedToggle') as HTMLInputElement | null;
 
-      // Show toast
+      // Add/edit form elements
+      const addLinkBtn = document.getElementById('addLinkBtn') as HTMLButtonElement | null;
+      const addLinkForm = document.getElementById('addLinkForm') as HTMLDivElement | null;
+      const cancelAddLink = document.getElementById('cancelAddLink') as HTMLButtonElement | null;
+      const saveAddLink = document.getElementById('saveAddLink') as HTMLButtonElement | null;
+      const catSelect = document.getElementById('newLinkCategory') as HTMLSelectElement | null;
+      const catInput = document.getElementById('newCategoryInput') as HTMLInputElement | null;
+      const newLinkTypeSelect = document.getElementById('newLinkType') as HTMLSelectElement | null;
+      const newLinkExternalCheck = document.getElementById('newLinkExternal') as HTMLInputElement | null;
+
+      // SMS elements
+      const smsForm = document.getElementById('sms-form') as HTMLFormElement | null;
+      const smsPhone = document.getElementById('sms-phone') as HTMLInputElement | null;
+      const smsCategorySelect = document.getElementById('sms-category') as HTMLSelectElement | null;
+      const smsText = document.getElementById('sms-text') as HTMLTextAreaElement | null;
+      const charCount = document.getElementById('char-count') as HTMLSpanElement | null;
+      const smsCost = document.getElementById('sms-cost') as HTMLSpanElement | null;
+      const charBarFill = document.getElementById('char-bar-fill') as HTMLDivElement | null;
+      const sendBtn = document.getElementById('send-btn') as HTMLButtonElement | null;
+      const messageArea = document.getElementById('sms-message-area') as HTMLDivElement | null;
+
+      // Confirm modal
+      const confirmModalBackdrop = document.getElementById('confirmModalBackdrop') as HTMLDivElement | null;
+      const confirmModalTitle = document.getElementById('confirmModalTitle') as HTMLHeadingElement | null;
+      const confirmModalText = document.getElementById('confirmModalText') as HTMLParagraphElement | null;
+      const confirmModalCancel = document.getElementById('confirmModalCancel') as HTMLButtonElement | null;
+      const confirmModalConfirm = document.getElementById('confirmModalConfirm') as HTMLButtonElement | null;
+
+      const smsEnabled = smsForm !== null;
+      const categoryIconsMap: Record<string, string> = {
+        Diagnoser: '🩺',
+        Operationer: '🔪',
+        Rehab: '🏋️',
+        'Frågeformulär': '📋',
+        Bokningar: '📅',
+        Info: 'ℹ️',
+      };
+      const smsTemplatesMap: Record<string, string> = {
+        Diagnoser: 'Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi',
+        Operationer: 'Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi',
+        Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi',
+        'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi',
+        Bokningar: 'Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi',
+        Info: 'Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi',
+      };
+      const defaultCategories = ['Diagnoser', 'Operationer', 'Rehab', 'Frågeformulär', 'Bokningar', 'Info'];
+      const noResultsDefaultText = 'Inga länkar hittades i länkbiblioteket.';
+      const noResultsFilteredText = 'Inga länkar matchar din sökning eller dina filter.';
+      const baseDomain = 'www.specialist.se';
+
+      let confirmResolver: ((value: boolean) => void) | null = null;
+      let searchDebounce: ReturnType<typeof setTimeout> | undefined;
+
+      const copyButtonMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        Kopiera
+      `;
+      const copiedButtonMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        Kopierad!
+      `;
+      const smsButtonMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        SMS
+      `;
+      const editButtonMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      `;
+      const deleteButtonMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+        </svg>
+      `;
+      const sendButtonDefaultMarkup = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+        Skicka SMS
+      `;
+
       function showToast(text: string, isError = false) {
         if (!toast) return;
         toast.textContent = text;
@@ -942,7 +1088,6 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         setTimeout(() => toast.classList.remove('show'), 2500);
       }
 
-      // Prefill phone from query param (e.g. ?phone=0701234567 or ?phone=+46701234567)
       function normalizePhoneInput(raw: string) {
         let value = raw.replace(/\D/g, '');
         if (value.startsWith('46')) value = value.substring(2);
@@ -950,149 +1095,64 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         return value;
       }
 
-      if (smsPhone) {
-        const phoneParam = urlParams.get('phone') || urlParams.get('mobil') || urlParams.get('tel');
-        if (phoneParam) {
-          smsPhone.value = normalizePhoneInput(phoneParam);
-          updateCharCounter();
-          smsPhone.focus();
+      function normalizeShortCode(code: string) {
+        if (!code) return '';
+        return code.startsWith('/') ? code : `/${code}`;
+      }
+
+      function syncExternalFromType() {
+        if (!newLinkTypeSelect || !newLinkExternalCheck) return;
+        if (newLinkTypeSelect.value === 'external') {
+          newLinkExternalCheck.checked = true;
         }
       }
 
-      // Copy functionality
-      document.querySelectorAll('.btn-copy').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          e.stopPropagation();
-          const url = btn.getAttribute('data-url');
-          if (!url) return;
-          
-          try {
-            await navigator.clipboard.writeText(url);
-            btn.classList.add('copied');
-            btn.innerHTML = `
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-              </svg>
-              Kopierad!
-            `;
-            showToast('✓ Länk kopierad!');
-            
-            setTimeout(() => {
-              btn.classList.remove('copied');
-              btn.innerHTML = `
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                </svg>
-                Kopiera
-              `;
-            }, 2000);
-          } catch (err) {
-            showToast('Kunde inte kopiera', true);
-          }
-        });
-      });
+      function buildPublicUrl(shortCode: string) {
+        return `${baseDomain}${normalizeShortCode(shortCode)}`;
+      }
 
-      // SMS button click - fill SMS form
-      document.querySelectorAll('.btn-sms').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const linkItem = btn.closest('.link-item') as HTMLElement;
-          if (!linkItem) return;
-          
-          const name = linkItem.dataset.name || '';
-          const url = linkItem.dataset.url || '';
-          const category = linkItem.dataset.category || '';
-          const template = linkItem.dataset.template || '';
-          
-          // Update category select
-          if (smsCategory) {
-            smsCategory.value = category;
-          }
-          
-          // Fill in the message using template
-          const message = template
-            .replace('{namn}', name)
-            .replace('{länk}', url);
-          
-          if (smsText) {
-            smsText.value = message;
-            updateCharCounter();
-          }
-          
-          // Focus phone field
-          if (smsPhone) {
-            smsPhone.focus();
-          }
-          
-          // Highlight selected item
-          document.querySelectorAll('.link-item').forEach(item => item.classList.remove('selected'));
-          linkItem.classList.add('selected');
-        });
-      });
+      function getDefaultSmsTemplate(category: string) {
+        return smsTemplatesMap[category] || 'Hej! Se denna länk: {länk} /Södermalms Ortopedi';
+      }
 
-      // Link item click (entire row)
-      document.querySelectorAll('.link-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          const target = e.target as HTMLElement;
-          if (target.closest('.btn')) return; // Ignore if button clicked
-          
-          // Find and click the SMS button if it exists
-          const smsBtn = item.querySelector('.btn-sms') as HTMLButtonElement;
-          if (smsBtn) {
-            smsBtn.click();
-          }
-        });
-      });
+      function getLinkTypeLabel(type: string | undefined, isExternal: boolean) {
+        if (type === 'form') return 'Formulär';
+        if (type === 'booking') return 'Bokning';
+        if (type === 'external' || isExternal) return 'Extern';
+        return 'Intern';
+      }
 
-      // Search functionality
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          const term = searchInput.value.toLowerCase().trim();
-          let hasResults = false;
-          
-          categorySections.forEach(section => {
-            const items = section.querySelectorAll('.link-item');
-            let categoryHasResults = false;
-            
-            items.forEach(item => {
-              const el = item as HTMLElement;
-              const name = (el.dataset.name || '').toLowerCase();
-              const url = (el.dataset.url || '').toLowerCase();
-              const matches = name.includes(term) || url.includes(term);
-              
-              el.style.display = matches ? 'flex' : 'none';
-              if (matches) {
-                categoryHasResults = true;
-                hasResults = true;
-              }
-            });
-            
-            (section as HTMLElement).style.display = categoryHasResults ? 'block' : 'none';
-          });
-          
-          if (noResults) {
-            noResults.style.display = hasResults ? 'none' : 'block';
-          }
+      function sortCategories(input: string[]) {
+        const priority = new Map(defaultCategories.map((category, index) => [category, index]));
+        return [...input].sort((a, b) => {
+          const aIndex = priority.has(a) ? priority.get(a)! : Number.MAX_SAFE_INTEGER;
+          const bIndex = priority.has(b) ? priority.get(b)! : Number.MAX_SAFE_INTEGER;
+          if (aIndex !== bIndex) return aIndex - bIndex;
+          return a.localeCompare(b, 'sv');
         });
       }
 
-      // Character counter
+      function setNoResultsVisible(visible: boolean, filtered: boolean) {
+        if (!noResultsEl) return;
+        noResultsEl.textContent = filtered ? noResultsFilteredText : noResultsDefaultText;
+        noResultsEl.style.display = visible ? 'block' : 'none';
+      }
+
       function updateCharCounter() {
         if (!smsText || !charCount || !smsCost || !charBarFill || !sendBtn) return;
-        
+
         const length = smsText.value.length;
         const smsCount = length === 0 ? 1 : Math.ceil(length / 160);
         const percent = Math.min((length / 160) * 100, 100);
-        
+
         charCount.textContent = `${length}/160`;
-        smsCost.textContent = `${smsCount} SMS${smsCount > 1 ? ' (~' + (smsCount * 0.35).toFixed(2) + ' kr)' : ''}`;
+        smsCost.textContent = `${smsCount} SMS${smsCount > 1 ? ` (~${(smsCount * 0.35).toFixed(2)} kr)` : ''}`;
         charBarFill.style.width = `${percent}%`;
-        
-        // Color coding
+
         charCount.classList.remove('warning', 'danger');
         charBarFill.classList.remove('warning', 'danger');
         smsCost.classList.remove('multiple');
-        
+
         if (length > 306) {
           charCount.classList.add('danger');
           charBarFill.classList.add('danger');
@@ -1102,43 +1162,659 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
           charBarFill.classList.add('warning');
           smsCost.classList.add('multiple');
         }
-        
-        // Enable/disable send button
-        const phoneValid = smsPhone && /^[0-9]{9,10}$/.test(smsPhone.value.replace(/\s/g, ''));
+
+        const phoneValid = smsPhone ? /^[0-9]{9,10}$/.test(smsPhone.value.replace(/\s/g, '')) : false;
         sendBtn.disabled = !(length > 0 && phoneValid);
       }
 
-      if (smsText) {
-        smsText.addEventListener('input', updateCharCounter);
+      function closeConfirmModal(confirmed: boolean) {
+        if (confirmModalBackdrop) {
+          confirmModalBackdrop.classList.remove('show');
+          confirmModalBackdrop.hidden = true;
+        }
+        if (confirmResolver) {
+          const resolve = confirmResolver;
+          confirmResolver = null;
+          resolve(confirmed);
+        }
       }
-      
-      if (smsPhone) {
-        smsPhone.addEventListener('input', () => {
-          // Remove non-digits and leading zero
-          let value = smsPhone.value.replace(/\D/g, '');
-          if (value.startsWith('0')) {
-            value = value.substring(1);
-          }
-          smsPhone.value = value;
-          updateCharCounter();
+
+      function askLinkActionConfirm(options: { name: string; shortCode: string; isSystem: boolean }) {
+        if (!confirmModalBackdrop || !confirmModalTitle || !confirmModalText || !confirmModalConfirm) {
+          return Promise.resolve(window.confirm(options.isSystem ? 'Arkivera denna systemlänk?' : 'Ta bort denna länk?'));
+        }
+
+        confirmModalTitle.textContent = options.isSystem ? 'Arkivera systemlänk?' : 'Ta bort länk?';
+        confirmModalText.textContent = options.isSystem
+          ? `${options.name} (${options.shortCode}) kommer att döljas från listan men finnas kvar i databasen.`
+          : `${options.name} (${options.shortCode}) kommer att tas bort permanent.`;
+        confirmModalConfirm.textContent = options.isSystem ? 'Arkivera' : 'Ta bort';
+        confirmModalConfirm.style.background = options.isSystem ? '#ea580c' : '#dc2626';
+        confirmModalBackdrop.hidden = false;
+        confirmModalBackdrop.classList.add('show');
+
+        return new Promise<boolean>((resolve) => {
+          confirmResolver = resolve;
         });
       }
 
-      // Form submission
-      if (smsForm) {
-        smsForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          
-          if (!smsPhone || !smsText || !sendBtn) return;
-          
-          const phone = '+46' + smsPhone.value.replace(/\D/g, '');
+      function applyInlineButtonStyle(btn: HTMLButtonElement, className: string) {
+        btn.style.display = 'inline-flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.gap = '0.375rem';
+        btn.style.padding = '0.5rem 0.875rem';
+        btn.style.borderRadius = '0.5rem';
+        btn.style.fontSize = '0.85rem';
+        btn.style.fontWeight = '500';
+        btn.style.lineHeight = '1';
+        btn.style.whiteSpace = 'nowrap';
+        btn.style.cursor = 'pointer';
+        btn.style.border = 'none';
+        btn.style.minHeight = '40px';
+        btn.style.appearance = 'none';
+
+        if (className.includes('btn-copy')) {
+          btn.style.background = '#024264';
+          btn.style.color = '#ffffff';
+        } else if (className.includes('btn-sms')) {
+          btn.style.background = '#0ea5e9';
+          btn.style.color = '#ffffff';
+        } else if (className.includes('btn-edit-link')) {
+          btn.style.background = '#f0f9ff';
+          btn.style.color = '#2563eb';
+          btn.style.border = '1px solid #bfdbfe';
+          btn.style.padding = '0.5rem';
+          btn.style.minWidth = '40px';
+        } else if (className.includes('btn-delete-link')) {
+          btn.style.background = '#fef2f2';
+          btn.style.color = '#ef4444';
+          btn.style.border = '1px solid #fecaca';
+          btn.style.padding = '0.5rem';
+          btn.style.minWidth = '40px';
+        } else if (className.includes('btn-archive-link')) {
+          btn.style.background = '#fff7ed';
+          btn.style.color = '#c2410c';
+          btn.style.border = '1px solid #fdba74';
+        } else if (className.includes('btn-restore-link')) {
+          btn.style.background = '#ecfdf5';
+          btn.style.color = '#047857';
+          btn.style.border = '1px solid #86efac';
+        }
+
+        btn.querySelectorAll('svg').forEach((svg) => {
+          svg.setAttribute('width', '16');
+          svg.setAttribute('height', '16');
+          svg.style.width = '16px';
+          svg.style.height = '16px';
+          svg.style.minWidth = '16px';
+          svg.style.minHeight = '16px';
+          svg.style.display = 'block';
+          svg.style.flexShrink = '0';
+        });
+      }
+
+      function createActionButton(className: string, title: string, markup: string, dataId?: string, dataUrl?: string) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = className;
+        btn.title = title;
+        if (dataId) btn.dataset.id = dataId;
+        if (dataUrl) btn.dataset.url = dataUrl;
+        btn.innerHTML = markup.trim();
+        applyInlineButtonStyle(btn, className);
+        return btn;
+      }
+
+      function resetAddLinkForm() {
+        (document.getElementById('newLinkName') as HTMLInputElement | null)!.value = '';
+        (document.getElementById('newLinkCode') as HTMLInputElement | null)!.value = '';
+        (document.getElementById('newLinkTarget') as HTMLInputElement | null)!.value = '';
+        if (newLinkTypeSelect) newLinkTypeSelect.value = 'internal';
+        (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)!.value = '';
+        (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)!.value = '';
+        (document.getElementById('newLinkActive') as HTMLInputElement | null)!.checked = true;
+        if (newLinkExternalCheck) newLinkExternalCheck.checked = false;
+        if (catSelect) catSelect.value = 'Info';
+        if (catInput) {
+          catInput.value = '';
+          catInput.style.display = 'none';
+        }
+        if (saveAddLink) {
+          delete (saveAddLink as any).dataset.editId;
+          saveAddLink.textContent = 'Spara';
+        }
+      }
+
+      function updateCategoryDropdown(links: any[]) {
+        if (!catSelect) return;
+        const categories = new Set<string>(defaultCategories);
+        links.forEach((link: any) => {
+          if (typeof link?.category === 'string' && link.category.trim().length > 0) {
+            categories.add(link.category.trim());
+          }
+        });
+        const ordered = sortCategories(Array.from(categories));
+        const previousValue = catSelect.value;
+
+        catSelect.innerHTML = '';
+        ordered.forEach((category) => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          catSelect.appendChild(option);
+        });
+        const customOption = document.createElement('option');
+        customOption.value = '__new__';
+        customOption.textContent = '+ Ny kategori...';
+        catSelect.appendChild(customOption);
+
+        if (previousValue === '__new__') {
+          catSelect.value = '__new__';
+        } else if (categories.has(previousValue)) {
+          catSelect.value = previousValue;
+        } else {
+          catSelect.value = 'Info';
+        }
+      }
+
+      function updateSmsCategoryDropdown(links: any[]) {
+        if (!smsCategorySelect) return;
+        const categories = new Set<string>(defaultCategories);
+        links.forEach((link: any) => {
+          if (typeof link?.category === 'string' && link.category.trim().length > 0) {
+            categories.add(link.category.trim());
+          }
+        });
+        const ordered = sortCategories(Array.from(categories));
+        const previousValue = smsCategorySelect.value;
+        smsCategorySelect.innerHTML = '';
+
+        ordered.forEach((category) => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.dataset.template = getDefaultSmsTemplate(category);
+          option.textContent = `${categoryIconsMap[category] || '📄'} ${category}`;
+          smsCategorySelect.appendChild(option);
+        });
+
+        if (ordered.includes(previousValue)) {
+          smsCategorySelect.value = previousValue;
+        }
+      }
+
+      function fillSmsFromRow(row: HTMLElement) {
+        const name = row.dataset.name || '';
+        const url = row.dataset.url || '';
+        const category = row.dataset.category || '';
+        const template = row.dataset.template || getDefaultSmsTemplate(category);
+
+        if (smsCategorySelect && category) smsCategorySelect.value = category;
+        if (smsText) {
+          smsText.value = template.replace('{namn}', name).replace('{länk}', url);
+          updateCharCounter();
+        }
+        smsPhone?.focus();
+        document.querySelectorAll('.link-item').forEach((item) => item.classList.remove('selected'));
+        row.classList.add('selected');
+      }
+
+      async function loadDynamicLinks() {
+        if (!dynamicContainer) return;
+        const searchValue = searchInput?.value.trim() || '';
+        const linkTypeValue = linkTypeFilter?.value || '';
+        const showArchived = showArchivedToggle?.checked || false;
+        const hasFilters = Boolean(searchValue || linkTypeValue || showArchived);
+
+        try {
+          const params = new URLSearchParams();
+          if (searchValue) params.set('search', searchValue);
+          if (linkTypeValue) params.set('link_type', linkTypeValue);
+          if (showArchived) params.set('include_inactive', 'true');
+
+          const query = params.toString();
+          const res = await fetch(`/api/personal/kort-lankar${query ? `?${query}` : ''}`, { credentials: 'include' });
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            showToast(data.error || 'Kunde inte läsa länkar', true);
+            dynamicContainer.innerHTML = '';
+            setNoResultsVisible(true, hasFilters);
+            return;
+          }
+
+          const links = Array.isArray(data.links) ? data.links : [];
+          updateCategoryDropdown(links);
+          updateSmsCategoryDropdown(links);
+
+          dynamicContainer.innerHTML = '';
+          if (links.length === 0) {
+            setNoResultsVisible(true, hasFilters);
+            return;
+          }
+
+          setNoResultsVisible(false, hasFilters);
+          const grouped = new Map<string, any[]>();
+          links.forEach((link: any) => {
+            const category = typeof link?.category === 'string' && link.category.trim() ? link.category.trim() : 'Info';
+            if (!grouped.has(category)) grouped.set(category, []);
+            grouped.get(category)!.push(link);
+          });
+
+          const orderedCategories = sortCategories(Array.from(grouped.keys()));
+          orderedCategories.forEach((category) => {
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.dataset.category = category;
+
+            const heading = document.createElement('h2');
+            const icon = document.createElement('span');
+            icon.textContent = categoryIconsMap[category] || '📄';
+            heading.append(icon, document.createTextNode(category));
+
+            const list = document.createElement('div');
+            list.className = 'links-list';
+            grouped.get(category)?.forEach((item) => {
+              list.appendChild(buildDynamicLinkElement(item, category));
+            });
+
+            section.append(heading, list);
+            dynamicContainer.appendChild(section);
+          });
+        } catch (error) {
+          console.error('Error loading links:', error);
+          showToast('Kunde inte läsa länkbiblioteket', true);
+          dynamicContainer.innerHTML = '';
+          setNoResultsVisible(true, hasFilters);
+        }
+      }
+
+      function buildDynamicLinkElement(item: any, category: string) {
+        const shortCode = normalizeShortCode(item?.short_code || '');
+        const url = buildPublicUrl(shortCode);
+        const isNarrow = window.innerWidth <= 768;
+        const isActive = item?.is_active !== false;
+        const isSystem = Boolean(item?.is_system);
+        const isExternal = Boolean(item?.is_external);
+
+        const row = document.createElement('div');
+        row.className = 'link-item dynamic-link-item';
+        if (!isActive) row.classList.add('is-archived');
+        row.style.display = 'flex';
+        row.style.alignItems = isNarrow ? 'stretch' : 'center';
+        row.style.flexDirection = isNarrow ? 'column' : 'row';
+        row.style.padding = '0.875rem 1rem';
+        row.style.borderBottom = '1px solid #f1f5f9';
+        row.style.cursor = 'pointer';
+
+        row.dataset.name = item?.name || '';
+        row.dataset.url = url;
+        row.dataset.category = category;
+        row.dataset.shortCode = shortCode;
+        row.dataset.target = item?.target || '';
+        row.dataset.id = item?.id || '';
+        row.dataset.isExternal = isExternal ? '1' : '0';
+        row.dataset.isSystem = isSystem ? '1' : '0';
+        row.dataset.isActive = isActive ? '1' : '0';
+        row.dataset.linkType = item?.link_type || '';
+        row.dataset.smsTemplate = item?.sms_template || '';
+        row.dataset.description = item?.description || '';
+        row.dataset.template = item?.sms_template || getDefaultSmsTemplate(category);
+
+        const info = document.createElement('div');
+        info.className = 'link-info';
+        info.style.flex = '1';
+        info.style.minWidth = '0';
+
+        const name = document.createElement('div');
+        name.className = 'link-name';
+        name.style.display = 'flex';
+        name.style.alignItems = 'center';
+        name.style.flexWrap = 'wrap';
+        name.style.gap = '0.35rem';
+        name.style.fontWeight = '500';
+        name.style.color = '#1e293b';
+        name.style.marginBottom = '0.125rem';
+        name.append(document.createTextNode(item?.name || 'Namnlös länk'));
+
+        const sourceBadge = document.createElement('span');
+        sourceBadge.className = `dynamic-badge ${isSystem ? 'dynamic-badge-system' : 'dynamic-badge-custom'}`;
+        sourceBadge.textContent = isSystem ? 'System' : 'Egen';
+
+        const typeBadge = document.createElement('span');
+        typeBadge.className = 'dynamic-badge dynamic-badge-type';
+        typeBadge.textContent = getLinkTypeLabel(item?.link_type, isExternal);
+
+        name.appendChild(sourceBadge);
+        name.appendChild(typeBadge);
+        if (!isActive) {
+          const archivedBadge = document.createElement('span');
+          archivedBadge.className = 'dynamic-badge dynamic-badge-archived';
+          archivedBadge.textContent = 'Arkiverad';
+          name.appendChild(archivedBadge);
+        }
+
+        const urlEl = document.createElement('div');
+        urlEl.className = 'link-url';
+        urlEl.style.fontSize = '0.8rem';
+        urlEl.style.color = '#64748b';
+        urlEl.style.fontFamily = 'monospace';
+        urlEl.textContent = url;
+
+        info.append(name, urlEl);
+
+        const actions = document.createElement('div');
+        actions.className = 'link-actions';
+        actions.style.display = 'flex';
+        actions.style.flexDirection = 'row';
+        actions.style.flexWrap = 'wrap';
+        actions.style.alignItems = 'center';
+        actions.style.gap = '0.5rem';
+        actions.style.flexShrink = '0';
+        actions.style.marginLeft = isNarrow ? '0' : '1rem';
+        actions.style.marginTop = isNarrow ? '0.75rem' : '0';
+        actions.style.justifyContent = 'flex-start';
+
+        const copyBtn = createActionButton('btn btn-copy', 'Kopiera länk', copyButtonMarkup, item?.id, url);
+        actions.appendChild(copyBtn);
+
+        if (smsEnabled) {
+          const smsBtn = createActionButton('btn btn-sms', 'Fyll i SMS', smsButtonMarkup, item?.id);
+          actions.appendChild(smsBtn);
+        }
+
+        const editBtn = createActionButton('btn btn-edit-link', 'Redigera', editButtonMarkup, item?.id);
+        actions.appendChild(editBtn);
+
+        const actionClass = !isActive
+          ? 'btn btn-restore-link'
+          : (isSystem ? 'btn btn-archive-link' : 'btn btn-delete-link');
+        const actionTitle = !isActive
+          ? 'Återställ'
+          : (isSystem ? 'Arkivera' : 'Ta bort');
+        const actionBtn = createActionButton(actionClass, actionTitle, deleteButtonMarkup, item?.id);
+        actions.appendChild(actionBtn);
+
+        row.append(info, actions);
+        bindDynamicLinkRow(row);
+        return row;
+      }
+
+      function bindDynamicLinkRow(row: HTMLElement) {
+        const copyBtn = row.querySelector('.btn-copy') as HTMLButtonElement | null;
+        const smsBtn = row.querySelector('.btn-sms') as HTMLButtonElement | null;
+        const editBtn = row.querySelector('.btn-edit-link') as HTMLButtonElement | null;
+        const actionBtn = row.querySelector('.btn-delete-link, .btn-archive-link, .btn-restore-link') as HTMLButtonElement | null;
+
+        copyBtn?.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          const url = row.dataset.url || '';
+          if (!url) return;
+          try {
+            await navigator.clipboard.writeText(url);
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = copiedButtonMarkup;
+            applyInlineButtonStyle(copyBtn, 'btn btn-copy');
+            showToast('✓ Länk kopierad');
+            setTimeout(() => {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = copyButtonMarkup;
+              applyInlineButtonStyle(copyBtn, 'btn btn-copy');
+            }, 1800);
+          } catch {
+            showToast('Kunde inte kopiera länken', true);
+          }
+        });
+
+        smsBtn?.addEventListener('click', (event) => {
+          event.stopPropagation();
+          fillSmsFromRow(row);
+        });
+
+        editBtn?.addEventListener('click', (event) => {
+          event.stopPropagation();
+          if (!addLinkForm || !saveAddLink) return;
+          addLinkForm.style.display = 'block';
+
+          (document.getElementById('newLinkName') as HTMLInputElement | null)!.value = row.dataset.name || '';
+          (document.getElementById('newLinkCode') as HTMLInputElement | null)!.value = row.dataset.shortCode || '';
+          (document.getElementById('newLinkTarget') as HTMLInputElement | null)!.value = row.dataset.target || '';
+          const resolvedType = row.dataset.linkType || (row.dataset.isExternal === '1' ? 'external' : 'internal');
+          if (newLinkTypeSelect) newLinkTypeSelect.value = resolvedType;
+          (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)!.value = row.dataset.smsTemplate || '';
+          (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)!.value = row.dataset.description || '';
+          (document.getElementById('newLinkActive') as HTMLInputElement | null)!.checked = row.dataset.isActive !== '0';
+          if (newLinkExternalCheck) newLinkExternalCheck.checked = row.dataset.isExternal === '1' || resolvedType === 'external';
+
+          if (catSelect) {
+            if (Array.from(catSelect.options).some((option) => option.value === row.dataset.category)) {
+              catSelect.value = row.dataset.category || 'Info';
+              if (catInput) catInput.style.display = 'none';
+            } else {
+              catSelect.value = '__new__';
+              if (catInput) {
+                catInput.style.display = 'block';
+                catInput.value = row.dataset.category || '';
+              }
+            }
+          }
+
+          saveAddLink.textContent = 'Uppdatera';
+          (saveAddLink as any).dataset.editId = row.dataset.id || '';
+          window.scrollTo({ top: addLinkForm.offsetTop - 100, behavior: 'smooth' });
+        });
+
+        actionBtn?.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          const id = row.dataset.id;
+          if (!id) return;
+          const isSystem = row.dataset.isSystem === '1';
+          const isActive = row.dataset.isActive !== '0';
+
+          if (!isActive) {
+            try {
+              const response = await fetch('/api/personal/kort-lankar', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, is_active: true }),
+              });
+              const result = await response.json().catch(() => ({}));
+              if (!response.ok) {
+                showToast(result.error || 'Kunde inte återställa länken', true);
+                return;
+              }
+              await loadDynamicLinks();
+              showToast('Länk återställd');
+            } catch {
+              showToast('Kunde inte återställa länken', true);
+            }
+            return;
+          }
+
+          const confirmed = await askLinkActionConfirm({
+            name: row.dataset.name || 'Länk',
+            shortCode: row.dataset.shortCode || '',
+            isSystem,
+          });
+          if (!confirmed) return;
+
+          try {
+            const response = isSystem
+              ? await fetch('/api/personal/kort-lankar', {
+                  method: 'PATCH',
+                  credentials: 'include',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id, is_active: false }),
+                })
+              : await fetch(`/api/personal/kort-lankar?id=${encodeURIComponent(id)}`, {
+                  method: 'DELETE',
+                  credentials: 'include',
+                });
+
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              showToast(result.error || 'Kunde inte genomföra åtgärden', true);
+              return;
+            }
+
+            await loadDynamicLinks();
+            showToast(isSystem ? 'Systemlänk arkiverad' : 'Länk borttagen');
+          } catch {
+            showToast('Kunde inte genomföra åtgärden', true);
+          }
+        });
+
+        row.addEventListener('click', (event) => {
+          const target = event.target as HTMLElement;
+          if (target.closest('.btn') || !smsEnabled) return;
+          smsBtn?.click();
+        });
+      }
+
+      addLinkBtn?.addEventListener('click', () => {
+        if (!addLinkForm) return;
+        const shouldOpen = addLinkForm.style.display === 'none' || addLinkForm.style.display === '';
+        addLinkForm.style.display = shouldOpen ? 'block' : 'none';
+        if (shouldOpen && !(saveAddLink as any)?.dataset?.editId) {
+          resetAddLinkForm();
+        }
+      });
+
+      cancelAddLink?.addEventListener('click', () => {
+        if (addLinkForm) addLinkForm.style.display = 'none';
+        resetAddLinkForm();
+      });
+
+      saveAddLink?.addEventListener('click', async () => {
+        const name = (document.getElementById('newLinkName') as HTMLInputElement | null)?.value.trim() || '';
+        const code = (document.getElementById('newLinkCode') as HTMLInputElement | null)?.value.trim() || '';
+        const target = (document.getElementById('newLinkTarget') as HTMLInputElement | null)?.value.trim() || '';
+        const selectedLinkType = newLinkTypeSelect?.value.trim() || '';
+        const smsTemplate = (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)?.value.trim() || '';
+        const description = (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)?.value.trim() || '';
+        const isActive = (document.getElementById('newLinkActive') as HTMLInputElement | null)?.checked ?? true;
+        const ext = newLinkExternalCheck?.checked ?? false;
+        const linkType = selectedLinkType || (ext ? 'external' : 'internal');
+        const isExternal = ext || linkType === 'external';
+        let category = catSelect?.value || 'Info';
+
+        if (category === '__new__') {
+          category = catInput?.value.trim() || '';
+          if (!category) {
+            showToast('Ange kategorinamn', true);
+            return;
+          }
+        }
+
+        if (!name || !code || !target) {
+          showToast('Fyll i namn, kortkod och URL', true);
+          return;
+        }
+
+        saveAddLink.textContent = 'Sparar...';
+        saveAddLink.disabled = true;
+
+        try {
+          const editId = (saveAddLink as any).dataset.editId;
+          const method = editId ? 'PUT' : 'POST';
+          const payload = {
+            name,
+            short_code: normalizeShortCode(code),
+            target,
+            category,
+            is_external: isExternal,
+            is_active: isActive,
+            link_type: linkType,
+            sms_template: smsTemplate || null,
+            description: description || null,
+          };
+          const body = editId
+            ? JSON.stringify({ id: editId, ...payload })
+            : JSON.stringify(payload);
+
+          const response = await fetch('/api/personal/kort-lankar', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body,
+          });
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            showToast(result.error || 'Kunde inte spara', true);
+            return;
+          }
+
+          if (addLinkForm) addLinkForm.style.display = 'none';
+          resetAddLinkForm();
+          await loadDynamicLinks();
+          showToast(editId ? 'Länk uppdaterad' : 'Länk skapad');
+        } catch {
+          showToast('Något gick fel vid sparning', true);
+        } finally {
+          saveAddLink.textContent = 'Spara';
+          saveAddLink.disabled = false;
+        }
+      });
+
+      catSelect?.addEventListener('change', () => {
+        if (!catInput || !catSelect) return;
+        if (catSelect.value === '__new__') {
+          catInput.style.display = 'block';
+          catInput.focus();
+        } else {
+          catInput.style.display = 'none';
+        }
+      });
+
+      newLinkTypeSelect?.addEventListener('change', () => {
+        syncExternalFromType();
+      });
+
+      newLinkExternalCheck?.addEventListener('change', () => {
+        if (!newLinkExternalCheck.checked && newLinkTypeSelect?.value === 'external') {
+          newLinkTypeSelect.value = 'internal';
+        }
+      });
+
+      searchInput?.addEventListener('input', () => {
+        if (searchDebounce) clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          void loadDynamicLinks();
+        }, 160);
+      });
+      linkTypeFilter?.addEventListener('change', () => { void loadDynamicLinks(); });
+      showArchivedToggle?.addEventListener('change', () => { void loadDynamicLinks(); });
+
+      confirmModalCancel?.addEventListener('click', () => closeConfirmModal(false));
+      confirmModalConfirm?.addEventListener('click', () => closeConfirmModal(true));
+      confirmModalBackdrop?.addEventListener('click', (event) => {
+        if (event.target === confirmModalBackdrop) closeConfirmModal(false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && confirmResolver) closeConfirmModal(false);
+      });
+
+      smsText?.addEventListener('input', updateCharCounter);
+      smsPhone?.addEventListener('input', () => {
+        let value = smsPhone.value.replace(/\D/g, '');
+        if (value.startsWith('0')) value = value.substring(1);
+        smsPhone.value = value;
+        updateCharCounter();
+      });
+
+      if (smsForm && smsPhone && smsText && sendBtn) {
+        smsForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const phone = `+46${smsPhone.value.replace(/\D/g, '')}`;
           const message = smsText.value;
-          
+
           if (!message || phone.length < 12) {
             showToast('Fyll i telefonnummer och meddelande', true);
             return;
           }
-          
+
           sendBtn.disabled = true;
           sendBtn.innerHTML = `
             <svg class="animate-spin" fill="none" viewBox="0 0 24 24" width="20" height="20">
@@ -1147,242 +1823,60 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
             </svg>
             Skickar...
           `;
-          
+
           try {
             const response = await fetch('/api/sms/skicka', {
-              method: method,
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ phone, message })
+              body: JSON.stringify({ phone, message }),
             });
-            
-            const result = await response.json();
-            
-            if (response.ok) {
-              showToast('✓ SMS skickat!');
-              smsPhone.value = '';
-              smsText.value = '';
-              updateCharCounter();
-              document.querySelectorAll('.link-item').forEach(item => item.classList.remove('selected'));
-              
-              if (messageArea) {
-                messageArea.innerHTML = `
-                  <div class="message success">
-                    ✓ SMS skickat till ${phone.substring(0, 6)}***
-                  </div>
-                `;
-                setTimeout(() => { messageArea.innerHTML = ''; }, 5000);
-              }
-            } else {
+            const result = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
               throw new Error(result.error || 'Kunde inte skicka SMS');
             }
-          } catch (err: any) {
-            showToast(err.message || 'Fel vid sändning', true);
+
+            showToast('✓ SMS skickat');
+            smsPhone.value = '';
+            smsText.value = '';
+            updateCharCounter();
+            document.querySelectorAll('.link-item').forEach((item) => item.classList.remove('selected'));
+            if (messageArea) {
+              messageArea.innerHTML = `
+                <div class="message success">
+                  ✓ SMS skickat till ${phone.substring(0, 6)}***
+                </div>
+              `;
+              setTimeout(() => { messageArea.innerHTML = ''; }, 5000);
+            }
+          } catch (error: any) {
+            showToast(error?.message || 'Fel vid sändning', true);
             if (messageArea) {
               messageArea.innerHTML = `
                 <div class="message error">
-                  ❌ ${err.message || 'Kunde inte skicka SMS'}
+                  ❌ ${error?.message || 'Kunde inte skicka SMS'}
                 </div>
               `;
             }
           } finally {
             sendBtn.disabled = false;
-            sendBtn.innerHTML = `
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-              </svg>
-              Skicka SMS
-            `;
+            sendBtn.innerHTML = sendButtonDefaultMarkup;
             updateCharCounter();
           }
         });
       }
-    });
 
-    // Simple toast for dynamic links
-    function dlToast(msg: string) {
-      const t = document.getElementById('toast');
-      if (t) { t.textContent = msg; t.style.background = '#16a34a'; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 2500); }
-    }
-
-    // === Dynamic links from Supabase ===
-    const addLinkBtn = document.getElementById('addLinkBtn');
-    const addLinkForm = document.getElementById('addLinkForm');
-    const cancelAddLink = document.getElementById('cancelAddLink');
-    const saveAddLink = document.getElementById('saveAddLink');
-    const dynamicContainer = document.getElementById('dynamicLinksContainer');
-
-    addLinkBtn?.addEventListener('click', () => {
-      addLinkForm!.style.display = addLinkForm!.style.display === 'none' ? 'block' : 'none';
-    });
-    cancelAddLink?.addEventListener('click', () => {
-      addLinkForm!.style.display = 'none';
-    });
-
-    saveAddLink?.addEventListener('click', async () => {
-      const name = (document.getElementById('newLinkName') as HTMLInputElement).value.trim();
-      const code = (document.getElementById('newLinkCode') as HTMLInputElement).value.trim();
-      const target = (document.getElementById('newLinkTarget') as HTMLInputElement).value.trim();
-      let cat = (document.getElementById('newLinkCategory') as HTMLSelectElement).value;
-      if (cat === '__new__') { cat = (document.getElementById('newCategoryInput') as HTMLInputElement).value.trim(); if (!cat) { alert('Ange kategorinamn'); return; } }
-      const ext = (document.getElementById('newLinkExternal') as HTMLInputElement).checked;
-      if (!name || !code || !target) { alert('Fyll i namn, kortkod och URL'); return; }
-
-      saveAddLink!.textContent = 'Sparar...';
-      (saveAddLink as HTMLButtonElement).disabled = true;
-      try {
-        const editId = (saveAddLink as any).dataset.editId;
-        const method = editId ? 'PUT' : 'POST';
-        const body = editId 
-          ? JSON.stringify({ id: editId, name, short_code: code, target, category: cat, is_external: ext })
-          : JSON.stringify({ name, short_code: code, target, category: cat, is_external: ext });
-        const res = await fetch('/api/personal/kort-lankar', {
-          method: method,
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: body
-        });
-        const data = await res.json();
-        if (res.ok) {
-          addLinkForm!.style.display = 'none';
-          (document.getElementById('newLinkName') as HTMLInputElement).value = '';
-          (document.getElementById('newLinkCode') as HTMLInputElement).value = '';
-          (document.getElementById('newLinkTarget') as HTMLInputElement).value = '';
-          loadDynamicLinks();
-          showToast(editId ? 'L\u00e4nk uppdaterad!' : 'L\u00e4nk skapad!');
-          delete (saveAddLink as any).dataset.editId;
-          saveAddLink!.textContent = 'Spara';
-        } else {
-          alert(data.error || 'Kunde inte spara');
-        }
-      } catch (e) {
-        alert('N\u00e5got gick fel');
-      } finally {
-        saveAddLink!.textContent = 'Spara';
-        (saveAddLink as HTMLButtonElement).disabled = false;
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneParam = urlParams.get('phone') || urlParams.get('mobil') || urlParams.get('tel');
+      if (smsPhone && phoneParam) {
+        smsPhone.value = normalizePhoneInput(phoneParam);
+        smsPhone.focus();
       }
+
+      updateCharCounter();
+      void loadDynamicLinks();
     });
-
-    async function loadDynamicLinks() {
-      if (!dynamicContainer) return;
-      try {
-        const res = await fetch('/api/personal/kort-lankar', { credentials: 'include' });
-        const data = await res.json();
-        const links = data.links || [];
-        updateCategoryDropdown(links);
-        if (links.length === 0) { dynamicContainer.innerHTML = ''; return; }
-
-        // Inject into existing category sections where possible
-        const existingSections = document.querySelectorAll('.category-section[data-category]');
-        const existingCats = new Map<string, HTMLElement>();
-        existingSections.forEach(s => {
-          const cat = (s as HTMLElement).dataset.category || '';
-          if (cat) existingCats.set(cat, s.querySelector('.links-list') as HTMLElement);
-        });
-
-        // Remove previously injected dynamic items
-        document.querySelectorAll('.dynamic-link-item').forEach(el => el.remove());
-
-        const grouped: Record<string, any[]> = {};
-        links.forEach((l: any) => { if (!grouped[l.category]) grouped[l.category] = []; grouped[l.category].push(l); });
-
-        const baseDomain = 'www.specialist.se';
-        const catIcons: Record<string, string> = { 'Diagnoser': '\uD83E\uDE7A', 'Operationer': '\uD83D\uDD2A', 'Rehab': '\uD83C\uDFCB\uFE0F', 'Info': '\u2139\uFE0F' };
-        const copyIcon = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>';
-
-        function makeLinkHtml(item: any, cat: string) {
-          const url = baseDomain + item.short_code;
-          const esc = (s: string) => s.replace(/"/g, '&quot;');
-          return '<div class="link-item dynamic-link-item" data-name="' + esc(item.name) + '" data-url="' + url + '" data-category="' + cat + '" data-template="Hej! Se denna l\u00e4nk: {l\u00e4nk} /S\u00f6dermalms Ortopedi">' +
-            '<div class="link-info"><div class="link-name">' + item.name + ' <span class="dynamic-badge">Egen</span></div><div class="link-url">' + url + '</div></div>' +
-            '<div class="link-actions">' +
-            '<button type="button" class="btn btn-copy" data-url="' + url + '" title="Kopiera l\u00e4nk"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg> Kopiera</button>' +
-            '<button type="button" class="btn btn-sms" title="Fyll i SMS"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg> SMS</button>' +
-            '<button type="button" class="btn btn-edit-link" data-id="' + item.id + '" title="Redigera"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' +
-            '<button type="button" class="btn btn-delete-link" data-id="' + item.id + '" title="Ta bort"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>' +
-            '</div></div>';
-        }
-
-        let newCatsHtml = '';
-        for (const [cat, items] of Object.entries(grouped)) {
-          const existingList = existingCats.get(cat);
-          if (existingList) {
-            // Inject into existing category
-            items.forEach((item: any) => { existingList.insertAdjacentHTML('beforeend', makeLinkHtml(item, cat)); });
-          } else {
-            // Create new category section
-            const icon = catIcons[cat] || '\uD83D\uDCC4';
-            newCatsHtml += '<section class="category-section" data-category="' + cat + '"><h2><span>' + icon + '</span> ' + cat + '</h2><div class="links-list">';
-            items.forEach((item: any) => { newCatsHtml += makeLinkHtml(item, cat); });
-            newCatsHtml += '</div></section>';
-          }
-        }
-        dynamicContainer.innerHTML = newCatsHtml;
-
-        // Attach handlers to ALL dynamic items (both injected and new)
-        document.querySelectorAll('.dynamic-link-item .btn-delete-link').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            if (!confirm('Ta bort denna l\u00e4nk?')) return;
-            try {
-              await fetch('/api/personal/kort-lankar?id=' + (btn as HTMLElement).dataset.id, { method: 'DELETE', credentials: 'include' });
-              loadDynamicLinks();
-              dlToast('L\u00e4nk borttagen');
-            } catch (err) { alert('Kunde inte ta bort'); }
-          });
-        });
-
-        document.querySelectorAll('.dynamic-link-item .btn-edit-link').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const el = btn as HTMLElement;
-            const item = el.closest('.link-item') as HTMLElement;
-            addLinkForm!.style.display = 'block';
-            (document.getElementById('newLinkName') as HTMLInputElement).value = item?.dataset.name || '';
-            (document.getElementById('newLinkCode') as HTMLInputElement).value = '';
-            (document.getElementById('newLinkTarget') as HTMLInputElement).value = '';
-            saveAddLink!.textContent = 'Uppdatera';
-            (saveAddLink as any).dataset.editId = el.dataset.id;
-            window.scrollTo({ top: addLinkForm!.offsetTop - 100, behavior: 'smooth' });
-          });
-        });
-
-        document.querySelectorAll('.dynamic-link-item .btn-copy').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const url = (btn as HTMLElement).dataset.url || '';
-            navigator.clipboard.writeText(url).then(() => dlToast('Kopierad: ' + url));
-          });
-        });
-
-      } catch (err) {
-        console.error('Error loading dynamic links:', err);
-      }
-    }
-
-    // Category handling - allow creating new categories
-    const catSelect = document.getElementById('newLinkCategory') as HTMLSelectElement;
-    const catInput = document.getElementById('newCategoryInput') as HTMLInputElement;
-    catSelect?.addEventListener('change', () => {
-      if (catSelect.value === '__new__') {
-        catInput!.style.display = 'block';
-        catInput!.focus();
-      } else {
-        catInput!.style.display = 'none';
-      }
-    });
-
-    // After loading dynamic links, update category dropdown with any new categories
-    function updateCategoryDropdown(links: any[]) {
-      if (!catSelect) return;
-      const existing = new Set(['Diagnoser', 'Operationer', 'Rehab', 'Info']);
-      links.forEach((l: any) => existing.add(l.category));
-      const current = catSelect.value;
-      const opts = Array.from(existing).sort().map(c => '<option value="' + c + '">' + c + '</option>').join('');
-      catSelect.innerHTML = opts + '<option value="__new__">+ Ny kategori...</option>';
-      if (existing.has(current)) catSelect.value = current;
-    }
-    // Load on page init
-    loadDynamicLinks();
   </script>
 </body>
 </html>
+
