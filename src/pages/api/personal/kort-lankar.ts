@@ -97,14 +97,14 @@ function inferLinkType(category: string | undefined, isExternal: boolean | undef
 
 function getDefaultSmsTemplate(category: string): string {
   const templates: Record<string, string> = {
-    Diagnoser: 'Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi',
-    Operationer: 'Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi',
-    Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi',
-    'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi',
-    Bokningar: 'Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi',
-    Info: 'Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi',
+    Diagnoser: 'Hej! Läs mer om $namn: $länk /Södermalms Ortopedi',
+    Operationer: 'Hej! Du är planerad för $namn. Läs mer här: $länk /Södermalms Ortopedi',
+    Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: $länk /Södermalms Ortopedi',
+    'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: $länk /Södermalms Ortopedi',
+    Bokningar: 'Hej! Här är bokningslänken: $länk /Södermalms Ortopedi',
+    Info: 'Hej! Här finns information som kan vara bra att läsa: $länk /Södermalms Ortopedi',
   };
-  return templates[category] || 'Hej! Se denna länk: {länk} /Södermalms Ortopedi';
+  return templates[category] || 'Hej! Se denna länk: $länk /Södermalms Ortopedi';
 }
 
 function buildSeedRowsFromShortLinks() {

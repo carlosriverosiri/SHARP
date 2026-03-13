@@ -32,19 +32,19 @@ const categoryIcons: Record<string, string> = {
 
 // SMS-mallar per kategori
 const smsMallar: Record<string, string> = {
-  "Diagnoser": "Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi",
-  "Operationer": "Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi",
-  "Rehab": "Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi",
-  "Frågeformulär": "Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi",
-  "Bokningar": "Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi",
-  "Info": "Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi"
+  "Diagnoser": "Hej! Läs mer om $namn: $länk /Södermalms Ortopedi",
+  "Operationer": "Hej! Du är planerad för $namn. Läs mer här: $länk /Södermalms Ortopedi",
+  "Rehab": "Hej! Efter din operation, läs igenom rehabinformationen: $länk /Södermalms Ortopedi",
+  "Frågeformulär": "Hej! Vänligen fyll i detta formulär inför ditt besök: $länk /Södermalms Ortopedi",
+  "Bokningar": "Hej! Här är bokningslänken: $länk /Södermalms Ortopedi",
+  "Info": "Hej! Här finns information som kan vara bra att läsa: $länk /Södermalms Ortopedi"
 };
 
 const defaultCategoryOrder = ['Diagnoser', 'Operationer', 'Rehab', 'Frågeformulär', 'Bokningar', 'Info'];
 const defaultCategories = defaultCategoryOrder.map((categoryName) => ({
   category: categoryName,
   icon: categoryIcons[categoryName] || "📄",
-  smsMall: smsMallar[categoryName] || "Hej! Se denna länk: {länk} /Södermalms Ortopedi",
+  smsMall: smsMallar[categoryName] || "Hej! Se denna länk: $länk /Södermalms Ortopedi",
 }));
 
 // Kontrollera om 46elks är konfigurerat
@@ -110,6 +110,51 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
     }
     .add-link-input:focus { border-color: #2563eb; outline: none; box-shadow: 0 0 0 2px rgba(37,99,235,0.15); }
     .add-link-category-row { display: flex; gap: 0.5rem; }
+    .sms-template-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+    .sms-template-toolbar-label {
+      font-size: 0.75rem;
+      color: #475569;
+      font-weight: 600;
+    }
+    .sms-template-toolbar-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .sms-token-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .sms-token-btn:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+    .sms-template-help {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: -0.125rem;
+    }
     .add-link-check { font-size: 0.8125rem; display: flex; align-items: center; gap: 0.5rem; }
     .add-link-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.25rem; }
     .btn-cancel { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.375rem 0.75rem; font-size: 0.8125rem; cursor: pointer; }
@@ -866,7 +911,15 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
                 <option value="form">Formulär</option>
                 <option value="booking">Bokning</option>
               </select>
-              <textarea id="newLinkSmsTemplate" class="add-link-input" placeholder="Valfri SMS-mall. Använd {namn} och {länk} om du vill."></textarea>
+              <div class="sms-template-toolbar">
+                <span class="sms-template-toolbar-label">Infoga automatiska fält i SMS-mallen</span>
+                <div class="sms-template-toolbar-buttons">
+                  <button type="button" class="sms-token-btn" data-sms-token="$namn" title="Infoga länkens namn">Namn</button>
+                  <button type="button" class="sms-token-btn" data-sms-token="$länk" title="Infoga kortlänken">Kortlänk</button>
+                </div>
+              </div>
+              <textarea id="newLinkSmsTemplate" class="add-link-input" placeholder="Valfri SMS-mall. Skriv fritt och klicka på knapparna ovanför för att infoga namn eller kortlänk."></textarea>
+              <div class="sms-template-help">Placera markören där du vill infoga texten och klicka sedan på `Namn` eller `Kortlänk`.</div>
               <textarea id="newLinkDescription" class="add-link-input" placeholder="Intern beskrivning eller kommentar (valfritt)"></textarea>
               <label class="add-link-check"><input type="checkbox" id="newLinkActive" checked> Aktiv länk</label>
               <label class="add-link-check"><input type="checkbox" id="newLinkExternal"> Extern URL</label>
@@ -999,6 +1052,8 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
       const catInput = document.getElementById('newCategoryInput') as HTMLInputElement | null;
       const newLinkTypeSelect = document.getElementById('newLinkType') as HTMLSelectElement | null;
       const newLinkExternalCheck = document.getElementById('newLinkExternal') as HTMLInputElement | null;
+      const newLinkSmsTemplate = document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null;
+      const smsTemplateTokenButtons = document.querySelectorAll('.sms-token-btn') as NodeListOf<HTMLButtonElement>;
 
       // SMS elements
       const smsForm = document.getElementById('sms-form') as HTMLFormElement | null;
@@ -1028,12 +1083,12 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         Info: 'ℹ️',
       };
       const smsTemplatesMap: Record<string, string> = {
-        Diagnoser: 'Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi',
-        Operationer: 'Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi',
-        Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi',
-        'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi',
-        Bokningar: 'Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi',
-        Info: 'Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi',
+        Diagnoser: 'Hej! Läs mer om $namn: $länk /Södermalms Ortopedi',
+        Operationer: 'Hej! Du är planerad för $namn. Läs mer här: $länk /Södermalms Ortopedi',
+        Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: $länk /Södermalms Ortopedi',
+        'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: $länk /Södermalms Ortopedi',
+        Bokningar: 'Hej! Här är bokningslänken: $länk /Södermalms Ortopedi',
+        Info: 'Hej! Här finns information som kan vara bra att läsa: $länk /Södermalms Ortopedi',
       };
       const defaultCategories = ['Diagnoser', 'Operationer', 'Rehab', 'Frågeformulär', 'Bokningar', 'Info'];
       const noResultsDefaultText = 'Inga länkar hittades i länkbiblioteket.';
@@ -1107,12 +1162,45 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         }
       }
 
+      function insertTextAtCursor(textarea: HTMLTextAreaElement, text: string) {
+        const start = textarea.selectionStart ?? textarea.value.length;
+        const end = textarea.selectionEnd ?? start;
+        const before = textarea.value.slice(0, start);
+        const after = textarea.value.slice(end);
+        const nextCursorPosition = start + text.length;
+
+        textarea.value = `${before}${text}${after}`;
+        textarea.focus();
+        textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+      }
+
       function buildPublicUrl(shortCode: string) {
         return `${baseDomain}${normalizeShortCode(shortCode)}`;
       }
 
       function getDefaultSmsTemplate(category: string) {
-        return smsTemplatesMap[category] || 'Hej! Se denna länk: {länk} /Södermalms Ortopedi';
+        return smsTemplatesMap[category] || 'Hej! Se denna länk: $länk /Södermalms Ortopedi';
+      }
+
+      function replaceSmsToken(template: string, variants: string[], value: string) {
+        return variants.reduce((current, variant) => current.split(variant).join(value), template);
+      }
+
+      function normalizeSmsTemplateTokens(template: string) {
+        return [
+          ['{namn}', '$namn'],
+          ['(namn)', '$namn'],
+          ['{länk}', '$länk'],
+          ['{lank}', '$länk'],
+          ['$lank', '$länk'],
+          ['(länk)', '$länk'],
+          ['(lank)', '$länk'],
+        ].reduce((current, [from, to]) => current.split(from).join(to), template);
+      }
+
+      function renderSmsTemplate(template: string, name: string, url: string) {
+        const withName = replaceSmsToken(template, ['{namn}', '$namn', '(namn)'], name);
+        return replaceSmsToken(withName, ['{länk}', '{lank}', '$länk', '$lank', '(länk)', '(lank)'], url);
       }
 
       function getLinkTypeLabel(type: string | undefined, isExternal: boolean) {
@@ -1271,7 +1359,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         (document.getElementById('newLinkCode') as HTMLInputElement | null)!.value = '';
         (document.getElementById('newLinkTarget') as HTMLInputElement | null)!.value = '';
         if (newLinkTypeSelect) newLinkTypeSelect.value = 'internal';
-        (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)!.value = '';
+        if (newLinkSmsTemplate) newLinkSmsTemplate.value = '';
         (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)!.value = '';
         (document.getElementById('newLinkActive') as HTMLInputElement | null)!.checked = true;
         if (newLinkExternalCheck) newLinkExternalCheck.checked = false;
@@ -1351,7 +1439,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
 
         if (smsCategorySelect && category) smsCategorySelect.value = category;
         if (smsText) {
-          smsText.value = template.replace('{namn}', name).replace('{länk}', url);
+          smsText.value = renderSmsTemplate(template, name, url);
           updateCharCounter();
         }
         smsPhone?.focus();
@@ -1581,7 +1669,9 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
           (document.getElementById('newLinkTarget') as HTMLInputElement | null)!.value = row.dataset.target || '';
           const resolvedType = row.dataset.linkType || (row.dataset.isExternal === '1' ? 'external' : 'internal');
           if (newLinkTypeSelect) newLinkTypeSelect.value = resolvedType;
-          (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)!.value = row.dataset.smsTemplate || '';
+          if (newLinkSmsTemplate) {
+            newLinkSmsTemplate.value = normalizeSmsTemplateTokens(row.dataset.smsTemplate || '');
+          }
           (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)!.value = row.dataset.description || '';
           (document.getElementById('newLinkActive') as HTMLInputElement | null)!.checked = row.dataset.isActive !== '0';
           if (newLinkExternalCheck) newLinkExternalCheck.checked = row.dataset.isExternal === '1' || resolvedType === 'external';
@@ -1691,7 +1781,7 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         const code = (document.getElementById('newLinkCode') as HTMLInputElement | null)?.value.trim() || '';
         const target = (document.getElementById('newLinkTarget') as HTMLInputElement | null)?.value.trim() || '';
         const selectedLinkType = newLinkTypeSelect?.value.trim() || '';
-        const smsTemplate = (document.getElementById('newLinkSmsTemplate') as HTMLTextAreaElement | null)?.value.trim() || '';
+        const smsTemplate = normalizeSmsTemplateTokens(newLinkSmsTemplate?.value.trim() || '');
         const description = (document.getElementById('newLinkDescription') as HTMLTextAreaElement | null)?.value.trim() || '';
         const isActive = (document.getElementById('newLinkActive') as HTMLInputElement | null)?.checked ?? true;
         const ext = newLinkExternalCheck?.checked ?? false;
@@ -1776,6 +1866,15 @@ const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
         if (!newLinkExternalCheck.checked && newLinkTypeSelect?.value === 'external') {
           newLinkTypeSelect.value = 'internal';
         }
+      });
+
+      smsTemplateTokenButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          if (!newLinkSmsTemplate) return;
+          const token = button.dataset.smsToken || '';
+          if (!token) return;
+          insertTextAtCursor(newLinkSmsTemplate, token);
+        });
       });
 
       searchInput?.addEventListener('input', () => {

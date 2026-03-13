@@ -283,13 +283,21 @@ Varje kategori har en fördefinierad mall som fylls i automatiskt:
 
 | Kategori | Mall |
 |----------|------|
-| **Diagnoser** | "Hej! Läs mer om {diagnos}: {länk} /Södermalms Ortopedi" |
-| **Operationer** | "Hej! Du är planerad för {operation}. Läs mer här: {länk} /Södermalms Ortopedi" |
-| **Rehab** | "Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi" |
-| **Frågeformulär** | "Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi" |
-| **Info** | "Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi" |
+| **Diagnoser** | "Hej! Läs mer om $namn: $länk /Södermalms Ortopedi" |
+| **Operationer** | "Hej! Du är planerad för $namn. Läs mer här: $länk /Södermalms Ortopedi" |
+| **Rehab** | "Hej! Efter din operation, läs igenom rehabinformationen: $länk /Södermalms Ortopedi" |
+| **Frågeformulär** | "Hej! Vänligen fyll i detta formulär inför ditt besök: $länk /Södermalms Ortopedi" |
+| **Info** | "Hej! Här finns information som kan vara bra att läsa: $länk /Södermalms Ortopedi" |
 
 **Mallarna kan redigeras** innan sändning - personalen kan anpassa texten efter behov.
+
+Stödda platshållare i egna mallar:
+
+- `$namn` för länkens namn
+- `$länk` för kortlänken
+- äldre format som `{namn}` och `{länk}` fungerar fortfarande för bakåtkompatibilitet
+
+I formuläret för `Ny länk` finns också snabbknappar ovanför SMS-fältet. De infogar `Namn` eller `Kortlänk` exakt där markören står i texten, så man slipper skriva platshållarna manuellt.
 
 ---
 

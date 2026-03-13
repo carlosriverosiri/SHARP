@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
@@ -29,15 +29,15 @@ function inferLinkType(category, item) {
 
 function buildSmsTemplate(category) {
   const templates = {
-    Diagnoser: 'Hej! Läs mer om {namn}: {länk} /Södermalms Ortopedi',
-    Operationer: 'Hej! Du är planerad för {namn}. Läs mer här: {länk} /Södermalms Ortopedi',
-    Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: {länk} /Södermalms Ortopedi',
-    'Frågeformulär': 'Hej! Vänligen fyll i detta formulär inför ditt besök: {länk} /Södermalms Ortopedi',
-    Bokningar: 'Hej! Här är bokningslänken: {länk} /Södermalms Ortopedi',
-    Info: 'Hej! Här finns information som kan vara bra att läsa: {länk} /Södermalms Ortopedi',
+    Diagnoser: 'Hej! Läs mer om $namn: $länk /Södermalms Ortopedi',
+    Operationer: 'Hej! Du är planerad för $namn. Läs mer här: $länk /Södermalms Ortopedi',
+    Rehab: 'Hej! Efter din operation, läs igenom rehabinformationen: $länk /Södermalms Ortopedi',
+    Frågeformulär: 'Hej! Vänligen fyll i detta formulär inför ditt besök: $länk /Södermalms Ortopedi',
+    Bokningar: 'Hej! Här är bokningslänken: $länk /Södermalms Ortopedi',
+    Info: 'Hej! Här finns information som kan vara bra att läsa: $länk /Södermalms Ortopedi',
   };
 
-  return templates[category] ?? 'Hej! Se denna länk: {länk} /Södermalms Ortopedi';
+  return templates[category] ?? 'Hej! Se denna länk: $länk /Södermalms Ortopedi';
 }
 
 async function main() {
