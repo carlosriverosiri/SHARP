@@ -18,12 +18,14 @@
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.5",
     "chart.js": "^4.5.1",
+    "papaparse": "^5.5.3",
     "pdf-parse": "^1.1.1",
     "sharp": "^0.33.5",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.5.2",
     "pagefind": "^1.4.0",
     "terser": "^5.44.1",
     "typedoc": "^0.28.16"

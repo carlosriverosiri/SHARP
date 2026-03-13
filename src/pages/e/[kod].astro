@@ -1,0 +1,329 @@
+---
+export const prerender = false;
+
+import { createClient } from '@supabase/supabase-js';
+
+const { kod } = Astro.params;
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || '';
+const SUPABASE_SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+let utskick: any = null;
+let errorMessage = '';
+let expired = false;
+let alreadyUsed = false;
+
+if (!kod || kod.length < 12) {
+  errorMessage = 'Ogiltig enkätlänk.';
+} else {
+  const { data, error } = await supabaseAdmin
+    .from('enkat_utskick')
+    .select('id, vardgivare_namn, besoksdatum, besoksstart_tid, bokningstyp_raw, used, expires_at')
+    .eq('unik_kod', kod)
+    .single();
+
+  if (error || !data) {
+    errorMessage = 'Den här länken är ogiltig eller finns inte längre.';
+  } else if (data.used) {
+    alreadyUsed = true;
+  } else if (data.expires_at && new Date(data.expires_at) < new Date()) {
+    expired = true;
+  } else {
+    utskick = data;
+  }
+}
+
+function formatVisitDate(date: string) {
+  try {
+    return new Intl.DateTimeFormat('sv-SE', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(new Date(`${date}T12:00:00`));
+  } catch {
+    return date;
+  }
+}
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Patientenkät | Södermalms Ortopedi</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      color: #0f172a;
+    }
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: white;
+      border-radius: 20px;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+    .hero {
+      background: #0284c7;
+      color: white;
+      padding: 24px;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+    .content {
+      padding: 24px;
+    }
+    .notice {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .meta {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    .question {
+      margin-bottom: 24px;
+    }
+    .question h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .rating-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .rating-grid.ten {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .rating-option input {
+      display: none;
+    }
+    .rating-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      font-weight: 700;
+      background: white;
+    }
+    .rating-option input:checked + label {
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
+    }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      font: inherit;
+      resize: vertical;
+    }
+    .button {
+      width: 100%;
+      border: none;
+      background: #0284c7;
+      color: white;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .state-box {
+      padding: 24px;
+      line-height: 1.6;
+    }
+    .banner {
+      display: none;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    .banner.visible { display: block; }
+    .banner.error { background: #fee2e2; color: #b91c1c; }
+    .banner.success { background: #dcfce7; color: #166534; }
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 24px; }
+      .rating-grid, .rating-grid.ten { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="hero">
+      <h1>Patientupplevelse</h1>
+      <p>En kort anonym enkät som hjälper oss förbättra mottagningen.</p>
+    </div>
+
+    {errorMessage ? (
+      <div class="state-box">
+        <h2>Ogiltig länk</h2>
+        <p>{errorMessage}</p>
+      </div>
+    ) : alreadyUsed ? (
+      <div class="state-box">
+        <h2>Du har redan svarat</h2>
+        <p>Den här enkätlänken har redan använts. Tack för ditt svar.</p>
+      </div>
+    ) : expired ? (
+      <div class="state-box">
+        <h2>Länken har gått ut</h2>
+        <p>Enkäten är inte längre öppen. Tack ändå för att du försökte svara.</p>
+      </div>
+    ) : utskick ? (
+      <div class="content">
+        <div class="notice">
+          <strong>Denna enkät är anonym på individnivå.</strong> Vi använder svaren för att förbättra mottagningen.
+          Skriv inte personnummer, diagnoser eller andra känsliga personuppgifter i fritextfälten.
+        </div>
+
+        <div class="meta">
+          <div><strong>Vårdgivare:</strong> {utskick.vardgivare_namn}</div>
+          <div><strong>Datum:</strong> {formatVisitDate(utskick.besoksdatum)}</div>
+          {utskick.bokningstyp_raw && <div><strong>Besökstyp:</strong> {utskick.bokningstyp_raw}</div>}
+        </div>
+
+        <form id="surveyForm">
+          <div class="question">
+            <h2>Hur nöjd är du med ditt besök som helhet?</h2>
+            <div class="rating-grid ten">
+              {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
+                <div class="rating-option">
+                  <input type="radio" id={`overall-${value}`} name="overallScore" value={value} required />
+                  <label for={`overall-${value}`}>{value}</label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {[
+            ['bemotande', 'Hur upplevde du bemötandet?'],
+            ['information', 'Hur tydlig var informationen du fick?'],
+            ['lyssnadPa', 'Kände du dig lyssnad på?'],
+            ['planFramat', 'Fick du en tydlig plan framåt?']
+          ].map(([name, label]) => (
+            <div class="question">
+              <h2>{label}</h2>
+              <div class="rating-grid">
+                {Array.from({ length: 5 }, (_, index) => index + 1).map((value) => (
+                  <div class="rating-option">
+                    <input type="radio" id={`${name}-${value}`} name={name} value={value} required />
+                    <label for={`${name}-${value}`}>{value}</label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <div class="question">
+            <h2>Vad var bra?</h2>
+            <textarea id="commentGood" name="commentGood" placeholder="Valfritt"></textarea>
+          </div>
+
+          <div class="question">
+            <h2>Vad hade kunnat vara bättre?</h2>
+            <textarea id="commentImprove" name="commentImprove" placeholder="Valfritt"></textarea>
+          </div>
+
+          <button type="submit" class="button" id="submitBtn">Skicka svar</button>
+          <div id="banner" class="banner"></div>
+        </form>
+      </div>
+    ) : null}
+  </main>
+
+  {utskick && (
+    <script is:inline define:vars={{ code: kod }}>
+      const form = document.getElementById('surveyForm');
+      const banner = document.getElementById('banner');
+      const submitBtn = document.getElementById('submitBtn');
+
+      function setBanner(type, message) {
+        banner.className = `banner visible ${type}`;
+        banner.textContent = message;
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        setBanner('success', 'Skickar ditt svar...');
+
+        const formData = new FormData(form);
+        const payload = {
+          code,
+          overallScore: Number(formData.get('overallScore')),
+          bemotande: Number(formData.get('bemotande')),
+          information: Number(formData.get('information')),
+          lyssnadPa: Number(formData.get('lyssnadPa')),
+          planFramat: Number(formData.get('planFramat')),
+          commentGood: String(formData.get('commentGood') || ''),
+          commentImprove: String(formData.get('commentImprove') || '')
+        };
+
+        try {
+          const response = await fetch('/api/enkat/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            setBanner('error', result.error || 'Kunde inte spara svaret.');
+            submitBtn.disabled = false;
+            return;
+          }
+
+          form.innerHTML = `
+            <div class="state-box" style="padding:0;">
+              <h2>Tack för ditt svar</h2>
+              <p>Ditt svar är registrerat anonymt och hjälper oss förbättra mottagningen.</p>
+            </div>
+          `;
+        } catch (error) {
+          console.error(error);
+          setBanner('error', 'Ett oväntat fel uppstod. Försök igen om en stund.');
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  )}
+</body>
+</html>
