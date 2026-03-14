@@ -39,7 +39,8 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 
 ## Det som fungerar nu
 
-- import av semikolonseparerad CSV
+- import av CSV (semikolon, tab eller komma -- auto-detect)
+- stöd för filer i Latin-1/Windows-1252 (vanligt vid export från journalsystem)
 - validering av kärnkolumner
 - preview med felrader och dubletthantering
 - klassificering av bokningstyper
@@ -53,6 +54,8 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - kampanjhistorik
 - periodrapport
 - fördröjningsanalys baserat på `Starttid` / tid till första SMS
+- patientvänliga bokningstyper i SMS och på enkätsidan
+- "Dr." prefix på vårdgivarnamn i patientkommunikation
 
 ## Viktiga beroenden
 

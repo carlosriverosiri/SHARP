@@ -45,6 +45,58 @@ export function getBookingTypePriority(type: NormalizedBookingType): number {
   }
 }
 
+/**
+ * Converts an internal booking type code to a patient-friendly label.
+ * Used in SMS text and on the patient survey page.
+ */
+export function patientFriendlyBookingType(rawValue?: string | null): string {
+  if (!rawValue) return 'Besök';
+
+  const value = normalizeSwedishText(rawValue);
+
+  const bodyPart = value.includes('axel') ? 'axel'
+    : value.includes('kna') ? 'knä'
+    : value.includes('armbage') ? 'armbåge'
+    : value.includes('handled') ? 'handled'
+    : value.includes('hoft') ? 'höft'
+    : value.includes('fot') ? 'fot'
+    : null;
+
+  if (value.includes('remiss') || value.match(/^\d+\.\s*remiss/)) {
+    return bodyPart ? `Nybesök ${bodyPart}` : 'Nybesök';
+  }
+
+  if (value.includes('ab op') || value.includes('aterbesok op')) {
+    return bodyPart ? `Återbesök efter operation ${bodyPart}` : 'Återbesök efter operation';
+  }
+
+  if (value.includes('ab') || value.includes('aterbesok')) {
+    return bodyPart ? `Återbesök ${bodyPart}` : 'Återbesök';
+  }
+
+  if (value.includes('operation') || value.match(/^\d+\.\s*operation/)) {
+    return bodyPart ? `Operation ${bodyPart}` : 'Operation';
+  }
+
+  if (value.includes('suturtagning')) return 'Suturtagning';
+  if (value.includes('ssk')) return 'Sjuksköterskebesök';
+  if (value.includes('telefon')) return 'Telefonkontakt';
+  if (value.includes('nybesok')) return bodyPart ? `Nybesök ${bodyPart}` : 'Nybesök';
+  if (value.includes('kuralink') || value.includes('fysiskt')) return 'Digitalt besök';
+
+  return rawValue.trim();
+}
+
+/**
+ * Adds "Dr." prefix to a provider name if it doesn't already have one.
+ */
+export function formatProviderName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return trimmed;
+  if (/^(dr\.?|doktor)\s/i.test(trimmed)) return trimmed;
+  return `Dr. ${trimmed}`;
+}
+
 export function getBookingChoiceReason(
   keptType: NormalizedBookingType,
   discardedType: NormalizedBookingType,

@@ -115,7 +115,8 @@ b5kp8fc;+46707676108;Sophie Lantz;2026-02-02;KuralinkFysiskt;
 
 Parsern ska:
 
-- använda `;` som standardseparator
+- auto-detektera separator (`;`, tab, `,`)
+- hantera filer i Latin-1/Windows-1252 (vanligt vid export från svenska journalsystem)
 - tåla avslutande tom kolumn
 - trimma whitespace
 - acceptera svenska tecken

@@ -2,6 +2,7 @@
 export const prerender = false;
 
 import { createClient } from '@supabase/supabase-js';
+import { formatProviderName, patientFriendlyBookingType } from '../../lib/enkat-booking-classifier';
 
 const { kod } = Astro.params;
 const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL || '';
@@ -215,9 +216,9 @@ function formatVisitDate(date: string) {
         </div>
 
         <div class="meta">
-          <div><strong>Vårdgivare:</strong> {utskick.vardgivare_namn}</div>
+          <div><strong>Vårdgivare:</strong> {formatProviderName(utskick.vardgivare_namn)}</div>
           <div><strong>Datum:</strong> {formatVisitDate(utskick.besoksdatum)}</div>
-          {utskick.bokningstyp_raw && <div><strong>Besökstyp:</strong> {utskick.bokningstyp_raw}</div>}
+          {utskick.bokningstyp_raw && <div><strong>Besökstyp:</strong> {patientFriendlyBookingType(utskick.bokningstyp_raw)}</div>}
         </div>
 
         <form id="surveyForm">

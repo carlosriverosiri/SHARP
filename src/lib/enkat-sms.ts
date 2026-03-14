@@ -1,7 +1,9 @@
+import { formatProviderName, patientFriendlyBookingType } from './enkat-booking-classifier';
+
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
 const ELKS_API_USER = import.meta.env.ELKS_API_USER || '';
 const ELKS_API_PASSWORD = import.meta.env.ELKS_API_PASSWORD || '';
-const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://specialist.se';
+const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://sodermalm.netlify.app';
 
 export type EnkatSmsRow = {
   providerName: string;
@@ -41,9 +43,9 @@ export function buildEnkatSmsMessage(
   const baseTemplate = options?.reminder ? defaultReminderTemplate : defaultInitialTemplate;
 
   return (template || baseTemplate)
-    .replaceAll('[VÅRDGIVARE]', row.providerName)
+    .replaceAll('[VÅRDGIVARE]', formatProviderName(row.providerName))
     .replaceAll('[DATUM]', formatEnkatVisitDate(row.visitDate))
-    .replaceAll('[BOKNINGSTYP]', row.bookingTypeRaw || row.bookingTypeNormalized || 'besöket')
+    .replaceAll('[BOKNINGSTYP]', patientFriendlyBookingType(row.bookingTypeRaw))
     .replaceAll('[LÄNK]', `${SITE_URL}/e/${code}`);
 }
 

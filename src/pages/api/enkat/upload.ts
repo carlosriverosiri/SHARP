@@ -38,7 +38,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return json({ success: false, error: 'Filen är för stor. Max 5 MB tillåts i V1.' }, 400);
     }
 
-    const text = await file.text();
+    const rawBytes = await file.arrayBuffer();
+    let text = new TextDecoder('utf-8').decode(rawBytes);
+
+    if (text.includes('\uFFFD')) {
+      text = new TextDecoder('latin1').decode(rawBytes);
+    }
+
     const result = parseEnkatCsv(text, globalBookingType);
 
     if (result.totalRows > 500) {

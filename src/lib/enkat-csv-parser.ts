@@ -60,7 +60,7 @@ function mapHeaders(headers: string[]): Record<string, string> {
     else if (canonical === 'vardgivare') mapped.vardgivare = header;
     else if (canonical === 'datum') mapped.datum = header;
     else if (canonical === 'bokningstyp') mapped.bokningstyp = header;
-    else if (canonical === 'starttid') mapped.starttid = header;
+    else if (canonical === 'starttid' || canonical === 'startid') mapped.starttid = header;
   }
 
   return mapped;
@@ -134,10 +134,31 @@ function choosePreferredRow(rows: EnkatPreviewRow[]): { kept: EnkatPreviewRow; d
   return { kept, discarded, reason };
 }
 
+function stripBom(text: string): string {
+  return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
+}
+
+function countMappedHeaders(text: string, delimiter: string): number {
+  const trial = Papa.parse<RawCsvRow>(text, { header: true, delimiter, preview: 1 });
+  const headers = trial.meta.fields || [];
+  return Object.keys(mapHeaders(headers)).length;
+}
+
 export function parseEnkatCsv(csvText: string, globalBookingType?: string): EnkatParseResult {
-  const parsed = Papa.parse<RawCsvRow>(csvText, {
+  const cleanText = stripBom(csvText);
+
+  const semicolonScore = countMappedHeaders(cleanText, ';');
+  const tabScore = countMappedHeaders(cleanText, '\t');
+  const commaScore = countMappedHeaders(cleanText, ',');
+  const delimiter = tabScore > semicolonScore && tabScore >= commaScore
+    ? '\t'
+    : commaScore > semicolonScore
+      ? ','
+      : ';';
+
+  const parsed = Papa.parse<RawCsvRow>(cleanText, {
     header: true,
-    delimiter: ';',
+    delimiter,
     skipEmptyLines: 'greedy'
   });
 
