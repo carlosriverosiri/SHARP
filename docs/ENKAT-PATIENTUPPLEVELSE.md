@@ -578,6 +578,8 @@ Den kan återanvända logik från:
 
 Bör innehålla:
 
+Överst bör sidan ha en kort informationsruta som förklarar arbetsflödet: importera fil, granska urvalet och skapa kampanj innan SMS skickas.
+
 1. importsektion
 2. förhandsgranskning
 3. filter och urval

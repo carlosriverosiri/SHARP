@@ -165,6 +165,23 @@ const isAdmin = anvandare.roll === 'admin';
       background: white;
     }
 
+    .file-picker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .file-picker-name {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .file-picker-name.has-file {
+      color: var(--text);
+      font-weight: 500;
+    }
+
     .actions {
       display: flex;
       gap: 12px;
@@ -280,6 +297,19 @@ const isAdmin = anvandare.roll === 'admin';
       line-height: 1.5;
     }
 
+    .intro-box {
+      margin: 0 0 20px;
+    }
+
+    .intro-box h2 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .intro-box p {
+      margin: 0;
+    }
+
     .history-card {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -315,6 +345,13 @@ const isAdmin = anvandare.roll === 'admin';
       <div class="role-chip">{anvandare.roll === 'admin' ? 'Administratör' : 'Personal'}</div>
     </div>
 
+    <section class="muted-box intro-box" aria-labelledby="pagePurposeTitle">
+      <h2 id="pagePurposeTitle">Det här gör sidan</h2>
+      <p class="helper">
+        Använd sidan för att importera dagens exportfil, granska vilka patienter som väljs ut och skapa en kampanj innan första SMS-batchen skickas.
+      </p>
+    </section>
+
     <div class="grid">
       <section class="card">
         <h2>1. Importera fil</h2>
@@ -331,7 +368,11 @@ const isAdmin = anvandare.roll === 'admin';
 
           <div class="form-group">
             <label for="fileInput">CSV-fil</label>
-            <input id="fileInput" name="file" type="file" accept=".csv,.txt" class="file-input" required />
+            <div class="file-picker">
+              <input id="fileInput" name="file" type="file" accept=".csv,.txt" required hidden />
+              <button type="button" class="btn btn-secondary" id="fileInputTrigger">Välj fil</button>
+              <span id="fileName" class="file-picker-name" aria-live="polite">Ingen fil har valts</span>
+            </div>
           </div>
 
           <div class="form-group">
@@ -516,6 +557,8 @@ Enkäten är anonym. Tack!</textarea>
   <script is:inline>
     const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
+    const fileInputTrigger = document.getElementById('fileInputTrigger');
+    const fileName = document.getElementById('fileName');
     const clearBtn = document.getElementById('clearBtn');
     const previewBtn = document.getElementById('previewBtn');
     const dropzone = document.getElementById('dropzone');
@@ -547,6 +590,21 @@ Enkäten är anonym. Tack!</textarea>
       statusBanner.className = `banner visible ${type}`;
       statusBanner.textContent = message;
     }
+
+    function syncSelectedFileName() {
+      const selectedFile = fileInput.files?.[0];
+      fileName.textContent = selectedFile ? selectedFile.name : 'Ingen fil har valts';
+      fileName.classList.toggle('has-file', Boolean(selectedFile));
+    }
+
+    fileInputTrigger.addEventListener('click', () => {
+      if (typeof fileInput.showPicker === 'function') {
+        fileInput.showPicker();
+        return;
+      }
+
+      fileInput.click();
+    });
 
     function clearPreview() {
       previewSection.classList.add('hidden');
@@ -636,15 +694,21 @@ Enkäten är anonym. Tack!</textarea>
       dropzone.classList.remove('dragover');
       if (event.dataTransfer?.files?.length) {
         fileInput.files = event.dataTransfer.files;
+        syncSelectedFileName();
       }
     });
 
+    fileInput.addEventListener('change', syncSelectedFileName);
+
     clearBtn.addEventListener('click', () => {
       form.reset();
+      syncSelectedFileName();
       statusBanner.className = 'banner info';
       statusBanner.textContent = '';
       clearPreview();
     });
+
+    syncSelectedFileName();
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();

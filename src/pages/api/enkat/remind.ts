@@ -6,11 +6,46 @@ import { buildEnkatSmsMessage, sendEnkatSms } from '../../../lib/enkat-sms';
 
 export const prerender = false;
 
-function json(data: unknown, status = 200) {
+type RemindRequestBody = {
+  campaignId: string;
+};
+
+type RawRemindRequestBody = {
+  campaignId?: unknown;
+};
+
+function json<T>(data: T, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
     headers: { 'Content-Type': 'application/json' }
   });
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : 'Okänt fel';
+}
+
+async function parseRemindRequest(request: Request): Promise<RemindRequestBody | Response> {
+  let rawBody: unknown;
+
+  try {
+    rawBody = await request.json();
+  } catch {
+    return json({ success: false, error: 'Ogiltig JSON i request.' }, 400);
+  }
+
+  if (!rawBody || typeof rawBody !== 'object' || Array.isArray(rawBody)) {
+    return json({ success: false, error: 'Request body måste vara ett JSON-objekt.' }, 400);
+  }
+
+  const body = rawBody as RawRemindRequestBody;
+  const campaignId = typeof body.campaignId === 'string' ? body.campaignId.trim() : '';
+
+  if (!campaignId) {
+    return json({ success: false, error: 'campaignId krävs' }, 400);
+  }
+
+  return { campaignId };
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -23,13 +58,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ success: false, error: 'Kunde inte hämta användare' }, 401);
   }
 
-  try {
-    const body = await request.json();
-    const campaignId = String(body.campaignId || '').trim();
+  const parsedBody = await parseRemindRequest(request);
+  if (parsedBody instanceof Response) {
+    return parsedBody;
+  }
 
-    if (!campaignId) {
-      return json({ success: false, error: 'campaignId krävs' }, 400);
-    }
+  try {
+    const { campaignId } = parsedBody;
 
     let campaignQuery = supabaseAdmin
       .from('enkat_kampanjer')
@@ -139,12 +174,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         failed
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Kunde inte skicka påminnelser:', error);
     return json({
       success: false,
       error: 'Kunde inte skicka påminnelser.',
-      details: { message: error?.message || 'Okänt fel' }
+      details: { message: getErrorMessage(error) }
     }, 500);
   }
 };

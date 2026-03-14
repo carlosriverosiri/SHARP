@@ -287,6 +287,8 @@ Skickar påminnelser till utskick som:
 }
 ```
 
+Request body måste vara giltig JSON och innehålla `campaignId`. Annars ska endpointen svara med `400 Bad Request`.
+
 Alternativt senare:
 
 ```json
