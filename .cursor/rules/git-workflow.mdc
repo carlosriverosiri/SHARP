@@ -1,0 +1,11 @@
+---
+description: Commit and push workflow for this repo
+alwaysApply: true
+---
+
+# Git Workflow
+
+- After a larger task, or when the user writes `save`, `commit`, or `push`, propose a commit message based on the actual changes.
+- Propose a full command such as `git add . && git commit -m "[message]" && git push origin main`.
+- Do not run `git add`, `git commit`, or `git push` automatically without explicit user confirmation.
+- When behavior, architecture, or workflows changed, include relevant documentation updates in the same commit when practical.

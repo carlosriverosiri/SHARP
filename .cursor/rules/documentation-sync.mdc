@@ -1,0 +1,12 @@
+---
+description: Keep project documentation in sync with real changes
+alwaysApply: true
+---
+
+# Documentation Sync
+
+- When behavior, architecture, workflow, or admin UX changes, update the relevant project documentation in the same task.
+- Prefer feature-specific docs first, then broader indexes if needed.
+- Typical sync targets in this repo include `PROJECT_INDEX.md`, `docs/ADMIN-PORTAL-DESIGN.md`, `docs/ENV-KONFIGURATION.md`, `docs/TEKNIK-OVERSIKT.md`, and feature-specific docs in `docs/`.
+- Do not force README or changelog updates for tiny edits; update them when they are genuinely the right source of truth.
+- Keep documentation concise, current, and aligned with what is actually implemented.

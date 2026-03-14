@@ -1,0 +1,13 @@
+---
+description: Core standards for the SHARP repo
+alwaysApply: true
+---
+
+# Core Standards
+
+- Stack: Astro (SSR/SSG), TypeScript strict, Tailwind CSS, Supabase.
+- Prefer explicit types. Avoid `any` unless the reason is documented.
+- Use `??` and `?.` instead of manual null guards when it keeps the code clearer.
+- Keep all files UTF-8 encoded. When writing files via Node, use `'utf8'`.
+- If mojibake appears, run `node scripts/fix-mojibake.cjs`.
+- Run `npx astro check` after larger changes when practical.

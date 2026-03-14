@@ -1,0 +1,14 @@
+---
+description: AI Council layering and migration constraints
+globs: "{src/lib/ai-core/**/*.ts,src/lib/ai-council/**/*.ts,src/pages/api/ai-council/**/*.ts,src/pages/admin/ai-council.astro}"
+alwaysApply: false
+---
+
+# AI Council Architecture
+
+- AI Council should stay migration-friendly for a future move to Next.js.
+- Keep `src/lib/ai-core/` UI-agnostic: pure TypeScript, no DOM access, no Astro-specific imports.
+- Keep `src/lib/ai-council/` for Astro-specific UI behavior: DOM work, event listeners, rendering helpers.
+- Before adding new logic, ask: does this require DOM access?
+- If yes, place it in `ai-council`. If no, place it in `ai-core`.
+- When AI Council modules or architecture change, update the relevant AI Council documentation, including `docs/ai-council/KONTEXT.md` if that file is part of the affected flow.

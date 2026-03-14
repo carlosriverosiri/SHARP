@@ -1,0 +1,18 @@
+---
+description: Astro UI, accessibility, icon, and button patterns
+globs: **/*.astro
+alwaysApply: false
+---
+
+# Astro UI Patterns
+
+- Keep server logic in frontmatter. Use client-side JS only when interactivity requires it.
+- Put reusable UI in `src/components/`; keep page-specific flow in `src/pages/`.
+- Respect islands architecture and minimize `client:*` usage.
+- All interactive controls need visible text or an `aria-label`.
+- Inputs need matching `<label>` elements. Modals and dynamic UI need sensible focus handling.
+- Use the shared `Icon` component and Feather-style icons. See `docs/IKONER.md`.
+- Do not use emojis as UI icons and do not ship incomplete inline SVGs.
+- Use the button classes from `src/styles/global.css`; do not redefine `.btn` styles inline.
+- In admin pages that do not use `BaseLayout`, import `src/styles/global.css`.
+- Back buttons should move one level up in the hierarchy, not jump to unrelated pages.

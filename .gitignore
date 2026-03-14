@@ -31,7 +31,9 @@ pnpm-debug.log*
 
 # VSCode/Cursor settings
 .vscode/
-.cursor/
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
 
 # Windows thumbnail cache
 Thumbs.db

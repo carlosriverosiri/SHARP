@@ -1,112 +1,14 @@
-## Stack & Coding Standards
+# Legacy Cursor Rules
 
-**Stack:** Astro (SSR/SSG), TypeScript (strict), Tailwind CSS, Supabase.
-**Framtida migration:** AI Council-verktyget ska kunna migreras till Next.js. All ny logik i `src/lib/ai-core/` och `src/lib/ai-council/` ska vara UI-agnostisk (ren TypeScript, inga DOM-importer i ai-core).
+Primara projektregler finns nu i `.cursor/rules/*.mdc`.
 
-### TypeScript
-- Alltid strict typing. Ingen `any` utan kommentar om varfor.
-- Alla funktionsparametrar och returvarden ska ha explicita typer.
-- Anvand nullish coalescing (`??`) och optional chaining (`?.`) istallet for manuella null-checkar.
+Den har filen behalls bara for bakatkompatibilitet och ska vara kort for att undvika dubbla eller motstridiga instruktioner.
 
-### Astro
-- Serverlojik i frontmatter (`---`-blocket). Client-side JS bara nar interaktivitet kravs.
-- Komponenter i `src/components/`, sidlogik i `src/pages/`.
-- Islands architecture: minimera client-side JS, anvand `client:load` / `client:visible` sparsamt.
+Aktiva regelomraden finns nu uppdelade i:
 
-### Modularisering (migrationsvanlighet)
-- **`src/lib/ai-core/`** — UI-agnostik karnlogik (typer, validering, payloads, formatering). Ingen DOM, inget Astro-specifikt. Ska funka i Next.js utan andringar.
-- **`src/lib/ai-council/`** — Astro-specifik UI-logik (DOM-hantering, event listeners, rendering). Importerar fran ai-core.
-- Ny logik ska alltid hamna i ratt lager. Fraga: "Behover detta DOM?" Ja → ai-council. Nej → ai-core.
-
-### Tillganglighet (a11y)
-- Alla interaktiva element ska ha `aria-label` eller synlig text.
-- Formularelement ska ha tillhorande `<label>`.
-- Fokushantering vid modaler och dynamiskt innehall.
-
-### Verifiering
-- Kor `npx astro check` efter varje storre block.
-- Uppdatera `docs/ai-council/KONTEXT.md` nar moduler laggs till eller andras.
-
----
-
-## Prompt Library Reference
-Use these by typing @filename in chat:
-- @00_add_new_prompt.md (System: Takes raw text and saves it as a new numbered prompt)
-- @04_qa_import_guide.md (How to import old questions from WordPress)
-- @05_qa_formatting_rules.md (Rules for formatting Q&A with bullet points and colored blocks)
-- @06_unanswered_qa_workflow.md (Workflow for handling new questions)
-- @07_performance_guide.md (Performance optimization guide for new pages)
-- @09_new_diagnosis_page.md (Generates a full Astro page from raw notes)
-- @11_diagnosis_master_en.md (Creates the English Master Page in /en/ with Zotero matching)
-- @13_translate_to_english.md (Translates current Swedish page to English structure)
-
-## Ikonsystem - VIKTIGT
-Projektet anvander Feather Icons-stil (stroke-based, 24x24 viewBox).
-**ALLTID anvand Icon-komponenten** for ikoner:
-
-```astro
-import Icon from '../components/Icon.astro';
-<Icon name="trash" size={16} />
-```
-
-Tillgangliga ikoner: trash, edit, eye, plus, x, check, search, folder, file-text, user, settings, etc.
-Se docs/IKONER.md for komplett lista.
-
-ALDRIG anvand:
-- Emojis som ikoner
-- Inkompletta SVG:er (saknar stroke-attribut)
-- Andra ikonsystem
-
-## Knappsystem - VIKTIGT (GLOBAL CSS)
-Knappstilarna finns i **src/styles/global.css** och ger enhetlig design pa hela sajten.
-
-Tillgangliga klasser:
-- `.btn.btn-primary` - Huvudaktion (bla)
-- `.btn.btn-secondary` - Sekundar (vit med ram)
-- `.btn.btn-success` - Positiv (gron)
-- `.btn.btn-danger` - Destruktiv (rod)
-- `.btn.btn-ghost` - Transparent
-- `.btn.btn-sm` - Liten storlek
-- `.btn.btn-lg` - Stor storlek
-
-**For admin-sidor som inte anvander BaseLayout:**
-```astro
----
-import '../../styles/global.css';
----
-```
-
-Exempel:
-```html
-<button class="btn btn-primary">Skapa</button>
-<button class="btn btn-secondary">Tillbaka</button>
-```
-
-ALDRIG definiera .btn-klasser inline i <style>-taggar!
-
-## Navigation - VIKTIGT
-Tillbaka-knappar ska GA EN NIVA UPP i hierarkin:
-- Kategori -> Projekt (RATT)
-- Projekt -> Dashboard (RATT)
-- Kategori -> AI Council (FEL!)
-
-## Teckenkodning - VIKTIGT (UTF-8)
-Alla filer ska anvanda UTF-8-kodning. Svenska tecken (a, a, o) MASTE sparas korrekt.
-
-**Vid scripts som skriver filer:**
-- Anvand ALLTID `fs.writeFileSync(path, content, 'utf8')` i Node.js
-- Undvik PowerShell heredocs for svenska text
-- Testa att svenska tecken visas korrekt efter redigering
-
-**Om mojibake uppstar (t.ex. "Ã¶" istallet for "o"):**
-Kor: `node scripts/fix-mojibake.cjs`
-
-**BaseLayout.astro har redan:**
-```html
-<meta charset="UTF-8" />
-```
-
-## Multi-AI Council Mode
-For komplexa problem, skriv **COUNCIL:** eller **RADET:** fore din fraga.
-AI:n svarar da fran tre perspektiv (Implementator, Arkitekt, Kritiker) + syntes.
-Dokumentation: @MULTI-AI-ARBETSFLODE.md
+- `core-standards.mdc`
+- `astro-ui-patterns.mdc`
+- `ai-council-architecture.mdc`
+- `documentation-sync.mdc`
+- `assistant-workflows.mdc`
+- `git-workflow.mdc`
