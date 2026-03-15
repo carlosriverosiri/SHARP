@@ -126,6 +126,7 @@ const isAdmin = anvandare.roll === 'admin';
       padding: 28px;
       text-align: center;
       transition: all 0.15s ease;
+      cursor: pointer;
     }
 
     .dropzone.dragover {
@@ -143,6 +144,24 @@ const isAdmin = anvandare.roll === 'admin';
       margin: 0;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .dropzone-file-name {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .dropzone-file-name.has-file {
+      color: #0f172a;
+      border-color: #93c5fd;
+      background: #dbeafe;
     }
 
     .form-group {
@@ -163,23 +182,6 @@ const isAdmin = anvandare.roll === 'admin';
       padding: 12px 14px;
       font-size: 15px;
       background: white;
-    }
-
-    .file-picker {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .file-picker-name {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .file-picker-name.has-file {
-      color: var(--text);
-      font-weight: 500;
     }
 
     .actions {
@@ -361,18 +363,12 @@ const isAdmin = anvandare.roll === 'admin';
         </p>
 
         <form id="uploadForm">
-          <div class="dropzone" id="dropzone">
-            <strong>Dra in CSV-filen här</strong>
-            <p>eller välj fil manuellt. Semikolonseparerat format förväntas.</p>
-          </div>
+          <input id="fileInput" name="file" type="file" accept=".csv,.txt" required hidden />
 
-          <div class="form-group">
-            <label for="fileInput">CSV-fil</label>
-            <div class="file-picker">
-              <input id="fileInput" name="file" type="file" accept=".csv,.txt" required hidden />
-              <button type="button" class="btn btn-secondary" id="fileInputTrigger">Välj fil</button>
-              <span id="fileName" class="file-picker-name" aria-live="polite">Ingen fil har valts</span>
-            </div>
+          <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Ladda upp CSV-fil genom att klicka eller dra in en fil">
+            <strong>Dra in CSV-filen här</strong>
+            <p>eller klicka för att välja fil. CSV/TXT stöds.</p>
+            <span id="fileName" class="dropzone-file-name" aria-live="polite">Ingen fil har valts</span>
           </div>
 
           <div class="form-group">
@@ -557,7 +553,6 @@ Enkäten är anonym. Tack!</textarea>
   <script is:inline>
     const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
-    const fileInputTrigger = document.getElementById('fileInputTrigger');
     const fileName = document.getElementById('fileName');
     const clearBtn = document.getElementById('clearBtn');
     const previewBtn = document.getElementById('previewBtn');
@@ -597,13 +592,21 @@ Enkäten är anonym. Tack!</textarea>
       fileName.classList.toggle('has-file', Boolean(selectedFile));
     }
 
-    fileInputTrigger.addEventListener('click', () => {
+    function openFilePicker() {
       if (typeof fileInput.showPicker === 'function') {
         fileInput.showPicker();
         return;
       }
 
       fileInput.click();
+    }
+
+    dropzone.addEventListener('click', openFilePicker);
+    dropzone.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openFilePicker();
+      }
     });
 
     function clearPreview() {

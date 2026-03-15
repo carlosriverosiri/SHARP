@@ -115,8 +115,8 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
 
 ### Innehåll
 
-- drag & drop-yta
-- knapp: `Välj fil`
+- en sammanhållen uppladdningsyta som stödjer både drag & drop och klick för filval
+- tydlig visning av vald fil i samma block
 - informationsruta om förväntat format
 - fallback-fält för `Bokningstyp`
 
