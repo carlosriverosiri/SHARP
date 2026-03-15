@@ -6,7 +6,7 @@ import { buildEnkatSmsMessage, sendEnkatSms } from '../../src/lib/enkat-sms';
 
 const SUPABASE_URL = process.env.PUBLIC_SUPABASE_URL || '';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const ENCRYPTION_KEY = process.env.POOL_ENCRYPTION_KEY || 'default-dev-key-32-bytes-long!!';
+const ENCRYPTION_KEY = process.env.POOL_ENCRYPTION_KEY || '';
 const SALT = 'kort-varsel-salt';
 
 function decryptPhone(encryptedText: string): string {
@@ -27,6 +27,10 @@ function decryptPhone(encryptedText: string): string {
 export default async function handler(_req: Request, _context: Context) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     return new Response('Supabase not configured', { status: 500 });
+  }
+
+  if (!ENCRYPTION_KEY) {
+    return new Response('POOL_ENCRYPTION_KEY saknas -- kan inte dekryptera telefonnummer', { status: 500 });
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {

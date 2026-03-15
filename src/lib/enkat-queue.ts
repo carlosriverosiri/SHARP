@@ -1,3 +1,5 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
+
 type QueueCampaign = {
   id: string;
   sms_mall: string | null;
@@ -24,40 +26,45 @@ type QueueLog = {
   typ: string;
 };
 
+type EnkatSmsRow = {
+  providerName: string;
+  visitDate: string;
+  bookingTypeRaw: string | null;
+  bookingTypeNormalized: string | null;
+};
+
 type QueueProcessorOptions = {
-  supabase: any;
+  supabase: SupabaseClient;
   limit?: number;
   campaignId?: string;
   decryptPhone: (encrypted: string) => string;
-  buildMessage: (template: string | null, row: {
-    providerName: string;
-    visitDate: string;
-    bookingTypeRaw: string | null;
-    bookingTypeNormalized: string | null;
-  }, code: string) => string;
+  buildMessage: (template: string | null, row: EnkatSmsRow, code: string) => string;
   sendSms: (phone: string, message: string) => Promise<{ ok: boolean; providerResponse?: unknown; error?: string }>;
 };
 
-async function updateCampaignSummaries(supabase: any, campaignIds: string[]) {
+async function updateCampaignSummaries(supabase: SupabaseClient, campaignIds: string[]) {
   const uniqueCampaignIds = [...new Set(campaignIds.filter(Boolean))];
   for (const campaignId of uniqueCampaignIds) {
-    const [{ data: sentLogs }, { data: queuedLogs }] = await Promise.all([
+    const [sentResult, queuedResult] = await Promise.all([
       supabase
         .from('enkat_delivery_log')
-        .select('id', { count: 'exact' })
+        .select('id', { count: 'exact', head: true })
         .eq('kampanj_id', campaignId)
         .eq('typ', 'forsta_sms')
         .eq('status', 'sent'),
       supabase
         .from('enkat_delivery_log')
-        .select('id', { count: 'exact' })
+        .select('id', { count: 'exact', head: true })
         .eq('kampanj_id', campaignId)
         .eq('typ', 'forsta_sms')
         .eq('status', 'queued')
     ]);
 
-    const sentCount = sentLogs?.length || 0;
-    const queuedCount = queuedLogs?.length || 0;
+    if (sentResult.error) console.error(`Fel vid räkning av skickade för kampanj ${campaignId}:`, sentResult.error.message);
+    if (queuedResult.error) console.error(`Fel vid räkning av köade för kampanj ${campaignId}:`, queuedResult.error.message);
+
+    const sentCount = sentResult.count ?? 0;
+    const queuedCount = queuedResult.count ?? 0;
     const nextStatus = queuedCount > 0 ? 'skickar' : (sentCount > 0 ? 'klar' : 'fel');
 
     await supabase
@@ -103,19 +110,28 @@ export async function processQueuedEnkatMessages({
   const utskickIds = queueLogs.map((item) => item.utskick_id).filter(Boolean);
   const campaignIds = [...new Set(queueLogs.map((item) => item.kampanj_id))];
 
-  const [{ data: utskickRows }, { data: campaigns }] = await Promise.all([
-    supabase
-      .from('enkat_utskick')
-      .select('id, kampanj_id, unik_kod, vardgivare_namn, besoksdatum, bokningstyp_raw, bokningstyp_normaliserad, telefon_temp_krypterad, forsta_sms_skickad_vid, expires_at')
-      .in('id', utskickIds),
+  const [utskickResult, campaignResult] = await Promise.all([
+    utskickIds.length > 0
+      ? supabase
+          .from('enkat_utskick')
+          .select('id, kampanj_id, unik_kod, vardgivare_namn, besoksdatum, bokningstyp_raw, bokningstyp_normaliserad, telefon_temp_krypterad, forsta_sms_skickad_vid, expires_at')
+          .in('id', utskickIds)
+      : Promise.resolve({ data: [], error: null }),
     supabase
       .from('enkat_kampanjer')
       .select('id, sms_mall')
       .in('id', campaignIds)
   ]);
 
-  const utskickById = new Map((utskickRows || []).map((row: QueueUtskick) => [row.id, row]));
-  const campaignById = new Map((campaigns || []).map((row: QueueCampaign) => [row.id, row]));
+  if (utskickResult.error) {
+    throw new Error(`Kunde inte hämta utskicksrader: ${utskickResult.error.message}`);
+  }
+  if (campaignResult.error) {
+    throw new Error(`Kunde inte hämta kampanjer: ${campaignResult.error.message}`);
+  }
+
+  const utskickById = new Map((utskickResult.data || []).map((row: QueueUtskick) => [row.id, row]));
+  const campaignById = new Map((campaignResult.data || []).map((row: QueueCampaign) => [row.id, row]));
 
   let sent = 0;
   let failed = 0;

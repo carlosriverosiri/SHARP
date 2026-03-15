@@ -19,9 +19,9 @@ export function classifyBookingType(rawValue?: string | null): NormalizedBooking
   const value = normalizeSwedishText(rawValue || '');
 
   if (!value) return 'ovrigt';
-  if (value.includes('nybesok') || value.includes('nybesok')) return 'nybesok';
   if (value.includes('remiss')) return 'nybesok_remiss';
-  if (value.includes('ab') || value.includes('aterbesok')) return 'aterbesok';
+  if (value.includes('nybesok') || value.includes('nb')) return 'nybesok';
+  if (value.includes('aterbesok') || /\bab\b/.test(value)) return 'aterbesok';
   if (value.includes('ssk')) return 'ssk_besok';
   if (value.includes('telefon')) return 'telefon';
 
@@ -82,7 +82,7 @@ export function patientFriendlyBookingType(rawValue?: string | null): string {
   if (value.includes('ssk')) return 'Sjuksköterskebesök';
   if (value.includes('telefon')) return 'Telefonkontakt';
   if (value.includes('nybesok')) return bodyPart ? `Nybesök ${bodyPart}` : 'Nybesök';
-  if (value.includes('kuralink') || value.includes('fysiskt')) return 'Digitalt besök';
+  if (value.includes('kuralink')) return 'Digitalt besök';
 
   return rawValue.trim();
 }

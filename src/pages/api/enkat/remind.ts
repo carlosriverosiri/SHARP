@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
+import { jsonResponse as json, getErrorMessage } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
 import { dekryptera } from '../../../lib/kryptering';
 import { buildEnkatSmsMessage, sendEnkatSms } from '../../../lib/enkat-sms';
@@ -13,17 +15,6 @@ type RemindRequestBody = {
 type RawRemindRequestBody = {
   campaignId?: unknown;
 };
-
-function json<T>(data: T, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
-
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Okänt fel';
-}
 
 async function parseRemindRequest(request: Request): Promise<RemindRequestBody | Response> {
   let rawBody: unknown;
@@ -71,7 +62,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       .select('id, skapad_av, namn, status, sms_mall, skicka_paminnelse, paminnelse_efter_timmar')
       .eq('id', campaignId);
 
-    if (anvandare.roll !== 'admin') {
+    if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
       campaignQuery = campaignQuery.eq('skapad_av', anvandare.id);
     }
 

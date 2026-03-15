@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { parseEnkatCsv } from '../../../lib/enkat-csv-parser';
 import {
@@ -9,13 +10,6 @@ import {
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
 
 async function getSharedExcludedBookingTypePatternText() {
   try {

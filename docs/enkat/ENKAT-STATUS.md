@@ -12,6 +12,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - `supabase/migrations/023-enkat.sql`
 - `supabase/migrations/024-profile-vardgivare.sql`
 - `supabase/migrations/025-enkat-installningar.sql`
+- `supabase/migrations/026-enkat-increment-svar.sql`
 
 #### Backend
 - `src/lib/enkat-booking-classifier.ts`
@@ -19,6 +20,8 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - `src/lib/enkat-follow-up-rules.ts`
 - `src/lib/enkat-sms.ts`
 - `src/lib/enkat-queue.ts`
+- `src/lib/enkat-api-helpers.ts`
+- `src/lib/enkat-stats.ts`
 
 #### API-routes
 - `src/pages/api/enkat/upload.ts`
@@ -70,6 +73,7 @@ För att systemet ska fungera fullt ut måste följande vara körda i Supabase:
 1. `023-enkat.sql`
 2. `024-profile-vardgivare.sql`
 3. `025-enkat-installningar.sql`
+4. `026-enkat-increment-svar.sql`
 
 Dessutom måste användaren välja sitt vårdgivarnamn i:
 
@@ -98,6 +102,21 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 9. Öppna en publik länk `/e/[kod]`
 10. Skicka in ett testsvar
 11. Kontrollera dashboard, kampanjhistorik och rapport
+
+## Nyligen genomförd kodgranskning
+
+Följande förbättringar är gjorda efter en samlad kodgranskning:
+
+- **Rollkontroller**: alla API-endpoints använder nu `harMinstPortalRoll()` istället för hård `=== 'admin'`-jämförelse, så att superadmin inte blockeras
+- **Krypteringsnyckel**: Netlify-funktionen `enkat-send-queue.mts` har inte längre en hårdkodad fallback-nyckel; saknas `POOL_ENCRYPTION_KEY` returneras 500
+- **Atomär svarsräknare**: `total_svar` uppdateras via SQL-funktion `increment_enkat_total_svar` istället för read-then-write
+- **Poängvalidering**: `submit.ts` validerar nu helhetsbetyg (1-10) och delbetyg (1-5) server-side
+- **Dubbel-submit-skydd**: atomär claim via `UPDATE ... WHERE used = false` innan svaret sparas
+- **Classifier-buggar**: duplicerad nybesök-kontroll fixad, `remiss` fångas före `nybesök`, `ab` matchar bara som helt ord, `fysiskt` klassas inte längre som "Digitalt besök"
+- **Staging-URL borttagen**: SMS-funktionen saknar inte längre hårdkodad fallback; loggar varning om URL saknas
+- **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
+- **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
+- **Typning**: `any` ersatt med `SupabaseClient` i `enkat-queue.ts`
 
 ## Kvarvarande prioriterade steg
 

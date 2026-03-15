@@ -3,7 +3,11 @@ import { formatProviderName, patientFriendlyBookingType } from './enkat-booking-
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
 const ELKS_API_USER = import.meta.env.ELKS_API_USER || '';
 const ELKS_API_PASSWORD = import.meta.env.ELKS_API_PASSWORD || '';
-const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || 'https://sodermalm.netlify.app';
+const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || '';
+
+if (!SITE_URL) {
+  console.warn('⚠️ SITE / PUBLIC_SITE_URL saknas -- enkät-SMS-länkar kommer bli ogiltiga');
+}
 
 export type EnkatSmsRow = {
   providerName: string;

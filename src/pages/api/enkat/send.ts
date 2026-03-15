@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import crypto from 'crypto';
+import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 import { kryptera, dekryptera } from '../../../lib/kryptering';
@@ -17,13 +18,6 @@ type PreviewRow = {
   bookingTypeRaw: string | null;
   bookingTypeNormalized: string;
 };
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
 
 function hashPatientId(patientId: string) {
   return crypto.createHash('sha256').update(patientId).digest('hex');

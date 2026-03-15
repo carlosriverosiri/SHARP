@@ -1,15 +1,10 @@
 import type { APIRoute } from 'astro';
+import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
 
 export const GET: APIRoute = async ({ cookies }) => {
   if (!await arInloggad(cookies)) {
@@ -28,7 +23,7 @@ export const GET: APIRoute = async ({ cookies }) => {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (anvandare.roll !== 'admin') {
+    if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
       query = query.eq('skapad_av', anvandare.id);
     }
 

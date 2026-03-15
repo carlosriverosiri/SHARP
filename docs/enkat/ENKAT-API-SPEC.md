@@ -414,15 +414,16 @@ Tar emot svar från patientsidan via unik enkätkod.
 
 ### Server-side logik
 
-1. validera kod
-2. verifiera att koden finns
-3. verifiera att den inte är använd
-4. verifiera att den inte är utgången
-5. maska personuppgifter i fritext
-6. skapa rad i `enkat_svar`
-7. markera utskick som `used = true`
-8. sätt `svarad_vid`
-9. uppdatera `enkat_kampanjer.total_svar`
+1. validera kod (minst 12 tecken)
+2. validera poäng: helhetsbetyg 1-10 heltal, delbetyg 1-5 heltal
+3. verifiera att koden finns
+4. verifiera att den inte är använd
+5. verifiera att den inte är utgången
+6. atomär claim: `UPDATE enkat_utskick SET used = true WHERE id = ? AND used = false`
+7. om ingen rad uppdaterades -- returnera 409 (redan använd)
+8. maska personuppgifter i fritext
+9. skapa rad i `enkat_svar`
+10. uppdatera `enkat_kampanjer.total_svar` atomärt via `increment_enkat_total_svar` RPC
 
 ### Response
 
@@ -449,6 +450,9 @@ Tar emot svar från patientsidan via unik enkätkod.
 - endpoint är publik men hårt validerad
 - ingen rå patientidentifierare ska returneras
 - fritextmaskning sker innan lagring
+- dubbel-submit hanteras via atomär claim (conditional update)
+- poängintervall valideras server-side innan insert
+- `total_svar` ökas atomärt via SQL-funktion (ej read-then-write)
 
 ---
 
@@ -583,20 +587,17 @@ Detta är ett mer sammanfattat format än dashboarden.
 
 ## 9. Roll- och åtkomstkontroll i API-lagret
 
-### Rekommenderad modell
+### Implementerad modell
 
-API-lagret måste explicit avgöra om användaren är:
+API-lagret använder `harMinstPortalRoll()` från `src/lib/portal-roles.ts` för att avgöra behörighet. Rollhierarkin:
 
-- vanlig vårdgivare
-- chef/admin/verksamhetsansvarig
+| Roll | Nivå | Ser |
+|---|---|---|
+| `personal` | 1 | Egna resultat (kopplat via `profiles.vardgivare_namn`) |
+| `admin` | 2 | Alla vårdgivare, alla kampanjer |
+| `superadmin` | 3 | Samma som admin + användarhantering |
 
-### Praktisk strategi
-
-Detta kan avgöras via:
-
-- användarprofil
-- app metadata
-- särskild admin-roll
+Alla endpoints som kräver adminbehörighet kontrollerar `harMinstPortalRoll(anvandare.roll, 'admin')`, vilket ger åtkomst för både `admin` och `superadmin`.
 
 ### Rekommendation
 

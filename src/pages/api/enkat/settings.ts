@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
@@ -11,13 +12,6 @@ import {
 export const prerender = false;
 
 const SETTINGS_ROW_ID = 'standard';
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
 
 function isMissingSettingsTable(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;

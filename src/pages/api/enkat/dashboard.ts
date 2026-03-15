@@ -1,17 +1,11 @@
 import type { APIRoute } from 'astro';
+import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import { ANONYMITY_THRESHOLD, average, summarizeDelayRows, type DeliveryDelayRow } from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
-
-const ANONYMITY_THRESHOLD = 5;
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
 
 type SurveyRow = {
   vardgivare_namn: string;
@@ -25,67 +19,6 @@ type SurveyRow = {
   kommentar_forbattra: string | null;
   created_at: string;
 };
-
-type DeliveryDelayRow = {
-  vardgivare_namn: string;
-  besoksdatum: string;
-  besoksstart_tid: string | null;
-  forsta_sms_skickad_vid: string | null;
-  svarad_vid: string | null;
-};
-
-function average(values: number[]) {
-  if (!values.length) return 0;
-  return Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(2));
-}
-
-function calculateDelayHours(date: string, time: string | null, sentAt: string | null) {
-  if (!time || !sentAt) return null;
-  const visitStart = new Date(`${date}T${time}:00`);
-  const sent = new Date(sentAt);
-  if (Number.isNaN(visitStart.getTime()) || Number.isNaN(sent.getTime())) return null;
-  return Math.max(0, (sent.getTime() - visitStart.getTime()) / (1000 * 60 * 60));
-}
-
-function bucketForDelay(delayHours: number) {
-  if (delayHours <= 6) return '0-6h';
-  if (delayHours <= 24) return '6-24h';
-  if (delayHours <= 48) return '24-48h';
-  return '48h+';
-}
-
-function summarizeDelayRows(rows: DeliveryDelayRow[]) {
-  const measured = rows
-    .map((row) => {
-      const delayHours = calculateDelayHours(row.besoksdatum, row.besoksstart_tid, row.forsta_sms_skickad_vid);
-      if (delayHours === null) return null;
-      return {
-        delayHours,
-        answered: !!row.svarad_vid
-      };
-    })
-    .filter(Boolean) as Array<{ delayHours: number; answered: boolean }>;
-
-  const bucketMap = new Map<string, { sent: number; answered: number }>();
-  for (const row of measured) {
-    const key = bucketForDelay(row.delayHours);
-    const current = bucketMap.get(key) || { sent: 0, answered: 0 };
-    current.sent += 1;
-    if (row.answered) current.answered += 1;
-    bucketMap.set(key, current);
-  }
-
-  return {
-    measuredCount: measured.length,
-    averageDelayHours: average(measured.map((row) => row.delayHours)),
-    buckets: Array.from(bucketMap.entries()).map(([bucket, values]) => ({
-      bucket,
-      sent: values.sent,
-      answered: values.answered,
-      responseRate: values.sent > 0 ? Number((values.answered / values.sent).toFixed(3)) : 0
-    }))
-  };
-}
 
 function summarizeProvider(
   providerName: string,
@@ -234,7 +167,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       })
       .sort((a, b) => a.providerName.localeCompare(b.providerName, 'sv'));
 
-    if (anvandare.roll !== 'admin') {
+    if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
       const myProviderName = profile?.vardgivare_namn?.trim();
       if (!myProviderName) {
         return json({
