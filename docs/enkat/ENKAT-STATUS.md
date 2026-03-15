@@ -72,11 +72,11 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 
 ## Dokumentation att läsa först på nästa dator
 
-1. `docs/ENKAT-STATUS.md`
-2. `docs/ENKAT-IMPLEMENTATIONSPLAN.md`
-3. `docs/ENKAT-PATIENTUPPLEVELSE.md`
-4. `docs/ENKAT-API-SPEC.md`
-5. `docs/ENKAT-UI-SPEC.md`
+1. `docs/enkat/ENKAT-STATUS.md`
+2. `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
+3. `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
+4. `docs/enkat/ENKAT-API-SPEC.md`
+5. `docs/enkat/ENKAT-UI-SPEC.md`
 
 ## Praktiskt testflöde
 

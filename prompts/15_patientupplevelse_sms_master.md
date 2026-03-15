@@ -26,8 +26,8 @@ Relevant existing references:
 - `src/pages/personal/kort-varsel.astro`
 - `netlify/functions/scheduled-sms.mts`
 - `src/lib/kryptering.ts`
-- `docs/ENKAT-PATIENTUPPLEVELSE.md`
-- `docs/ENKAT-IMPLEMENTATIONSPLAN.md`
+- `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
+- `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
 
 ---
 
