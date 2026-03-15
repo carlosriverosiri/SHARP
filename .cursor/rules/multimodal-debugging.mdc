@@ -1,0 +1,14 @@
+---
+description: Screenshot, error-image, and dictated-input handling
+alwaysApply: true
+---
+
+# Multimodal Debugging
+
+- The user often uploads screenshots of UI bugs, design issues, and terminal errors.
+- When a screenshot is relevant, analyze visible layout details such as spacing, alignment, colors, contrast, border radius, and component consistency.
+- Cross-reference visual findings with existing Tailwind classes, CSS variables, and shared design patterns before suggesting new styling.
+- When screenshots show error messages, stack traces, routes, file paths, line numbers, or visible UI context, use those clues to locate the most likely relevant file or files.
+- Treat dictated prompts generously: expect typos, missing words, and speech-to-text errors.
+- Infer intent from the combination of the user's wording, attached screenshots, and project context.
+- If the spoken wording is materially ambiguous and would change the fix, ask a short clarifying question instead of guessing.

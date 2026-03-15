@@ -123,7 +123,7 @@ Fält:
 | Fält | Typ | Krav | Beskrivning |
 |---|---|---|---|
 | `file` | fil | Ja | CSV/TSV-export |
-| `globalBookingType` | string | Nej | Fallback om `Bokningstyp` saknas |
+| `excludedBookingTypePatterns` | text | Nej | Radseparerad mall för bokningstyper som ska sorteras bort automatiskt. Om fältet utelämnas används den sparade gemensamma Supabase-mallen, annars lokalt skickat värde |
 
 ### Förväntade kärnkolumner
 
@@ -144,9 +144,10 @@ Valfria:
 3. parse med semikolonstöd
 4. validera kolumnrubriker
 5. validera varje rad
-6. klassificera bokningstyp
-7. deduplicera
-8. returnera preview
+6. kontrollera om bokningstyp matchar standardmallen för "följ aldrig upp"
+7. klassificera kvarvarande bokningstyp
+8. deduplicera kvarvarande rader
+9. returnera preview
 
 ### Response: lyckad preview
 
@@ -157,7 +158,16 @@ Valfria:
     "totalRows": 73,
     "validRows": 68,
     "invalidRows": 3,
+    "autoExcludedRows": 11,
     "duplicateRows": 2,
+    "autoExcludedBookingTypes": [
+      {
+        "bookingTypeRaw": "9. SSK-BESÖK",
+        "matchedRule": "ssk",
+        "count": 5,
+        "rowIndexes": [2, 8, 17, 22, 31]
+      }
+    ],
     "selectedRows": [
       {
         "patientId": "b5kp8fc",
@@ -193,6 +203,59 @@ Valfria:
 - visa *varför* dubblettrad valdes bort
 - skriv inte till databasen här
 - om `Starttid` finns ska den returneras i preview
+- rader med tom `Bokningstyp` ska markeras som ogiltiga och inte gå vidare till utskick
+- bokningstyper som matchar standardmallen för "följ aldrig upp" ska inte bli felrader, utan sorteras bort separat
+- deduplicering ska ske efter att auto-exkludering har tillämpats
+
+---
+
+## 3A. `GET /api/enkat/settings`
+
+### Syfte
+
+Hämtar den gemensamma standardmallen för bokningstyper som aldrig ska följas upp.
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "excludedBookingTypePatterns": ["ssk", "suturtagning", "telefon"],
+    "patternText": "ssk\nsuturtagning\ntelefon",
+    "updatedAt": "2026-01-25T20:10:00.000Z",
+    "updatedBy": "uuid",
+    "usingFallbackDefaults": false
+  }
+}
+```
+
+### Viktiga regler
+
+- om tabellen ännu inte finns ska endpointen kunna falla tillbaka till inbyggda standardvärden
+- endpointen får inte exponera rå Supabase-fel till användaren utan begriplig feltext
+
+---
+
+## 3B. `POST /api/enkat/settings`
+
+### Syfte
+
+Sparar den gemensamma standardmallen i Supabase så att samma urvalsregler följer med mellan datorer och användare.
+
+### Input
+
+```json
+{
+  "excludedBookingTypePatterns": "ssk\nsuturtagning\ntelefon\ntel.tid sll\nadmin\nsll-tel"
+}
+```
+
+### Viktiga regler
+
+- endast administratör får spara den gemensamma standardmallen
+- tom lista ska vara tillåten om verksamheten vill stänga av auto-exkludering
+- sparad mall ska returneras normaliserad så att UI:t kan uppdatera textarea och återställ-knapp
 
 ---
 
@@ -214,7 +277,6 @@ Denna endpoint ska:
 ```json
 {
   "campaignName": "Patientupplevelse vecka 11",
-  "globalBookingType": "Nybesok",
   "smsTemplate": "Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?",
   "sendNow": true,
   "scheduledSendAt": null,

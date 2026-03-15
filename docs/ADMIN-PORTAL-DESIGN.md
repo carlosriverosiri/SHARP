@@ -24,6 +24,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 |----------|-----|-------------|
 | **Inloggning** | `/personal/` | Supabase-autentisering med e-post/lösenord |
 | **Översikt** | `/personal/oversikt` | Dashboard med alla verktyg |
+| **Administration** | `/personal/admin` | Skapa användare, hantera roller, skicka återställningslänkar och administrera läkare |
 | **Länkar & SMS** | `/personal/lankar-sms` | Kopiera kortlänkar och skicka SMS |
 | **Resurser** | `/personal/resurser` | Dokument, länkar, instruktionsvideor |
 | **Lösenordsåterställning** | `/personal/aterstall-losenord` | Självbetjäning |
@@ -35,6 +36,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 ```
 /personal/                    → Inloggningssida
 /personal/oversikt            → Dashboard
+/personal/admin              → Administration (användare, roller, läkare)
 /personal/lankar-sms          → Kopiera länkar & Skicka SMS
 /personal/resurser            → Dokument och resurser
 /personal/aterstall-losenord  → Återställ lösenord
@@ -52,6 +54,7 @@ src/
 │   └── Header.astro              # Kugghjulsikon till portalen
 ├── lib/
 │   ├── auth.ts                   # Autentisering (Supabase)
+│   ├── portal-roles.ts           # Rollhierarki (superadmin/admin/personal)
 │   └── supabase.ts               # Supabase-klient
 ├── pages/
 │   ├── api/
@@ -62,6 +65,7 @@ src/
 │   └── personal/
 │       ├── index.astro           # Inloggning
 │       ├── oversikt.astro        # Dashboard
+│       ├── admin.astro           # Adminpanel för användare/roller/läkare
 │       ├── lankar-sms.astro      # Länkar & SMS
 │       ├── resurser.astro        # Resurser
 │       └── aterstall-losenord.astro
@@ -78,6 +82,13 @@ src/
 - **Metoder:** E-post/lösenord, Magic Link
 - **Session:** 1 timme sliding timeout
 - **Cookies:** HttpOnly, SameSite Strict, Secure
+- **Roller:** `superadmin` / `admin` / `personal` via `app_metadata.role` i Supabase Auth
+- **Rollhierarki:** `superadmin` > `admin` > `personal`. Kontrolleras via `harMinstPortalRoll()` i `src/lib/portal-roles.ts`.
+- **Superadmin:** Kan ändra roller, skapa användare med valfri roll, och har full åtkomst till alla admin-funktioner.
+- **Admin:** Kan skapa användare (som personal), hantera läkare, skicka återställningslänkar.
+- **Personal:** Basåtkomst till portalen, kan inte nå `/personal/admin`.
+- **Rollhantering i UI:** `/personal/admin` är adminpanel, men Supabase Auth är fortsatt source of truth
+- **Lösenordsåterställning:** självbetjäning via `/personal/aterstall-losenord`, men admin kan trigga återställningslänk från `/personal/admin`
 
 ### Miljövariabler
 

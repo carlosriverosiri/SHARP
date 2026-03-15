@@ -9,6 +9,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { harMinstPortalRoll } from './portal-roles';
 
 // Miljövariabler (ställs in i .env eller Netlify)
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
@@ -73,7 +74,18 @@ export interface AuditLogg {
   id?: number;
   anvandare_id: string;
   anvandare_email: string;
-  handelse_typ: 'INLOGGNING' | 'UTLOGGNING' | 'SMS_SKICKAT' | 'MALL_SKAPAD' | 'MALL_RADERAD';
+  handelse_typ:
+    | 'INLOGGNING'
+    | 'UTLOGGNING'
+    | 'SMS_SKICKAT'
+    | 'MALL_SKAPAD'
+    | 'MALL_RADERAD'
+    | 'ANVANDARE_SKAPAD'
+    | 'ROLL_ANDRAD'
+    | 'LOSENORD_ATERSTALLNING_SKICKAD'
+    | 'LAKARE_SKAPAD'
+    | 'LAKARE_BORTTAGEN'
+    | 'LAKARE_AKTIV_STATUS_ANDRAD';
   detaljer?: Record<string, unknown>;
   ip_adress?: string;
   user_agent?: string;
@@ -188,8 +200,8 @@ export async function registreraSms(
  */
 export async function arAdmin(user_id: string): Promise<boolean> {
   try {
-    const { data: { user } } = await supabase.auth.admin.getUserById(user_id);
-    return user?.app_metadata?.role === 'admin';
+    const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(user_id);
+    return harMinstPortalRoll(user?.app_metadata?.role, 'admin');
   } catch {
     return false;
   }

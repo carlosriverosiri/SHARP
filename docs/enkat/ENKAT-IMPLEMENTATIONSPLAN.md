@@ -80,7 +80,9 @@ Det betyder att dokumentet nedan ska läsas som:
 - ladda upp fil via drag & drop eller knapp
 - parsea semikolonseparerad fil
 - validera de fasta kärnkolumnerna: `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`
-- acceptera `Bokningstyp` som valfri och föränderlig fri text
+- behandla tom `Bokningstyp` som ej uppföljningsbar (raden ska bort i preview/utskick)
+- tillämpa en standardmall för bokningstyper som aldrig ska följas upp, innan deduplicering
+- spara den gemensamma standardmallen i Supabase så att den delas mellan datorer och användare
 - acceptera `Starttid` som valfri tilläggskolumn
 - validera telefonnummer utan att onödigt skriva om redan korrekta `+46`-nummer
 - deduplicera på `Patient-ID`, fallback telefon
@@ -96,6 +98,7 @@ Det betyder att dokumentet nedan ska läsas som:
 
 - användaren kan ladda en fil och få en korrekt preview
 - systemet kan visa vilka patienter som kommer att få SMS
+- användaren kan se vilka bokningstyper som sorterades bort av standardmallen
 
 ### Status
 

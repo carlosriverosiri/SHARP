@@ -3,13 +3,20 @@
  * Admin-sida för personalportalen
  * URL: /personal/admin
  * 
- * Hantera användare och läkare.
+ * Hantera användare, roller, lösenordsåterställning och läkare.
  */
 
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { hamtaAnvandare } from '../../lib/auth';
+import { hamtaAnvandare, skickaAterställningslank } from '../../lib/auth';
+import {
+  harMinstPortalRoll,
+  normalizePortalRole,
+  portalRoleLabel,
+  portalRoleRank,
+  type PortalRole
+} from '../../lib/portal-roles';
 import { supabaseAdmin } from '../../lib/supabase';
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
@@ -19,35 +26,97 @@ if (!anvandare) {
   return Astro.redirect('/personal');
 }
 
+function hamtaRollFranAuthUser(user: { app_metadata?: Record<string, unknown> | null }): PortalRole {
+  return normalizePortalRole(user.app_metadata?.role);
+}
+
+function sorteraPersonal<T extends { roll: PortalRole; email?: string | null }>(lista: T[]): T[] {
+  return lista.sort((a, b) => {
+    const rankDiff = portalRoleRank(b.roll) - portalRoleRank(a.roll);
+    if (rankDiff !== 0) return rankDiff;
+    return (a.email || '').localeCompare(b.email || '', 'sv');
+  });
+}
+
+async function loggaAdminAtgard(
+  handelseTyp: string,
+  detaljer: Record<string, unknown>
+) {
+  if (!anvandare) return;
+  try {
+    await supabaseAdmin.from('audit_logg').insert({
+      anvandare_id: anvandare.id,
+      anvandare_email: anvandare.email,
+      handelse_typ: handelseTyp,
+      detaljer,
+      ip_adress: Astro.request.headers.get('x-forwarded-for')
+        || Astro.request.headers.get('x-real-ip')
+        || 'unknown',
+      user_agent: Astro.request.headers.get('user-agent') || 'unknown'
+    });
+  } catch (error) {
+    console.error(`Kunde inte logga adminåtgärd ${handelseTyp}:`, error);
+  }
+}
+
+const arAdmin = harMinstPortalRoll(anvandare.roll, 'admin');
+const arSuperadmin = anvandare.roll === 'superadmin';
+
+type PersonalPost = {
+  id: string;
+  email: string | undefined;
+  skapad: string;
+  mobilnummer: string | null;
+  vill_ha_notifikationer: boolean;
+  avatar_url: string | null;
+  roll: PortalRole;
+  ar_nuvarande: boolean;
+};
+
+type LakarePost = {
+  id: string;
+  namn: string;
+  kortnamn: string | null;
+  aktiv: boolean;
+};
+
 // Hämta alla profiler med notifikationsinställningar
-let personal: any[] = [];
+let personal: PersonalPost[] = [];
 let personalError = '';
 
 try {
-  // Hämta alla användare från auth och deras profiler
-  const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
-  
-  if (authError) {
-    personalError = 'Kunde inte hämta användare';
-    console.error('Auth error:', authError);
-  } else {
-    // Hämta profiler
-    const { data: profiles } = await supabaseAdmin
-      .from('profiles')
-      .select('*');
+  if (arAdmin) {
+    // Hämta alla användare från auth och deras profiler
+    const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
     
-    // Kombinera
-    personal = (authUsers?.users || []).map(user => {
-      const profil = profiles?.find(p => p.id === user.id);
-      return {
-        id: user.id,
-        email: user.email,
-        skapad: user.created_at,
-        mobilnummer: profil?.mobilnummer || null,
-        vill_ha_notifikationer: profil?.vill_ha_notifikationer || false,
-        avatar_url: profil?.avatar_url || null
-      };
-    });
+    if (authError) {
+      personalError = 'Kunde inte hämta användare';
+      console.error('Auth error:', authError);
+    } else {
+      // Hämta profiler
+      const { data: profiles } = await supabaseAdmin
+        .from('profiles')
+        .select('*');
+      
+      // Kombinera
+      personal = (authUsers?.users || []).map(user => {
+        const profil = profiles?.find(p => p.id === user.id);
+        const roll = hamtaRollFranAuthUser(user);
+        return {
+          id: user.id,
+          email: user.email,
+          skapad: user.created_at,
+          mobilnummer: profil?.mobilnummer || null,
+          vill_ha_notifikationer: profil?.vill_ha_notifikationer || false,
+          avatar_url: profil?.avatar_url || null,
+          roll,
+          ar_nuvarande: user.id === anvandare.id
+        };
+      });
+      sorteraPersonal(personal);
+    }
+  } else {
+    personalError = 'Endast administratör kan hantera användare och roller.';
   }
 } catch (e) {
   console.error('Error fetching personal:', e);
@@ -55,19 +124,23 @@ try {
 }
 
 // Hämta läkare
-let lakare: any[] = [];
+let lakare: LakarePost[] = [];
 let lakareError = '';
 
 try {
-  const { data, error } = await supabaseAdmin
-    .from('lakare')
-    .select('*')
-    .order('namn');
-  
-  if (error) {
-    lakareError = error.message;
+  if (arAdmin) {
+    const { data, error } = await supabaseAdmin
+      .from('lakare')
+      .select('*')
+      .order('namn');
+    
+    if (error) {
+      lakareError = error.message;
+    } else {
+      lakare = data || [];
+    }
   } else {
-    lakare = data || [];
+    lakareError = 'Endast administratör kan hantera läkare.';
   }
 } catch (e) {
   lakareError = 'Kunde inte hämta läkare';
@@ -79,6 +152,10 @@ let meddelandeTyp: 'success' | 'error' = 'success';
 
 if (Astro.request.method === 'POST') {
   try {
+    if (!arAdmin) {
+      meddelande = 'Endast administratör kan göra ändringar här.';
+      meddelandeTyp = 'error';
+    } else {
     const formData = await Astro.request.formData();
     const action = formData.get('action');
 
@@ -86,6 +163,8 @@ if (Astro.request.method === 'POST') {
     if (action === 'skapa_anvandare') {
       const email = formData.get('email')?.toString().trim();
       const password = formData.get('password')?.toString();
+      const onskadRoll = normalizePortalRole(formData.get('roll'));
+      const roll = arSuperadmin ? onskadRoll : 'personal';
 
       if (!email || !password) {
         meddelande = 'E-post och lösenord krävs';
@@ -97,15 +176,20 @@ if (Astro.request.method === 'POST') {
         const { data, error } = await supabaseAdmin.auth.admin.createUser({
           email,
           password,
-          email_confirm: true // Bekräfta direkt utan email-verifiering
+          email_confirm: true,
+          app_metadata: { role: roll }
         });
 
         if (error) {
           meddelande = `Kunde inte skapa användare: ${error.message}`;
           meddelandeTyp = 'error';
         } else {
-          meddelande = `✅ Användare ${email} skapad!`;
+          meddelande = `✅ Användare ${email} skapad som ${portalRoleLabel(roll).toLowerCase()}!`;
           meddelandeTyp = 'success';
+          await loggaAdminAtgard('ANVANDARE_SKAPAD', {
+            ny_anvandare_email: email,
+            roll
+          });
           
           // Lägg till i personal-listan
           personal.push({
@@ -113,7 +197,102 @@ if (Astro.request.method === 'POST') {
             email: data.user.email,
             skapad: data.user.created_at,
             mobilnummer: null,
-            vill_ha_notifikationer: false
+            vill_ha_notifikationer: false,
+            avatar_url: null,
+            roll,
+            ar_nuvarande: false
+          });
+          sorteraPersonal(personal);
+        }
+      }
+    }
+
+    // === ÄNDRA ANVÄNDARROLL ===
+    if (action === 'andra_roll') {
+      if (!arSuperadmin) {
+        meddelande = 'Endast superadmin kan ändra användarroller.';
+        meddelandeTyp = 'error';
+      } else {
+      const userId = formData.get('user_id')?.toString();
+      const nyRoll = normalizePortalRole(formData.get('ny_roll'));
+      const nuvarandeRoll = normalizePortalRole(formData.get('nuvarande_roll'));
+      const targetUser = personal.find((p) => p.id === userId);
+      const antalSuperadmins = personal.filter((p) => p.roll === 'superadmin').length;
+
+      if (!userId || !targetUser) {
+        meddelande = 'Kunde inte hitta användaren.';
+        meddelandeTyp = 'error';
+      } else if (userId === anvandare.id) {
+        meddelande = 'Din egen roll ändras inte här. Använd en annan superadmin eller Supabase Dashboard vid behov.';
+        meddelandeTyp = 'error';
+      } else if (nuvarandeRoll === nyRoll) {
+        meddelande = 'Ingen rolländring att spara.';
+        meddelandeTyp = 'error';
+      } else if (nuvarandeRoll === 'superadmin' && nyRoll !== 'superadmin' && antalSuperadmins <= 1) {
+        meddelande = 'Det måste alltid finnas minst en superadmin.';
+        meddelandeTyp = 'error';
+      } else {
+        const { data: authUserData, error: authUserError } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+        if (authUserError || !authUserData?.user) {
+          meddelande = `Kunde inte läsa användaren: ${authUserError?.message || 'Okänt fel'}`;
+          meddelandeTyp = 'error';
+        } else {
+          const existingAppMetadata = authUserData.user.app_metadata && typeof authUserData.user.app_metadata === 'object'
+            ? authUserData.user.app_metadata
+            : {};
+
+          const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+            app_metadata: {
+              ...existingAppMetadata,
+              role: nyRoll
+            }
+          });
+
+          if (error) {
+            meddelande = `Kunde inte uppdatera roll: ${error.message}`;
+            meddelandeTyp = 'error';
+          } else {
+            meddelande = `✅ ${targetUser.email} är nu ${portalRoleLabel(nyRoll).toLowerCase()}.`;
+            meddelandeTyp = 'success';
+            await loggaAdminAtgard('ROLL_ANDRAD', {
+              target_user_id: userId,
+              target_user_email: targetUser.email,
+              tidigare_roll: nuvarandeRoll,
+              ny_roll: nyRoll
+            });
+
+            const idx = personal.findIndex((p) => p.id === userId);
+            if (idx >= 0) {
+              personal[idx].roll = nyRoll;
+            }
+            sorteraPersonal(personal);
+          }
+        }
+      }
+      }
+    }
+
+    // === SKICKA ÅTERSTÄLLNINGSLÄNK ===
+    if (action === 'skicka_aterstallningslank') {
+      const userId = formData.get('user_id')?.toString();
+      const targetUser = personal.find((p) => p.id === userId);
+
+      if (!userId || !targetUser || !targetUser.email) {
+        meddelande = 'Kunde inte hitta användaren eller e-postadress saknas.';
+        meddelandeTyp = 'error';
+      } else {
+        const result = await skickaAterställningslank(targetUser.email);
+
+        if (!result.success) {
+          meddelande = result.error || 'Kunde inte skicka återställningslänk.';
+          meddelandeTyp = 'error';
+        } else {
+          meddelande = `✅ Återställningslänk skickad till ${targetUser.email}.`;
+          meddelandeTyp = 'success';
+          await loggaAdminAtgard('LOSENORD_ATERSTALLNING_SKICKAD', {
+            target_user_id: userId,
+            target_user_email: targetUser.email
           });
         }
       }
@@ -142,6 +321,7 @@ if (Astro.request.method === 'POST') {
         } else {
           meddelande = `✅ Läkare "${namn}" tillagd!`;
           meddelandeTyp = 'success';
+          await loggaAdminAtgard('LAKARE_SKAPAD', { namn, kortnamn: kortnamn || null });
           
           // Hämta uppdaterad lista
           const { data } = await supabaseAdmin
@@ -169,6 +349,7 @@ if (Astro.request.method === 'POST') {
         } else {
           meddelande = '✅ Läkare borttagen!';
           meddelandeTyp = 'success';
+          await loggaAdminAtgard('LAKARE_BORTTAGEN', { lakare_id: lakareId });
           lakare = lakare.filter(l => l.id !== lakareId);
         }
       }
@@ -191,6 +372,10 @@ if (Astro.request.method === 'POST') {
         } else {
           meddelande = nuvarandeAktiv ? '⏸️ Läkare inaktiverad' : '✅ Läkare aktiverad';
           meddelandeTyp = 'success';
+          await loggaAdminAtgard('LAKARE_AKTIV_STATUS_ANDRAD', {
+            lakare_id: lakareId,
+            aktiv: !nuvarandeAktiv
+          });
           
           // Uppdatera lokalt
           const idx = lakare.findIndex(l => l.id === lakareId);
@@ -199,6 +384,7 @@ if (Astro.request.method === 'POST') {
           }
         }
       }
+    }
     }
 
   } catch (e) {
@@ -227,7 +413,7 @@ function formateraDatum(datum: string): string {
 }
 ---
 
-<BaseLayout title="Administration | Personalportal" description="Hantera användare och läkare">
+<BaseLayout title="Administration | Personalportal" description="Hantera användare, roller, lösenordsåterställning och läkare">
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b">
@@ -270,6 +456,25 @@ function formateraDatum(datum: string): string {
         </div>
       )}
 
+      {!arAdmin ? (
+        <section class="bg-white rounded-xl shadow-sm border overflow-hidden">
+          <div class="bg-amber-500 px-6 py-4">
+            <h2 class="text-xl font-semibold text-white">🔒 Administratör krävs</h2>
+            <p class="text-amber-50 text-sm">Den här sidan är avsedd för användar- och rollhantering.</p>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-gray-700">
+              Din nuvarande inloggning har rollen <strong>{portalRoleLabel(anvandare.roll)}</strong>. För att kunna skapa användare,
+              ändra roller eller hantera läkare behöver kontot ha admin-roll i Supabase Auth.
+            </p>
+            <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              Första superadmin sätts säkrast i Supabase Dashboard genom att lägga <code>{`"role": "superadmin"`}</code> i
+              användarens <code>app_metadata</code>. Därefter kan superadmin hantera roller här i adminpanelen.
+            </div>
+          </div>
+        </section>
+      ) : (
+
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <!-- ANVÄNDARE -->
@@ -310,6 +515,25 @@ function formateraDatum(datum: string): string {
                   />
                   <p class="text-xs text-gray-500 mt-1">Användaren kan byta lösenord senare</p>
                 </div>
+
+                {arSuperadmin ? (
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Roll</label>
+                    <select
+                      name="roll"
+                      class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 bg-white"
+                    >
+                      <option value="personal" selected>Personal</option>
+                      <option value="admin">Administratör</option>
+                      <option value="superadmin">Superadmin</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Roll lagras i Supabase Auth och styr åtkomst i hela personalportalen.</p>
+                  </div>
+                ) : (
+                  <div class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm text-sky-800">
+                    Nya användare skapas som <strong>Personal</strong>. Endast superadmin kan tilldela rollerna administratör eller superadmin.
+                  </div>
+                )}
                 
                 <button 
                   type="submit"
@@ -366,6 +590,22 @@ function formateraDatum(datum: string): string {
                             <span class="ml-2 text-green-600">🔔</span>
                           )}
                         </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                          <span class={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ${
+                            p.roll === 'superadmin'
+                              ? 'bg-purple-100 text-purple-700'
+                              : p.roll === 'admin'
+                              ? 'bg-indigo-100 text-indigo-700'
+                              : 'bg-gray-200 text-gray-700'
+                          }`}>
+                            {portalRoleLabel(p.roll)}
+                          </span>
+                          {p.ar_nuvarande && (
+                            <span class="inline-flex items-center rounded-full bg-sky-100 px-2 py-0.5 font-medium text-sky-700">
+                              Du
+                            </span>
+                          )}
+                        </div>
                       </div>
                       
                       {/* Datum */}
@@ -375,6 +615,47 @@ function formateraDatum(datum: string): string {
                     </div>
                     {/* Upload status */}
                     <div class="upload-status hidden mt-2 text-xs"></div>
+
+                    {!p.ar_nuvarande && arSuperadmin ? (
+                      <form method="POST" class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <input type="hidden" name="action" value="andra_roll" />
+                        <input type="hidden" name="user_id" value={p.id} />
+                        <input type="hidden" name="nuvarande_roll" value={p.roll} />
+                        <select
+                          name="ny_roll"
+                          class="w-full sm:w-48 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 bg-white text-sm"
+                        >
+                          <option value="personal" selected={p.roll === 'personal'}>Personal</option>
+                          <option value="admin" selected={p.roll === 'admin'}>Administratör</option>
+                          <option value="superadmin" selected={p.roll === 'superadmin'}>Superadmin</option>
+                        </select>
+                        <button
+                          type="submit"
+                          class="px-3 py-2 bg-white border border-sky-200 text-sky-700 text-sm font-medium rounded-lg hover:bg-sky-50 transition-colors"
+                        >
+                          Uppdatera roll
+                        </button>
+                      </form>
+                    ) : p.ar_nuvarande ? (
+                      <p class="mt-3 text-xs text-gray-500">
+                        Din egen roll ändras inte här för att minska risken att du låser ute dig själv.
+                      </p>
+                    ) : (
+                      <p class="mt-3 text-xs text-gray-500">
+                        Endast superadmin kan ändra användarroller.
+                      </p>
+                    )}
+
+                    <form method="POST" class="mt-2">
+                      <input type="hidden" name="action" value="skicka_aterstallningslank" />
+                      <input type="hidden" name="user_id" value={p.id} />
+                      <button
+                        type="submit"
+                        class="px-3 py-2 bg-white border border-amber-200 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-50 transition-colors"
+                      >
+                        Skicka återställningslänk
+                      </button>
+                    </form>
                   </div>
                 ))}
               </div>
@@ -504,11 +785,16 @@ function formateraDatum(datum: string): string {
         <h3 class="font-medium text-amber-900 mb-2">💡 Tips</h3>
         <ul class="text-sm text-amber-800 space-y-1 list-disc list-inside">
           <li>Nya användare kan logga in direkt med e-post och det tillfälliga lösenordet</li>
+          <li>Roller lagras i Supabase Auth (<code>app_metadata.role</code>) och hanteras här för långsiktig säkerhet</li>
+          <li><strong>Superadmin</strong> hanterar roller. Vanlig administratör kan fortsätta arbeta med användare, återställningslänkar och läkare.</li>
+          <li>Det måste alltid finnas minst en superadmin i systemet</li>
+          <li>Knappen <strong>Skicka återställningslänk</strong> använder det vanliga Supabase-flödet för glömt lösenord</li>
           <li>Be användare gå till <strong>Min profil</strong> för att lägga till sitt mobilnummer och aktivera notifikationer</li>
           <li>Läkare som är inaktiverade visas inte i Kort Varsel-dropdown:en</li>
           <li>Hovra över en profilbild och klicka på 📷 för att ladda upp en ny bild</li>
         </ul>
       </div>
+      )}
       
     </main>
   </div>

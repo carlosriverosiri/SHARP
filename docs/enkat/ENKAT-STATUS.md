@@ -11,15 +11,18 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 #### Migreringar
 - `supabase/migrations/023-enkat.sql`
 - `supabase/migrations/024-profile-vardgivare.sql`
+- `supabase/migrations/025-enkat-installningar.sql`
 
 #### Backend
 - `src/lib/enkat-booking-classifier.ts`
 - `src/lib/enkat-csv-parser.ts`
+- `src/lib/enkat-follow-up-rules.ts`
 - `src/lib/enkat-sms.ts`
 - `src/lib/enkat-queue.ts`
 
 #### API-routes
 - `src/pages/api/enkat/upload.ts`
+- `src/pages/api/enkat/settings.ts`
 - `src/pages/api/enkat/send.ts`
 - `src/pages/api/enkat/remind.ts`
 - `src/pages/api/enkat/submit.ts`
@@ -42,6 +45,9 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - import av CSV (semikolon, tab eller komma -- auto-detect)
 - stöd för filer i Latin-1/Windows-1252 (vanligt vid export från journalsystem)
 - validering av kärnkolumner
+- standardmall för bokningstyper som aldrig ska följas upp
+- automatisk bortsortering av bokningstyper som matchar standardmallen
+- snabbval med flera förinställningar för olika mottagningsflöden
 - preview med felrader och dubletthantering
 - klassificering av bokningstyper
 - kampanjskapande
@@ -63,6 +69,7 @@ För att systemet ska fungera fullt ut måste följande vara körda i Supabase:
 
 1. `023-enkat.sql`
 2. `024-profile-vardgivare.sql`
+3. `025-enkat-installningar.sql`
 
 Dessutom måste användaren välja sitt vårdgivarnamn i:
 
@@ -117,3 +124,5 @@ Om du öppnar projektet på en ny dator ska du tänka:
 - profilkoppling måste vara satt
 - `/personal/enkat` är huvudsidan
 - nästa fokus är testning och polish, inte grundarkitektur
+- previewn använder nu en regelmall för att sortera bort telefon/admin/ssk-liknande bokningstyper innan urvalet visas
+- den gemensamma standardmallen för auto-exkludering sparas nu i Supabase och kan uppdateras av admin från `/personal/enkat`

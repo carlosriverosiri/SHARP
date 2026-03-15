@@ -1,6 +1,12 @@
 import type { APIRoute } from 'astro';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { parseEnkatCsv } from '../../../lib/enkat-csv-parser';
+import {
+  formatExcludedBookingTypePatterns,
+  getDefaultExcludedBookingTypePatternText,
+  parseExcludedBookingTypePatterns
+} from '../../../lib/enkat-follow-up-rules';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
 
@@ -9,6 +15,25 @@ function json(data: unknown, status = 200) {
     status,
     headers: { 'Content-Type': 'application/json' }
   });
+}
+
+async function getSharedExcludedBookingTypePatternText() {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('enkat_installningar')
+      .select('exkludera_bokningstyper')
+      .eq('id', 'standard')
+      .maybeSingle();
+
+    if (error || !data) {
+      return getDefaultExcludedBookingTypePatternText();
+    }
+
+    const storedText = formatExcludedBookingTypePatterns(data.exkludera_bokningstyper);
+    return storedText;
+  } catch {
+    return getDefaultExcludedBookingTypePatternText();
+  }
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -24,7 +49,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const formData = await request.formData();
     const file = formData.get('file');
-    const globalBookingType = String(formData.get('globalBookingType') || '').trim();
+    const hasSubmittedPatterns = formData.has('excludedBookingTypePatterns');
+    const submittedPatternText = String(formData.get('excludedBookingTypePatterns') ?? '').trim();
+    const patternText = hasSubmittedPatterns ? submittedPatternText : await getSharedExcludedBookingTypePatternText();
+    const excludedBookingTypePatterns = parseExcludedBookingTypePatterns(
+      patternText
+    );
 
     if (!(file instanceof File)) {
       return json({ success: false, error: 'Ingen fil uppladdad' }, 400);
@@ -45,7 +75,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       text = new TextDecoder('latin1').decode(rawBytes);
     }
 
-    const result = parseEnkatCsv(text, globalBookingType);
+    const result = parseEnkatCsv(text, { excludedBookingTypePatterns });
 
     if (result.totalRows > 500) {
       return json({
@@ -60,6 +90,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       data: {
         fileName: file.name,
         uploadedBy: anvandare.email,
+        excludedBookingTypePatterns,
         ...result
       }
     });

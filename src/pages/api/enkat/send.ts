@@ -46,7 +46,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const body = await request.json();
     const campaignName = String(body.campaignName || '').trim() || null;
-    const globalBookingType = String(body.globalBookingType || '').trim() || null;
     const smsTemplate = String(body.smsTemplate || '').trim() || null;
     const sendNow = body.sendNow !== false;
     const scheduledSendAt = body.scheduledSendAt ? String(body.scheduledSendAt) : null;
@@ -68,7 +67,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         total_giltiga: rows.length,
         total_skickade: 0,
         total_svar: 0,
-        global_bokningstyp: globalBookingType,
+        global_bokningstyp: null,
         sms_mall: smsTemplate,
         skicka_paminnelse: sendReminder,
         paminnelse_efter_timmar: reminderAfterHours,

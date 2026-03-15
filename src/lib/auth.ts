@@ -10,6 +10,7 @@
 
 import type { AstroCookies } from 'astro';
 import { supabase, loggaHandelse, supabaseKonfigurerad } from './supabase';
+import { harMinstPortalRoll, normalizePortalRole, type PortalRole } from './portal-roles';
 
 // ============================================
 // KONFIGURATION
@@ -60,7 +61,7 @@ function accessTokenIsValid(accessToken: string, leewaySeconds = 60): boolean {
 export interface Anvandare {
   id: string;
   email: string;
-  roll: 'admin' | 'personal';
+  roll: PortalRole;
 }
 
 // ============================================
@@ -104,7 +105,7 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return {
       id: payload.sub,
       email: payload.email,
-      roll: payload.app_metadata?.role === 'admin' ? 'admin' : 'personal'
+      roll: normalizePortalRole(payload.app_metadata?.role)
     };
   }
 
@@ -115,7 +116,7 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return {
       id: user.id,
       email: user.email || '',
-      roll: user.app_metadata?.role === 'admin' ? 'admin' : 'personal'
+      roll: normalizePortalRole(user.app_metadata?.role)
     };
   } catch {
     return null;
@@ -416,7 +417,7 @@ export function arSupabaseAktiverat(): boolean {
  */
 export async function arAdmin(cookies: AstroCookies): Promise<boolean> {
   const user = await hamtaAnvandare(cookies);
-  return user?.roll === 'admin';
+  return user ? harMinstPortalRoll(user.roll, 'admin') : false;
 }
 
 // Exportera äldre funktioner för bakåtkompatibilitet

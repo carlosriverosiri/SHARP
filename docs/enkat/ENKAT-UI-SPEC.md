@@ -117,8 +117,12 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
 
 - en sammanhållen uppladdningsyta som stödjer både drag & drop och klick för filval
 - tydlig visning av vald fil i samma block
-- informationsruta om förväntat format
-- fallback-fält för `Bokningstyp`
+- en sidomodul med standardmall för bokningstyper som aldrig ska följas upp
+- snabbval med vanliga förinställningar, t.ex. `Även återbesök`, `Utan operation` och `Bara nybesök/remiss`
+- återställ-knapp för att gå tillbaka till senast sparade gemensamma standard
+- admin-knapp för att spara mallen gemensamt i Supabase
+- tydlig regel att rader med tom `Bokningstyp` inte följs upp
+- automatisk bortsortering av bokningstyper som matchar standardmallen
 
 ### Information som ska visas
 
@@ -128,12 +132,15 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
   - `Vårdgivare`
   - `Datum`
 - vilka som är valfria:
-  - `Bokningstyp`
   - `Starttid`
+- särskild regel:
+  - `Bokningstyp` krävs för uppföljning
+  - vissa bokningstyper sorteras bort automatiskt via standardmallen
+  - alla användare kan testa lokala ändringar, men endast admin kan spara den gemensamma mallen
 
 ### CTA
 
-- `Ladda och förhandsgranska`
+- `Filtrera och förhandsgranska`
 
 ### Felvisning
 
@@ -161,6 +168,7 @@ Visa vad systemet tänker göra innan något skickas.
 - antal giltiga rader
 - antal dubletter
 - antal ogiltiga rader
+- antal automatiskt bortsorterade rader
 - antal vårdgivare i filen
 
 ### Tabell: valda rader
@@ -200,6 +208,14 @@ Exempel:
 
 - `Mobiltelefon saknas`
 - `Ogiltigt datumformat`
+
+### Panel: automatiskt bortsorterade bokningstyper
+
+Visar:
+
+- bokningstyp råtext
+- antal bortsorterade rader
+- vilken regel i standardmallen som matchade
 
 ### Viktig designprincip
 

@@ -22,7 +22,7 @@ declare namespace App {
     user?: {
       id: string;
       email: string;
-      roll: 'admin' | 'personal';
+      roll: 'admin' | 'personal' | 'superadmin';
     };
   }
 }

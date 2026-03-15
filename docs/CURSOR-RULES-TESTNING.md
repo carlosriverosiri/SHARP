@@ -25,6 +25,7 @@ Kontrollera att följande finns i projektet:
 - `.cursor/rules/ai-council-architecture.mdc`
 - `.cursor/rules/documentation-sync.mdc`
 - `.cursor/rules/assistant-workflows.mdc`
+- `.cursor/rules/multimodal-debugging.mdc`
 - `.cursor/rules/git-workflow.mdc`
 
 Samt:
@@ -225,6 +226,31 @@ COUNCIL: Hur bör jag förbättra arbetsflödet i enkätsystemet utan att göra 
 ### Rätt beteende
 
 Modellen bör svara som ett litet råd eller flera perspektiv med en kort syntes, inte bara ge ett platt standardsvar.
+
+---
+
+## Bonus: test av screenshot- och dikteringsregeln
+
+Det här testet är bra om du ofta arbetar med bifogade bilder eller dikterade felbeskrivningar.
+
+### Prompt att klistra in
+
+```text
+Jag bifogar en screenshot av ett UI-problem. Hjälp mig analysera vad som ser fel ut visuellt, koppla det till projektets befintliga designmönster och hitta den mest sannolika filen att ändra.
+```
+
+### Det du testar
+
+- `multimodal-debugging.mdc`
+
+### Rätt beteende
+
+Modellen bör:
+
+- titta på spacing, alignment, färger, kontrast och border-radius när det är relevant
+- använda visuella ledtrådar och projektkontext för att hitta sannolik fil
+- vara tolerant mot dikterade småfel i texten
+- fråga kort om bilden eller instruktionen är för tvetydig för att ge en säker fix
 
 ---
 

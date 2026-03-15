@@ -39,6 +39,8 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 - Cookie‑baserad session (Supabase access/refresh tokens).
 - Roll‑baserat (admin/personal) via app metadata.
 - SSR‑sidor kräver inloggning med `arInloggad(...)`.
+- `/personal/admin` hanterar användare och roller via Supabase Auth Admin API.
+- Återställningslänk för lösenord använder Supabase `resetPasswordForEmail(...)` och samma self-service-sida för användaren.
 - Säkerhetsheaders via Netlify.
 
 ## AI‑plattform (AI Council)

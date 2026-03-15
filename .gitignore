@@ -41,5 +41,8 @@ Thumbs.db
 # Editor backup files
 *~
 
+# Local Codex CLI logs
+.codex*.log
+
 # Local Netlify folder
 .netlify

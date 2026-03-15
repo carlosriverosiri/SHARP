@@ -26,6 +26,7 @@
 ## 3) Aktuella endpoints
 
 - `POST /api/enkat/upload` - parse + validera CSV och returnera preview
+- `GET/POST /api/enkat/settings` - läs/spara gemensam standardmall för auto-exkludering
 - `POST /api/enkat/send` - skapa kampanj + utskick
 - `POST /api/enkat/remind` - skicka påminnelse till obesvarade
 - `POST /api/enkat/submit` - publik submit via kod
@@ -41,6 +42,7 @@
 - `enkat_utskick`
 - `enkat_svar`
 - `enkat_delivery_log`
+- `enkat_installningar`
 
 Nyckelidéer:
 
@@ -54,7 +56,9 @@ Nyckelidéer:
 ## 5) Affärsregler
 
 - Importen ska tåla vanliga vårdexporter (separator + teckenkodning).
-- Deduplicering prioriterar nybesök/remiss över återbesök.
+- Bokningstyper som matchar standardmallen för "följ aldrig upp" ska sorteras bort innan preview/deduplicering.
+- Den gemensamma standardmallen lagras i Supabase och kan uppdateras av administratör.
+- Deduplicering prioriterar nybesök/remiss över återbesök bland de rader som återstår efter filtrering.
 - Max en påminnelse per utskick.
 - `submit` är publik men strikt validerad (kod, giltighet, redan använd).
 - Dashboard ska skydda integritet vid lågt underlag.
@@ -65,6 +69,9 @@ Nyckelidéer:
 ## 6) Vad som redan fungerar (V1-läge)
 
 - CSV-import + preview med felrader/dubletter
+- standardmall för bokningstyper som automatiskt sorteras bort
+- delad Supabase-lagrad standardmall för auto-exkludering
+- snabbval med presetmallar för olika uppföljningsscenarier
 - klassificering av bokningstyper
 - kampanjskapande + första utskick
 - manuell påminnelse

@@ -117,6 +117,7 @@ Diagnosinformation med referenser och FAQ.
 - Om oss → Team, Kontakt, **Admin** (nytt!)
 
 **Admin-undermeny:**
+- Administration
 - Senast redigerade
 - Obesvarade frågor
 - Länkar & SMS
@@ -130,6 +131,15 @@ Diagnosinformation med referenser och FAQ.
 - `MedicinskGranskad.astro` - Granskningsblock
 - `SEO.astro` - SEO-metablock
 - `AuthorCard.astro` - Författarkort
+
+---
+
+## 🔐 Personalportal & roller
+
+- `/personal/admin` är adminpanel för användare, roller, lösenordsåterställning och läkare.
+- Roller lagras i Supabase Auth `app_metadata.role`.
+- `admin` används för känsligare verktyg och gemensamma inställningar.
+- `personal` är standardroll för vanliga användare.
 
 ---
 

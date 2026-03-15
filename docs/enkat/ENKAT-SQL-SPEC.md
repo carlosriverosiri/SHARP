@@ -1,4 +1,4 @@
-# Patientupplevelse via SMS: SQL-spec för `009-enkat.sql`
+# Patientupplevelse via SMS: SQL-spec för enkätmigreringar
 
 > Databasspecifikation för första versionen av enkätmodulen i SHARP.
 >
@@ -8,7 +8,7 @@
 
 ## 1. Mål med migreringen
 
-Migreringen `supabase/migrations/009-enkat.sql` ska skapa den databasgrund som krävs för att:
+Migreringarna `supabase/migrations/023-enkat.sql` och `supabase/migrations/025-enkat-installningar.sql` ska skapa den databasgrund som krävs för att:
 
 - skapa enkätkampanjer
 - hantera importerade utskick
@@ -44,6 +44,10 @@ enkat_delivery_log
 enkat_utskick
     ↓
 enkat_delivery_log
+
+auth.users
+    ↓
+enkat_installningar
 ```
 
 ### Designprincip
@@ -52,6 +56,31 @@ enkat_delivery_log
 - `enkat_utskick` beskriver en unik patientlänk och utskicksrad
 - `enkat_svar` beskriver ett faktiskt svar
 - `enkat_delivery_log` beskriver varje SMS-försök
+- `enkat_installningar` beskriver den gemensamma klinikmallen för auto-exkludering av bokningstyper
+
+---
+
+## 2A. Tabell: `enkat_installningar`
+
+### Syfte
+
+Lagrar en gemensam standardmall för bokningstyper som aldrig ska följas upp i patientupplevelseflödet.
+
+### Kolumner
+
+| Kolumn | Typ | Null | Beskrivning |
+|---|---|---|---|
+| `id` | TEXT | Nej | Singleton-id, normalt `standard` |
+| `exkludera_bokningstyper` | TEXT[] | Nej | Lista med regler/mönster som ska sorteras bort före preview |
+| `updated_by` | UUID | Ja | FK till `auth.users(id)` för senaste sparning |
+| `created_at` | TIMESTAMPTZ | Nej | Skapad |
+| `updated_at` | TIMESTAMPTZ | Nej | Senast uppdaterad |
+
+### Designregel
+
+- tabellen ska normalt bara innehålla en rad
+- klientåtkomst bör gå via server-side API så att endast admin kan spara
+- om raden saknas ska applikationen kunna falla tillbaka till inbyggda standardvärden
 
 ---
 
@@ -76,7 +105,7 @@ Representerar en administrativ kampanj där en CSV importerats och ett antal pat
 | `total_ogiltiga` | INTEGER | Nej | Antal felrader |
 | `total_skickade` | INTEGER | Nej | Antal faktiskt skickade första SMS |
 | `total_svar` | INTEGER | Nej | Antal svarade enkäter |
-| `global_bokningstyp` | TEXT | Ja | Fallback från UI |
+| `global_bokningstyp` | TEXT | Ja | Legacyfält från tidigare UI-flöde, används inte längre i aktiv import |
 | `sms_mall` | TEXT | Ja | Använd SMS-mall |
 | `skicka_paminnelse` | BOOLEAN | Nej | Om påminnelse ska användas |
 | `paminnelse_efter_timmar` | INTEGER | Ja | T.ex. 48 |

@@ -6,6 +6,7 @@ import {
   normalizeSwedishText,
   type NormalizedBookingType
 } from './enkat-booking-classifier';
+import { findExcludedBookingTypePattern } from './enkat-follow-up-rules';
 
 type RawCsvRow = Record<string, string>;
 
@@ -34,11 +35,20 @@ export type EnkatValidationError = {
   message: string;
 };
 
+export type EnkatAutoExcludedGroup = {
+  bookingTypeRaw: string;
+  matchedRule: string;
+  count: number;
+  rowIndexes: number[];
+};
+
 export type EnkatParseResult = {
   totalRows: number;
   validRows: number;
   invalidRows: number;
   duplicateRows: number;
+  autoExcludedRows: number;
+  autoExcludedBookingTypes: EnkatAutoExcludedGroup[];
   selectedRows: EnkatPreviewRow[];
   duplicates: EnkatDuplicateGroup[];
   errors: EnkatValidationError[];
@@ -144,8 +154,12 @@ function countMappedHeaders(text: string, delimiter: string): number {
   return Object.keys(mapHeaders(headers)).length;
 }
 
-export function parseEnkatCsv(csvText: string, globalBookingType?: string): EnkatParseResult {
+export function parseEnkatCsv(
+  csvText: string,
+  options?: { excludedBookingTypePatterns?: string[] }
+): EnkatParseResult {
   const cleanText = stripBom(csvText);
+  const excludedBookingTypePatterns = options?.excludedBookingTypePatterns || [];
 
   const semicolonScore = countMappedHeaders(cleanText, ';');
   const tabScore = countMappedHeaders(cleanText, '\t');
@@ -182,6 +196,8 @@ export function parseEnkatCsv(csvText: string, globalBookingType?: string): Enka
       validRows: 0,
       invalidRows: errors.length,
       duplicateRows: 0,
+      autoExcludedRows: 0,
+      autoExcludedBookingTypes: [],
       selectedRows: [],
       duplicates: [],
       errors
@@ -189,15 +205,41 @@ export function parseEnkatCsv(csvText: string, globalBookingType?: string): Enka
   }
 
   const selectedCandidates: EnkatPreviewRow[] = [];
+  const autoExcludedGroups = new Map<string, EnkatAutoExcludedGroup>();
 
   parsed.data.forEach((row, index) => {
     const rowIndex = index + 2;
+    const bookingTypeRaw = cleanCell(row, headerMap.bokningstyp);
+    if (!bookingTypeRaw) {
+      errors.push({ rowIndex, field: 'Bokningstyp', message: 'Bokningstyp saknas. Raden följs inte upp.' });
+      return;
+    }
+
+    const matchedExcludedPattern = findExcludedBookingTypePattern(bookingTypeRaw, excludedBookingTypePatterns);
+    if (matchedExcludedPattern) {
+      const key = `${matchedExcludedPattern}__${bookingTypeRaw}`;
+      const existing = autoExcludedGroups.get(key);
+
+      if (existing) {
+        existing.count += 1;
+        existing.rowIndexes.push(rowIndex);
+      } else {
+        autoExcludedGroups.set(key, {
+          bookingTypeRaw,
+          matchedRule: matchedExcludedPattern,
+          count: 1,
+          rowIndexes: [rowIndex]
+        });
+      }
+
+      return;
+    }
+
     const patientId = cleanCell(row, headerMap.patientid);
     const providerName = cleanCell(row, headerMap.vardgivare);
     const normalizedPhone = normalizePhone(cleanCell(row, headerMap.mobiltelefon));
     const normalizedDate = normalizeDate(cleanCell(row, headerMap.datum));
     const visitStartTime = normalizeTime(cleanCell(row, headerMap.starttid));
-    const bookingTypeRaw = cleanCell(row, headerMap.bokningstyp) || globalBookingType?.trim() || '';
     const bookingTypeNormalized = classifyBookingType(bookingTypeRaw);
 
     if (!patientId) {
@@ -258,12 +300,19 @@ export function parseEnkatCsv(csvText: string, globalBookingType?: string): Enka
   }
 
   selectedRows.sort((a, b) => a.rowIndex - b.rowIndex);
+  const autoExcludedBookingTypes = Array.from(autoExcludedGroups.values()).sort((a, b) => {
+    const countDiff = b.count - a.count;
+    if (countDiff !== 0) return countDiff;
+    return a.bookingTypeRaw.localeCompare(b.bookingTypeRaw, 'sv');
+  });
 
   return {
     totalRows: parsed.data.length,
     validRows: selectedRows.length,
     invalidRows: [...new Set(errors.map((err) => err.rowIndex))].filter((value) => value !== 0).length,
     duplicateRows: duplicates.reduce((sum, item) => sum + item.discardedRowIndexes.length, 0),
+    autoExcludedRows: autoExcludedBookingTypes.reduce((sum, item) => sum + item.count, 0),
+    autoExcludedBookingTypes,
     selectedRows,
     duplicates,
     errors
