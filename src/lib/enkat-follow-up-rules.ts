@@ -9,40 +9,6 @@ export const DEFAULT_NEVER_FOLLOW_UP_BOOKING_PATTERNS = [
   'sll-tel'
 ] as const;
 
-export type ExcludedBookingTypePreset = {
-  id: string;
-  name: string;
-  description: string;
-  patterns: string[];
-};
-
-export const EXCLUDED_BOOKING_TYPE_PRESETS: ExcludedBookingTypePreset[] = [
-  {
-    id: 'aterbesok',
-    name: 'Även återbesök',
-    description: 'Tar bort telefon-, admin-, SSK- och suturtyper men behåller vanliga mottagningsbesök och återbesök.',
-    patterns: [...DEFAULT_NEVER_FOLLOW_UP_BOOKING_PATTERNS]
-  },
-  {
-    id: 'utan_operation',
-    name: 'Utan operation',
-    description: 'Som standardmallen men sorterar även bort operationstyper. Bra när enkät ska gälla mottagningsbesök.',
-    patterns: [...DEFAULT_NEVER_FOLLOW_UP_BOOKING_PATTERNS, 'operation']
-  },
-  {
-    id: 'nybesok_remiss',
-    name: 'Bara nybesök/remiss',
-    description: 'Sorterar bort operation och återbesöksliknande bokningar. Bra för ren nybesöks- och remissuppföljning.',
-    patterns: [...DEFAULT_NEVER_FOLLOW_UP_BOOKING_PATTERNS, 'operation', 'aterbesok', 'ab']
-  },
-  {
-    id: 'ingen',
-    name: 'Ingen auto-exkludering',
-    description: 'Behåll alla bokningstyper i previewn. Använd när du vill göra allt urval manuellt.',
-    patterns: []
-  }
-];
-
 function canonicalizeBookingRule(value: string): string {
   return normalizeSwedishText(value).replace(/[^a-z0-9]/g, '');
 }

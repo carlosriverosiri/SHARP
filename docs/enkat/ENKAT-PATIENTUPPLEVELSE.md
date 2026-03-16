@@ -96,8 +96,9 @@ b5kp8fc;+46707676108;Sophie Lantz;2026-02-02;KuralinkFysiskt;
 - varje rad verkar ha ett extra avslutande `;`
 - telefonnummer är redan i internationellt format `+467...`
 - datum är i ISO-format `YYYY-MM-DD`
-- de fasta kärnkolumnerna i verklig drift är `Patient-ID`, `Mobiltelefon`, `Vårdgivare` och `Datum`
+- de fasta kärnkolumnerna i verklig drift är `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`, `Bokningstyp` och `Diagnoser`
 - `Bokningstyp` kan ändras över tid och får inte hårdkodas som en sluten lista
+- rader utan värde i `Diagnoser` ska inte gå vidare till utskick
 - `Starttid` kan förekomma i exporten och bör stödjas när den finns
 
 ### Förväntade kolumner
@@ -108,7 +109,8 @@ b5kp8fc;+46707676108;Sophie Lantz;2026-02-02;KuralinkFysiskt;
 | `Mobiltelefon` | Ja | `+46707676108` | Svenskt mobilnummer |
 | `Vårdgivare` | Ja | `Sophie Lantz` | Den behandlande personen |
 | `Datum` | Ja | `2026-02-02` | Besöksdatum |
-| `Bokningstyp` | Nej | `3. REMISS AXEL` | Fri text från källsystem |
+| `Bokningstyp` | Ja | `3. REMISS AXEL` | Fri text från källsystem |
+| `Diagnoser` | Ja | `M75.1` | Tom cell betyder att raden ska sorteras bort före preview |
 | `Starttid` | Nej | `08:40` | Starttid för besöket, om tillgänglig i exporten |
 
 ### Parserkrav
@@ -123,7 +125,8 @@ Parsern ska:
 - validera datum
 - validera telefonnummer
 - inte ändra redan korrekta nummer i `+46`-format i onödan
-- hantera saknad `Bokningstyp` med fallback från UI
+- kräva `Bokningstyp` och `Diagnoser` som kolumner i filen
+- sortera bort rader där `Diagnoser` är tom
 - hantera saknad `Starttid` utan att flödet bryts
 - visa felrader tydligt i preview
 - vara tolerant mot mindre variationer i rubriker, whitespace och teckenkodning

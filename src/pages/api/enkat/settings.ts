@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
-    return json({ success: false, error: 'Endast administratör kan spara den gemensamma standardmallen.' }, 403);
+    return json({ success: false, error: 'Endast administratör kan spara listan över bokningstyper som aldrig ska följas upp.' }, 403);
   }
 
   try {
@@ -102,11 +102,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (isMissingSettingsTable(error)) {
         return json({
           success: false,
-          error: 'Tabellen enkat_installningar saknas. Kör migreringen 025-enkat-installningar.sql först.'
+        error: 'Tabellen enkat_installningar saknas. Kör migreringen 025-enkat-installningar.sql först.'
         }, 500);
       }
 
-      return json({ success: false, error: error.message || 'Kunde inte spara standardmallen.' }, 500);
+      return json({ success: false, error: error.message || 'Kunde inte spara listan.' }, 500);
     }
 
     return json({

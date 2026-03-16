@@ -26,7 +26,7 @@
 ## 3) Aktuella endpoints
 
 - `POST /api/enkat/upload` - parse + validera CSV och returnera preview
-- `GET/POST /api/enkat/settings` - läs/spara gemensam standardmall för auto-exkludering
+- `GET/POST /api/enkat/settings` - läs/spara gemensam lista över bokningstyper som aldrig ska följas upp
 - `POST /api/enkat/send` - skapa kampanj + utskick
 - `POST /api/enkat/remind` - skicka påminnelse till obesvarade
 - `POST /api/enkat/submit` - publik submit via kod
@@ -56,8 +56,10 @@ Nyckelidéer:
 ## 5) Affärsregler
 
 - Importen ska tåla vanliga vårdexporter (separator + teckenkodning).
-- Bokningstyper som matchar standardmallen för "följ aldrig upp" ska sorteras bort innan preview/deduplicering.
-- Den gemensamma standardmallen lagras i Supabase och kan uppdateras av administratör.
+- Bokningstyper som finns i den gemensamma listan "följs aldrig upp" ska sorteras bort innan preview/deduplicering.
+- Rader utan värde i `Diagnoser` ska sorteras bort innan preview.
+- Den gemensamma listan lagras i Supabase och kan uppdateras av administratör.
+- Bokningstyper som finns kvar i den aktuella filen ska visas som kryssrutor så att användaren aktivt väljer vad som ska ingå i utskicket.
 - Deduplicering prioriterar nybesök/remiss över återbesök bland de rader som återstår efter filtrering.
 - Max en påminnelse per utskick.
 - `submit` är publik men strikt validerad (kod, giltighet, redan använd).
@@ -69,9 +71,9 @@ Nyckelidéer:
 ## 6) Vad som redan fungerar (V1-läge)
 
 - CSV-import + preview med felrader/dubletter
-- standardmall för bokningstyper som automatiskt sorteras bort
-- delad Supabase-lagrad standardmall för auto-exkludering
-- snabbval med presetmallar för olika uppföljningsscenarier
+- gemensam Supabase-lagrad lista för bokningstyper som automatiskt sorteras bort
+- `Diagnoser` som hårt urvalskrav i importen
+- checkbox-urval av bokningstyper i den aktuella filen
 - klassificering av bokningstyper
 - kampanjskapande + första utskick
 - manuell påminnelse

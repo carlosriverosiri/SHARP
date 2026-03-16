@@ -123,7 +123,8 @@ Fält:
 | Fält | Typ | Krav | Beskrivning |
 |---|---|---|---|
 | `file` | fil | Ja | CSV/TSV-export |
-| `excludedBookingTypePatterns` | text | Nej | Radseparerad mall för bokningstyper som ska sorteras bort automatiskt. Om fältet utelämnas används den sparade gemensamma Supabase-mallen, annars lokalt skickat värde |
+| `excludedBookingTypePatterns` | text | Nej | Radseparerad lista med bokningstyper som alltid ska sorteras bort. Om fältet utelämnas används den sparade gemensamma listan från Supabase |
+| `selectedBookingTypes` | JSON-sträng | Nej | Lista över vilka bokningstyper i den aktuella filen som ska ingå i previewn. Om fältet utelämnas väljs alla bokningstyper |
 
 ### Förväntade kärnkolumner
 
@@ -131,10 +132,11 @@ Fält:
 - `Mobiltelefon`
 - `Vårdgivare`
 - `Datum`
+- `Bokningstyp`
+- `Diagnoser`
 
 Valfria:
 
-- `Bokningstyp`
 - `Starttid`
 
 ### Server-side logik
@@ -144,10 +146,13 @@ Valfria:
 3. parse med semikolonstöd
 4. validera kolumnrubriker
 5. validera varje rad
-6. kontrollera om bokningstyp matchar standardmallen för "följ aldrig upp"
-7. klassificera kvarvarande bokningstyp
-8. deduplicera kvarvarande rader
-9. returnera preview
+6. sortera bort rader där `Diagnoser` är tom
+7. sortera bort bokningstyper som finns i den sparade listan över "följ aldrig upp"
+8. räkna vilka bokningstyper som återstår i den aktuella filen och returnera dem som checkbox-alternativ
+9. om `selectedBookingTypes` skickas in ska bara de bokningstyperna gå vidare till preview
+10. klassificera kvarvarande bokningstyper
+11. deduplicera kvarvarande rader
+12. returnera preview
 
 ### Response: lyckad preview
 
@@ -160,12 +165,19 @@ Valfria:
     "invalidRows": 3,
     "autoExcludedRows": 11,
     "duplicateRows": 2,
-    "autoExcludedBookingTypes": [
+    "autoExcludedGroups": [
       {
-        "bookingTypeRaw": "9. SSK-BESÖK",
-        "matchedRule": "ssk",
+        "label": "9. SSK-BESÖK",
+        "reason": "Bokningstyp matchade regeln \"ssk\"",
         "count": 5,
         "rowIndexes": [2, 8, 17, 22, 31]
+      }
+    ],
+    "bookingTypeOptions": [
+      {
+        "bookingTypeRaw": "3. REMISS AXEL",
+        "count": 18,
+        "selected": true
       }
     ],
     "selectedRows": [
@@ -203,8 +215,11 @@ Valfria:
 - visa *varför* dubblettrad valdes bort
 - skriv inte till databasen här
 - om `Starttid` finns ska den returneras i preview
+- `Bokningstyp` och `Diagnoser` är obligatoriska kolumner i filen
 - rader med tom `Bokningstyp` ska markeras som ogiltiga och inte gå vidare till utskick
-- bokningstyper som matchar standardmallen för "följ aldrig upp" ska inte bli felrader, utan sorteras bort separat
+- rader med tom `Diagnoser` ska auto-bortsorteras, inte bli en felrad
+- bokningstyper som finns i listan över "följs aldrig upp" ska inte bli felrader, utan sorteras bort separat
+- checkbox-urvalet för bokningstyper ska tillämpas före deduplicering
 - deduplicering ska ske efter att auto-exkludering har tillämpats
 
 ---
@@ -213,7 +228,7 @@ Valfria:
 
 ### Syfte
 
-Hämtar den gemensamma standardmallen för bokningstyper som aldrig ska följas upp.
+Hämtar den gemensamma listan med bokningstyper som aldrig ska följas upp.
 
 ### Response
 
@@ -241,7 +256,7 @@ Hämtar den gemensamma standardmallen för bokningstyper som aldrig ska följas 
 
 ### Syfte
 
-Sparar den gemensamma standardmallen i Supabase så att samma urvalsregler följer med mellan datorer och användare.
+Sparar den gemensamma listan i Supabase så att samma "följ aldrig upp"-bokningstyper följer med mellan datorer och användare.
 
 ### Input
 
@@ -253,9 +268,9 @@ Sparar den gemensamma standardmallen i Supabase så att samma urvalsregler följ
 
 ### Viktiga regler
 
-- endast administratör får spara den gemensamma standardmallen
+- endast administratör får spara den gemensamma listan
 - tom lista ska vara tillåten om verksamheten vill stänga av auto-exkludering
-- sparad mall ska returneras normaliserad så att UI:t kan uppdatera textarea och återställ-knapp
+- sparad lista ska returneras normaliserad så att UI:t kan uppdatera textarea och återställ-knapp
 
 ---
 

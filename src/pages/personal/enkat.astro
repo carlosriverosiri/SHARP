@@ -4,11 +4,10 @@ export const prerender = false;
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 import { supabaseAdmin } from '../../lib/supabase';
 import {
-  EXCLUDED_BOOKING_TYPE_PRESETS,
   formatExcludedBookingTypePatterns,
   getDefaultExcludedBookingTypePatternText
 } from '../../lib/enkat-follow-up-rules';
-import { harMinstPortalRoll } from '../../lib/portal-roles';
+import { harMinstPortalRoll, portalRoleLabel } from '../../lib/portal-roles';
 
 if (!await arInloggad(Astro.cookies)) {
   return Astro.redirect('/personal');
@@ -21,14 +20,10 @@ if (!anvandare) {
 
 const isAdmin = harMinstPortalRoll(anvandare.roll, 'admin');
 const defaultExcludedBookingTypePatternsText = getDefaultExcludedBookingTypePatternText();
-const excludedBookingTypePresets = EXCLUDED_BOOKING_TYPE_PRESETS.map((preset) => ({
-  ...preset,
-  patternText: formatExcludedBookingTypePatterns(preset.patterns)
-}));
 let initialExcludedBookingTypePatternsText = defaultExcludedBookingTypePatternsText;
 let sharedTemplateHelperText = isAdmin
-  ? 'Den gemensamma standardmallen lagras i Supabase och kan sparas av administratör.'
-  : 'Den gemensamma standardmallen hämtas från Supabase. Du kan justera den lokalt i previewn, men endast administratör kan spara ändringar.';
+  ? 'Listan lagras i Supabase och används som gemensam lista för vilka bokningstyper som alltid ska sorteras bort.'
+  : 'Listan hämtas från Supabase. Du kan läsa och använda den här, men endast administratör kan spara ändringar.';
 
 try {
   const { data, error } = await supabaseAdmin
@@ -39,16 +34,16 @@ try {
 
   if (error) {
     sharedTemplateHelperText = isAdmin
-      ? 'Visar inbyggd standardmall. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
-      : 'Visar inbyggd standardmall. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
+      ? 'Visar inbyggd lista. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
+      : 'Visar inbyggd lista. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
   } else if (data) {
     initialExcludedBookingTypePatternsText = formatExcludedBookingTypePatterns(data.exkludera_bokningstyper);
   }
 } catch (error) {
   console.warn('Kunde inte läsa gemensam enkätsmall från Supabase:', error);
   sharedTemplateHelperText = isAdmin
-    ? 'Visar inbyggd standardmall. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
-    : 'Visar inbyggd standardmall. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
+    ? 'Visar inbyggd lista. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
+    : 'Visar inbyggd lista. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
 }
 import PortalLayout from '../../layouts/PortalLayout.astro';
 ---
@@ -108,6 +103,16 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       padding: 8px 12px;
       font-size: 13px;
       white-space: nowrap;
+    }
+
+    .role-chip-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .role-chip-link:hover {
+      background: #1e293b;
     }
 
     .grid {
@@ -338,6 +343,30 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       line-height: 1.4;
     }
 
+    .booking-type-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .booking-type-option input[type='checkbox'] {
+      margin-top: 2px;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .booking-type-option-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .booking-type-option-title {
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
     .intro-box {
       margin: 0 0 20px;
     }
@@ -377,16 +406,18 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       <div>
         <h1>Patientupplevelse via SMS</h1>
         <p class="subtitle">
-          Ladda upp dagens exportfil, filtrera automatiskt bort bokningstyper som inte ska följas upp och kontrollera vilka patienter som blir kvar innan kampanjen skapas.
+          Ladda upp exportfilen, sortera bort besök som aldrig ska följas upp och välj sedan vilka bokningstyper som ska ingå i just detta utskicket.
         </p>
       </div>
-      <div class="role-chip">{anvandare.roll === 'admin' ? 'Administratör' : 'Personal'}</div>
+      <a href="/personal/profil" class="role-chip role-chip-link" title="Öppna Min profil">
+        {portalRoleLabel(anvandare.roll)}
+      </a>
     </div>
 
     <section class="muted-box intro-box" aria-labelledby="pagePurposeTitle">
       <h2 id="pagePurposeTitle">Det här gör sidan</h2>
       <p class="helper">
-        Använd sidan för att importera dagens exportfil, tillämpa standardmallen för bokningstyper som aldrig ska följas upp och sedan skapa en kampanj för de patienter som blir kvar.
+        Använd sidan för att importera dagens exportfil, sortera bort bokningstyper som aldrig ska följas upp, kräva att diagnos finns och sedan välja vilka bokningstyper som ska ingå innan kampanjen skapas.
       </p>
     </section>
 
@@ -394,8 +425,8 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       <section class="card">
         <h2>1. Importera fil</h2>
         <p class="helper">
-          Fasta kärnkolumner är <code>Patient-ID</code>, <code>Mobiltelefon</code>, <code>Vårdgivare</code> och <code>Datum</code>.
-          <code>Bokningstyp</code> krävs för uppföljning. Rader med tom bokningstyp väljs bort, och bokningstyper som matchar standardmallen sorteras bort automatiskt. <code>Starttid</code> är valfri.
+          Fasta kärnkolumner är <code>Patient-ID</code>, <code>Mobiltelefon</code>, <code>Vårdgivare</code>, <code>Datum</code>, <code>Bokningstyp</code> och <code>Diagnoser</code>.
+          Rader utan diagnos sorteras bort automatiskt. <code>Starttid</code> är valfri.
         </p>
 
         <form id="uploadForm">
@@ -421,30 +452,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       </section>
 
       <aside class="card">
-        <h3>Standardmall: följ aldrig upp</h3>
+        <h3>Bokningstyper som aldrig ska följas upp</h3>
         <p class="helper">
-          Bokningstyper som matchar denna mall sorteras bort automatiskt redan i previewn. Skriv en regel per rad.
+          Skriv en bokningstyp per rad. Om texten matchar en bokningstyp i filen sorteras raden bort automatiskt före previewn.
         </p>
 
         <div class="form-group" style="margin-top: 12px;">
-          <label for="excludedBookingTypePreset">Snabbval</label>
-          <select id="excludedBookingTypePreset" class="input">
-            <option value="">Egen mall</option>
-            {excludedBookingTypePresets.map((preset) => (
-              <option value={preset.id}>{preset.name}</option>
-            ))}
-          </select>
-          <p id="excludedBookingTypePresetDescription" class="helper" style="margin: 8px 0 0;">
-            Välj en förinställning om du snabbt vill fylla standardmallen med vanliga regler.
-          </p>
-        </div>
-
-        <div class="actions" style="margin-top: 12px;">
-          <button type="button" class="btn btn-secondary" id="applyExcludedBookingTypePresetBtn">Använd förinställning</button>
-        </div>
-
-        <div class="form-group" style="margin-top: 12px;">
-          <label for="excludedBookingTypePatterns">Bokningstyper som aldrig ska följas upp</label>
+          <label for="excludedBookingTypePatterns">Lista som alltid sorteras bort</label>
           <textarea
             id="excludedBookingTypePatterns"
             name="excludedBookingTypePatterns"
@@ -455,15 +469,15 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
         </div>
 
         <div class="actions" style="margin-top: 12px;">
-          <button type="button" class="btn btn-secondary" id="resetExcludedBookingTypesBtn">Återställ standardmall</button>
+          <button type="button" class="btn btn-secondary" id="resetExcludedBookingTypesBtn">Återställ sparad lista</button>
           <button
             type="button"
             class="btn btn-primary"
             id="saveExcludedBookingTypesBtn"
             disabled={!isAdmin}
-            title={isAdmin ? 'Spara den gemensamma standardmallen i Supabase' : 'Endast administratör kan spara den gemensamma standardmallen'}
+            title={isAdmin ? 'Spara listan så att samma bokningstyper sorteras bort för alla användare' : 'Endast administratör kan spara listan för alla användare'}
           >
-            Spara som gemensam standard
+            Spara lista för alla
           </button>
         </div>
 
@@ -472,13 +486,25 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
         </div>
 
         <div class="muted-box" style="margin-top: 16px;">
-          Exempel som ofta sorteras bort automatiskt: <code>SSK-BESÖK</code>, <code>SUTURTAGNING</code>, <code>TELEFON FÖRSÄKR</code>, <code>TEL.TID SLL</code>, <code>ADMIN</code> och <code>SLL-TEL-AXEL</code>.
+          Rader där kolumnen <code>Diagnoser</code> är tom sorteras också alltid bort. De visas separat efter uppladdning så att du kan gå igenom dem innan utskicket om du vill.
+        </div>
+
+        <div class="muted-box hidden" id="bookingTypeSelectionBox">
+          <strong>Bokningstyper i denna fil</strong>
+          <p class="helper" style="margin: 8px 0 0;">
+            Markera de bokningstyper som ska ingå i just detta utskick. Alla är ikryssade första gången filen läses in.
+          </p>
+          <div class="actions" style="margin-top: 12px;">
+            <button type="button" class="btn btn-secondary" id="selectAllBookingTypesBtn">Markera alla</button>
+            <button type="button" class="btn btn-secondary" id="clearAllBookingTypesBtn">Avmarkera alla</button>
+          </div>
+          <div class="rule-preview-list" id="bookingTypeSelectionList"></div>
         </div>
 
         <div class="muted-box hidden" id="excludedBookingTypesSummaryBox">
-          <strong>Sorterades bort av standardmallen</strong>
+          <strong>Sorterades bort före preview</strong>
           <p class="helper" style="margin: 8px 0 0;">
-            Dessa bokningstyper matchade reglerna i mallen och togs därför bort innan previewn byggdes.
+            Dessa rader togs bort automatiskt, antingen för att bokningstypen finns i listan ovan eller för att diagnos saknades.
           </p>
           <div class="rule-preview-list" id="excludedBookingTypesSummary"></div>
         </div>
@@ -621,8 +647,7 @@ Enkäten är anonym. Tack!</textarea>
       <div id="reportContent" class="section"></div>
     </section>
 
-  <script is:inline define:vars={{ excludedBookingTypePresetsJson: JSON.stringify(excludedBookingTypePresets) }}>
-    const excludedBookingTypePresets = JSON.parse(excludedBookingTypePresetsJson);
+  <script is:inline>
     const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
@@ -631,13 +656,14 @@ Enkäten är anonym. Tack!</textarea>
     const dropzone = document.getElementById('dropzone');
     const previewSection = document.getElementById('previewSection');
     const statusBanner = document.getElementById('statusBanner');
-    const excludedBookingTypePresetSelect = document.getElementById('excludedBookingTypePreset');
-    const excludedBookingTypePresetDescription = document.getElementById('excludedBookingTypePresetDescription');
-    const applyExcludedBookingTypePresetBtn = document.getElementById('applyExcludedBookingTypePresetBtn');
     const excludedBookingTypePatternsInput = document.getElementById('excludedBookingTypePatterns');
     const resetExcludedBookingTypesBtn = document.getElementById('resetExcludedBookingTypesBtn');
     const saveExcludedBookingTypesBtn = document.getElementById('saveExcludedBookingTypesBtn');
     const excludedBookingTypeSettingsStatus = document.getElementById('excludedBookingTypeSettingsStatus');
+    const bookingTypeSelectionBox = document.getElementById('bookingTypeSelectionBox');
+    const bookingTypeSelectionList = document.getElementById('bookingTypeSelectionList');
+    const selectAllBookingTypesBtn = document.getElementById('selectAllBookingTypesBtn');
+    const clearAllBookingTypesBtn = document.getElementById('clearAllBookingTypesBtn');
     const excludedBookingTypesSummaryBox = document.getElementById('excludedBookingTypesSummaryBox');
     const excludedBookingTypesSummary = document.getElementById('excludedBookingTypesSummary');
     const summaryGrid = document.getElementById('summaryGrid');
@@ -685,24 +711,6 @@ Enkäten är anonym. Tack!</textarea>
         .join('\n');
     }
 
-    function getSelectedExcludedBookingTypePreset() {
-      return excludedBookingTypePresets.find((preset) => preset.id === excludedBookingTypePresetSelect?.value) || null;
-    }
-
-    function syncExcludedBookingTypePresetSelection() {
-      const currentPatternText = normalizePatternText(excludedBookingTypePatternsInput?.value || '');
-      const matchingPreset = excludedBookingTypePresets.find((preset) => normalizePatternText(preset.patternText) === currentPatternText) || null;
-
-      if (excludedBookingTypePresetSelect) {
-        excludedBookingTypePresetSelect.value = matchingPreset?.id || '';
-      }
-
-      const activePreset = matchingPreset || getSelectedExcludedBookingTypePreset();
-      excludedBookingTypePresetDescription.textContent = activePreset
-        ? activePreset.description
-        : 'Välj en förinställning om du snabbt vill fylla standardmallen med vanliga regler.';
-    }
-
     function syncSelectedFileName() {
       const selectedFile = fileInput.files?.[0];
       fileName.textContent = selectedFile ? selectedFile.name : 'Ingen fil har valts';
@@ -733,14 +741,42 @@ Enkäten är anonym. Tack!</textarea>
       selectedRowsBody.innerHTML = '';
       duplicatesBody.innerHTML = '';
       errorsBody.innerHTML = '';
+    }
+
+    function clearAutoExcludedSummary() {
       excludedBookingTypesSummary.innerHTML = '';
       excludedBookingTypesSummaryBox.classList.add('hidden');
     }
 
+    function clearBookingTypeSelection() {
+      bookingTypeSelectionList.innerHTML = '';
+      bookingTypeSelectionBox.classList.add('hidden');
+    }
+
+    function clearAnalysis() {
+      clearPreview();
+      clearAutoExcludedSummary();
+      clearBookingTypeSelection();
+    }
+
     function invalidatePreview(message) {
-      if (!currentPreview) return;
       clearPreview();
       setBanner('info', message);
+    }
+
+    function invalidateAnalysis(message) {
+      clearAnalysis();
+      setBanner('info', message);
+    }
+
+    function getBookingTypeCheckboxes() {
+      return Array.from(bookingTypeSelectionList.querySelectorAll('input[name="includedBookingTypes"]'));
+    }
+
+    function getSelectedBookingTypes() {
+      return getBookingTypeCheckboxes()
+        .filter((input) => input.checked)
+        .map((input) => input.value);
     }
 
     function escapeHtml(value) {
@@ -753,11 +789,16 @@ Enkäten är anonym. Tack!</textarea>
     }
 
     function renderSummary(data) {
+      const manuallyExcludedRows = (data.bookingTypeOptions || [])
+        .filter((row) => row.selected === false)
+        .reduce((sum, row) => sum + row.count, 0);
+
       const cards = [
         ['Totala rader', data.totalRows],
         ['Giltiga rader', data.validRows],
         ['Ogiltiga rader', data.invalidRows],
         ['Auto-bortsorterade', data.autoExcludedRows || 0],
+        ['Ej valda rader', manuallyExcludedRows],
         ['Bortvalda dubletter', data.duplicateRows]
       ];
 
@@ -769,7 +810,36 @@ Enkäten är anonym. Tack!</textarea>
       `).join('');
     }
 
-    function renderAutoExcludedBookingTypes(rows) {
+    function renderBookingTypeOptions(rows) {
+      if (!rows.length) {
+        clearBookingTypeSelection();
+        return;
+      }
+
+      bookingTypeSelectionBox.classList.remove('hidden');
+      bookingTypeSelectionList.innerHTML = rows.map((row) => `
+        <label class="rule-preview-item booking-type-option">
+          <input
+            type="checkbox"
+            name="includedBookingTypes"
+            value="${escapeHtml(row.bookingTypeRaw)}"
+            ${row.selected ? 'checked' : ''}
+          />
+          <div class="booking-type-option-main">
+            <div class="booking-type-option-title">${escapeHtml(row.bookingTypeRaw)}</div>
+            <div class="helper" style="margin-top: 4px;">${escapeHtml(row.count)} rad${row.count === 1 ? '' : 'er'} kvar efter fasta bortsorteringar</div>
+          </div>
+        </label>
+      `).join('');
+
+      getBookingTypeCheckboxes().forEach((input) => {
+        input.addEventListener('change', () => {
+          invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+        });
+      });
+    }
+
+    function renderAutoExcludedGroups(rows) {
       if (!rows.length) {
         excludedBookingTypesSummaryBox.classList.add('hidden');
         excludedBookingTypesSummary.innerHTML = '';
@@ -780,10 +850,10 @@ Enkäten är anonym. Tack!</textarea>
       excludedBookingTypesSummary.innerHTML = rows.map((row) => `
         <div class="rule-preview-item">
           <div class="rule-preview-top">
-            <strong>${escapeHtml(row.bookingTypeRaw)}</strong>
+            <strong>${escapeHtml(row.label)}</strong>
             <span class="pill warn">${escapeHtml(row.count)} rad${row.count === 1 ? '' : 'er'}</span>
           </div>
-          <div class="helper" style="margin-top: 8px;">Matchade regel: <code>${escapeHtml(row.matchedRule)}</code></div>
+          <div class="helper" style="margin-top: 8px;">Orsak: ${escapeHtml(row.reason)}</div>
         </div>
       `).join('');
     }
@@ -844,83 +914,71 @@ Enkäten är anonym. Tack!</textarea>
       if (event.dataTransfer?.files?.length) {
         fileInput.files = event.dataTransfer.files;
         syncSelectedFileName();
-        invalidatePreview('Filen ändrades. Kör preview igen för att se det uppdaterade urvalet.');
+        invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
       }
     });
 
     fileInput.addEventListener('change', () => {
       syncSelectedFileName();
-      invalidatePreview('Filen ändrades. Kör preview igen för att se det uppdaterade urvalet.');
+      invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
     });
 
-    excludedBookingTypePresetSelect?.addEventListener('change', () => {
-      const preset = getSelectedExcludedBookingTypePreset();
-      excludedBookingTypePresetDescription.textContent = preset
-        ? preset.description
-        : 'Välj en förinställning om du snabbt vill fylla standardmallen med vanliga regler.';
+    selectAllBookingTypesBtn?.addEventListener('click', () => {
+      const checkboxes = getBookingTypeCheckboxes();
+      if (!checkboxes.length) return;
+      checkboxes.forEach((input) => {
+        input.checked = true;
+      });
+      invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
     });
 
-    applyExcludedBookingTypePresetBtn?.addEventListener('click', () => {
-      const preset = getSelectedExcludedBookingTypePreset();
-      if (!preset) {
-        setExcludedBookingTypeSettingsStatus('info', 'Välj en förinställning först.');
-        return;
-      }
-
-      excludedBookingTypePatternsInput.value = preset.patternText;
-      syncExcludedBookingTypePresetSelection();
-
-      if (currentPreview) {
-        invalidatePreview(`Förinställningen "${preset.name}" lades in. Kör preview igen för att använda urvalet.`);
-        return;
-      }
-
-      setExcludedBookingTypeSettingsStatus('success', `Förinställningen "${preset.name}" lades in i standardmallen.`);
+    clearAllBookingTypesBtn?.addEventListener('click', () => {
+      const checkboxes = getBookingTypeCheckboxes();
+      if (!checkboxes.length) return;
+      checkboxes.forEach((input) => {
+        input.checked = false;
+      });
+      invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
     });
 
     excludedBookingTypePatternsInput?.addEventListener('input', () => {
-      syncExcludedBookingTypePresetSelection();
-      invalidatePreview('Standardmallen ändrades. Kör preview igen för att tillämpa de nya reglerna.');
+      invalidatePreview('Listan över bokningstyper som alltid ska sorteras bort ändrades. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
     });
 
     resetExcludedBookingTypesBtn?.addEventListener('click', () => {
-      excludedBookingTypePatternsInput.value = excludedBookingTypePatternsInput.dataset.defaultValue || '';
-      syncExcludedBookingTypePresetSelection();
-      if (currentPreview) {
-        invalidatePreview('Standardmallen återställdes. Kör preview igen för att använda grundreglerna.');
-        return;
-      }
-
-      setBanner('info', 'Standardmallen återställdes.');
+      excludedBookingTypePatternsInput.value = normalizePatternText(excludedBookingTypePatternsInput.dataset.defaultValue || '');
+      invalidatePreview('Listan återställdes. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
+      setExcludedBookingTypeSettingsStatus('info', 'Listan återställdes till senast sparade värde.');
     });
 
     saveExcludedBookingTypesBtn?.addEventListener('click', async () => {
       saveExcludedBookingTypesBtn.disabled = true;
-      setExcludedBookingTypeSettingsStatus('info', 'Sparar gemensam standardmall...');
+      const normalizedPatternText = normalizePatternText(excludedBookingTypePatternsInput?.value || '');
+      excludedBookingTypePatternsInput.value = normalizedPatternText;
+      setExcludedBookingTypeSettingsStatus('info', 'Sparar listan för alla användare...');
 
       try {
         const response = await fetch('/api/enkat/settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            excludedBookingTypePatterns: excludedBookingTypePatternsInput?.value || ''
+            excludedBookingTypePatterns: normalizedPatternText
           })
         });
 
         const payload = await response.json();
         if (!response.ok || !payload.success) {
-          setExcludedBookingTypeSettingsStatus('error', payload.error || 'Kunde inte spara standardmallen.');
+          setExcludedBookingTypeSettingsStatus('error', payload.error || 'Kunde inte spara listan.');
           return;
         }
 
         const savedText = payload.data?.patternText || '';
         excludedBookingTypePatternsInput.value = savedText;
         excludedBookingTypePatternsInput.dataset.defaultValue = savedText;
-        syncExcludedBookingTypePresetSelection();
-        setExcludedBookingTypeSettingsStatus('success', 'Gemensam standardmall sparad i Supabase.');
+        setExcludedBookingTypeSettingsStatus('success', 'Listan sparades i Supabase och används nu som gemensam lista.');
       } catch (error) {
         console.error(error);
-        setExcludedBookingTypeSettingsStatus('error', 'Ett oväntat fel uppstod när standardmallen skulle sparas.');
+        setExcludedBookingTypeSettingsStatus('error', 'Ett oväntat fel uppstod när listan skulle sparas.');
       } finally {
         saveExcludedBookingTypesBtn.disabled = false;
       }
@@ -931,11 +989,10 @@ Enkäten är anonym. Tack!</textarea>
       syncSelectedFileName();
       statusBanner.className = 'banner info';
       statusBanner.textContent = '';
-      clearPreview();
+      clearAnalysis();
     });
 
     syncSelectedFileName();
-    syncExcludedBookingTypePresetSelection();
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -947,11 +1004,16 @@ Enkäten är anonym. Tack!</textarea>
       }
 
       previewBtn.disabled = true;
-      setBanner('info', 'Läser fil, tillämpar standardmallen och bygger preview...');
+      setBanner('info', 'Läser filen, sorterar bort alltid exkluderade bokningstyper och bygger preview...');
 
       try {
         const formData = new FormData(form);
-        formData.set('excludedBookingTypePatterns', excludedBookingTypePatternsInput?.value || '');
+        const normalizedPatternText = normalizePatternText(excludedBookingTypePatternsInput?.value || '');
+        excludedBookingTypePatternsInput.value = normalizedPatternText;
+        formData.set('excludedBookingTypePatterns', normalizedPatternText);
+        if (getBookingTypeCheckboxes().length > 0) {
+          formData.set('selectedBookingTypes', JSON.stringify(getSelectedBookingTypes()));
+        }
         const response = await fetch('/api/enkat/upload', {
           method: 'POST',
           body: formData
@@ -965,16 +1027,21 @@ Enkäten är anonym. Tack!</textarea>
 
         const data = payload.data;
         currentPreview = data;
+        renderBookingTypeOptions(data.bookingTypeOptions || []);
         renderSummary(data);
-        renderAutoExcludedBookingTypes(data.autoExcludedBookingTypes || []);
+        renderAutoExcludedGroups(data.autoExcludedGroups || []);
         renderSelectedRows(data.selectedRows || []);
         renderDuplicates(data.duplicates || []);
         renderErrors(data.errors || []);
         previewSection.classList.remove('hidden');
 
+        const manuallyExcludedRows = (data.bookingTypeOptions || [])
+          .filter((row) => row.selected === false)
+          .reduce((sum, row) => sum + row.count, 0);
+
         setBanner(
           'success',
-          `Preview klar: ${data.validRows} giltiga rader, ${data.autoExcludedRows || 0} automatiskt bortsorterade, ${data.invalidRows} ogiltiga och ${data.duplicateRows} bortvalda dublettrader.`
+          `Preview klar: ${data.validRows} giltiga rader, ${data.autoExcludedRows || 0} automatiskt bortsorterade, ${manuallyExcludedRows} bortvalda via bokningstyp, ${data.invalidRows} ogiltiga och ${data.duplicateRows} bortvalda dublettrader.`
         );
       } catch (error) {
         console.error(error);

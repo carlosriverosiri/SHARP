@@ -56,7 +56,7 @@ enkat_installningar
 - `enkat_utskick` beskriver en unik patientlänk och utskicksrad
 - `enkat_svar` beskriver ett faktiskt svar
 - `enkat_delivery_log` beskriver varje SMS-försök
-- `enkat_installningar` beskriver den gemensamma klinikmallen för auto-exkludering av bokningstyper
+- `enkat_installningar` beskriver den gemensamma kliniklistan för auto-exkludering av bokningstyper
 
 ---
 
@@ -64,14 +64,14 @@ enkat_installningar
 
 ### Syfte
 
-Lagrar en gemensam standardmall för bokningstyper som aldrig ska följas upp i patientupplevelseflödet.
+Lagrar en gemensam lista med bokningstyper som aldrig ska följas upp i patientupplevelseflödet.
 
 ### Kolumner
 
 | Kolumn | Typ | Null | Beskrivning |
 |---|---|---|---|
 | `id` | TEXT | Nej | Singleton-id, normalt `standard` |
-| `exkludera_bokningstyper` | TEXT[] | Nej | Lista med regler/mönster som ska sorteras bort före preview |
+| `exkludera_bokningstyper` | TEXT[] | Nej | Lista med bokningstyper eller mönster som ska sorteras bort före preview |
 | `updated_by` | UUID | Ja | FK till `auth.users(id)` för senaste sparning |
 | `created_at` | TIMESTAMPTZ | Nej | Skapad |
 | `updated_at` | TIMESTAMPTZ | Nej | Senast uppdaterad |

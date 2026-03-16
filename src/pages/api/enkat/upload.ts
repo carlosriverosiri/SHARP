@@ -30,6 +30,20 @@ async function getSharedExcludedBookingTypePatternText() {
   }
 }
 
+function parseSelectedBookingTypes(value: FormDataEntryValue | null): string[] | undefined {
+  if (typeof value !== 'string' || !value.trim()) return undefined;
+
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return undefined;
+    return parsed
+      .map((item) => String(item || '').trim())
+      .filter(Boolean);
+  } catch {
+    return undefined;
+  }
+}
+
 export const POST: APIRoute = async ({ request, cookies }) => {
   if (!await arInloggad(cookies)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
@@ -46,6 +60,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const hasSubmittedPatterns = formData.has('excludedBookingTypePatterns');
     const submittedPatternText = String(formData.get('excludedBookingTypePatterns') ?? '').trim();
     const patternText = hasSubmittedPatterns ? submittedPatternText : await getSharedExcludedBookingTypePatternText();
+    const selectedBookingTypes = parseSelectedBookingTypes(formData.get('selectedBookingTypes'));
     const excludedBookingTypePatterns = parseExcludedBookingTypePatterns(
       patternText
     );
@@ -69,7 +84,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       text = new TextDecoder('latin1').decode(rawBytes);
     }
 
-    const result = parseEnkatCsv(text, { excludedBookingTypePatterns });
+    const result = parseEnkatCsv(text, {
+      excludedBookingTypePatterns,
+      includedBookingTypes: selectedBookingTypes
+    });
 
     if (result.totalRows > 500) {
       return json({
@@ -88,12 +106,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         ...result
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Enkät-upload misslyckades:', error);
     return json({
       success: false,
       error: 'Kunde inte läsa eller validera filen.',
-      details: { message: error?.message || 'Okänt fel' }
+      details: { message: error instanceof Error ? error.message : 'Okänt fel' }
     }, 500);
   }
 };

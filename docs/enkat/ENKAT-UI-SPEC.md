@@ -117,12 +117,12 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
 
 - en sammanhållen uppladdningsyta som stödjer både drag & drop och klick för filval
 - tydlig visning av vald fil i samma block
-- en sidomodul med standardmall för bokningstyper som aldrig ska följas upp
-- snabbval med vanliga förinställningar, t.ex. `Även återbesök`, `Utan operation` och `Bara nybesök/remiss`
-- återställ-knapp för att gå tillbaka till senast sparade gemensamma standard
-- admin-knapp för att spara mallen gemensamt i Supabase
-- tydlig regel att rader med tom `Bokningstyp` inte följs upp
-- automatisk bortsortering av bokningstyper som matchar standardmallen
+- en sidomodul med lista över bokningstyper som aldrig ska följas upp
+- återställ-knapp för att gå tillbaka till senast sparade gemensamma lista
+- admin-knapp för att spara listan gemensamt i Supabase
+- tydlig regel att `Diagnoser` måste finnas för att raden ska få gå vidare
+- checkbox-lista med bokningstyper som faktiskt finns i den uppladdade filen
+- användaren väljer aktivt vilka bokningstyper som ska ingå i just detta utskick
 
 ### Information som ska visas
 
@@ -131,12 +131,14 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
   - `Mobiltelefon`
   - `Vårdgivare`
   - `Datum`
+  - `Bokningstyp` krävs för uppföljning
+  - `Diagnoser` krävs för uppföljning
 - vilka som är valfria:
   - `Starttid`
-- särskild regel:
-  - `Bokningstyp` krävs för uppföljning
-  - vissa bokningstyper sorteras bort automatiskt via standardmallen
-  - alla användare kan testa lokala ändringar, men endast admin kan spara den gemensamma mallen
+- särskilda regler:
+  - rader utan diagnos sorteras bort automatiskt
+  - bokningstyper i den sparade listan sorteras bort automatiskt
+  - alla användare kan testa lokala ändringar, men endast admin kan spara den gemensamma listan
 
 ### CTA
 
@@ -169,7 +171,7 @@ Visa vad systemet tänker göra innan något skickas.
 - antal dubletter
 - antal ogiltiga rader
 - antal automatiskt bortsorterade rader
-- antal vårdgivare i filen
+- antal bortvalda rader via bokningstypskryssrutorna
 
 ### Tabell: valda rader
 
@@ -209,13 +211,21 @@ Exempel:
 - `Mobiltelefon saknas`
 - `Ogiltigt datumformat`
 
-### Panel: automatiskt bortsorterade bokningstyper
+### Panel: bokningstyper i denna fil
 
 Visar:
 
-- bokningstyp råtext
+- en checkbox per bokningstyp som finns kvar efter fasta bortsorteringar
+- antal rader per bokningstyp
+- knappar för `Markera alla` och `Avmarkera alla`
+
+### Panel: automatiskt bortsorterade rader
+
+Visar:
+
+- etikett eller bokningstyp
 - antal bortsorterade rader
-- vilken regel i standardmallen som matchade
+- orsak, t.ex. `Kolumnen Diagnoser är tom` eller `Bokningstyp matchade listan`
 
 ### Viktig designprincip
 

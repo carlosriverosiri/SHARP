@@ -26,3 +26,25 @@ declare namespace App {
     };
   }
 }
+
+declare module 'papaparse' {
+  export type ParseResult<T> = {
+    data: T[];
+    meta: {
+      fields?: string[];
+    };
+  };
+
+  export type ParseConfig<T> = {
+    header?: boolean;
+    delimiter?: string;
+    preview?: number;
+    skipEmptyLines?: boolean | 'greedy';
+  };
+
+  const Papa: {
+    parse<T>(input: string, config?: ParseConfig<T>): ParseResult<T>;
+  };
+
+  export default Papa;
+}

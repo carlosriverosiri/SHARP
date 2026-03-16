@@ -36,10 +36,16 @@ export type EnkatValidationError = {
 };
 
 export type EnkatAutoExcludedGroup = {
-  bookingTypeRaw: string;
-  matchedRule: string;
+  label: string;
+  reason: string;
   count: number;
   rowIndexes: number[];
+};
+
+export type EnkatBookingTypeOption = {
+  bookingTypeRaw: string;
+  count: number;
+  selected: boolean;
 };
 
 export type EnkatParseResult = {
@@ -48,13 +54,14 @@ export type EnkatParseResult = {
   invalidRows: number;
   duplicateRows: number;
   autoExcludedRows: number;
-  autoExcludedBookingTypes: EnkatAutoExcludedGroup[];
+  autoExcludedGroups: EnkatAutoExcludedGroup[];
+  bookingTypeOptions: EnkatBookingTypeOption[];
   selectedRows: EnkatPreviewRow[];
   duplicates: EnkatDuplicateGroup[];
   errors: EnkatValidationError[];
 };
 
-const REQUIRED_HEADERS = ['patientid', 'mobiltelefon', 'vardgivare', 'datum'] as const;
+const REQUIRED_HEADERS = ['patientid', 'mobiltelefon', 'vardgivare', 'datum', 'bokningstyp', 'diagnoser'] as const;
 
 function canonicalizeHeader(value: string): string {
   return normalizeSwedishText(value).replace(/[^a-z0-9]/g, '');
@@ -70,6 +77,7 @@ function mapHeaders(headers: string[]): Record<string, string> {
     else if (canonical === 'vardgivare') mapped.vardgivare = header;
     else if (canonical === 'datum') mapped.datum = header;
     else if (canonical === 'bokningstyp') mapped.bokningstyp = header;
+    else if (canonical === 'diagnoser' || canonical === 'diagnos') mapped.diagnoser = header;
     else if (canonical === 'starttid' || canonical === 'startid') mapped.starttid = header;
   }
 
@@ -79,6 +87,33 @@ function mapHeaders(headers: string[]): Record<string, string> {
 function cleanCell(row: RawCsvRow, key?: string): string {
   if (!key) return '';
   return String(row[key] ?? '').trim();
+}
+
+function addAutoExcludedGroup(
+  groups: Map<string, EnkatAutoExcludedGroup>,
+  label: string,
+  reason: string,
+  rowIndex: number
+) {
+  const key = `${label}__${reason}`;
+  const existing = groups.get(key);
+
+  if (existing) {
+    existing.count += 1;
+    existing.rowIndexes.push(rowIndex);
+    return;
+  }
+
+  groups.set(key, {
+    label,
+    reason,
+    count: 1,
+    rowIndexes: [rowIndex]
+  });
+}
+
+function canonicalizeBookingTypeSelection(value: string): string {
+  return normalizeSwedishText(value || '').trim();
 }
 
 function normalizePhone(value: string): string | null {
@@ -156,10 +191,14 @@ function countMappedHeaders(text: string, delimiter: string): number {
 
 export function parseEnkatCsv(
   csvText: string,
-  options?: { excludedBookingTypePatterns?: string[] }
+  options?: { excludedBookingTypePatterns?: string[]; includedBookingTypes?: string[] }
 ): EnkatParseResult {
   const cleanText = stripBom(csvText);
   const excludedBookingTypePatterns = options?.excludedBookingTypePatterns || [];
+  const hasExplicitIncludedBookingTypes = Array.isArray(options?.includedBookingTypes);
+  const includedBookingTypeKeys = hasExplicitIncludedBookingTypes
+    ? new Set((options?.includedBookingTypes || []).map((value) => canonicalizeBookingTypeSelection(String(value || ''))).filter(Boolean))
+    : null;
 
   const semicolonScore = countMappedHeaders(cleanText, ';');
   const tabScore = countMappedHeaders(cleanText, '\t');
@@ -197,7 +236,8 @@ export function parseEnkatCsv(
       invalidRows: errors.length,
       duplicateRows: 0,
       autoExcludedRows: 0,
-      autoExcludedBookingTypes: [],
+      autoExcludedGroups: [],
+      bookingTypeOptions: [],
       selectedRows: [],
       duplicates: [],
       errors
@@ -207,8 +247,19 @@ export function parseEnkatCsv(
   const selectedCandidates: EnkatPreviewRow[] = [];
   const autoExcludedGroups = new Map<string, EnkatAutoExcludedGroup>();
 
-  parsed.data.forEach((row, index) => {
+  parsed.data.forEach((row: RawCsvRow, index: number) => {
     const rowIndex = index + 2;
+    const diagnosisText = cleanCell(row, headerMap.diagnoser);
+    if (headerMap.diagnoser && !diagnosisText) {
+      addAutoExcludedGroup(
+        autoExcludedGroups,
+        'Saknar diagnos',
+        'Kolumnen Diagnoser är tom',
+        rowIndex
+      );
+      return;
+    }
+
     const bookingTypeRaw = cleanCell(row, headerMap.bokningstyp);
     if (!bookingTypeRaw) {
       errors.push({ rowIndex, field: 'Bokningstyp', message: 'Bokningstyp saknas. Raden följs inte upp.' });
@@ -217,21 +268,12 @@ export function parseEnkatCsv(
 
     const matchedExcludedPattern = findExcludedBookingTypePattern(bookingTypeRaw, excludedBookingTypePatterns);
     if (matchedExcludedPattern) {
-      const key = `${matchedExcludedPattern}__${bookingTypeRaw}`;
-      const existing = autoExcludedGroups.get(key);
-
-      if (existing) {
-        existing.count += 1;
-        existing.rowIndexes.push(rowIndex);
-      } else {
-        autoExcludedGroups.set(key, {
-          bookingTypeRaw,
-          matchedRule: matchedExcludedPattern,
-          count: 1,
-          rowIndexes: [rowIndex]
-        });
-      }
-
+      addAutoExcludedGroup(
+        autoExcludedGroups,
+        bookingTypeRaw,
+        `Bokningstyp matchade regeln "${matchedExcludedPattern}"`,
+        rowIndex
+      );
       return;
     }
 
@@ -271,8 +313,30 @@ export function parseEnkatCsv(
     });
   });
 
-  const groups = new Map<string, EnkatPreviewRow[]>();
+  const bookingTypeCounts = new Map<string, number>();
   for (const row of selectedCandidates) {
+    const key = row.bookingTypeRaw || '';
+    if (!key) continue;
+    bookingTypeCounts.set(key, (bookingTypeCounts.get(key) || 0) + 1);
+  }
+
+  const bookingTypeOptions = Array.from(bookingTypeCounts.entries())
+    .map(([bookingTypeRaw, count]) => ({
+      bookingTypeRaw,
+      count,
+      selected: includedBookingTypeKeys
+        ? includedBookingTypeKeys.has(canonicalizeBookingTypeSelection(bookingTypeRaw))
+        : true
+    }))
+    .sort((a, b) => a.bookingTypeRaw.localeCompare(b.bookingTypeRaw, 'sv'));
+
+  const previewCandidates = selectedCandidates.filter((row) => {
+    if (!includedBookingTypeKeys) return true;
+    return includedBookingTypeKeys.has(canonicalizeBookingTypeSelection(row.bookingTypeRaw || ''));
+  });
+
+  const groups = new Map<string, EnkatPreviewRow[]>();
+  for (const row of previewCandidates) {
     const dedupKey = row.patientId || row.phone;
     const current = groups.get(dedupKey) || [];
     current.push(row);
@@ -300,10 +364,10 @@ export function parseEnkatCsv(
   }
 
   selectedRows.sort((a, b) => a.rowIndex - b.rowIndex);
-  const autoExcludedBookingTypes = Array.from(autoExcludedGroups.values()).sort((a, b) => {
+  const autoExcludedGroupsList = Array.from(autoExcludedGroups.values()).sort((a, b) => {
     const countDiff = b.count - a.count;
     if (countDiff !== 0) return countDiff;
-    return a.bookingTypeRaw.localeCompare(b.bookingTypeRaw, 'sv');
+    return a.label.localeCompare(b.label, 'sv');
   });
 
   return {
@@ -311,8 +375,9 @@ export function parseEnkatCsv(
     validRows: selectedRows.length,
     invalidRows: [...new Set(errors.map((err) => err.rowIndex))].filter((value) => value !== 0).length,
     duplicateRows: duplicates.reduce((sum, item) => sum + item.discardedRowIndexes.length, 0),
-    autoExcludedRows: autoExcludedBookingTypes.reduce((sum, item) => sum + item.count, 0),
-    autoExcludedBookingTypes,
+    autoExcludedRows: autoExcludedGroupsList.reduce((sum, item) => sum + item.count, 0),
+    autoExcludedGroups: autoExcludedGroupsList,
+    bookingTypeOptions,
     selectedRows,
     duplicates,
     errors
