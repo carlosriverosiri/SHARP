@@ -206,7 +206,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   const body = await request.json();
-  const { action, projectId, kbProjectId, autoInclude } = body;
+  const { action, projectId, kbProjectId: _kbProjectId, autoInclude } = body;
 
   try {
     if (action === 'listKbProjects') {

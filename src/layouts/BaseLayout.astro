@@ -60,7 +60,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     ) : (
       <>
         <link rel="alternate" hreflang="sv" href={canonicalUrl} />
-        <link rel="alternate" hreflang="en" href={alternateUrl ? `${siteUrl}${alternateUrl}` : `${siteUrl}/en/`} />
+        <link rel="alternate" hreflang="en" href={alternateUrl ? `${siteUrl}${alternateUrl}` : `${siteUrl}/en`} />
         <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
       </>
     )}

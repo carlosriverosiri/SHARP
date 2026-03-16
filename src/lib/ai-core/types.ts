@@ -48,7 +48,7 @@ export type AIResponse = {
 
 export type ModelProvider = 'openai' | 'anthropic' | 'gemini' | 'grok';
 
-export type SynthesisModel = 'claude' | 'claude-opus' | 'openai' | 'openai-pro' | 'gpt4o' | 'gemini' | 'grok';
+export type SynthesisModel = 'claude' | 'claude-opus' | 'claude-opus-46' | 'openai' | 'openai-pro' | 'gpt4o' | 'gemini' | 'grok';
 
 export type ImageData = {
   name: string;

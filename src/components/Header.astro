@@ -7,10 +7,10 @@ const isEnglish = pathname.startsWith('/en');
 const { alternateUrl } = Astro.props;
 
 // Smart language switcher: use alternateUrl if provided, otherwise fallback to root
-const switchToEnglish = isEnglish ? '#' : (alternateUrl || '/en/');
+const switchToEnglish = isEnglish ? '#' : (alternateUrl || '/en');
 const switchToSwedish = isEnglish ? (alternateUrl || '/') : '#';
 
-const homeUrl = isEnglish ? '/en/' : '/';
+const homeUrl = isEnglish ? '/en' : '/';
 const searchUrl = isEnglish ? '/en/search' : '/sok';
 ---
 
@@ -37,7 +37,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
         <>
           <!-- Diseases - Mega Menu -->
           <div class="group relative">
-            <a href="/en/diseases/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/diseases" class="nav-link group-hover:text-blue-600">
               Diseases
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -48,7 +48,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
                   <div class="group/shoulder relative">
-                    <a href="/en/diseases/shoulder/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/diseases/shoulder" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/shoulder:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -62,7 +62,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knee -->
                   <div class="group/knee relative">
-                    <a href="/en/diseases/knee/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/diseases/knee" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/knee:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -74,7 +74,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Elbow -->
                   <div class="group/elbow relative">
-                    <a href="/en/diseases/elbow/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/diseases/elbow" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/elbow:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -91,7 +91,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Surgery - Mega Menu -->
           <div class="group relative">
-            <a href="/en/surgery/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/surgery" class="nav-link group-hover:text-blue-600">
               Surgery
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -102,7 +102,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
                   <div class="group/shoulder-op relative">
-                    <a href="/en/surgery/shoulder/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/surgery/shoulder" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/shoulder-op:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -114,7 +114,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knee -->
                   <div class="group/knee-op relative">
-                    <a href="/en/surgery/knee/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/surgery/knee" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/knee-op:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -126,7 +126,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Elbow -->
                   <div class="group/elbow-op relative">
-                    <a href="/en/surgery/elbow/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/surgery/elbow" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/elbow-op:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -143,7 +143,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Rehab - Mega Menu -->
           <div class="group relative">
-            <a href="/en/rehab/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/rehab" class="nav-link group-hover:text-blue-600">
               Rehab
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -154,7 +154,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
                   <div class="group/shoulder-rehab relative">
-                    <a href="/en/rehab/shoulder/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/rehab/shoulder" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/shoulder-rehab:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -166,7 +166,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knee -->
                   <div class="group/knee-rehab relative">
-                    <a href="/en/rehab/knee/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/rehab/knee" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/knee-rehab:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -178,7 +178,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Elbow -->
                   <div class="group/elbow-rehab relative">
-                    <a href="/en/rehab/elbow/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/en/rehab/elbow" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/elbow-rehab:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -195,7 +195,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Ask the Doctor - Mega Menu -->
           <div class="group relative">
-            <a href="/en/ask-the-doctor/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/ask-the-doctor" class="nav-link group-hover:text-blue-600">
               Ask the Doctor
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -205,21 +205,21 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Shoulder -->
-                  <a href="/en/ask-the-doctor/shoulder/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/shoulder-qa">
+                  <a href="/en/ask-the-doctor/shoulder" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/shoulder-qa">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/shoulder-qa:scale-110 transition-transform">
                       <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
                     <span class="font-bold text-[#024264] text-base">Shoulder</span>
                   </a>
                   <!-- Knee -->
-                  <a href="/en/ask-the-doctor/knee/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/knee-qa">
+                  <a href="/en/ask-the-doctor/knee" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/knee-qa">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/knee-qa:scale-110 transition-transform">
                       <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
                     <span class="font-bold text-[#024264] text-base">Knee</span>
                   </a>
                   <!-- Elbow -->
-                  <a href="/en/ask-the-doctor/elbow/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/elbow-qa">
+                  <a href="/en/ask-the-doctor/elbow" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/elbow-qa">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/elbow-qa:scale-110 transition-transform">
                       <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
@@ -228,13 +228,13 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 </div>
                 <!-- Action buttons -->
                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-2">
-                  <a href="/en/ask-the-doctor/#question-form" class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-3 py-2 rounded-full hover:bg-sky-700 transition-colors font-medium">
+                  <a href="/en/ask-the-doctor#question-form" class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-3 py-2 rounded-full hover:bg-sky-700 transition-colors font-medium">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Ask a Question
                   </a>
-                  <a href="/en/ask-the-doctor/latest/" class="inline-flex items-center gap-2 text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors font-medium">
+                  <a href="/en/ask-the-doctor/latest" class="inline-flex items-center gap-2 text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors font-medium">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -247,7 +247,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Patient -->
           <div class="group relative">
-            <a href="/en/patient/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/patient" class="nav-link group-hover:text-blue-600">
               Patient
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -255,17 +255,17 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </a>
             <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
               <ul class="dropdown-menu min-w-[260px]">
-                <li><a href="/en/patient/visit-us/" class="dropdown-link">Visit Us from All of Sweden</a></li>
-                <li><a href="/en/patient/referral-waiting-time/" class="dropdown-link">Referral & Waiting Time</a></li>
-                <li><a href="/en/patient/insurance-payment/" class="dropdown-link">Insurance & Payment</a></li>
-                <li><a href="/en/patient/book-reschedule/" class="dropdown-link">Book & Reschedule</a></li>
+                <li><a href="/en/patient/visit-us" class="dropdown-link">Visit Us from All of Sweden</a></li>
+                <li><a href="/en/patient/referral-waiting-time" class="dropdown-link">Referral & Waiting Time</a></li>
+                <li><a href="/en/patient/insurance-payment" class="dropdown-link">Insurance & Payment</a></li>
+                <li><a href="/en/patient/book-reschedule" class="dropdown-link">Book & Reschedule</a></li>
               </ul>
             </div>
           </div>
 
           <!-- About Us -->
           <div class="group relative">
-            <a href="/en/about/" class="nav-link group-hover:text-blue-600">
+            <a href="/en/about" class="nav-link group-hover:text-blue-600">
               About Us
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -274,12 +274,12 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             <div class="absolute top-full right-0 pt-2 hidden group-hover:block z-50">
               <ul class="dropdown-menu min-w-[240px]">
                 <li>
-                  <a href="/en/about/our-team/" class="dropdown-link font-medium">Our Team</a>
+                  <a href="/en/about/our-team" class="dropdown-link font-medium">Our Team</a>
                   <a href="/en/about/our-team/dr-carlos-rivero-siri" class="block px-4 py-1.5 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-blue-200 ml-4 transition-colors">Dr. Carlos Rivero Siri</a>
                 </li>
-                <li><a href="/en/about/quality-research/" class="dropdown-link">Quality & Research</a></li>
-                <li><a href="/en/about/clinic-directions/" class="dropdown-link">About the Clinic & Directions</a></li>
-                <li><a href="/en/about/faq/" class="dropdown-link">FAQ</a></li>
+                <li><a href="/en/about/quality-research" class="dropdown-link">Quality & Research</a></li>
+                <li><a href="/en/about/clinic-directions" class="dropdown-link">About the Clinic & Directions</a></li>
+                <li><a href="/en/about/faq" class="dropdown-link">FAQ</a></li>
               </ul>
             </div>
           </div>
@@ -315,7 +315,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
         <>
           <!-- Sjukdomar - Mega Menu -->
           <div class="group relative">
-            <a href="/sjukdomar/" class="nav-link group-hover:text-blue-600">
+            <a href="/sjukdomar" class="nav-link group-hover:text-blue-600">
               Sjukdomar
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -326,7 +326,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Axel -->
                   <div class="group/axel relative">
-                    <a href="/sjukdomar/axel/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/sjukdomar/axel" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -339,7 +339,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knä -->
                   <div class="group/kna relative">
-                    <a href="/sjukdomar/kna/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/sjukdomar/kna" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -351,7 +351,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Armbåge -->
                   <div class="group/arm relative">
-                    <a href="/sjukdomar/armbage/" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
+                    <a href="/sjukdomar/armbage" class="flex flex-col items-center text-center hover:bg-blue-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-sky-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -368,7 +368,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Operation - Mega Menu -->
           <div class="group relative">
-            <a href="/operation/" class="nav-link group-hover:text-blue-600">
+            <a href="/operation" class="nav-link group-hover:text-blue-600">
               Operation
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -379,7 +379,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Axel -->
                   <div class="group/axel-op relative">
-                    <a href="/operation/axel/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/operation/axel" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/axel-op:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -391,7 +391,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knä -->
                   <div class="group/kna-op relative">
-                    <a href="/operation/kna/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/operation/kna" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/kna-op:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -403,7 +403,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Armbåge -->
                   <div class="group/arm-op relative">
-                    <a href="/operation/armbage/" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
+                    <a href="/operation/armbage" class="flex flex-col items-center text-center hover:bg-orange-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-orange-50 flex items-center justify-center overflow-hidden group-hover/arm-op:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -420,7 +420,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Rehab - Mega Menu -->
           <div class="group relative">
-            <a href="/rehab/" class="nav-link group-hover:text-blue-600">
+            <a href="/rehab" class="nav-link group-hover:text-blue-600">
               Rehab
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -431,7 +431,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Axel -->
                   <div class="group/axel relative">
-                    <a href="/rehab/axel/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/rehab/axel" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
                         <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -443,7 +443,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Knä -->
                   <div class="group/kna relative">
-                    <a href="/rehab/kna/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/rehab/kna" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
                         <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -455,7 +455,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </div>
                   <!-- Armbåge -->
                   <div class="group/arm relative">
-                    <a href="/rehab/armbage/" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
+                    <a href="/rehab/armbage" class="flex flex-col items-center text-center hover:bg-green-50 rounded-xl p-4 transition-colors">
                       <div class="w-20 h-20 mb-3 rounded-full bg-green-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
                         <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                       </div>
@@ -472,7 +472,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
           
           <!-- Fråga Doktorn - Mega Menu -->
           <div class="group relative">
-            <a href="/fraga-doktorn/" class="nav-link group-hover:text-blue-600">
+            <a href="/fraga-doktorn" class="nav-link group-hover:text-blue-600">
               Fråga Doktorn
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -482,21 +482,21 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 min-w-[560px]">
                 <div class="grid grid-cols-3 gap-6">
                   <!-- Axel -->
-                  <a href="/fraga-doktorn/axel/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/axel">
+                  <a href="/fraga-doktorn/axel" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/axel">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/axel:scale-110 transition-transform">
                       <img src="/images/icons/Axel-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
                     <span class="font-bold text-[#024264] text-base">Axel</span>
                   </a>
                   <!-- Knä -->
-                  <a href="/fraga-doktorn/kna/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/kna">
+                  <a href="/fraga-doktorn/kna" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/kna">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/kna:scale-110 transition-transform">
                       <img src="/images/icons/kna-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
                     <span class="font-bold text-[#024264] text-base">Knä</span>
                   </a>
                   <!-- Armbåge -->
-                  <a href="/fraga-doktorn/armbage/" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/arm">
+                  <a href="/fraga-doktorn/armbage" class="flex flex-col items-center text-center hover:bg-purple-50 rounded-xl p-4 transition-colors group/arm">
                     <div class="w-20 h-20 mb-3 rounded-full bg-purple-50 flex items-center justify-center overflow-hidden group-hover/arm:scale-110 transition-transform">
                       <img src="/images/icons/armbage-icon.svg" alt="" class="w-16 h-16 object-contain" />
                     </div>
@@ -505,19 +505,19 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                 </div>
                 <!-- Åtgärdsknappar -->
                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-2">
-                  <a href="/fraga-doktorn/#fraga-form" class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-3 py-2 rounded-full hover:bg-sky-700 transition-colors font-medium">
+                  <a href="/fraga-doktorn#fraga-form" class="inline-flex items-center gap-2 text-sm bg-sky-600 text-white px-3 py-2 rounded-full hover:bg-sky-700 transition-colors font-medium">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Ställ en fråga
                   </a>
-                  <a href="/fraga-doktorn/senaste/" class="inline-flex items-center gap-2 text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors font-medium">
+                  <a href="/fraga-doktorn/senaste" class="inline-flex items-center gap-2 text-sm bg-slate-100 text-slate-700 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors font-medium">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Senaste svaren
                   </a>
-                  <a href="/admin/obesvarade/" class="inline-flex items-center gap-2 text-sm bg-amber-100 text-amber-700 px-3 py-2 rounded-full hover:bg-amber-200 transition-colors font-medium">
+                  <a href="/admin/obesvarade" class="inline-flex items-center gap-2 text-sm bg-amber-100 text-amber-700 px-3 py-2 rounded-full hover:bg-amber-200 transition-colors font-medium">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
@@ -530,7 +530,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
           
           <!-- Patient -->
           <div class="group relative">
-            <a href="/patient/" class="nav-link group-hover:text-blue-600">
+            <a href="/patient" class="nav-link group-hover:text-blue-600">
               Patient
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -538,10 +538,10 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </a>
             <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
               <ul class="dropdown-menu min-w-[260px]">
-                <li><a href="/patient/kom-till-oss/" class="dropdown-link">Kom till oss från hela Sverige</a></li>
-                <li><a href="/patient/remiss-vantetid/" class="dropdown-link">Remiss & Väntetid</a></li>
-                <li><a href="/patient/forsakringar-betalning/" class="dropdown-link">Försäkringar & Betalning</a></li>
-                <li><a href="/patient/boka-omboka/" class="dropdown-link">Boka & Omboka tid</a></li>
+                <li><a href="/patient/kom-till-oss" class="dropdown-link">Kom till oss från hela Sverige</a></li>
+                <li><a href="/patient/remiss-vantetid" class="dropdown-link">Remiss & Väntetid</a></li>
+                <li><a href="/patient/forsakringar-betalning" class="dropdown-link">Försäkringar & Betalning</a></li>
+                <li><a href="/patient/boka-omboka" class="dropdown-link">Boka & Omboka tid</a></li>
                 <li class="border-t border-gray-200 mt-2 pt-2">
                   <span class="block px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Info</span>
                   <a href="/info/recept-policy" class="dropdown-link">Receptpolicy & förpackningsbyten</a>
@@ -552,7 +552,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
           
           <!-- Om Oss -->
           <div class="group relative">
-            <a href="/om-oss/" class="nav-link group-hover:text-blue-600">
+            <a href="/om-oss" class="nav-link group-hover:text-blue-600">
               Om Oss
               <svg class="inline-block w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -561,12 +561,12 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             <div class="absolute top-full right-0 pt-2 hidden group-hover:block z-50">
               <ul class="dropdown-menu min-w-[240px]">
                 <li>
-                  <a href="/om-oss/vart-team/" class="dropdown-link font-medium">Vårt Team</a>
+                  <a href="/om-oss/vart-team" class="dropdown-link font-medium">Vårt Team</a>
                   <a href="/om-oss/vart-team/dr-carlos-rivero-siri" class="block px-4 py-1.5 text-xs text-gray-500 hover:text-blue-600 hover:bg-blue-50 border-l-2 border-blue-200 ml-4 transition-colors">Dr. Carlos Rivero Siri</a>
                 </li>
-                <li><a href="/om-oss/kvalitet-forskning/" class="dropdown-link">Kvalitet & Forskning</a></li>
-                <li><a href="/om-oss/om-kliniken-hitta-hit/" class="dropdown-link">Om Kliniken & Hitta Hit</a></li>
-                <li><a href="/om-oss/faq/" class="dropdown-link">FAQ</a></li>
+                <li><a href="/om-oss/kvalitet-forskning" class="dropdown-link">Kvalitet & Forskning</a></li>
+                <li><a href="/om-oss/om-kliniken-hitta-hit" class="dropdown-link">Om Kliniken & Hitta Hit</a></li>
+                <li><a href="/om-oss/faq" class="dropdown-link">FAQ</a></li>
                 <li class="border-t border-gray-100 mt-2 pt-2">
                   <a href="/om-oss/kort-varsel-demo" class="dropdown-link flex items-center gap-2">
                     <span class="text-rose-500">📱</span> Kort Varsel SMS
@@ -701,7 +701,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/en/diseases/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder conditions</a>
+                  <a href="/en/diseases/shoulder" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder conditions</a>
                   <a href="/en/diseases/shoulder/ac-joint-arthritis" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC Joint Arthritis</a>
                   <a href="/en/diseases/shoulder/suprascapular-neuropathy" class="block text-slate-400 hover:text-white py-1.5 text-sm">Suprascapular Neuropathy</a>
                   <a href="/en/diseases/shoulder/parsonage-turner" class="block text-slate-400 hover:text-white py-1.5 text-sm">Parsonage-Turner</a>
@@ -716,7 +716,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-knee-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/en/diseases/knee/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All knee conditions</a>
+                  <a href="/en/diseases/knee" class="block text-slate-400 hover:text-white py-1.5 text-sm">All knee conditions</a>
                 </div>
               </div>
               <!-- Elbow -->
@@ -728,7 +728,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-elbow-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/en/diseases/elbow/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All elbow conditions</a>
+                  <a href="/en/diseases/elbow" class="block text-slate-400 hover:text-white py-1.5 text-sm">All elbow conditions</a>
                   <a href="/en/diseases/elbow/distal-biceps-rupture" class="block text-slate-400 hover:text-white py-1.5 text-sm">Distal Biceps Rupture</a>
                 </div>
               </div>
@@ -753,19 +753,19 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-surgery-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/en/surgery/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder surgeries</a>
+                  <a href="/en/surgery/shoulder" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder surgeries</a>
                   <a href="/en/surgery/shoulder/lateral-clavicle-resection" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC Joint Arthritis</a>
                 </div>
               </div>
               <!-- Knee -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/en/surgery/knee/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/en/surgery/knee" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Knee
                 </a>
               </div>
               <!-- Elbow -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/en/surgery/elbow/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/en/surgery/elbow" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Elbow
                 </a>
               </div>
@@ -790,19 +790,19 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-rehab-shoulder-en" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/en/rehab/shoulder/" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder rehab</a>
+                  <a href="/en/rehab/shoulder" class="block text-slate-400 hover:text-white py-1.5 text-sm">All shoulder rehab</a>
                   <a href="/en/rehab/suprascapular-nerve-decompression" class="block text-slate-400 hover:text-white py-1.5 text-sm">Nerve Decompression</a>
                 </div>
               </div>
               <!-- Knee -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/en/rehab/knee/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/en/rehab/knee" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Knee
                 </a>
               </div>
               <!-- Elbow -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/en/rehab/elbow/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/en/rehab/elbow" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-emerald-400 mr-3"></span>Elbow
                 </a>
               </div>
@@ -818,21 +818,21 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </button>
             <div id="menu-askdoctor-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
-              <a href="/en/ask-the-doctor/#question-form" class="flex items-center text-sky-400 hover:text-sky-300 py-2 font-medium">
+              <a href="/en/ask-the-doctor#question-form" class="flex items-center text-sky-400 hover:text-sky-300 py-2 font-medium">
                 <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Ask a Question
               </a>
-              <a href="/en/ask-the-doctor/latest/" class="flex items-center text-slate-300 hover:text-white py-2">
+              <a href="/en/ask-the-doctor/latest" class="flex items-center text-slate-300 hover:text-white py-2">
                 <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 Latest Answers
               </a>
-              <a href="/en/ask-the-doctor/shoulder/" class="block text-slate-400 hover:text-white py-1.5 mt-2">Shoulder Questions</a>
-              <a href="/en/ask-the-doctor/knee/" class="block text-slate-400 hover:text-white py-1.5">Knee Questions</a>
-              <a href="/en/ask-the-doctor/elbow/" class="block text-slate-400 hover:text-white py-1.5">Elbow Questions</a>
+              <a href="/en/ask-the-doctor/shoulder" class="block text-slate-400 hover:text-white py-1.5 mt-2">Shoulder Questions</a>
+              <a href="/en/ask-the-doctor/knee" class="block text-slate-400 hover:text-white py-1.5">Knee Questions</a>
+              <a href="/en/ask-the-doctor/elbow" class="block text-slate-400 hover:text-white py-1.5">Elbow Questions</a>
             </div>
           </div>
 
@@ -846,9 +846,9 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </button>
             <div id="menu-patient-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
               <a href="/en/free-choice" class="block text-slate-400 hover:text-white py-1.5">Free Healthcare Choice Sweden</a>
-              <a href="/en/patient/insurance-payment/" class="block text-slate-400 hover:text-white py-1.5">Insurance & Payment</a>
-              <a href="/en/patient/referral-waiting-time/" class="block text-slate-400 hover:text-white py-1.5">Referral & Waiting Time</a>
-              <a href="/en/patient/book-reschedule/" class="block text-slate-400 hover:text-white py-1.5">Book & Reschedule</a>
+              <a href="/en/patient/insurance-payment" class="block text-slate-400 hover:text-white py-1.5">Insurance & Payment</a>
+              <a href="/en/patient/referral-waiting-time" class="block text-slate-400 hover:text-white py-1.5">Referral & Waiting Time</a>
+              <a href="/en/patient/book-reschedule" class="block text-slate-400 hover:text-white py-1.5">Book & Reschedule</a>
             </div>
           </div>
 
@@ -862,10 +862,10 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
             </button>
             <div id="menu-about-en" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
               <a href="/en/about/our-team/dr-carlos-rivero-siri" class="block text-slate-400 hover:text-white py-1.5">Dr. Carlos Rivero Siri</a>
-              <a href="/en/about/our-team/" class="block text-slate-400 hover:text-white py-1.5">Our Team</a>
-              <a href="/en/about/quality-research/" class="block text-slate-400 hover:text-white py-1.5">Quality & Research</a>
-              <a href="/en/about/clinic-directions/" class="block text-slate-400 hover:text-white py-1.5">About the Clinic & Directions</a>
-              <a href="/en/about/faq/" class="block text-slate-400 hover:text-white py-1.5">FAQ</a>
+              <a href="/en/about/our-team" class="block text-slate-400 hover:text-white py-1.5">Our Team</a>
+              <a href="/en/about/quality-research" class="block text-slate-400 hover:text-white py-1.5">Quality & Research</a>
+              <a href="/en/about/clinic-directions" class="block text-slate-400 hover:text-white py-1.5">About the Clinic & Directions</a>
+              <a href="/en/about/faq" class="block text-slate-400 hover:text-white py-1.5">FAQ</a>
             </div>
           </div>
 
@@ -904,7 +904,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-axel" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/sjukdomar/axel/" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla axelsjukdomar</a>
+                  <a href="/sjukdomar/axel" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla axelsjukdomar</a>
                   <a href="/sjukdomar/axel/ac-ledsartros" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC-ledsartros</a>
                   <a href="/sjukdomar/axel/parsonage-turner" class="block text-slate-400 hover:text-white py-1.5 text-sm">Parsonage-Turner</a>
                 </div>
@@ -918,7 +918,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-kna" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/sjukdomar/kna/" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla knäsjukdomar</a>
+                  <a href="/sjukdomar/kna" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla knäsjukdomar</a>
                 </div>
               </div>
               <!-- Armbåge -->
@@ -930,7 +930,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-armbage" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/sjukdomar/armbage/" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla armbågssjukdomar</a>
+                  <a href="/sjukdomar/armbage" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla armbågssjukdomar</a>
                   <a href="/sjukdomar/armbage/distal-bicepsruptur" class="block text-slate-400 hover:text-white py-1.5 text-sm">Distal bicepsruptur</a>
                 </div>
               </div>
@@ -955,19 +955,19 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
                   </svg>
                 </button>
                 <div id="menu-operation-axel" class="mobile-accordion-content hidden pl-5 pb-2 space-y-1">
-                  <a href="/operation/axel/" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla axeloperationer</a>
+                  <a href="/operation/axel" class="block text-slate-400 hover:text-white py-1.5 text-sm">Alla axeloperationer</a>
                   <a href="/operation/axel/lateral-klavikelresektion" class="block text-slate-400 hover:text-white py-1.5 text-sm">AC-ledsartros</a>
                 </div>
               </div>
               <!-- Knä -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/operation/kna/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/operation/kna" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Knä
                 </a>
               </div>
               <!-- Armbåge -->
               <div class="mobile-accordion-nested ml-4">
-                <a href="/operation/armbage/" class="flex items-center text-slate-300 py-2 hover:text-white">
+                <a href="/operation/armbage" class="flex items-center text-slate-300 py-2 hover:text-white">
                   <span class="w-2 h-2 rounded-full bg-orange-400 mr-3"></span>Armbåge
                 </a>
               </div>
@@ -976,7 +976,7 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
 
           <!-- Rehab -->
           <div class="mobile-accordion border-b border-slate-800">
-            <a href="/rehab/" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
+            <a href="/rehab" class="block text-lg font-bold text-white py-4 hover:text-sky-400 transition-colors">
               Rehab
             </a>
           </div>
@@ -990,21 +990,21 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
               </svg>
             </button>
             <div id="menu-fraga" class="mobile-accordion-content hidden pb-4 ml-4 space-y-1">
-              <a href="/fraga-doktorn/#fraga-form" class="flex items-center text-sky-400 hover:text-sky-300 py-2 font-medium">
+              <a href="/fraga-doktorn#fraga-form" class="flex items-center text-sky-400 hover:text-sky-300 py-2 font-medium">
                 <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Ställ en fråga
               </a>
-              <a href="/fraga-doktorn/senaste/" class="flex items-center text-slate-300 hover:text-white py-2">
+              <a href="/fraga-doktorn/senaste" class="flex items-center text-slate-300 hover:text-white py-2">
                 <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 Senaste svaren
               </a>
-              <a href="/fraga-doktorn/axel/" class="block text-slate-400 hover:text-white py-1.5 mt-2">Axel-frågor</a>
-              <a href="/fraga-doktorn/kna/" class="block text-slate-400 hover:text-white py-1.5">Knä-frågor</a>
-              <a href="/fraga-doktorn/armbage/" class="block text-slate-400 hover:text-white py-1.5">Armbåge-frågor</a>
+              <a href="/fraga-doktorn/axel" class="block text-slate-400 hover:text-white py-1.5 mt-2">Axel-frågor</a>
+              <a href="/fraga-doktorn/kna" class="block text-slate-400 hover:text-white py-1.5">Knä-frågor</a>
+              <a href="/fraga-doktorn/armbage" class="block text-slate-400 hover:text-white py-1.5">Armbåge-frågor</a>
             </div>
           </div>
 

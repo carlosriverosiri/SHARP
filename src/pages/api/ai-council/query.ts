@@ -1035,8 +1035,6 @@ async function synthesizeWithOpenAIPro(
   }
 }
 
-void synthesizeWithOpenAIPro;
-
 // Synthesis using Gemini
 async function synthesizeWithGemini(
   originalPrompt: string,
@@ -1388,6 +1386,8 @@ async function synthesize(
   switch (synthesisModel) {
     case 'openai':
       return synthesizeWithOpenAI(originalPrompt, responses);
+    case 'openai-pro':
+      return synthesizeWithOpenAIPro(originalPrompt, responses);
     case 'gpt4o':
       return synthesizeWithGPT4o(originalPrompt, responses);
     case 'gemini':
@@ -1437,7 +1437,21 @@ async function superSynthesize(
         const data = await response.json();
         return { model: 'gpt-5.2', provider: 'GPT-5.2 (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
       } catch (e: any) {
-        return { model: 'gpt-5.2', provider: 'OpenAI o1 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+        return { model: 'gpt-5.2', provider: 'GPT-5.2 (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
+      }
+
+    case 'openai-pro':
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
+          body: JSON.stringify({ model: 'gpt-5.2-pro', messages: [{ role: 'user', content: superPrompt }], max_tokens: 16384 }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        return { model: 'gpt-5.2-pro', provider: 'GPT-5.2 Pro (Supersyntes)', response: data.choices[0]?.message?.content || '', duration: Date.now() - start };
+      } catch (e: any) {
+        return { model: 'gpt-5.2-pro', provider: 'GPT-5.2 Pro (Supersyntes)', response: '', error: e.message, duration: Date.now() - start };
       }
     
     case 'gpt4o':

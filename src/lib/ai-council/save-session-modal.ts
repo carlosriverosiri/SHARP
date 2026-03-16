@@ -1,5 +1,16 @@
 import type { CurrentResponses } from './types';
 
+type PickProjectOptions = {
+  title?: string;
+  forFilter?: boolean;
+};
+
+type PickProjectSelection = {
+  id: string;
+  name: string;
+  icon?: string;
+};
+
 type SaveSessionModalOptions = {
   getCurrentPrompt: () => string;
   getCurrentResponses: () => CurrentResponses;
@@ -7,7 +18,7 @@ type SaveSessionModalOptions = {
   synthesisModelEl: HTMLSelectElement | null;
   kbProjectSelect: HTMLSelectElement | null;
   getSaveSession: () => (payload: any) => Promise<any>;
-  pickProject?: (options?: { title?: string }) => Promise<{ id: string; name: string; icon?: string } | null>;
+  pickProject?: (options?: PickProjectOptions) => Promise<PickProjectSelection | null>;
   getKbProjectMap?: () => Record<string, string>;
 };
 
@@ -38,7 +49,7 @@ export function initSaveSessionModal({
 
   function updateSaveModalProjectDisplay() {
     if (!saveModalProjectBtnText) return;
-    const currentId = kbProjectSelect ? (kbProjectSelect as HTMLInputElement).value : '';
+    const currentId = kbProjectSelect?.value || '';
     const projectName = currentId && getKbProjectMap ? getKbProjectMap()[currentId] : null;
     if (projectName) {
       saveModalProjectBtnText.textContent = projectName;
@@ -66,11 +77,11 @@ export function initSaveSessionModal({
     const selected = await pickProject({ title: '📁 Välj projekt för session' });
     if (!selected) return;
     if (selected.id === '__none__') {
-      (kbProjectSelect as HTMLInputElement).value = '';
+      kbProjectSelect.value = '';
       updateSaveModalProjectDisplay();
       return;
     }
-    (kbProjectSelect as HTMLInputElement).value = selected.id;
+    kbProjectSelect.value = selected.id;
     updateSaveModalProjectDisplay();
   });
 
