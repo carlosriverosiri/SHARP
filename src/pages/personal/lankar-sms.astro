@@ -12,6 +12,7 @@
 export const prerender = false;
 
 import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+import PortalLayout from '../../layouts/PortalLayout.astro';
 
 // Kontrollera inloggning
 if (!await arInloggad(Astro.cookies)) {
@@ -65,8 +66,6 @@ const normalizePhone = (raw: string) => {
 };
 
 const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
-
-import PortalLayout from '../../layouts/PortalLayout.astro';
 ---
 
 <PortalLayout title="Länkar & SMS" activePath="/personal/lankar-sms" email={anvandare?.email} role={anvandare?.roll}>
