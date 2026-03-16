@@ -1,0 +1,293 @@
+---
+/**
+ * Delad layout för personalportalen.
+ * Ger enhetlig sidebar, mobilmeny och huvudinnehållsyta.
+ *
+ * Props:
+ *   title    – sidtitel (visas i <title>)
+ *   activePath – URL-path för att markera rätt nav-länk som aktiv
+ *   email    – inloggad användares e-post (visas i sidebar-footer)
+ *   role     – 'admin' | 'personal'
+ */
+export interface Props {
+  title: string;
+  activePath: string;
+  email?: string;
+  role?: string;
+}
+
+const { title, activePath, email, role } = Astro.props;
+
+type NavItem = { href: string; label: string; icon: string };
+type NavSection = { title: string; items: NavItem[] };
+
+const sections: NavSection[] = [
+  {
+    title: 'Verktyg',
+    items: [
+      { href: '/personal/oversikt', label: 'Översikt', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+      { href: '/personal/resurser', label: 'Resurser', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+      { href: '/personal/lankar-sms', label: 'Länkar & SMS', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' },
+      { href: '/personal/kort-varsel', label: 'Kort varsel SMS', icon: 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z' },
+      { href: '/personal/enkat', label: 'Patientupplevelse', icon: 'M8 10h.01M12 10h.01M16 10h.01M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z' },
+    ]
+  },
+  {
+    title: 'Administration',
+    items: [
+      { href: '/personal/admin', label: 'Användare & läkare', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' },
+      { href: '/personal/profil', label: 'Min profil', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+      { href: '/admin/obesvarade', label: 'Obesvarade frågor', icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { href: '/senast-redigerade', label: 'Senast redigerade', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+    ]
+  },
+  {
+    title: 'Information',
+    items: [
+      { href: '/info/kallelse-operation', label: 'Kallelse operation', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+      { href: '/info/kallelse-operation-forsakring', label: 'Kallelse försäkring', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+    ]
+  }
+];
+
+function isActive(href: string) {
+  return activePath === href || activePath.startsWith(href + '/');
+}
+---
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{title} | Personalportal</title>
+  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+  <style is:global>
+    .portal-reset * { box-sizing: border-box; }
+    .portal-reset body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+    }
+    .portal-sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 260px;
+      background: #1e293b;
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 50;
+    }
+    .portal-sidebar-header {
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .portal-sidebar-header img { height: 32px; filter: brightness(0) invert(1); }
+    .portal-nav-section { margin-bottom: 1.5rem; }
+    .portal-nav-section-title {
+      font-size: 0.75rem; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 0.75rem; padding-left: 0.75rem;
+    }
+    .portal-nav-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem; border-radius: 0.5rem;
+      color: #cbd5e1; text-decoration: none;
+      transition: all 0.2s; margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .portal-nav-link:hover { background: #334155; color: white; }
+    .portal-nav-link.active { background: #0284c7; color: white; }
+    .portal-nav-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .portal-sidebar-footer {
+      margin-top: auto; padding-top: 1.5rem;
+      border-top: 1px solid #334155;
+    }
+    .portal-user-info {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem; margin-bottom: 0.75rem;
+      background: #334155; border-radius: 0.5rem;
+    }
+    .portal-user-avatar {
+      width: 36px; height: 36px; background: #0284c7;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 600; color: white;
+      font-size: 0.875rem; flex-shrink: 0;
+    }
+    .portal-user-details { display: flex; flex-direction: column; overflow: hidden; }
+    .portal-user-email { font-size: 0.75rem; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .portal-user-role { font-size: 0.625rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .portal-logout-btn {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem; border-radius: 0.5rem;
+      color: #f87171; text-decoration: none;
+      transition: all 0.2s; width: 100%;
+      background: none; border: none; cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .portal-logout-btn:hover { background: #450a0a; }
+    .portal-main {
+      margin-left: 260px; padding: 2rem; min-height: 100vh;
+    }
+    .portal-mobile-nav {
+      display: none;
+      position: sticky; top: 0; z-index: 40;
+      background: #1e293b; color: white;
+      padding: 0.75rem 1rem;
+      align-items: center; justify-content: space-between;
+    }
+    .portal-mobile-nav img { height: 28px; filter: brightness(0) invert(1); }
+    .portal-mobile-menu-btn {
+      background: transparent; border: none; color: white; cursor: pointer; padding: 0.5rem;
+    }
+    .portal-mobile-logout { color: #f87171; text-decoration: none; font-size: 0.8125rem; }
+    .portal-mobile-drawer {
+      display: none; position: fixed; inset: 0; z-index: 60;
+    }
+    .portal-mobile-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+    }
+    .portal-mobile-drawer-content {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 280px; max-width: 85%; background: #1e293b;
+      padding: 1.5rem; overflow-y: auto;
+      transform: translateX(-100%); transition: transform 0.3s ease;
+    }
+    .portal-mobile-drawer.open .portal-mobile-drawer-content {
+      transform: translateX(0);
+    }
+    .portal-mobile-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: transparent; border: none; color: #94a3b8; cursor: pointer; padding: 0.5rem;
+    }
+    .portal-mobile-drawer nav { margin-top: 2rem; }
+    .portal-mobile-drawer nav a {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.875rem 0.75rem; color: #cbd5e1;
+      text-decoration: none; border-radius: 0.5rem;
+      margin-bottom: 0.25rem; font-size: 0.9375rem;
+    }
+    .portal-mobile-drawer nav a:hover,
+    .portal-mobile-drawer nav a.active { background: #334155; color: white; }
+    .portal-mobile-drawer nav a svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .portal-mobile-section { margin-bottom: 1.5rem; }
+    .portal-mobile-section-title {
+      font-size: 0.6875rem; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 0.5rem; padding-left: 0.75rem;
+    }
+    @media (max-width: 1023px) {
+      .portal-sidebar { display: none; }
+      .portal-main { margin-left: 0; padding: 1rem; }
+      .portal-mobile-nav { display: flex; }
+      .portal-mobile-drawer { display: block; pointer-events: none; }
+      .portal-mobile-drawer.open { pointer-events: auto; }
+      .portal-mobile-overlay { opacity: 0; transition: opacity 0.3s; }
+      .portal-mobile-drawer.open .portal-mobile-overlay { opacity: 1; }
+    }
+    @media (min-width: 1024px) {
+      .portal-mobile-nav, .portal-mobile-drawer { display: none !important; }
+    }
+  </style>
+</head>
+<body class="portal-reset">
+  <!-- Desktop sidebar -->
+  <aside class="portal-sidebar">
+    <a href="/" class="portal-sidebar-header" title="Tillbaka till hemsidan">
+      <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi">
+    </a>
+    <nav>
+      {sections.map((section) => (
+        <div class="portal-nav-section">
+          <div class="portal-nav-section-title">{section.title}</div>
+          {section.items.map((item) => (
+            <a href={item.href} class={`portal-nav-link${isActive(item.href) ? ' active' : ''}`}>
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon}/></svg>
+              {item.label}
+            </a>
+          ))}
+        </div>
+      ))}
+    </nav>
+    <div class="portal-sidebar-footer">
+      {email && (
+        <div class="portal-user-info">
+          <div class="portal-user-avatar">{email.charAt(0).toUpperCase()}</div>
+          <div class="portal-user-details">
+            <span class="portal-user-email">{email}</span>
+            <span class="portal-user-role">{role === 'admin' ? 'Administratör' : 'Personal'}</span>
+          </div>
+        </div>
+      )}
+      <a href="/personal/oversikt?logout=true" class="portal-logout-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logga ut
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile top bar -->
+  <div class="portal-mobile-nav">
+    <button type="button" class="portal-mobile-menu-btn" id="portalMobileMenuBtn" aria-label="Öppna meny">
+      <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi">
+    <a href="/personal/oversikt?logout=true" class="portal-mobile-logout">Logga ut</a>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="portal-mobile-drawer" id="portalMobileDrawer">
+    <div class="portal-mobile-overlay" id="portalMobileOverlay"></div>
+    <div class="portal-mobile-drawer-content">
+      <button type="button" class="portal-mobile-close" id="portalMobileClose">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <nav>
+        {sections.map((section) => (
+          <div class="portal-mobile-section">
+            <div class="portal-mobile-section-title">{section.title}</div>
+            {section.items.map((item) => (
+              <a href={item.href} class={isActive(item.href) ? 'active' : ''}>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon}/></svg>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        ))}
+        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #334155;">
+          <a href="/" style="color: #94a3b8;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Tillbaka till hemsidan
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <main class="portal-main">
+    <slot />
+  </main>
+
+  <script>
+    const btn = document.getElementById('portalMobileMenuBtn');
+    const drawer = document.getElementById('portalMobileDrawer');
+    const overlay = document.getElementById('portalMobileOverlay');
+    const close = document.getElementById('portalMobileClose');
+    function open() { drawer?.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function shut() { drawer?.classList.remove('open'); document.body.style.overflow = ''; }
+    btn?.addEventListener('click', open);
+    overlay?.addEventListener('click', shut);
+    close?.addEventListener('click', shut);
+  </script>
+</body>
+</html>

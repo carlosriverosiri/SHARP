@@ -6,7 +6,7 @@
 
 export const prerender = false;
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortalLayout from '../../layouts/PortalLayout.astro';
 import { hamtaAnvandare, arInloggad } from '../../lib/auth';
 import { supabaseAdmin, supabaseKonfigurerad } from '../../lib/supabase';
 
@@ -114,24 +114,8 @@ if (supabaseKonfigurerad) {
 }
 ---
 
-<BaseLayout title="Kort varsel SMS | Personalportal" description="Hantera kort varsel SMS-utskick">
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
-              ← Tillbaka
-            </a>
-            <h1 class="text-2xl font-bold text-gray-900">📱 Kort varsel SMS</h1>
-          </div>
-          <div class="text-sm text-gray-500">
-            Inloggad som {anvandare.email}
-          </div>
-        </div>
-      </div>
-    </header>
+<PortalLayout title="Kort varsel SMS" activePath="/personal/kort-varsel" email={anvandare.email} role={anvandare.roll}>
+  <div class="min-h-screen" style="background:#f8fafc;">
 
     <main class="max-w-7xl mx-auto px-4 py-8" data-kampanj-id={kampanjIdFromUrl || ''}>
       <!-- Debug: Visa om Supabase inte är konfigurerat -->
@@ -3676,4 +3660,4 @@ if (supabaseKonfigurerad) {
       });
     }
   </script>
-</BaseLayout>
+</PortalLayout>

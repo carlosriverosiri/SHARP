@@ -8,7 +8,7 @@
 
 export const prerender = false;
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortalLayout from '../../layouts/PortalLayout.astro';
 import { hamtaAnvandare } from '../../lib/auth';
 import { supabaseAdmin } from '../../lib/supabase';
 
@@ -130,19 +130,8 @@ function formateraNummer(nummer: string | null): string {
 }
 ---
 
-<BaseLayout title="Min profil | Personalportal" description="Hantera din profil och SMS-notifikationer">
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-5xl mx-auto px-4 py-4">
-        <div class="flex items-center gap-4">
-          <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
-            ← Tillbaka
-          </a>
-          <h1 class="text-2xl font-bold text-gray-900">👤 Min profil</h1>
-        </div>
-      </div>
-    </header>
+<PortalLayout title="Min profil" activePath="/personal/profil" email={anvandare?.email} role={anvandare?.roll}>
+  <div class="min-h-screen" style="background:#f8fafc;">
 
     <main class="max-w-5xl mx-auto px-4 py-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -327,4 +316,4 @@ function formateraNummer(nummer: string | null): string {
       </div>
     </main>
   </div>
-</BaseLayout>
+</PortalLayout>

@@ -8,7 +8,7 @@
 
 export const prerender = false;
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortalLayout from '../../layouts/PortalLayout.astro';
 import { hamtaAnvandare, skickaAterställningslank } from '../../lib/auth';
 import {
   harMinstPortalRoll,
@@ -413,16 +413,11 @@ function formateraDatum(datum: string): string {
 }
 ---
 
-<BaseLayout title="Administration | Personalportal" description="Hantera användare, roller, lösenordsåterställning och läkare">
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-6xl mx-auto px-4 py-4">
+<PortalLayout title="Administration" activePath="/personal/admin" email={anvandare?.email} role={anvandare?.roll}>
+  <div class="min-h-screen" style="background:#f8fafc;">
+    <div class="max-w-6xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <a href="/personal/oversikt" class="text-gray-500 hover:text-gray-700">
-              ← Tillbaka
-            </a>
+          <div>
             <h1 class="text-2xl font-bold text-gray-900">⚙️ Administration</h1>
           </div>
           <div class="flex items-center gap-3">
@@ -890,4 +885,4 @@ function formateraDatum(datum: string): string {
       });
     });
   </script>
-</BaseLayout>
+</PortalLayout>

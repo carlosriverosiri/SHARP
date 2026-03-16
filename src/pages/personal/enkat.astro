@@ -50,16 +50,10 @@ try {
     ? 'Visar inbyggd standardmall. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
     : 'Visar inbyggd standardmall. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
 }
+import PortalLayout from '../../layouts/PortalLayout.astro';
 ---
 
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Patientupplevelse | Personalportal</title>
-  <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+<PortalLayout title="Patientupplevelse" activePath="/personal/enkat" email={anvandare.email} role={anvandare.roll}>
   <style>
     :root {
       --bg: #f8fafc;
@@ -78,12 +72,6 @@ try {
     }
 
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
 
     .page {
       max-width: 1200px;
@@ -394,9 +382,7 @@ try {
     }
   </style>
 </head>
-<body>
-  <main class="page">
-    <a href="/personal/oversikt" class="back-link">← Tillbaka till personalöversikten</a>
+  <div class="page">
 
     <div class="header">
       <div>
@@ -645,10 +631,9 @@ Enkäten är anonym. Tack!</textarea>
       <div id="reportBanner" class="banner info" style="display:block;margin-top:16px;">Laddar rapport...</div>
       <div id="reportContent" class="section"></div>
     </section>
-  </main>
 
-  <script is:inline>
-    const excludedBookingTypePresets = {JSON.stringify(excludedBookingTypePresets)};
+  <script is:inline define:vars={{ excludedBookingTypePresetsJson: JSON.stringify(excludedBookingTypePresets) }}>
+    const excludedBookingTypePresets = JSON.parse(excludedBookingTypePresetsJson);
     const form = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
@@ -1408,5 +1393,5 @@ Enkäten är anonym. Tack!</textarea>
 
     void loadReport();
   </script>
-</body>
-</html>
+  </div>
+</PortalLayout>
