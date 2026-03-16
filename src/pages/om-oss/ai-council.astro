@@ -97,6 +97,28 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
               </div>
             </div>
           </div>
+
+          <!-- Vetenskaplig litteratur: felfrekvens / hallucinationer -->
+          <div class="mt-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+              <div class="text-4xl">📚</div>
+              <div class="flex-1">
+                <h3 class="text-white font-bold text-lg mb-1">Vetenskaplig litteratur: felfrekvens i referenslistor</h3>
+                <p class="text-slate-300 text-sm mb-3">
+                  För vetenskaplig skrivning är <strong class="text-emerald-400">antal hallucinationer</strong> det viktigaste. 
+                  Med enskilda AI-modeller har felfrekvensen i referenslistor tidigare kunnat ligga på <strong class="text-white">upp till 8 av 10</strong> referenser. 
+                  Med AI Councils korsvalidering via flera oberoende modeller har felfrekvensen i senaste körningarna gått ner till <strong class="text-emerald-400">0%</strong>. 
+                  Enskilda modeller (t.ex. Grok) har förbättrats men ligger fortfarande kvar på cirka <strong class="text-slate-300">1 fel av 5</strong> — korsvalideringen tar bort den sista andelen.
+                </p>
+                <p class="text-slate-400 text-xs">
+                  Utom Perplexity (som har inbyggd sökning och källhantering) har inget av de andra multi-modellverktygen samma fokus på spårbarhet och nollfel i vetenskapliga referenser.
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full font-semibold">Nyckelfördel</span>
+              </div>
+            </div>
+          </div>
           
           <!-- Hybrid search highlight - NEW! -->
           <div class="mt-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
@@ -1475,27 +1497,53 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
             Det finns liknande verktyg på marknaden. Här är hur AI Council skiljer sig.
           </p>
           
-          <!-- Alternatives grid -->
+          <!-- Deliberation & Consensus tools -->
+          <h3 class="text-lg font-semibold text-white mb-4">Deliberering &amp; konsensus</h3>
+          <div class="grid md:grid-cols-4 gap-4 mb-6">
+            <a href="https://quorumai.dev/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">Quorum</h4>
+              <p class="text-slate-500 text-xs">7 delibereringsmetoder (Oxford, Delphi, Socratic m.fl.)</p>
+              <p class="text-amber-400 text-xs mt-2">SaaS</p>
+            </a>
+            <a href="https://consilium.sh/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">consilium</h4>
+              <p class="text-slate-500 text-xs">CLI med blinda faser, cross-pollination, anti-sycophancy</p>
+              <p class="text-emerald-400 text-xs mt-2">Open source (CLI)</p>
+            </a>
+            <a href="https://www.llm-council.xyz/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">LLM Council</h4>
+              <p class="text-slate-500 text-xs">3-stegs peer review, rapporterar 70%→94% accuracy</p>
+              <p class="text-amber-400 text-xs mt-2">SaaS</p>
+            </a>
+            <a href="https://www.aiscouncil.com/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">AISCouncil</h4>
+              <p class="text-slate-500 text-xs">7 strategier, 300+ modeller, BYOK</p>
+              <p class="text-amber-400 text-xs mt-2">SaaS</p>
+            </a>
+          </div>
+
+          <!-- Comparison / side-by-side tools -->
+          <h3 class="text-lg font-semibold text-white mb-4">Jämförelse &amp; side-by-side</h3>
           <div class="grid md:grid-cols-4 gap-4 mb-8">
-            <a href="https://jenova.ai" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
-              <h4 class="text-white font-semibold mb-1">Jenova.ai</h4>
-              <p class="text-slate-500 text-xs">Unified platform, 50+ agents</p>
-              <p class="text-amber-400 text-xs mt-2">💰 Prenumeration</p>
+            <a href="https://www.gend.co/blog/perplexity-model-council" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">Perplexity Model Council</h4>
+              <p class="text-slate-500 text-xs">3 modeller parallellt, enighet/oenighet i tabell</p>
+              <p class="text-amber-400 text-xs mt-2">Perplexity Pro</p>
             </a>
-            <a href="https://rival.tips" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
-              <h4 class="text-white font-semibold mb-1">Rival.tips</h4>
-              <p class="text-slate-500 text-xs">Side-by-side jämförelse</p>
-              <p class="text-amber-400 text-xs mt-2">💰 Prenumeration</p>
+            <a href="https://www.comparelabs.ai/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">MetaLLM</h4>
+              <p class="text-slate-500 text-xs">20+ modeller side-by-side + "Super Answer"</p>
+              <p class="text-emerald-400 text-xs mt-2">Gratis</p>
             </a>
-            <a href="https://apify.com/onescales/ai-model-comparison" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
-              <h4 class="text-white font-semibold mb-1">Apify AI Compare</h4>
-              <p class="text-slate-500 text-xs">Smart Analysis syntes</p>
-              <p class="text-amber-400 text-xs mt-2">💰 Per körning</p>
+            <a href="https://www.nomodo.ai/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">Nomodo AI</h4>
+              <p class="text-slate-500 text-xs">30+ modeller med latens/kostnad/token-metadata</p>
+              <p class="text-amber-400 text-xs mt-2">Freemium</p>
             </a>
-            <a href="https://llmleaderboard.ai/compare/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
-              <h4 class="text-white font-semibold mb-1">LLM Leaderboard</h4>
-              <p class="text-slate-500 text-xs">Benchmarks, 7 modeller</p>
-              <p class="text-emerald-400 text-xs mt-2">✓ Gratis</p>
+            <a href="https://multi.llm.ist/" target="_blank" rel="noopener" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 hover:border-slate-500 transition-colors">
+              <h4 class="text-white font-semibold mb-1">Multi+LLM</h4>
+              <p class="text-slate-500 text-xs">Browser extension, batch-frågor till flera chattar</p>
+              <p class="text-emerald-400 text-xs mt-2">Gratis extension</p>
             </a>
           </div>
           
@@ -1506,59 +1554,70 @@ const description = "AI Council är vårt interna verktyg för att konsultera fl
                 <tr>
                   <th class="text-left text-slate-400 font-semibold p-4">Funktion</th>
                   <th class="text-center text-indigo-400 font-semibold p-4">AI Council</th>
-                  <th class="text-center text-slate-500 font-semibold p-4">Övriga</th>
+                  <th class="text-center text-slate-500 font-semibold p-4">Quorum / consilium</th>
+                  <th class="text-center text-slate-500 font-semibold p-4">Perplexity / MetaLLM</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-800">
                 <tr>
                   <td class="text-slate-300 p-4">Parallell körning</td>
-                  <td class="text-center text-emerald-400 p-4">✓</td>
-                  <td class="text-center text-emerald-400 p-4">✓</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
                 </tr>
                 <tr>
-                  <td class="text-slate-300 p-4">Syntes ("Domaren")</td>
-                  <td class="text-center text-emerald-400 p-4">✓</td>
-                  <td class="text-center text-slate-500 p-4">Vissa</td>
+                  <td class="text-slate-300 p-4">Syntes/konsensus</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-slate-500 p-4">Viss</td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300 p-4">Deliberering (Runda 2)</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
                 <tr class="bg-indigo-500/5">
-                  <td class="text-white font-semibold p-4">Deliberation (Runda 2)</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                  <td class="text-white font-semibold p-4">Hybrid-sökning (PubMed/Scholar/Google)</td>
+                  <td class="text-center text-emerald-400 p-4 font-bold">Unikt</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
+                  <td class="text-center text-slate-500 p-4">Perplexity: delvis</td>
                 </tr>
-                <tr class="bg-red-500/5">
-                  <td class="text-white font-semibold p-4">🔍 Hallucinationsdetektion</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                <tr>
+                  <td class="text-slate-300 p-4">Live-websökning</td>
+                  <td class="text-center text-emerald-400 p-4">Nativ per modell (OpenAI, Gemini, Grok; Claude utan)</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
+                  <td class="text-center text-slate-400 p-4">Perplexity: Ja. MetaLLM: Nej</td>
+                </tr>
+                <tr class="bg-indigo-500/5">
+                  <td class="text-white font-semibold p-4">Referenshantering + Zotero</td>
+                  <td class="text-center text-emerald-400 p-4 font-bold">Unikt</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
                 <tr class="bg-indigo-500/5">
                   <td class="text-white font-semibold p-4">Profilväljare (5 lägen)</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                  <td class="text-center text-emerald-400 p-4 font-bold">Unikt</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
                 <tr class="bg-indigo-500/5">
-                  <td class="text-white font-semibold p-4">Val av syntesmodell (6 st)</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
-                </tr>
-                <tr class="bg-indigo-500/5">
-                  <td class="text-white font-semibold p-4">📚 Referenshantering + Zotero</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
-                </tr>
-                <tr class="bg-emerald-500/5">
-                  <td class="text-white font-semibold p-4">🔍 Hybrid-sökning (PubMed/Scholar/Google)</td>
-                  <td class="text-center text-emerald-400 p-4 font-bold">✓ Unikt!</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                  <td class="text-white font-semibold p-4">Val av syntesmodell (7 st)</td>
+                  <td class="text-center text-emerald-400 p-4 font-bold">Unikt</td>
+                  <td class="text-center text-slate-500 p-4">Begränsat</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
                 <tr>
                   <td class="text-slate-300 p-4">Self-hosted (egna API-nycklar)</td>
-                  <td class="text-center text-emerald-400 p-4">✓</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-slate-500 p-4">consilium: Ja</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
                 <tr>
                   <td class="text-slate-300 p-4">Full kostnadskontroll</td>
-                  <td class="text-center text-emerald-400 p-4">✓</td>
-                  <td class="text-center text-red-400 p-4">✗</td>
+                  <td class="text-center text-emerald-400 p-4">Ja</td>
+                  <td class="text-center text-slate-500 p-4">consilium: Ja</td>
+                  <td class="text-center text-red-400 p-4">Nej</td>
                 </tr>
               </tbody>
             </table>
