@@ -10,6 +10,7 @@ export const prerender = false;
 
 import PortalLayout from '../../layouts/PortalLayout.astro';
 import { hamtaAnvandare } from '../../lib/auth';
+import { portalRoleLabel } from '../../lib/portal-roles';
 import { supabaseAdmin } from '../../lib/supabase';
 
 const anvandare = await hamtaAnvandare(Astro.cookies);
@@ -38,6 +39,9 @@ if (anvandare) {
     .order('namn');
   lakare = lakareData || [];
 }
+
+const visningsnamn = anvandare?.namn?.trim() || anvandare?.email || 'Min profil';
+const rollEtikett = portalRoleLabel(anvandare?.roll ?? 'personal');
 
 // Hantera POST
 if (Astro.request.method === 'POST') {
@@ -130,7 +134,14 @@ function formateraNummer(nummer: string | null): string {
 }
 ---
 
-<PortalLayout title="Min profil" activePath="/personal/profil" email={anvandare?.email} role={anvandare?.roll}>
+<PortalLayout
+  title="Min profil"
+  activePath="/personal/profil"
+  email={anvandare?.email}
+  role={anvandare?.roll}
+  userId={anvandare?.id}
+  userName={anvandare?.namn}
+>
   <div class="min-h-screen" style="background:#f8fafc;">
 
     <main class="max-w-5xl mx-auto px-4 py-8">
@@ -155,10 +166,11 @@ function formateraNummer(nummer: string | null): string {
                   )}
                 </div>
                 <div>
-                  <h2 class="text-xl font-semibold">{anvandare?.email}</h2>
-                  <p class="text-sky-100">
-                    {anvandare?.roll === 'admin' ? 'Administratör' : 'Personal'}
-                  </p>
+                  <h2 class="text-xl font-semibold">{visningsnamn}</h2>
+                  <p class="text-sky-100">{rollEtikett}</p>
+                  {anvandare?.email && (
+                    <p class="text-sky-50/90 text-sm mt-1">{anvandare.email}</p>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 # 🔐 Personalportal för Södermalms Ortopedi
 
 > **Status:** ✅ Implementerad  
-> **Senast uppdaterad:** 2026-03-11
+> **Senast uppdaterad:** 2026-03-16
 
 ---
 
@@ -24,6 +24,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 |----------|-----|-------------|
 | **Inloggning** | `/personal/` | Supabase-autentisering med e-post/lösenord |
 | **Översikt** | `/personal/oversikt` | Dashboard med alla verktyg |
+| **Min profil** | `/personal/profil` | Egen profilsida för namnvisning, mobilnummer, vårdgivarkoppling och profilbild |
 | **Administration** | `/personal/admin` | Skapa användare, hantera roller, skicka återställningslänkar och administrera läkare |
 | **Länkar & SMS** | `/personal/lankar-sms` | Kopiera kortlänkar och skicka SMS |
 | **Resurser** | `/personal/resurser` | Dokument, länkar, instruktionsvideor |
@@ -36,6 +37,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 ```
 /personal/                    → Inloggningssida
 /personal/oversikt            → Dashboard
+/personal/profil              → Min profil
 /personal/admin              → Administration (användare, roller, läkare)
 /personal/lankar-sms          → Kopiera länkar & Skicka SMS
 /personal/resurser            → Dokument och resurser
@@ -52,8 +54,10 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 src/
 ├── components/
 │   └── Header.astro              # Kugghjulsikon till portalen
+├── layouts/
+│   └── PortalLayout.astro        # Delad portal-layout med nav + profilblock
 ├── lib/
-│   ├── auth.ts                   # Autentisering (Supabase)
+│   ├── auth.ts                   # Autentisering + namn/roll från Supabase Auth
 │   ├── portal-roles.ts           # Rollhierarki (superadmin/admin/personal)
 │   └── supabase.ts               # Supabase-klient
 ├── pages/
@@ -65,6 +69,7 @@ src/
 │   └── personal/
 │       ├── index.astro           # Inloggning
 │       ├── oversikt.astro        # Dashboard
+│       ├── profil.astro          # Min profil
 │       ├── admin.astro           # Adminpanel för användare/roller/läkare
 │       ├── lankar-sms.astro      # Länkar & SMS
 │       ├── resurser.astro        # Resurser
@@ -88,7 +93,13 @@ src/
 - **Admin:** Kan skapa användare (som personal), hantera läkare, skicka återställningslänkar.
 - **Personal:** Basåtkomst till portalen, kan inte nå `/personal/admin`.
 - **Rollhantering i UI:** `/personal/admin` är adminpanel, men Supabase Auth är fortsatt source of truth
+- **Visningsnamn i UI:** hämtas i första hand från Supabase Auth `user_metadata` (`full_name`, `name`, `display_name`) och faller annars tillbaka till ett namn format från e-postadressen
 - **Lösenordsåterställning:** självbetjäning via `/personal/aterstall-losenord`, men admin kan trigga återställningslänk från `/personal/admin`
+
+### Profil & navigation
+- Portalens användarblock i sidfoten och mobilmenyn länkar till `/personal/profil`.
+- Profilblocket visar visningsnamn och aktuell roll, till exempel `Superadmin`.
+- Profilbild visas om `profiles.avatar_url` finns, annars visas initialer.
 
 ### Miljövariabler
 
@@ -142,7 +153,7 @@ Uppladdning och hantering av:
 │ Senast     │                                                  │
 │            │                                                  │
 │ ────────   │                                                  │
-│ [Användare]│                                                  │
+│ [Namn + roll]                                                 │
 │ Logga ut   │                                                  │
 └────────────┴─────────────────────────────────────────────────┘
 ```
@@ -173,4 +184,4 @@ Uppladdning och hantering av:
 
 ---
 
-*Dokumentet uppdaterat 2026-01-22*
+*Dokumentet uppdaterat 2026-03-16*

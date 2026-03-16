@@ -114,7 +114,14 @@ if (supabaseKonfigurerad) {
 }
 ---
 
-<PortalLayout title="Kort varsel SMS" activePath="/personal/kort-varsel" email={anvandare.email} role={anvandare.roll}>
+<PortalLayout
+  title="Kort varsel SMS"
+  activePath="/personal/kort-varsel"
+  email={anvandare.email}
+  role={anvandare.roll}
+  userId={anvandare.id}
+  userName={anvandare.namn}
+>
   <div class="min-h-screen" style="background:#f8fafc;">
 
     <main class="max-w-7xl mx-auto px-4 py-8" data-kampanj-id={kampanjIdFromUrl || ''}>

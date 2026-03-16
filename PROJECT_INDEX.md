@@ -137,7 +137,10 @@ Diagnosinformation med referenser och FAQ.
 ## 🔐 Personalportal & roller
 
 - `/personal/admin` är adminpanel för användare, roller, lösenordsåterställning och läkare.
+- `/personal/profil` är profilsidan för mobilnummer, vårdgivarkoppling, profilbild och personlig portalvisning.
+- Portalens användarblock i `PortalLayout.astro` visar namn + roll och länkar till `/personal/profil`.
 - Roller lagras i Supabase Auth `app_metadata.role`.
+- `superadmin` > `admin` > `personal` enligt `src/lib/portal-roles.ts`.
 - `admin` används för känsligare verktyg och gemensamma inställningar.
 - `personal` är standardroll för vanliga användare.
 
@@ -148,6 +151,7 @@ Diagnosinformation med referenser och FAQ.
 | Layout | Användning |
 |--------|------------|
 | `BaseLayout.astro` | Standard för de flesta sidor |
+| `PortalLayout.astro` | Personalportalen med sidnavigering och profilblock |
 | `OperationLayout.astro` | Operationssidor med TOC |
 | `RehabLayout.astro` | Rehabprogram |
 

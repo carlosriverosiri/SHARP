@@ -32,6 +32,11 @@ type JwtPayload = {
   sub?: string;
   email?: string;
   app_metadata?: { role?: string };
+  user_metadata?: {
+    full_name?: string;
+    name?: string;
+    display_name?: string;
+  };
 };
 
 function decodeJwtPayload(token: string): JwtPayload | null {
@@ -54,6 +59,34 @@ function accessTokenIsValid(accessToken: string, leewaySeconds = 60): boolean {
   return payload.exp - leewaySeconds > now;
 }
 
+function formatDisplayNameFromEmail(email: string): string {
+  const localPart = email.split('@')[0]?.trim() || '';
+  if (!localPart) return email;
+
+  const words = localPart
+    .replace(/[._-]+/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (words.length === 0) return email;
+
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function hamtaVisningsnamn(
+  email: string,
+  metadata?: JwtPayload['user_metadata']
+): string {
+  const explicitName = metadata?.full_name?.trim()
+    || metadata?.name?.trim()
+    || metadata?.display_name?.trim();
+
+  if (explicitName) return explicitName;
+  return formatDisplayNameFromEmail(email);
+}
+
 // ============================================
 // TYPER
 // ============================================
@@ -62,6 +95,7 @@ export interface Anvandare {
   id: string;
   email: string;
   roll: PortalRole;
+  namn?: string;
 }
 
 // ============================================
@@ -91,7 +125,8 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
       return {
         id: 'single-user',
         email: 'personal@klinik.se',
-        roll: 'admin'
+        roll: 'admin',
+        namn: 'Personal'
       };
     }
     return null;
@@ -105,7 +140,8 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return {
       id: payload.sub,
       email: payload.email,
-      roll: normalizePortalRole(payload.app_metadata?.role)
+      roll: normalizePortalRole(payload.app_metadata?.role),
+      namn: hamtaVisningsnamn(payload.email, payload.user_metadata)
     };
   }
 
@@ -116,7 +152,8 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return {
       id: user.id,
       email: user.email || '',
-      roll: normalizePortalRole(user.app_metadata?.role)
+      roll: normalizePortalRole(user.app_metadata?.role),
+      namn: hamtaVisningsnamn(user.email || '', user.user_metadata)
     };
   } catch {
     return null;

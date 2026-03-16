@@ -94,7 +94,14 @@ const kategoriAlternativ = [
 
 import PortalLayout from '../../layouts/PortalLayout.astro';
 ---
-<PortalLayout title="Resurser" activePath="/personal/resurser" email={anvandare?.email} role={anvandare?.roll}>
+<PortalLayout
+  title="Resurser"
+  activePath="/personal/resurser"
+  email={anvandare?.email}
+  role={anvandare?.roll}
+  userId={anvandare?.id}
+  userName={anvandare?.namn}
+>
   <style>
     * {
       margin: 0;

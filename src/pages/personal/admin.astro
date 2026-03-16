@@ -413,7 +413,14 @@ function formateraDatum(datum: string): string {
 }
 ---
 
-<PortalLayout title="Administration" activePath="/personal/admin" email={anvandare?.email} role={anvandare?.roll}>
+<PortalLayout
+  title="Administration"
+  activePath="/personal/admin"
+  email={anvandare?.email}
+  role={anvandare?.roll}
+  userId={anvandare?.id}
+  userName={anvandare?.namn}
+>
   <div class="min-h-screen" style="background:#f8fafc;">
     <div class="max-w-6xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between">

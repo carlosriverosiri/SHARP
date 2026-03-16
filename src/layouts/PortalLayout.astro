@@ -6,19 +6,25 @@
  * Props:
  *   title    – sidtitel (visas i <title>)
  *   activePath – URL-path för att markera rätt nav-länk som aktiv
- *   email    – inloggad användares e-post (visas i sidebar-footer)
- *   role     – 'admin' | 'personal'
+ *   email    – inloggad användares e-post
+ *   role     – 'personal' | 'admin' | 'superadmin'
+ *   userId   – inloggad användares id (för profilbild)
+ *   userName – visningsnamn i profillänken
  */
 import "../styles/global.css";
+import { supabaseAdmin } from "../lib/supabase";
+import { normalizePortalRole, portalRoleLabel } from "../lib/portal-roles";
 
 export interface Props {
   title: string;
   activePath: string;
   email?: string;
   role?: string;
+  userId?: string;
+  userName?: string;
 }
 
-const { title, activePath, email, role } = Astro.props;
+const { title, activePath, email, role, userId, userName } = Astro.props;
 
 type NavItem = { href: string; label: string; icon: string };
 type NavSection = { title: string; items: NavItem[] };
@@ -38,7 +44,6 @@ const sections: NavSection[] = [
     title: 'Administration',
     items: [
       { href: '/personal/admin', label: 'Användare & läkare', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' },
-      { href: '/personal/profil', label: 'Min profil', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
       { href: '/admin/obesvarade', label: 'Obesvarade frågor', icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
       { href: '/senast-redigerade', label: 'Senast redigerade', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
     ]
@@ -54,6 +59,43 @@ const sections: NavSection[] = [
 
 function isActive(href: string) {
   return activePath === href || activePath.startsWith(href + '/');
+}
+
+const normalizedRole = normalizePortalRole(role);
+const userRoleLabel = portalRoleLabel(normalizedRole);
+const displayUserName = userName?.trim() || email || 'Min profil';
+const userInfoTitle = email ? `Öppna Min profil (${email})` : 'Öppna Min profil';
+
+let avatarUrl: string | undefined;
+
+if (userId) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('Kunde inte läsa profilbild för portal-layout:', error);
+    } else if (typeof data?.avatar_url === 'string' && data.avatar_url.trim()) {
+      avatarUrl = data.avatar_url;
+    }
+  } catch (error) {
+    console.warn('Kunde inte läsa profilbild för portal-layout:', error);
+  }
+}
+
+function getInitials(value: string): string {
+  const parts = value
+    .split(/\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+
+  return `${parts[0].slice(0, 1)}${parts[1].slice(0, 1)}`.toUpperCase();
 }
 ---
 
@@ -118,16 +160,22 @@ function isActive(href: string) {
       display: flex; align-items: center; gap: 0.75rem;
       padding: 0.75rem; margin-bottom: 0.75rem;
       background: #334155; border-radius: 0.5rem;
+      text-decoration: none; color: inherit;
+      transition: background 0.2s ease, transform 0.2s ease;
     }
+    .portal-user-info:hover { background: #3b475c; transform: translateY(-1px); }
     .portal-user-avatar {
       width: 36px; height: 36px; background: #0284c7;
       border-radius: 50%; display: flex; align-items: center;
       justify-content: center; font-weight: 600; color: white;
       font-size: 0.875rem; flex-shrink: 0;
+      overflow: hidden;
     }
+    .portal-user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .portal-user-details { display: flex; flex-direction: column; overflow: hidden; }
-    .portal-user-email { font-size: 0.75rem; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .portal-user-name { font-size: 0.875rem; font-weight: 600; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .portal-user-role { font-size: 0.625rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .portal-mobile-user-info { margin-top: 1.5rem; }
     .portal-logout-btn {
       display: flex; align-items: center; gap: 0.75rem;
       padding: 0.75rem; border-radius: 0.5rem;
@@ -221,14 +269,20 @@ function isActive(href: string) {
       ))}
     </nav>
     <div class="portal-sidebar-footer">
-      {email && (
-        <div class="portal-user-info">
-          <div class="portal-user-avatar">{email.charAt(0).toUpperCase()}</div>
-          <div class="portal-user-details">
-            <span class="portal-user-email">{email}</span>
-            <span class="portal-user-role">{role === 'admin' ? 'Administratör' : 'Personal'}</span>
+      {(email || userId || userName) && (
+        <a href="/personal/profil" class="portal-user-info" title={userInfoTitle}>
+          <div class="portal-user-avatar">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" loading="lazy" decoding="async" />
+            ) : (
+              getInitials(displayUserName)
+            )}
           </div>
-        </div>
+          <div class="portal-user-details">
+            <span class="portal-user-name">{displayUserName}</span>
+            <span class="portal-user-role">{userRoleLabel}</span>
+          </div>
+        </a>
       )}
       <a href="/personal/oversikt?logout=true" class="portal-logout-btn">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
@@ -265,6 +319,21 @@ function isActive(href: string) {
             ))}
           </div>
         ))}
+        {(email || userId || userName) && (
+          <a href="/personal/profil" class="portal-user-info portal-mobile-user-info" title={userInfoTitle}>
+            <div class="portal-user-avatar">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" loading="lazy" decoding="async" />
+              ) : (
+                getInitials(displayUserName)
+              )}
+            </div>
+            <div class="portal-user-details">
+              <span class="portal-user-name">{displayUserName}</span>
+              <span class="portal-user-role">{userRoleLabel}</span>
+            </div>
+          </a>
+        )}
         <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #334155;">
           <a href="/" style="color: #94a3b8;">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>

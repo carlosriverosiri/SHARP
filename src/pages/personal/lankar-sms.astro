@@ -68,7 +68,14 @@ const normalizePhone = (raw: string) => {
 const initialPhone = phoneParam ? normalizePhone(phoneParam) : '';
 ---
 
-<PortalLayout title="Länkar & SMS" activePath="/personal/lankar-sms" email={anvandare?.email} role={anvandare?.roll}>
+<PortalLayout
+  title="Länkar & SMS"
+  activePath="/personal/lankar-sms"
+  email={anvandare?.email}
+  role={anvandare?.roll}
+  userId={anvandare?.id}
+  userName={anvandare?.namn}
+>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
