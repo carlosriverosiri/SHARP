@@ -36,9 +36,11 @@ Object.entries(shortLinksData)
     });
   });
 
+const siteUrl = process.env.PUBLIC_SITE_URL || process.env.SITE || 'https://sodermalm.netlify.app';
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sodermalmsortopedi.se',
+  site: siteUrl,
   
   // Trailing slash: 'never' = /om-oss/ai-council (utan /)
   // Detta gör att /om-oss/ai-council/ redirectar till /om-oss/ai-council
