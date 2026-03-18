@@ -33,8 +33,8 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: 'Alla obligatoriska betyg måste fyllas i.' }, 400);
     }
 
-    if (overallScore < 1 || overallScore > 10 || !Number.isInteger(overallScore)) {
-      return json({ success: false, error: 'Helhetsbetyg måste vara ett heltal mellan 1 och 10.' }, 400);
+    if (overallScore < 1 || overallScore > 5 || !Number.isInteger(overallScore)) {
+      return json({ success: false, error: 'Helhetsbetyg måste vara ett heltal mellan 1 och 5.' }, 400);
     }
 
     const subscores = [bemotande, information, lyssnadPa, planFramat];

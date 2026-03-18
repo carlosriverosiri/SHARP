@@ -224,8 +224,8 @@ function formatVisitDate(date: string) {
         <form id="surveyForm">
           <div class="question">
             <h2>Hur nöjd är du med ditt besök som helhet?</h2>
-            <div class="rating-grid ten">
-              {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
+            <div class="rating-grid">
+              {Array.from({ length: 5 }, (_, index) => index + 1).map((value) => (
                 <div class="rating-option">
                   <input type="radio" id={`overall-${value}`} name="overallScore" value={value} required />
                   <label for={`overall-${value}`}>{value}</label>

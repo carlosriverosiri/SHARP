@@ -179,7 +179,7 @@ describe('GET /api/enkat/dashboard', () => {
         data: [
           {
             vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 8,
+            helhetsbetyg: 4,
             bemotande: 4,
             information: 3,
             lyssnad_pa: 4,
@@ -190,7 +190,7 @@ describe('GET /api/enkat/dashboard', () => {
           },
           {
             vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 10,
+            helhetsbetyg: 5,
             bemotande: 5,
             information: 5,
             lyssnad_pa: 5,
@@ -260,7 +260,7 @@ describe('GET /api/enkat/dashboard', () => {
             deliveredCount: 1,
             sentCount: 2,
             reminderCount: 1,
-            overallAverage: 9,
+            overallAverage: 4.5,
             subscores: {
               bemotande: 4.5,
               information: 4,

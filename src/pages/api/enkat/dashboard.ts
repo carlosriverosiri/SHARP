@@ -58,8 +58,8 @@ function summarizeProvider(
   const planFramat = average(rows.map((row) => row.plan_framat));
   const sampleSize = rows.length;
   const responseRate = sentCount > 0 ? Number((sampleSize / sentCount).toFixed(3)) : 0;
-  const highScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg >= 9).length / sampleSize).toFixed(3)) : 0;
-  const lowScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg <= 6).length / sampleSize).toFixed(3)) : 0;
+  const highScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg >= 5).length / sampleSize).toFixed(3)) : 0;
+  const lowScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg <= 2).length / sampleSize).toFixed(3)) : 0;
   const comments = rows
     .flatMap((row) => [
       row.kommentar_bra ? { type: 'bra', text: row.kommentar_bra, createdAt: row.created_at } : null,

@@ -4,13 +4,13 @@ const { rpcMock } = vi.hoisted(() => ({
   rpcMock: vi.fn()
 }));
 
-vi.mock('../../../../lib/supabase', () => ({
+vi.mock('../../../lib/supabase', () => ({
   supabaseAdmin: {
     rpc: rpcMock
   }
 }));
 
-import { POST } from '../submit';
+import { POST } from '../../../pages/api/enkat/submit';
 
 function createSubmitRequest(overrides: Record<string, unknown> = {}): Request {
   return new Request('http://localhost/api/enkat/submit', {

@@ -165,7 +165,7 @@ describe('GET /api/enkat/report', () => {
         data: [
           {
             vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 8,
+            helhetsbetyg: 4,
             bemotande: 4,
             information: 3,
             lyssnad_pa: 4,
@@ -173,7 +173,7 @@ describe('GET /api/enkat/report', () => {
           },
           {
             vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 10,
+            helhetsbetyg: 5,
             bemotande: 5,
             information: 5,
             lyssnad_pa: 5,
@@ -186,7 +186,7 @@ describe('GET /api/enkat/report', () => {
         data: [
           {
             vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 7,
+            helhetsbetyg: 3,
             bemotande: 4,
             information: 4,
             lyssnad_pa: 4,
@@ -232,7 +232,7 @@ describe('GET /api/enkat/report', () => {
             providerName: 'Dr Test',
             sampleSize: 2,
             canShowDetails: false,
-            overallAverage: 9,
+            overallAverage: 4.5,
             subscores: {
               bemotande: 4.5,
               information: 4,
@@ -242,7 +242,7 @@ describe('GET /api/enkat/report', () => {
             delayMetrics: {
               totalRows: 1
             },
-            deltaVsPrevious: 2
+            deltaVsPrevious: 1.5
           }
         ],
         totals: {
