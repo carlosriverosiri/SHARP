@@ -190,7 +190,7 @@ function formatVisitDate(date: string) {
   <main class="container">
     <div class="hero">
       <h1>Patientupplevelse</h1>
-      <p>En kort anonym enkät som hjälper oss förbättra mottagningen.</p>
+      <p>Denna enkät är anonym. Skriv inte personnummer eller andra känsliga personuppgifter i fritextfälten.</p>
     </div>
 
     {errorMessage ? (
@@ -210,11 +210,6 @@ function formatVisitDate(date: string) {
       </div>
     ) : utskick ? (
       <div class="content">
-        <div class="notice">
-          <strong>Denna enkät är anonym på individnivå.</strong> Vi använder svaren för att förbättra mottagningen.
-          Skriv inte personnummer, diagnoser eller andra känsliga personuppgifter i fritextfälten.
-        </div>
-
         <div class="meta">
           <div><strong>Vårdgivare:</strong> {formatProviderName(utskick.vardgivare_namn)}</div>
           <div><strong>Datum:</strong> {formatVisitDate(utskick.besoksdatum)}</div>
