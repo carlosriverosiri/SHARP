@@ -213,7 +213,6 @@ function formatVisitDate(date: string) {
         <div class="meta">
           <div><strong>Vårdgivare:</strong> {formatProviderName(utskick.vardgivare_namn)}</div>
           <div><strong>Datum:</strong> {formatVisitDate(utskick.besoksdatum)}</div>
-          {utskick.bokningstyp_raw && <div><strong>Besökstyp:</strong> {patientFriendlyBookingType(utskick.bokningstyp_raw)}</div>}
         </div>
 
         <form id="surveyForm">
