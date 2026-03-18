@@ -18,6 +18,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 #### Backend
 - `src/lib/enkat-booking-classifier.ts`
 - `src/lib/enkat-csv-parser.ts`
+- `src/lib/enkat-free-text-sanitizer.ts`
 - `src/lib/enkat-follow-up-rules.ts`
 - `src/lib/enkat-sms.ts`
 - `src/lib/enkat-queue.ts`
@@ -130,6 +131,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Krypteringsnyckel**: Netlify-funktionen `enkat-send-queue.mts` har inte längre en hårdkodad fallback-nyckel; saknas `POOL_ENCRYPTION_KEY` returneras 500
 - **Atomär svarsräknare**: `total_svar` uppdateras i samma SQL-transaktion som svaret sparas
 - **Poängvalidering**: `submit.ts` validerar nu helhetsbetyg (1-10) och delbetyg (1-5) server-side
+- **Fritextsanering i submit**: `submit.ts` maskar nu uppenbara mejladresser, svenska telefonnummer även med `+46`, mellanslag eller bindestreck, samt sannolika personnummer innan lagring
 - **Verifierad preview**: `send.ts` accepterar nu signerad `previewToken` från upload i stället för råa klientrader
 - **Idempotent kampanjskapande**: `enkat_kampanjer.preview_token_hash` används för att stoppa dubbelsubmit av samma preview
 - **Atomar svarsinlämning**: `submit.ts` använder SQL-funktionen `submit_enkat_response` så att claim, svar och `total_svar` sker i samma transaktion
@@ -141,7 +143,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline
-- **Utökade automatiska tester**: `npm test` kör nu Vitest för preview-token, statistik, bokningstypklassning, CSV-parsning, centrala page-helpers samt DOM-baserade klienttester för `enkat-page-preview.ts` och `enkat-page-sections.ts`
+- **Utökade automatiska tester**: `npm test` kör nu Vitest för preview-token, submit-sanering, `upload`-, `send`-, `settings`-, `remind`-, `campaigns`-, `report`- och `dashboard`-flödet, statistik, bokningstypklassning, CSV-parsning, centrala page-helpers samt DOM-baserade klienttester för `enkat-page-preview.ts` och `enkat-page-sections.ts`
 - **Auth-regressionstester**: `src/lib/auth.test.ts` fångar nu förfalskade access tokens, verifierad användarhämtning och refresh av utgången Supabase-session
 - **Typning**: `any` ersatt med `SupabaseClient` i `enkat-queue.ts`
 
@@ -176,3 +178,4 @@ Om du öppnar projektet på en ny dator ska du tänka:
 - nästa fokus efter det är mer verklig testning, eventuellt ett separat export-/visualiseringspass och bara därefter ytterligare polish av återstående wiring i `enkat.astro`
 - previewn kräver nu `Diagnoser`, sorterar bort tomma diagnoser automatiskt och visar bokningstyperna i filen som kryssrutor
 - den gemensamma listan över bokningstyper som aldrig ska följas upp sparas i Supabase och kan uppdateras av admin från `/personal/enkat`
+- `submit` sanerar nu fritext server-side innan lagring och har regressionstester för både statusmappning och maskning av mejl, telefon och personnummer

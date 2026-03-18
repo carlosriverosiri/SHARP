@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EnkatPreviewRow } from './enkat-csv-parser';
 import {
@@ -7,7 +7,7 @@ import {
   verifyEnkatPreviewToken
 } from './enkat-preview-token';
 
-const TEST_SECRET = 'test-secret';
+const TEST_SECRET = crypto.randomBytes(32).toString('hex');
 
 const sampleRows: EnkatPreviewRow[] = [
   {

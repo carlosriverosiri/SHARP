@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import { maskSensitiveEnkatText } from '../../../lib/enkat-free-text-sanitizer';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
@@ -11,15 +12,6 @@ type SubmitEnkatResponseResult = {
   svarad_vid: string | null;
 };
 
-function maskSensitiveText(value: string): string {
-  return value
-    .replace(/\b\d{6}[- ]?\d{4}\b/g, '[personnummer borttaget]')
-    .replace(/\b\d{8}[- ]?\d{4}\b/g, '[personnummer borttaget]')
-    .replace(/\+46\d{7,12}\b/g, '[telefon borttagen]')
-    .replace(/\b0\d{8,11}\b/g, '[telefon borttagen]')
-    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[e-post borttagen]');
-}
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
@@ -29,8 +21,8 @@ export const POST: APIRoute = async ({ request }) => {
     const information = Number(body.information);
     const lyssnadPa = Number(body.lyssnadPa);
     const planFramat = Number(body.planFramat);
-    const commentGood = maskSensitiveText(String(body.commentGood || '').trim());
-    const commentImprove = maskSensitiveText(String(body.commentImprove || '').trim());
+    const commentGood = maskSensitiveEnkatText(String(body.commentGood || '').trim());
+    const commentImprove = maskSensitiveEnkatText(String(body.commentImprove || '').trim());
 
     if (!code || code.length < 12) {
       return json({ success: false, error: 'Ogiltig enkätkod.' }, 400);

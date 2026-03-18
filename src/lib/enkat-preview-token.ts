@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import type { EnkatPreviewRow } from './enkat-csv-parser';
 
 const PREVIEW_TOKEN_VERSION = 1 as const;
@@ -81,20 +81,20 @@ function isPreviewRow(value: unknown): value is EnkatPreviewRow {
 
 function assertValidPayload(payload: unknown): asserts payload is EnkatPreviewTokenPayload {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
-    throw new Error('Preview-token saknar giltig payload.');
+    throw new TypeError('Preview-token saknar giltig payload.');
   }
 
   const maybePayload = payload as Record<string, unknown>;
   if (maybePayload.version !== PREVIEW_TOKEN_VERSION) {
-    throw new Error('Preview-token har en version som inte stods.');
+    throw new TypeError('Preview-token har en version som inte stods.');
   }
 
   if (typeof maybePayload.userId !== 'string' || !maybePayload.userId.trim()) {
-    throw new Error('Preview-token saknar userId.');
+    throw new TypeError('Preview-token saknar userId.');
   }
 
   if (typeof maybePayload.fileName !== 'string' || !maybePayload.fileName.trim()) {
-    throw new Error('Preview-token saknar filnamn.');
+    throw new TypeError('Preview-token saknar filnamn.');
   }
 
   if (!isNonNegativeInteger(maybePayload.totalRows)
@@ -102,15 +102,15 @@ function assertValidPayload(payload: unknown): asserts payload is EnkatPreviewTo
     || !isNonNegativeInteger(maybePayload.invalidRows)
     || !isNonNegativeInteger(maybePayload.duplicateRows)
     || !isNonNegativeInteger(maybePayload.autoExcludedRows)) {
-    throw new Error('Preview-token har ogiltiga sammanfattningsvarden.');
+    throw new TypeError('Preview-token har ogiltiga sammanfattningsvarden.');
   }
 
   if (typeof maybePayload.issuedAt !== 'string' || typeof maybePayload.expiresAt !== 'string') {
-    throw new Error('Preview-token saknar tidsstamplar.');
+    throw new TypeError('Preview-token saknar tidsstamplar.');
   }
 
   if (!Array.isArray(maybePayload.selectedRows) || maybePayload.selectedRows.some((row) => !isPreviewRow(row))) {
-    throw new Error('Preview-token innehaller ogiltiga previewrader.');
+    throw new TypeError('Preview-token innehaller ogiltiga previewrader.');
   }
 }
 

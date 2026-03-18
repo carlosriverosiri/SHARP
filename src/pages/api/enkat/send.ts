@@ -1,7 +1,7 @@
-import type { APIRoute } from 'astro';
-import crypto from 'crypto';
+import type { APIRoute, AstroCookies } from 'astro';
+import crypto from 'node:crypto';
 import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-helpers';
-import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
+import { arInloggad, hamtaAnvandare, type Anvandare } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 import { kryptera, dekryptera } from '../../../lib/kryptering';
 import { buildEnkatSmsMessage, sendEnkatSms } from '../../../lib/enkat-sms';
@@ -39,6 +39,48 @@ type ExistingCampaignSummary = {
   status: string;
   total_giltiga: number;
   total_skickade: number;
+};
+
+type CreatedCampaignSummary = {
+  id: string;
+  status: string;
+};
+
+type PreparedPreview = {
+  preview: EnkatPreviewTokenPayload;
+  previewTokenHash: string;
+};
+
+type CampaignResolution =
+  | { kind: 'existing'; campaign: ExistingCampaignSummary }
+  | { kind: 'created'; campaign: CreatedCampaignSummary };
+
+type OutboundInsertRow = {
+  kampanj_id: string;
+  unik_kod: string;
+  patient_id_hash: string;
+  telefon_temp_krypterad: string;
+  vardgivare_namn: string;
+  besoksdatum: string;
+  besoksstart_tid: string | null;
+  bokningstyp_raw: string | null;
+  bokningstyp_normaliserad: string;
+  created_at: string;
+};
+
+type InsertedUtskickRow = {
+  id: string;
+  unik_kod: string;
+  vardgivare_namn: string;
+  besoksdatum: string;
+  bokningstyp_raw: string | null;
+  bokningstyp_normaliserad: string;
+  telefon_temp_krypterad: string;
+};
+
+type QueueSendSummary = {
+  sent: number;
+  failed: number;
 };
 
 function hashPatientId(patientId: string) {
@@ -129,14 +171,193 @@ async function cleanupCampaign(campaignId: string) {
     .eq('id', campaignId);
 }
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+async function requireAuthenticatedUser(cookies: AstroCookies): Promise<Anvandare | Response> {
   if (!await arInloggad(cookies)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
   }
 
   const anvandare = await hamtaAnvandare(cookies);
-  if (!anvandare) {
-    return json({ success: false, error: 'Kunde inte hämta användare' }, 401);
+  return anvandare ?? json({ success: false, error: 'Kunde inte hämta användare' }, 401);
+}
+
+function preparePreview(previewToken: string, userId: string): PreparedPreview | Response {
+  try {
+    return {
+      preview: verifyEnkatPreviewToken(previewToken, userId),
+      previewTokenHash: hashEnkatPreviewToken(previewToken)
+    };
+  } catch (error) {
+    return json({ success: false, error: getErrorMessage(error) }, 400);
+  }
+}
+
+function buildCampaignInsertPayload(
+  anvandareId: string,
+  previewTokenHash: string,
+  preview: EnkatPreviewTokenPayload,
+  body: SendRequestBody
+) {
+  return {
+    skapad_av: anvandareId,
+    namn: body.campaignName,
+    status: body.sendNow ? 'skickar' : 'redo',
+    csv_filnamn: preview.fileName,
+    preview_token_hash: previewTokenHash,
+    total_importerade: preview.totalRows,
+    total_giltiga: preview.validRows,
+    total_dubletter: preview.duplicateRows,
+    total_ogiltiga: preview.invalidRows,
+    total_skickade: 0,
+    total_svar: 0,
+    global_bokningstyp: null,
+    sms_mall: body.smsTemplate,
+    skicka_paminnelse: body.sendReminder,
+    paminnelse_efter_timmar: body.reminderAfterHours,
+    skicka_nu: body.sendNow,
+    planerad_skicktid: body.scheduledSendAt
+  };
+}
+
+async function createOrReuseCampaign(
+  anvandareId: string,
+  previewTokenHash: string,
+  preview: EnkatPreviewTokenPayload,
+  body: SendRequestBody
+): Promise<CampaignResolution> {
+  const existingCampaign = await findExistingCampaignByPreviewTokenHash(previewTokenHash);
+  if (existingCampaign) {
+    return {
+      kind: 'existing',
+      campaign: existingCampaign
+    };
+  }
+
+  const { data: campaign, error: campaignError } = await supabaseAdmin
+    .from('enkat_kampanjer')
+    .insert(buildCampaignInsertPayload(anvandareId, previewTokenHash, preview, body))
+    .select('id, status')
+    .single();
+
+  if (campaignError && isUniquePreviewTokenHashViolation(campaignError)) {
+    const duplicateCampaign = await findExistingCampaignByPreviewTokenHash(previewTokenHash);
+    if (duplicateCampaign) {
+      return {
+        kind: 'existing',
+        campaign: duplicateCampaign
+      };
+    }
+  }
+
+  if (campaignError || !campaign) {
+    throw new Error(campaignError?.message || 'Kunde inte skapa kampanj');
+  }
+
+  return {
+    kind: 'created',
+    campaign
+  };
+}
+
+function buildOutboundInsertRows(campaignId: string, preview: EnkatPreviewTokenPayload): OutboundInsertRow[] {
+  const createdAt = new Date().toISOString();
+
+  return preview.selectedRows.map((row) => ({
+    kampanj_id: campaignId,
+    unik_kod: generateSurveyCode(),
+    patient_id_hash: hashPatientId(row.patientId),
+    telefon_temp_krypterad: kryptera(row.phone),
+    vardgivare_namn: row.providerName,
+    besoksdatum: row.visitDate,
+    besoksstart_tid: row.visitStartTime,
+    bokningstyp_raw: row.bookingTypeRaw,
+    bokningstyp_normaliserad: row.bookingTypeNormalized,
+    created_at: createdAt
+  }));
+}
+
+async function insertOutboundRows(campaignId: string, preview: EnkatPreviewTokenPayload): Promise<InsertedUtskickRow[]> {
+  const { data, error } = await supabaseAdmin
+    .from('enkat_utskick')
+    .insert(buildOutboundInsertRows(campaignId, preview))
+    .select('id, unik_kod, vardgivare_namn, besoksdatum, bokningstyp_raw, bokningstyp_normaliserad, telefon_temp_krypterad');
+
+  if (error || !data) {
+    throw new Error(error?.message || 'Kunde inte skapa utskicksrader');
+  }
+
+  return data as InsertedUtskickRow[];
+}
+
+async function insertOutboundRowsWithCleanup(campaignId: string, preview: EnkatPreviewTokenPayload): Promise<InsertedUtskickRow[]> {
+  try {
+    return await insertOutboundRows(campaignId, preview);
+  } catch (error) {
+    await cleanupCampaign(campaignId);
+    throw error;
+  }
+}
+
+async function createDeliveryLogs(campaignId: string, rows: InsertedUtskickRow[]): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from('enkat_delivery_log')
+    .insert(rows.map((row) => ({
+      kampanj_id: campaignId,
+      utskick_id: row.id,
+      typ: 'forsta_sms',
+      status: 'queued',
+      provider: '46elks'
+    })));
+
+  if (error) {
+    throw new Error(error.message || 'Kunde inte skapa leveranslogg för utskicken');
+  }
+}
+
+async function createDeliveryLogsWithCleanup(campaignId: string, rows: InsertedUtskickRow[]): Promise<void> {
+  try {
+    await createDeliveryLogs(campaignId, rows);
+  } catch (error) {
+    await cleanupCampaign(campaignId);
+    throw error;
+  }
+}
+
+async function processQueueIfNeeded(sendNow: boolean, campaignId: string): Promise<QueueSendSummary> {
+  if (!sendNow) {
+    return { sent: 0, failed: 0 };
+  }
+
+  const queueResult = await processQueuedEnkatMessages({
+    supabase: supabaseAdmin,
+    campaignId,
+    limit: 25,
+    decryptPhone: dekryptera,
+    buildMessage: (template, row, code) => buildEnkatSmsMessage(template, row, code),
+    sendSms: sendEnkatSms
+  });
+
+  return {
+    sent: queueResult.sent,
+    failed: queueResult.failed
+  };
+}
+
+function resolveCampaignStatus(sendNow: boolean, fallbackStatus: string, sentCount: number, failedCount: number): string {
+  if (!sendNow) {
+    return fallbackStatus;
+  }
+
+  if (failedCount > 0 && sentCount === 0) {
+    return 'fel';
+  }
+
+  return 'skickar';
+}
+
+export const POST: APIRoute = async ({ request, cookies }) => {
+  const anvandare = await requireAuthenticatedUser(cookies);
+  if (anvandare instanceof Response) {
+    return anvandare;
   }
 
   const parsedBody = await parseSendRequest(request);
@@ -145,140 +366,39 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    const {
-      campaignName,
-      smsTemplate,
-      sendNow,
-      scheduledSendAt,
-      sendReminder,
-      reminderAfterHours,
-      previewToken
-    } = parsedBody;
-
-    let preview: EnkatPreviewTokenPayload;
-    try {
-      preview = verifyEnkatPreviewToken(previewToken, anvandare.id);
-    } catch (error) {
-      return json({ success: false, error: getErrorMessage(error) }, 400);
+    const preparedPreview = preparePreview(parsedBody.previewToken, anvandare.id);
+    if (preparedPreview instanceof Response) {
+      return preparedPreview;
     }
 
-    const previewTokenHash = hashEnkatPreviewToken(previewToken);
-    const existingCampaign = await findExistingCampaignByPreviewTokenHash(previewTokenHash);
-    if (existingCampaign) {
+    const campaignResolution = await createOrReuseCampaign(
+      anvandare.id,
+      preparedPreview.previewTokenHash,
+      preparedPreview.preview,
+      parsedBody
+    );
+
+    if (campaignResolution.kind === 'existing') {
       return json({
         success: true,
-        data: buildExistingCampaignResponse(existingCampaign)
+        data: buildExistingCampaignResponse(campaignResolution.campaign)
       });
     }
 
-    const { data: campaign, error: campaignError } = await supabaseAdmin
-      .from('enkat_kampanjer')
-      .insert({
-        skapad_av: anvandare.id,
-        namn: campaignName,
-        status: sendNow ? 'skickar' : 'redo',
-        csv_filnamn: preview.fileName,
-        preview_token_hash: previewTokenHash,
-        total_importerade: preview.totalRows,
-        total_giltiga: preview.validRows,
-        total_dubletter: preview.duplicateRows,
-        total_ogiltiga: preview.invalidRows,
-        total_skickade: 0,
-        total_svar: 0,
-        global_bokningstyp: null,
-        sms_mall: smsTemplate,
-        skicka_paminnelse: sendReminder,
-        paminnelse_efter_timmar: reminderAfterHours,
-        skicka_nu: sendNow,
-        planerad_skicktid: scheduledSendAt
-      })
-      .select('id, status')
-      .single();
-
-    if (campaignError && isUniquePreviewTokenHashViolation(campaignError)) {
-      const duplicateCampaign = await findExistingCampaignByPreviewTokenHash(previewTokenHash);
-      if (duplicateCampaign) {
-        return json({
-          success: true,
-          data: buildExistingCampaignResponse(duplicateCampaign)
-        });
-      }
-    }
-
-    if (campaignError || !campaign) {
-      return json({ success: false, error: campaignError?.message || 'Kunde inte skapa kampanj' }, 500);
-    }
-
-    const now = new Date().toISOString();
-    const outboundRows = preview.selectedRows.map((row) => {
-      const unikKod = generateSurveyCode();
-      return {
-        insertRow: {
-          kampanj_id: campaign.id,
-          unik_kod: unikKod,
-          patient_id_hash: hashPatientId(row.patientId),
-          telefon_temp_krypterad: kryptera(row.phone),
-          vardgivare_namn: row.providerName,
-          besoksdatum: row.visitDate,
-          besoksstart_tid: row.visitStartTime,
-          bokningstyp_raw: row.bookingTypeRaw,
-          bokningstyp_normaliserad: row.bookingTypeNormalized,
-          created_at: now
-        }
-      };
-    });
-
-    const { data: insertedRows, error: utskickError } = await supabaseAdmin
-      .from('enkat_utskick')
-      .insert(outboundRows.map((row) => row.insertRow))
-      .select('id, unik_kod, vardgivare_namn, besoksdatum, bokningstyp_raw, bokningstyp_normaliserad, telefon_temp_krypterad');
-
-    if (utskickError || !insertedRows) {
-      await cleanupCampaign(campaign.id);
-      return json({ success: false, error: utskickError?.message || 'Kunde inte skapa utskicksrader' }, 500);
-    }
-
-    const { error: deliveryLogError } = await supabaseAdmin
-      .from('enkat_delivery_log')
-      .insert(insertedRows.map((row) => ({
-        kampanj_id: campaign.id,
-        utskick_id: row.id,
-        typ: 'forsta_sms',
-        status: 'queued',
-        provider: '46elks'
-      })));
-
-    if (deliveryLogError) {
-      await cleanupCampaign(campaign.id);
-      return json({ success: false, error: deliveryLogError.message || 'Kunde inte skapa leveranslogg för utskicken' }, 500);
-    }
-
-    let sentCount = 0;
-    let failedCount = 0;
-
-    if (sendNow) {
-      const queueResult = await processQueuedEnkatMessages({
-        supabase: supabaseAdmin,
-        campaignId: campaign.id,
-        limit: 25,
-        decryptPhone: dekryptera,
-        buildMessage: (template, row, code) => buildEnkatSmsMessage(template, row, code),
-        sendSms: sendEnkatSms
-      });
-
-      sentCount = queueResult.sent;
-      failedCount = queueResult.failed;
-    }
+    const campaign = campaignResolution.campaign;
+    const insertedRows = await insertOutboundRowsWithCleanup(campaign.id, preparedPreview.preview);
+    await createDeliveryLogsWithCleanup(campaign.id, insertedRows);
+    const queueResult = await processQueueIfNeeded(parsedBody.sendNow, campaign.id);
 
     return json({
       success: true,
       data: {
         campaignId: campaign.id,
-        status: sendNow ? (failedCount > 0 && sentCount === 0 ? 'fel' : 'skickar') : campaign.status,
-        totalValid: preview.validRows,
-        totalQueued: preview.validRows,
-        totalSent: sentCount,
-        totalFailed: failedCount
+        status: resolveCampaignStatus(parsedBody.sendNow, campaign.status, queueResult.sent, queueResult.failed),
+        totalValid: preparedPreview.preview.validRows,
+        totalQueued: preparedPreview.preview.validRows,
+        totalSent: queueResult.sent,
+        totalFailed: queueResult.failed
       }
     }, 201);
   } catch (error: unknown) {
