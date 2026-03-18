@@ -431,7 +431,10 @@ Tar emot svar från patientsidan via unik enkätkod.
 
 1. validera kod (minst 12 tecken)
 2. validera poäng: helhetsbetyg 1-10 heltal, delbetyg 1-5 heltal
-3. maska personuppgifter i fritext
+3. maska personuppgifter i fritext före lagring
+   - mejladresser
+   - svenska telefonnummer, även formaterade med `+46`, mellanslag eller bindestreck
+   - sannolika personnummer efter datum- och Luhn-kontroll
 4. anropa en databasfunktion som i samma transaktion:
    - verifierar att koden finns
    - verifierar att den inte är använd
@@ -446,7 +449,7 @@ Tar emot svar från patientsidan via unik enkätkod.
 {
   "success": true,
   "data": {
-    "message": "Ditt svar är registrerat."
+    "message": "Ditt svar är registrerat anonymt."
   }
 }
 ```
@@ -460,14 +463,23 @@ Tar emot svar från patientsidan via unik enkätkod.
 }
 ```
 
+Implementerad felmappning i V1:
+
+- `400` om kod eller poäng är ogiltiga
+- `404` om koden saknas eller är ogiltig
+- `409` om länken redan är använd
+- `410` om länken har gått ut
+- `500` vid oväntat fel eller databasfel
+
 ### Viktiga regler
 
 - endpoint är publik men hårt validerad
 - ingen rå patientidentifierare ska returneras
-- fritextmaskning sker innan lagring
+- fritextmaskning sker innan lagring och ska bevara omgivande skiljetecken så att kommentarerna förblir läsbara
 - dubbel-submit hanteras atomärt i SQL-funktionen `submit_enkat_response`
 - poängintervall valideras server-side innan insert
 - `total_svar` ökas i samma databastransaktion som svaret sparas
+- regressionstester ska täcka både statusmappning och maskning av realistiska svenska telefonformat
 
 ---
 
@@ -633,6 +645,7 @@ Exponera aldrig ett “alla resultat”-läge till klienten utan att servern fö
 | `403` | saknar behörighet |
 | `404` | kampanj/kod saknas |
 | `409` | konflikt, t.ex. redan använd kod |
+| `410` | resursen är utgången, t.ex. enkätlänk efter `expires_at` |
 | `500` | serverfel |
 
 ---
