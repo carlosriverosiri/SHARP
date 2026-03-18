@@ -98,27 +98,27 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-vi.mock('../../../lib/kryptering', () => ({
+vi.mock('../../../../lib/kryptering', () => ({
   dekryptera: mocks.dekrypteraMock
 }));
 
-vi.mock('../../../lib/enkat-sms', () => ({
+vi.mock('../../../../lib/enkat-sms', () => ({
   buildEnkatSmsMessage: mocks.buildEnkatSmsMessageMock,
   sendEnkatSms: mocks.sendEnkatSmsMock
 }));
 
-import { POST } from './remind';
+import { POST } from '../remind';
 
 function createRequest(overrides: Record<string, unknown> = {}): Request {
   return new Request('http://localhost/api/enkat/remind', {

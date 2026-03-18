@@ -85,37 +85,37 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-vi.mock('../../../lib/kryptering', () => ({
+vi.mock('../../../../lib/kryptering', () => ({
   kryptera: mocks.krypteraMock,
   dekryptera: mocks.dekrypteraMock
 }));
 
-vi.mock('../../../lib/enkat-sms', () => ({
+vi.mock('../../../../lib/enkat-sms', () => ({
   buildEnkatSmsMessage: mocks.buildEnkatSmsMessageMock,
   sendEnkatSms: mocks.sendEnkatSmsMock
 }));
 
-vi.mock('../../../lib/enkat-queue', () => ({
+vi.mock('../../../../lib/enkat-queue', () => ({
   processQueuedEnkatMessages: mocks.processQueuedEnkatMessagesMock
 }));
 
-vi.mock('../../../lib/enkat-preview-token', () => ({
+vi.mock('../../../../lib/enkat-preview-token', () => ({
   hashEnkatPreviewToken: mocks.hashEnkatPreviewTokenMock,
   verifyEnkatPreviewToken: mocks.verifyEnkatPreviewTokenMock
 }));
 
-import { POST } from './send';
+import { POST } from '../send';
 
 function createPreviewPayload() {
   return {

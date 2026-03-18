@@ -78,18 +78,18 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-import { GET } from './campaigns';
+import { GET } from '../campaigns';
 
 describe('GET /api/enkat/campaigns', () => {
   beforeEach(() => {

@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => {
 
   const state = {
     enkatSvarResults: [] as QueryResult[],
+    enkatDeliveryLogResults: [] as QueryResult[],
     enkatUtskickResults: [] as QueryResult[]
   };
 
@@ -24,8 +25,21 @@ const mocks = vi.hoisted(() => {
         error: result.error,
         select: vi.fn(() => builder),
         gte: vi.fn(() => builder),
-        lte: vi.fn(() => builder),
-        lt: vi.fn(() => builder),
+        order: vi.fn(() => builder),
+        eq: vi.fn(() => builder)
+      };
+
+      return builder;
+    }
+
+    if (table === 'enkat_delivery_log') {
+      const result = nextResult(state.enkatDeliveryLogResults, { data: [], error: null });
+      const builder = {
+        data: result.data,
+        error: result.error,
+        select: vi.fn(() => builder),
+        gte: vi.fn(() => builder),
+        in: vi.fn(() => builder),
         eq: vi.fn(() => builder)
       };
 
@@ -40,8 +54,8 @@ const mocks = vi.hoisted(() => {
         select: vi.fn(() => builder),
         not: vi.fn(() => builder),
         gte: vi.fn(() => builder),
-        lte: vi.fn(() => builder),
-        eq: vi.fn(() => builder)
+        eq: vi.fn(() => builder),
+        in: vi.fn(() => builder)
       };
 
       return builder;
@@ -60,23 +74,23 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-vi.mock('../../../lib/enkat-provider-scope', () => ({
+vi.mock('../../../../lib/enkat-provider-scope', () => ({
   resolveEnkatProviderScope: mocks.resolveEnkatProviderScopeMock
 }));
 
-vi.mock('../../../lib/enkat-stats', () => ({
-  ANONYMITY_THRESHOLD: 5,
+vi.mock('../../../../lib/enkat-stats', () => ({
+  ANONYMITY_THRESHOLD: 2,
   average: (values: number[]) => {
     if (values.length === 0) {
       return 0;
@@ -88,16 +102,17 @@ vi.mock('../../../lib/enkat-stats', () => ({
   summarizeDelayRows: mocks.summarizeDelayRowsMock
 }));
 
-import { GET } from './report';
+import { GET } from '../dashboard';
 
-function createUrl(path = 'http://localhost/api/enkat/report'): URL {
+function createUrl(path = 'http://localhost/api/enkat/dashboard'): URL {
   return new URL(path);
 }
 
-describe('GET /api/enkat/report', () => {
+describe('GET /api/enkat/dashboard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.state.enkatSvarResults.length = 0;
+    mocks.state.enkatDeliveryLogResults.length = 0;
     mocks.state.enkatUtskickResults.length = 0;
 
     mocks.arInloggadMock.mockResolvedValue(true);
@@ -147,14 +162,13 @@ describe('GET /api/enkat/report', () => {
       data: {
         scope: 'self',
         configured: false,
-        periodLabel: 'Senaste 30 dagarna',
         message: 'Du har ännu inte kopplat ditt konto till ett vårdgivarnamn. Gå till Min profil och välj ditt vårdgivarnamn först.'
       }
     });
     expect(mocks.fromMock).not.toHaveBeenCalled();
   });
 
-  it('returns aggregated admin report data with provider deltas and totals', async () => {
+  it('returns aggregated admin dashboard data including reminder and comment metrics', async () => {
     mocks.resolveEnkatProviderScopeMock.mockResolvedValueOnce({
       isAdmin: true,
       ownProviderName: null,
@@ -169,7 +183,10 @@ describe('GET /api/enkat/report', () => {
             bemotande: 4,
             information: 3,
             lyssnad_pa: 4,
-            plan_framat: 5
+            plan_framat: 5,
+            kommentar_bra: 'Bra bemötande',
+            kommentar_forbattra: null,
+            created_at: '2026-03-18T10:00:00.000Z'
           },
           {
             vardgivare_namn: 'Dr Test',
@@ -177,20 +194,10 @@ describe('GET /api/enkat/report', () => {
             bemotande: 5,
             information: 5,
             lyssnad_pa: 5,
-            plan_framat: 4
-          }
-        ],
-        error: null
-      },
-      {
-        data: [
-          {
-            vardgivare_namn: 'Dr Test',
-            helhetsbetyg: 7,
-            bemotande: 4,
-            information: 4,
-            lyssnad_pa: 4,
-            plan_framat: 4
+            plan_framat: 4,
+            kommentar_bra: null,
+            kommentar_forbattra: 'Mer information',
+            created_at: '2026-03-18T11:00:00.000Z'
           }
         ],
         error: null
@@ -200,18 +207,36 @@ describe('GET /api/enkat/report', () => {
         error: null
       }
     );
-    mocks.state.enkatUtskickResults.push({
+    mocks.state.enkatDeliveryLogResults.push({
       data: [
-        {
-          vardgivare_namn: 'Dr Test',
-          besoksdatum: '2026-03-18',
-          besoksstart_tid: '08:00',
-          forsta_sms_skickad_vid: '2026-03-18T09:00:00.000Z',
-          svarad_vid: null
-        }
+        { status: 'sent', typ: 'forsta_sms', utskick_id: 'u1' },
+        { status: 'delivered', typ: 'forsta_sms', utskick_id: 'u1' },
+        { status: 'sent', typ: 'paminnelse', utskick_id: 'u2' }
       ],
       error: null
     });
+    mocks.state.enkatUtskickResults.push(
+      {
+        data: [
+          {
+            id: 'u1',
+            vardgivare_namn: 'Dr Test',
+            besoksdatum: '2026-03-18',
+            besoksstart_tid: '08:00',
+            forsta_sms_skickad_vid: '2026-03-18T09:00:00.000Z',
+            svarad_vid: null
+          }
+        ],
+        error: null
+      },
+      {
+        data: [
+          { id: 'u1', vardgivare_namn: 'Dr Test' },
+          { id: 'u2', vardgivare_namn: 'Dr Test' }
+        ],
+        error: null
+      }
+    );
 
     const response = await GET({
       cookies: {} as Parameters<typeof GET>[0]['cookies'],
@@ -224,14 +249,17 @@ describe('GET /api/enkat/report', () => {
       success: true,
       data: {
         scope: 'admin',
-        periodLabel: 'Senaste 30 dagarna',
-        anonymityThreshold: 5,
+        anonymityThreshold: 2,
         availableProviders: ['Dr Test'],
         providers: [
           {
             providerName: 'Dr Test',
             sampleSize: 2,
-            canShowDetails: false,
+            canShowDetails: true,
+            responseRate: 1,
+            deliveredCount: 1,
+            sentCount: 2,
+            reminderCount: 1,
             overallAverage: 9,
             subscores: {
               bemotande: 4.5,
@@ -239,10 +267,15 @@ describe('GET /api/enkat/report', () => {
               lyssnadPa: 4.5,
               planFramat: 4.5
             },
+            highScoreShare: 0.5,
+            lowScoreShare: 0,
+            latestComments: [
+              { type: 'bra', text: 'Bra bemötande', createdAt: '2026-03-18T10:00:00.000Z' },
+              { type: 'forbattra', text: 'Mer information', createdAt: '2026-03-18T11:00:00.000Z' }
+            ],
             delayMetrics: {
               totalRows: 1
-            },
-            deltaVsPrevious: 2
+            }
           }
         ],
         totals: {
@@ -253,22 +286,20 @@ describe('GET /api/enkat/report', () => {
     });
   });
 
-  it('returns 500 when a later report query fails', async () => {
+  it('returns 500 when the delivery log query fails', async () => {
     mocks.resolveEnkatProviderScopeMock.mockResolvedValueOnce({
       isAdmin: true,
       ownProviderName: null,
       effectiveProviderFilter: ''
     });
-    mocks.state.enkatSvarResults.push(
-      {
-        data: [],
-        error: null
-      },
-      {
-        data: null,
-        error: new Error('previous query failed')
-      }
-    );
+    mocks.state.enkatSvarResults.push({
+      data: [],
+      error: null
+    });
+    mocks.state.enkatDeliveryLogResults.push({
+      data: null,
+      error: new Error('log query failed')
+    });
 
     const response = await GET({
       cookies: {} as Parameters<typeof GET>[0]['cookies'],
@@ -279,9 +310,9 @@ describe('GET /api/enkat/report', () => {
     expect(response.status).toBe(500);
     expect(body).toEqual({
       success: false,
-      error: 'Kunde inte läsa rapportdata.',
+      error: 'Kunde inte läsa dashboarddata.',
       details: {
-        message: 'previous query failed'
+        message: 'log query failed'
       }
     });
   });

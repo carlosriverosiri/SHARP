@@ -29,26 +29,26 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-vi.mock('../../../lib/enkat-csv-parser', () => ({
+vi.mock('../../../../lib/enkat-csv-parser', () => ({
   parseEnkatCsv: mocks.parseEnkatCsvMock
 }));
 
-vi.mock('../../../lib/enkat-preview-token', () => ({
+vi.mock('../../../../lib/enkat-preview-token', () => ({
   createEnkatPreviewToken: mocks.createEnkatPreviewTokenMock
 }));
 
-import { POST } from './upload';
+import { POST } from '../upload';
 
 function createUploadRequest(options: {
   file?: File;

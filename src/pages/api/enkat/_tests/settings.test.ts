@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getDefaultExcludedBookingTypePatternText, parseExcludedBookingTypePatterns } from '../../../lib/enkat-follow-up-rules';
+import { getDefaultExcludedBookingTypePatternText, parseExcludedBookingTypePatterns } from '../../../../lib/enkat-follow-up-rules';
 
 const mocks = vi.hoisted(() => {
   type QueryResult = { data: any; error: any };
@@ -49,18 +49,18 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../lib/auth', () => ({
+vi.mock('../../../../lib/auth', () => ({
   arInloggad: mocks.arInloggadMock,
   hamtaAnvandare: mocks.hamtaAnvandareMock
 }));
 
-vi.mock('../../../lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabaseAdmin: {
     from: mocks.fromMock
   }
 }));
 
-import { GET, POST } from './settings';
+import { GET, POST } from '../settings';
 
 function createPostRequest(overrides: Record<string, unknown> = {}): Request {
   return new Request('http://localhost/api/enkat/settings', {
