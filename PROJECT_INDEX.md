@@ -204,6 +204,10 @@ Diagnosinformation med referenser och FAQ.
 
 ```
 SHARP/
+├── .github/
+│   └── workflows/
+│       └── verify.yml         # GitHub Actions: npm run verify på push/PR
+│
 ├── public/
 │   ├── favicons/           # Favicon-filer
 │   ├── images/

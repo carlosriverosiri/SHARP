@@ -92,6 +92,7 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 - `npm run dev` (Astro dev server)
 - `npm run build` (Astro build, följt av `postbuild` för Pagefind)
 - `npm run verify` (tester + `astro check` + full build före deploy)
+- `.github/workflows/verify.yml` kör samma verify-pass på `push` till `main` och på `pull_request`
 - `npm run preview` (lokal preview)
 - Netlify bygger på push till `main`.
 
@@ -101,6 +102,7 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 
 - `astro.config.mjs` – Astro/Netlify‑konfiguration + redirects
 - `netlify.toml` – build, headers, functions, caching
+- `.github/workflows/verify.yml` – CI för test, `astro check` och build
 - `src/pages/api/**` – API‑endpoints (AI, SMS, Zotero, etc.)
 - `supabase/` – schema + migrationer
 - `docs/ai-council/AI-COUNCIL.md` – detaljerad AI Council‑dokumentation

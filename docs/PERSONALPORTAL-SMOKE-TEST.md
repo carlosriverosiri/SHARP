@@ -13,10 +13,11 @@ Kör detta pass när:
 ## Förberedelser
 
 1. Kör `npm run verify`.
-2. Deploya den aktuella versionen.
-3. Öppna sidan i ett nytt privat fönster eller gör en hård uppdatering.
-4. Logga in i personalportalen.
-5. Börja på `/personal/oversikt`.
+2. Om pushen gick till GitHub, vänta gärna tills workflow `Verify` är grön.
+3. Deploya den aktuella versionen.
+4. Öppna sidan i ett nytt privat fönster eller gör en hård uppdatering.
+5. Logga in i personalportalen.
+6. Börja på `/personal/oversikt`.
 
 ## Desktop-check
 
