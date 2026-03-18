@@ -1,10 +1,54 @@
 import type { APIRoute } from 'astro';
-import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
+
+type CampaignRow = {
+  id: string;
+  namn: string | null;
+  status: string;
+  total_importerade: number;
+  total_giltiga: number;
+  total_dubletter: number;
+  total_ogiltiga: number;
+  total_skickade: number;
+  total_svar: number;
+  skicka_paminnelse: boolean;
+  paminnelse_efter_timmar: number | null;
+  created_at: string;
+  skapad_av: string;
+};
+
+type CampaignIdRow = {
+  kampanj_id: string;
+};
+
+type ReminderStat = {
+  remindersSent: number;
+  unansweredEligible: number;
+  queuedInitial: number;
+};
+
+function getEmptyReminderStat(): ReminderStat {
+  return {
+    remindersSent: 0,
+    unansweredEligible: 0,
+    queuedInitial: 0
+  };
+}
+
+function incrementReminderStat(
+  stats: Map<string, ReminderStat>,
+  campaignId: string,
+  field: keyof ReminderStat
+) {
+  const current = stats.get(campaignId) || getEmptyReminderStat();
+  current[field] += 1;
+  stats.set(campaignId, current);
+}
 
 export const GET: APIRoute = async ({ cookies }) => {
   if (!await arInloggad(cookies)) {
@@ -32,43 +76,61 @@ export const GET: APIRoute = async ({ cookies }) => {
       return json({ success: false, error: error.message || 'Kunde inte läsa kampanjer' }, 500);
     }
 
-    const campaignIds = (campaigns || []).map((item) => item.id);
-    let reminderStats = new Map<string, { remindersSent: number; unansweredEligible: number; queuedInitial: number }>();
+    const campaignRows = (campaigns || []) as CampaignRow[];
+    const campaignIds = campaignRows.map((item) => item.id);
+    const reminderStats = new Map<string, ReminderStat>();
 
     if (campaignIds.length > 0) {
-      const { data: utskickRows } = await supabaseAdmin
-        .from('enkat_utskick')
-        .select('id, kampanj_id, used, paminnelse_skickad_vid, expires_at')
-        .in('kampanj_id', campaignIds);
+      const nowIso = new Date().toISOString();
+      const [reminderSentResult, unansweredEligibleResult, queuedInitialResult] = await Promise.all([
+        supabaseAdmin
+          .from('enkat_utskick')
+          .select('kampanj_id')
+          .in('kampanj_id', campaignIds)
+          .not('paminnelse_skickad_vid', 'is', null),
+        supabaseAdmin
+          .from('enkat_utskick')
+          .select('kampanj_id')
+          .in('kampanj_id', campaignIds)
+          .eq('used', false)
+          .is('paminnelse_skickad_vid', null)
+          .gte('expires_at', nowIso),
+        supabaseAdmin
+          .from('enkat_delivery_log')
+          .select('kampanj_id')
+          .in('kampanj_id', campaignIds)
+          .eq('typ', 'forsta_sms')
+          .eq('status', 'queued')
+      ]);
 
-      for (const row of utskickRows || []) {
-        const current = reminderStats.get(row.kampanj_id) || { remindersSent: 0, unansweredEligible: 0, queuedInitial: 0 };
-        if (row.paminnelse_skickad_vid) current.remindersSent += 1;
-        const isExpired = row.expires_at ? new Date(row.expires_at) < new Date() : false;
-        if (!row.used && !row.paminnelse_skickad_vid && !isExpired) {
-          current.unansweredEligible += 1;
-        }
-        reminderStats.set(row.kampanj_id, current);
+      if (reminderSentResult.error) {
+        throw reminderSentResult.error;
+      }
+      if (unansweredEligibleResult.error) {
+        throw unansweredEligibleResult.error;
+      }
+      if (queuedInitialResult.error) {
+        throw queuedInitialResult.error;
       }
 
-      const { data: deliveryLogs } = await supabaseAdmin
-        .from('enkat_delivery_log')
-        .select('kampanj_id, typ, status')
-        .in('kampanj_id', campaignIds);
+      for (const row of (reminderSentResult.data || []) as CampaignIdRow[]) {
+        incrementReminderStat(reminderStats, row.kampanj_id, 'remindersSent');
+      }
 
-      for (const log of deliveryLogs || []) {
-        if (log.typ !== 'forsta_sms' || log.status !== 'queued') continue;
-        const current = reminderStats.get(log.kampanj_id) || { remindersSent: 0, unansweredEligible: 0, queuedInitial: 0 };
-        current.queuedInitial += 1;
-        reminderStats.set(log.kampanj_id, current);
+      for (const row of (unansweredEligibleResult.data || []) as CampaignIdRow[]) {
+        incrementReminderStat(reminderStats, row.kampanj_id, 'unansweredEligible');
+      }
+
+      for (const row of (queuedInitialResult.data || []) as CampaignIdRow[]) {
+        incrementReminderStat(reminderStats, row.kampanj_id, 'queuedInitial');
       }
     }
 
     return json({
       success: true,
       data: {
-        campaigns: (campaigns || []).map((campaign) => {
-          const reminder = reminderStats.get(campaign.id) || { remindersSent: 0, unansweredEligible: 0, queuedInitial: 0 };
+        campaigns: campaignRows.map((campaign) => {
+          const reminder = reminderStats.get(campaign.id) || getEmptyReminderStat();
           const responseRate = campaign.total_skickade > 0
             ? Number((campaign.total_svar / campaign.total_skickade).toFixed(3))
             : 0;
@@ -82,12 +144,12 @@ export const GET: APIRoute = async ({ cookies }) => {
         })
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Kunde inte läsa kampanjhistorik:', error);
     return json({
       success: false,
       error: 'Kunde inte läsa kampanjhistorik.',
-      details: { message: error?.message || 'Okänt fel' }
+      details: { message: getErrorMessage(error) || 'Okänt fel' }
     }, 500);
   }
 };

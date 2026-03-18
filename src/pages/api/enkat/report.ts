@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
-import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import { resolveEnkatProviderScope } from '../../../lib/enkat-provider-scope';
 import { ANONYMITY_THRESHOLD, average, summarizeDelayRows, type DeliveryDelayRow } from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
-import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
@@ -14,8 +14,31 @@ type SurveyRow = {
   information: number;
   lyssnad_pa: number;
   plan_framat: number;
-  created_at: string;
 };
+
+type ProviderNameRow = {
+  vardgivare_namn: string | null;
+};
+
+function uniqueProviderNames(rows: ProviderNameRow[]): string[] {
+  return [...new Set(
+    rows
+      .map((row) => row.vardgivare_namn?.trim())
+      .filter((value): value is string => Boolean(value))
+  )]
+    .sort((left, right) => left.localeCompare(right, 'sv'));
+}
+
+function groupByProvider(rows: SurveyRow[]) {
+  const map = new Map<string, SurveyRow[]>();
+  for (const row of rows) {
+    const provider = row.vardgivare_namn || 'Okänd';
+    const currentRows = map.get(provider) || [];
+    currentRows.push(row);
+    map.set(provider, currentRows);
+  }
+  return map;
+}
 
 function startForPeriod(period: string) {
   const now = new Date();
@@ -62,55 +85,87 @@ export const GET: APIRoute = async ({ cookies, url }) => {
   const range = startForPeriod(period);
 
   try {
-    let profile: { vardgivare_namn?: string | null } | null = null;
-    try {
-      const result = await supabaseAdmin
-        .from('profiles')
-        .select('vardgivare_namn')
-        .eq('id', anvandare.id)
-        .single();
-      profile = result.data || null;
-    } catch {
-      profile = null;
+    const { isAdmin, ownProviderName, effectiveProviderFilter } = await resolveEnkatProviderScope(anvandare, providerFilter);
+
+    if (!isAdmin && !ownProviderName) {
+      return json({
+        success: true,
+        data: {
+          scope: 'self',
+          configured: false,
+          periodLabel: range.label,
+          message: 'Du har ännu inte kopplat ditt konto till ett vårdgivarnamn. Gå till Min profil och välj ditt vårdgivarnamn först.'
+        }
+      });
     }
 
-    const { data: currentRows, error: currentError } = await supabaseAdmin
+    let currentRowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat, created_at')
+      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat')
       .gte('created_at', range.from)
       .lte('created_at', range.to);
+
+    if (effectiveProviderFilter) {
+      currentRowsQuery = currentRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
+    }
+
+    const { data: currentRows, error: currentError } = await currentRowsQuery;
 
     if (currentError) {
       return json({ success: false, error: currentError.message || 'Kunde inte läsa enkätsvar' }, 500);
     }
 
-    const { data: previousRows } = await supabaseAdmin
+    let previousRowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat, created_at')
+      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat')
       .gte('created_at', range.previousFrom)
       .lt('created_at', range.previousTo);
 
-    const { data: currentDelayRows } = await supabaseAdmin
+    if (effectiveProviderFilter) {
+      previousRowsQuery = previousRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
+    }
+
+    const { data: previousRows, error: previousError } = await previousRowsQuery;
+
+    if (previousError) {
+      throw previousError;
+    }
+
+    let currentDelayRowsQuery = supabaseAdmin
       .from('enkat_utskick')
       .select('vardgivare_namn, besoksdatum, besoksstart_tid, forsta_sms_skickad_vid, svarad_vid')
       .not('forsta_sms_skickad_vid', 'is', null)
       .gte('forsta_sms_skickad_vid', range.from)
       .lte('forsta_sms_skickad_vid', range.to);
 
+    if (effectiveProviderFilter) {
+      currentDelayRowsQuery = currentDelayRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
+    }
+
+    const { data: currentDelayRows, error: currentDelayError } = await currentDelayRowsQuery;
+
+    if (currentDelayError) {
+      throw currentDelayError;
+    }
+
+    let providerRows: ProviderNameRow[] = [];
+    if (isAdmin) {
+      const { data, error: providerError } = await supabaseAdmin
+        .from('enkat_svar')
+        .select('vardgivare_namn')
+        .gte('created_at', range.from)
+        .lte('created_at', range.to);
+
+      if (providerError) {
+        throw providerError;
+      }
+
+      providerRows = data || [];
+    }
+
     const current = (currentRows || []) as SurveyRow[];
     const previous = (previousRows || []) as SurveyRow[];
     const currentDelay = (currentDelayRows || []) as DeliveryDelayRow[];
-
-    const groupByProvider = (rows: SurveyRow[]) => {
-      const map = new Map<string, SurveyRow[]>();
-      for (const row of rows) {
-        const provider = row.vardgivare_namn || 'Okänd';
-        const currentRows = map.get(provider) || [];
-        currentRows.push(row);
-        map.set(provider, currentRows);
-      }
-      return map;
-    };
 
     const currentByProvider = groupByProvider(current);
     const previousByProvider = groupByProvider(previous);
@@ -132,21 +187,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       };
     }).sort((a, b) => a.providerName.localeCompare(b.providerName, 'sv'));
 
-    if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
-      const ownProvider = profile?.vardgivare_namn?.trim();
-      if (!ownProvider) {
-        return json({
-          success: true,
-          data: {
-            scope: 'self',
-            configured: false,
-            periodLabel: range.label,
-            message: 'Du har ännu inte kopplat ditt konto till ett vårdgivarnamn. Gå till Min profil och välj ditt vårdgivarnamn först.'
-          }
-        });
-      }
-
-      const own = providers.find((item) => item.providerName === ownProvider);
+    if (!isAdmin) {
+      const own = providers.find((item) => item.providerName === ownProviderName);
       return json({
         success: true,
         data: own
@@ -155,7 +197,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
               scope: 'self',
               configured: true,
               periodLabel: range.label,
-              providerName: ownProvider,
+              providerName: ownProviderName,
               sampleSize: 0,
               canShowDetails: false,
               message: 'Inga rapportdata hittades ännu för ditt vårdgivarnamn i vald period.'
@@ -163,9 +205,15 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       });
     }
 
-    const filtered = providerFilter
-      ? providers.filter((item) => item.providerName === providerFilter)
+    const filtered = effectiveProviderFilter
+      ? providers.filter((item) => item.providerName === effectiveProviderFilter)
       : providers;
+
+    const availableProviders = uniqueProviderNames(providerRows);
+    if (effectiveProviderFilter && !availableProviders.includes(effectiveProviderFilter)) {
+      availableProviders.push(effectiveProviderFilter);
+      availableProviders.sort((left, right) => left.localeCompare(right, 'sv'));
+    }
 
     return json({
       success: true,
@@ -173,7 +221,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
         scope: 'admin',
         periodLabel: range.label,
         anonymityThreshold: ANONYMITY_THRESHOLD,
-        availableProviders: providers.map((item) => item.providerName),
+        availableProviders,
         providers: filtered,
         totals: {
           providerCount: filtered.length,
@@ -181,12 +229,12 @@ export const GET: APIRoute = async ({ cookies, url }) => {
         }
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Kunde inte läsa rapportdata:', error);
     return json({
       success: false,
       error: 'Kunde inte läsa rapportdata.',
-      details: { message: error?.message || 'Okänt fel' }
+      details: { message: getErrorMessage(error) || 'Okänt fel' }
     }, 500);
   }
 };

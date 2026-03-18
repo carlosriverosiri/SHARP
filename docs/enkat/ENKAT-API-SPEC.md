@@ -180,6 +180,7 @@ Valfria:
         "selected": true
       }
     ],
+    "previewToken": "signed-preview-token",
     "selectedRows": [
       {
         "patientId": "b5kp8fc",
@@ -221,6 +222,7 @@ Valfria:
 - bokningstyper som finns i listan över "följs aldrig upp" ska inte bli felrader, utan sorteras bort separat
 - checkbox-urvalet för bokningstyper ska tillämpas före deduplicering
 - deduplicering ska ske efter att auto-exkludering har tillämpats
+- lyckad preview ska returnera en signerad `previewToken` som senare krävs av `/api/enkat/send`
 
 ---
 
@@ -278,7 +280,7 @@ Sparar den gemensamma listan i Supabase så att samma "följ aldrig upp"-bokning
 
 ### Syfte
 
-Skapar kampanj och utskick baserat på previewdata eller ny validerad payload.
+Skapar kampanj och utskick baserat på en signerad preview-token från `/api/enkat/upload`.
 
 Denna endpoint ska:
 
@@ -297,17 +299,7 @@ Denna endpoint ska:
   "scheduledSendAt": null,
   "sendReminder": true,
   "reminderAfterHours": 48,
-  "rows": [
-    {
-      "patientId": "b5kp8fc",
-      "phone": "+46707676108",
-      "providerName": "Sophie Lantz",
-      "visitDate": "2026-02-02",
-      "visitStartTime": "08:40",
-      "bookingTypeRaw": "3. REMISS AXEL",
-      "bookingTypeNormalized": "nybesok_remiss"
-    }
-  ]
+  "previewToken": "signed-preview-token"
 }
 ```
 
@@ -315,13 +307,17 @@ Denna endpoint ska:
 
 1. verifiera auth
 2. validera payload
-3. skapa kampanj
-4. skapa utskicksrader
-5. om temporär kontaktdata används:
+3. verifiera `previewToken`
+4. säkerställ att token tillhör aktuell användare och inte har gått ut
+5. beräkna hash av `previewToken`
+6. kontrollera om samma preview redan har skapat en kampanj
+7. skapa kampanj
+8. skapa utskicksrader
+9. om temporär kontaktdata används:
    - kryptera telefonnummer
-6. skapa `unik_kod`
-7. skapa `delivery_log` med `queued`
-8. trigga utskick eller background flow
+10. skapa `unik_kod`
+11. skapa `delivery_log` med `queued`
+12. trigga utskick eller background flow
 
 ### Response
 
@@ -332,7 +328,8 @@ Denna endpoint ska:
     "campaignId": "uuid",
     "status": "skickar",
     "totalValid": 68,
-    "totalQueued": 68
+    "totalQueued": 68,
+    "alreadyCreated": false
   }
 }
 ```
@@ -342,6 +339,9 @@ Denna endpoint ska:
 - endpoint ska vara idempotent i praktiken så långt det går
 - dubbelklick eller dubbel submit får inte skicka allt två gånger
 - om utskick misslyckas delvis ska kampanjen ändå kunna spåras
+- klienten ska inte få skicka råa `rows` direkt till endpointen
+- `previewToken` ska vara signerad server-side och fungera som kontrakt mellan upload och send
+- om samma preview skickas igen kan endpointen returnera befintlig kampanj med `alreadyCreated: true`
 
 ---
 
@@ -431,14 +431,14 @@ Tar emot svar från patientsidan via unik enkätkod.
 
 1. validera kod (minst 12 tecken)
 2. validera poäng: helhetsbetyg 1-10 heltal, delbetyg 1-5 heltal
-3. verifiera att koden finns
-4. verifiera att den inte är använd
-5. verifiera att den inte är utgången
-6. atomär claim: `UPDATE enkat_utskick SET used = true WHERE id = ? AND used = false`
-7. om ingen rad uppdaterades -- returnera 409 (redan använd)
-8. maska personuppgifter i fritext
-9. skapa rad i `enkat_svar`
-10. uppdatera `enkat_kampanjer.total_svar` atomärt via `increment_enkat_total_svar` RPC
+3. maska personuppgifter i fritext
+4. anropa en databasfunktion som i samma transaktion:
+   - verifierar att koden finns
+   - verifierar att den inte är använd
+   - verifierar att den inte är utgången
+   - markerar utskicket som använt
+   - sparar rad i `enkat_svar`
+   - ökar `enkat_kampanjer.total_svar`
 
 ### Response
 
@@ -465,9 +465,9 @@ Tar emot svar från patientsidan via unik enkätkod.
 - endpoint är publik men hårt validerad
 - ingen rå patientidentifierare ska returneras
 - fritextmaskning sker innan lagring
-- dubbel-submit hanteras via atomär claim (conditional update)
+- dubbel-submit hanteras atomärt i SQL-funktionen `submit_enkat_response`
 - poängintervall valideras server-side innan insert
-- `total_svar` ökas atomärt via SQL-funktion (ej read-then-write)
+- `total_svar` ökas i samma databastransaktion som svaret sparas
 
 ---
 

@@ -602,259 +602,95 @@ Enkäten är anonym. Tack!</textarea>
       <div id="reportContent" class="section"></div>
     </section>
 
-  <script is:inline>
-    const form = document.getElementById('uploadForm');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-    const clearBtn = document.getElementById('clearBtn');
-    const previewBtn = document.getElementById('previewBtn');
-    const dropzone = document.getElementById('dropzone');
-    const previewSection = document.getElementById('previewSection');
-    const statusBanner = document.getElementById('statusBanner');
-    const excludedBookingTypePatternsInput = document.getElementById('excludedBookingTypePatterns');
-    const resetExcludedBookingTypesBtn = document.getElementById('resetExcludedBookingTypesBtn');
-    const saveExcludedBookingTypesBtn = document.getElementById('saveExcludedBookingTypesBtn');
-    const excludedBookingTypeSettingsStatus = document.getElementById('excludedBookingTypeSettingsStatus');
-    const bookingTypeSelectionBox = document.getElementById('bookingTypeSelectionBox');
-    const bookingTypeSelectionList = document.getElementById('bookingTypeSelectionList');
-    const selectAllBookingTypesBtn = document.getElementById('selectAllBookingTypesBtn');
-    const clearAllBookingTypesBtn = document.getElementById('clearAllBookingTypesBtn');
-    const excludedBookingTypesSummaryBox = document.getElementById('excludedBookingTypesSummaryBox');
-    const excludedBookingTypesSummary = document.getElementById('excludedBookingTypesSummary');
-    const summaryGrid = document.getElementById('summaryGrid');
-    const selectedRowsBody = document.getElementById('selectedRowsBody');
-    const duplicatesBody = document.getElementById('duplicatesBody');
-    const errorsBody = document.getElementById('errorsBody');
-    const createCampaignBtn = document.getElementById('createCampaignBtn');
-    const campaignNameInput = document.getElementById('campaignName');
-    const smsTemplateInput = document.getElementById('smsTemplate');
-    const sendReminderInput = document.getElementById('sendReminder');
-    const reminderHoursInput = document.getElementById('reminderHours');
-    const dashboardBanner = document.getElementById('dashboardBanner');
-    const dashboardContent = document.getElementById('dashboardContent');
-    const dashboardProviderFilter = document.getElementById('dashboardProviderFilter');
-    const campaignsBanner = document.getElementById('campaignsBanner');
-    const campaignsContent = document.getElementById('campaignsContent');
-    const refreshCampaignsBtn = document.getElementById('refreshCampaignsBtn');
-    const reportBanner = document.getElementById('reportBanner');
-    const reportContent = document.getElementById('reportContent');
-    const reportPeriod = document.getElementById('reportPeriod');
-    const reportProviderFilter = document.getElementById('reportProviderFilter');
-    const refreshReportBtn = document.getElementById('refreshReportBtn');
-    let currentPreview = null;
+  <script>
+    import {
+      normalizePatternText,
+      setElementBanner
+    } from '../../lib/enkat-page-helpers';
+    import { createEnkatPreviewUi } from '../../lib/enkat-page-preview';
+    import {
+      createCampaignAction,
+      saveExcludedBookingTypesAction,
+      submitPreviewAction
+    } from '../../lib/enkat-page-actions';
+    import {
+      loadCampaignHistorySection,
+      loadDashboardSection,
+      loadReportSection
+    } from '../../lib/enkat-page-sections';
 
-    function setBanner(type, message) {
-      statusBanner.className = `banner visible ${type}`;
-      statusBanner.textContent = message;
+    type BannerType = 'info' | 'error' | 'success';
+
+    const form = document.getElementById('uploadForm') as HTMLFormElement;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const fileName = document.getElementById('fileName') as HTMLElement;
+    const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
+    const previewBtn = document.getElementById('previewBtn') as HTMLButtonElement;
+    const dropzone = document.getElementById('dropzone') as HTMLElement;
+    const previewSection = document.getElementById('previewSection') as HTMLElement;
+    const statusBanner = document.getElementById('statusBanner') as HTMLElement;
+    const excludedBookingTypePatternsInput = document.getElementById('excludedBookingTypePatterns') as HTMLTextAreaElement;
+    const resetExcludedBookingTypesBtn = document.getElementById('resetExcludedBookingTypesBtn') as HTMLButtonElement;
+    const saveExcludedBookingTypesBtn = document.getElementById('saveExcludedBookingTypesBtn') as HTMLButtonElement;
+    const excludedBookingTypeSettingsStatus = document.getElementById('excludedBookingTypeSettingsStatus') as HTMLElement;
+    const bookingTypeSelectionBox = document.getElementById('bookingTypeSelectionBox') as HTMLElement;
+    const bookingTypeSelectionList = document.getElementById('bookingTypeSelectionList') as HTMLElement;
+    const selectAllBookingTypesBtn = document.getElementById('selectAllBookingTypesBtn') as HTMLButtonElement | null;
+    const clearAllBookingTypesBtn = document.getElementById('clearAllBookingTypesBtn') as HTMLButtonElement | null;
+    const excludedBookingTypesSummaryBox = document.getElementById('excludedBookingTypesSummaryBox') as HTMLElement;
+    const excludedBookingTypesSummary = document.getElementById('excludedBookingTypesSummary') as HTMLElement;
+    const summaryGrid = document.getElementById('summaryGrid') as HTMLElement;
+    const selectedRowsBody = document.getElementById('selectedRowsBody') as HTMLTableSectionElement;
+    const duplicatesBody = document.getElementById('duplicatesBody') as HTMLTableSectionElement;
+    const errorsBody = document.getElementById('errorsBody') as HTMLTableSectionElement;
+    const createCampaignBtn = document.getElementById('createCampaignBtn') as HTMLButtonElement | null;
+    const campaignNameInput = document.getElementById('campaignName') as HTMLInputElement;
+    const smsTemplateInput = document.getElementById('smsTemplate') as HTMLInputElement | HTMLTextAreaElement;
+    const sendReminderInput = document.getElementById('sendReminder') as HTMLInputElement;
+    const reminderHoursInput = document.getElementById('reminderHours') as HTMLInputElement;
+    const dashboardBanner = document.getElementById('dashboardBanner') as HTMLElement;
+    const dashboardContent = document.getElementById('dashboardContent') as HTMLElement;
+    const dashboardProviderFilter = document.getElementById('dashboardProviderFilter') as HTMLSelectElement | null;
+    const campaignsBanner = document.getElementById('campaignsBanner') as HTMLElement;
+    const campaignsContent = document.getElementById('campaignsContent') as HTMLElement;
+    const refreshCampaignsBtn = document.getElementById('refreshCampaignsBtn') as HTMLButtonElement | null;
+    const reportBanner = document.getElementById('reportBanner') as HTMLElement;
+    const reportContent = document.getElementById('reportContent') as HTMLElement;
+    const reportPeriod = document.getElementById('reportPeriod') as HTMLSelectElement;
+    const reportProviderFilter = document.getElementById('reportProviderFilter') as HTMLSelectElement | null;
+    const refreshReportBtn = document.getElementById('refreshReportBtn') as HTMLButtonElement | null;
+
+    function setBanner(type: BannerType, message: string) {
+      setElementBanner(statusBanner, type, message);
     }
 
-    function setExcludedBookingTypeSettingsStatus(type, message) {
-      excludedBookingTypeSettingsStatus.className = `banner visible ${type}`;
-      excludedBookingTypeSettingsStatus.textContent = message;
+    function setExcludedBookingTypeSettingsStatus(type: BannerType, message: string) {
+      setElementBanner(excludedBookingTypeSettingsStatus, type, message);
     }
 
-    function normalizePatternText(value) {
-      const seen = new Set();
-      return String(value || '')
-        .split(/\r?\n/)
-        .map((row) => row.trim())
-        .filter((row) => {
-          if (!row || seen.has(row)) return false;
-          seen.add(row);
-          return true;
-        })
-        .join('\n');
-    }
+    const previewUi = createEnkatPreviewUi({
+      fileInput,
+      fileName,
+      previewSection,
+      summaryGrid,
+      selectedRowsBody,
+      duplicatesBody,
+      errorsBody,
+      bookingTypeSelectionBox,
+      bookingTypeSelectionList,
+      excludedBookingTypesSummaryBox,
+      excludedBookingTypesSummary
+    }, setBanner);
 
-    function syncSelectedFileName() {
-      const selectedFile = fileInput.files?.[0];
-      fileName.textContent = selectedFile ? selectedFile.name : 'Ingen fil har valts';
-      fileName.classList.toggle('has-file', Boolean(selectedFile));
-    }
-
-    function openFilePicker() {
-      if (typeof fileInput.showPicker === 'function') {
-        fileInput.showPicker();
-        return;
-      }
-
-      fileInput.click();
-    }
-
-    dropzone.addEventListener('click', openFilePicker);
-    dropzone.addEventListener('keydown', (event) => {
+    dropzone.addEventListener('click', previewUi.openFilePicker);
+    dropzone.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        openFilePicker();
+        previewUi.openFilePicker();
       }
     });
 
-    function clearPreview() {
-      currentPreview = null;
-      previewSection.classList.add('hidden');
-      summaryGrid.innerHTML = '';
-      selectedRowsBody.innerHTML = '';
-      duplicatesBody.innerHTML = '';
-      errorsBody.innerHTML = '';
-    }
-
-    function clearAutoExcludedSummary() {
-      excludedBookingTypesSummary.innerHTML = '';
-      excludedBookingTypesSummaryBox.classList.add('hidden');
-    }
-
-    function clearBookingTypeSelection() {
-      bookingTypeSelectionList.innerHTML = '';
-      bookingTypeSelectionBox.classList.add('hidden');
-    }
-
-    function clearAnalysis() {
-      clearPreview();
-      clearAutoExcludedSummary();
-      clearBookingTypeSelection();
-    }
-
-    function invalidatePreview(message) {
-      clearPreview();
-      setBanner('info', message);
-    }
-
-    function invalidateAnalysis(message) {
-      clearAnalysis();
-      setBanner('info', message);
-    }
-
-    function getBookingTypeCheckboxes() {
-      return Array.from(bookingTypeSelectionList.querySelectorAll('input[name="includedBookingTypes"]'));
-    }
-
-    function getSelectedBookingTypes() {
-      return getBookingTypeCheckboxes()
-        .filter((input) => input.checked)
-        .map((input) => input.value);
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
-
-    function renderSummary(data) {
-      const manuallyExcludedRows = (data.bookingTypeOptions || [])
-        .filter((row) => row.selected === false)
-        .reduce((sum, row) => sum + row.count, 0);
-
-      const cards = [
-        ['Totala rader', data.totalRows],
-        ['Giltiga rader', data.validRows],
-        ['Ogiltiga rader', data.invalidRows],
-        ['Auto-bortsorterade', data.autoExcludedRows || 0],
-        ['Ej valda rader', manuallyExcludedRows],
-        ['Bortvalda dubletter', data.duplicateRows]
-      ];
-
-      summaryGrid.innerHTML = cards.map(([label, value]) => `
-        <div class="summary-card">
-          <div class="summary-label">${escapeHtml(label)}</div>
-          <div class="summary-value">${escapeHtml(value)}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderBookingTypeOptions(rows) {
-      if (!rows.length) {
-        clearBookingTypeSelection();
-        return;
-      }
-
-      bookingTypeSelectionBox.classList.remove('hidden');
-      bookingTypeSelectionList.innerHTML = rows.map((row) => `
-        <label class="rule-preview-item booking-type-option">
-          <input
-            type="checkbox"
-            name="includedBookingTypes"
-            value="${escapeHtml(row.bookingTypeRaw)}"
-            ${row.selected ? 'checked' : ''}
-          />
-          <div class="booking-type-option-main">
-            <div class="booking-type-option-title">${escapeHtml(row.bookingTypeRaw)}</div>
-            <div class="helper" style="margin-top: 4px;">${escapeHtml(row.count)} rad${row.count === 1 ? '' : 'er'} kvar efter fasta bortsorteringar</div>
-          </div>
-        </label>
-      `).join('');
-
-      getBookingTypeCheckboxes().forEach((input) => {
-        input.addEventListener('change', () => {
-          invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
-        });
-      });
-    }
-
-    function renderAutoExcludedGroups(rows) {
-      if (!rows.length) {
-        excludedBookingTypesSummaryBox.classList.add('hidden');
-        excludedBookingTypesSummary.innerHTML = '';
-        return;
-      }
-
-      excludedBookingTypesSummaryBox.classList.remove('hidden');
-      excludedBookingTypesSummary.innerHTML = rows.map((row) => `
-        <div class="rule-preview-item">
-          <div class="rule-preview-top">
-            <strong>${escapeHtml(row.label)}</strong>
-            <span class="pill warn">${escapeHtml(row.count)} rad${row.count === 1 ? '' : 'er'}</span>
-          </div>
-          <div class="helper" style="margin-top: 8px;">Orsak: ${escapeHtml(row.reason)}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderSelectedRows(rows) {
-      selectedRowsBody.innerHTML = rows.length
-        ? rows.map((row) => `
-            <tr>
-              <td>${escapeHtml(row.rowIndex)}</td>
-              <td>${escapeHtml(row.patientId)}</td>
-              <td>${escapeHtml(row.providerName)}</td>
-              <td>${escapeHtml(row.visitDate)}</td>
-              <td>${escapeHtml(row.visitStartTime || '—')}</td>
-              <td>${escapeHtml(row.bookingTypeRaw || '—')}</td>
-              <td><span class="pill info">${escapeHtml(row.bookingTypeNormalized)}</span></td>
-            </tr>
-          `).join('')
-        : '<tr><td colspan="7">Inga giltiga rader hittades.</td></tr>';
-    }
-
-    function renderDuplicates(rows) {
-      duplicatesBody.innerHTML = rows.length
-        ? rows.map((row) => `
-            <tr>
-              <td>${escapeHtml(row.dedupKey)}</td>
-              <td>${escapeHtml(row.keptRowIndex)}</td>
-              <td>${escapeHtml(row.discardedRowIndexes.join(', '))}</td>
-              <td>${escapeHtml(row.chosenReason)}</td>
-            </tr>
-          `).join('')
-        : '<tr><td colspan="4">Inga dubletter hittades.</td></tr>';
-    }
-
-    function renderErrors(rows) {
-      errorsBody.innerHTML = rows.length
-        ? rows.map((row) => `
-            <tr>
-              <td>${escapeHtml(row.rowIndex)}</td>
-              <td>${escapeHtml(row.field)}</td>
-              <td>${escapeHtml(row.message)}</td>
-            </tr>
-          `).join('')
-        : '<tr><td colspan="3">Inga valideringsfel hittades.</td></tr>';
-    }
-
-    dropzone.addEventListener('dragover', (event) => {
+    dropzone.addEventListener('dragover', (event: DragEvent) => {
       event.preventDefault();
       dropzone.classList.add('dragover');
     });
@@ -863,536 +699,122 @@ Enkäten är anonym. Tack!</textarea>
       dropzone.classList.remove('dragover');
     });
 
-    dropzone.addEventListener('drop', (event) => {
+    dropzone.addEventListener('drop', (event: DragEvent) => {
       event.preventDefault();
       dropzone.classList.remove('dragover');
       if (event.dataTransfer?.files?.length) {
         fileInput.files = event.dataTransfer.files;
-        syncSelectedFileName();
-        invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
+        previewUi.syncSelectedFileName();
+        previewUi.invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
       }
     });
 
     fileInput.addEventListener('change', () => {
-      syncSelectedFileName();
-      invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
+      previewUi.syncSelectedFileName();
+      previewUi.invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
     });
 
     selectAllBookingTypesBtn?.addEventListener('click', () => {
-      const checkboxes = getBookingTypeCheckboxes();
+      const checkboxes = previewUi.getBookingTypeCheckboxes();
       if (!checkboxes.length) return;
       checkboxes.forEach((input) => {
         input.checked = true;
       });
-      invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+      previewUi.invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
     });
 
     clearAllBookingTypesBtn?.addEventListener('click', () => {
-      const checkboxes = getBookingTypeCheckboxes();
+      const checkboxes = previewUi.getBookingTypeCheckboxes();
       if (!checkboxes.length) return;
       checkboxes.forEach((input) => {
         input.checked = false;
       });
-      invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+      previewUi.invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
     });
 
     excludedBookingTypePatternsInput?.addEventListener('input', () => {
-      invalidatePreview('Listan över bokningstyper som alltid ska sorteras bort ändrades. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
+      previewUi.invalidatePreview('Listan över bokningstyper som alltid ska sorteras bort ändrades. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
     });
 
     resetExcludedBookingTypesBtn?.addEventListener('click', () => {
       excludedBookingTypePatternsInput.value = normalizePatternText(excludedBookingTypePatternsInput.dataset.defaultValue || '');
-      invalidatePreview('Listan återställdes. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
+      previewUi.invalidatePreview('Listan återställdes. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
       setExcludedBookingTypeSettingsStatus('info', 'Listan återställdes till senast sparade värde.');
     });
 
     saveExcludedBookingTypesBtn?.addEventListener('click', async () => {
-      saveExcludedBookingTypesBtn.disabled = true;
-      const normalizedPatternText = normalizePatternText(excludedBookingTypePatternsInput?.value || '');
-      excludedBookingTypePatternsInput.value = normalizedPatternText;
-      setExcludedBookingTypeSettingsStatus('info', 'Sparar listan för alla användare...');
-
-      try {
-        const response = await fetch('/api/enkat/settings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            excludedBookingTypePatterns: normalizedPatternText
-          })
-        });
-
-        const payload = await response.json();
-        if (!response.ok || !payload.success) {
-          setExcludedBookingTypeSettingsStatus('error', payload.error || 'Kunde inte spara listan.');
-          return;
-        }
-
-        const savedText = payload.data?.patternText || '';
-        excludedBookingTypePatternsInput.value = savedText;
-        excludedBookingTypePatternsInput.dataset.defaultValue = savedText;
-        setExcludedBookingTypeSettingsStatus('success', 'Listan sparades i Supabase och används nu som gemensam lista.');
-      } catch (error) {
-        console.error(error);
-        setExcludedBookingTypeSettingsStatus('error', 'Ett oväntat fel uppstod när listan skulle sparas.');
-      } finally {
-        saveExcludedBookingTypesBtn.disabled = false;
-      }
+      await saveExcludedBookingTypesAction({
+        button: saveExcludedBookingTypesBtn,
+        input: excludedBookingTypePatternsInput,
+        setStatus: setExcludedBookingTypeSettingsStatus
+      });
     });
 
     clearBtn.addEventListener('click', () => {
       form.reset();
-      syncSelectedFileName();
+      previewUi.syncSelectedFileName();
       statusBanner.className = 'banner info';
       statusBanner.textContent = '';
-      clearAnalysis();
+      previewUi.clearAnalysis();
     });
 
-    syncSelectedFileName();
+    previewUi.syncSelectedFileName();
 
-    form.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event: SubmitEvent) => {
       event.preventDefault();
-      clearPreview();
-
-      if (!fileInput.files?.length) {
-        setBanner('error', 'Välj en fil först.');
-        return;
-      }
-
-      previewBtn.disabled = true;
-      setBanner('info', 'Läser filen, sorterar bort alltid exkluderade bokningstyper och bygger preview...');
-
-      try {
-        const formData = new FormData(form);
-        const normalizedPatternText = normalizePatternText(excludedBookingTypePatternsInput?.value || '');
-        excludedBookingTypePatternsInput.value = normalizedPatternText;
-        formData.set('excludedBookingTypePatterns', normalizedPatternText);
-        if (getBookingTypeCheckboxes().length > 0) {
-          formData.set('selectedBookingTypes', JSON.stringify(getSelectedBookingTypes()));
-        }
-        const response = await fetch('/api/enkat/upload', {
-          method: 'POST',
-          body: formData
-        });
-
-        const payload = await response.json();
-        if (!response.ok || !payload.success) {
-          setBanner('error', payload.error || 'Kunde inte förhandsgranska filen.');
-          return;
-        }
-
-        const data = payload.data;
-        currentPreview = data;
-        renderBookingTypeOptions(data.bookingTypeOptions || []);
-        renderSummary(data);
-        renderAutoExcludedGroups(data.autoExcludedGroups || []);
-        renderSelectedRows(data.selectedRows || []);
-        renderDuplicates(data.duplicates || []);
-        renderErrors(data.errors || []);
-        previewSection.classList.remove('hidden');
-
-        const manuallyExcludedRows = (data.bookingTypeOptions || [])
-          .filter((row) => row.selected === false)
-          .reduce((sum, row) => sum + row.count, 0);
-
-        setBanner(
-          'success',
-          `Preview klar: ${data.validRows} giltiga rader, ${data.autoExcludedRows || 0} automatiskt bortsorterade, ${manuallyExcludedRows} bortvalda via bokningstyp, ${data.invalidRows} ogiltiga och ${data.duplicateRows} bortvalda dublettrader.`
-        );
-      } catch (error) {
-        console.error(error);
-        setBanner('error', 'Ett oväntat fel uppstod vid uppladdning.');
-      } finally {
-        previewBtn.disabled = false;
-      }
+      await submitPreviewAction({
+        form,
+        fileInput,
+        previewButton: previewBtn,
+        excludedBookingTypePatternsInput,
+        previewUi,
+        setBanner
+      });
     });
 
     createCampaignBtn?.addEventListener('click', async () => {
-      if (!currentPreview?.selectedRows?.length) {
-        setBanner('error', 'Filtrera och förhandsgranska en fil först.');
-        return;
-      }
-
-      createCampaignBtn.disabled = true;
-      setBanner('info', 'Skapar kampanj...');
-
-      try {
-        const response = await fetch('/api/enkat/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            campaignName: campaignNameInput?.value || '',
-            smsTemplate: smsTemplateInput?.value || '',
-            sendNow: true,
-            sendReminder: !!sendReminderInput?.checked,
-            reminderAfterHours: Number(reminderHoursInput?.value || 48),
-            rows: currentPreview.selectedRows
-          })
-        });
-
-        const payload = await response.json();
-        if (!response.ok || !payload.success) {
-          setBanner('error', payload.error || 'Kunde inte skapa kampanjen.');
-          createCampaignBtn.disabled = false;
-          return;
+      await createCampaignAction({
+        button: createCampaignBtn,
+        campaignNameInput,
+        smsTemplateInput,
+        sendReminderInput,
+        reminderHoursInput,
+        previewUi,
+        setBanner,
+        afterCreate: () => {
+          void loadCampaignHistory();
+          void loadDashboard();
+          void loadReport();
         }
-
-        const data = payload.data;
-        setBanner(
-          'success',
-          `Kampanj skapad. Status: ${data.status}. Skickade: ${data.totalSent}, misslyckade: ${data.totalFailed}.`
-        );
-        createCampaignBtn.disabled = false;
-        void loadCampaignHistory();
-        void loadDashboard();
-        void loadReport();
-      } catch (error) {
-        console.error(error);
-        setBanner('error', 'Ett oväntat fel uppstod när kampanjen skulle skapas.');
-        createCampaignBtn.disabled = false;
-      }
+      });
     });
 
-    function renderProviderCard(item) {
-      const comments = (item.latestComments || [])
-        .slice(0, 4)
-        .map((comment) => `
-          <div style="padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;">
-            <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">${comment.type === 'bra' ? 'Bra' : 'Förbättra'}</div>
-            <div style="font-size:14px;line-height:1.45;">${escapeHtml(comment.text)}</div>
-          </div>
-        `)
-        .join('');
-
-      const details = item.canShowDetails
-        ? `
-          <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-            <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
-            <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
-            <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-            <div class="summary-card"><div class="summary-label">Plan</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.planFramat)}</div></div>
-          </div>
-          <div style="margin-top:14px;font-size:14px;color:var(--muted);">
-            Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · Svar: <strong>${escapeHtml(item.sampleSize)}</strong> · Påminnelser: <strong>${escapeHtml(item.reminderCount || 0)}</strong>
-          </div>
-          <div style="margin-top:6px;font-size:14px;color:var(--muted);">
-            Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong>
-          </div>
-          <div style="margin-top:6px;font-size:14px;color:var(--muted);">
-            Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
-          </div>
-          ${comments ? `<div style="display:grid;gap:10px;margin-top:14px;">${comments}</div>` : '<div style="margin-top:14px;color:var(--muted);font-size:14px;">Inga kommentarer ännu.</div>'}
-        `
-        : `<div style="margin-top:14px;color:var(--muted);font-size:14px;">För få svar för att visa resultat på ett integritetssäkert sätt.</div>`;
-
-      return `
-        <div class="card" style="padding:16px;">
-          <h3 style="margin-bottom:4px;">${escapeHtml(item.providerName)}</h3>
-          <div style="color:var(--muted);font-size:13px;">Underlag: ${escapeHtml(item.sampleSize)}</div>
-          ${details}
-        </div>
-      `;
-    }
-
-    function formatDateTime(value) {
-      if (!value) return '—';
-      try {
-        return new Date(value).toLocaleString('sv-SE');
-      } catch {
-        return value;
-      }
-    }
-
-    function renderCampaignCard(item) {
-      const statusText =
-        item.status === 'skickar' && item.queuedInitial > 0
-          ? `Köad batch kvar: ${item.queuedInitial}`
-          : item.status === 'klar'
-            ? 'Utskicket är klart'
-            : item.status === 'fel'
-              ? 'Något gick fel i utskicket'
-              : 'Kampanjen väntar eller bearbetas';
-
-      return `
-        <div class="history-card">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
-            <div>
-              <h3 style="margin:0 0 4px;">${escapeHtml(item.namn || 'Namnlös kampanj')}</h3>
-              <div style="color:var(--muted);font-size:13px;">Skapad ${escapeHtml(formatDateTime(item.created_at))}</div>
-            </div>
-            <span class="pill ${item.status === 'klar' ? 'ok' : item.status === 'fel' ? 'warn' : 'info'}">${escapeHtml(item.status)}</span>
-          </div>
-
-          <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-            <div class="summary-card"><div class="summary-label">Importerade</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_importerade)}</div></div>
-            <div class="summary-card"><div class="summary-label">Skickade</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_skickade)}</div></div>
-            <div class="summary-card"><div class="summary-label">Svar</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_svar)}</div></div>
-            <div class="summary-card"><div class="summary-label">Påminn möjliga</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.unansweredEligible)}</div></div>
-          </div>
-
-          <div style="margin-top:12px;color:var(--muted);font-size:14px;">
-            Giltiga: <strong>${escapeHtml(item.total_giltiga)}</strong> · Dubletter: <strong>${escapeHtml(item.total_dubletter)}</strong> · Ogiltiga: <strong>${escapeHtml(item.total_ogiltiga)}</strong> · Påminnelser skickade: <strong>${escapeHtml(item.remindersSent)}</strong>
-          </div>
-          <div style="margin-top:6px;color:var(--muted);font-size:14px;">
-            Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · ${escapeHtml(statusText)}
-          </div>
-
-          <div class="actions">
-            <button
-              type="button"
-              class="btn btn-secondary remind-btn"
-              data-campaign-id="${escapeHtml(item.id)}"
-              ${item.unansweredEligible > 0 && item.skicka_paminnelse ? '' : 'disabled'}
-            >
-              Skicka påminnelse
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderReportProvider(item) {
-      return `
-        <div class="history-card">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
-            <div>
-              <h3 style="margin:0 0 4px;">${escapeHtml(item.providerName)}</h3>
-              <div style="color:var(--muted);font-size:13px;">Underlag: ${escapeHtml(item.sampleSize)}</div>
-            </div>
-            <span class="pill ${item.deltaVsPrevious >= 0 ? 'ok' : 'warn'}">
-              ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(item.deltaVsPrevious)}
-            </span>
-          </div>
-
-          ${
-            item.canShowDetails
-              ? `
-                <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-                  <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
-                  <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
-                  <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-                  <div class="summary-card"><div class="summary-label">Plan</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.planFramat)}</div></div>
-                </div>
-                <div style="margin-top:10px;color:var(--muted);font-size:14px;">
-                  Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong>
-                </div>
-                <div style="margin-top:6px;color:var(--muted);font-size:14px;">
-                  Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
-                </div>
-              `
-              : `<div style="margin-top:14px;color:var(--muted);font-size:14px;">För få svar för att visa resultat på ett integritetssäkert sätt.</div>`
-          }
-        </div>
-      `;
-    }
-
-    function updateSelectOptions(selectEl, values, selectedValue) {
-      if (!selectEl) return;
-      const current = new Set(
-        Array.from(selectEl.querySelectorAll('option'))
-          .map((option) => option.value)
-      );
-
-      for (const value of values || []) {
-        if (!current.has(value)) {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = value;
-          selectEl.appendChild(option);
-        }
-      }
-
-      if (selectedValue !== undefined) {
-        selectEl.value = selectedValue;
-      }
-    }
-
-    async function loadDashboard() {
-      dashboardBanner.className = 'banner info visible';
-      dashboardBanner.textContent = 'Laddar resultatöversikt...';
-      dashboardContent.innerHTML = '';
-
-      try {
-        const provider = dashboardProviderFilter?.value || '';
-        const response = await fetch(`/api/enkat/dashboard?days=90${provider ? `&provider=${encodeURIComponent(provider)}` : ''}`);
-        const payload = await response.json();
-
-        if (!response.ok || !payload.success) {
-          dashboardBanner.className = 'banner error visible';
-          dashboardBanner.textContent = payload.error || 'Kunde inte läsa dashboarddata.';
-          return;
-        }
-
-        const data = payload.data;
-        updateSelectOptions(dashboardProviderFilter, data.availableProviders || [], provider);
-        dashboardBanner.className = 'banner success visible';
-        dashboardBanner.textContent = data.scope === 'admin'
-          ? `Visar resultat för ${data.totals.providerCount} vårdgivare.`
-          : 'Visar dina egna resultat för de senaste 90 dagarna.';
-
-        if (data.scope === 'self') {
-          if (!data.configured) {
-            dashboardContent.innerHTML = `<div class="muted-box">${escapeHtml(data.message)}</div>`;
-            return;
-          }
-          dashboardContent.innerHTML = renderProviderCard(data);
-          return;
-        }
-
-        const providers = data.providers || [];
-        if (!providers.length) {
-          dashboardContent.innerHTML = '<div class="muted-box">Inga enkätsvar hittades ännu för vald period.</div>';
-          return;
-        }
-
-        dashboardContent.innerHTML = `
-          <div style="display:grid;gap:16px;">
-            ${providers.map((item) => renderProviderCard(item)).join('')}
-          </div>
-        `;
-      } catch (error) {
-        console.error(error);
-        dashboardBanner.className = 'banner error visible';
-        dashboardBanner.textContent = 'Kunde inte ladda resultatöversikten.';
-      }
-    }
-
-    void loadDashboard();
+    const loadDashboard = () => loadDashboardSection({
+      bannerEl: dashboardBanner,
+      contentEl: dashboardContent,
+      providerFilterEl: dashboardProviderFilter
+    });
 
     dashboardProviderFilter?.addEventListener('change', () => {
       void loadDashboard();
     });
 
-    async function loadCampaignHistory() {
-      campaignsBanner.className = 'banner info visible';
-      campaignsBanner.textContent = 'Laddar kampanjhistorik...';
-      campaignsContent.innerHTML = '';
-
-      try {
-        const response = await fetch('/api/enkat/campaigns');
-        const payload = await response.json();
-
-        if (!response.ok || !payload.success) {
-          campaignsBanner.className = 'banner error visible';
-          campaignsBanner.textContent = payload.error || 'Kunde inte läsa kampanjhistoriken.';
-          return;
-        }
-
-        const campaigns = payload.data?.campaigns || [];
-        if (!campaigns.length) {
-          campaignsBanner.className = 'banner success visible';
-          campaignsBanner.textContent = 'Ingen kampanjhistorik ännu.';
-          campaignsContent.innerHTML = '<div class="muted-box">När du skapar dina första kampanjer visas de här.</div>';
-          return;
-        }
-
-        campaignsBanner.className = 'banner success visible';
-        campaignsBanner.textContent = `Visar ${campaigns.length} kampanjer.`;
-        campaignsContent.innerHTML = `<div style="display:grid;gap:16px;">${campaigns.map((item) => renderCampaignCard(item)).join('')}</div>`;
-
-        campaignsContent.querySelectorAll('.remind-btn').forEach((button) => {
-          button.addEventListener('click', async () => {
-            const campaignId = button.getAttribute('data-campaign-id');
-            if (!campaignId) return;
-
-            button.disabled = true;
-            campaignsBanner.className = 'banner info visible';
-            campaignsBanner.textContent = 'Skickar påminnelser...';
-
-            try {
-              const response = await fetch('/api/enkat/remind', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ campaignId })
-              });
-              const payload = await response.json();
-
-              if (!response.ok || !payload.success) {
-                campaignsBanner.className = 'banner error visible';
-                campaignsBanner.textContent = payload.error || 'Kunde inte skicka påminnelser.';
-                button.disabled = false;
-                return;
-              }
-
-              const data = payload.data;
-              campaignsBanner.className = 'banner success visible';
-              campaignsBanner.textContent = `Påminnelser skickade. Berörda: ${data.eligible}, skickade: ${data.sent}, misslyckade: ${data.failed}.`;
-              await loadCampaignHistory();
-              await loadDashboard();
-            } catch (error) {
-              console.error(error);
-              campaignsBanner.className = 'banner error visible';
-              campaignsBanner.textContent = 'Ett oväntat fel uppstod vid påminnelseutskick.';
-              button.disabled = false;
-            }
-          });
-        });
-      } catch (error) {
-        console.error(error);
-        campaignsBanner.className = 'banner error visible';
-        campaignsBanner.textContent = 'Kunde inte ladda kampanjhistoriken.';
-      }
-    }
+    const loadCampaignHistory = () => loadCampaignHistorySection({
+      bannerEl: campaignsBanner,
+      contentEl: campaignsContent,
+      afterReminderSent: loadDashboard
+    });
 
     refreshCampaignsBtn?.addEventListener('click', () => {
       void loadCampaignHistory();
     });
 
-    void loadCampaignHistory();
-
-    async function loadReport() {
-      reportBanner.className = 'banner info visible';
-      reportBanner.textContent = 'Laddar rapport...';
-      reportContent.innerHTML = '';
-
-      try {
-        const period = reportPeriod?.value || 'month';
-        const provider = reportProviderFilter?.value || '';
-        const response = await fetch(`/api/enkat/report?period=${encodeURIComponent(period)}${provider ? `&provider=${encodeURIComponent(provider)}` : ''}`);
-        const payload = await response.json();
-
-        if (!response.ok || !payload.success) {
-          reportBanner.className = 'banner error visible';
-          reportBanner.textContent = payload.error || 'Kunde inte läsa rapporten.';
-          return;
-        }
-
-        const data = payload.data;
-        updateSelectOptions(reportProviderFilter, data.availableProviders || [], provider);
-        reportBanner.className = 'banner success visible';
-        reportBanner.textContent = `Rapport laddad: ${data.periodLabel}.`;
-
-        if (data.scope === 'self') {
-          if (!data.configured) {
-            reportContent.innerHTML = `<div class="muted-box">${escapeHtml(data.message)}</div>`;
-            return;
-          }
-
-          if (!data.canShowDetails) {
-            reportContent.innerHTML = `<div class="muted-box">${escapeHtml(data.message || 'För få svar för att visa resultat på ett integritetssäkert sätt.')}</div>`;
-            return;
-          }
-
-          reportContent.innerHTML = renderReportProvider(data);
-          return;
-        }
-
-        const providers = data.providers || [];
-        if (!providers.length) {
-          reportContent.innerHTML = '<div class="muted-box">Inga rapportdata hittades för vald period.</div>';
-          return;
-        }
-
-        reportContent.innerHTML = `
-          <div style="display:grid;gap:16px;">
-            ${providers.map((item) => renderReportProvider(item)).join('')}
-          </div>
-        `;
-      } catch (error) {
-        console.error(error);
-        reportBanner.className = 'banner error visible';
-        reportBanner.textContent = 'Kunde inte ladda rapporten.';
-      }
-    }
+    const loadReport = () => loadReportSection({
+      bannerEl: reportBanner,
+      contentEl: reportContent,
+      periodEl: reportPeriod,
+      providerFilterEl: reportProviderFilter
+    });
 
     refreshReportBtn?.addEventListener('click', () => {
       void loadReport();
@@ -1402,6 +824,8 @@ Enkäten är anonym. Tack!</textarea>
       void loadReport();
     });
 
+    void loadDashboard();
+    void loadCampaignHistory();
     void loadReport();
   </script>
   </div>

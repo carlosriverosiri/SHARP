@@ -27,12 +27,13 @@
 
 1. **Session-hantering** (`personal_session`)
    - Sparar att du är inloggad
-   - Går ut efter 1 timme inaktivitet (sliding timeout)
+   - Går ut efter 2 timmar inaktivitet (sliding timeout)
    - **HttpOnly** = kan inte läsas av JavaScript (säkrare)
 
 2. **Supabase Auth Tokens** (`sb-access-token`, `sb-refresh-token`)
    - Access token för att autentisera mot Supabase
    - Refresh token för att förnya access token automatiskt
+   - Access token verifieras server-side mot Supabase innan användare eller roll accepteras
    - **HttpOnly** = kan inte läsas av JavaScript (säkrare)
 
 ### Cookie-inställningar:
@@ -42,7 +43,7 @@ cookies.set('personal_session', sessionSecret, {
   httpOnly: true,        // ✅ Säker - JavaScript kan inte läsa
   secure: true,          // ✅ Endast HTTPS (i produktion)
   sameSite: 'strict',    // ✅ Skydd mot CSRF-attacker
-  maxAge: 3600          // 1 timme
+  maxAge: 7200          // 2 timmar
 });
 ```
 

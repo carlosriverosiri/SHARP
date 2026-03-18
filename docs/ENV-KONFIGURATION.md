@@ -27,6 +27,7 @@
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `PERSONAL_SESSION_SECRET`
    - `SITE`
+   - `PUBLIC_SITE_URL`
 
 ### Steg 2: Skapa `.env.local`-fil
 
@@ -98,8 +99,14 @@ SUPABASE_SERVICE_ROLE_KEY=eyJxxxxx...
 ## Site URL
 
 ```bash
-# Din webbplats URL (utan avslutande /)
-SITE=https://axelspecialisten.se
+# Publik basadress som används i enkät-SMS, magic link och lösenordsåterställning
+# Använd den tillfälliga Netlify-adressen under testfasen
+SITE=https://sodermalm.netlify.app
+PUBLIC_SITE_URL=https://sodermalm.netlify.app
+
+# Byt båda till den skarpa domänen när den är klar
+# SITE=https://specialist.se
+# PUBLIC_SITE_URL=https://specialist.se
 ```
 
 ---

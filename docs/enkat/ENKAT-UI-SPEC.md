@@ -265,6 +265,7 @@ Systemet bör kunna ersätta:
 Mycket rekommenderat:
 
 - liten live-preview av hur SMS:et ser ut
+- tydlig visning av vilken publik domän som faktiskt kommer användas i länken
 
 Detta minskar risken för fel innan utskick.
 

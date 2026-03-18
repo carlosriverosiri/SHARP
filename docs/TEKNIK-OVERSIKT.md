@@ -90,7 +90,8 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 ## Driftsflöde & build
 
 - `npm run dev` (Astro dev server)
-- `npm run build` (Astro build + Pagefind)
+- `npm run build` (Astro build, följt av `postbuild` för Pagefind)
+- `npm run verify` (tester + `astro check` + full build före deploy)
 - `npm run preview` (lokal preview)
 - Netlify bygger på push till `main`.
 
@@ -118,7 +119,7 @@ Exempel på centrala variabler:
 - Search: `SERPAPI_KEY`
 - Zotero: `ZOTERO_API_KEY` (lagras i appen per användare)
 - SMS: `ELKS_API_USER`, `ELKS_API_PASSWORD`
-- Övrigt: `SITE`, `POOL_ENCRYPTION_KEY`
+- Övrigt: `SITE`, `PUBLIC_SITE_URL`, `POOL_ENCRYPTION_KEY`
 
 ---
 

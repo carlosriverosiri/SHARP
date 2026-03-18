@@ -1,0 +1,6 @@
+PatientID;Mobiltelefon;Vardgivare;Datum;Bokningstyp;Diagnoser;Starttid
+p100;0701234567;Dr A;2026-03-15;Nybesök;M17;08:00
+p101;0707654321;Dr B;2026-03-15;Suturtagning;;09:00
+p102;0701112233;Dr A;2026-03-15;Återbesök;M17;10:00
+p102;0701112233;Dr A;2026-03-15;Remiss knä;M17;10:30
+p103;0704445566;Dr A;2026-03-15;Telefonkontakt;M17;11:00

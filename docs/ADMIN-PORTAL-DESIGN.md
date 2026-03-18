@@ -55,7 +55,7 @@ src/
 ├── components/
 │   └── Header.astro              # Kugghjulsikon till portalen
 ├── layouts/
-│   └── PortalLayout.astro        # Delad portal-layout med nav + profilblock
+│   └── PortalLayout.astro        # Delad portal-layout med nav + profilblock, samt named head-slot för page-styles/scripts
 ├── lib/
 │   ├── auth.ts                   # Autentisering + namn/roll från Supabase Auth
 │   ├── portal-roles.ts           # Rollhierarki (superadmin/admin/personal)
@@ -85,8 +85,9 @@ src/
 ### Supabase
 - **Plattform:** Supabase (EU-server, Frankfurt)
 - **Metoder:** E-post/lösenord, Magic Link
-- **Session:** 1 timme sliding timeout
-- **Cookies:** HttpOnly, SameSite Strict, Secure
+- **Session:** 2 timmar sliding timeout
+- **Cookies:** HttpOnly, Secure. `personal_session` använder `SameSite=Strict`, medan Supabase-cookies använder `SameSite=Lax` för att fungera med redirects
+- **Tokenverifiering:** `sb-access-token` accepteras inte enbart via lokal JWT-avkodning; portalen verifierar token mot Supabase och använder `sb-refresh-token` för att förnya sessionen vid behov
 - **Roller:** `superadmin` / `admin` / `personal` via `app_metadata.role` i Supabase Auth
 - **Rollhierarki:** `superadmin` > `admin` > `personal`. Kontrolleras via `harMinstPortalRoll()` i `src/lib/portal-roles.ts`.
 - **Superadmin:** Kan ändra roller, skapa användare med valfri roll, och har full åtkomst till alla admin-funktioner.
@@ -181,7 +182,8 @@ Uppladdning och hantering av:
 - [`docs/LANKAR-OCH-SMS.md`](./LANKAR-OCH-SMS.md) - Länk- och SMS-verktyget
 - [`docs/ANVANDARSYSTEM-PLANERING.md`](./ANVANDARSYSTEM-PLANERING.md) - Användarhantering
 - [`docs/SSR-OG-COOKIES-FORKLARING.md`](./SSR-OG-COOKIES-FORKLARING.md) - Teknisk förklaring
+- [`docs/PERSONALPORTAL-SMOKE-TEST.md`](./PERSONALPORTAL-SMOKE-TEST.md) - Manuell checklista efter deploy
 
 ---
 
-*Dokumentet uppdaterat 2026-03-16*
+*Dokumentet uppdaterat 2026-03-18*

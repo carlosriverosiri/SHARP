@@ -9,6 +9,7 @@
  */
 
 import type { AstroCookies } from 'astro';
+import type { User } from '@supabase/supabase-js';
 import { supabase, loggaHandelse, supabaseKonfigurerad } from './supabase';
 import { harMinstPortalRoll, normalizePortalRole, type PortalRole } from './portal-roles';
 
@@ -132,32 +133,7 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return null;
   }
 
-  const accessToken = cookies.get('sb-access-token')?.value;
-  if (!accessToken) return null;
-
-  const payload = decodeJwtPayload(accessToken);
-  if (payload?.sub && payload?.email && accessTokenIsValid(accessToken)) {
-    return {
-      id: payload.sub,
-      email: payload.email,
-      roll: normalizePortalRole(payload.app_metadata?.role),
-      namn: hamtaVisningsnamn(payload.email, payload.user_metadata)
-    };
-  }
-
-  try {
-    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
-    if (error || !user) return null;
-
-    return {
-      id: user.id,
-      email: user.email || '',
-      roll: normalizePortalRole(user.app_metadata?.role),
-      namn: hamtaVisningsnamn(user.email || '', user.user_metadata)
-    };
-  } catch {
-    return null;
-  }
+  return await hamtaVerifieradSupabaseAnvandare(cookies);
 }
 
 /**
@@ -245,34 +221,54 @@ function enkelLoggaIn(
 // ============================================
 
 async function kontrolleraSupabaseSession(cookies: AstroCookies): Promise<boolean> {
+  return Boolean(await hamtaVerifieradSupabaseAnvandare(cookies));
+}
+
+function skapaAnvandareFranSupabaseUser(user: User): Anvandare {
+  return {
+    id: user.id,
+    email: user.email || '',
+    roll: normalizePortalRole(user.app_metadata?.role),
+    namn: hamtaVisningsnamn(user.email || '', user.user_metadata)
+  };
+}
+
+function rensaSupabaseSession(cookies: AstroCookies): void {
+  cookies.delete('sb-access-token', { path: '/' });
+  cookies.delete('sb-refresh-token', { path: '/' });
+}
+
+async function hamtaVerifieradSupabaseAnvandare(cookies: AstroCookies): Promise<Anvandare | null> {
   const accessToken = cookies.get('sb-access-token')?.value;
   const refreshToken = cookies.get('sb-refresh-token')?.value;
-  
-  if (!accessToken) return false;
+
+  if (!accessToken) return null;
 
   try {
-    // Snabb lokal kontroll av JWT (undviker nätverksanrop vid giltig token)
     if (accessTokenIsValid(accessToken)) {
-      return true;
-    }
-    
-    // Om access token är utgången, försök refresha
-    if (refreshToken) {
-      const { data, error: refreshError } = await supabase.auth.refreshSession({
-        refresh_token: refreshToken
-      });
-      
-      if (!refreshError && data.session) {
-        // Uppdatera cookies med nya tokens
-        sparaSupabaseSession(cookies, data.session.access_token, data.session.refresh_token);
-        return true;
+      const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+      if (!error && user) {
+        return skapaAnvandareFranSupabaseUser(user);
       }
     }
-    
-    return false;
+
+    if (refreshToken) {
+      const { data, error } = await supabase.auth.refreshSession({
+        refresh_token: refreshToken
+      });
+      const refreshedUser = data.user ?? data.session?.user ?? null;
+
+      if (!error && data.session && refreshedUser) {
+        sparaSupabaseSession(cookies, data.session.access_token, data.session.refresh_token);
+        return skapaAnvandareFranSupabaseUser(refreshedUser);
+      }
+    }
   } catch {
-    return false;
+    // Rensa ogiltiga sessionscookies om Supabase-verifieringen fallerar.
   }
+
+  rensaSupabaseSession(cookies);
+  return null;
 }
 
 async function supabaseLoggaIn(

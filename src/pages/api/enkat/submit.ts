@@ -4,6 +4,13 @@ import { supabaseAdmin } from '../../../lib/supabase';
 
 export const prerender = false;
 
+type SubmitEnkatResponseResult = {
+  status: 'ok' | 'invalid_code' | 'already_used' | 'expired';
+  kampanj_id: string | null;
+  utskick_id: string | null;
+  svarad_vid: string | null;
+};
+
 function maskSensitiveText(value: string): string {
   return value
     .replace(/\b\d{6}[- ]?\d{4}\b/g, '[personnummer borttaget]')
@@ -43,64 +50,41 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: 'Delbetyg måste vara heltal mellan 1 och 5.' }, 400);
     }
 
-    const nowIso = new Date().toISOString();
+    const { data, error } = await supabaseAdmin.rpc('submit_enkat_response', {
+      p_code: code,
+      p_helhetsbetyg: overallScore,
+      p_bemotande: bemotande,
+      p_information: information,
+      p_lyssnad_pa: lyssnadPa,
+      p_plan_framat: planFramat,
+      p_kommentar_bra: commentGood || null,
+      p_kommentar_forbattra: commentImprove || null
+    });
 
-    const { data: utskick, error: utskickError } = await supabaseAdmin
-      .from('enkat_utskick')
-      .select('id, kampanj_id, vardgivare_namn, besoksdatum, besoksstart_tid, bokningstyp_raw, bokningstyp_normaliserad, used, expires_at')
-      .eq('unik_kod', code)
-      .single();
+    if (error) {
+      return json({ success: false, error: error.message || 'Kunde inte spara svaret.' }, 500);
+    }
 
-    if (utskickError || !utskick) {
+    const submitResult = (Array.isArray(data) ? data[0] : data) as SubmitEnkatResponseResult | null;
+    if (!submitResult) {
+      return json({ success: false, error: 'Kunde inte spara svaret.' }, 500);
+    }
+
+    if (submitResult.status === 'invalid_code') {
       return json({ success: false, error: 'Länken är ogiltig eller saknas.' }, 404);
     }
 
-    if (utskick.used) {
+    if (submitResult.status === 'already_used') {
       return json({ success: false, error: 'Den här länken har redan använts.' }, 409);
     }
 
-    if (utskick.expires_at && new Date(utskick.expires_at) < new Date()) {
+    if (submitResult.status === 'expired') {
       return json({ success: false, error: 'Länken har gått ut.' }, 410);
     }
 
-    // Atomär claim -- sätter used=true bara om den fortfarande är false
-    const { data: claimedRows, error: claimError } = await supabaseAdmin
-      .from('enkat_utskick')
-      .update({ used: true, svarad_vid: nowIso })
-      .eq('id', utskick.id)
-      .eq('used', false)
-      .select('id');
-
-    if (claimError || !claimedRows?.length) {
-      return json({ success: false, error: 'Den här länken har redan använts.' }, 409);
+    if (submitResult.status !== 'ok') {
+      return json({ success: false, error: 'Kunde inte spara svaret.' }, 500);
     }
-
-    const { error: insertError } = await supabaseAdmin
-      .from('enkat_svar')
-      .insert({
-        kampanj_id: utskick.kampanj_id,
-        utskick_id: utskick.id,
-        vardgivare_namn: utskick.vardgivare_namn,
-        besoksdatum: utskick.besoksdatum,
-        besoksstart_tid: utskick.besoksstart_tid,
-        bokningstyp_raw: utskick.bokningstyp_raw,
-        bokningstyp_normaliserad: utskick.bokningstyp_normaliserad,
-        helhetsbetyg: overallScore,
-        bemotande,
-        information,
-        lyssnad_pa: lyssnadPa,
-        plan_framat: planFramat,
-        kommentar_bra: commentGood || null,
-        kommentar_forbattra: commentImprove || null
-      });
-
-    if (insertError) {
-      return json({ success: false, error: insertError.message || 'Kunde inte spara svaret.' }, 500);
-    }
-
-    await supabaseAdmin.rpc('increment_enkat_total_svar', {
-      p_kampanj_id: utskick.kampanj_id
-    });
 
     return json({
       success: true,

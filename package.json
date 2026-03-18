@@ -4,8 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "npx astro dev -- --open",
-    "build": "npx astro build && npx pagefind --site dist",
+    "build": "npx astro build",
     "preview": "npx astro preview",
+    "test": "vitest run",
+    "verify": "npm test && npx astro check && npm run build",
     "postbuild": "npx pagefind --site dist",
     "docs:typedoc": "typedoc",
     "astro": "npx astro"
@@ -26,8 +28,10 @@
   },
   "devDependencies": {
     "@types/papaparse": "^5.5.2",
+    "jsdom": "^29.0.0",
     "pagefind": "^1.4.0",
     "terser": "^5.44.1",
-    "typedoc": "^0.28.16"
+    "typedoc": "^0.28.16",
+    "vitest": "^4.1.0"
   }
 }

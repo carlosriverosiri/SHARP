@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { jsonResponse as json } from '../../../lib/enkat-api-helpers';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { parseEnkatCsv } from '../../../lib/enkat-csv-parser';
+import { createEnkatPreviewToken } from '../../../lib/enkat-preview-token';
 import {
   formatExcludedBookingTypePatterns,
   getDefaultExcludedBookingTypePatternText,
@@ -97,10 +98,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }, 400);
     }
 
+    const previewToken = createEnkatPreviewToken({
+      userId: anvandare.id,
+      fileName: file.name,
+      totalRows: result.totalRows,
+      validRows: result.validRows,
+      invalidRows: result.invalidRows,
+      duplicateRows: result.duplicateRows,
+      autoExcludedRows: result.autoExcludedRows,
+      selectedRows: result.selectedRows
+    });
+
     return json({
       success: true,
       data: {
         fileName: file.name,
+        previewToken,
         uploadedBy: anvandare.email,
         excludedBookingTypePatterns,
         ...result

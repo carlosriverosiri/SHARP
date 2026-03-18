@@ -99,6 +99,7 @@ Representerar en administrativ kampanj där en CSV importerats och ett antal pat
 | `status` | TEXT | Nej | Kampanjstatus |
 | `namn` | TEXT | Ja | Valfritt namn för kampanjen |
 | `csv_filnamn` | TEXT | Ja | Ursprungligt filnamn |
+| `preview_token_hash` | TEXT | Ja | Hash av signerad preview-token för idempotent kampanjskapande |
 | `total_importerade` | INTEGER | Nej | Antal rader från fil |
 | `total_giltiga` | INTEGER | Nej | Efter validering |
 | `total_dubletter` | INTEGER | Nej | Antal bortvalda dubletter |
@@ -137,6 +138,7 @@ Representerar en administrativ kampanj där en CSV importerats och ett antal pat
 - `CHECK (total_skickade >= 0)`
 - `CHECK (total_svar >= 0)`
 - `CHECK (paminnelse_efter_timmar IS NULL OR paminnelse_efter_timmar >= 1)`
+- `UNIQUE (preview_token_hash)` när värde finns
 
 ### Default-värden
 
@@ -321,6 +323,7 @@ Tabellen behövs för att:
 - `idx_enkat_kampanjer_skapad_av` på `(skapad_av)`
 - `idx_enkat_kampanjer_status` på `(status)`
 - `idx_enkat_kampanjer_created_at` på `(created_at DESC)`
+- `idx_enkat_kampanjer_preview_token_hash` på `(preview_token_hash)` med `WHERE preview_token_hash IS NOT NULL`
 
 #### `enkat_utskick`
 
@@ -400,22 +403,19 @@ Det är bättre att göra de publika Astro API-routes ansvariga för filtrering 
 
 Rekommenderas på `enkat_kampanjer`.
 
-### Auto-markering av utskick som besvarat
+### Atomar svarsinlamning
 
-När rad skapas i `enkat_svar` bör systemet också uppdatera:
+När rad skapas i `enkat_svar` ska systemet i samma transaktion också uppdatera:
 
 - `enkat_utskick.used = true`
 - `enkat_utskick.svarad_vid = now()`
 - `enkat_kampanjer.total_svar = total_svar + 1`
 
-Detta kan göras:
-
-- antingen i API-lagret
-- eller via en trigger
+Detta goras i en SQL-funktion, till exempel `submit_enkat_response`, i stallet for flera separata API-steg.
 
 ### Rekommendation
 
-För V1 är det rimligt att göra detta i API-lagret för att hålla SQL enklare.
+For V1 ar en dedikerad SQL-funktion battre an att gora claim + insert + counter update i flera separata skrivningar.
 
 ### Auto-radering / retention
 
