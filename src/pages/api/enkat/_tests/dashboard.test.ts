@@ -183,7 +183,6 @@ describe('GET /api/enkat/dashboard', () => {
             bemotande: 4,
             information: 3,
             lyssnad_pa: 4,
-            plan_framat: 5,
             kommentar_bra: 'Bra bemötande',
             kommentar_forbattra: null,
             created_at: '2026-03-18T10:00:00.000Z'
@@ -194,7 +193,6 @@ describe('GET /api/enkat/dashboard', () => {
             bemotande: 5,
             information: 5,
             lyssnad_pa: 5,
-            plan_framat: 4,
             kommentar_bra: null,
             kommentar_forbattra: 'Mer information',
             created_at: '2026-03-18T11:00:00.000Z'
@@ -264,10 +262,9 @@ describe('GET /api/enkat/dashboard', () => {
             subscores: {
               bemotande: 4.5,
               information: 4,
-              lyssnadPa: 4.5,
-              planFramat: 4.5
+              lyssnadPa: 4.5
             },
-            highScoreShare: 0.5,
+            highScoreShare: 1,
             lowScoreShare: 0,
             latestComments: [
               { type: 'bra', text: 'Bra bemötande', createdAt: '2026-03-18T10:00:00.000Z' },

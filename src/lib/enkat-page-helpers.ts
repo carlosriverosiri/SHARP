@@ -23,7 +23,7 @@ type CommentItem = {
 type ProviderSubscores = {
   bemotande: number;
   information: number;
-  planFramat: number;
+  lyssnadPa: number;
 };
 
 export type ProviderCardData = {
@@ -54,6 +54,8 @@ export type CampaignCardData = {
   responseRate: number;
   skicka_paminnelse: boolean;
   queuedInitial: number;
+  sms_mall?: string | null;
+  surveyCodes?: string[];
 };
 
 export type ReportProviderData = {
@@ -293,7 +295,7 @@ export function renderProviderCard(item: ProviderCardData): string {
         <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
         <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
         <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-        <div class="summary-card"><div class="summary-label">Plan</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.planFramat)}</div></div>
+        <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
       </div>
       <div style="margin-top:14px;font-size:14px;color:var(--muted);">
         Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · Svar: <strong>${escapeHtml(item.sampleSize)}</strong> · Påminnelser: <strong>${escapeHtml(item.reminderCount || 0)}</strong>
@@ -327,6 +329,35 @@ export function renderCampaignCard(item: CampaignCardData): string {
           ? 'Något gick fel i utskicket'
           : 'Kampanjen väntar eller bearbetas';
 
+  const surveyCodes = (item.surveyCodes || []).slice(0, 3);
+  const surveyCodeSection = surveyCodes.length
+    ? `
+      <div style="margin-top:12px;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">URL till enkät</div>
+        <div style="display:grid;gap:8px;">
+          ${surveyCodes.map((code) => `
+            <div style="border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#f8fafc;">
+              <a href="/e/${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer" style="font-size:13px;line-height:1.4;word-break:break-all;">/e/${escapeHtml(code)}</a>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `
+    : `
+      <div style="margin-top:12px;color:var(--muted);font-size:13px;">
+        Inga enkätkoder hittades för kampanjen ännu.
+      </div>
+    `;
+
+  const smsTemplateSection = item.sms_mall
+    ? `
+      <details style="margin-top:12px;">
+        <summary style="cursor:pointer;color:var(--muted);font-size:13px;">Visa SMS-mall som användes</summary>
+        <pre style="margin-top:8px;white-space:pre-wrap;word-break:break-word;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;line-height:1.45;">${escapeHtml(item.sms_mall)}</pre>
+      </details>
+    `
+    : '';
+
   return `
     <div class="history-card">
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
@@ -350,6 +381,8 @@ export function renderCampaignCard(item: CampaignCardData): string {
       <div style="margin-top:6px;color:var(--muted);font-size:14px;">
         Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · ${escapeHtml(statusText)}
       </div>
+      ${surveyCodeSection}
+      ${smsTemplateSection}
 
       <div class="actions">
         <button
@@ -385,7 +418,7 @@ export function renderReportProvider(item: ReportProviderData): string {
               <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
               <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
               <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-              <div class="summary-card"><div class="summary-label">Plan</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.planFramat)}</div></div>
+              <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
             </div>
             <div style="margin-top:10px;color:var(--muted);font-size:14px;">
               Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong>

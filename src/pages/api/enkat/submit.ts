@@ -20,7 +20,8 @@ export const POST: APIRoute = async ({ request }) => {
     const bemotande = Number(body.bemotande);
     const information = Number(body.information);
     const lyssnadPa = Number(body.lyssnadPa);
-    const planFramat = Number(body.planFramat);
+    // Legacy compatibility: if client no longer sends planFramat, mirror information.
+    const planFramat = Number(body.planFramat ?? body.information);
     const commentGood = maskSensitiveEnkatText(String(body.commentGood || '').trim());
     const commentImprove = maskSensitiveEnkatText(String(body.commentImprove || '').trim());
 

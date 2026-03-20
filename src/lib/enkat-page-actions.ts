@@ -45,6 +45,26 @@ type CreateCampaignActionArgs = {
   afterCreate: () => void;
 };
 
+function getTodayCampaignDateLabel(): string {
+  return new Date().toLocaleDateString('sv-SE');
+}
+
+function resolveCampaignName(rawValue: string): string {
+  const trimmed = (rawValue || '').trim();
+  const todayLabel = getTodayCampaignDateLabel();
+  const defaultBase = 'Patientupplevelse';
+
+  if (!trimmed) {
+    return `${defaultBase} ${todayLabel}`;
+  }
+
+  if (trimmed.includes(todayLabel)) {
+    return trimmed;
+  }
+
+  return `${trimmed} ${todayLabel}`;
+}
+
 export async function saveExcludedBookingTypesAction({
   button,
   input,
@@ -147,11 +167,14 @@ export async function createCampaignAction({
   setBanner('info', 'Skapar kampanj...');
 
   try {
+    const campaignName = resolveCampaignName(campaignNameInput.value);
+    campaignNameInput.value = campaignName;
+
     const data = await fetchApiData<SendCampaignData>('/api/enkat/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        campaignName: campaignNameInput.value || '',
+        campaignName,
         smsTemplate: smsTemplateInput.value || '',
         sendNow: true,
         sendReminder: !!sendReminderInput.checked,

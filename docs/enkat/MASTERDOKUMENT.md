@@ -100,6 +100,7 @@ Hela enkätdokumentationen ligger i `docs/enkat/`:
 - `ENKAT-STATUS.md`
 - `ENKAT-IMPLEMENTATIONSPLAN.md`
 - `ENKAT-PATIENTUPPLEVELSE.md`
+- `ENKAT-PATIENTFORMULAR-MALL.md` — referens för publikt frågeformulär (mobilgenomgång + mall för nya formulär)
 - `ENKAT-API-SPEC.md`
 - `ENKAT-UI-SPEC.md`
 - `ENKAT-SQL-SPEC.md`
@@ -138,7 +139,7 @@ Fråga:
 - Skicka detta masterdokument först till extern AI.
 - Lägg sedan till relevant underdokument från `docs/enkat/` beroende på frågan:
   - API-fråga -> `ENKAT-API-SPEC.md`
-  - UI-fråga -> `ENKAT-UI-SPEC.md`
+  - UI-fråga -> `ENKAT-UI-SPEC.md` + vid behov `ENKAT-PATIENTFORMULAR-MALL.md`
   - databasfråga -> `ENKAT-SQL-SPEC.md`
   - plan/prioritering -> `ENKAT-STATUS.md` + `ENKAT-IMPLEMENTATIONSPLAN.md`
 

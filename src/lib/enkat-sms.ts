@@ -35,12 +35,12 @@ export function buildEnkatSmsMessage(
   options?: { reminder?: boolean }
 ) {
   const defaultInitialTemplate =
-    'Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM] ([BOKNINGSTYP])?\n' +
+    'Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?\n' +
     'Svara här: [LÄNK]\n' +
     'Enkäten är anonym. Tack!';
 
   const defaultReminderTemplate =
-    'Hej! Om du vill hjälpa oss förbättra mottagningen får du gärna svara på vår korta anonyma enkät om ditt besök hos [VÅRDGIVARE] den [DATUM] ([BOKNINGSTYP]).\n' +
+    'Hej! Om du vill hjälpa oss förbättra mottagningen får du gärna svara på vår korta anonyma enkät om ditt besök hos [VÅRDGIVARE] den [DATUM].\n' +
     'Svara här: [LÄNK]\n' +
     'Tack!';
 

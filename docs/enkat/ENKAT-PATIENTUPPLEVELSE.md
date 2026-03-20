@@ -4,6 +4,8 @@
 >
 > Rekommenderad implementation: i samma Astro/Supabase/46elks-arkitektur som `Kort varsel`.
 
+**Aktuellt publikt formulär (utseende, mobil, mall för framtida formulär):** `ENKAT-PATIENTFORMULAR-MALL.md`
+
 ---
 
 ## 1. Syfte
@@ -262,14 +264,13 @@ För coachning räcker det inte med bara ett totalbetyg.
 #### Del 1: Helhetsomdöme
 
 - `Hur nöjd är du med ditt besök som helhet?`
-- skala 1-10
+- skala 1-5 (1 = Instämmer inte alls, 5 = Instämmer helt)
 
 #### Del 2: Strukturerade delområden
 
 - `Bemötande`
 - `Tydlighet i informationen`
 - `Kände du dig lyssnad på?`
-- `Fick du en tydlig plan framåt?`
 
 Rekommenderad skala: **1-5**
 
@@ -367,7 +368,6 @@ Per vårdgivare:
 - bemötande
 - tydlighet
 - lyssnad på
-- plan framåt
 - trendlinje
 
 Dashboarden bör i första hand lyfta **utveckling över tid** och förbättringsområden, inte skapa en känsla av ranking mellan kollegor.
@@ -471,7 +471,7 @@ Första versionen bör implementera följande standard:
 | `id` | UUID | Primärnyckel |
 | `utskick_id` | UUID | FK till utskick |
 | `kampanj_id` | UUID | FK till kampanj |
-| `helhetsbetyg` | INTEGER | 1-10 |
+| `helhetsbetyg` | INTEGER | 1-5 |
 | `bemotande` | INTEGER | 1-5 |
 | `information` | INTEGER | 1-5 |
 | `lyssnad_pa` | INTEGER | 1-5 |

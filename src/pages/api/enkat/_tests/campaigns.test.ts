@@ -48,7 +48,8 @@ const mocks = vi.hoisted(() => {
         not: vi.fn(() => builder),
         eq: vi.fn(() => builder),
         is: vi.fn(() => builder),
-        gte: vi.fn(() => builder)
+        gte: vi.fn(() => builder),
+        order: vi.fn(() => builder)
       };
 
       return builder;
@@ -167,6 +168,7 @@ describe('GET /api/enkat/campaigns', () => {
           total_svar: 3,
           skicka_paminnelse: true,
           paminnelse_efter_timmar: 48,
+          sms_mall: 'Malltext',
           created_at: '2026-03-18T10:00:00.000Z',
           skapad_av: 'user-1'
         }
@@ -180,6 +182,13 @@ describe('GET /api/enkat/campaigns', () => {
       },
       {
         data: [{ kampanj_id: 'kampanj-1' }],
+        error: null
+      },
+      {
+        data: [
+          { kampanj_id: 'kampanj-1', unik_kod: 'KOD-NEW', created_at: '2026-03-18T11:00:00.000Z' },
+          { kampanj_id: 'kampanj-1', unik_kod: 'KOD-OLD', created_at: '2026-03-18T10:00:00.000Z' }
+        ],
         error: null
       }
     );
@@ -210,12 +219,14 @@ describe('GET /api/enkat/campaigns', () => {
             total_svar: 3,
             skicka_paminnelse: true,
             paminnelse_efter_timmar: 48,
+            sms_mall: 'Malltext',
             created_at: '2026-03-18T10:00:00.000Z',
             skapad_av: 'user-1',
             remindersSent: 2,
             unansweredEligible: 1,
             queuedInitial: 3,
-            responseRate: 0.75
+            responseRate: 0.75,
+            surveyCodes: ['KOD-NEW', 'KOD-OLD']
           }
         ]
       }
@@ -237,6 +248,7 @@ describe('GET /api/enkat/campaigns', () => {
           total_svar: 3,
           skicka_paminnelse: true,
           paminnelse_efter_timmar: 48,
+          sms_mall: null,
           created_at: '2026-03-18T10:00:00.000Z',
           skapad_av: 'user-1'
         }
@@ -247,6 +259,10 @@ describe('GET /api/enkat/campaigns', () => {
       {
         data: null,
         error: new Error('stat query failed')
+      },
+      {
+        data: [],
+        error: null
       },
       {
         data: [],

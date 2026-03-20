@@ -228,6 +228,19 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       margin-top: 16px;
     }
 
+    #summaryGrid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    #summaryGrid .summary-card {
+      padding: 12px;
+    }
+
+    #summaryGrid .summary-value {
+      font-size: 24px;
+    }
+
     .summary-card {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -366,6 +379,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       .page { padding: 16px 12px 40px; }
       h1 { font-size: 28px; }
       .summary-grid { grid-template-columns: 1fr; }
+      #summaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
   <div class="page">
@@ -485,7 +499,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
         <div class="form-group">
           <label for="smsTemplate">SMS-mall</label>
-          <textarea id="smsTemplate" class="input" style="min-height:120px;">Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM] ([BOKNINGSTYP])?
+          <textarea id="smsTemplate" class="input" style="min-height:120px;">Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?
 Svara här: [LÄNK]
 Enkäten är anonym. Tack!</textarea>
         </div>
@@ -659,6 +673,10 @@ Enkäten är anonym. Tack!</textarea>
     const reportPeriod = document.getElementById('reportPeriod') as HTMLSelectElement;
     const reportProviderFilter = document.getElementById('reportProviderFilter') as HTMLSelectElement | null;
     const refreshReportBtn = document.getElementById('refreshReportBtn') as HTMLButtonElement | null;
+
+    if (!campaignNameInput.value.trim()) {
+      campaignNameInput.value = `Patientupplevelse ${new Date().toLocaleDateString('sv-SE')}`;
+    }
 
     function setBanner(type: BannerType, message: string) {
       setElementBanner(statusBanner, type, message);

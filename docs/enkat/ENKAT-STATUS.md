@@ -130,7 +130,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Sessionsäkerhet**: portalen accepterar inte längre `sb-access-token` bara för att JWT-payloaden ser giltig ut lokalt; användare och roll verifieras server-side mot Supabase och sessionen refreshas via `sb-refresh-token` vid behov
 - **Krypteringsnyckel**: Netlify-funktionen `enkat-send-queue.mts` har inte längre en hårdkodad fallback-nyckel; saknas `POOL_ENCRYPTION_KEY` returneras 500
 - **Atomär svarsräknare**: `total_svar` uppdateras i samma SQL-transaktion som svaret sparas
-- **Poängvalidering**: `submit.ts` validerar nu helhetsbetyg (1-10) och delbetyg (1-5) server-side
+- **Poängvalidering**: `submit.ts` validerar nu helhetsbetyg (1-5) och delbetyg (1-5) server-side
 - **Fritextsanering i submit**: `submit.ts` maskar nu uppenbara mejladresser, svenska telefonnummer även med `+46`, mellanslag eller bindestreck, samt sannolika personnummer innan lagring
 - **Verifierad preview**: `send.ts` accepterar nu signerad `previewToken` från upload i stället för råa klientrader
 - **Idempotent kampanjskapande**: `enkat_kampanjer.preview_token_hash` används för att stoppa dubbelsubmit av samma preview

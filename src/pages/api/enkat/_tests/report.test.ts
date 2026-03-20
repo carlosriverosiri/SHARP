@@ -168,16 +168,14 @@ describe('GET /api/enkat/report', () => {
             helhetsbetyg: 4,
             bemotande: 4,
             information: 3,
-            lyssnad_pa: 4,
-            plan_framat: 5
+            lyssnad_pa: 4
           },
           {
             vardgivare_namn: 'Dr Test',
             helhetsbetyg: 5,
             bemotande: 5,
             information: 5,
-            lyssnad_pa: 5,
-            plan_framat: 4
+            lyssnad_pa: 5
           }
         ],
         error: null
@@ -189,8 +187,7 @@ describe('GET /api/enkat/report', () => {
             helhetsbetyg: 3,
             bemotande: 4,
             information: 4,
-            lyssnad_pa: 4,
-            plan_framat: 4
+            lyssnad_pa: 4
           }
         ],
         error: null
@@ -236,8 +233,7 @@ describe('GET /api/enkat/report', () => {
             subscores: {
               bemotande: 4.5,
               information: 4,
-              lyssnadPa: 4.5,
-              planFramat: 4.5
+              lyssnadPa: 4.5
             },
             delayMetrics: {
               totalRows: 1

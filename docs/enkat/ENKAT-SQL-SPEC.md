@@ -238,7 +238,7 @@ Lagrar patientens faktiska svar på enkäten.
 | `besoksstart_tid` | TIME | Ja | Duplicerat för tidsanalys |
 | `bokningstyp_raw` | TEXT | Ja | Duplicerat för analys |
 | `bokningstyp_normaliserad` | TEXT | Ja | Duplicerat för analys |
-| `helhetsbetyg` | INTEGER | Nej | 1-10 |
+| `helhetsbetyg` | INTEGER | Nej | 1-5 |
 | `bemotande` | INTEGER | Nej | 1-5 |
 | `information` | INTEGER | Nej | 1-5 |
 | `lyssnad_pa` | INTEGER | Nej | 1-5 |
@@ -253,7 +253,7 @@ Lagrar patientens faktiska svar på enkäten.
 - `FOREIGN KEY (kampanj_id) REFERENCES enkat_kampanjer(id) ON DELETE CASCADE`
 - `FOREIGN KEY (utskick_id) REFERENCES enkat_utskick(id) ON DELETE CASCADE`
 - `UNIQUE (utskick_id)` för att förhindra dubbelsvar
-- `CHECK (helhetsbetyg BETWEEN 1 AND 10)`
+- `CHECK (helhetsbetyg BETWEEN 1 AND 5)`
 - `CHECK (bemotande BETWEEN 1 AND 5)`
 - `CHECK (information BETWEEN 1 AND 5)`
 - `CHECK (lyssnad_pa BETWEEN 1 AND 5)`

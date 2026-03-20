@@ -417,7 +417,7 @@ Tar emot svar från patientsidan via unik enkätkod.
 ```json
 {
   "code": "unik-kod",
-  "overallScore": 8,
+  "overallScore": 5,
   "bemotande": 5,
   "information": 4,
   "lyssnadPa": 5,
@@ -430,7 +430,7 @@ Tar emot svar från patientsidan via unik enkätkod.
 ### Server-side logik
 
 1. validera kod (minst 12 tecken)
-2. validera poäng: helhetsbetyg 1-10 heltal, delbetyg 1-5 heltal
+2. validera poäng: helhetsbetyg 1-5 heltal, delbetyg 1-5 heltal
 3. maska personuppgifter i fritext före lagring
    - mejladresser
    - svenska telefonnummer, även formaterade med `+46`, mellanslag eller bindestreck
@@ -525,12 +525,11 @@ Ser:
     "scope": "self",
     "sampleSize": 18,
     "canShowDetails": true,
-    "overallAverage": 8.3,
+    "overallAverage": 4.3,
     "subscores": {
       "bemotande": 4.8,
       "information": 4.1,
-      "lyssnadPa": 4.6,
-      "planFramat": 4.0
+      "lyssnadPa": 4.6
     },
     "responseRate": 0.42,
     "reminderResponseRate": 0.11,

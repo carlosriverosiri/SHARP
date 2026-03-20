@@ -18,12 +18,19 @@ type CampaignRow = {
   total_svar: number;
   skicka_paminnelse: boolean;
   paminnelse_efter_timmar: number | null;
+  sms_mall: string | null;
   created_at: string;
   skapad_av: string;
 };
 
 type CampaignIdRow = {
   kampanj_id: string;
+};
+
+type CampaignSurveyCodeRow = {
+  kampanj_id: string;
+  unik_kod: string;
+  created_at: string;
 };
 
 type ReminderStat = {
@@ -63,7 +70,7 @@ export const GET: APIRoute = async ({ cookies }) => {
   try {
     let query = supabaseAdmin
       .from('enkat_kampanjer')
-      .select('id, namn, status, total_importerade, total_giltiga, total_dubletter, total_ogiltiga, total_skickade, total_svar, skicka_paminnelse, paminnelse_efter_timmar, created_at, skapad_av')
+      .select('id, namn, status, total_importerade, total_giltiga, total_dubletter, total_ogiltiga, total_skickade, total_svar, skicka_paminnelse, paminnelse_efter_timmar, sms_mall, created_at, skapad_av')
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -79,10 +86,11 @@ export const GET: APIRoute = async ({ cookies }) => {
     const campaignRows = (campaigns || []) as CampaignRow[];
     const campaignIds = campaignRows.map((item) => item.id);
     const reminderStats = new Map<string, ReminderStat>();
+    const campaignSurveyCodes = new Map<string, string[]>();
 
     if (campaignIds.length > 0) {
       const nowIso = new Date().toISOString();
-      const [reminderSentResult, unansweredEligibleResult, queuedInitialResult] = await Promise.all([
+      const [reminderSentResult, unansweredEligibleResult, queuedInitialResult, surveyCodesResult] = await Promise.all([
         supabaseAdmin
           .from('enkat_utskick')
           .select('kampanj_id')
@@ -100,7 +108,11 @@ export const GET: APIRoute = async ({ cookies }) => {
           .select('kampanj_id')
           .in('kampanj_id', campaignIds)
           .eq('typ', 'forsta_sms')
-          .eq('status', 'queued')
+          .eq('status', 'queued'),
+        supabaseAdmin
+          .from('enkat_utskick')
+          .select('kampanj_id, unik_kod, created_at')
+          .in('kampanj_id', campaignIds)
       ]);
 
       if (reminderSentResult.error) {
@@ -111,6 +123,9 @@ export const GET: APIRoute = async ({ cookies }) => {
       }
       if (queuedInitialResult.error) {
         throw queuedInitialResult.error;
+      }
+      if (surveyCodesResult.error) {
+        throw surveyCodesResult.error;
       }
 
       for (const row of (reminderSentResult.data || []) as CampaignIdRow[]) {
@@ -123,6 +138,21 @@ export const GET: APIRoute = async ({ cookies }) => {
 
       for (const row of (queuedInitialResult.data || []) as CampaignIdRow[]) {
         incrementReminderStat(reminderStats, row.kampanj_id, 'queuedInitial');
+      }
+
+      const surveyCodeRows = ((surveyCodesResult.data || []) as CampaignSurveyCodeRow[])
+        .slice()
+        .sort((a, b) => {
+          if (a.created_at === b.created_at) return 0;
+          return a.created_at > b.created_at ? -1 : 1;
+        });
+
+      for (const row of surveyCodeRows) {
+        const existingCodes = campaignSurveyCodes.get(row.kampanj_id) || [];
+        if (existingCodes.length >= 3) continue;
+        if (existingCodes.includes(row.unik_kod)) continue;
+        existingCodes.push(row.unik_kod);
+        campaignSurveyCodes.set(row.kampanj_id, existingCodes);
       }
     }
 
@@ -139,7 +169,8 @@ export const GET: APIRoute = async ({ cookies }) => {
             remindersSent: reminder.remindersSent,
             unansweredEligible: reminder.unansweredEligible,
             queuedInitial: reminder.queuedInitial,
-            responseRate
+            responseRate,
+            surveyCodes: campaignSurveyCodes.get(campaign.id) || []
           };
         })
       }

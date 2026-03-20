@@ -4,6 +4,8 @@
 >
 > Fokus: tydligt personalflöde, enkel patientsida, förbättringsfokus och låg friktion.
 
+**Referens för det publika formuläret (mobil, färger, återanvändning som mall):** se `ENKAT-PATIENTFORMULAR-MALL.md`.
+
 ---
 
 ## 1. Syfte
@@ -257,7 +259,6 @@ Systemet bör kunna ersätta:
 
 - `[VÅRDGIVARE]`
 - `[DATUM]`
-- `[BOKNINGSTYP]`
 - `[LÄNK]`
 
 ### Preview av SMS
@@ -332,7 +333,6 @@ Visas överst:
 - bemötande
 - information
 - lyssnad på
-- plan framåt
 
 ### Trender
 
@@ -485,7 +485,7 @@ Måste vara tydlig och synlig utan scroll om möjligt.
 
 #### Helhetsbetyg
 
-- stora klickbara knappar 1-10
+- stora klickbara knappar 1-5 med tydlig skalförklaring (`1 = Instämmer inte alls`, `5 = Instämmer helt`)
 
 #### Delskalor
 

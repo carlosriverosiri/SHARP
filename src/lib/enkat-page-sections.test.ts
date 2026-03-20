@@ -41,7 +41,7 @@ describe('enkat-page-sections', () => {
               subscores: {
                 bemotande: 9,
                 information: 8,
-                planFramat: 8
+                lyssnadPa: 8
               },
               delayMetrics: {
                 averageDelayHours: 2,

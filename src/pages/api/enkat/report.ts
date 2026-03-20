@@ -13,7 +13,6 @@ type SurveyRow = {
   bemotande: number;
   information: number;
   lyssnad_pa: number;
-  plan_framat: number;
 };
 
 type ProviderNameRow = {
@@ -63,8 +62,7 @@ function summarize(rows: SurveyRow[], delayRows: DeliveryDelayRow[]) {
     subscores: {
       bemotande: average(rows.map((row) => row.bemotande)),
       information: average(rows.map((row) => row.information)),
-      lyssnadPa: average(rows.map((row) => row.lyssnad_pa)),
-      planFramat: average(rows.map((row) => row.plan_framat))
+      lyssnadPa: average(rows.map((row) => row.lyssnad_pa))
     },
     delayMetrics: summarizeDelayRows(delayRows)
   };
@@ -101,7 +99,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let currentRowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat')
+      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa')
       .gte('created_at', range.from)
       .lte('created_at', range.to);
 
@@ -117,7 +115,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let previousRowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat')
+      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa')
       .gte('created_at', range.previousFrom)
       .lt('created_at', range.previousTo);
 

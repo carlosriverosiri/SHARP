@@ -173,11 +173,10 @@ Klar i grundform, inklusive delivery log och kömodell för första utskick.
 - visa vårdgivare, datum, bokningstyp
 - visa anonymitetstext
 - samla in:
-  - helhetsbetyg 1-10
+  - helhetsbetyg 1-5
   - bemötande 1-5
   - information 1-5
   - lyssnad på 1-5
-  - plan framåt 1-5
   - vad var bra
   - vad kunde förbättras
 - tacksida efter submit

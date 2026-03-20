@@ -13,7 +13,6 @@ type SurveyRow = {
   bemotande: number;
   information: number;
   lyssnad_pa: number;
-  plan_framat: number;
   kommentar_bra: string | null;
   kommentar_forbattra: string | null;
   created_at: string;
@@ -55,10 +54,9 @@ function summarizeProvider(
   const bemotande = average(rows.map((row) => row.bemotande));
   const information = average(rows.map((row) => row.information));
   const lyssnadPa = average(rows.map((row) => row.lyssnad_pa));
-  const planFramat = average(rows.map((row) => row.plan_framat));
   const sampleSize = rows.length;
   const responseRate = sentCount > 0 ? Number((sampleSize / sentCount).toFixed(3)) : 0;
-  const highScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg >= 5).length / sampleSize).toFixed(3)) : 0;
+  const highScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg >= 4).length / sampleSize).toFixed(3)) : 0;
   const lowScoreShare = sampleSize > 0 ? Number((rows.filter((row) => row.helhetsbetyg <= 2).length / sampleSize).toFixed(3)) : 0;
   const comments = rows
     .flatMap((row) => [
@@ -80,8 +78,7 @@ function summarizeProvider(
     subscores: {
       bemotande,
       information,
-      lyssnadPa,
-      planFramat
+      lyssnadPa
     },
     highScoreShare,
     lowScoreShare,
@@ -120,7 +117,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let rowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, plan_framat, kommentar_bra, kommentar_forbattra, created_at')
+      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, kommentar_bra, kommentar_forbattra, created_at')
       .gte('created_at', fromDate)
       .order('created_at', { ascending: false });
 
