@@ -96,6 +96,14 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       line-height: 1.1;
     }
 
+    .page-intro {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
@@ -110,9 +118,18 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
     }
 
-    .import-card,
-    .settings-card {
+    .import-card {
       grid-column: 1 / -1;
+    }
+
+    .booking-types-card {
+      grid-column: 1;
+      align-self: start;
+    }
+
+    .settings-card {
+      grid-column: 2;
+      align-self: start;
     }
 
     .card h2, .card h3 {
@@ -120,6 +137,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     }
 
     .helper {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .card-intro {
+      margin: 0;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
@@ -247,12 +271,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       border-radius: 12px;
       font-size: 14px;
       line-height: 1.45;
+      border: 1px solid transparent;
     }
 
     .banner.visible { display: block; }
-    .banner.info { background: #eff6ff; color: #1d4ed8; }
-    .banner.error { background: var(--danger-soft); color: var(--danger); }
-    .banner.success { background: var(--success-soft); color: var(--success); }
+    .banner.info { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .banner.error { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
+    .banner.success { background: var(--success-soft); color: var(--success); border-color: #a7f3d0; }
 
     .summary-grid {
       display: grid;
@@ -346,6 +371,62 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       line-height: 1.5;
     }
 
+    .workflow-box {
+      margin-top: 20px;
+      background: linear-gradient(180deg, #f8fbff 0%, #f8fafc 100%);
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .workflow-title {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .workflow-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .workflow-step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .workflow-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     .rule-preview-list {
       display: grid;
       gap: 10px;
@@ -392,6 +473,186 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       font-weight: 600;
       line-height: 1.4;
       color: var(--text);
+    }
+
+    .selection-placeholder {
+      margin-top: 16px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 16px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #bookingTypeSelectionBox:not(.hidden) + #bookingTypeSelectionPlaceholder {
+      display: none;
+    }
+
+    .settings-panel {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #fbfdff 0%, #ffffff 100%);
+    }
+
+    .field-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar-select {
+      max-width: 260px;
+    }
+
+    .toolbar-select.narrow {
+      max-width: 220px;
+    }
+
+    .data-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+    }
+
+    .data-card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .data-card-title {
+      margin: 0 0 4px;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .data-card-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .metric-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric-grid-4 .summary-card {
+      padding: 12px;
+    }
+
+    .data-card--metrics .metric-grid-4 .summary-value {
+      font-size: 22px;
+    }
+
+    .data-card--campaign .metric-grid-4 .summary-value {
+      font-size: 20px;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .comment-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .comment-card {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .comment-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .link-stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .link-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #f8fafc;
+    }
+
+    .link-card a {
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+
+    .details-toggle {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .template-panel {
+      margin-top: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .card-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .empty-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .history-card {
@@ -496,6 +757,14 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       }
 
       .grid { grid-template-columns: 1fr; }
+      .booking-types-card,
+      .settings-card {
+        grid-column: 1;
+      }
+      .field-grid-2,
+      .metric-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .summary-grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -504,6 +773,17 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       h1 { font-size: 28px; }
       .summary-grid { grid-template-columns: 1fr; }
       #summaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .field-grid-2,
+      .metric-grid-4 {
+        grid-template-columns: 1fr;
+      }
+      .toolbar-select,
+      .toolbar-select.narrow {
+        max-width: none;
+      }
+      .toggle-row {
+        width: 100%;
+      }
     }
   </style>
   <div class="page">
@@ -511,12 +791,15 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     <div class="header">
       <div>
         <h1>Patientupplevelse via SMS</h1>
+        <p class="page-intro">
+          Importera en CSV, filtrera bort irrelevanta bokningstyper och skapa enkätutskick utan att lämna sidan.
+        </p>
       </div>
     </div>
 
     <div class="grid">
       <section class="card import-card">
-        <h2>1. Importer CSV-fil</h2>
+        <h2>1. Importera CSV-fil</h2>
         <div class="import-layout">
           <div class="csv-cols-block">
             <p class="csv-cols-intro">Kolumnerna som måste finnas:</p>
@@ -547,14 +830,38 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
         <div id="statusBanner" class="banner info"></div>
 
-        <div class="muted-box">
-          Du kan nu både förhandsgranska filen, skapa kampanj och skicka första batchen. För större kampanjer används en kömodell i bakgrunden.
+        <div class="workflow-box">
+          <p class="workflow-title">Fortsätt med att:</p>
+          <ol class="workflow-list">
+            <li class="workflow-step"><span class="workflow-step-number">1</span><span>Förhandsgranska filen</span></li>
+            <li class="workflow-step"><span class="workflow-step-number">2</span><span>Sortera bort bokningstyper</span></li>
+            <li class="workflow-step"><span class="workflow-step-number">3</span><span>Skicka SMS</span></li>
+          </ol>
+          <p class="workflow-note">För större kampanjer används en kömodell.</p>
+        </div>
+      </section>
+
+      <section class="card booking-types-card">
+        <h3>Bokningstyper i denna fil</h3>
+        <p class="card-intro">
+          Markera de bokningstyper som ska ingå i just detta utskick. Alla är ikryssade första gången filen läses in.
+        </p>
+
+        <div class="muted-box hidden" id="bookingTypeSelectionBox">
+          <div class="actions" style="margin-top: 0;">
+            <button type="button" class="btn btn-secondary" id="selectAllBookingTypesBtn">Markera alla</button>
+            <button type="button" class="btn btn-secondary" id="clearAllBookingTypesBtn">Avmarkera alla</button>
+          </div>
+          <div class="rule-preview-list" id="bookingTypeSelectionList"></div>
+        </div>
+        <div class="selection-placeholder" id="bookingTypeSelectionPlaceholder">
+          Läs in en fil för att se vilka bokningstyper som går att välja för just detta utskick.
         </div>
       </section>
 
       <aside class="card settings-card">
         <h3>Bokningstyper som aldrig ska följas upp</h3>
-        <p class="helper">
+        <p class="card-intro">
           Skriv en bokningstyp per rad. Om texten matchar en bokningstyp i filen sorteras raden bort automatiskt före previewn.
         </p>
 
@@ -582,24 +889,8 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
           </button>
         </div>
 
-        <div id="excludedBookingTypeSettingsStatus" class="banner info" style="margin-top: 12px; display: block;">
+        <div id="excludedBookingTypeSettingsStatus" class="banner visible info" style="margin-top: 12px;">
           {sharedTemplateHelperText}
-        </div>
-
-        <div class="muted-box" style="margin-top: 16px;">
-          Rader där kolumnen <code>Diagnoser</code> är tom sorteras också alltid bort. De visas separat efter uppladdning så att du kan gå igenom dem innan utskicket om du vill.
-        </div>
-
-        <div class="muted-box hidden" id="bookingTypeSelectionBox">
-          <strong>Bokningstyper i denna fil</strong>
-          <p class="helper" style="margin: 8px 0 0;">
-            Markera de bokningstyper som ska ingå i just detta utskick. Alla är ikryssade första gången filen läses in.
-          </p>
-          <div class="actions" style="margin-top: 12px;">
-            <button type="button" class="btn btn-secondary" id="selectAllBookingTypesBtn">Markera alla</button>
-            <button type="button" class="btn btn-secondary" id="clearAllBookingTypesBtn">Avmarkera alla</button>
-          </div>
-          <div class="rule-preview-list" id="bookingTypeSelectionList"></div>
         </div>
 
         <div class="muted-box hidden" id="excludedBookingTypesSummaryBox">
@@ -614,17 +905,16 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
     <section class="card section hidden" id="previewSection">
       <h2>2. Förhandsgranskning</h2>
-      <div class="summary-grid" id="summaryGrid"></div>
 
-      <div class="section">
+      <div class="section settings-panel">
         <h3>3. Kampanjinställningar</h3>
-        <div class="summary-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="field-grid-2">
           <div>
-            <label for="campaignName" style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;">Kampanjnamn</label>
+            <label for="campaignName" class="field-label">Kampanjnamn</label>
             <input id="campaignName" class="input" type="text" placeholder="T.ex. Patientupplevelse vecka 11" />
           </div>
           <div>
-            <label for="reminderHours" style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;">Påminn efter (timmar)</label>
+            <label for="reminderHours" class="field-label">Påminn efter (timmar)</label>
             <input id="reminderHours" class="input" type="number" min="1" value="48" />
           </div>
         </div>
@@ -637,7 +927,7 @@ Enkäten är anonym. Tack!</textarea>
         </div>
 
         <div class="actions">
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);">
+          <label class="toggle-row">
             <input id="sendReminder" type="checkbox" checked />
             Skicka påminnelse till obesvarade
           </label>
@@ -704,47 +994,47 @@ Enkäten är anonym. Tack!</textarea>
 
     <section class="card section">
       <h2>Resultatöversikt</h2>
-      <p class="helper">
+      <p class="card-intro">
         Vårdgivare ser bara sina egna resultat. Administratörer ser alla vårdgivare sida vid sida.
       </p>
       {isAdmin && (
         <div class="actions">
-          <select id="dashboardProviderFilter" class="input" style="max-width:260px;">
+          <select id="dashboardProviderFilter" class="input toolbar-select">
             <option value="">Alla vårdgivare</option>
           </select>
         </div>
       )}
-      <div id="dashboardBanner" class="banner info" style="display:block;margin-top:16px;">Laddar resultatöversikt...</div>
+      <div id="dashboardBanner" class="banner visible info">Laddar resultatöversikt...</div>
       <div id="dashboardContent" class="section"></div>
     </section>
 
     <section class="card section">
       <h2>Kampanjhistorik</h2>
-      <p class="helper">Visar de senaste enkätkampanjerna och om det finns obesvarade utskick som kan få en påminnelse.</p>
+      <p class="card-intro">Visar de senaste enkätkampanjerna och om det finns obesvarade utskick som kan få en påminnelse.</p>
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="refreshCampaignsBtn">Uppdatera historik</button>
       </div>
-      <div id="campaignsBanner" class="banner info" style="display:block;margin-top:16px;">Laddar kampanjhistorik...</div>
+      <div id="campaignsBanner" class="banner visible info">Laddar kampanjhistorik...</div>
       <div id="campaignsContent" class="section"></div>
     </section>
 
     <section class="card section">
       <h2>Rapport</h2>
-      <p class="helper">En enkel periodsammanfattning för de senaste 7, 30 eller 90 dagarna.</p>
+      <p class="card-intro">En enkel periodsammanfattning för de senaste 7, 30 eller 90 dagarna.</p>
       <div class="actions">
         {isAdmin && (
-          <select id="reportProviderFilter" class="input" style="max-width:260px;">
+          <select id="reportProviderFilter" class="input toolbar-select">
             <option value="">Alla vårdgivare</option>
           </select>
         )}
-        <select id="reportPeriod" class="input" style="max-width:220px;">
+        <select id="reportPeriod" class="input toolbar-select narrow">
           <option value="week">Senaste 7 dagarna</option>
           <option value="month" selected>Senaste 30 dagarna</option>
           <option value="quarter">Senaste 90 dagarna</option>
         </select>
         <button type="button" class="btn btn-secondary" id="refreshReportBtn">Uppdatera rapport</button>
       </div>
-      <div id="reportBanner" class="banner info" style="display:block;margin-top:16px;">Laddar rapport...</div>
+      <div id="reportBanner" class="banner visible info">Laddar rapport...</div>
       <div id="reportContent" class="section"></div>
     </section>
 
@@ -784,7 +1074,6 @@ Enkäten är anonym. Tack!</textarea>
     const clearAllBookingTypesBtn = document.getElementById('clearAllBookingTypesBtn') as HTMLButtonElement | null;
     const excludedBookingTypesSummaryBox = document.getElementById('excludedBookingTypesSummaryBox') as HTMLElement;
     const excludedBookingTypesSummary = document.getElementById('excludedBookingTypesSummary') as HTMLElement;
-    const summaryGrid = document.getElementById('summaryGrid') as HTMLElement;
     const selectedRowsBody = document.getElementById('selectedRowsBody') as HTMLTableSectionElement;
     const duplicatesBody = document.getElementById('duplicatesBody') as HTMLTableSectionElement;
     const errorsBody = document.getElementById('errorsBody') as HTMLTableSectionElement;
@@ -821,7 +1110,6 @@ Enkäten är anonym. Tack!</textarea>
       fileInput,
       fileName,
       previewSection,
-      summaryGrid,
       selectedRowsBody,
       duplicatesBody,
       errorsBody,

@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   escapeHtml,
+  fetchApiData,
   getManuallyExcludedRows,
   normalizePatternText,
   renderErrorsTable,
@@ -9,6 +10,10 @@ import {
 } from './enkat-page-helpers';
 
 describe('enkat-page-helpers', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('normalizes multiline pattern text by trimming and deduplicating', () => {
     const normalized = normalizePatternText(' Nybesok \n\nOperation\nNybesok\n Operation ');
 
@@ -67,5 +72,32 @@ describe('enkat-page-helpers', () => {
     expect(html).toContain('patient-1');
     expect(html).toContain('Dr &lt;Test&gt;');
     expect(html).toContain('nybesok');
+  });
+
+  it('includes credentials on api fetches by default', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      data: { ok: true }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await fetchApiData<{ ok: boolean }>('/api/test', { method: 'POST' }, 'Fallback');
+
+    expect(result).toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledWith('/api/test', expect.objectContaining({
+      method: 'POST',
+      credentials: 'include'
+    }));
+  });
+
+  it('maps network fetch failures to a user-friendly swedish message', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+
+    await expect(fetchApiData('/api/test', undefined, 'Kunde inte förhandsgranska filen.')).rejects.toThrow(
+      'Kunde inte förhandsgranska filen. Kunde inte nå servern. Kontrollera att du fortfarande är inloggad och försök igen.'
+    );
   });
 });

@@ -131,12 +131,35 @@ export function getErrorText(error: unknown, fallbackMessage: string): string {
   return error instanceof Error && error.message ? error.message : fallbackMessage;
 }
 
+function getNetworkErrorMessage(fallbackMessage: string, error: unknown): string {
+  if (error instanceof Error && error.name === 'AbortError') {
+    return 'Begäran avbröts. Försök igen.';
+  }
+
+  const errorMessage = error instanceof Error ? error.message : '';
+  if (/failed to fetch|load failed|networkerror|network request failed/i.test(errorMessage)) {
+    return `${fallbackMessage} Kunde inte nå servern. Kontrollera att du fortfarande är inloggad och försök igen.`;
+  }
+
+  return fallbackMessage;
+}
+
 export async function fetchApiData<T>(
   url: string,
   options: RequestInit | undefined,
   fallbackMessage: string
 ): Promise<T> {
-  const response = await fetch(url, options);
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      ...options,
+      credentials: options?.credentials ?? 'include'
+    });
+  } catch (error) {
+    throw new Error(getNetworkErrorMessage(fallbackMessage, error));
+  }
+
   let payload: ApiSuccessEnvelope<T> | null = null;
 
   try {
@@ -282,38 +305,38 @@ export function renderProviderCard(item: ProviderCardData): string {
   const comments = (item.latestComments || [])
     .slice(0, 4)
     .map((comment) => `
-      <div style="padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:4px;">${comment.type === 'bra' ? 'Bra' : 'Förbättra'}</div>
-        <div style="font-size:14px;line-height:1.45;">${escapeHtml(comment.text)}</div>
+      <div class="comment-card">
+        <div class="comment-label">${comment.type === 'bra' ? 'Bra' : 'Förbättra'}</div>
+        <div>${escapeHtml(comment.text)}</div>
       </div>
     `)
     .join('');
 
   const details = item.canShowDetails
     ? `
-      <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-        <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
-        <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
-        <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-        <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
+      <div class="metric-grid-4">
+        <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value">${escapeHtml(item.overallAverage)}</div></div>
+        <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value">${escapeHtml(item.subscores.bemotande)}</div></div>
+        <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value">${escapeHtml(item.subscores.information)}</div></div>
+        <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
       </div>
-      <div style="margin-top:14px;font-size:14px;color:var(--muted);">
-        Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · Svar: <strong>${escapeHtml(item.sampleSize)}</strong> · Påminnelser: <strong>${escapeHtml(item.reminderCount || 0)}</strong>
+      <div class="meta-list">
+        <div>Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · Svar: <strong>${escapeHtml(item.sampleSize)}</strong> · Påminnelser: <strong>${escapeHtml(item.reminderCount || 0)}</strong></div>
+        <div>Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong></div>
+        <div>Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}</div>
       </div>
-      <div style="margin-top:6px;font-size:14px;color:var(--muted);">
-        Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong>
-      </div>
-      <div style="margin-top:6px;font-size:14px;color:var(--muted);">
-        Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
-      </div>
-      ${comments ? `<div style="display:grid;gap:10px;margin-top:14px;">${comments}</div>` : '<div style="margin-top:14px;color:var(--muted);font-size:14px;">Inga kommentarer ännu.</div>'}
+      ${comments ? `<div class="comment-grid">${comments}</div>` : '<div class="empty-note">Inga kommentarer ännu.</div>'}
     `
-    : `<div style="margin-top:14px;color:var(--muted);font-size:14px;">För få svar för att visa resultat på ett integritetssäkert sätt.</div>`;
+    : '<div class="empty-note">För få svar för att visa resultat på ett integritetssäkert sätt.</div>';
 
   return `
-    <div class="card" style="padding:16px;">
-      <h3 style="margin-bottom:4px;">${escapeHtml(item.providerName)}</h3>
-      <div style="color:var(--muted);font-size:13px;">Underlag: ${escapeHtml(item.sampleSize)}</div>
+    <div class="data-card data-card--metrics">
+      <div class="data-card-header">
+        <div>
+          <h3 class="data-card-title">${escapeHtml(item.providerName)}</h3>
+          <div class="data-card-subtitle">Underlag: ${escapeHtml(item.sampleSize)}</div>
+        </div>
+      </div>
       ${details}
     </div>
   `;
@@ -333,53 +356,47 @@ export function renderCampaignCard(item: CampaignCardData): string {
   const surveyCodeSection = surveyCodes.length
     ? `
       <div style="margin-top:12px;">
-        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">URL till enkät</div>
-        <div style="display:grid;gap:8px;">
+        <div class="data-card-subtitle" style="margin-bottom:6px;">URL till enkät</div>
+        <div class="link-stack">
           ${surveyCodes.map((code) => `
-            <div style="border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#f8fafc;">
-              <a href="/e/${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer" style="font-size:13px;line-height:1.4;word-break:break-all;">/e/${escapeHtml(code)}</a>
+            <div class="link-card">
+              <a href="/e/${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">/e/${escapeHtml(code)}</a>
             </div>
           `).join('')}
         </div>
       </div>
     `
-    : `
-      <div style="margin-top:12px;color:var(--muted);font-size:13px;">
-        Inga enkätkoder hittades för kampanjen ännu.
-      </div>
-    `;
+    : '<div class="empty-note">Inga enkätkoder hittades för kampanjen ännu.</div>';
 
   const smsTemplateSection = item.sms_mall
     ? `
       <details style="margin-top:12px;">
-        <summary style="cursor:pointer;color:var(--muted);font-size:13px;">Visa SMS-mall som användes</summary>
-        <pre style="margin-top:8px;white-space:pre-wrap;word-break:break-word;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;line-height:1.45;">${escapeHtml(item.sms_mall)}</pre>
+        <summary class="details-toggle">Visa SMS-mall som användes</summary>
+        <pre class="template-panel">${escapeHtml(item.sms_mall)}</pre>
       </details>
     `
     : '';
 
   return `
-    <div class="history-card">
-      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+    <div class="data-card data-card--campaign">
+      <div class="data-card-header">
         <div>
-          <h3 style="margin:0 0 4px;">${escapeHtml(item.namn || 'Namnlös kampanj')}</h3>
-          <div style="color:var(--muted);font-size:13px;">Skapad ${escapeHtml(formatDateTime(item.created_at))}</div>
+          <h3 class="data-card-title">${escapeHtml(item.namn || 'Namnlös kampanj')}</h3>
+          <div class="data-card-subtitle">Skapad ${escapeHtml(formatDateTime(item.created_at))}</div>
         </div>
         <span class="pill ${item.status === 'klar' ? 'ok' : item.status === 'fel' ? 'warn' : 'info'}">${escapeHtml(item.status)}</span>
       </div>
 
-      <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-        <div class="summary-card"><div class="summary-label">Importerade</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_importerade)}</div></div>
-        <div class="summary-card"><div class="summary-label">Skickade</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_skickade)}</div></div>
-        <div class="summary-card"><div class="summary-label">Svar</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.total_svar)}</div></div>
-        <div class="summary-card"><div class="summary-label">Påminn möjliga</div><div class="summary-value" style="font-size:20px;">${escapeHtml(item.unansweredEligible)}</div></div>
+      <div class="metric-grid-4">
+        <div class="summary-card"><div class="summary-label">Importerade</div><div class="summary-value">${escapeHtml(item.total_importerade)}</div></div>
+        <div class="summary-card"><div class="summary-label">Skickade</div><div class="summary-value">${escapeHtml(item.total_skickade)}</div></div>
+        <div class="summary-card"><div class="summary-label">Svar</div><div class="summary-value">${escapeHtml(item.total_svar)}</div></div>
+        <div class="summary-card"><div class="summary-label">Påminn möjliga</div><div class="summary-value">${escapeHtml(item.unansweredEligible)}</div></div>
       </div>
 
-      <div style="margin-top:12px;color:var(--muted);font-size:14px;">
-        Giltiga: <strong>${escapeHtml(item.total_giltiga)}</strong> · Dubletter: <strong>${escapeHtml(item.total_dubletter)}</strong> · Ogiltiga: <strong>${escapeHtml(item.total_ogiltiga)}</strong> · Påminnelser skickade: <strong>${escapeHtml(item.remindersSent)}</strong>
-      </div>
-      <div style="margin-top:6px;color:var(--muted);font-size:14px;">
-        Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · ${escapeHtml(statusText)}
+      <div class="meta-list">
+        <div>Giltiga: <strong>${escapeHtml(item.total_giltiga)}</strong> · Dubletter: <strong>${escapeHtml(item.total_dubletter)}</strong> · Ogiltiga: <strong>${escapeHtml(item.total_ogiltiga)}</strong> · Påminnelser skickade: <strong>${escapeHtml(item.remindersSent)}</strong></div>
+        <div>Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · ${escapeHtml(statusText)}</div>
       </div>
       ${surveyCodeSection}
       ${smsTemplateSection}
@@ -400,11 +417,11 @@ export function renderCampaignCard(item: CampaignCardData): string {
 
 export function renderReportProvider(item: ReportProviderData): string {
   return `
-    <div class="history-card">
-      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+    <div class="data-card data-card--metrics">
+      <div class="data-card-header">
         <div>
-          <h3 style="margin:0 0 4px;">${escapeHtml(item.providerName)}</h3>
-          <div style="color:var(--muted);font-size:13px;">Underlag: ${escapeHtml(item.sampleSize)}</div>
+          <h3 class="data-card-title">${escapeHtml(item.providerName)}</h3>
+          <div class="data-card-subtitle">Underlag: ${escapeHtml(item.sampleSize)}</div>
         </div>
         <span class="pill ${item.deltaVsPrevious >= 0 ? 'ok' : 'warn'}">
           ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(item.deltaVsPrevious)}
@@ -414,20 +431,18 @@ export function renderReportProvider(item: ReportProviderData): string {
       ${
         item.canShowDetails
           ? `
-            <div class="summary-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px;">
-              <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.overallAverage)}</div></div>
-              <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.bemotande)}</div></div>
-              <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.information)}</div></div>
-              <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value" style="font-size:22px;">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
+            <div class="metric-grid-4">
+              <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value">${escapeHtml(item.overallAverage)}</div></div>
+              <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value">${escapeHtml(item.subscores.bemotande)}</div></div>
+              <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value">${escapeHtml(item.subscores.information)}</div></div>
+              <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
             </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:14px;">
-              Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong>
-            </div>
-            <div style="margin-top:6px;color:var(--muted);font-size:14px;">
-              Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
+            <div class="meta-list">
+              <div>Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong></div>
+              <div>Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}</div>
             </div>
           `
-          : `<div style="margin-top:14px;color:var(--muted);font-size:14px;">För få svar för att visa resultat på ett integritetssäkert sätt.</div>`
+          : '<div class="empty-note">För få svar för att visa resultat på ett integritetssäkert sätt.</div>'
       }
     </div>
   `;

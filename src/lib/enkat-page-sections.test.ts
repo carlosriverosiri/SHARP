@@ -70,7 +70,7 @@ describe('enkat-page-sections', () => {
       providerFilterEl
     });
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/dashboard?days=90&provider=Dr%20A', undefined);
+    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/dashboard?days=90&provider=Dr%20A', expect.objectContaining({ credentials: 'include' }));
     expect(bannerEl.textContent).toBe('Visar resultat för 1 vårdgivare.');
     expect(contentEl.innerHTML).toContain('Dr A');
     expect(Array.from(providerFilterEl.querySelectorAll('option')).map((option) => option.value)).toEqual(['', 'Dr A', 'Dr B']);
@@ -103,7 +103,7 @@ describe('enkat-page-sections', () => {
       providerFilterEl
     });
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/report?period=month', undefined);
+    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/report?period=month', expect.objectContaining({ credentials: 'include' }));
     expect(bannerEl.textContent).toBe('Rapport laddad: Senaste 30 dagarna.');
     expect(contentEl.innerHTML).toContain('Välj vårdgivarnamn först.');
   });

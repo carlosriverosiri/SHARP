@@ -9,7 +9,6 @@ function createPreviewRefs() {
     <input id="fileInput" type="file" />
     <div id="fileName"></div>
     <section id="previewSection" class="hidden"></section>
-    <div id="summaryGrid"></div>
     <table><tbody id="selectedRowsBody"></tbody></table>
     <table><tbody id="duplicatesBody"></tbody></table>
     <table><tbody id="errorsBody"></tbody></table>
@@ -23,7 +22,6 @@ function createPreviewRefs() {
     fileInput: document.getElementById('fileInput') as HTMLInputElement,
     fileName: document.getElementById('fileName') as HTMLElement,
     previewSection: document.getElementById('previewSection') as HTMLElement,
-    summaryGrid: document.getElementById('summaryGrid') as HTMLElement,
     selectedRowsBody: document.getElementById('selectedRowsBody') as HTMLTableSectionElement,
     duplicatesBody: document.getElementById('duplicatesBody') as HTMLTableSectionElement,
     errorsBody: document.getElementById('errorsBody') as HTMLTableSectionElement,
@@ -101,7 +99,6 @@ describe('enkat-page-preview', () => {
     expect(manuallyExcludedRows).toBe(2);
     expect(previewUi.getCurrentPreview()?.previewToken).toBe('token-1');
     expect(refs.previewSection.classList.contains('hidden')).toBe(false);
-    expect(refs.summaryGrid.innerHTML).toContain('Totala rader');
     expect(refs.selectedRowsBody.innerHTML).toContain('Dr Test');
     expect(refs.duplicatesBody.innerHTML).toContain('Vald rad prioriterades.');
     expect(refs.errorsBody.innerHTML).toContain('Ogiltigt telefonnummer.');
@@ -137,7 +134,6 @@ describe('enkat-page-preview', () => {
 
     expect(previewUi.getCurrentPreview()).toBeNull();
     expect(refs.previewSection.classList.contains('hidden')).toBe(true);
-    expect(refs.summaryGrid.innerHTML).toBe('');
     expect(refs.bookingTypeSelectionList.innerHTML).toBe('');
     expect(refs.excludedBookingTypesSummary.innerHTML).toBe('');
   });

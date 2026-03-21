@@ -5,7 +5,6 @@ import {
   renderDuplicatesTable,
   renderErrorsTable,
   renderSelectedRowsTable,
-  renderSummaryCards,
   type AutoExcludedGroup,
   type BookingTypeOption,
   type DuplicateRow,
@@ -20,7 +19,6 @@ type PreviewUiRefs = {
   fileInput: HTMLInputElement;
   fileName: HTMLElement;
   previewSection: HTMLElement;
-  summaryGrid: HTMLElement;
   selectedRowsBody: HTMLTableSectionElement;
   duplicatesBody: HTMLTableSectionElement;
   errorsBody: HTMLTableSectionElement;
@@ -57,7 +55,6 @@ export function createEnkatPreviewUi(refs: PreviewUiRefs, setBanner: SetBanner) 
   function clearPreview(): void {
     currentPreview = null;
     refs.previewSection.classList.add('hidden');
-    refs.summaryGrid.innerHTML = '';
     refs.selectedRowsBody.innerHTML = '';
     refs.duplicatesBody.innerHTML = '';
     refs.errorsBody.innerHTML = '';
@@ -99,10 +96,6 @@ export function createEnkatPreviewUi(refs: PreviewUiRefs, setBanner: SetBanner) 
     return getBookingTypeCheckboxes()
       .filter((input) => input.checked)
       .map((input) => input.value);
-  }
-
-  function renderSummary(data: PreviewData): void {
-    refs.summaryGrid.innerHTML = renderSummaryCards(data);
   }
 
   function renderBookingTypeOptions(rows: BookingTypeOption[]): void {
@@ -147,7 +140,6 @@ export function createEnkatPreviewUi(refs: PreviewUiRefs, setBanner: SetBanner) 
   function applyPreviewData(data: PreviewData): number {
     currentPreview = data;
     renderBookingTypeOptions(data.bookingTypeOptions || []);
-    renderSummary(data);
     renderAutoExcludedGroups(data.autoExcludedGroups || []);
     renderSelectedRows(data.selectedRows || []);
     renderDuplicates(data.duplicates || []);

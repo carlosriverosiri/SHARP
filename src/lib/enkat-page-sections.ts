@@ -115,11 +115,7 @@ export async function loadDashboardSection({
       return;
     }
 
-    contentEl.innerHTML = `
-      <div style="display:grid;gap:16px;">
-        ${providers.map((item) => renderProviderCard(item)).join('')}
-      </div>
-    `;
+    contentEl.innerHTML = `<div class="card-list">${providers.map((item) => renderProviderCard(item)).join('')}</div>`;
   } catch (error) {
     console.error(error);
     setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte ladda resultatöversikten.'));
@@ -149,7 +145,7 @@ export async function loadCampaignHistorySection({
     }
 
     setElementBanner(bannerEl, 'success', `Visar ${campaigns.length} kampanjer.`);
-    contentEl.innerHTML = `<div style="display:grid;gap:16px;">${campaigns.map((item) => renderCampaignCard(item)).join('')}</div>`;
+    contentEl.innerHTML = `<div class="card-list">${campaigns.map((item) => renderCampaignCard(item)).join('')}</div>`;
 
     contentEl.querySelectorAll<HTMLButtonElement>('.remind-btn').forEach((button) => {
       button.addEventListener('click', async () => {
@@ -230,11 +226,7 @@ export async function loadReportSection({
       return;
     }
 
-    contentEl.innerHTML = `
-      <div style="display:grid;gap:16px;">
-        ${providers.map((item) => renderReportProvider(item)).join('')}
-      </div>
-    `;
+    contentEl.innerHTML = `<div class="card-list">${providers.map((item) => renderReportProvider(item)).join('')}</div>`;
   } catch (error) {
     console.error(error);
     setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte ladda rapporten.'));
