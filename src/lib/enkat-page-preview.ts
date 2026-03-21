@@ -116,7 +116,7 @@ export function createEnkatPreviewUi(refs: PreviewUiRefs, setBanner: SetBanner) 
 
     getBookingTypeCheckboxes().forEach((input) => {
       input.addEventListener('change', () => {
-        invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+        invalidatePreview('Urvalet ändrades. Filen filtreras om automatiskt.');
       });
     });
   }

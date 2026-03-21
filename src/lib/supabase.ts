@@ -8,7 +8,8 @@
  * - SMS-statistik
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { harMinstPortalRoll } from './portal-roles';
 
 // Miljövariabler (ställs in i .env eller Netlify)

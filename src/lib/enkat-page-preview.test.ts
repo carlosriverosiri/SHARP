@@ -124,7 +124,7 @@ describe('enkat-page-preview', () => {
     expect(refs.previewSection.classList.contains('hidden')).toBe(true);
     expect(setBanner).toHaveBeenLastCalledWith(
       'info',
-      'Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.'
+      'Urvalet ändrades. Filen filtreras om automatiskt.'
     );
   });
 

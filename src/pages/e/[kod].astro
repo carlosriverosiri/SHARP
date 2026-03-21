@@ -13,6 +13,7 @@ let utskick: any = null;
 let errorMessage = '';
 let expired = false;
 let alreadyUsed = false;
+const submitted = Astro.url.searchParams.get('submitted') === '1';
 
 if (!kod || kod.length < 12) {
   errorMessage = 'Ogiltig enkätlänk.';
@@ -91,6 +92,9 @@ function formatVisitDate(date: string) {
       background: #0369a1; /* sky-700 */
       padding: 22px 24px 24px;
     }
+    .hero-bottom.completed {
+      text-align: center;
+    }
     .brand img {
       width: 280px;
       max-width: 100%;
@@ -100,6 +104,9 @@ function formatVisitDate(date: string) {
     .hero h1 {
       margin: 0 0 8px;
       font-size: 28px;
+    }
+    .hero-bottom.completed h1 {
+      margin-bottom: 0;
     }
     .hero p {
       margin: 0;
@@ -201,6 +208,43 @@ function formatVisitDate(date: string) {
     .banner.visible { display: block; }
     .banner.error { background: #fee2e2; color: #b91c1c; }
     .banner.success { background: #dcfce7; color: #166534; }
+    .submit-success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 40px 24px 48px;
+      gap: 16px;
+    }
+    .submit-success-icon {
+      width: 72px;
+      height: 72px;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .submit-success h2 {
+      margin: 0;
+      font-size: 26px;
+      color: #0f172a;
+    }
+    .submit-success-main {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #334155;
+      max-width: 420px;
+    }
+    .submit-success-footnote {
+      margin: 0;
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+      max-width: 380px;
+    }
     @media (max-width: 640px) {
       body {
         padding: 0;
@@ -237,9 +281,11 @@ function formatVisitDate(date: string) {
           <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi logga" />
         </div>
       </div>
-      <div class="hero-bottom">
+      <div class:list={['hero-bottom', { completed: alreadyUsed || submitted }]}>
         <h1>Patientupplevelse</h1>
-        <p>Denna enkät är anonym på individnivå. Skriv inte personnummer, diagnoser eller andra känsliga personuppgifter i fritextfälten.</p>
+        {!alreadyUsed && !submitted && (
+          <p>Denna enkät är anonym på individnivå. Skriv inte personnummer, diagnoser eller andra känsliga personuppgifter i fritextfälten.</p>
+        )}
       </div>
     </div>
 
@@ -247,6 +293,23 @@ function formatVisitDate(date: string) {
       <div class="state-box">
         <h2>Ogiltig länk</h2>
         <p>{errorMessage}</p>
+      </div>
+    ) : submitted ? (
+      <div class="content">
+        <div class="submit-success">
+          <div class="submit-success-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h2>Tack för ditt svar!</h2>
+          <p class="submit-success-main">
+            Ditt svar är registrerat anonymt och hjälper oss att fortsätta förbättra vården
+            på Södermalms Ortopedi.
+          </p>
+          <p class="submit-success-footnote">Du kan stänga den här sidan.</p>
+        </div>
       </div>
     ) : alreadyUsed ? (
       <div class="state-box">
@@ -354,13 +417,7 @@ function formatVisitDate(date: string) {
             submitBtn.disabled = false;
             return;
           }
-
-          form.innerHTML = `
-            <div class="state-box" style="padding:0;">
-              <h2>Tack för ditt svar</h2>
-              <p>Ditt svar är registrerat anonymt och hjälper oss förbättra mottagningen.</p>
-            </div>
-          `;
+          window.location.replace(`/e/${encodeURIComponent(code)}?submitted=1`);
         } catch (error) {
           console.error(error);
           setBanner('error', 'Ett oväntat fel uppstod. Försök igen om en stund.');

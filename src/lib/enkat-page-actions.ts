@@ -28,7 +28,7 @@ type SaveExcludedBookingTypesActionArgs = {
 type SubmitPreviewActionArgs = {
   form: HTMLFormElement;
   fileInput: HTMLInputElement;
-  previewButton: HTMLButtonElement;
+  previewButton?: HTMLButtonElement | null;
   excludedBookingTypePatternsInput: HTMLTextAreaElement;
   previewUi: EnkatPreviewUi;
   setBanner: SetBanner;
@@ -111,8 +111,8 @@ export async function submitPreviewAction({
     return;
   }
 
-  previewButton.disabled = true;
-  setBanner('info', 'Läser filen, sorterar bort alltid exkluderade bokningstyper och bygger preview...');
+  if (previewButton) previewButton.disabled = true;
+  setBanner('info', 'Läser in filen och filtrerar...');
 
   try {
     const formData = new FormData(form);
@@ -137,7 +137,7 @@ export async function submitPreviewAction({
     console.error(error);
     setBanner('error', getErrorText(error, 'Ett oväntat fel uppstod vid uppladdning.'));
   } finally {
-    previewButton.disabled = false;
+    if (previewButton) previewButton.disabled = false;
   }
 }
 
@@ -154,7 +154,7 @@ export async function createCampaignAction({
   const currentPreview = previewUi.getCurrentPreview();
 
   if (!currentPreview?.selectedRows?.length) {
-    setBanner('error', 'Filtrera och förhandsgranska en fil först.');
+    setBanner('error', 'Ladda upp en fil först.');
     return;
   }
 

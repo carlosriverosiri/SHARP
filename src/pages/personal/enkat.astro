@@ -110,6 +110,11 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
     }
 
+    .import-card,
+    .settings-card {
+      grid-column: 1 / -1;
+    }
+
     .card h2, .card h3 {
       margin: 0 0 12px;
     }
@@ -128,6 +133,34 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       text-align: center;
       transition: all 0.15s ease;
       cursor: pointer;
+      position: relative;
+    }
+    /* already patched */
+
+    .dropzone-clear {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .dropzone-clear:hover {
+      color: #ef4444;
+      background: #fee2e2;
+      border-color: #fecaca;
+    }
+
+    .dropzone-clear.hidden {
+      display: none;
     }
 
     .dropzone.dragover {
@@ -370,7 +403,98 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
     .hidden { display: none; }
 
+    .import-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .csv-cols-block {
+      margin: 12px 0 0;
+    }
+
+    .csv-cols-intro {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .csv-cols-row {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .csv-col-cell {
+      padding: 10px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      background: linear-gradient(180deg, #f1f5f9 0%, #e8eef4 100%);
+      border-right: 1px solid #cbd5e1;
+      border-bottom: 1px solid #cbd5e1;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .csv-col-cell:last-child {
+      border-right: none;
+    }
+
+    .csv-cols-note {
+      margin: 10px 0 0;
+    }
+
+    .import-upload {
+      width: 100%;
+    }
+
+    .import-upload .dropzone {
+      min-height: 170px;
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .import-upload .dropzone strong {
+      font-size: 15px;
+    }
+
+    .import-upload .dropzone p {
+      font-size: 13px;
+    }
+
+    .import-upload .dropzone-file-name {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
     @media (max-width: 900px) {
+      .import-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .csv-cols-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .csv-col-cell:nth-child(3n) {
+        border-right: none;
+      }
+
+      .csv-col-cell:not(:nth-last-child(-n + 3)) {
+        border-bottom: 1px solid #cbd5e1;
+      }
+
       .grid { grid-template-columns: 1fr; }
       .summary-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -391,27 +515,35 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     </div>
 
     <div class="grid">
-      <section class="card">
-        <h2>1. Importera fil</h2>
-        <p class="helper">
-          Kolumnerna som måste finnas är <code>Patient-ID</code>, <code>Mobiltelefon</code>, <code>Vårdgivare</code>, <code>Datum</code>, <code>Bokningstyp</code> och <code>Diagnoser</code>.
-          Rader utan diagnos sorteras bort automatiskt. <code>Starttid</code> är valfri.
-        </p>
-
-        <form id="uploadForm">
-          <input id="fileInput" name="file" type="file" accept=".csv,.txt" required hidden />
-
-          <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Ladda upp CSV-fil genom att klicka eller dra in en fil">
-            <strong>Dra in CSV-filen här</strong>
-            <p>eller klicka för att välja fil. CSV/TXT stöds.</p>
-            <span id="fileName" class="dropzone-file-name" aria-live="polite">Ingen fil har valts</span>
+      <section class="card import-card">
+        <h2>1. Importer CSV-fil</h2>
+        <div class="import-layout">
+          <div class="csv-cols-block">
+            <p class="csv-cols-intro">Kolumnerna som måste finnas:</p>
+            <div class="csv-cols-row" aria-label="Obligatoriska kolumnnamn">
+              <span class="csv-col-cell">Patient-ID</span>
+              <span class="csv-col-cell">Mobiltelefon</span>
+              <span class="csv-col-cell">Vårdgivare</span>
+              <span class="csv-col-cell">Datum</span>
+              <span class="csv-col-cell">Bokningstyp</span>
+              <span class="csv-col-cell">Diagnoser</span>
+            </div>
+            <p class="helper csv-cols-note">Rader utan diagnos sorteras bort. <code>Starttid</code> är valfri.</p>
           </div>
 
-          <div class="actions">
-            <button type="submit" class="btn btn-primary" id="previewBtn">Filtrera och förhandsgranska</button>
-            <button type="button" class="btn btn-secondary" id="clearBtn">Rensa</button>
-          </div>
-        </form>
+          <form id="uploadForm" class="import-upload">
+            <input id="fileInput" name="file" type="file" accept=".csv,.txt" required hidden />
+
+            <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Ladda upp CSV-fil genom att klicka eller dra in en fil">
+              <button type="button" class="dropzone-clear hidden" id="clearBtn" title="Ta bort vald fil" aria-label="Ta bort vald fil">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+              <strong>Dra in CSV-fil här</strong>
+              <p>eller klicka för att välja. CSV/TXT stöds.</p>
+              <span id="fileName" class="dropzone-file-name" aria-live="polite">Ingen fil har valts</span>
+            </div>
+          </form>
+        </div>
 
         <div id="statusBanner" class="banner info"></div>
 
@@ -420,7 +552,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
         </div>
       </section>
 
-      <aside class="card">
+      <aside class="card settings-card">
         <h3>Bokningstyper som aldrig ska följas upp</h3>
         <p class="helper">
           Skriv en bokningstyp per rad. Om texten matchar en bokningstyp i filen sorteras raden bort automatiskt före previewn.
@@ -639,7 +771,6 @@ Enkäten är anonym. Tack!</textarea>
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const fileName = document.getElementById('fileName') as HTMLElement;
     const clearBtn = document.getElementById('clearBtn') as HTMLButtonElement;
-    const previewBtn = document.getElementById('previewBtn') as HTMLButtonElement;
     const dropzone = document.getElementById('dropzone') as HTMLElement;
     const previewSection = document.getElementById('previewSection') as HTMLElement;
     const statusBanner = document.getElementById('statusBanner') as HTMLElement;
@@ -700,7 +831,25 @@ Enkäten är anonym. Tack!</textarea>
       excludedBookingTypesSummary
     }, setBanner);
 
-    dropzone.addEventListener('click', previewUi.openFilePicker);
+    async function runAutoPreview() {
+      if (!fileInput.files?.length) return;
+      await submitPreviewAction({
+        form,
+        fileInput,
+        excludedBookingTypePatternsInput,
+        previewUi,
+        setBanner
+      });
+    }
+
+    function syncClearButton() {
+      clearBtn.classList.toggle('hidden', !fileInput.files?.length);
+    }
+
+    dropzone.addEventListener('click', (event: MouseEvent) => {
+      if ((event.target as HTMLElement).closest('.dropzone-clear')) return;
+      previewUi.openFilePicker();
+    });
     dropzone.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -723,41 +872,44 @@ Enkäten är anonym. Tack!</textarea>
       if (event.dataTransfer?.files?.length) {
         fileInput.files = event.dataTransfer.files;
         previewUi.syncSelectedFileName();
-        previewUi.invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
+        syncClearButton();
+        void runAutoPreview();
       }
     });
 
     fileInput.addEventListener('change', () => {
       previewUi.syncSelectedFileName();
-      previewUi.invalidateAnalysis('Filen ändrades. Läs filen igen för att se uppdaterade bokningstyper och preview.');
+      syncClearButton();
+      void runAutoPreview();
     });
 
     selectAllBookingTypesBtn?.addEventListener('click', () => {
       const checkboxes = previewUi.getBookingTypeCheckboxes();
       if (!checkboxes.length) return;
-      checkboxes.forEach((input) => {
-        input.checked = true;
-      });
-      previewUi.invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+      checkboxes.forEach((input) => { input.checked = true; });
+      void runAutoPreview();
     });
 
     clearAllBookingTypesBtn?.addEventListener('click', () => {
       const checkboxes = previewUi.getBookingTypeCheckboxes();
       if (!checkboxes.length) return;
-      checkboxes.forEach((input) => {
-        input.checked = false;
-      });
-      previewUi.invalidatePreview('Urvalet ändrades. Klicka "Filtrera och förhandsgranska" igen för att bygga en ny preview.');
+      checkboxes.forEach((input) => { input.checked = false; });
+      void runAutoPreview();
     });
 
+    let excludedPatternsDebounce: ReturnType<typeof setTimeout> | null = null;
     excludedBookingTypePatternsInput?.addEventListener('input', () => {
-      previewUi.invalidatePreview('Listan över bokningstyper som alltid ska sorteras bort ändrades. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
+      if (excludedPatternsDebounce) clearTimeout(excludedPatternsDebounce);
+      previewUi.clearPreview();
+      excludedPatternsDebounce = setTimeout(() => {
+        if (fileInput.files?.length) void runAutoPreview();
+      }, 400);
     });
 
     resetExcludedBookingTypesBtn?.addEventListener('click', () => {
       excludedBookingTypePatternsInput.value = normalizePatternText(excludedBookingTypePatternsInput.dataset.defaultValue || '');
-      previewUi.invalidatePreview('Listan återställdes. Bokningstyperna nedan visas från föregående körning tills du klickar "Filtrera och förhandsgranska" igen.');
       setExcludedBookingTypeSettingsStatus('info', 'Listan återställdes till senast sparade värde.');
+      if (fileInput.files?.length) void runAutoPreview();
     });
 
     saveExcludedBookingTypesBtn?.addEventListener('click', async () => {
@@ -768,26 +920,22 @@ Enkäten är anonym. Tack!</textarea>
       });
     });
 
-    clearBtn.addEventListener('click', () => {
+    clearBtn.addEventListener('click', (event: MouseEvent) => {
+      event.stopPropagation();
       form.reset();
       previewUi.syncSelectedFileName();
+      syncClearButton();
       statusBanner.className = 'banner info';
       statusBanner.textContent = '';
       previewUi.clearAnalysis();
     });
 
     previewUi.syncSelectedFileName();
+    syncClearButton();
 
     form.addEventListener('submit', async (event: SubmitEvent) => {
       event.preventDefault();
-      await submitPreviewAction({
-        form,
-        fileInput,
-        previewButton: previewBtn,
-        excludedBookingTypePatternsInput,
-        previewUi,
-        setBanner
-      });
+      await runAutoPreview();
     });
 
     createCampaignBtn?.addEventListener('click', async () => {

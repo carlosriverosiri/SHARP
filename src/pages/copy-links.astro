@@ -1,0 +1,8 @@
+---
+export const prerender = false;
+
+const requestUrl = new URL(Astro.request.url);
+const targetPath = `/personal/lankar-sms${requestUrl.search}`;
+
+return Astro.redirect(targetPath, 302);
+---
