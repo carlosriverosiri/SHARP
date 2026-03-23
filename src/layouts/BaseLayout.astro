@@ -1,5 +1,11 @@
 ---
 // src/layouts/BaseLayout.astro
+//
+// UI policy — content / TOC icons:
+// Do not use colourful emoji for article "Contents" lists or equivalent navigation.
+// Use src/components/ContentListIcon.astro with semantic keys: numbered strings "1"…"9",
+// "expert", "faq", "references" (Icon: zap, help-circle, book). Details: docs/IKONER.md
+//
 import "../styles/global.css";
 import Footer from "../components/footer.astro";
 import Header from "../components/Header.astro";
@@ -135,6 +141,7 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     
     <!-- Named slot for page-specific head content (schemas, extra meta, etc.) -->
     <slot name="head" />
+    <!-- TOC / contents lists: use ContentListIcon — no emoji (see frontmatter policy comment). -->
   </head>
   <!-- ÄNDRING: Tog bort 'pt-20' eftersom headern är sticky och tar upp plats själv -->
   <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">

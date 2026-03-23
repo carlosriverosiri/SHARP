@@ -1,0 +1,515 @@
+---
+/**
+ * Interactive RTS vs RTPL summary for the English AC joint dislocation page.
+ * Client-only Chart.js; scoped IDs under ac-rts-dashboard.
+ */
+---
+
+<div id="ac-rts-dashboard-root" class="not-prose space-y-8 mt-6">
+  <!-- Terminology -->
+  <section
+    class="bg-slate-50 rounded-xl border border-slate-200 p-5 md:p-6"
+    aria-labelledby="ac-rts-term-heading"
+  >
+    <h3 id="ac-rts-term-heading" class="text-lg font-bold text-slate-900 border-b-2 border-sky-100 pb-2 inline-block mb-4">
+      RTS and RTPL — what we measure
+    </h3>
+    <p class="text-slate-600 mb-6 leading-relaxed">
+      Outcomes after AC joint injury are often reported as <strong>return to any sport</strong> versus
+      <strong>return to the same level of play</strong>. The gap between them widens as injury severity increases — an
+      important point in shared decision-making.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="rounded-lg border border-slate-200 bg-white p-4">
+        <button
+          type="button"
+          class="w-full flex justify-between items-center text-left gap-2"
+          id="ac-rts-toggle-rts"
+          aria-expanded="false"
+          aria-controls="ac-rts-panel-rts"
+        >
+          <span class="text-lg font-bold text-blue-800">RTS (Return to Sport)</span>
+          <span class="text-blue-500 font-bold text-xl shrink-0" aria-hidden="true">▼</span>
+        </button>
+        <div id="ac-rts-panel-rts" class="hidden mt-3 text-slate-700 leading-relaxed text-sm ac-rts-fade">
+          Means a return to <strong>some form of organised sport or training</strong>. Changing position, sport, or level
+          of competition still counts as RTS — so reported RTS rates are often high across injury grades.
+        </div>
+      </div>
+
+      <div class="rounded-lg border border-slate-200 bg-white p-4">
+        <button
+          type="button"
+          class="w-full flex justify-between items-center text-left gap-2"
+          id="ac-rts-toggle-rtpl"
+          aria-expanded="false"
+          aria-controls="ac-rts-panel-rtpl"
+        >
+          <span class="text-lg font-bold text-amber-800">RTPL (Return to Previous Level)</span>
+          <span class="text-amber-500 font-bold text-xl shrink-0" aria-hidden="true">▼</span>
+        </button>
+        <div id="ac-rts-panel-rtpl" class="hidden mt-3 text-slate-700 leading-relaxed text-sm ac-rts-fade">
+          Means returning to the <strong>same performance level</strong> as before injury. For high-grade injuries or
+          overhead athletes, RTPL is often lower than RTS.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview chart -->
+  <section class="bg-slate-50 rounded-xl border border-slate-200 p-5 md:p-6" aria-labelledby="ac-rts-gap-heading">
+    <h3 id="ac-rts-gap-heading" class="text-lg font-bold text-slate-900 border-b-2 border-sky-100 pb-2 inline-block mb-4">
+      The prognostic gap
+    </h3>
+    <p class="text-slate-600 mb-6 leading-relaxed">
+      Pooled literature suggests <em>RTS</em> stays high (often above 90%) across Rockwood groups, while
+      <em>RTPL</em> falls behind as severity rises from type III upward. The figure uses <strong>illustrative</strong>
+      pooled percentages for counselling conversations, not a single trial’s raw rates.
+    </p>
+    <div class="relative w-full max-w-3xl mx-auto h-[280px] md:h-[340px]">
+      <canvas id="ac-rts-overview-chart" aria-label="Bar chart comparing RTS and RTPL by injury grade"></canvas>
+    </div>
+  </section>
+
+  <!-- Grade explorer -->
+  <section
+    class="bg-slate-50 rounded-xl border border-slate-200 p-5 md:p-6"
+    aria-labelledby="ac-rts-grade-heading"
+  >
+    <h3 id="ac-rts-grade-heading" class="text-lg font-bold text-slate-900 border-b-2 border-sky-100 pb-2 inline-block mb-4">
+      Clinical picture by Rockwood group
+    </h3>
+    <p class="text-slate-600 mb-6 leading-relaxed">
+      Select a severity band for typical treatment emphasis, timelines, and the RTS / RTPL pattern. Content aligns with
+      ISAKOS-style consensus and systematic reviews of operative versus non-operative care.
+    </p>
+
+    <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-200 pb-4" role="tablist" aria-label="Rockwood groups">
+      <button
+        type="button"
+        role="tab"
+        id="ac-rts-tab-low"
+        class="ac-rts-tab px-5 py-2 rounded-t-lg font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        aria-selected="true"
+        aria-controls="ac-rts-grade-panel"
+        data-grade="low"
+      >
+        Types I & II
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="ac-rts-tab-mid"
+        class="ac-rts-tab px-5 py-2 rounded-t-lg font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        aria-selected="false"
+        aria-controls="ac-rts-grade-panel"
+        data-grade="mid"
+      >
+        Type III
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="ac-rts-tab-high"
+        class="ac-rts-tab px-5 py-2 rounded-t-lg font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        aria-selected="false"
+        aria-controls="ac-rts-grade-panel"
+        data-grade="high"
+      >
+        Types IV–VI
+      </button>
+    </div>
+
+    <div id="ac-rts-grade-panel" role="tabpanel" aria-labelledby="ac-rts-tab-low" class="grid lg:grid-cols-3 gap-8 ac-rts-fade">
+      <div class="lg:col-span-2 space-y-6">
+        <div>
+          <h4 class="text-xl font-bold text-blue-950" id="ac-rts-grade-title">Rockwood types I and II</h4>
+          <p id="ac-rts-grade-subtitle" class="text-slate-500 font-medium italic mb-3 text-sm">
+            Low-grade injury: AC ligament sprain or partial tear; coracoclavicular (CC) ligaments typically intact.
+          </p>
+          <p id="ac-rts-grade-desc" class="text-slate-700 leading-relaxed text-sm">
+            Excellent prognosis. Athletes usually return quickly; in elite collision sports, time loss is often days to a
+            few weeks. Mild chronic radiographic changes seldom block high-level sport if strength and symptoms allow.
+          </p>
+        </div>
+
+        <div class="bg-sky-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+          <h5 class="font-bold text-blue-950 mb-1">Treatment emphasis</h5>
+          <p id="ac-rts-grade-treatment" class="text-sm text-slate-800 leading-relaxed">
+            Almost always non-operative: pain control, early range of motion, then graded loading. Long-term functional
+            scores (e.g. Constant, DASH) are typically very good.
+          </p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-lg p-4">
+          <h5 class="font-bold text-slate-800 mb-1">Typical time to return</h5>
+          <p id="ac-rts-grade-time" class="text-slate-700 font-medium text-base text-blue-800">Days to a few weeks</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col bg-white rounded-lg p-5 border border-slate-200">
+        <h5 class="font-bold text-slate-700 mb-3 w-full text-center border-b border-slate-200 pb-2 text-sm">
+          Outcomes (illustrative averages)
+        </h5>
+        <div class="relative w-full h-44">
+          <canvas id="ac-rts-detail-chart" aria-label="Horizontal bars for RTS and RTPL for selected grade"></canvas>
+        </div>
+        <p id="ac-rts-grade-caveat" class="text-xs text-slate-500 text-center italic mt-3 leading-relaxed">
+          RTPL is near 100% in this band; mild imaging changes rarely match sport limitation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modifiable factors -->
+  <section class="bg-slate-50 rounded-xl border border-slate-200 p-5 md:p-6" aria-labelledby="ac-rts-factors-heading">
+    <h3 id="ac-rts-factors-heading" class="text-lg font-bold text-slate-900 border-b-2 border-sky-100 pb-2 inline-block mb-4">
+      Factors that influence RTS and especially RTPL
+    </h3>
+    <p class="text-slate-600 mb-6 leading-relaxed">
+      For types III–VI in particular, three themes recur in the literature when aiming for the best realistic level of
+      return.
+    </p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div
+          class="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-800 text-lg font-bold mb-3"
+          aria-hidden="true"
+        >
+          1
+        </div>
+        <h4 class="font-bold text-slate-800 mb-2 text-sm">Sport demands</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Collision athletes and overhead throwers often have lower RTPL or longer rehab than sports with lower shoulder
+          stress.
+        </p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div
+          class="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-800 text-lg font-bold mb-3"
+          aria-hidden="true"
+        >
+          2
+        </div>
+        <h4 class="font-bold text-slate-800 mb-2 text-sm">Timing of surgery</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          When surgery is chosen, earlier stabilisation (often within the first few weeks) tends to preserve anatomy and
+          mechanics better than very delayed reconstruction — relevant for RTPL.
+        </p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+        <div
+          class="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-800 text-lg font-bold mb-3"
+          aria-hidden="true"
+        >
+          3
+        </div>
+        <h4 class="font-bold text-slate-800 mb-2 text-sm">Psychological readiness</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Fear of re-injury and confidence affect whether an athlete truly returns to prior level even when the joint is
+          structurally sound.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <p class="text-xs text-slate-500 leading-relaxed">
+    Synthesised from pooled outcome reports and consensus guidance on AC instability; exact percentages differ by
+    population, sport, and outcome definition.
+  </p>
+</div>
+
+<style>
+  .ac-rts-fade {
+    animation: acRtsFade 0.35s ease-out;
+  }
+  @keyframes acRtsFade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  import Chart from 'chart.js/auto';
+
+  type GradeKey = 'low' | 'mid' | 'high';
+
+  const gradeData: Record<
+    GradeKey,
+    {
+      title: string;
+      subtitle: string;
+      desc: string;
+      treatment: string;
+      time: string;
+      rts: number;
+      rtpl: number;
+      caveat: string;
+      tabId: string;
+    }
+  > = {
+    low: {
+      title: 'Rockwood types I and II',
+      subtitle:
+        'Low-grade injury: AC ligament sprain or partial tear; coracoclavicular (CC) ligaments typically intact.',
+      desc: 'Excellent prognosis. Athletes usually return quickly; in elite collision sports, time loss is often days to a few weeks. Long-term functional scores are typically very good.',
+      treatment:
+        'Almost always non-operative: pain control, early range of motion, then graded loading.',
+      time: 'Days to a few weeks',
+      rts: 100,
+      rtpl: 100,
+      caveat:
+        'RTPL is near 100% in this band; mild chronic imaging changes rarely match sport limitation.',
+      tabId: 'ac-rts-tab-low',
+    },
+    mid: {
+      title: 'Rockwood type III',
+      subtitle: 'Complete disruption of both AC and CC ligaments — the “controversial” grade.',
+      desc: 'Often subclassified (e.g. stable IIIA vs unstable IIIB with scapular dyskinesis). RTS remains generally high; RTPL varies with sport, demands, and treatment path.',
+      treatment:
+        'IIIA: primary non-operative care is common. IIIB / high-demand overhead athletes: surgery is considered more often. Shared decision-making is standard.',
+      time: 'Highly variable — often on the order of 2–4 months depending on path',
+      rts: 93,
+      rtpl: 81,
+      caveat:
+        'Overhead athletes with unstable patterns may lose RTPL if treated non-operatively; after surgery, reported RTPL spans a wide range in the literature.',
+      tabId: 'ac-rts-tab-mid',
+    },
+    high: {
+      title: 'Rockwood types IV, V, and VI',
+      subtitle: 'High-grade displacement with more soft-tissue and mechanical disruption.',
+      desc: 'Major injury pattern affecting global shoulder mechanics. Even with successful RTS, some athletes report residual sport-related limitations versus the uninjured side.',
+      treatment:
+        'Primary surgical stabilisation is usual (e.g. hook plate, suture-button / tape CC reconstruction, graft techniques in chronic cases).',
+      time: 'Often roughly 4–6 months to demanding sport — individualise',
+      rts: 94,
+      rtpl: 83,
+      caveat:
+        'Illustrative pooled data: a substantial minority may not reach exact pre-injury level (e.g. type V cohort summaries) despite high overall RTS.',
+      tabId: 'ac-rts-tab-high',
+    },
+  };
+
+  const tabActiveClasses = ['bg-blue-800', 'text-white'] as const;
+  const tabInactiveClasses = ['bg-slate-200', 'text-slate-700', 'hover:bg-slate-300'] as const;
+  const allTabClasses = [...tabActiveClasses, ...tabInactiveClasses];
+
+  function wireToggles(): void {
+    const pairs: { btn: string; panel: string }[] = [
+      { btn: 'ac-rts-toggle-rts', panel: 'ac-rts-panel-rts' },
+      { btn: 'ac-rts-toggle-rtpl', panel: 'ac-rts-panel-rtpl' },
+    ];
+    for (const { btn, panel } of pairs) {
+      const b = document.getElementById(btn);
+      const p = document.getElementById(panel);
+      if (!b || !p || !(b instanceof HTMLButtonElement)) continue;
+      b.addEventListener('click', () => {
+        p.classList.toggle('hidden');
+        const expanded = !p.classList.contains('hidden');
+        b.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        if (expanded) {
+          p.classList.remove('ac-rts-fade');
+          void p.offsetWidth;
+          p.classList.add('ac-rts-fade');
+        }
+      });
+    }
+  }
+
+  let detailChart: Chart | null = null;
+
+  function updateDetailChart(rtsVal: number, rtplVal: number): void {
+    const canvas = document.getElementById('ac-rts-detail-chart') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (detailChart) {
+      detailChart.destroy();
+      detailChart = null;
+    }
+
+    detailChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['RTS', 'RTPL'],
+        datasets: [
+          {
+            data: [rtsVal, rtplVal],
+            backgroundColor: ['#3b82f6', '#f59e0b'],
+            borderRadius: 4,
+            barThickness: 28,
+          },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.parsed.x ?? 0}%`,
+            },
+          },
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: (v) => `${v}%`,
+            },
+            grid: { color: '#e2e8f0' },
+          },
+          y: {
+            grid: { display: false },
+          },
+        },
+      },
+    });
+  }
+
+  function initOverviewChart(): void {
+    const canvas = document.getElementById('ac-rts-overview-chart') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    Chart.defaults.color = '#475569';
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Types I & II', 'Type III', 'Types IV–VI'],
+        datasets: [
+          {
+            label: 'RTS (return to sport) %',
+            data: [100, 93, 94],
+            backgroundColor: '#3b82f6',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8,
+          },
+          {
+            label: 'RTPL (return to previous level) %',
+            data: [100, 81, 83],
+            backgroundColor: '#f59e0b',
+            borderRadius: 4,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { usePointStyle: true, boxWidth: 8 },
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: (c) => `${c.dataset.label}: ${c.parsed.y}%`,
+            },
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: (v) => `${v}%`,
+            },
+            grid: { color: '#e2e8f0' },
+          },
+          x: {
+            grid: { display: false },
+          },
+        },
+      },
+    });
+  }
+
+  function setTabStyles(activeId: string): void {
+    const tabs = ['ac-rts-tab-low', 'ac-rts-tab-mid', 'ac-rts-tab-high'];
+    for (const id of tabs) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      const on = id === activeId;
+      el.setAttribute('aria-selected', on ? 'true' : 'false');
+      el.classList.remove(...allTabClasses);
+      el.classList.add(...(on ? tabActiveClasses : tabInactiveClasses));
+    }
+    const panel = document.getElementById('ac-rts-grade-panel');
+    const activeTab = document.getElementById(activeId);
+    if (panel && activeTab) {
+      panel.setAttribute('aria-labelledby', activeId);
+    }
+  }
+
+  function updateGradeData(gradeKey: GradeKey): void {
+    const data = gradeData[gradeKey];
+    const title = document.getElementById('ac-rts-grade-title');
+    const subtitle = document.getElementById('ac-rts-grade-subtitle');
+    const desc = document.getElementById('ac-rts-grade-desc');
+    const treatment = document.getElementById('ac-rts-grade-treatment');
+    const time = document.getElementById('ac-rts-grade-time');
+    const caveat = document.getElementById('ac-rts-grade-caveat');
+    if (title) title.textContent = data.title;
+    if (subtitle) subtitle.textContent = data.subtitle;
+    if (desc) desc.textContent = data.desc;
+    if (treatment) treatment.textContent = data.treatment;
+    if (time) time.textContent = data.time;
+    if (caveat) caveat.textContent = data.caveat;
+
+    setTabStyles(data.tabId);
+
+    const contentArea = document.getElementById('ac-rts-grade-panel');
+    if (contentArea) {
+      contentArea.classList.remove('ac-rts-fade');
+      void contentArea.offsetWidth;
+      contentArea.classList.add('ac-rts-fade');
+    }
+
+    updateDetailChart(data.rts, data.rtpl);
+  }
+
+  function init(): void {
+    const root = document.getElementById('ac-rts-dashboard-root');
+    if (!root) return;
+
+    wireToggles();
+    initOverviewChart();
+    updateGradeData('low');
+
+    const tablist = root.querySelector('[role="tablist"]');
+    if (tablist) {
+      tablist.addEventListener('click', (e) => {
+        const t = (e.target as HTMLElement).closest('button[data-grade]');
+        if (!t || !(t instanceof HTMLButtonElement)) return;
+        const key = t.dataset.grade as GradeKey | undefined;
+        if (key === 'low' || key === 'mid' || key === 'high') {
+          updateGradeData(key);
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

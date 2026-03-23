@@ -18,6 +18,19 @@ Alla ikoner foljer samma standard:
 | **fill** | none |
 | **stroke** | currentColor |
 
+## Innehållsförteckning / «Contents» på artikelsidor
+
+Använd **ContentListIcon** (`src/components/ContentListIcon.astro`) i TOC-länkar — inte emoji.
+
+- Siffersektioner: `icon: "1"` … `"9"` (eller flersiffrigt vid behov)
+- `icon: "expert"` → Feather **zap** (ersätter t.ex. glödlampa-emoji)
+- `icon: "faq"` eller `"?"` → **help-circle**
+- `icon: "references"` → **book**
+
+Valfritt: `variant="sm" | "md"`, `accent="sky" | "emerald"` för att matcha sidans färgtema.
+
+Policyn är dokumenterad i `BaseLayout.astro` (kommentar).
+
 ## Anvandning
 
 ### Med Icon-komponenten (REKOMMENDERAT)
@@ -78,6 +91,8 @@ Se src/components/Icon.astro for komplett lista.
 - settings - Installningar
 - info - Information
 - alert-circle - Varning
+- help-circle - Hjalp / FAQ
+- zap - Tips / expertperspektiv (TOC)
 - external-link - Extern lank
 - link - Lank
 - database - Databas

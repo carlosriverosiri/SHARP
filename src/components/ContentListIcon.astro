@@ -1,0 +1,67 @@
+---
+/**
+ * Neutral stroke icons for article table-of-contents / “Contents” lists.
+ * Prefer semantic keys: expert | faq | references; digits for numbered sections.
+ * See policy comment in BaseLayout.astro and docs/IKONER.md.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  icon: string;
+  /** Mobile TOC chips vs desktop sidebar */
+  variant?: 'sm' | 'md';
+  /** Match section accent (sky default, emerald e.g. suprascapular mobile) */
+  accent?: 'sky' | 'emerald';
+}
+
+const { icon, variant = 'md', accent = 'sky' } = Astro.props;
+
+type Resolved = 'digit' | 'faq' | 'expert' | 'references' | 'text';
+
+function resolve(raw: string): Resolved {
+  if (/^\d+$/.test(raw)) return 'digit';
+  if (raw === '?' || raw === 'faq') return 'faq';
+  if (raw === 'expert' || raw === '💡') return 'expert';
+  if (raw === 'references' || raw === '📚') return 'references';
+  return 'text';
+}
+
+const mode = resolve(icon);
+
+const skySm = 'w-4 h-4 rounded-full bg-sky-100 text-sky-700';
+const skyMd = 'w-5 h-5 rounded-md bg-sky-100 text-sky-700';
+const emSm = 'w-4 h-4 rounded-full bg-emerald-100 text-emerald-700';
+const emMd = 'w-5 h-5 rounded-md bg-emerald-100 text-emerald-700';
+
+const boxClass =
+  variant === 'sm'
+    ? accent === 'emerald'
+      ? emSm
+      : skySm
+    : accent === 'emerald'
+      ? emMd
+      : skyMd;
+
+const svgSize = variant === 'sm' ? 12 : 14;
+---
+
+<span
+  class:list={[
+    boxClass,
+    'inline-flex shrink-0 items-center justify-center font-bold leading-none',
+    mode === 'digit' || mode === 'text' ? 'text-xs' : '',
+  ]}
+  aria-hidden="true"
+>
+  {
+    mode === 'digit' || mode === 'text' ? (
+      icon
+    ) : mode === 'faq' ? (
+      <Icon name="help-circle" size={svgSize} class="text-current" strokeWidth={2} />
+    ) : mode === 'expert' ? (
+      <Icon name="zap" size={svgSize} class="text-current" strokeWidth={2} />
+    ) : (
+      <Icon name="book" size={svgSize} class="text-current" strokeWidth={2} />
+    )
+  }
+</span>

@@ -3,6 +3,10 @@ import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import RefLink from '../../../../components/RefLink.astro';
 import RefDrawer from '../../../../components/RefDrawer.astro';
+import AcJointRtsRtplDashboard from '../../../../components/AcJointRtsRtplDashboard.astro';
+import AcJointRtwCalculator from '../../../../components/AcJointRtwCalculator.astro';
+import ContentListIcon from '../../../../components/ContentListIcon.astro';
+import Icon from '../../../../components/Icon.astro';
 
 import imgClinicalBump from '../../../../assets/images/ac-joint-dislocation/AC-lux_nyckelbenet_ur_led600.png';
 import imgRockwood1 from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-1.webp';
@@ -32,9 +36,9 @@ const tableOfContents = [
   { id: 'treatment', title: 'Treatment', icon: '5' },
   { id: 'surgery', title: 'Surgical techniques', icon: '6' },
   { id: 'work-sport', title: 'Work & return to sport', icon: '7' },
-  { id: 'expert', title: 'Expert perspective', icon: '💡' },
-  { id: 'faq', title: 'FAQ', icon: '?' },
-  { id: 'references', title: 'References', icon: '📚' },
+  { id: 'expert', title: 'Expert perspective', icon: 'expert' },
+  { id: 'faq', title: 'FAQ', icon: 'faq' },
+  { id: 'references', title: 'References', icon: 'references' },
 ];
 
 /* Numbered [1]–[11] aligned with AI Council / Zotero list provided */
@@ -319,9 +323,7 @@ const faqSchema = {
                 href={`#${item.id}`}
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-sky-700 bg-white px-2.5 py-1 rounded-full border border-slate-200"
               >
-                <span class="w-4 h-4 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">
-                  {item.icon}
-                </span>
+                <ContentListIcon icon={item.icon} variant="sm" accent="sky" />
                 {item.title}
               </a>
             ))}
@@ -442,14 +444,16 @@ const faqSchema = {
                 url={references[8].url}
               />.
             </p>
-            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm text-slate-700">
-              <span class="text-lg mr-2">💡</span>
-              <strong>Classification reliability</strong> remains imperfect — interobserver disagreement is a known
-              limitation when choosing conservative versus operative care<RefLink
-                id="7"
-                text="Rockwood vs Kraus"
-                url={references[6].url}
-              />.
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm text-slate-700 flex gap-2 items-start">
+              <Icon name="zap" size={20} class="text-purple-600 shrink-0 mt-0.5" strokeWidth={2} />
+              <span>
+                <strong>Classification reliability</strong> remains imperfect — interobserver disagreement is a known
+                limitation when choosing conservative versus operative care<RefLink
+                  id="7"
+                  text="Rockwood vs Kraus"
+                  url={references[6].url}
+                />.
+              </span>
             </div>
           </article>
 
@@ -704,6 +708,22 @@ const faqSchema = {
                 url={references[4].url}
               />.
             </p>
+            <p class="text-slate-600 leading-relaxed mb-4 text-sm">
+              <strong>Return to work (RTW)</strong> depends on the same injury pattern plus job demands. The tool below
+              compares illustrative week ranges across common treatment paths; it is not a substitute for workplace
+              assessment or legal timelines<RefLink id="4" text="Outcomes overview" url={references[3].url} />.
+            </p>
+            <AcJointRtwCalculator />
+            <p class="text-slate-600 leading-relaxed mb-2 text-sm mt-10">
+              Outcome studies often separate <strong>return to sport (RTS)</strong> from{' '}
+              <strong>return to previous level (RTPL)</strong>. The interactive summary below uses pooled, illustrative
+              percentages for counselling; for trial-level evidence see recent reviews and consensus statements<RefLink
+                id="3"
+                text="Systematic review"
+                url={references[2].url}
+              /><RefLink id="10" text="Expert consensus" url={references[9].url} />.
+            </p>
+            <AcJointRtsRtplDashboard />
           </article>
         </main>
 
@@ -720,9 +740,7 @@ const faqSchema = {
                     href={`#${item.id}`}
                     class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
                   >
-                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
-                      {item.icon}
-                    </span>
+                    <ContentListIcon icon={item.icon} variant="md" accent="sky" />
                     {item.title}
                   </a>
                 ))}
@@ -777,8 +795,8 @@ const faqSchema = {
   <section id="expert" class="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 py-12 scroll-mt-6">
     <div class="max-w-[1500px] mx-auto px-4 sm:px-6">
       <div class="flex items-center gap-4 mb-8">
-        <div class="w-14 h-14 rounded-full bg-amber-500/20 flex items-center justify-center">
-          <span class="text-3xl">💡</span>
+        <div class="w-14 h-14 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400">
+          <Icon name="zap" size={28} strokeWidth={2} />
         </div>
         <div>
           <h2 class="text-2xl font-bold text-white">Expert perspective</h2>

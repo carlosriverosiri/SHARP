@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import RefLink from '../../../../components/RefLink.astro';
 import RefDrawer from '../../../../components/RefDrawer.astro';
+import ContentListIcon from '../../../../components/ContentListIcon.astro';
 
 // Optimized images
 import mriOedema from '../../../../assets/images/suprascapular-nerve/oedema-mr-suprascapular-nerve.png';
@@ -27,9 +28,9 @@ const tableOfContents = [
   { id: "treatment", title: "Treatment", icon: "4" },
   { id: "sick-leave", title: "Sick Leave", icon: "5" },
   { id: "return-to-sport", title: "Return to Sport", icon: "6" },
-  { id: "expert", title: "Expert Perspective", icon: "💡" },
-  { id: "faq", title: "FAQ", icon: "?" },
-  { id: "references", title: "References", icon: "📚" },
+  { id: "expert", title: "Expert Perspective", icon: "expert" },
+  { id: "faq", title: "FAQ", icon: "faq" },
+  { id: "references", title: "References", icon: "references" },
 ];
 
 // REFERENCE DATA - Matched from Zotero list
@@ -353,7 +354,7 @@ const faqSchema = {
       <nav class="mt-4 lg:hidden">
         <details class="bg-emerald-50 rounded-lg border border-emerald-200">
           <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
-            <span class="font-bold text-emerald-800 text-sm uppercase tracking-wide">📑 Contents</span>
+            <span class="font-bold text-emerald-800 text-sm uppercase tracking-wide">Contents</span>
             <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
@@ -361,7 +362,7 @@ const faqSchema = {
           <div class="px-3 pb-2 flex flex-wrap gap-2">
             {tableOfContents.map((item) => (
               <a href={`#${item.id}`} class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-emerald-700 bg-white px-2.5 py-1 rounded-full border border-slate-200 hover:border-emerald-300 transition-colors">
-                <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">{item.icon}</span>
+                <ContentListIcon icon={item.icon} variant="sm" accent="emerald" />
                 {item.title}
               </a>
             ))}
@@ -1001,9 +1002,7 @@ const faqSchema = {
                     href={`#${item.id}`} 
                     class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
                   >
-                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
-                      {item.icon}
-                    </span>
+                    <ContentListIcon icon={item.icon} variant="md" accent="sky" />
                     {item.title}
                   </a>
                 ))}
