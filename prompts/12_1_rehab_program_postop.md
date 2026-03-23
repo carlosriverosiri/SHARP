@@ -1,13 +1,17 @@
-# Prompt: Create Postoperative Rehabilitation Program (General Template)
+# Prompt: 12-1 — Postoperative Rehabilitation Program (General Template)
+
+**Series:** Grupp **12** — rehab-sidor med `RehabLayout` (engelska först, sedan översättning). Systermall för icke-operativ rehab: `12_2_rehab_program_conservative.md`.
 
 **Purpose:** Generate evidence-based rehabilitation program for patients after orthopedic surgery.
 
 **Role:** You are an experienced physiotherapist and orthopedic specialist with extensive clinical experience in postoperative rehabilitation.
 
+**Language workflow:** Skriv **primärt på engelska** för `src/pages/en/rehab/...`. Svenska versioner skapas separat (manuellt eller med `13_translate_to_english.md` i omvänd riktning / motsvarande översättningsprompt).
+
 **FIRST - Ask the User:**
 1. **What surgery/procedure?** (e.g., "suprascapular nerve decompression", "rotator cuff repair", "ACL reconstruction", "distal biceps repair")
 2. **What body part?** (Shoulder, Knee, Elbow, etc.)
-3. **Language?** (English, Swedish, etc.)
+3. **Language?** (Default **English** for new site pages; Swedish only if explicitly requested.)
 4. **Sling/immobilization needed?** (Yes for rotator cuff repair, distal biceps repair, etc. / No for nerve decompression, simple arthroscopy)
 5. **Key details:**
    - Surgical approach (arthroscopic/open)
@@ -19,7 +23,7 @@
 
 ## Task
 
-Write a complete, patient-friendly rehabilitation program in **English** that you would hand out to the patient on paper or digitally. 
+Write a complete, patient-friendly rehabilitation program in **English** that you would hand out to the patient on paper or digitally.
 
 ## Evidence Base
 
@@ -78,7 +82,7 @@ The program must be as evidence-based as possible. Use sources in this priority 
 ### 2. Phase Division
 Recommended **3–4 phases**, for example:
 - **Phase 1:** 0–4 weeks
-- **Phase 2:** 4–8 weeks  
+- **Phase 2:** 4–8 weeks
 - **Phase 3:** 8–12 weeks
 - **Phase 4:** >12 weeks / return to activity
 
@@ -113,7 +117,7 @@ Tailor exercises to the specific surgery, but generally include:
 
 ### 6. Reference List
 
-End the program with a separate section titled **"References"** listing all sources you based the recommendations on. 
+End the program with a separate section titled **"References"** listing all sources you based the recommendations on.
 
 Format them as clickable markdown links, e.g.:
 - [Rothman Orthopaedics Suprascapular Nerve Decompression Protocol](URL)
@@ -133,7 +137,7 @@ Format them as clickable markdown links, e.g.:
 ## Output Format
 
 **Create as .astro page:**
-- File location: `src/pages/[language]/rehab/[program-name].astro`
+- File location: `src/pages/en/rehab/[path]/[program-name].astro` (mirror site structure, e.g. under `shoulder/` when applicable)
 - Example: `src/pages/en/rehab/suprascapular-nerve-decompression.astro`
 
 **MANDATORY: Use RehabLayout component (not BaseLayout):**
@@ -145,7 +149,7 @@ const pageTitle = "Rehabilitation After [Surgery Name] | Södermalms Ortopedi";
 const pageDescription = "Evidence-based postoperative rehabilitation program...";
 ---
 
-<RehabLayout 
+<RehabLayout
   title={pageTitle}
   description={pageDescription}
   type="article"
@@ -176,5 +180,6 @@ const pageDescription = "Evidence-based postoperative rehabilitation program..."
 - Colored blocks will be simplified in print (white background, grey borders)
 - Nested blocks removed in print for compact layout
 
-Include proper headings, lists, and formatting for easy reading both online and in PDF.
+**Consistency:** Match structure, heading levels, and phase table style used on other rehab pages in this repo (e.g. phased goals / activities / exercises / precautions / progression criteria) so postoperative and conservative programs look the same to the patient.
 
+Include proper headings, lists, and formatting for easy reading both online and in PDF.
