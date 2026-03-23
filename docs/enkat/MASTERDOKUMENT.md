@@ -58,7 +58,7 @@ Nyckelidéer:
 - Importen ska tåla vanliga vårdexporter (separator + teckenkodning).
 - Bokningstyper som finns i den gemensamma listan "följs aldrig upp" ska sorteras bort innan preview/deduplicering.
 - Rader utan värde i `Diagnoser` ska sorteras bort innan preview.
-- Den gemensamma listan lagras i Supabase och kan uppdateras av administratör.
+- Den gemensamma listan lagras i Supabase och kan uppdateras av administratör (via `/personal/enkat`; i UI visas ingen ständig informationsruta om lagring — se `ENKAT-UI-SPEC.md`).
 - Bokningstyper som finns kvar i den aktuella filen ska visas som kryssrutor så att användaren aktivt väljer vad som ska ingå i utskicket.
 - Deduplicering prioriterar nybesök/remiss över återbesök bland de rader som återstår efter filtrering.
 - Max en påminnelse per utskick.
@@ -80,6 +80,7 @@ Nyckelidéer:
 - publik enkätsida och submit
 - dashboard + rapport + kampanjhistorik
 - fördröjningsanalys baserat på besökstid/starttid
+- publikt formulär: se `ENKAT-PATIENTFORMULAR-MALL.md` (layout, mobil, färger)
 
 ---
 

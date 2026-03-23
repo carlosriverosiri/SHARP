@@ -184,3 +184,60 @@ export const GET: APIRoute = async ({ cookies }) => {
     }, 500);
   }
 };
+
+export const DELETE: APIRoute = async ({ cookies, request }) => {
+  if (!await arInloggad(cookies)) {
+    return json({ success: false, error: 'Ej inloggad' }, 401);
+  }
+
+  const anvandare = await hamtaAnvandare(cookies);
+  if (!anvandare) {
+    return json({ success: false, error: 'Kunde inte hämta användare' }, 401);
+  }
+
+  let body: { campaignId?: string };
+  try {
+    body = await request.json() as { campaignId?: string };
+  } catch {
+    return json({ success: false, error: 'Ogiltig JSON-kropp.' }, 400);
+  }
+
+  const campaignId = body.campaignId?.trim();
+  if (!campaignId) {
+    return json({ success: false, error: 'campaignId saknas.' }, 400);
+  }
+
+  try {
+    let query = supabaseAdmin
+      .from('enkat_kampanjer')
+      .select('id, namn, skapad_av')
+      .eq('id', campaignId);
+
+    if (!harMinstPortalRoll(anvandare.roll, 'admin')) {
+      query = query.eq('skapad_av', anvandare.id);
+    }
+
+    const { data: campaign, error: lookupError } = await query.single();
+    if (lookupError || !campaign) {
+      return json({ success: false, error: 'Kampanjen hittades inte eller kan inte nås.' }, 404);
+    }
+
+    const { error: deleteError } = await supabaseAdmin
+      .from('enkat_kampanjer')
+      .delete()
+      .eq('id', campaignId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    return json({ success: true, data: { campaignId, deleted: true } });
+  } catch (error: unknown) {
+    console.error('Kunde inte radera kampanj:', error);
+    return json({
+      success: false,
+      error: 'Kunde inte radera kampanjen.',
+      details: { message: getErrorMessage(error) || 'Okänt fel' }
+    }, 500);
+  }
+};

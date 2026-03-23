@@ -7,12 +7,13 @@
 2.  **Determine File Name:**
     * Scan the `prompts/` folder to find the highest existing number (e.g., if `07` exists, the new one is `08`).
     * Create a short, descriptive English filename in snake_case (e.g., `08_seo_optimizer.md`).
+    * If the prompt is meant to run in **AI Council** (multi-model app, PDF context, Zotero workflow), include **`ai_council`** in the name (e.g., `20_ai_council_topic_research.md`). See `prompts/README.md` for the split between AI Council vs Astro/Cursor prompts.
 3.  **Create the File:**
     * Create the new file in `prompts/` with the calculated number and name.
     * Paste the user's content into it.
 4.  **Update Index:**
-    * Edit `.cursorrules`.
-    * Add a new line to the "Prompt Library Reference" list with the new filename and a brief summary.
+    * Add a one-line entry to `prompts/README.md` in the correct section (AI Council vs Webb/Cursor).
+    * If you still maintain a legacy list in `.cursorrules`, add the filename there too.
 5.  **Confirm:**
     * Respond to the user: "Saved as [Filename] and added to .cursorrules."
 

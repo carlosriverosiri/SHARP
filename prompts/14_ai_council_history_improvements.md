@@ -1,4 +1,4 @@
-# AI Council - Molnbaserad Sessionshantering
+# AI Council — Molnbaserad sessionshantering
 
 ## Princip
 

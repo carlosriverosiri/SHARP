@@ -31,8 +31,12 @@ export type ProviderCardData = {
   sampleSize: number;
   canShowDetails: boolean;
   responseRate: number;
+  sentCount?: number;
+  deliveredCount?: number;
   reminderCount?: number;
   overallAverage: number;
+  highScoreShare?: number;
+  lowScoreShare?: number;
   subscores: ProviderSubscores;
   delayMetrics?: DelayMetrics;
   latestComments?: CommentItem[];
@@ -116,6 +120,15 @@ export type PreviewData = {
   errors?: ValidationErrorRow[];
   previewToken?: string;
 };
+
+function rateColorClass(rate: number): string {
+  const pct = Math.round(rate * 100);
+  return pct >= 50 ? 'rate-high' : pct >= 30 ? 'rate-mid' : 'rate-low';
+}
+
+function scoreColorClass(score: number): string {
+  return score >= 4 ? 'score-high' : score >= 3 ? 'score-mid' : 'score-low';
+}
 
 export function setElementBanner(
   element: HTMLElement | null,
@@ -201,6 +214,19 @@ export function formatDateTime(value: unknown): string {
   if (!value) return '—';
   try {
     return new Date(String(value)).toLocaleString('sv-SE');
+  } catch {
+    return String(value);
+  }
+}
+
+export function formatShortDate(value: unknown): string {
+  if (!value) return '—';
+  try {
+    return new Date(String(value)).toLocaleDateString('sv-SE', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
   } catch {
     return String(value);
   }
@@ -301,43 +327,117 @@ export function renderErrorsTable(rows: ValidationErrorRow[]): string {
     : '<tr><td colspan="3">Inga valideringsfel hittades.</td></tr>';
 }
 
-export function renderProviderCard(item: ProviderCardData): string {
-  const comments = (item.latestComments || [])
-    .slice(0, 4)
-    .map((comment) => `
-      <div class="comment-card">
-        <div class="comment-label">${comment.type === 'bra' ? 'Bra' : 'Förbättra'}</div>
-        <div>${escapeHtml(comment.text)}</div>
-      </div>
-    `)
-    .join('');
-
-  const details = item.canShowDetails
-    ? `
-      <div class="metric-grid-4">
-        <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value">${escapeHtml(item.overallAverage)}</div></div>
-        <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value">${escapeHtml(item.subscores.bemotande)}</div></div>
-        <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value">${escapeHtml(item.subscores.information)}</div></div>
-        <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
-      </div>
-      <div class="meta-list">
-        <div>Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · Svar: <strong>${escapeHtml(item.sampleSize)}</strong> · Påminnelser: <strong>${escapeHtml(item.reminderCount || 0)}</strong></div>
-        <div>Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong></div>
-        <div>Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}</div>
-      </div>
-      ${comments ? `<div class="comment-grid">${comments}</div>` : '<div class="empty-note">Inga kommentarer ännu.</div>'}
-    `
-    : '<div class="empty-note">För få svar för att visa resultat på ett integritetssäkert sätt.</div>';
+export function renderKpiRow(providers: ProviderCardData[]): string {
+  const totalSent = providers.reduce((sum, p) => sum + (p.sentCount || 0), 0);
+  const totalAnswered = providers.reduce((sum, p) => sum + p.sampleSize, 0);
+  const overallRate = totalSent > 0 ? totalAnswered / totalSent : 0;
+  const overallAvg = totalAnswered > 0
+    ? providers.reduce((sum, p) => sum + p.overallAverage * p.sampleSize, 0) / totalAnswered
+    : 0;
+  const ratePct = Math.round(overallRate * 100);
 
   return `
-    <div class="data-card data-card--metrics">
-      <div class="data-card-header">
-        <div>
-          <h3 class="data-card-title">${escapeHtml(item.providerName)}</h3>
-          <div class="data-card-subtitle">Underlag: ${escapeHtml(item.sampleSize)}</div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-card-label">Utskickade</div>
+        <div class="kpi-card-value">${escapeHtml(totalSent)}</div>
+        <div class="kpi-card-sub">${escapeHtml(providers.length)} vårdgivare</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">Besvarade</div>
+        <div class="kpi-card-value">${escapeHtml(totalAnswered)}</div>
+        <div class="kpi-card-sub">av ${escapeHtml(totalSent)} utskickade</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-label">Svarsfrekvens</div>
+        <div class="kpi-card-value">${escapeHtml(ratePct)}%</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar"><div class="progress-bar-fill ${rateColorClass(overallRate)}" style="width: ${ratePct}%"></div></div>
         </div>
       </div>
-      ${details}
+      <div class="kpi-card">
+        <div class="kpi-card-label">Medelbetyg</div>
+        <div class="kpi-card-value">${escapeHtml(overallAvg.toFixed(1))}</div>
+        <div class="kpi-card-sub">Helhetsbetyg (1–5)</div>
+      </div>
+    </div>
+  `;
+}
+
+export function renderProviderCard(item: ProviderCardData): string {
+  const ratePct = Math.round(item.responseRate * 100);
+
+  if (!item.canShowDetails) {
+    return `
+      <div class="provider-card-v2">
+        <div class="provider-card-header">
+          <div>
+            <h3 class="provider-card-name">${escapeHtml(item.providerName)}</h3>
+            <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
+          </div>
+        </div>
+        <div class="provider-card-empty">För få svar för att visa resultat på ett integritetssäkert sätt.</div>
+      </div>
+    `;
+  }
+
+  const comments = (item.latestComments || []).slice(0, 4);
+  const commentHtml = comments.length
+    ? `
+      <div class="provider-comments">
+        ${comments.map((c) => `
+          <div class="provider-comment">
+            <div class="provider-comment-type type-${c.type === 'bra' ? 'bra' : 'forbattra'}">${c.type === 'bra' ? 'Positivt' : 'Kan förbättras'}</div>
+            <div>${escapeHtml(c.text)}</div>
+          </div>
+        `).join('')}
+      </div>
+    `
+    : '';
+
+  return `
+    <div class="provider-card-v2">
+      <div class="provider-card-header">
+        <div>
+          <h3 class="provider-card-name">${escapeHtml(item.providerName)}</h3>
+          <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
+        </div>
+        <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(item.overallAverage)}</div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-labels">
+          <span>Svarsfrekvens</span>
+          <span>${escapeHtml(ratePct)}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-bar-fill ${rateColorClass(item.responseRate)}" style="width: ${ratePct}%"></div></div>
+      </div>
+
+      <div class="score-grid">
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.overallAverage)}</div>
+          <div class="score-item-label">Helhet</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.bemotande)}</div>
+          <div class="score-item-label">Bemötande</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.information)}</div>
+          <div class="score-item-label">Information</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.lyssnadPa)}</div>
+          <div class="score-item-label">Lyssnad på</div>
+        </div>
+      </div>
+
+      <div class="provider-meta">
+        Påminnelser: ${escapeHtml(item.reminderCount || 0)}
+        · Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
+      </div>
+
+      ${commentHtml}
     </div>
   `;
 }
@@ -415,35 +515,140 @@ export function renderCampaignCard(item: CampaignCardData): string {
   `;
 }
 
-export function renderReportProvider(item: ReportProviderData): string {
+export function renderCampaignTable(campaigns: CampaignCardData[]): string {
+  const rows = campaigns.map((item) => {
+    const ratePct = Math.round(item.responseRate * 100);
+    const statusClass = item.status === 'klar' ? 'status-klar'
+      : item.status === 'skickar' ? 'status-skickar'
+      : item.status === 'fel' ? 'status-fel'
+      : 'status-default';
+    const statusLabel = item.status === 'klar' ? 'Klar'
+      : item.status === 'skickar' ? 'Skickar'
+      : item.status === 'fel' ? 'Fel'
+      : 'Väntar';
+
+    return `
+      <tr>
+        <td class="cell-name">${escapeHtml(item.namn || 'Namnlös')}</td>
+        <td class="cell-date">${escapeHtml(formatShortDate(item.created_at))}</td>
+        <td class="cell-num">${escapeHtml(item.total_skickade)}</td>
+        <td class="cell-num">${escapeHtml(item.total_svar)}</td>
+        <td>
+          <div class="campaign-rate-bar">
+            <div class="progress-bar"><div class="progress-bar-fill ${rateColorClass(item.responseRate)}" style="width: ${ratePct}%"></div></div>
+            <span class="rate-label">${escapeHtml(ratePct)}%</span>
+          </div>
+        </td>
+        <td><span class="status-badge ${statusClass}">${escapeHtml(statusLabel)}</span></td>
+        <td>
+          <button
+            type="button"
+            class="btn-xs btn-secondary remind-btn"
+            data-campaign-id="${escapeHtml(item.id)}"
+            ${item.unansweredEligible > 0 && item.skicka_paminnelse ? '' : 'disabled'}
+            aria-label="Skicka påminnelse för ${escapeHtml(item.namn || 'kampanj')}"
+          >Påminn${item.unansweredEligible > 0 ? ` (${escapeHtml(item.unansweredEligible)})` : ''}</button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="delete-campaign-btn"
+            data-campaign-id="${escapeHtml(item.id)}"
+            data-campaign-name="${escapeHtml(item.namn || 'Namnlös')}"
+            aria-label="Radera kampanj ${escapeHtml(item.namn || '')}"
+          ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
   return `
-    <div class="data-card data-card--metrics">
-      <div class="data-card-header">
-        <div>
-          <h3 class="data-card-title">${escapeHtml(item.providerName)}</h3>
-          <div class="data-card-subtitle">Underlag: ${escapeHtml(item.sampleSize)}</div>
+    <div class="campaign-table-wrap">
+      <table class="campaign-table">
+        <colgroup>
+          <col style="width: 26%">
+          <col style="width: 12%">
+          <col style="width: 9%">
+          <col style="width: 7%">
+          <col style="width: 18%">
+          <col style="width: 10%">
+          <col style="width: 13%">
+          <col style="width: 5%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Kampanj</th>
+            <th>Datum</th>
+            <th style="text-align: right">Skickade</th>
+            <th style="text-align: right">Svar</th>
+            <th>Svarsfrekvens</th>
+            <th>Status</th>
+            <th>Påminnelse</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+export function renderReportProvider(item: ReportProviderData): string {
+  const deltaSymbol = item.deltaVsPrevious > 0 ? '↑' : item.deltaVsPrevious < 0 ? '↓' : '→';
+  const deltaClass = item.deltaVsPrevious > 0 ? 'delta-up' : item.deltaVsPrevious < 0 ? 'delta-down' : 'delta-flat';
+
+  if (!item.canShowDetails) {
+    return `
+      <div class="provider-card-v2">
+        <div class="provider-card-header">
+          <div>
+            <h3 class="provider-card-name">${escapeHtml(item.providerName)}</h3>
+            <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
+          </div>
         </div>
-        <span class="pill ${item.deltaVsPrevious >= 0 ? 'ok' : 'warn'}">
-          ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(item.deltaVsPrevious)}
-        </span>
+        <div class="provider-card-empty">För få svar för att visa resultat på ett integritetssäkert sätt.</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="provider-card-v2">
+      <div class="provider-card-header">
+        <div>
+          <h3 class="provider-card-name">${escapeHtml(item.providerName)}</h3>
+          <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(item.overallAverage)}</div>
+          <span class="delta-badge ${deltaClass}">${deltaSymbol} ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(item.deltaVsPrevious)}</span>
+        </div>
       </div>
 
-      ${
-        item.canShowDetails
-          ? `
-            <div class="metric-grid-4">
-              <div class="summary-card"><div class="summary-label">Helhet</div><div class="summary-value">${escapeHtml(item.overallAverage)}</div></div>
-              <div class="summary-card"><div class="summary-label">Bemötande</div><div class="summary-value">${escapeHtml(item.subscores.bemotande)}</div></div>
-              <div class="summary-card"><div class="summary-label">Info</div><div class="summary-value">${escapeHtml(item.subscores.information)}</div></div>
-              <div class="summary-card"><div class="summary-label">Lyssnad på</div><div class="summary-value">${escapeHtml(item.subscores.lyssnadPa)}</div></div>
-            </div>
-            <div class="meta-list">
-              <div>Genomsnittlig tid till första SMS: <strong>${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h</strong></div>
-              <div>Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}</div>
-            </div>
-          `
-          : '<div class="empty-note">För få svar för att visa resultat på ett integritetssäkert sätt.</div>'
-      }
+      <div class="score-grid">
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.overallAverage)}</div>
+          <div class="score-item-label">Helhet</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.bemotande)}</div>
+          <div class="score-item-label">Bemötande</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.information)}</div>
+          <div class="score-item-label">Information</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-value">${escapeHtml(item.subscores.lyssnadPa)}</div>
+          <div class="score-item-label">Lyssnad på</div>
+        </div>
+      </div>
+
+      <div class="provider-meta">
+        Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
+        · Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
+      </div>
     </div>
   `;
 }

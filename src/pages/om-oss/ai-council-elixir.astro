@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const title = "AI Council — Elixir Edition";
-const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 5-fas pipeline, Claim Ledger och 7 modeller i 2 tiers — byggt i Elixir/Phoenix LiveView.";
+const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 5-fas pipeline, Claim Ledger, 8 modeller i 2 tiers och automatisk verifiering av PMID/DOI i vetenskapliga svar.";
 ---
 
 <BaseLayout title={title} description={description}>
@@ -57,7 +57,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
           </h2>
           <p class="text-slate-400 text-center mb-12 max-w-3xl mx-auto">
             En komplett omskrivning av AI Council i Elixir/Phoenix. Skickar en fråga till 
-            <strong class="text-purple-400">upp till 7 AI-modeller parallellt</strong>, syntetiserar svaren via 
+            <strong class="text-purple-400">upp till 8 AI-modeller parallellt</strong>, syntetiserar svaren via 
             <strong class="text-purple-400">Claim Ledger</strong>-metodik, och kör en delibereringsomgång 
             där modellerna granskar varandra. Resultatet: en <strong class="text-white">supersyntes</strong>.
           </p>
@@ -83,7 +83,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
               </div>
               <h3 class="text-lg font-semibold text-white mb-2">Realtid med LiveView</h3>
               <p class="text-slate-400 text-sm">
-                Varje pipelinesteg syns i UI:t omedelbart via WebSocket — utan en rad JavaScript.
+                Varje pipelinesteg syns i UI:t omedelbart via WebSocket — med minimal klientlogik och utan tung frontend.
               </p>
             </div>
 
@@ -100,24 +100,57 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
             </div>
           </div>
 
-          <!-- Vetenskaplig litteratur & hallucinationer -->
+          <!-- Vetenskaplig litteratur & referenskontroll -->
           <div class="mt-8 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border-2 border-emerald-500/40 rounded-xl p-6">
             <div class="flex flex-col md:flex-row md:items-center gap-4">
-              <div class="text-4xl">📚</div>
+              <div class="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold uppercase tracking-wide">
+                PMID / PMCID / DOI
+              </div>
               <div class="flex-1">
-                <h3 class="text-white font-bold text-lg mb-1">Vetenskaplig litteratur: felfrekvens i referenslistor</h3>
+                <h3 class="text-white font-bold text-lg mb-1">Vetenskaplig litteratur: spårbarhet och automatisk referenskontroll</h3>
                 <p class="text-slate-300 text-sm mb-3">
-                  För vetenskaplig skrivning är <strong class="text-emerald-400">antal hallucinationer</strong> det viktigaste. 
-                  Med enskilda AI-modeller har felfrekvensen i referenslistor tidigare kunnat ligga på <strong class="text-white">upp till 8 av 10</strong> referenser. 
-                  Med AI Councils korsvalidering via flera oberoende modeller har felfrekvensen i senaste körningarna gått ner till <strong class="text-emerald-400">0%</strong>. 
-                  Enskilda modeller (t.ex. Grok) har förbättrats men ligger fortfarande kvar på cirka <strong class="text-slate-300">1 fel av 5</strong> — korsvalideringen tar bort den sista andelen.
+                  För vetenskaplig skrivning är inte blind tillit det viktigaste, utan <strong class="text-emerald-400">spårbarhet</strong>. 
+                  I Elixir Edition uppmanas modellerna att skriva ut maskinläsbara identifierare i referensraderna — främst 
+                  <strong class="text-white">PMID</strong>, <strong class="text-white">PMCID</strong> och <strong class="text-white">DOI</strong>. När sådana identifierare finns i svaret 
+                  verifieras de automatiskt efter supersyntesen via <strong class="text-emerald-400">PubMed</strong>, <strong class="text-emerald-400">PMC ID Converter</strong> respektive <strong class="text-emerald-400">Crossref</strong>.
                 </p>
                 <p class="text-slate-400 text-xs">
-                  Utom Perplexity (som har inbyggd sökning och källhantering) har inget av de andra multi-modellverktygen samma fokus på spårbarhet och nollfel i vetenskapliga referenser.
+                  Före verifieringen normaliserar AI Council referensrader, försöker komplettera saknade identifierare konservativt och bygger om Zotero-listan automatiskt. Målet är att minska hallucinerade referenser och göra litteraturlistor enklare att kontrollera och importera vidare till till exempel Zotero.
+                </p>
+                <p class="text-slate-500 text-xs mt-2">
+                  Verifieringen kontrollerar identifierare och metadata, men ersätter inte manuell bedömning av om rätt artikel verkligen stödjer rätt påstående i brödtexten.
                 </p>
               </div>
               <div class="text-right">
                 <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full font-semibold">Nyckelfördel</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 bg-slate-900/50 border border-slate-700 rounded-xl p-6">
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+              <span class="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-indigo-300 text-xs font-semibold uppercase tracking-wide">
+                Vetenskapligt arbetsflöde
+              </span>
+              <span class="text-slate-500 text-sm">Så är Elixir Edition tänkt att användas i litteraturtunga körningar</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-3 text-sm">
+              <div class="rounded-lg bg-slate-800/60 border border-slate-700 p-4">
+                <p class="text-white font-semibold mb-1">1. Ladda upp underlag</p>
+                <p class="text-slate-400">Lägg in PDF:er, utdrag eller annat bakgrundsmaterial i kontexten innan körningen startar.</p>
+              </div>
+              <div class="rounded-lg bg-slate-800/60 border border-slate-700 p-4">
+                <p class="text-white font-semibold mb-1">2. Kör Council med evidensfokus</p>
+                <p class="text-slate-400">Använd en systemprompt som kräver referensrader med identifierare och ett tydligt, strukturerat slutsvar.</p>
+              </div>
+              <div class="rounded-lg bg-slate-800/60 border border-slate-700 p-4">
+                <p class="text-white font-semibold mb-1">3. Granska kvalitetsstatus</p>
+                <p class="text-slate-400">Titta först på den kompakta kvalitetsstatusen, sedan på panelerna för referenskomplettering och referensverifiering.</p>
+              </div>
+              <div class="rounded-lg bg-slate-800/60 border border-slate-700 p-4">
+                <p class="text-white font-semibold mb-1">4. Exportera till Zotero</p>
+                <p class="text-slate-400">Låt den ombyggda Zotero-listan ge ett renare underlag för import och fortsatt manuell granskning.</p>
               </div>
             </div>
           </div>
@@ -276,11 +309,11 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
       <div class="container mx-auto px-4">
         <div class="max-w-5xl mx-auto">
           <h2 class="text-3xl font-bold text-white text-center mb-4">
-            7 modeller i 2 tiers
+            8 modeller i 2 tiers
           </h2>
           <p class="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
-            Växla mellan <strong class="text-purple-400">Snabb</strong> (2 modeller, ~3–5 sek) och 
-            <strong class="text-purple-400">Avancerad</strong> (4+1 modeller, djupare analys) med ett klick.
+            Växla mellan <strong class="text-purple-400">Snabb</strong> (2 modeller) och 
+            <strong class="text-purple-400">Avancerad</strong> (3 standard + 3 tillval, djupare analys) med ett klick.
           </p>
 
           <!-- Fast Tier -->
@@ -300,9 +333,9 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-blue-400 text-xl font-bold">G</span>
                 </div>
                 <div>
-                  <h4 class="text-lg font-semibold text-white">Gemini 2.0 Flash</h4>
+                  <h4 class="text-lg font-semibold text-white">Gemini 3.1 Flash-Lite</h4>
                   <p class="text-slate-500 text-sm">Google</p>
-                  <p class="text-slate-400 text-sm mt-1">Snabb, prisvärd och multimodal</p>
+                  <p class="text-slate-400 text-sm mt-1">Snabb, kostnadseffektiv modell för fast tier (hög volym, korta svar)</p>
                 </div>
               </div>
               <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
@@ -327,7 +360,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                 </svg>
                 Avancerad tier
               </span>
-              <span class="text-slate-500 text-sm">4 + 1 opt-in</span>
+              <span class="text-slate-500 text-sm">3 standard + 3 opt-in</span>
             </div>
             <div class="grid md:grid-cols-2 gap-4">
               <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
@@ -335,29 +368,9 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-emerald-400 text-xl font-bold">O</span>
                 </div>
                 <div>
-                  <h4 class="text-lg font-semibold text-white">GPT-4.1</h4>
-                  <p class="text-slate-500 text-sm">OpenAI</p>
-                  <p class="text-slate-400 text-sm mt-1">Stark på kod och logik, 1M token-kontext</p>
-                </div>
-              </div>
-              <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
-                <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                  <span class="text-emerald-400 text-xl font-bold">O</span>
-                </div>
-                <div>
                   <h4 class="text-lg font-semibold text-white">GPT-5.4</h4>
                   <p class="text-slate-500 text-sm">OpenAI</p>
-                  <p class="text-slate-400 text-sm mt-1">Djupast resonering och analys</p>
-                </div>
-              </div>
-              <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
-                <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                  <span class="text-orange-400 text-xl font-bold">C</span>
-                </div>
-                <div>
-                  <h4 class="text-lg font-semibold text-white">Claude Sonnet 4</h4>
-                  <p class="text-slate-500 text-sm">Anthropic</p>
-                  <p class="text-slate-400 text-sm mt-1">Kodstruktur och tydlig syntes</p>
+                  <p class="text-slate-400 text-sm mt-1">Djup resonering och stark syntes i avancerad tier</p>
                 </div>
               </div>
               <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
@@ -365,9 +378,9 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-blue-400 text-xl font-bold">G</span>
                 </div>
                 <div>
-                  <h4 class="text-lg font-semibold text-white">Gemini 2.5 Pro</h4>
+                  <h4 class="text-lg font-semibold text-white">Gemini 3.1 Pro Preview</h4>
                   <p class="text-slate-500 text-sm">Google</p>
-                  <p class="text-slate-400 text-sm mt-1">Hög tokengräns och kostnadseffektiv</p>
+                  <p class="text-slate-400 text-sm mt-1">Hög kapacitet för syntes, promptförbättring och större resonemang</p>
                 </div>
               </div>
               <div class="bg-slate-900/50 border border-purple-500/30 rounded-xl p-5 flex gap-4">
@@ -375,9 +388,39 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-purple-400 text-xl font-bold">X</span>
                 </div>
                 <div>
-                  <h4 class="text-lg font-semibold text-white">Grok 4 <span class="text-xs text-purple-400 font-normal ml-1">opt-in</span></h4>
+                  <h4 class="text-lg font-semibold text-white">Grok 4.20 Reasoning</h4>
                   <p class="text-slate-500 text-sm">xAI</p>
-                  <p class="text-slate-400 text-sm mt-1">Reasoning-kapacitet och vetenskaplig analys</p>
+                  <p class="text-slate-400 text-sm mt-1">Reasoning-fokuserad modell i standarduppsättningen för avancerad tier</p>
+                </div>
+              </div>
+              <div class="bg-slate-900/50 border border-slate-700 rounded-xl p-5 flex gap-4">
+                <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="text-orange-400 text-xl font-bold">C</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">Claude Sonnet 4.6 <span class="text-xs text-orange-400 font-normal ml-1">opt-in</span></h4>
+                  <p class="text-slate-500 text-sm">Anthropic</p>
+                  <p class="text-slate-400 text-sm mt-1">Tydlig syntes och bra språkstruktur när kredit finns aktiverad</p>
+                </div>
+              </div>
+              <div class="bg-slate-900/50 border border-orange-500/30 rounded-xl p-5 flex gap-4">
+                <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="text-orange-400 text-xl font-bold">C</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">Claude Opus 4.6 <span class="text-xs text-orange-400 font-normal ml-1">opt-in</span></h4>
+                  <p class="text-slate-500 text-sm">Anthropic</p>
+                  <p class="text-slate-400 text-sm mt-1">Tyngre Claude-alternativ för selektiva körningar</p>
+                </div>
+              </div>
+              <div class="bg-slate-900/50 border border-emerald-500/30 rounded-xl p-5 flex gap-4">
+                <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="text-emerald-400 text-xl font-bold">O</span>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold text-white">GPT-4.1 <span class="text-xs text-emerald-400 font-normal ml-1">opt-in</span></h4>
+                  <p class="text-slate-500 text-sm">OpenAI</p>
+                  <p class="text-slate-400 text-sm mt-1">Stark allround-modell och alternativ till GPT-5.4 när man vill jämföra OpenAI-spår</p>
                 </div>
               </div>
             </div>
@@ -393,19 +436,19 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
             </h4>
             <div class="grid md:grid-cols-2 gap-4 text-sm">
               <div class="flex items-center gap-3 bg-slate-800/50 rounded-lg p-3">
-                <span class="text-emerald-400">GPT-4.1</span>
+                <span class="text-emerald-400">OpenAI-modell</span>
                 <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                <span class="text-amber-400">GPT-4.1 Mini</span>
+                <span class="text-amber-400">GPT-5.4 Mini</span>
                 <span class="text-slate-500 text-xs ml-auto">vid rate limit</span>
               </div>
               <div class="flex items-center gap-3 bg-slate-800/50 rounded-lg p-3">
-                <span class="text-purple-400">Grok 4</span>
+                <span class="text-purple-400">Grok 4.20</span>
                 <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-                <span class="text-amber-400">Grok 3 Mini</span>
+                <span class="text-amber-400">Grok 4.1 Fast Reasoning</span>
                 <span class="text-slate-500 text-xs ml-auto">vid alla fel</span>
               </div>
             </div>
@@ -607,7 +650,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-emerald-400 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                   </span>
-                  <span>AI-driven promptförbättring via Gemini Flash</span>
+                  <span>AI-driven promptförbättring via Gemini 3.1 Pro</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-400 mt-0.5">
@@ -619,7 +662,13 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <span class="text-emerald-400 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                   </span>
-                  <span>Live-websökning med Gemini Grounding + SourceResolver</span>
+                  <span>Native live-webbsökning per modell (OpenAI, Claude, Gemini, Grok) med källspårning</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-400 mt-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  </span>
+                  <span>Automatisk referenskomplettering och kontroll: PMID via PubMed, PMCID via PMC och DOI via Crossref efter supersyntes</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-400 mt-0.5">
@@ -963,7 +1012,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                 </tr>
                 <tr>
                   <td class="text-slate-300 p-4">Live-websökning</td>
-                  <td class="text-center text-emerald-400 p-4">Nativ per modell (OpenAI, Gemini, Grok; Claude utan). Perplexity endast för "Sök fakta" (kontext)</td>
+                  <td class="text-center text-emerald-400 p-4">Nativ per modell (OpenAI, Claude, Gemini, Grok). Perplexity används för separat faktainsamling</td>
                   <td class="text-center text-red-400 p-4">Nej</td>
                   <td class="text-center text-slate-400 p-4">Perplexity: Ja. MetaLLM: Nej</td>
                 </tr>
@@ -975,29 +1024,6 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
             AI Council är det enda verktyget med <strong class="text-purple-400">Claim Ledger</strong> — strukturerad påståendeextraktion med 
             spårbarhet, dubbla konfidensvärden och changes-diff som visar exakt vad delibereringen förändrade.
           </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer CTA -->
-    <section class="py-16">
-      <div class="container mx-auto px-4 text-center">
-        <p class="text-slate-500 mb-6">
-          AI Council Elixir Edition — samma kärna, robustare plattform.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="/om-oss/ai-council" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-            Se Next.js-versionen
-          </a>
-          <a href="/om-oss" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            Tillbaka till Om Oss
-          </a>
         </div>
       </div>
     </section>

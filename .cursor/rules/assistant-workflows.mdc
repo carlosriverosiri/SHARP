@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Assistant Workflows
 
-- The repo includes reusable prompt files under `prompts/`; remember they can be referenced with `@filename` in chat when relevant.
+- The repo includes reusable prompt files under `prompts/`; see `prompts/README.md` for **AI Council** vs **webb/Cursor** prompts. Reference files with `@filename` in chat when relevant.
 - Keep suggestions aligned with the existing prompt library instead of inventing parallel workflows unnecessarily.
 - If the user writes `COUNCIL:` or `RADET:`, structure the response as multiple perspectives plus a short synthesis when that format helps solve the problem.
 - Keep the council style practical: focus on trade-offs, risks, implementation path, and final recommendation.

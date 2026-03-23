@@ -50,6 +50,8 @@ export default defineConfig({
   redirects: {
     ...redirects,
     '/copy-links': '/personal/lankar-sms',
+    // Tidigare rot-URL; sidan ligger nu under sjukdomar/axel
+    '/nyckelbensleden-ur-led': '/sjukdomar/axel/nyckelbensleden-ur-led',
   },
 
   integrations: [

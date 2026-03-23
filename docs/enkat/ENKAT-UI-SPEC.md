@@ -119,12 +119,19 @@ Låta användaren ladda upp dagens exportfil och förstå om filen är korrekt.
 
 - en sammanhållen uppladdningsyta som stödjer både drag & drop och klick för filval
 - tydlig visning av vald fil i samma block
-- en sidomodul med lista över bokningstyper som aldrig ska följas upp
-- återställ-knapp för att gå tillbaka till senast sparade gemensamma lista
-- admin-knapp för att spara listan gemensamt i Supabase
+- sidomodul för bokningstyper som aldrig ska följas upp (se nedan)
 - tydlig regel att `Diagnoser` måste finnas för att raden ska få gå vidare
 - checkbox-lista med bokningstyper som faktiskt finns i den uppladdade filen
 - användaren väljer aktivt vilka bokningstyper som ska ingå i just detta utskick
+
+### Sidomodul: bokningstyper som aldrig ska följas upp
+
+- **Rubrik:** `Bokningstyper som aldrig ska följas upp`
+- **Intro:** *Skriv en bokningstyp per rad för bortsortering*
+- **Inmatning:** textarea utan synlig etikett; tillgänglighetsnamn via `aria-label` (en rad per mönster). Matchning sker mot rå bokningstyp före preview.
+- **Knappar:** `Återställ sparad lista`; `Spara lista för alla` (endast administratör) — sparar den **gemensamma** listan via API (se `ENKAT-API-SPEC.md`).
+- **Status:** banner visas vid spara/återställ (info/success/fel). Om inställningstabellen inte kan läsas (t.ex. migrering saknas) visas en **varningsruta** med samma budskap som tidigare.
+- **Avsikt:** ingen permanent informationsruta som förklarar att listan lagras i Supabase; lagring och delning mellan användare beskrivs i API-/SQL-dokumentation.
 
 ### Information som ska visas
 

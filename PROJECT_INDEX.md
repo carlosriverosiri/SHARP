@@ -265,7 +265,7 @@ SHARP/
 │   ├── OPERATION-SIDOR.md  # Operationssystem
 │   └── ...
 │
-├── prompts/                # AI-prompts för innehåll
+├── prompts/                # AI-prompts (README: AI Council vs Astro/Cursor)
 │
 ├── astro.config.mjs        # Astro + redirects
 ├── netlify.toml            # Netlify-konfiguration

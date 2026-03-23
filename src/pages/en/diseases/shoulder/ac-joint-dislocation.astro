@@ -1,0 +1,825 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import RefLink from '../../../../components/RefLink.astro';
+import RefDrawer from '../../../../components/RefDrawer.astro';
+
+import imgClinicalBump from '../../../../assets/images/ac-joint-dislocation/AC-lux_nyckelbenet_ur_led600.png';
+import imgRockwood1 from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-1.webp';
+import imgRockwood2 from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-2.webp';
+import imgRockwood3 from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-3.webp';
+import imgRockwood5 from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-5.webp';
+import imgRockwoodV from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-v.webp';
+import imgType4 from '../../../../assets/images/ac-joint-dislocation/ac-joint-dislocation-type-4.jpg';
+import imgDiagram35 from '../../../../assets/images/ac-joint-dislocation/ac-dislocation-type-3-or-5.svg';
+import imgDogBone from '../../../../assets/images/ac-joint-dislocation/ac_dog_bone_technique_0-large.png';
+import imgHookPlate from '../../../../assets/images/ac-joint-dislocation/hook-plate-ac-joint.webp';
+
+const authorName = 'Dr. Carlos Rivero Siri';
+const authorUrl = 'https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri';
+const authorImage = '/images/team/carlos-rivero-siri.webp';
+const currentDate = new Date().toISOString().split('T')[0];
+const lastMedicalReview = '21 March 2026';
+
+const tableOfContents = [
+  { id: 'overview', title: 'Overview & mechanism', icon: '1' },
+  { id: 'symptoms', title: 'Symptoms', icon: '2' },
+  { id: 'diagnosis', title: 'Diagnosis & imaging', icon: '3' },
+  { id: 'classification', title: 'Rockwood classification', icon: '4' },
+  { id: 'treatment', title: 'Treatment', icon: '5' },
+  { id: 'surgery', title: 'Surgical techniques', icon: '6' },
+  { id: 'work-sport', title: 'Work & return to sport', icon: '7' },
+  { id: 'expert', title: 'Expert perspective', icon: '💡' },
+  { id: 'faq', title: 'FAQ', icon: '?' },
+  { id: 'references', title: 'References', icon: '📚' },
+];
+
+/* Numbered [1]–[11] aligned with AI Council / Zotero list provided */
+const references = [
+  {
+    id: '1',
+    text: 'Michael R, Sinclair K, Bédard L, et al. A ten-year prospective randomized trial comparing non-operative treatment to hook plate fixation for Rockwood III acromio-clavicular dislocation. Orthop Traumatol Surg Res. 2025.',
+    url: 'https://doi.org/10.1016/j.otsr.2025.104159',
+  },
+  {
+    id: '2',
+    text: 'Marín Fermín T, Hong CK, Lacheta L, et al. Surgical treatment of acute high-grade acromioclavicular joint dislocations. J Exp Orthop. 2025.',
+    url: 'https://doi.org/10.1002/jeo2.70173',
+  },
+  {
+    id: '3',
+    text: 'Bianco Prevot L, Accetta R, Fozzato S, et al. Surgical vs conservative: what is the best treatment of acute Rockwood III acromioclavicular joint dislocation? A systematic review and meta-analysis. EFORT Open Rev. 2025.',
+    url: 'https://doi.org/10.1530/EOR-2024-0077',
+  },
+  {
+    id: '4',
+    text: 'Xie C, Fan S, Chen L, et al. Comparative efficacy of operative versus conservative treatment for Rockwood type III acromioclavicular joint dislocation: a systematic review and meta-analysis of RCTs. BMC Musculoskelet Disord. 2024.',
+    url: 'https://doi.org/10.1186/s12891-024-08100-x',
+  },
+  {
+    id: '5',
+    text: 'Albishi W, AlShayhan F, Alfridy A, et al. Acromioclavicular joint separation: Controversies and treatment algorithm. Orthop Rev. 2024.',
+    url: 'https://doi.org/10.52965/001c.94037',
+  },
+  {
+    id: '6',
+    text: 'Yan Y, Liao M, Lai H, et al. Comparison of Effectiveness and Safety in Treating Acute Acromioclavicular Joint Dislocation with Five Different Surgical Procedures: A Systematic Review and Network Meta-Analysis. Orthop Surg. 2023.',
+    url: 'https://doi.org/10.1111/os.13731',
+  },
+  {
+    id: '7',
+    text: 'Velasquez Garcia A, Liendo R, Ekdahl M, et al. The Reliability of Acromioclavicular Joint Dislocation Classification Systems: A Comparison Between the Rockwood and Kraus Classifications. Orthop J Sports Med. 2023.',
+    url: 'https://doi.org/10.1177/23259671221149391',
+  },
+  {
+    id: '8',
+    text: 'Boström Windhamre H, von Heideken J, Une-Larsson V, et al. No difference in clinical outcome at 2-year follow-up in patients with type III and V acromioclavicular joint dislocation treated with hook plate or physiotherapy: a randomized controlled trial. J Shoulder Elbow Surg. 2022.',
+    url: 'https://doi.org/10.1016/j.jse.2021.12.003',
+  },
+  {
+    id: '9',
+    text: 'Berthold DP, Muench LN, Dyrna F, et al. Current concepts in acromioclavicular joint (AC) instability – a proposed treatment algorithm for acute and chronic AC-joint surgery. BMC Musculoskelet Disord. 2022.',
+    url: 'https://doi.org/10.1186/s12891-022-05935-0',
+  },
+  {
+    id: '10',
+    text: 'Rosso C, Martetschläger F, Saccomanno MF, et al. High degree of consensus achieved regarding diagnosis and treatment of acromioclavicular joint instability among ESA-ESSKA members. Knee Surg Sports Traumatol Arthrosc. 2021.',
+    url: 'https://doi.org/10.1007/s00167-020-06286-w',
+  },
+  {
+    id: '11',
+    text: 'Petri M, Warth RJ, Greenspoon JA, et al. Clinical Results After Conservative Management for Grade III Acromioclavicular Joint Injuries: Does Eventual Surgery Affect Overall Outcomes? Arthroscopy. 2016.',
+    url: 'https://doi.org/10.1016/j.arthro.2015.11.024',
+  },
+];
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: 'AC joint dislocation — classification & treatment',
+  author: { '@type': 'Person', name: authorName, url: authorUrl },
+  dateModified: currentDate,
+  reviewedBy: { '@type': 'Person', name: authorName, url: authorUrl },
+  about: {
+    '@type': 'MedicalCondition',
+    name: 'Acromioclavicular joint dislocation',
+    possibleTreatment: [
+      { '@type': 'MedicalTherapy', name: 'Conservative treatment and rehabilitation' },
+      { '@type': 'MedicalTherapy', name: 'Surgical AC joint stabilisation' },
+    ],
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Does every Rockwood type III AC dislocation need surgery?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. High-quality reviews and trials show similar long-term functional scores after conservative care versus early surgery for many type III injuries. A structured non-operative trial is standard before considering surgery, unless specific instability or patient factors apply.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is a hook plate or cortical button better for AC joint dislocation?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Network meta-analyses summarise multiple techniques. Modern cortical button / suspension constructs avoid a subacromial hook and often remove the need for routine hardware removal compared with hook plates, which are associated with high planned reoperation rates for implant removal and impingement risk.',
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="AC joint dislocation — types, treatment & surgery | Södermalms Ortopedi"
+  description="Acromioclavicular (AC) joint dislocation: Rockwood types, when X-ray is enough, conservative vs surgical treatment, hook plate vs cortical buttons, and return to work and sport."
+  alternateUrl="/sjukdomar/axel/nyckelbensleden-ur-led"
+  type="article"
+>
+  <meta slot="head" property="article:author" content={authorName} />
+  <meta slot="head" property="article:section" content="Shoulder" />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
+  <script
+    is:inline
+    type="application/ld+json"
+    slot="head"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sodermalmsortopedi.se/en/' },
+        { '@type': 'ListItem', position: 2, name: 'Diseases', item: 'https://sodermalmsortopedi.se/en/diseases' },
+        { '@type': 'ListItem', position: 3, name: 'Shoulder', item: 'https://sodermalmsortopedi.se/en/diseases/shoulder' },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: 'AC joint dislocation',
+          item: 'https://sodermalmsortopedi.se/en/diseases/shoulder/ac-joint-dislocation',
+        },
+      ],
+    })}
+  />
+
+  <!-- HERO -->
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900 text-white pt-8 pb-12 relative">
+    <div class="max-w-[1500px] mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-4">
+        <a href="/en" class="text-slate-400 hover:text-white">Home</a>
+        <span class="text-slate-500">/</span>
+        <a href="/en/diseases" class="text-slate-400 hover:text-white">Diseases</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-sky-400">Shoulder</span>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8 items-end">
+        <div class="lg:col-span-2">
+          <span
+            class="inline-block py-1 px-3 rounded bg-sky-600/30 text-sky-300 text-xs font-bold mb-3 tracking-wider uppercase"
+          >
+            Shoulder instability
+          </span>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight tracking-tight">
+            AC joint dislocation
+          </h1>
+          <p class="text-slate-300 text-base md:text-lg max-w-2xl leading-relaxed">
+            A common shoulder injury in contact sports and falls onto the point of the shoulder. Treatment depends on
+            Rockwood type, horizontal stability, chronicity, and patient goals<RefLink id="5" text="Treatment algorithms" url={references[4].url} /><RefLink id="9" text="Current concepts" url={references[8].url} />.
+          </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-400 shrink-0">
+              <img src={authorImage} alt={authorName} class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p class="text-xs text-sky-300 uppercase tracking-wider font-bold">Medically reviewed</p>
+              <a href={authorUrl} class="text-sm font-bold text-white hover:text-sky-200">{authorName}</a>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400">Specialist in orthopaedics & shoulder surgery</div>
+          <div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span class="text-xs text-slate-300">Updated: <strong class="text-white">{lastMedicalReview}</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TL;DR -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-6">
+      <div class="bg-gradient-to-r from-sky-50 to-indigo-50 rounded-xl p-3 md:p-5 border border-sky-200">
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
+          <div class="flex-1 flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-2 flex flex-wrap items-center gap-2">
+                Key points
+                <span class="text-xs font-normal text-slate-500 normal-case">⏱ ~12 min read</span>
+              </h2>
+              <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                <strong>Types I–II</strong> are treated conservatively.<strong> Type III</strong> usually starts with structured
+                non-operative care; long-term functional scores often match early surgery in trials<RefLink
+                  id="3"
+                  text="Meta-analysis"
+                  url={references[2].url}
+                /><RefLink id="4" text="RCT review" url={references[3].url} />. <strong>Surgery</strong> improves
+                radiographic alignment but not consistently clinical outcome; complication rates are higher with
+                surgery<RefLink id="1" text="Hook plate trial" url={references[0].url} />. When operating, many surgeons
+                favour <strong>cortical button / suspension</strong> constructs over <strong>hook plates</strong> for
+                biomechanics and to avoid routine second surgery for hardware removal<RefLink
+                  id="2"
+                  text="High-grade AC"
+                  url={references[1].url}
+                /><RefLink id="6" text="Network meta-analysis" url={references[5].url} />.
+              </p>
+              <div class="grid sm:grid-cols-3 gap-3 text-xs">
+                <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                  <span class="text-green-600 font-bold">✓</span>
+                  <span><strong>True AP + Zanca</strong> usually sufficient for diagnosis<RefLink
+                      id="10"
+                      text="Consensus"
+                      url={references[9].url}
+                    /></span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                  <span class="text-sky-600 font-bold">✓</span>
+                  <span><strong>~18–20%</strong> high-grade injuries have associated intra-articular lesions<RefLink
+                      id="9"
+                      text="Algorithm"
+                      url={references[8].url}
+                    /></span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/70 rounded-lg p-2">
+                  <span class="text-indigo-600 font-bold">✓</span>
+                  <span><strong>Type V</strong>: RCT data challenge “always operate”<RefLink
+                      id="8"
+                      text="JSES 2022"
+                      url={references[7].url}
+                    /></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figure class="shrink-0 w-full max-w-xs mx-auto lg:mx-0 rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+            <Image
+              src={imgClinicalBump}
+              alt="Visible step-off deformity at the acromioclavicular joint after dislocation"
+              class="w-full h-auto"
+              widths={[320, 480]}
+              sizes="(max-width: 1024px) 100vw, 320px"
+            />
+            <figcaption class="text-[11px] text-slate-500 px-2 py-1.5 bg-slate-50">
+              Typical “bump” from elevated distal clavicle (clinical photo).
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <nav class="mt-4 lg:hidden">
+        <details class="bg-sky-50 rounded-lg border border-sky-200">
+          <summary class="flex items-center justify-between p-3 cursor-pointer select-none">
+            <span class="font-bold text-sky-800 text-sm uppercase tracking-wide">Contents</span>
+            <svg class="w-4 h-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </summary>
+          <div class="px-3 pb-2 flex flex-wrap gap-2">
+            {tableOfContents.map((item) => (
+              <a
+                href={`#${item.id}`}
+                class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 hover:text-sky-700 bg-white px-2.5 py-1 rounded-full border border-slate-200"
+              >
+                <span class="w-4 h-4 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">
+                  {item.icon}
+                </span>
+                {item.title}
+              </a>
+            ))}
+          </div>
+        </details>
+      </nav>
+    </div>
+  </section>
+
+  <section class="bg-slate-50 py-6 md:py-10">
+    <div class="max-w-[1500px] mx-auto px-3 sm:px-4 md:px-6">
+      <div class="grid lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
+        <!-- LEFT -->
+        <aside class="lg:col-span-3 order-2 lg:order-1">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 overflow-hidden">
+              <div class="bg-indigo-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Biomechanics snapshot</h3>
+              </div>
+              <div class="p-4 text-xs text-slate-700 space-y-3">
+                <p>
+                  <strong>AC ligaments</strong> resist <em>horizontal</em> translation; <strong>coracoclavicular (CC)</strong> complex
+                  resists <em>vertical</em> displacement. Untreated horizontal instability drives poor outcomes in many
+                  high-grade patterns<RefLink id="9" text="Concepts" url={references[8].url} />.
+                </p>
+                <p>
+                  <strong>Scapular dyskinesis</strong> is common after AC injury and may persist after conservative care—worth
+                  screening in chronic type III patterns<RefLink id="9" text="Rehab context" url={references[8].url} />.
+                </p>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-2">
+                  <p class="font-bold text-amber-900 mb-1">Type VI (rare)</p>
+                  <p class="text-slate-600">
+                    Inferior clavicle displacement — assess neurovascular status urgently<RefLink
+                      id="5"
+                      text="Algorithm"
+                      url={references[4].url}
+                    />.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 overflow-hidden">
+              <div class="bg-slate-800 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Related (SV)</h3>
+              </div>
+              <div class="p-4 text-sm">
+                <a
+                  href="/sjukdomar/axel/nyckelbensleden-ur-led"
+                  class="text-sky-600 hover:underline font-medium"
+                >
+                  Nyckelbenet ur led (Swedish)
+                </a>
+                <p class="text-xs text-slate-500 mt-2">
+                  Patient-oriented summary on our clinic site (<a
+                    href="https://specialist.se/nyckelbensleden-ur-led/"
+                    class="text-sky-600 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer">specialist.se</a
+                  >) covers similar themes in Swedish.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-6">
+          <article id="overview" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">1</span>
+              Overview & mechanism
+            </h2>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              AC joint dislocations account for roughly <strong>3–12% of all shoulder injuries</strong> and a much higher
+              share in contact sports<RefLink id="5" text="Epidemiology" url={references[4].url} />. Young active men are
+              most often affected. The injury is typically a direct blow or fall onto the shoulder.
+            </p>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-sm text-slate-700">
+              <strong class="text-indigo-900">Take-home:</strong> Decide treatment by <em>Rockwood type</em>, chronicity,
+              horizontal instability, occupation/sport, and whether intra-articular pathology needs addressing<RefLink
+                id="9"
+                text="Algorithm"
+                url={references[8].url}
+              />.
+            </div>
+          </article>
+
+          <article id="symptoms" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">2</span>
+              Symptoms
+            </h2>
+            <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-4">
+              <li>Pain over the AC joint, worse with cross-body adduction or overhead loading.</li>
+              <li>Visible <strong>step-off</strong> or skin tenting in higher-grade injuries.</li>
+              <li>Reduced push-up / bench-press confidence in athletes; difficulty with heavy overhead work.</li>
+            </ul>
+          </article>
+
+          <article id="diagnosis" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">3</span>
+              Diagnosis & imaging
+            </h2>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              Clinical examination localises tenderness and identifies deformity. ESA–ESSKA consensus supports
+              <strong>true anteroposterior radiographs</strong> with <strong>bilateral Zanca views</strong> as adequate for
+              standard AC instability assessment — routine advanced imaging solely to grade the AC joint is not
+              required<RefLink id="10" text="Consensus statement" url={references[9].url} />.
+            </p>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              Use <strong>ultrasound, CT, or MRI</strong> selectively when you need to evaluate associated glenohumeral
+              pathology or complex cases. Around <strong>18–20%</strong> of high-grade AC injuries may have relevant
+              intra-articular lesions (e.g. SLAP or partial cuff tears), which can influence surgical planning<RefLink
+                id="9"
+                text="Associated injuries"
+                url={references[8].url}
+              />.
+            </p>
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm text-slate-700">
+              <span class="text-lg mr-2">💡</span>
+              <strong>Classification reliability</strong> remains imperfect — interobserver disagreement is a known
+              limitation when choosing conservative versus operative care<RefLink
+                id="7"
+                text="Rockwood vs Kraus"
+                url={references[6].url}
+              />.
+            </div>
+          </article>
+
+          <article id="classification" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">4</span>
+              Rockwood classification (illustrated)
+            </h2>
+            <p class="text-slate-600 text-sm mb-4">
+              Schematic overview of common types (illustrations for patient education — not a substitute for formal
+              radiographic classification).
+            </p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+              {[
+                { src: imgRockwood1, cap: 'Type I' },
+                { src: imgRockwood2, cap: 'Type II' },
+                { src: imgRockwood3, cap: 'Type III' },
+                { src: imgRockwood5, cap: 'Type V' },
+                { src: imgRockwoodV, cap: 'Type V (variant art)' },
+              ].map((row) => (
+                <figure class="rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                  <Image src={row.src} alt={`Rockwood ${row.cap} AC injury illustration`} class="w-full h-auto" widths={[200, 280]} sizes="150px" />
+                  <figcaption class="text-[10px] text-center text-slate-500 py-1">{row.cap}</figcaption>
+                </figure>
+              ))}
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <figure class="rounded-lg overflow-hidden border border-slate-200">
+                <Image src={imgType4} alt="AC joint injury type 4 posterior displacement diagram" class="w-full h-auto" widths={[400, 600]} sizes="(max-width: 768px) 100vw, 50vw" />
+                <figcaption class="text-xs text-slate-500 p-2 bg-slate-50">Type IV — posterior clavicle relative to acromion.</figcaption>
+              </figure>
+              <figure class="rounded-lg overflow-hidden border border-slate-200 bg-white p-2">
+                <Image src={imgDiagram35} alt="Diagram comparing AC joint type 3 and type 5 displacement" class="w-full h-auto" />
+                <figcaption class="text-xs text-slate-500 p-2">Types III vs V — vertical displacement difference.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article id="treatment" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">5</span>
+              Treatment principles
+            </h2>
+
+            <div class="space-y-4 text-slate-600 leading-relaxed">
+              <div class="border-l-4 border-emerald-500 pl-4">
+                <h3 class="font-bold text-slate-800 mb-1">Types I & II</h3>
+                <p>
+                  Treat conservatively with sling as needed, early range of motion, and progressive strengthening<RefLink
+                    id="5"
+                    text="Guidance"
+                    url={references[4].url}
+                  />.
+                </p>
+              </div>
+
+              <div class="border-l-4 border-sky-500 pl-4">
+                <h3 class="font-bold text-slate-800 mb-1">Type III (acute)</h3>
+                <p class="mb-2">
+                  Start with a structured <strong>non-operative programme</strong> (often 3–6 weeks initial focus, longer
+                  rehab as needed). Meta-analyses and RCT data show <strong>no consistent long-term functional superiority</strong> of
+                  early surgery for many patients<RefLink id="3" text="EFORT review" url={references[2].url} /><RefLink
+                    id="4"
+                    text="BMC meta-analysis"
+                    url={references[3].url}
+                  /><RefLink id="11" text="Conservative cohort" url={references[10].url} />.
+                </p>
+                <p>
+                  If symptoms plateau, reassess for <strong>horizontal instability</strong> and scapular dyskinesis; some
+                  “IIIB”-type patterns are more likely to benefit from surgery than horizontally stable “IIIA”
+                  equivalents<RefLink id="10" text="Expert consensus" url={references[9].url} />.
+                </p>
+              </div>
+
+              <div class="border-l-4 border-amber-500 pl-4">
+                <h3 class="font-bold text-slate-800 mb-1">Type V & controversies</h3>
+                <p>
+                  Many guidelines still lean operative for marked displacement, yet a high-quality RCT reported
+                  <strong>no clinical difference at 2 years</strong> between hook plate fixation and physiotherapy for
+                  combined type III and V cohorts — challenging a dogmatic “always operate” stance<RefLink
+                    id="8"
+                    text="RCT"
+                    url={references[7].url}
+                  />.
+                </p>
+              </div>
+
+              <div class="border-l-4 border-rose-500 pl-4">
+                <h3 class="font-bold text-slate-800 mb-1">Chronic injuries (&gt;3–6 weeks)</h3>
+                <p>
+                  Delayed reconstruction may need <strong>biological augmentation</strong> (e.g. graft reconstruction) because
+                  native ligament healing potential decreases<RefLink id="2" text="Surgical review" url={references[1].url} /><RefLink
+                    id="9"
+                    text="Algorithm"
+                    url={references[8].url}
+                  />.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-6 bg-slate-50 rounded-lg p-4 border border-slate-200 text-sm text-slate-700">
+              <strong>Surgery vs conservative — outcomes:</strong> Operative treatment achieves superior radiographic
+              reduction, but this does not reliably translate into better long-term patient-reported function; complication
+              rates are higher with surgery<RefLink id="1" text="Long-term RCT" url={references[0].url} /><RefLink
+                id="4"
+                text="Meta-analysis"
+                url={references[3].url}
+              />. Conservative care typically allows <strong>faster early return to work and sport</strong> in aggregate<RefLink
+                id="4"
+                text="Review"
+                url={references[3].url}
+              />.
+            </div>
+          </article>
+
+          <article id="surgery" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">6</span>
+              Surgical techniques
+            </h2>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              Many techniques exist (CC fixation, AC cerclage, hook plate, suture-button / tape constructs, free tendon
+              grafts). Network meta-analyses summarise comparative effectiveness and complication profiles<RefLink
+                id="6"
+                text="Network MA"
+                url={references[5].url}
+              />.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <figure class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                <Image
+                  src={imgDogBone}
+                  alt="Illustration of double cortical button CC ligament reconstruction (dog-bone construct)"
+                  class="w-full h-auto bg-white"
+                  widths={[400, 700]}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <figcaption class="text-xs text-slate-600 p-3 bg-slate-50">
+                  <strong>Cortical buttons / suspension tape</strong> — restores CC distance without a subacromial hook; avoids
+                  routine planned removal in many protocols<RefLink id="2" text="Modern fixation" url={references[1].url} /><RefLink
+                    id="6"
+                    text="Comparative data"
+                    url={references[5].url}
+                  />.
+                </figcaption>
+              </figure>
+              <figure class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                <Image
+                  src={imgHookPlate}
+                  alt="Hook plate fixation of acromioclavicular joint dislocation"
+                  class="w-full h-auto bg-white"
+                  widths={[400, 700]}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <figcaption class="text-xs text-slate-600 p-3 bg-slate-50">
+                  <strong>Hook plate</strong> — effective reduction but frequent planned reoperation for hardware removal and
+                  risks such as subacromial impingement / acromial erosion in a proportion of patients<RefLink
+                    id="1"
+                    text="Ten-year data"
+                    url={references[0].url}
+                  /><RefLink id="6" text="Complications overview" url={references[5].url} />.
+                </figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article id="work-sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">7</span>
+              Work & return to sport
+            </h2>
+            <p class="text-slate-600 leading-relaxed mb-4">
+              Timeline depends on Rockwood type, treatment path, and demands. Conservative protocols generally permit an
+              earlier resumption of light activity than operative protocols complicated by immobilisation and hardware
+              logistics<RefLink id="4" text="Meta-analysis" url={references[3].url} />. Athletes in collision sports may need
+              longer graded contact progressions — individualise using strength, pain, and sport-specific testing<RefLink
+                id="5"
+                text="Return considerations"
+                url={references[4].url}
+              />.
+            </p>
+          </article>
+        </main>
+
+        <!-- RIGHT -->
+        <aside class="lg:col-span-3 order-3">
+          <div class="lg:sticky lg:top-6 space-y-4">
+            <nav class="hidden lg:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-sky-700 px-4 py-2.5">
+                <h3 class="font-bold text-sm text-white uppercase tracking-wide">Contents</h3>
+              </div>
+              <div class="p-2">
+                {tableOfContents.map((item) => (
+                  <a
+                    href={`#${item.id}`}
+                    class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 py-1.5 px-2 rounded transition-colors"
+                  >
+                    <span class="w-5 h-5 rounded bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
+                      {item.icon}
+                    </span>
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </nav>
+
+            <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 overflow-hidden">
+              <div class="bg-emerald-600 text-white px-4 py-2.5">
+                <h3 class="font-bold text-sm uppercase tracking-wide">FAQ highlights</h3>
+              </div>
+              <div class="p-4 space-y-3 text-xs text-slate-600">
+                <p>
+                  <strong class="text-slate-800">Do I need MRI for every AC sprain?</strong><br />
+                  No — standard radiographs aligned with consensus guidance usually suffice for the AC joint itself<RefLink
+                    id="10"
+                    text="ESSKA paper"
+                    url={references[9].url}
+                  />.
+                </p>
+                <p>
+                  <strong class="text-slate-800">Hook plate vs buttons?</strong><br />
+                  Buttons / tape avoid the subacromial hook and often eliminate planned removal surgery; hook plates remain in
+                  use but carry higher reoperation burden<RefLink id="1" text="RCT" url={references[0].url} /><RefLink
+                    id="6"
+                    text="Network MA"
+                    url={references[5].url}
+                  />.
+                </p>
+              </div>
+            </div>
+
+            <div class="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-slate-200 overflow-hidden lg:mt-auto">
+              <div class="bg-rose-600 text-white px-4 py-3">
+                <h3 class="font-bold text-sm uppercase tracking-wide">Differential</h3>
+              </div>
+              <div class="p-4 text-xs text-slate-600 space-y-2">
+                <p>Lateral clavicle fracture, distal third clavicle fractures, scapula fracture, sternoclavicular injury.</p>
+                <p>Do not miss <strong>type VI</strong> inferior dislocation — neurovascular assessment<RefLink
+                    id="5"
+                    text="Algorithm"
+                    url={references[4].url}
+                  />.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERT -->
+  <section id="expert" class="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 py-12 scroll-mt-6">
+    <div class="max-w-[1500px] mx-auto px-4 sm:px-6">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-14 h-14 rounded-full bg-amber-500/20 flex items-center justify-center">
+          <span class="text-3xl">💡</span>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Expert perspective</h2>
+          <p class="text-slate-400">My approach to AC joint dislocations</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/50 backdrop-blur rounded-2xl border border-slate-700 p-6 md:p-8 max-w-4xl">
+        <p class="text-slate-300 text-base leading-relaxed mb-6">
+          High-grade AC injuries are common in Stockholm’s active population. I prioritise an accurate Rockwood assessment
+          with quality Zanca views, then match treatment to <strong>horizontal stability</strong>, chronicity, and the patient’s
+          aesthetic and performance goals — not to the radiograph alone.
+        </p>
+        <h3 class="text-lg font-bold text-amber-400 mb-3">Diagnostic approach</h3>
+        <p class="text-slate-300 leading-relaxed mb-6">
+          I explain upfront that <strong>type III</strong> injuries often do well without surgery, while acknowledging
+          classification noise and shared decision-making for high-demand workers or visible deformity. I maintain a low
+          threshold for MRI when symptoms suggest associated glenohumeral pathology in contact athletes<RefLink
+            id="9"
+            text="Associated lesions"
+            url={references[8].url}
+          />.
+        </p>
+        <h3 class="text-lg font-bold text-amber-400 mb-3">Surgical bias</h3>
+        <p class="text-slate-300 leading-relaxed">
+          When surgery is chosen, I prefer modern <strong>CC suspension constructs</strong> over hook plates in most acute
+          scenarios to reduce subacromial morbidity and second-stage removal — consistent with current comparative
+          literature<RefLink id="2" text="2025 review" url={references[1].url} /><RefLink id="6" text="Network MA" url={references[5].url} />.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="bg-white py-6 md:py-10 border-t border-slate-200 scroll-mt-6">
+    <div class="max-w-[1500px] mx-auto px-3 sm:px-4 md:px-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Frequently asked questions</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <details class="group bg-slate-50 rounded-lg open:bg-sky-50 open:ring-1 open:ring-sky-200">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm cursor-pointer list-none">
+            <span>Is surgery mandatory for a type V AC dislocation?</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Not necessarily. A randomised trial found no difference at two years between hook plate fixation and structured
+            physiotherapy for patients with type III and V injuries combined — shared decision-making is essential<RefLink
+              id="8"
+              text="JSES RCT"
+              url={references[7].url}
+            />.
+          </div>
+        </details>
+        <details class="group bg-slate-50 rounded-lg open:bg-sky-50 open:ring-1 open:ring-sky-200">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm cursor-pointer list-none">
+            <span>Will the bump go away without surgery?</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Often the cosmetic step-off persists after non-operative healing even when function is excellent. Surgery
+            improves appearance more predictably but carries hardware-related trade-offs<RefLink
+              id="1"
+              text="Outcome data"
+              url={references[0].url}
+            />.
+          </div>
+        </details>
+        <details class="group bg-slate-50 rounded-lg open:bg-sky-50 open:ring-1 open:ring-sky-200 md:col-span-2">
+          <summary class="flex justify-between items-center p-4 font-bold text-slate-800 text-sm cursor-pointer list-none">
+            <span>What if my injury is older than one month?</span>
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </summary>
+          <div class="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+            Delayed presentation reduces success of purely conservative care for some patients and may require graft-based
+            reconstruction if surgery is chosen<RefLink id="11" text="Chronic cohort" url={references[10].url} /><RefLink
+              id="9"
+              text="Algorithm"
+              url={references[8].url}
+            />.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references" class="bg-slate-100 py-6 md:py-8 scroll-mt-6">
+    <div class="max-w-[1500px] mx-auto px-3 sm:px-4 md:px-6">
+      <details class="group">
+        <summary class="flex items-center gap-2 cursor-pointer text-slate-700 font-bold text-sm uppercase tracking-wide select-none">
+          <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          View all {references.length} references
+        </summary>
+        <div class="mt-4 grid md:grid-cols-2 gap-2">
+          {references.map((ref, i) => (
+            <a
+              href={ref.url}
+              class="text-xs text-slate-600 hover:text-sky-700 hover:bg-white p-2 rounded transition block"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="font-bold text-slate-400 mr-1">[{i + 1}]</span>
+              {ref.text}
+            </a>
+          ))}
+        </div>
+        <p class="text-xs text-slate-500 mt-4 italic">Evidence list aligned with clinical synthesis. Updated {currentDate}.</p>
+      </details>
+    </div>
+  </section>
+
+  <p class="text-center text-sm text-slate-500 py-6">
+    <a href="/sjukdomar/axel/nyckelbensleden-ur-led" class="text-sky-600 hover:underline">Svenska: Nyckelbenet ur led</a>
+  </p>
+
+  <RefDrawer lang="en" />
+</BaseLayout>

@@ -177,5 +177,6 @@ Om du öppnar projektet på en ny dator ska du tänka:
 - nästa fokus är testning och polish, inte grundarkitektur
 - nästa fokus efter det är mer verklig testning, eventuellt ett separat export-/visualiseringspass och bara därefter ytterligare polish av återstående wiring i `enkat.astro`
 - previewn kräver nu `Diagnoser`, sorterar bort tomma diagnoser automatiskt och visar bokningstyperna i filen som kryssrutor
-- den gemensamma listan över bokningstyper som aldrig ska följas upp sparas i Supabase och kan uppdateras av admin från `/personal/enkat`
+- den gemensamma listan över bokningstyper som aldrig ska följas upp sparas i Supabase och kan uppdateras av admin från `/personal/enkat` (i UI visas ingen ständig informationsruta om lagring — se `ENKAT-UI-SPEC.md`)
+- publikt patientformulär som referens: `ENKAT-PATIENTFORMULAR-MALL.md`
 - `submit` sanerar nu fritext server-side innan lagring och har regressionstester för både statusmappning och maskning av mejl, telefon och personnummer

@@ -2,7 +2,8 @@ import {
   escapeHtml,
   fetchApiData,
   getErrorText,
-  renderCampaignCard,
+  renderCampaignTable,
+  renderKpiRow,
   renderProviderCard,
   renderReportProvider,
   setElementBanner,
@@ -115,7 +116,7 @@ export async function loadDashboardSection({
       return;
     }
 
-    contentEl.innerHTML = `<div class="card-list">${providers.map((item) => renderProviderCard(item)).join('')}</div>`;
+    contentEl.innerHTML = renderKpiRow(providers) + `<div class="provider-grid">${providers.map((item) => renderProviderCard(item)).join('')}</div>`;
   } catch (error) {
     console.error(error);
     setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte ladda resultatöversikten.'));
@@ -145,7 +146,7 @@ export async function loadCampaignHistorySection({
     }
 
     setElementBanner(bannerEl, 'success', `Visar ${campaigns.length} kampanjer.`);
-    contentEl.innerHTML = `<div class="card-list">${campaigns.map((item) => renderCampaignCard(item)).join('')}</div>`;
+    contentEl.innerHTML = renderCampaignTable(campaigns);
 
     contentEl.querySelectorAll<HTMLButtonElement>('.remind-btn').forEach((button) => {
       button.addEventListener('click', async () => {
@@ -174,6 +175,39 @@ export async function loadCampaignHistorySection({
         } catch (error) {
           console.error(error);
           setElementBanner(bannerEl, 'error', getErrorText(error, 'Ett oväntat fel uppstod vid påminnelseutskick.'));
+          button.disabled = false;
+        }
+      });
+    });
+
+    contentEl.querySelectorAll<HTMLButtonElement>('.delete-campaign-btn').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const campaignId = button.getAttribute('data-campaign-id');
+        const campaignName = button.getAttribute('data-campaign-name') || 'kampanjen';
+        if (!campaignId) return;
+
+        if (!confirm(`Radera "${campaignName}"? Alla utskick, svar och leveransloggar tas bort permanent.`)) {
+          return;
+        }
+
+        button.disabled = true;
+        setElementBanner(bannerEl, 'info', 'Raderar kampanj...');
+
+        try {
+          await fetchApiData<{ campaignId: string; deleted: boolean }>('/api/enkat/campaigns', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ campaignId })
+          }, 'Kunde inte radera kampanjen.');
+
+          setElementBanner(bannerEl, 'success', `"${campaignName}" har raderats.`);
+          await loadCampaignHistorySection({ bannerEl, contentEl, afterReminderSent });
+          if (afterReminderSent) {
+            await afterReminderSent();
+          }
+        } catch (error) {
+          console.error(error);
+          setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte radera kampanjen.'));
           button.disabled = false;
         }
       });
@@ -226,7 +260,7 @@ export async function loadReportSection({
       return;
     }
 
-    contentEl.innerHTML = `<div class="card-list">${providers.map((item) => renderReportProvider(item)).join('')}</div>`;
+    contentEl.innerHTML = `<div class="provider-grid">${providers.map((item) => renderReportProvider(item)).join('')}</div>`;
   } catch (error) {
     console.error(error);
     setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte ladda rapporten.'));

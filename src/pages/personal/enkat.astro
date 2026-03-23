@@ -21,9 +21,8 @@ if (!anvandare) {
 const isAdmin = harMinstPortalRoll(anvandare.roll, 'admin');
 const defaultExcludedBookingTypePatternsText = getDefaultExcludedBookingTypePatternText();
 let initialExcludedBookingTypePatternsText = defaultExcludedBookingTypePatternsText;
-let sharedTemplateHelperText = isAdmin
-  ? 'Listan lagras i Supabase och används som gemensam lista för vilka bokningstyper som alltid ska sorteras bort.'
-  : 'Listan hämtas från Supabase. Du kan läsa och använda den här, men endast administratör kan spara ändringar.';
+/** Varningsruta endast om inställningar inte kunde läsas från Supabase (t.ex. migrering saknas). */
+let excludedBookingSettingsLoadNotice: string | null = null;
 
 try {
   const { data, error } = await supabaseAdmin
@@ -33,7 +32,7 @@ try {
     .maybeSingle();
 
   if (error) {
-    sharedTemplateHelperText = isAdmin
+    excludedBookingSettingsLoadNotice = isAdmin
       ? 'Visar inbyggd lista. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
       : 'Visar inbyggd lista. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
   } else if (data) {
@@ -41,7 +40,7 @@ try {
   }
 } catch (error) {
   console.warn('Kunde inte läsa gemensam enkätsmall från Supabase:', error);
-  sharedTemplateHelperText = isAdmin
+  excludedBookingSettingsLoadNotice = isAdmin
     ? 'Visar inbyggd lista. Kör SQL-migreringen för att kunna spara den gemensamt i Supabase.'
     : 'Visar inbyggd lista. En administratör behöver köra SQL-migreringen för att aktivera gemensam lagring i Supabase.';
 }
@@ -278,6 +277,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     .banner.info { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
     .banner.error { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
     .banner.success { background: var(--success-soft); color: var(--success); border-color: #a7f3d0; }
+    .banner.warn { background: var(--warning-soft); color: var(--warning); border-color: #fde68a; }
 
     .summary-grid {
       display: grid;
@@ -785,6 +785,382 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
         width: 100%;
       }
     }
+
+  </style>
+
+  <style is:global>
+    :root {
+      --enk-bg: #f8fafc;
+      --enk-card: #ffffff;
+      --enk-text: #0f172a;
+      --enk-muted: #64748b;
+      --enk-line: #e2e8f0;
+      --enk-primary: #0284c7;
+      --enk-primary-soft: #e0f2fe;
+      --enk-success: #059669;
+      --enk-success-soft: #d1fae5;
+      --enk-warning: #d97706;
+      --enk-warning-soft: #fef3c7;
+      --enk-danger: #dc2626;
+      --enk-danger-soft: #fee2e2;
+    }
+
+    /* Repeated for dynamic innerHTML that can't see scoped vars */
+    .muted-box {
+      margin-top: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--enk-line);
+      border-radius: 14px;
+      padding: 16px;
+      color: var(--enk-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      border: 1px solid var(--enk-line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+
+    .kpi-card-label {
+      color: var(--enk-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .kpi-card-value {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--enk-text);
+      line-height: 1.1;
+    }
+
+    .kpi-card-sub {
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--enk-muted);
+    }
+
+    .progress-bar-wrap {
+      margin-top: 10px;
+    }
+
+    .progress-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--enk-muted);
+      margin-bottom: 4px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
+
+    .progress-bar-fill.rate-high { background: var(--enk-success); }
+    .progress-bar-fill.rate-mid { background: var(--enk-warning); }
+    .progress-bar-fill.rate-low { background: var(--enk-danger); }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      padding: 0 8px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .score-badge.score-high { background: var(--enk-success); }
+    .score-badge.score-mid { background: var(--enk-warning); }
+    .score-badge.score-low { background: var(--enk-danger); }
+
+    .provider-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .provider-card-v2 {
+      border: 1px solid var(--enk-line);
+      border-radius: 16px;
+      padding: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .provider-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .provider-card-name {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--enk-text);
+    }
+
+    .provider-card-sample {
+      font-size: 13px;
+      color: var(--enk-muted);
+      margin-top: 2px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .score-item {
+      text-align: center;
+      padding: 10px 6px;
+      background: #f8fafc;
+      border: 1px solid var(--enk-line);
+      border-radius: 10px;
+    }
+
+    .score-item-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--enk-text);
+    }
+
+    .score-item-label {
+      font-size: 11px;
+      color: var(--enk-muted);
+      margin-top: 2px;
+    }
+
+    .provider-meta {
+      font-size: 13px;
+      color: var(--enk-muted);
+      line-height: 1.5;
+    }
+
+    .provider-comments {
+      display: grid;
+      gap: 8px;
+    }
+
+    .provider-comment {
+      padding: 10px 12px;
+      border: 1px solid var(--enk-line);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .provider-comment-type {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+
+    .provider-comment-type.type-bra { color: var(--enk-success); }
+    .provider-comment-type.type-forbattra { color: var(--enk-warning); }
+
+    .provider-card-empty {
+      color: var(--enk-muted);
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--enk-line);
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .campaign-table-wrap {
+      overflow: auto;
+      border: 1px solid var(--enk-line);
+      border-radius: 14px;
+    }
+
+    .campaign-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    .campaign-table th {
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--enk-muted);
+      padding: 10px 14px;
+      border-bottom: 2px solid var(--enk-line);
+      text-align: left;
+      position: sticky;
+      top: 0;
+      white-space: nowrap;
+    }
+
+    .campaign-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--enk-line);
+      vertical-align: middle;
+    }
+
+    .campaign-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .campaign-table tbody tr:nth-child(even) {
+      background: #fafbfd;
+    }
+
+    .campaign-table tbody tr:hover {
+      background: #f0f4ff;
+    }
+
+    .campaign-table .cell-name {
+      font-weight: 600;
+      color: var(--enk-text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .campaign-table .cell-date {
+      color: var(--enk-muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .campaign-table .cell-num {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .campaign-rate-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .campaign-rate-bar .progress-bar {
+      flex: 1;
+      min-width: 60px;
+    }
+
+    .campaign-rate-bar .rate-label {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-badge.status-klar { background: var(--enk-success-soft); color: var(--enk-success); }
+    .status-badge.status-skickar { background: var(--enk-primary-soft); color: var(--enk-primary); }
+    .status-badge.status-fel { background: var(--enk-danger-soft); color: var(--enk-danger); }
+    .status-badge.status-default { background: #f1f5f9; color: var(--enk-muted); }
+
+    .btn-xs {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.1s ease;
+    }
+
+    .btn-xs:hover { transform: translateY(-1px); }
+    .btn-xs:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-xs.btn-primary { background: var(--enk-primary); color: white; }
+    .btn-xs.btn-secondary { background: #eef2ff; color: #1e293b; }
+    .delete-campaign-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .delete-campaign-btn:hover { color: var(--enk-danger); background: var(--enk-danger-soft); }
+    .delete-campaign-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .delete-campaign-btn svg { display: block; }
+
+    .delta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .delta-badge.delta-up { background: var(--enk-success-soft); color: var(--enk-success); }
+    .delta-badge.delta-down { background: var(--enk-danger-soft); color: var(--enk-danger); }
+    .delta-badge.delta-flat { background: #f1f5f9; color: var(--enk-muted); }
+
+    @media (max-width: 900px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .provider-grid { grid-template-columns: 1fr; }
+      .score-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .kpi-row { grid-template-columns: 1fr; }
+    }
   </style>
   <div class="page">
 
@@ -862,16 +1238,16 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       <aside class="card settings-card">
         <h3>Bokningstyper som aldrig ska följas upp</h3>
         <p class="card-intro">
-          Skriv en bokningstyp per rad. Om texten matchar en bokningstyp i filen sorteras raden bort automatiskt före previewn.
+          Skriv en bokningstyp per rad för bortsortering
         </p>
 
         <div class="form-group" style="margin-top: 12px;">
-          <label for="excludedBookingTypePatterns">Lista som alltid sorteras bort</label>
           <textarea
             id="excludedBookingTypePatterns"
             name="excludedBookingTypePatterns"
             class="input"
             style="min-height: 180px;"
+            aria-label="Bokningstyper för bortsortering, en per rad"
             data-default-value={initialExcludedBookingTypePatternsText}
           >{initialExcludedBookingTypePatternsText}</textarea>
         </div>
@@ -889,9 +1265,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
           </button>
         </div>
 
-        <div id="excludedBookingTypeSettingsStatus" class="banner visible info" style="margin-top: 12px;">
-          {sharedTemplateHelperText}
-        </div>
+        {excludedBookingSettingsLoadNotice && (
+          <div class="banner visible warn" style="margin-top: 12px;">
+            {excludedBookingSettingsLoadNotice}
+          </div>
+        )}
+
+        <div id="excludedBookingTypeSettingsStatus" class="banner info" style="margin-top: 12px;" aria-live="polite"></div>
 
         <div class="muted-box hidden" id="excludedBookingTypesSummaryBox">
           <strong>Sorterades bort före preview</strong>
@@ -1095,7 +1475,7 @@ Enkäten är anonym. Tack!</textarea>
     const refreshReportBtn = document.getElementById('refreshReportBtn') as HTMLButtonElement | null;
 
     if (!campaignNameInput.value.trim()) {
-      campaignNameInput.value = `Patientupplevelse ${new Date().toLocaleDateString('sv-SE')}`;
+      campaignNameInput.value = 'Patientupplevelse';
     }
 
     function setBanner(type: BannerType, message: string) {
