@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const title = 'Shoulder rehabilitation | Södermalms Ortopedi';
+const description =
+  'Shoulder rehab programs: AC joint type I–II, postoperative suprascapular nerve release, and links to clinical articles.';
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="bg-slate-50 min-h-[60vh]">
+    <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-10">
+      <div class="max-w-3xl mx-auto px-4">
+        <nav class="flex flex-wrap items-center gap-2 text-sm mb-6 text-slate-400">
+          <a href="/en" class="hover:text-white">Home</a>
+          <span>/</span>
+          <a href="/en/rehab" class="hover:text-white">Rehabilitation</a>
+          <span>/</span>
+          <span class="text-emerald-300">Shoulder</span>
+        </nav>
+        <h1 class="text-3xl md:text-4xl font-bold mb-3">Shoulder rehabilitation</h1>
+        <p class="text-slate-300 text-lg leading-relaxed">
+          Evidence-based programs and patient guides. Always follow your clinician’s plan if it differs from these general
+          protocols.
+        </p>
+      </div>
+    </section>
+
+    <div class="max-w-4xl mx-auto px-4 py-10 space-y-6">
+      <article
+        class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:border-emerald-300 transition"
+      >
+        <a href="/en/rehab/shoulder/ac-joint-dislocation-type-i-ii" class="block p-6 md:p-8 group">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 group-hover:text-emerald-800 mb-2">
+                AC joint dislocation — Rockwood type I &amp; II
+              </h2>
+              <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">
+                Four-phase conservative rehabilitation (protection → ROM → strengthening → return to activity) with
+                timelines for type I vs type II. Does not replace clinician-specific instructions.
+              </p>
+            </div>
+            <span
+              class="shrink-0 inline-flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-sm px-4 py-2 group-hover:bg-emerald-100"
+            >
+              Open program →
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <article
+        class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:border-emerald-300 transition"
+      >
+        <a href="/en/rehab/suprascapular-nerve-decompression" class="block p-6 md:p-8 group">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 group-hover:text-emerald-800 mb-2">
+                Suprascapular nerve decompression (postoperative)
+              </h2>
+              <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">
+                Full phased guide after arthroscopic nerve release: exercises, milestones, and return to sport.
+              </p>
+            </div>
+            <span
+              class="shrink-0 inline-flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-800 font-semibold text-sm px-4 py-2 group-hover:bg-emerald-100"
+            >
+              Open program →
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <div class="rounded-xl bg-sky-50 border border-sky-200 p-5 text-sm text-slate-700">
+        <strong class="text-sky-900">Related reading:</strong>
+        <a
+          href="/en/diseases/shoulder/ac-joint-dislocation"
+          class="text-sky-800 underline hover:text-sky-950 ml-1"
+          >AC joint dislocation — types, treatment &amp; surgery</a
+        >
+      </div>
+
+      <p class="text-center text-sm text-slate-500 pt-4">
+        <a href="/en/rehab" class="text-emerald-700 underline hover:text-emerald-900">← All rehabilitation</a>
+      </p>
+    </div>
+  </main>
+</BaseLayout>

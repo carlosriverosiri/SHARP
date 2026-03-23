@@ -1,0 +1,194 @@
+---
+import RehabLayout from '../../../../layouts/RehabLayout.astro';
+
+const pageTitle = 'AC joint dislocation type I & II — rehabilitation | Södermalms Ortopedi';
+const pageDescription =
+  'Phased conservative rehab after low-grade AC joint injury (Rockwood type I–II): protection, ROM, strengthening, return to sport — with references.';
+
+const references = [
+  {
+    n: '1',
+    text: 'Berthold DP, Muench LN, Dyrna F, et al. Current concepts in acromioclavicular joint (AC) instability – a proposed treatment algorithm for acute and chronic AC-joint surgery. BMC Musculoskelet Disord. 2022.',
+    url: 'https://doi.org/10.1186/s12891-022-05935-0',
+  },
+  {
+    n: '2',
+    text: 'Rosso C, Martetschläger F, Saccomanno MF, et al. High degree of consensus achieved regarding diagnosis and treatment of acromioclavicular joint instability among ESA-ESSKA members. Knee Surg Sports Traumatol Arthrosc. 2021.',
+    url: 'https://doi.org/10.1007/s00167-020-06286-w',
+  },
+  {
+    n: '3',
+    text: 'Albishi W, AlShayhan F, Alfridy A, et al. Acromioclavicular joint separation: Controversies and treatment algorithm. Orthop Rev. 2024.',
+    url: 'https://doi.org/10.52965/001c.94037',
+  },
+  {
+    n: '4',
+    text: 'Xie C, Fan S, Chen L, et al. Comparative efficacy of operative versus conservative treatment for Rockwood type III acromioclavicular joint dislocation: a systematic review and meta-analysis of RCTs. BMC Musculoskelet Disord. 2024.',
+    url: 'https://doi.org/10.1186/s12891-024-08100-x',
+  },
+  {
+    n: '5',
+    text: 'Boström Windhamre H, von Heideken J, Une-Larsson V, et al. No difference in clinical outcome at 2-year follow-up in patients with type III and V acromioclavicular joint dislocation treated with hook plate or physiotherapy: a randomized controlled trial. J Shoulder Elbow Surg. 2022.',
+    url: 'https://doi.org/10.1016/j.jse.2021.12.003',
+  },
+];
+---
+
+<RehabLayout title={pageTitle} description={pageDescription} type="article">
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white pt-6 pb-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-wrap items-center gap-2 text-sm mb-4">
+        <a href="/en" class="text-slate-400 hover:text-white">Home</a>
+        <span class="text-slate-500">/</span>
+        <a href="/en/rehab" class="text-slate-400 hover:text-white">Rehabilitation</a>
+        <span class="text-slate-500">/</span>
+        <a href="/en/rehab/shoulder" class="text-slate-400 hover:text-white">Shoulder</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-emerald-400">AC joint I–II</span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">AC joint dislocation — Rockwood type I &amp; II rehabilitation</h1>
+      <p class="text-lg text-slate-300 mb-6 max-w-3xl leading-relaxed">
+        Conservative (non-operative) phased program for <strong>low-grade</strong> AC injuries after clinician confirmation
+        of type I or II. Timelines differ slightly by type; progress by <strong>symptoms</strong>, not the calendar alone.
+      </p>
+
+      <div class="bg-emerald-600/20 backdrop-blur rounded-lg p-4 border border-emerald-500/30 mb-4">
+        <p class="font-bold text-emerald-300 mb-1">Important</p>
+        <p class="text-sm text-slate-300">
+          This is general education, not personal medical advice. If your injury may be type III or higher, or pain
+          worsens, see your doctor or physiotherapist before advancing phases.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3 print:hidden">
+        <button
+          type="button"
+          onclick="window.print()"
+          class="flex items-center gap-2 bg-white text-emerald-700 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-50 border-2 border-emerald-500 shadow"
+        >
+          Print / save PDF
+        </button>
+        <a
+          href="/en/diseases/shoulder/ac-joint-dislocation"
+          class="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2.5 rounded-lg font-semibold text-sm border border-white/20 hover:bg-white/15"
+        >
+          Clinical overview (all types)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 prose prose-slate max-w-none">
+      <h2 class="text-2xl font-bold text-slate-900 mb-3 not-prose">Phased protocol</h2>
+      <p class="text-slate-700 leading-relaxed mb-6 not-prose">
+        The table below follows a <strong>four-phase framework</strong> (Gladstone / Côté–style progressive loading) adapted
+        for Rockwood <strong>type I and II</strong> injuries, consistent with current reviews and consensus on conservative
+        care and scapular control <a
+          href={references[0].url}
+          class="text-emerald-700 underline hover:text-emerald-900">[1]</a
+        ><a href={references[1].url} class="text-emerald-700 underline hover:text-emerald-900">[2]</a
+        ><a href={references[2].url} class="text-emerald-700 underline hover:text-emerald-900">[3]</a>.
+      </p>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm mb-8 not-prose">
+        <table class="min-w-[640px] w-full text-sm text-left">
+          <thead>
+            <tr class="bg-slate-100 text-slate-800">
+              <th class="p-3 font-bold border-b border-slate-200 w-[22%]">Phase</th>
+              <th class="p-3 font-bold border-b border-slate-200 w-[24%]">Timeline</th>
+              <th class="p-3 font-bold border-b border-slate-200">Key components</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-700">
+            <tr class="border-b border-slate-100 align-top">
+              <td class="p-3 font-semibold text-emerald-900">1 — Protection</td>
+              <td class="p-3">
+                <strong>Type I:</strong> 0–1 wk<br />
+                <strong>Type II:</strong> 0–2 wk
+              </td>
+              <td class="p-3">
+                Sling as needed for comfort; pain and swelling control (e.g. ice, medication per clinician); early pendulum
+                exercises; <strong>closed-chain scapular</strong> work (wall slides, scapular clocks) to keep the shoulder
+                girdle active without heavy loading <a
+                  href={references[0].url}
+                  class="text-emerald-700 underline">[1]</a
+                ><a href={references[1].url} class="text-emerald-700 underline">[2]</a>.
+              </td>
+            </tr>
+            <tr class="border-b border-slate-100 align-top">
+              <td class="p-3 font-semibold text-emerald-900">2 — ROM restoration</td>
+              <td class="p-3">
+                <strong>Type I:</strong> 1–3 wk<br />
+                <strong>Type II:</strong> 2–4 wk
+              </td>
+              <td class="p-3">
+                Progressive passive and active-assisted ROM; gradual sling weaning; light isotonic loading; restore
+                <strong>scapulohumeral rhythm</strong>. Avoid forceful cross-body adduction and heavy overhead work early <a
+                  href={references[0].url}
+                  class="text-emerald-700 underline">[1]</a
+                ><a href={references[1].url} class="text-emerald-700 underline">[2]</a
+                ><a href={references[2].url} class="text-emerald-700 underline">[3]</a>.
+              </td>
+            </tr>
+            <tr class="border-b border-slate-100 align-top">
+              <td class="p-3 font-semibold text-emerald-900">3 — Strengthening</td>
+              <td class="p-3">
+                <strong>Type I:</strong> 3–6 wk<br />
+                <strong>Type II:</strong> 4–8 wk
+              </td>
+              <td class="p-3">
+                Deltoid, trapezius, rotator cuff, and periscapular stabilisers; open kinetic chain as tolerated; progressive
+                resistance. <strong>Scapular control</strong> remains central <a
+                  href={references[0].url}
+                  class="text-emerald-700 underline">[1]</a
+                ><a href={references[1].url} class="text-emerald-700 underline">[2]</a
+                ><a href={references[2].url} class="text-emerald-700 underline">[3]</a>.
+              </td>
+            </tr>
+            <tr class="align-top">
+              <td class="p-3 font-semibold text-emerald-900">4 — Sport / activity</td>
+              <td class="p-3">
+                <strong>Type I:</strong> ~6–12 wk<br />
+                <strong>Type II:</strong> ~8–12 wk
+              </td>
+              <td class="p-3">
+                Sport-specific drills, plyometrics, contact prep only when <strong>full ROM</strong>, near-symmetric strength,
+                and <strong>pain-free overhead</strong> function are achieved. <strong>Pain</strong> remains a primary guide to
+                progression <a href={references[3].url} class="text-emerald-700 underline">[4]</a
+                ><a href={references[0].url} class="text-emerald-700 underline">[1]</a
+                ><a href={references[1].url} class="text-emerald-700 underline">[2]</a>. Return-to-play data are most robust
+                for higher-grade injuries in trials <a href={references[4].url} class="text-emerald-700 underline">[5]</a> — use
+                extra caution for collision sports.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 not-prose text-sm text-slate-800">
+        <strong class="text-amber-900">Red flags — seek reassessment if:</strong> increasing deformity or step-off, numbness
+        or weak pulse, pain that escalates despite rest, or inability to progress after a reasonable trial in phase 2.
+      </div>
+
+      <h2 class="text-xl font-bold text-slate-900 mb-4 not-prose">References</h2>
+      <ol class="list-decimal pl-5 space-y-3 text-slate-700 text-sm not-prose">
+        {
+          references.map((r) => (
+            <li id={`ref-${r.n}`}>
+              {r.text}{' '}
+              <a href={r.url} class="text-emerald-700 underline break-all" target="_blank" rel="noopener noreferrer">
+                {r.url.replace('https://doi.org/', 'doi.org/')}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="mt-10 text-center text-sm text-slate-500 not-prose">
+        <a href="/en/rehab/shoulder" class="text-emerald-700 underline hover:text-emerald-900">← Shoulder rehab library</a>
+      </p>
+    </div>
+  </section>
+</RehabLayout>

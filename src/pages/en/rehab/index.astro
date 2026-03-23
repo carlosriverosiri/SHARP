@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const title = 'Rehabilitation programs | Södermalms Ortopedi';
+const description =
+  'Evidence-based English rehabilitation guides: shoulder, knee, and elbow programs after injury or surgery.';
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="bg-slate-50 min-h-[60vh]">
+    <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-12">
+      <div class="max-w-3xl mx-auto px-4 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-3">Rehabilitation</h1>
+        <p class="text-slate-300 text-lg">
+          Structured programs for safe return to activity. Choose a joint hub below.
+        </p>
+      </div>
+    </section>
+    <div class="max-w-4xl mx-auto px-4 py-10">
+      <ul class="space-y-4">
+        <li>
+          <a
+            href="/en/rehab/shoulder"
+            class="flex items-center justify-between gap-4 bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:border-emerald-400 hover:shadow-md transition"
+          >
+            <span class="font-bold text-slate-900">Shoulder rehab library</span>
+            <span class="text-emerald-600 text-sm font-semibold">Open →</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/en/rehab/suprascapular-nerve-decompression"
+            class="flex items-center justify-between gap-4 bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:border-emerald-400 hover:shadow-md transition"
+          >
+            <span class="font-bold text-slate-900">Suprascapular nerve decompression (post-op)</span>
+            <span class="text-emerald-600 text-sm font-semibold">Open →</span>
+          </a>
+        </li>
+      </ul>
+      <p class="text-center text-sm text-slate-500 mt-8">
+        <a href="/en" class="text-emerald-700 underline hover:text-emerald-900">← Back to English home</a>
+      </p>
+    </div>
+  </main>
+</BaseLayout>
