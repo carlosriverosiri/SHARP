@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import RefLink from '../../../../components/RefLink.astro';
 import RefDrawer from '../../../../components/RefDrawer.astro';
@@ -14,6 +14,9 @@ import imgType4 from '../../../../assets/images/ac-joint-dislocation/ac-joint-di
 import imgDiagram35 from '../../../../assets/images/ac-joint-dislocation/ac-dislocation-type-3-or-5.svg';
 import imgDogBone from '../../../../assets/images/ac-joint-dislocation/ac_dog_bone_technique_0-large.png';
 import imgHookPlate from '../../../../assets/images/ac-joint-dislocation/hook-plate-ac-joint.webp';
+
+const ogShare = await getImage({ src: imgClinicalBump, width: 1200 });
+const ogImageUrl = new URL(ogShare.src, Astro.site).href;
 
 const authorName = 'Dr. Carlos Rivero Siri';
 const authorUrl = 'https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri';
@@ -137,11 +140,17 @@ const faqSchema = {
 <BaseLayout
   title="AC joint dislocation — types, treatment & surgery | Södermalms Ortopedi"
   description="Acromioclavicular (AC) joint dislocation: Rockwood types, when X-ray is enough, conservative vs surgical treatment, hook plate vs cortical buttons, and return to work and sport."
+  image={ogImageUrl}
   alternateUrl="/sjukdomar/axel/nyckelbensleden-ur-led"
   type="article"
 >
   <meta slot="head" property="article:author" content={authorName} />
   <meta slot="head" property="article:section" content="Shoulder" />
+  <meta
+    slot="head"
+    name="keywords"
+    content="AC joint dislocation, acromioclavicular joint injury, shoulder separation, Rockwood classification, AC joint surgery, hook plate, conservative treatment, return to sport"
+  />
   <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
   <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
   <script

@@ -110,3 +110,13 @@ Same as **12-1:** friendly, motivating, clear; minimal jargon; exercise descript
 **Consistency:** Reuse the same heading hierarchy, phase presentation (e.g. tables or sections), and visual patterns as existing conservative rehab pages in the repo so **12-1** and **12-2** outputs are interchangeable from the patient’s perspective — only the clinical story changes.
 
 Include proper headings, lists, and formatting for screen and PDF.
+
+---
+
+## SEO & discoverability (Google, AI search, social)
+
+Same requirements as **`12_1_rehab_program_postop.md`** (research queries, AI-friendly structure, OG/Twitter `image`, `alternateUrl`, `slot="head"` with **MedicalWebPage** + **BreadcrumbList**, article meta, internal links).
+
+**Conservative-specific query examples** to include in research: “non-operative”, “physical therapy”, “sprain rehab”, “Rockwood type I”, “exercises for …”, “return to sport after …”.
+
+If you add **FAQ** + **FAQPage** schema, visible answers must match schema verbatim.

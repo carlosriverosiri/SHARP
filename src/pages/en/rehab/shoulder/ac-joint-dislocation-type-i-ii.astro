@@ -1,9 +1,48 @@
 ---
+import { getImage } from 'astro:assets';
 import RehabLayout from '../../../../layouts/RehabLayout.astro';
+import ogSrc from '../../../../assets/images/ac-joint-dislocation/ac-lux-typ-2.webp';
+
+const authorName = 'Dr. Carlos Rivero Siri';
+const siteUrl = 'https://sodermalmsortopedi.se';
+const currentDate = new Date().toISOString().split('T')[0];
 
 const pageTitle = 'AC joint dislocation type I & II — rehabilitation | Södermalms Ortopedi';
 const pageDescription =
   'Phased conservative rehab after low-grade AC joint injury (Rockwood type I–II): protection, ROM, strengthening, return to sport — with references.';
+
+const og = await getImage({ src: ogSrc, width: 1200, height: 630 });
+const ogImageUrl = new URL(og.src, Astro.site).href;
+
+const schemaMedical = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: 'AC joint dislocation Rockwood type I and II — conservative rehabilitation',
+  author: { '@type': 'Person', name: authorName },
+  dateModified: currentDate,
+  reviewedBy: { '@type': 'Person', name: authorName },
+  about: {
+    '@type': 'MedicalCondition',
+    name: 'Acromioclavicular joint sprain (Rockwood type I–II)',
+    possibleTreatment: [{ '@type': 'MedicalTherapy', name: 'Conservative rehabilitation and physiotherapy' }],
+  },
+};
+
+const schemaCrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/en/` },
+    { '@type': 'ListItem', position: 2, name: 'Rehabilitation', item: `${siteUrl}/en/rehab` },
+    { '@type': 'ListItem', position: 3, name: 'Shoulder', item: `${siteUrl}/en/rehab/shoulder` },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      name: 'AC joint type I–II rehab',
+      item: `${siteUrl}/en/rehab/shoulder/ac-joint-dislocation-type-i-ii`,
+    },
+  ],
+};
 
 const references = [
   {
@@ -34,7 +73,17 @@ const references = [
 ];
 ---
 
-<RehabLayout title={pageTitle} description={pageDescription} type="article">
+<RehabLayout title={pageTitle} description={pageDescription} type="article" image={ogImageUrl}>
+  <meta slot="head" property="article:author" content={authorName} />
+  <meta slot="head" property="article:section" content="Shoulder rehabilitation" />
+  <meta
+    slot="head"
+    name="keywords"
+    content="AC joint injury, Rockwood type I, Rockwood type II, shoulder separation, conservative rehab, AC joint rehabilitation, physiotherapy, return to sport"
+  />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaMedical)} />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaCrumb)} />
+
   <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white pt-6 pb-10">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="flex flex-wrap items-center gap-2 text-sm mb-4">

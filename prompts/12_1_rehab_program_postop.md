@@ -183,3 +183,30 @@ const pageDescription = "Evidence-based postoperative rehabilitation program..."
 **Consistency:** Match structure, heading levels, and phase table style used on other rehab pages in this repo (e.g. phased goals / activities / exercises / precautions / progression criteria) so postoperative and conservative programs look the same to the patient.
 
 Include proper headings, lists, and formatting for easy reading both online and in PDF.
+
+---
+
+## SEO & discoverability (Google, AI search, social)
+
+Rehab pages must be **findable** and **quotable** — not only for classic Google, but for AI answer engines and link previews.
+
+### 1. Before you draft (research step — in chat or notes)
+
+- **Google-style queries:** List **5–10** phrases real patients or clinicians type (synonyms, lay terms + medical terms, e.g. “rotator cuff repair rehab protocol”, “when to start pendulum exercises”).
+- **AI / answer engines:** Plan a **clear opening** (who the page is for, surgery name, body part, that it is postoperative rehab). Add **2–4 short subheadings** that match how people ask questions. If you add a **FAQ** section, questions must mirror real searches and **match** any `FAQPage` JSON-LD exactly (visible text = schema).
+- **Social sharing:** Write `title` and `description` so they read well as a **link preview** (no awkward cut-off mid-sentence).
+
+### 2. Implement in Astro
+
+- **Unique** `<title>` and meta `description` (~**145–160** characters; primary topic once, natural language).
+- **One** main **H1**; logical **H2/H3** hierarchy; use synonym phrases in body where natural (helps AI retrieval without stuffing).
+- **`RehabLayout` props:** `title`, `description`, `type="article"`, and **`image`** — use `getImage()` from a relevant `src/assets/...` image plus `new URL(..., Astro.site)` so **Open Graph / Twitter** get a real clinical image (not only the default logo).
+- **`alternateUrl`:** Set when a **Swedish** (or other) sibling page exists, for `hreflang` via `BaseLayout`.
+- **`slot="head"`** (forwarded by `RehabLayout` → `BaseLayout`): inject at minimum:
+  - `<meta property="article:author" … />` and `<meta property="article:section" … />` (e.g. “Shoulder rehabilitation”).
+  - **`MedicalWebPage`** JSON-LD with `about` → **`MedicalCondition`** / therapy where accurate.
+  - **`BreadcrumbList`** JSON-LD with absolute URLs under `https://sodermalmsortopedi.se`.
+  - Optional: `<meta name="keywords" content="…">` — **short**, comma-separated synonyms only; no stuffing (minor signal, mainly consistency).
+- **Internal links:** Link to the related **diagnosis/overview** page and rehab index (`/en/rehab`, body-part index) where relevant.
+
+Reference implementation: `src/pages/en/rehab/shoulder/ac-joint-dislocation-type-i-ii.astro` (pattern for OG image + head slot + schema).

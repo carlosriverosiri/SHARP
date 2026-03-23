@@ -38,8 +38,15 @@
 **Technical Constraints (Strict):**
 - **Reference Page:** Analyze `src/pages/sjukdomar/axel/ac-ledsartros.astro` first. Use EXACTLY the same layout classes, component usage, and Tailwind colors.
 - **Layout:** Import and use `../../../layouts/BaseLayout.astro`.
-- **Props:** `title`, `description` (unique SEO), `ogImage`.
+- **Props:** `title`, `description` (unique SEO), `image` / OG-bild (helst från `getImage()` + absolut URL via `Astro.site`), `alternateUrl` till engelsk syskonsida när den finns, `type="article"` för diagnossidor.
 - **Components:** `AuthorCard`, `RefLink`, `RefDrawer` (must be present).
+
+**SEO & discoverability (Google, AI-sök, sociala medier):**
+
+- Lista **5–10** typiska sökfraser (patient- och vårdnadsspråk) innan du skriver; spegla dem i rubriker och ingress.
+- **AI-svar / sökmotorer:** Tydlig ingress (vem, vad, när söka vård); FAQ som besvarar riktiga frågor. `FAQPage` JSON-LD i `slot="head"` **endast** om synlig FAQ-text stämmer exakt med schemat.
+- **Socialt / delning:** `title` + `description` ska fungera som **länkpreview**; sätt OG/Twitter-bild via `image`-prop.
+- **`slot="head"`:** Lägg `MedicalWebPage`, `BreadcrumbList` (absoluta URL:er under `https://sodermalmsortopedi.se`), samt `article`-meta där det passar. Länka internt till relevanta **rehab**-sidor om de finns.
 
 **Page Structure (Match ac-ledsartros.astro):**
 1.  **Hero:** Breadcrumbs + Title + Intro + Image.

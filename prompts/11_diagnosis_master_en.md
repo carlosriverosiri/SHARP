@@ -15,6 +15,16 @@
 2.  **Content:** Write professional, empathetic **English** copy.
 3.  **Design & Tech:** Follow the exact design system (Tailwind, BaseLayout, Components) as defined in `src/pages/sjukdomar/axel/ac-ledsartros.astro`.
 
+**SEO & discoverability (Google, AI search, social):**
+
+- **Research (before drafting):** Identify **5–10** target search phrases (patient + professional wording, synonyms). Plan headings and an intro that **directly answer** likely questions (helps AI overviews and featured-style answers).
+- **`BaseLayout`:** Set **`title`**, **`description`** (~145–160 chars, unique), **`type="article"`**, **`alternateUrl`** to the Swedish sibling when it exists, and **`image`** — prefer `getImage()` from the hero/clinical asset + `new URL(..., Astro.site)` for **Open Graph / Twitter** (not default logo when a strong image exists).
+- **`slot="head"`:** Include **`MedicalWebPage`** (+ `about` → **`MedicalCondition`** where appropriate), **`BreadcrumbList`**, and **`FAQPage`** JSON-LD **only** if the visible FAQ section matches the schema verbatim. Add `<meta property="article:author">` / `article:section` where appropriate.
+- **Internal links:** Cross-link related **rehab** programs and hub pages (`/en/rehab/...`) when relevant.
+- Optional short **`<meta name="keywords">`** — comma-separated, no stuffing.
+
+Reference: `src/pages/en/diseases/shoulder/ac-joint-dislocation.astro`.
+
 **STRICT REFERENCE SAFETY & MATCHING:**
 - **The Problem:** NotebookLM data often lacks links (says "MISSING").
 - **The Solution:** You must cross-reference the text citations with the "Zotero Reference List".
