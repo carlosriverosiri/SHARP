@@ -1607,22 +1607,6 @@ Enkäten är anonym. Tack!</textarea>
       await runAutoPreview();
     });
 
-    createCampaignBtn?.addEventListener('click', async () => {
-      await createCampaignAction({
-        button: createCampaignBtn,
-        campaignNameInput,
-        smsTemplateInput,
-        sendReminderInput,
-        previewUi,
-        setBanner,
-        afterCreate: () => {
-          void loadCampaignHistory();
-          void loadDashboard();
-          void loadReport();
-        }
-      });
-    });
-
     const loadDashboard = () => loadDashboardSection({
       bannerEl: dashboardBanner,
       contentEl: dashboardContent,
@@ -1633,16 +1617,6 @@ Enkäten är anonym. Tack!</textarea>
       void loadDashboard();
     });
 
-    const loadCampaignHistory = () => loadCampaignHistorySection({
-      bannerEl: campaignsBanner,
-      contentEl: campaignsContent,
-      afterHistoryMutated: loadDashboard
-    });
-
-    refreshCampaignsBtn?.addEventListener('click', () => {
-      void loadCampaignHistory();
-    });
-
     const loadReport = () => loadReportSection({
       bannerEl: reportBanner,
       contentEl: reportContent,
@@ -1650,17 +1624,52 @@ Enkäten är anonym. Tack!</textarea>
       providerFilterEl: reportProviderFilter
     });
 
+    const refreshEnkatViews = async () => {
+      await Promise.all([
+        loadDashboard(),
+        loadReport(),
+        loadCampaignHistory()
+      ]);
+    };
+
+    const loadCampaignHistory = () => loadCampaignHistorySection({
+      bannerEl: campaignsBanner,
+      contentEl: campaignsContent,
+      afterHistoryMutated: async () => {
+        await Promise.all([
+          loadDashboard(),
+          loadReport()
+        ]);
+      }
+    });
+
+    createCampaignBtn?.addEventListener('click', async () => {
+      await createCampaignAction({
+        button: createCampaignBtn,
+        campaignNameInput,
+        smsTemplateInput,
+        sendReminderInput,
+        previewUi,
+        setBanner,
+        afterCreate: () => {
+          void refreshEnkatViews();
+        }
+      });
+    });
+
+    refreshCampaignsBtn?.addEventListener('click', () => {
+      void refreshEnkatViews();
+    });
+
     refreshReportBtn?.addEventListener('click', () => {
-      void loadReport();
+      void refreshEnkatViews();
     });
 
     reportProviderFilter?.addEventListener('change', () => {
       void loadReport();
     });
 
-    void loadDashboard();
-    void loadCampaignHistory();
-    void loadReport();
+    void refreshEnkatViews();
   </script>
   </div>
 </PortalLayout>

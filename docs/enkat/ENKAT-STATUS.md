@@ -159,6 +159,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline
+- **Synkad uppdatering i admin**: knapparna för att uppdatera historik/rapport triggar nu samma refreshflöde så att historik, dashboard och rapport hålls i sync
 - **Utökade automatiska tester**: `npm test` kör nu Vitest för preview-token, submit-sanering, `upload`-, `send`-, `settings`-, `remind`-, `campaigns`-, `report`- och `dashboard`-flödet, statistik, bokningstypklassning, CSV-parsning, centrala page-helpers samt DOM-baserade klienttester för `enkat-page-preview.ts` och `enkat-page-sections.ts`
 - **Auth-regressionstester**: `src/lib/auth.test.ts` fångar nu förfalskade access tokens, verifierad användarhämtning och refresh av utgången Supabase-session
 - **Typning**: `any` ersatt med `SupabaseClient` i `enkat-queue.ts`
