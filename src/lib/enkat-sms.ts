@@ -1,12 +1,35 @@
 import { formatProviderName, patientFriendlyBookingType } from './enkat-booking-classifier';
 
 const ELKS_API_URL = 'https://api.46elks.com/a1/sms';
-const ELKS_API_USER = import.meta.env.ELKS_API_USER || '';
-const ELKS_API_PASSWORD = import.meta.env.ELKS_API_PASSWORD || '';
-const SITE_URL = import.meta.env.SITE || import.meta.env.PUBLIC_SITE_URL || '';
+type EnkatRuntimeEnvKey = 'ELKS_API_USER' | 'ELKS_API_PASSWORD' | 'SITE' | 'PUBLIC_SITE_URL';
 
-if (!SITE_URL) {
-  console.warn('⚠️ SITE / PUBLIC_SITE_URL saknas -- enkät-SMS-länkar kommer bli ogiltiga');
+let hasWarnedAboutMissingSiteUrl = false;
+
+function readEnkatRuntimeEnv(key: EnkatRuntimeEnvKey): string {
+  const processValue = typeof process !== 'undefined' ? process.env?.[key] : undefined;
+  if (typeof processValue === 'string' && processValue.length > 0) {
+    return processValue;
+  }
+
+  const metaEnv = (import.meta as ImportMeta & {
+    env?: Partial<Record<EnkatRuntimeEnvKey, string>>;
+  }).env;
+  const metaValue = metaEnv?.[key];
+  return typeof metaValue === 'string' ? metaValue : '';
+}
+
+function getEnkatSmsConfig() {
+  const siteUrl = readEnkatRuntimeEnv('SITE') || readEnkatRuntimeEnv('PUBLIC_SITE_URL');
+  if (!siteUrl && !hasWarnedAboutMissingSiteUrl) {
+    console.warn('⚠️ SITE / PUBLIC_SITE_URL saknas -- enkät-SMS-länkar kommer bli ogiltiga');
+    hasWarnedAboutMissingSiteUrl = true;
+  }
+
+  return {
+    elksApiUser: readEnkatRuntimeEnv('ELKS_API_USER'),
+    elksApiPassword: readEnkatRuntimeEnv('ELKS_API_PASSWORD'),
+    siteUrl
+  };
 }
 
 export type EnkatSmsRow = {
@@ -34,6 +57,7 @@ export function buildEnkatSmsMessage(
   code: string,
   options?: { reminder?: boolean }
 ) {
+  const { siteUrl } = getEnkatSmsConfig();
   const defaultInitialTemplate =
     'Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?\n' +
     'Svara här: [LÄNK]\n' +
@@ -50,11 +74,12 @@ export function buildEnkatSmsMessage(
     .replaceAll('[VÅRDGIVARE]', formatProviderName(row.providerName))
     .replaceAll('[DATUM]', formatEnkatVisitDate(row.visitDate))
     .replaceAll('[BOKNINGSTYP]', patientFriendlyBookingType(row.bookingTypeRaw))
-    .replaceAll('[LÄNK]', `${SITE_URL}/e/${code}`);
+    .replaceAll('[LÄNK]', `${siteUrl}/e/${code}`);
 }
 
 export async function sendEnkatSms(phone: string, message: string): Promise<{ ok: boolean; providerResponse?: unknown; error?: string }> {
-  if (!ELKS_API_USER || !ELKS_API_PASSWORD) {
+  const { elksApiUser, elksApiPassword } = getEnkatSmsConfig();
+  if (!elksApiUser || !elksApiPassword) {
     return { ok: false, error: '46elks är inte konfigurerat' };
   }
 
@@ -62,7 +87,7 @@ export async function sendEnkatSms(phone: string, message: string): Promise<{ ok
     const response = await fetch(ELKS_API_URL, {
       method: 'POST',
       headers: {
-        Authorization: 'Basic ' + Buffer.from(`${ELKS_API_USER}:${ELKS_API_PASSWORD}`).toString('base64'),
+        Authorization: 'Basic ' + Buffer.from(`${elksApiUser}:${elksApiPassword}`).toString('base64'),
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
