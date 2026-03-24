@@ -1,17 +1,27 @@
+---
+import { getSiteLocale } from '../lib/siteLocale';
+import { getFooterStrings } from '../i18n/footer';
+
+const locale = getSiteLocale(Astro.url.pathname);
+const t = getFooterStrings(locale);
+const year = new Date().getFullYear();
+const copyrightLine = t.copyright.replace('{year}', String(year));
+---
+
 <!-- CTA Section -->
 <section class="bg-gradient-to-r from-emerald-700 to-emerald-800 py-6 md:py-8">
   <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="text-center md:text-left">
-        <h2 class="text-xl font-bold text-white mb-1">Need Expert Assessment?</h2>
-        <p class="text-emerald-200 text-sm">Book a consultation with Dr. Carlos Rivero Siri for shoulder nerve pain.</p>
+        <h2 class="text-xl font-bold text-white mb-1">{t.ctaTitle}</h2>
+        <p class="text-emerald-200 text-sm">{t.ctaSubtitle}</p>
       </div>
       <div class="flex gap-3">
-        <a href="/boka" class="bg-white text-emerald-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-50 transition shadow-lg">
-          Book Appointment
+        <a href={t.ctaBookHref} class="bg-white text-emerald-700 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-50 transition shadow-lg">
+          {t.ctaBook}
         </a>
-        <a href="/egenremiss" class="bg-emerald-600 text-white border border-emerald-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">
-          Self-Referral
+        <a href={t.ctaSelfReferralHref} class="bg-emerald-600 text-white border border-emerald-500 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">
+          {t.ctaSelfReferral}
         </a>
       </div>
     </div>
@@ -19,78 +29,67 @@
 </section>
 
 <footer class="bg-gray-800 text-gray-300 w-full" aria-labelledby="footer-heading">
-    <h2 id="footer-heading" class="sr-only">Sidfot</h2>
+    <h2 id="footer-heading" class="sr-only">{t.srOnlyFooter}</h2>
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        
+
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-            
+
             <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">Kontakt</h4>
+                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">{t.contactHeading}</h4>
                 <ul class="space-y-3">
                     <li>
                         <a href="tel:+46855110422" class="text-base text-gray-300 hover:text-white">+46 8-55 11 04 22</a>
-                        <p class="text-xs text-gray-400">Telefontid: Mån-Fre 08-16 (lunchstängt)</p>
+                        <p class="text-xs text-gray-400">{t.phoneHours}</p>
                     </li>
                     <li>
                         <a href="mailto:info@sodermalmsortopedi.se" class="text-base text-gray-300 hover:text-white">info@sodermalmsortopedi.se</a>
                     </li>
                     <li>
-                        <span class="text-base text-gray-300">Fax: +46 8-55 11 04 24</span>
+                        <span class="text-base text-gray-300">{t.faxLabel} +46 8-55 11 04 24</span>
                     </li>
                 </ul>
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">Södermalms Ortopedi</h4>
+                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">{t.clinicNameHeading}</h4>
                 <div class="space-y-3 text-base">
                     <div>
-                        <p class="font-semibold text-gray-200">Besöksadress:</p>
-                        <p>Fatburs Brunnsgata 15-17<br>Egen ingång från utsidan.</p>
+                        <p class="font-semibold text-gray-200">{t.visitAddressLabel}</p>
+                        <p>Fatburs Brunnsgata 15-17<br>{t.visitAddressNote}</p>
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-200">Postadress:</p>
+                        <p class="font-semibold text-gray-200">{t.postalAddressLabel}</p>
                         <p>XZA 561-C BILLO<br>106 46 Stockholm</p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">Patient</h4>
+                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">{t.patientHeading}</h4>
                 <ul class="space-y-3">
-                    <li>
-                        <a href="/privatpatient-tre-val" class="text-base text-gray-300 hover:text-white">Frågeformulär (Privat)</a>
-                    </li>
-                    <li>
-                        <a href="/fritt-vardval-sverige" class="text-base text-gray-300 hover:text-white">Fritt Vårdval</a>
-                    </li>
-                    <li>
-                        <a href="/patientavgifter" class="text-base text-gray-300 hover:text-white">Patientavgifter</a>
-                    </li>
-                    <li>
-                        <a href="/patient/forsakringar-betalning" class="text-base text-gray-300 hover:text-white">Försäkringsbolag</a>
-                    </li>
+                    {t.patientLinks.map((link) => (
+                      <li>
+                        <a href={link.href} class="text-base text-gray-300 hover:text-white">{link.label}</a>
+                      </li>
+                    ))}
                 </ul>
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">Länkar</h4>
+                <h4 class="text-sm font-semibold text-white tracking-wider uppercase">{t.linksHeading}</h4>
                 <ul class="space-y-3">
-                    <li>
-                        <a href="/rehab" class="text-base text-gray-300 hover:text-white">Rehabprogram</a>
-                    </li>
-                    <li>
-                        <a href="/patientinformation" class="text-base text-gray-300 hover:text-white">Patientinformation</a>
-                    </li>
-                    <li>
-                        <a href="/om-oss" class="text-base text-gray-300 hover:text-white">Om oss</a>
-                    </li>
+                    {t.navLinks.map((link) => (
+                      <li>
+                        <a href={link.href} class="text-base text-gray-300 hover:text-white">{link.label}</a>
+                      </li>
+                    ))}
                 </ul>
             </div>
 
         </div>
 
         <div class="mt-8 border-t border-gray-700 pt-4 text-center text-sm text-gray-400">
-            <p>&copy; 2025 Södermalms Ortopedi. Alla rättigheter förbehållna.</p>
+            <p>{copyrightLine}</p>
         </div>
 
     </div>

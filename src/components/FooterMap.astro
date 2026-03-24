@@ -1,14 +1,18 @@
 ---
 // src/components/FooterMap.astro
 // Lazy-loadad karta - laddas endast när den blir synlig
+import { getSiteLocale } from '../lib/siteLocale';
+import { getFooterMapStrings } from '../i18n/footerMap';
+
+const mapStrings = getFooterMapStrings(getSiteLocale(Astro.url.pathname));
 ---
 
 <section aria-labelledby="karta-rubrik" class="w-full mt-auto">
-  <h2 id="karta-rubrik" class="sr-only">Karta till vår mottagning</h2>
+  <h2 id="karta-rubrik" class="sr-only">{mapStrings.sectionHeading}</h2>
   <div id="map" class="w-full h-96 bg-gray-100"></div>
 </section>
 
-<script>
+<script define:vars={{ mapStrings }}>
   // Lazy-load kartan när den blir synlig
   let mapInitialized = false;
   let leafletCssLoaded = false;
@@ -38,7 +42,7 @@
     script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
     script.crossOrigin = '';
     script.onload = () => {
-    const L = (window as any).L;
+    const L = window['L'];
     if (!L) return;
       // Koordinater för Södermalms Ortopedi, Fatburs Brunnsgata 17
       const lat = 59.3140;
@@ -77,7 +81,7 @@
         <strong>Södermalms Ortopedi</strong><br>
         Fatburs Brunnsgata 17<br><br>
         <a href="${directionsUrl}" target="_blank" rel="noopener" style="color: #0ea5e9; font-weight: 500;">
-          📍 Vägbeskrivning →
+          ${mapStrings.directionsLink}
         </a>
       `).openPopup();
       
@@ -105,35 +109,30 @@
         className: ''
       });
       
-      // Södra station (pendeltåg) - uppgång Swedenborgsgatan
       L.marker([59.314148, 18.064704], { icon: trainIcon })
         .addTo(map)
-        .bindTooltip('Uppgång Swedenborgsgatan', { direction: 'top', offset: [0, -10] })
-        .bindPopup(`<strong>Stockholms södra</strong><br>Pendeltåg<br>Uppgång Swedenborgsgatan`);
+        .bindTooltip(mapStrings.stockholmSouthSwedenborg.tooltip, { direction: 'top', offset: [0, -10] })
+        .bindPopup(mapStrings.stockholmSouthSwedenborg.popup);
       
-      // Södra station (pendeltåg) - uppgång Rosenlundsgatan
       L.marker([59.312805, 18.057752], { icon: trainIcon })
         .addTo(map)
-        .bindTooltip('Uppgång Rosenlundsgatan', { direction: 'top', offset: [0, -10] })
-        .bindPopup(`<strong>Stockholms södra</strong><br>Pendeltåg<br>Uppgång Rosenlundsgatan`);
+        .bindTooltip(mapStrings.stockholmSouthRosenlund.tooltip, { direction: 'top', offset: [0, -10] })
+        .bindPopup(mapStrings.stockholmSouthRosenlund.popup);
       
-      // Medborgarplatsen T-bana (uppgång Björns trädgård)
       L.marker([59.315313, 18.073029], { icon: metroIcon })
         .addTo(map)
-        .bindTooltip('Uppgång Björns trädgård', { direction: 'top', offset: [0, -10] })
-        .bindPopup(`<strong>Medborgarplatsen</strong><br>Tunnelbana (grön linje)<br>Uppgång Björns trädgård`);
+        .bindTooltip(mapStrings.medborgarplatsenBjorn.tooltip, { direction: 'top', offset: [0, -10] })
+        .bindPopup(mapStrings.medborgarplatsenBjorn.popup);
       
-      // Medborgarplatsen T-bana (uppgång Folkungagatan - närmast kliniken)
       L.marker([59.314288, 18.073067], { icon: metroIcon })
         .addTo(map)
-        .bindTooltip('Uppgång Folkungagatan', { direction: 'top', offset: [0, -10] })
-        .bindPopup(`<strong>Medborgarplatsen</strong><br>Uppgång Folkungagatan<br><em style="color: #16a34a;">Närmast kliniken!</em>`);
+        .bindTooltip(mapStrings.medborgarplatsenFolkungagatan.tooltip, { direction: 'top', offset: [0, -10] })
+        .bindPopup(mapStrings.medborgarplatsenFolkungagatan.popup);
       
-      // Mariatorget T-bana
       L.marker([59.316917, 18.063395], { icon: metroIcon })
         .addTo(map)
-        .bindTooltip('Mariatorget', { direction: 'top', offset: [0, -10] })
-        .bindPopup(`<strong>Mariatorget</strong><br>Tunnelbana (röd linje)<br>Uppgång Swedenborgsgatan`);
+        .bindTooltip(mapStrings.mariatorget.tooltip, { direction: 'top', offset: [0, -10] })
+        .bindPopup(mapStrings.mariatorget.popup);
       
       mapInitialized = true;
     };

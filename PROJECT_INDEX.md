@@ -123,7 +123,7 @@ Diagnosinformation med referenser och FAQ.
 - Länkar & SMS
 
 ### footer.astro
-4-kolumns footer med kontaktinfo, adress, patientlänkar.
+4-kolumns footer med kontaktinfo, adress, patientlänkar. **Språk** styrs av URL-prefix (`getSiteLocale` i `src/lib/siteLocale.ts`): sv för standardsidor, `en` för `/en/*`, framtida `es` för `/es/*`. Texter i `src/i18n/footer.ts`; kartan (`FooterMap.astro`) använder `src/i18n/footerMap.ts`.
 
 ### Övriga komponenter
 - `FooterMap.astro` - Google Maps
