@@ -29,7 +29,7 @@ export interface FooterStrings {
 
 const sv: FooterStrings = {
   ctaTitle: 'Behöver du en bedömning?',
-  ctaSubtitle: 'Boka tid hos Dr. Carlos Rivero Siri vid axelnervsmärta.',
+  ctaSubtitle: 'Boka tid hos Dr. Carlos Rivero Siri vid axelsmärta.',
   ctaBook: 'Boka tid',
   ctaSelfReferral: 'Egenremiss',
   ctaBookHref: '/boka',
@@ -60,7 +60,7 @@ const sv: FooterStrings = {
 
 const en: FooterStrings = {
   ctaTitle: 'Need expert assessment?',
-  ctaSubtitle: 'Book a consultation with Dr. Carlos Rivero Siri for shoulder nerve pain.',
+  ctaSubtitle: 'Book a consultation with Dr. Carlos Rivero Siri for shoulder pain.',
   ctaBook: 'Book appointment',
   ctaSelfReferral: 'Self-referral',
   ctaBookHref: '/boka',

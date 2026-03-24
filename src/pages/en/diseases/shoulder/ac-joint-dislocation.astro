@@ -42,7 +42,7 @@ const tableOfContents = [
   { id: 'references', title: 'References', icon: 'references' },
 ];
 
-/* Numbered [1]–[11] aligned with AI Council / Zotero list provided */
+/* Numbered [1]–[16]; inline RefLink id matches citation index */
 const references = [
   {
     id: '1',
@@ -118,6 +118,11 @@ const references = [
     id: '15',
     text: 'Geyer S, Achtnich AE, Voss A, et al. Iatrogenic instability of the acromioclavicular joint leads to ongoing impairment of shoulder function even following secondary surgical stabilization. Arch Orthop Trauma Surg. 2023;143(4):1877-1886.',
     url: 'https://doi.org/10.1007/s00402-022-04387-4',
+  },
+  {
+    id: '16',
+    text: 'Groot C de, Verstift DE, Heisen J, van Deurzen DFP, van den Bekerom MPJ. Management of Acromioclavicular Injuries – Current Concepts. Orthop Res Rev. 2023;15:1–12.',
+    url: 'https://doi.org/10.2147/ORR.S340531',
   },
 ];
 
@@ -539,6 +544,15 @@ const faqSchema = {
               standard AC instability assessment — routine advanced imaging solely to grade the AC joint is not
               required<RefLink id="10" text="Consensus statement" url={references[9].url} />.
             </p>
+            <div class="bg-sky-50 border border-sky-200 rounded-lg p-4 text-sm text-slate-700 mb-4">
+              <h3 class="font-bold text-slate-900 mb-2">AP drawer test</h3>
+              <p class="leading-relaxed">
+                To assess for a <strong>horizontal</strong> component of AC joint instability, the <strong>distal clavicle</strong> is
+                shifted <strong>posteriorly</strong> while the <strong>acromion</strong> is stabilised with the other hand.{' '}
+                <strong>Increased posterior translation</strong> compared with the unaffected side indicates a horizontal component of
+                AC joint instability<RefLink id="16" text="Current concepts review" url={references[15].url} />.
+              </p>
+            </div>
             <p class="text-slate-600 leading-relaxed mb-4">
               Use <strong>ultrasound, CT, or MRI</strong> selectively when you need to evaluate associated glenohumeral
               pathology or complex cases. Around <strong>18–20%</strong> of high-grade AC injuries may have relevant
