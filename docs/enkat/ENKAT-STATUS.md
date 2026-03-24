@@ -157,6 +157,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Classifier-buggar**: duplicerad nybesök-kontroll fixad, `remiss` fångas före `nybesök`, `ab` matchar bara som helt ord, `ssk` prioriteras nu före generiskt `återbesök`, och `fysiskt` klassas inte längre som "Digitalt besök"
 - **Staging-URL borttagen**: SMS-funktionen saknar inte längre hårdkodad fallback; loggar varning om URL saknas
 - **Netlify-envfix för SMS**: `enkat-sms.ts` läser nu först från `process.env` och sedan från Astro-miljön, så att schemalagda Netlify-funktioner kan använda 46elks och `SITE`/`PUBLIC_SITE_URL` utan att krascha
+- **Större direktbatch för första SMS**: `send.ts` försöker nu skicka upp till 50 första SMS direkt innan resterande lämnas till `enkat-send-queue`
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline

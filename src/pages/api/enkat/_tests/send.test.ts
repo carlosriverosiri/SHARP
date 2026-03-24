@@ -358,6 +358,12 @@ describe('POST /api/enkat/send', () => {
     expect(body.data.status).toBe('fel');
     expect(body.data.totalSent).toBe(0);
     expect(body.data.totalFailed).toBe(2);
+    expect(mocks.processQueuedEnkatMessagesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        campaignId: 'kampanj-1',
+        limit: 50
+      })
+    );
   });
 
   it('falls back to the existing campaign after a unique preview hash conflict on insert', async () => {

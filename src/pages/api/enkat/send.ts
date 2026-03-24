@@ -82,6 +82,12 @@ type QueueSendSummary = {
   failed: number;
 };
 
+/**
+ * Små/medelstora kampanjer ska normalt skickas direkt i samma flöde.
+ * Större volymer kan falla tillbaka på den schemalagda kön.
+ */
+const INITIAL_ENKAT_SEND_LIMIT = 50;
+
 function hashPatientId(patientId: string) {
   return crypto.createHash('sha256').update(patientId).digest('hex');
 }
@@ -323,7 +329,7 @@ async function processQueueIfNeeded(sendNow: boolean, campaignId: string): Promi
   const queueResult = await processQueuedEnkatMessages({
     supabase: supabaseAdmin,
     campaignId,
-    limit: 25,
+    limit: INITIAL_ENKAT_SEND_LIMIT,
     decryptPhone: dekryptera,
     buildMessage: (template, row, code) => buildEnkatSmsMessage(template, row, code),
     sendSms: sendEnkatSms
