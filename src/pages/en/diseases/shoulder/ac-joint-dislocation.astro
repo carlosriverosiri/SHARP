@@ -29,13 +29,14 @@ const currentDate = new Date().toISOString().split('T')[0];
 const lastMedicalReview = '21 March 2026';
 
 const tableOfContents = [
-  { id: 'overview', title: 'Overview & mechanism', icon: '1' },
-  { id: 'symptoms', title: 'Symptoms', icon: '2' },
-  { id: 'diagnosis', title: 'Diagnosis & imaging', icon: '3' },
-  { id: 'classification', title: 'Rockwood classification', icon: '4' },
-  { id: 'treatment', title: 'Treatment', icon: '5' },
-  { id: 'surgery', title: 'Surgical techniques', icon: '6' },
-  { id: 'work-sport', title: 'Work & return to sport', icon: '7' },
+  { id: 'overview', title: 'The instability X-rays don\u2019t show', icon: '1' },
+  { id: 'horizontal-instability', title: 'Horizontal instability', icon: '2' },
+  { id: 'symptoms', title: 'Symptoms', icon: '3' },
+  { id: 'diagnosis', title: 'Diagnosis & imaging', icon: '4' },
+  { id: 'classification', title: 'Rockwood classification', icon: '5' },
+  { id: 'treatment', title: 'Treatment', icon: '6' },
+  { id: 'surgery', title: 'Surgical techniques', icon: '7' },
+  { id: 'work-sport', title: 'Work & return to sport', icon: '8' },
   { id: 'expert', title: 'Expert perspective', icon: 'expert' },
   { id: 'faq', title: 'FAQ', icon: 'faq' },
   { id: 'references', title: 'References', icon: 'references' },
@@ -97,6 +98,26 @@ const references = [
     id: '11',
     text: 'Petri M, Warth RJ, Greenspoon JA, et al. Clinical Results After Conservative Management for Grade III Acromioclavicular Joint Injuries: Does Eventual Surgery Affect Overall Outcomes? Arthroscopy. 2016.',
     url: 'https://doi.org/10.1016/j.arthro.2015.11.024',
+  },
+  {
+    id: '12',
+    text: 'Aliberti GM, Kraeutler MJ, Trojan JD, Mulcahey MK. Horizontal Instability of the Acromioclavicular Joint: A Systematic Review. Am J Sports Med. 2020;48(2):504-510.',
+    url: 'https://doi.org/10.1177/0363546519831013',
+  },
+  {
+    id: '13',
+    text: 'Tauber M, Koller H, Hitzl W, Resch H. Dynamic Radiologic Evaluation of Horizontal Instability in Acute Acromioclavicular Joint Dislocations. Am J Sports Med. 2010;38(6):1188-1195.',
+    url: 'https://doi.org/10.1177/0363546510361951',
+  },
+  {
+    id: '14',
+    text: 'Kraus N, Hann C, Gerhardt C, Scheibel M. Dynamic instability of the acromioclavicular joint. Obere Extremität. 2018;13(4):279-285.',
+    url: 'https://doi.org/10.1007/s11678-018-0469-x',
+  },
+  {
+    id: '15',
+    text: 'Geyer S, Achtnich AE, Voss A, et al. Iatrogenic instability of the acromioclavicular joint leads to ongoing impairment of shoulder function even following secondary surgical stabilization. Arch Orthop Trauma Surg. 2023;143(4):1877-1886.',
+    url: 'https://doi.org/10.1007/s00402-022-04387-4',
   },
 ];
 
@@ -334,8 +355,8 @@ const faqSchema = {
   </section>
 
   <section class="bg-slate-50 py-6 md:py-10">
-    <div class="max-w-[1500px] mx-auto px-3 sm:px-4 md:px-6">
-      <div class="grid lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8">
+    <div class="max-w-[1500px] mx-auto px-0 sm:px-4 md:px-6">
+      <div class="grid lg:grid-cols-12 gap-0 sm:gap-4 md:gap-6 lg:gap-8">
         <!-- LEFT -->
         <aside class="lg:col-span-3 order-2 lg:order-1">
           <div class="lg:sticky lg:top-6 space-y-4">
@@ -391,44 +412,130 @@ const faqSchema = {
         </aside>
 
         <!-- MAIN -->
-        <main class="lg:col-span-6 order-1 lg:order-2 space-y-6">
-          <article id="overview" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">1</span>
-              Overview & mechanism
-            </h2>
-            <p class="text-slate-600 leading-relaxed mb-4">
-              AC joint dislocations account for roughly <strong>3–12% of all shoulder injuries</strong> and a much higher
-              share in contact sports<RefLink id="5" text="Epidemiology" url={references[4].url} />. Young active men are
-              most often affected. The injury is typically a direct blow or fall onto the shoulder.
+        <main class="lg:col-span-6 order-1 lg:order-2 space-y-2 sm:space-y-6">
+          <article id="overview" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Overview</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">1</span>
+                The instability X-rays don't show
+              </h2>
+              <p class="text-sky-200 text-sm">Why the Rockwood grade alone doesn't tell the full story.</p>
+            </div>
+            <div class="p-5 md:p-6">
+            <p class="text-slate-600 leading-relaxed mb-3">
+              The acromioclavicular (AC) joint is stabilized by the <strong>AC ligaments</strong> within the joint capsule
+              and the <strong>coracoclavicular (CC) ligaments</strong> connecting the coracoid process to the clavicle.
+              Together, they control joint stability in multiple planes.
             </p>
-            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-sm text-slate-700">
-              <strong class="text-indigo-900">Take-home:</strong> Decide treatment by <em>Rockwood type</em>, chronicity,
-              horizontal instability, occupation/sport, and whether intra-articular pathology needs addressing<RefLink
-                id="9"
-                text="Algorithm"
-                url={references[8].url}
-              />.
+            <p class="text-slate-600 leading-relaxed mb-3">
+              The Rockwood classification (types I–VI) has for decades been based almost exclusively on
+              <strong>vertical instability</strong> — the superior displacement of the clavicle relative to the acromion.
+              Motion in other directions has not been captured.
+            </p>
+            <p class="text-slate-600 leading-relaxed mb-3">
+              There is now growing recognition that a key driver of persistent symptoms is
+              <strong>horizontal instability</strong> — anteroposterior hypermobility that disrupts scapular kinematics and
+              shoulder function<RefLink id="12" text="Systematic review" url={references[11].url} />. This component is
+              invisible on standard radiographs and can only be identified through clinical examination.
+            </p>
+            <p class="text-slate-600 leading-relaxed">
+              Two patients with the same Rockwood grade may therefore have entirely different functional impairment — and
+              require entirely different treatment strategies.
+            </p>
             </div>
           </article>
 
-          <article id="symptoms" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">2</span>
-              Symptoms
-            </h2>
+          <article id="horizontal-instability" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Key concept</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">2</span>
+                Horizontal instability
+              </h2>
+              <p class="text-sky-200 text-sm">
+                A paradigm shift in diagnosis and treatment of both acute dislocations and iatrogenic instability.
+              </p>
+            </div>
+            <div class="p-5 md:p-6 space-y-5">
+              <div class="text-base text-slate-700 leading-relaxed border-l-4 border-sky-600 pl-4 bg-sky-50 py-3 pr-3 rounded-r-lg">
+                AC joint injuries have traditionally been assessed primarily in terms of vertical instability. Current
+                evidence shows that <strong>horizontal instability</strong> — caused by damage to the AC ligaments — is a
+                critical and often overlooked factor behind chronic pain and impaired function, whether it arises acutely
+                from trauma or iatrogenically after distal clavicle excision
+                (DCE)<RefLink id="12" text="Systematic review" url={references[11].url} />.
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3 gap-5">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                  <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-sky-700 mb-4">
+                    <Icon name="eye" size={20} />
+                  </div>
+                  <h3 class="text-lg font-bold text-slate-900 mb-2">Diagnostic pitfalls</h3>
+                  <p class="text-sm text-slate-600 leading-relaxed">
+                    Standard seated radiographs often miss horizontal displacement. Dynamic views — such as a modified
+                    bilateral Alexander view or dynamic axillary views in supine — are needed to unmask
+                    it<RefLink id="13" text="Dynamic evaluation" url={references[12].url} />.
+                    A glenoacromial angle (GACA) difference exceeding <strong>12.3°</strong> confirms
+                    instability<RefLink id="14" text="Kraus classification" url={references[13].url} />.
+                  </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                  <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mb-4">
+                    <Icon name="alert-circle" size={20} />
+                  </div>
+                  <h3 class="text-lg font-bold text-slate-900 mb-2">Trauma vs. iatrogenic</h3>
+                  <p class="text-sm text-slate-600 leading-relaxed">
+                    Dynamic horizontal translation can be present even in low-grade acute injuries
+                    (Rockwood I–II)<RefLink id="14" text="Kraus" url={references[13].url} />.
+                    In surgery, resection of <strong>&gt;5–10 mm</strong> of the distal clavicle risks compromising the
+                    joint capsule, creating difficult-to-treat iatrogenic
+                    instability<RefLink id="15" text="Iatrogenic instability" url={references[14].url} />.
+                  </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mb-4">
+                    <Icon name="check" size={20} />
+                  </div>
+                  <h3 class="text-lg font-bold text-slate-900 mb-2">Surgical implications</h3>
+                  <p class="text-sm text-slate-600 leading-relaxed">
+                    Addressing only vertical (CC) ligaments is insufficient. Anatomic reconstruction must restore the
+                    <strong>AC ligaments</strong>. Revision surgery after excessive DCE carries complication rates up to
+                    <strong>33%</strong>, underscoring the importance of joint-preserving initial
+                    surgery<RefLink id="15" text="Revision outcomes" url={references[14].url} />.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="symptoms" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Clinical</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">3</span>
+                Symptoms
+              </h2>
+              <p class="text-sky-200 text-sm">What patients experience and what the clinician sees on examination.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <ul class="list-disc pl-5 text-slate-600 space-y-2 mb-4">
               <li>Pain over the AC joint, worse with cross-body adduction or overhead loading.</li>
               <li>Visible <strong>step-off</strong> or skin tenting in higher-grade injuries.</li>
               <li>Reduced push-up / bench-press confidence in athletes; difficulty with heavy overhead work.</li>
             </ul>
+            </div>
           </article>
 
-          <article id="diagnosis" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">3</span>
-              Diagnosis & imaging
-            </h2>
+          <article id="diagnosis" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Diagnostics</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">4</span>
+                Diagnosis & imaging
+              </h2>
+              <p class="text-sky-200 text-sm">Imaging strategy, when to use advanced modalities, and classification pitfalls.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <p class="text-slate-600 leading-relaxed mb-4">
               Clinical examination localises tenderness and identifies deformity. ESA–ESSKA consensus supports
               <strong>true anteroposterior radiographs</strong> with <strong>bilateral Zanca views</strong> as adequate for
@@ -455,13 +562,19 @@ const faqSchema = {
                 />.
               </span>
             </div>
+            </div>
           </article>
 
-          <article id="classification" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">4</span>
-              Rockwood classification (illustrated)
-            </h2>
+          <article id="classification" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Classification</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">5</span>
+                Rockwood classification (illustrated)
+              </h2>
+              <p class="text-sky-200 text-sm">Visual guide to injury grades I through VI with type-specific details.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <p class="text-slate-600 text-sm mb-4">
               Schematic overview of common types (illustrations for patient education — not a substitute for formal
               radiographic classification).
@@ -558,14 +671,19 @@ const faqSchema = {
                 </p>
               </div>
             </div>
+            </div>
           </article>
 
-          <article id="treatment" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">5</span>
-              Treatment principles
-            </h2>
-
+          <article id="treatment" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Treatment</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">6</span>
+                Treatment principles
+              </h2>
+              <p class="text-sky-200 text-sm">Evidence-based management by injury type, chronicity, and patient demands.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <div class="space-y-4 text-slate-600 leading-relaxed">
               <div class="border-l-4 border-emerald-500 pl-4">
                 <h3 class="font-bold text-slate-800 mb-1">Types I & II</h3>
@@ -639,13 +757,19 @@ const faqSchema = {
                 url={references[3].url}
               />.
             </div>
+            </div>
           </article>
 
-          <article id="surgery" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">6</span>
-              Surgical techniques
-            </h2>
+          <article id="surgery" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Surgery</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">7</span>
+                Surgical techniques
+              </h2>
+              <p class="text-sky-200 text-sm">Current fixation methods, comparative outcomes, and complication profiles.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <p class="text-slate-600 leading-relaxed mb-4">
               Many techniques exist (CC fixation, AC cerclage, hook plate, suture-button / tape constructs, free tendon
               grafts). Network meta-analyses summarise comparative effectiveness and complication profiles<RefLink
@@ -691,13 +815,19 @@ const faqSchema = {
                 </figcaption>
               </figure>
             </div>
+            </div>
           </article>
 
-          <article id="work-sport" class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 scroll-mt-6">
-            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-sm">7</span>
-              Work & return to sport
-            </h2>
+          <article id="work-sport" class="bg-white sm:rounded-xl sm:shadow-sm sm:border sm:border-slate-200 overflow-hidden scroll-mt-6">
+            <div class="bg-sky-900 text-white p-5 md:p-6">
+              <span class="inline-block px-3 py-1 bg-sky-600 text-xs font-semibold uppercase tracking-wider rounded-full mb-3">Recovery</span>
+              <h2 class="text-xl font-bold mb-1 flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-sky-700 text-white flex items-center justify-center text-sm">8</span>
+                Work & return to sport
+              </h2>
+              <p class="text-sky-200 text-sm">Timeline and criteria for returning to work, training, and competition.</p>
+            </div>
+            <div class="p-5 md:p-6">
             <p class="text-slate-600 leading-relaxed mb-4">
               Timeline depends on Rockwood type, treatment path, and demands. Conservative protocols generally permit an
               earlier resumption of light activity than operative protocols complicated by immobilisation and hardware
@@ -724,6 +854,7 @@ const faqSchema = {
               /><RefLink id="10" text="Expert consensus" url={references[9].url} />.
             </p>
             <AcJointRtsRtplDashboard />
+            </div>
           </article>
         </main>
 
