@@ -20,7 +20,6 @@ type SendRequestBody = {
   sendNow: boolean;
   scheduledSendAt: string | null;
   sendReminder: boolean;
-  reminderAfterHours: number;
   previewToken: string;
 };
 
@@ -116,15 +115,10 @@ async function parseSendRequest(request: Request): Promise<SendRequestBody | Res
   const scheduledSendAt = typeof body.scheduledSendAt === 'string' ? body.scheduledSendAt.trim() || null : null;
   const sendNow = body.sendNow !== false;
   const sendReminder = body.sendReminder !== false;
-  const reminderAfterHours = Number(body.reminderAfterHours ?? 48);
   const previewToken = typeof body.previewToken === 'string' ? body.previewToken.trim() : '';
 
   if (!previewToken) {
     return json({ success: false, error: 'previewToken krävs. Läs filen igen och skapa en ny preview.' }, 400);
-  }
-
-  if (!Number.isInteger(reminderAfterHours) || reminderAfterHours < 1) {
-    return json({ success: false, error: 'Påminnelse måste anges som minst 1 timme.' }, 400);
   }
 
   return {
@@ -133,7 +127,6 @@ async function parseSendRequest(request: Request): Promise<SendRequestBody | Res
     sendNow,
     scheduledSendAt,
     sendReminder,
-    reminderAfterHours,
     previewToken
   };
 }
@@ -212,7 +205,7 @@ function buildCampaignInsertPayload(
     global_bokningstyp: null,
     sms_mall: body.smsTemplate,
     skicka_paminnelse: body.sendReminder,
-    paminnelse_efter_timmar: body.reminderAfterHours,
+    paminnelse_efter_timmar: null,
     skicka_nu: body.sendNow,
     planerad_skicktid: body.scheduledSendAt
   };

@@ -298,10 +298,11 @@ Denna endpoint ska:
   "sendNow": true,
   "scheduledSendAt": null,
   "sendReminder": true,
-  "reminderAfterHours": 48,
   "previewToken": "signed-preview-token"
 }
 ```
+
+Fältet `reminderAfterHours` ignoreras om det skickas (bakåtkompatibilitet). Påminnelsetid styrs i servern: **nästa kalenderdag kl 16:00 (Europe/Stockholm)** efter `forsta_sms_skickad_vid`, **högst en** påminnelse per utskick.
 
 ### Server-side logik
 
@@ -355,6 +356,9 @@ Skickar påminnelser till utskick som:
 - inte redan fått påminnelse
 - fortfarande är giltiga
 - tillhör en kampanj där påminnelse är aktiverad
+- **tid**: första SMS måste ha skickats så att **nästa kalenderdag kl 16:00 (Europe/Stockholm)** har passerats (samma regel som den schemalagda funktionen `enkat-remind-scheduled`)
+
+Den schemalagda funktionen kör var tionde minut och skickar automatiskt till alla berättigade utskick (alla kampanjer). `POST /api/enkat/remind` har samma tidsregel och används inte från personalportalens UI (kan användas vid behov för drift/verktyg).
 
 ### Input
 

@@ -109,7 +109,7 @@ Representerar en administrativ kampanj där en CSV importerats och ett antal pat
 | `global_bokningstyp` | TEXT | Ja | Legacyfält från tidigare UI-flöde, används inte längre i aktiv import |
 | `sms_mall` | TEXT | Ja | Använd SMS-mall |
 | `skicka_paminnelse` | BOOLEAN | Nej | Om påminnelse ska användas |
-| `paminnelse_efter_timmar` | INTEGER | Ja | T.ex. 48 |
+| `paminnelse_efter_timmar` | INTEGER | Ja | **Legacy / oanvänd i ny logik:** nya kampanjer sätter `NULL`. Påminnelsetid beräknas i applikationen (nästa dag 16:00 Europe/Stockholm). Kolumnen finns kvar i databasen. |
 | `skicka_nu` | BOOLEAN | Nej | Om direktutskick önskas |
 | `planerad_skicktid` | TIMESTAMPTZ | Ja | Om schemalagt utskick |
 | `created_at` | TIMESTAMPTZ | Nej | Skapad |

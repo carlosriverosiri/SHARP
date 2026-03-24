@@ -229,27 +229,31 @@ Systemet ska inte spamma patienter.
 
 | Typ | Tidpunkt |
 |---|---|
-| Första SMS | samma dag efter besöket eller dagen efter |
-| Påminnelse | 48-72 timmar senare |
-| Stopp | senast 5-7 dagar efter besöket |
+| Första SMS | samma dag efter besöket eller dagen efter (via kö/schemalagt utskick) |
+| Påminnelse | **nästa kalenderdag kl 16:00 (Europe/Stockholm)** efter att första SMS skickats, endast om patienten inte svarat |
+| Stopp | länken upphör enligt `expires_at` (standard ca 30 dagar) |
 
 ### Rekommenderad logik
 
 Påminnelse skickas bara om:
 
 - patienten inte redan svarat
-- kampanjen tillåter påminnelse
-- utskicket inte är äldre än definierad maxperiod
-- aktuell tid ligger inom definierat sändningsfönster
+- kampanjen har påminnelse aktiverat (`skicka_paminnelse`)
+- inget påminnelse-SMS redan skickats för utskicket (max ett)
+- utskicket inte har gått ut (`expires_at`)
+- aktuell tid är **på eller efter** planerad påminnelsetid (nästa dag 16:00 lokal tid)
+
+Utskicket sker **automatiskt** via schemalagd Netlify-funktion `enkat-remind-scheduled` (kör regelbundet). API:t `POST /api/enkat/remind` finns för ev. drift/verktyg med samma tidsregler; **ingen påminnelseknapp** i personalportalen.
 
 ### Admininställningar
 
-I `/personal/enkat` bör det finnas:
+I `/personal/enkat` finns bland annat:
 
-- `Skicka nu` / `Skicka senare`
-- `Skicka påminnelse` Ja/Nej
-- `Påminn efter` antal timmar eller dagar
-- valfritt sändningsfönster, t.ex. vardagar dagtid
+- kampanjnamn och SMS-mall
+- kryssruta för automatisk påminnelse (Ja/Nej) med informationstext om 16:00 följande dag
+- första utskick: direkt eller kö (`enkat-send-queue`)
+
+Valfritt sändningsfönster (endast vardagar osv.) är **inte** implementerat i nuvarande version.
 
 ---
 

@@ -1294,8 +1294,10 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
             <input id="campaignName" class="input" type="text" placeholder="T.ex. Patientupplevelse vecka 11" />
           </div>
           <div>
-            <label for="reminderHours" class="field-label">Påminn efter (timmar)</label>
-            <input id="reminderHours" class="input" type="number" min="1" value="48" />
+            <p class="field-label" style="margin: 0 0 6px;">Påminnelse</p>
+            <p class="helper" style="margin: 0;">
+              Påminnelse skickas ut 16:00 följande dag till de som inte har svarat på enkäten. Högst ett påminnelse-SMS per mottagare.
+            </p>
           </div>
         </div>
 
@@ -1309,7 +1311,7 @@ Enkäten är anonym. Tack!</textarea>
         <div class="actions">
           <label class="toggle-row">
             <input id="sendReminder" type="checkbox" checked />
-            Skicka påminnelse till obesvarade
+            Skicka automatisk påminnelse (16:00 följande dag till obesvarade)
           </label>
         </div>
 
@@ -1390,7 +1392,7 @@ Enkäten är anonym. Tack!</textarea>
 
     <section class="card section">
       <h2>Kampanjhistorik</h2>
-      <p class="card-intro">Visar de senaste enkätkampanjerna och om det finns obesvarade utskick som kan få en påminnelse.</p>
+      <p class="card-intro">Visar de senaste enkätkampanjerna. Påminnelse skickas ut 16:00 följande dag till de som inte har svarat på enkäten (högst en gång per mottagare).</p>
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="refreshCampaignsBtn">Uppdatera historik</button>
       </div>
@@ -1461,7 +1463,6 @@ Enkäten är anonym. Tack!</textarea>
     const campaignNameInput = document.getElementById('campaignName') as HTMLInputElement;
     const smsTemplateInput = document.getElementById('smsTemplate') as HTMLInputElement | HTMLTextAreaElement;
     const sendReminderInput = document.getElementById('sendReminder') as HTMLInputElement;
-    const reminderHoursInput = document.getElementById('reminderHours') as HTMLInputElement;
     const dashboardBanner = document.getElementById('dashboardBanner') as HTMLElement;
     const dashboardContent = document.getElementById('dashboardContent') as HTMLElement;
     const dashboardProviderFilter = document.getElementById('dashboardProviderFilter') as HTMLSelectElement | null;
@@ -1612,7 +1613,6 @@ Enkäten är anonym. Tack!</textarea>
         campaignNameInput,
         smsTemplateInput,
         sendReminderInput,
-        reminderHoursInput,
         previewUi,
         setBanner,
         afterCreate: () => {
@@ -1636,7 +1636,7 @@ Enkäten är anonym. Tack!</textarea>
     const loadCampaignHistory = () => loadCampaignHistorySection({
       bannerEl: campaignsBanner,
       contentEl: campaignsContent,
-      afterReminderSent: loadDashboard
+      afterHistoryMutated: loadDashboard
     });
 
     refreshCampaignsBtn?.addEventListener('click', () => {

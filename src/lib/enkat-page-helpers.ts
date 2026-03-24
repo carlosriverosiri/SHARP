@@ -491,26 +491,15 @@ export function renderCampaignCard(item: CampaignCardData): string {
         <div class="summary-card"><div class="summary-label">Importerade</div><div class="summary-value">${escapeHtml(item.total_importerade)}</div></div>
         <div class="summary-card"><div class="summary-label">Skickade</div><div class="summary-value">${escapeHtml(item.total_skickade)}</div></div>
         <div class="summary-card"><div class="summary-label">Svar</div><div class="summary-value">${escapeHtml(item.total_svar)}</div></div>
-        <div class="summary-card"><div class="summary-label">Påminn möjliga</div><div class="summary-value">${escapeHtml(item.unansweredEligible)}</div></div>
+        <div class="summary-card"><div class="summary-label">Påminnelser skickade</div><div class="summary-value">${escapeHtml(item.remindersSent)}</div></div>
       </div>
 
       <div class="meta-list">
-        <div>Giltiga: <strong>${escapeHtml(item.total_giltiga)}</strong> · Dubletter: <strong>${escapeHtml(item.total_dubletter)}</strong> · Ogiltiga: <strong>${escapeHtml(item.total_ogiltiga)}</strong> · Påminnelser skickade: <strong>${escapeHtml(item.remindersSent)}</strong></div>
+        <div>Giltiga: <strong>${escapeHtml(item.total_giltiga)}</strong> · Dubletter: <strong>${escapeHtml(item.total_dubletter)}</strong> · Ogiltiga: <strong>${escapeHtml(item.total_ogiltiga)}</strong></div>
         <div>Svarsfrekvens: <strong>${escapeHtml(item.responseRate)}</strong> · ${escapeHtml(statusText)}</div>
       </div>
       ${surveyCodeSection}
       ${smsTemplateSection}
-
-      <div class="actions">
-        <button
-          type="button"
-          class="btn btn-secondary remind-btn"
-          data-campaign-id="${escapeHtml(item.id)}"
-          ${item.unansweredEligible > 0 && item.skicka_paminnelse ? '' : 'disabled'}
-        >
-          Skicka påminnelse
-        </button>
-      </div>
     </div>
   `;
 }
@@ -543,15 +532,6 @@ export function renderCampaignTable(campaigns: CampaignCardData[]): string {
         <td>
           <button
             type="button"
-            class="btn-xs btn-secondary remind-btn"
-            data-campaign-id="${escapeHtml(item.id)}"
-            ${item.unansweredEligible > 0 && item.skicka_paminnelse ? '' : 'disabled'}
-            aria-label="Skicka påminnelse för ${escapeHtml(item.namn || 'kampanj')}"
-          >Påminn${item.unansweredEligible > 0 ? ` (${escapeHtml(item.unansweredEligible)})` : ''}</button>
-        </td>
-        <td>
-          <button
-            type="button"
             class="delete-campaign-btn"
             data-campaign-id="${escapeHtml(item.id)}"
             data-campaign-name="${escapeHtml(item.namn || 'Namnlös')}"
@@ -566,14 +546,13 @@ export function renderCampaignTable(campaigns: CampaignCardData[]): string {
     <div class="campaign-table-wrap">
       <table class="campaign-table">
         <colgroup>
-          <col style="width: 26%">
+          <col style="width: 30%">
           <col style="width: 12%">
-          <col style="width: 9%">
-          <col style="width: 7%">
-          <col style="width: 18%">
           <col style="width: 10%">
-          <col style="width: 13%">
-          <col style="width: 5%">
+          <col style="width: 8%">
+          <col style="width: 20%">
+          <col style="width: 12%">
+          <col style="width: 8%">
         </colgroup>
         <thead>
           <tr>
@@ -583,7 +562,6 @@ export function renderCampaignTable(campaigns: CampaignCardData[]): string {
             <th style="text-align: right">Svar</th>
             <th>Svarsfrekvens</th>
             <th>Status</th>
-            <th>Påminnelse</th>
             <th></th>
           </tr>
         </thead>

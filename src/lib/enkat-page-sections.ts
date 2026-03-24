@@ -34,12 +34,6 @@ type CampaignHistoryData = {
   campaigns?: CampaignCardData[];
 };
 
-type ReminderSendData = {
-  eligible: number;
-  sent: number;
-  failed: number;
-};
-
 type ReportSelfData = {
   scope: 'self';
   configured: boolean;
@@ -65,7 +59,8 @@ type DashboardSectionContext = {
 type CampaignHistorySectionContext = {
   bannerEl: HTMLElement;
   contentEl: HTMLElement;
-  afterReminderSent?: () => Promise<void>;
+  /** Anropas efter radering så att t.ex. dashboard kan uppdateras. */
+  afterHistoryMutated?: () => Promise<void>;
 };
 
 type ReportSectionContext = {
@@ -126,7 +121,7 @@ export async function loadDashboardSection({
 export async function loadCampaignHistorySection({
   bannerEl,
   contentEl,
-  afterReminderSent
+  afterHistoryMutated
 }: CampaignHistorySectionContext): Promise<void> {
   setElementBanner(bannerEl, 'info', 'Laddar kampanjhistorik...');
   contentEl.innerHTML = '';
@@ -147,38 +142,6 @@ export async function loadCampaignHistorySection({
 
     setElementBanner(bannerEl, 'success', `Visar ${campaigns.length} kampanjer.`);
     contentEl.innerHTML = renderCampaignTable(campaigns);
-
-    contentEl.querySelectorAll<HTMLButtonElement>('.remind-btn').forEach((button) => {
-      button.addEventListener('click', async () => {
-        const campaignId = button.getAttribute('data-campaign-id');
-        if (!campaignId) return;
-
-        button.disabled = true;
-        setElementBanner(bannerEl, 'info', 'Skickar påminnelser...');
-
-        try {
-          const result = await fetchApiData<ReminderSendData>('/api/enkat/remind', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ campaignId })
-          }, 'Kunde inte skicka påminnelser.');
-
-          setElementBanner(
-            bannerEl,
-            'success',
-            `Påminnelser skickade. Berörda: ${result.eligible}, skickade: ${result.sent}, misslyckade: ${result.failed}.`
-          );
-          await loadCampaignHistorySection({ bannerEl, contentEl, afterReminderSent });
-          if (afterReminderSent) {
-            await afterReminderSent();
-          }
-        } catch (error) {
-          console.error(error);
-          setElementBanner(bannerEl, 'error', getErrorText(error, 'Ett oväntat fel uppstod vid påminnelseutskick.'));
-          button.disabled = false;
-        }
-      });
-    });
 
     contentEl.querySelectorAll<HTMLButtonElement>('.delete-campaign-btn').forEach((button) => {
       button.addEventListener('click', async () => {
@@ -201,9 +164,9 @@ export async function loadCampaignHistorySection({
           }, 'Kunde inte radera kampanjen.');
 
           setElementBanner(bannerEl, 'success', `"${campaignName}" har raderats.`);
-          await loadCampaignHistorySection({ bannerEl, contentEl, afterReminderSent });
-          if (afterReminderSent) {
-            await afterReminderSent();
+          await loadCampaignHistorySection({ bannerEl, contentEl, afterHistoryMutated });
+          if (afterHistoryMutated) {
+            await afterHistoryMutated();
           }
         } catch (error) {
           console.error(error);

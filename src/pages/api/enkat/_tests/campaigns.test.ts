@@ -181,7 +181,7 @@ describe('GET /api/enkat/campaigns', () => {
         error: null
       },
       {
-        data: [{ kampanj_id: 'kampanj-1' }],
+        data: [{ kampanj_id: 'kampanj-1', forsta_sms_skickad_vid: '2026-03-01T12:00:00.000Z' }],
         error: null
       },
       {

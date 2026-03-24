@@ -108,90 +108,45 @@ describe('enkat-page-sections', () => {
     expect(contentEl.innerHTML).toContain('Välj vårdgivarnamn först.');
   });
 
-  it('binds reminder buttons in campaign history and refreshes after send', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(
-        jsonResponse({
-          success: true,
-          data: {
-            campaigns: [
-              {
-                id: 'kampanj-1',
-                namn: 'Utskick mars',
-                status: 'klar',
-                created_at: '2026-03-15T09:00:00.000Z',
-                total_importerade: 10,
-                total_giltiga: 9,
-                total_dubletter: 1,
-                total_ogiltiga: 0,
-                total_skickade: 8,
-                total_svar: 4,
-                unansweredEligible: 2,
-                remindersSent: 1,
-                responseRate: 0.5,
-                skicka_paminnelse: true,
-                queuedInitial: 0
-              }
-            ]
-          }
-        })
-      )
-      .mockResolvedValueOnce(
-        jsonResponse({
-          success: true,
-          data: {
-            eligible: 2,
-            sent: 2,
-            failed: 0
-          }
-        })
-      )
-      .mockResolvedValueOnce(
-        jsonResponse({
-          success: true,
-          data: {
-            campaigns: [
-              {
-                id: 'kampanj-1',
-                namn: 'Utskick mars',
-                status: 'klar',
-                created_at: '2026-03-15T09:00:00.000Z',
-                total_importerade: 10,
-                total_giltiga: 9,
-                total_dubletter: 1,
-                total_ogiltiga: 0,
-                total_skickade: 8,
-                total_svar: 4,
-                unansweredEligible: 2,
-                remindersSent: 3,
-                responseRate: 0.5,
-                skicka_paminnelse: true,
-                queuedInitial: 0
-              }
-            ]
-          }
-        })
-      );
+  it('loads campaign history without manual reminder controls', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      jsonResponse({
+        success: true,
+        data: {
+          campaigns: [
+            {
+              id: 'kampanj-1',
+              namn: 'Utskick mars',
+              status: 'klar',
+              created_at: '2026-03-15T09:00:00.000Z',
+              total_importerade: 10,
+              total_giltiga: 9,
+              total_dubletter: 1,
+              total_ogiltiga: 0,
+              total_skickade: 8,
+              total_svar: 4,
+              unansweredEligible: 2,
+              remindersSent: 1,
+              responseRate: 0.5,
+              skicka_paminnelse: true,
+              queuedInitial: 0
+            }
+          ]
+        }
+      })
+    );
     vi.stubGlobal('fetch', fetchMock);
 
-    const afterReminderSent = vi.fn().mockResolvedValue(undefined);
     const bannerEl = document.createElement('div');
     const contentEl = document.createElement('div');
 
     await loadCampaignHistorySection({
       bannerEl,
-      contentEl,
-      afterReminderSent
+      contentEl
     });
 
-    const button = contentEl.querySelector<HTMLButtonElement>('.remind-btn');
-    expect(button).not.toBeNull();
-
-    button?.click();
-
-    await vi.waitFor(() => {
-      expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/enkat/remind', expect.objectContaining({ method: 'POST' }));
-      expect(afterReminderSent).toHaveBeenCalledTimes(1);
-    });
+    expect(contentEl.querySelector('.remind-btn')).toBeNull();
+    expect(contentEl.querySelector('.delete-campaign-btn')).not.toBeNull();
+    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/campaigns', expect.objectContaining({ credentials: 'include' }));
   });
 });

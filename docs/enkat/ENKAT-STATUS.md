@@ -26,6 +26,8 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - `src/lib/enkat-stats.ts`
 - `src/lib/enkat-preview-token.ts`
 - `src/lib/enkat-provider-scope.ts`
+- `src/lib/enkat-reminder-time.ts` (planering nästa dag 16:00 Europe/Stockholm)
+- `src/lib/enkat-remind-runner.ts` (gemensam påminnelselogik för API och cron)
 
 #### API-routes
 - `src/pages/api/enkat/upload.ts`
@@ -49,8 +51,9 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
   - `src/lib/enkat-page-preview.ts`
   - `src/lib/enkat-page-sections.ts`
   - `src/lib/enkat-page-actions.ts`
-- schemalagd köfunktion:
-  - `netlify/functions/enkat-send-queue.mts`
+- schemalagda Netlify-funktioner:
+  - `netlify/functions/enkat-send-queue.mts` (kö för första SMS)
+  - `netlify/functions/enkat-remind-scheduled.mts` (automatiska påminnelser)
 
 ## Det som fungerar nu
 
@@ -66,7 +69,8 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - klassificering av bokningstyper
 - kampanjskapande
 - första SMS
-- manuell påminnelse
+- automatisk påminnelse (16:00 följande dag, svensk tid, max en per mottagare) via `enkat-remind-scheduled`
+- ingen manuell påminnelseknapp i personal-UI; `POST /api/enkat/remind` finns kvar för ev. drift/verktyg
 - publik enkätlänk
 - submit av svar
 - vårdgivarstyrd dashboard
@@ -115,6 +119,18 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 9. Öppna en publik länk `/e/[kod]`
 10. Skicka in ett testsvar
 11. Kontrollera dashboard, kampanjhistorik och rapport
+
+## Dokumentation i linje med kod (påminnelse m.m.)
+
+Följande är synkade med nuvarande beteende (automatisk påminnelse nästa dag 16:00 Europe/Stockholm, ingen påminnelseknapp i UI, `paminnelse_efter_timmar` oanvänd för nya kampanjer):
+
+- `ENKAT-STATUS.md` (denna fil)
+- `ENKAT-API-SPEC.md`
+- `ENKAT-PATIENTUPPLEVELSE.md`
+- `ENKAT-IMPLEMENTATIONSPLAN.md`
+- `ENKAT-UI-SPEC.md`
+- `ENKAT-SQL-SPEC.md` (kolumnkommentar för `paminnelse_efter_timmar`)
+- `MASTERDOKUMENT.md`
 
 ## Senast verifierat manuellt
 

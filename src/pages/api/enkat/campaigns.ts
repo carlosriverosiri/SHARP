@@ -3,6 +3,7 @@ import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-he
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { harMinstPortalRoll } from '../../../lib/portal-roles';
 import { supabaseAdmin } from '../../../lib/supabase';
+import { isReminderSendDue } from '../../../lib/enkat-reminder-time';
 
 export const prerender = false;
 
@@ -98,10 +99,12 @@ export const GET: APIRoute = async ({ cookies }) => {
           .not('paminnelse_skickad_vid', 'is', null),
         supabaseAdmin
           .from('enkat_utskick')
-          .select('kampanj_id')
+          .select('kampanj_id, forsta_sms_skickad_vid')
           .in('kampanj_id', campaignIds)
           .eq('used', false)
+          .is('svarad_vid', null)
           .is('paminnelse_skickad_vid', null)
+          .not('forsta_sms_skickad_vid', 'is', null)
           .gte('expires_at', nowIso),
         supabaseAdmin
           .from('enkat_delivery_log')
@@ -132,8 +135,13 @@ export const GET: APIRoute = async ({ cookies }) => {
         incrementReminderStat(reminderStats, row.kampanj_id, 'remindersSent');
       }
 
-      for (const row of (unansweredEligibleResult.data || []) as CampaignIdRow[]) {
-        incrementReminderStat(reminderStats, row.kampanj_id, 'unansweredEligible');
+      const nowDate = new Date();
+      for (const row of (unansweredEligibleResult.data || []) as Array<
+        CampaignIdRow & { forsta_sms_skickad_vid?: string | null }
+      >) {
+        if (isReminderSendDue(row.forsta_sms_skickad_vid, nowDate)) {
+          incrementReminderStat(reminderStats, row.kampanj_id, 'unansweredEligible');
+        }
       }
 
       for (const row of (queuedInitialResult.data || []) as CampaignIdRow[]) {

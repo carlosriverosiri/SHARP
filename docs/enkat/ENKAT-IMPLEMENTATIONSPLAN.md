@@ -313,10 +313,11 @@ Kommentar:
 - max 1 påminnelse
 - ingen ytterligare kontakt
 
-### Rekommenderat default
+### Implementerat beteende (produktion)
 
-- initialt utskick: samma dag eller dagen efter besöket
-- påminnelse: efter 48 timmar
+- initialt utskick: enligt kampanj (direkt eller kö)
+- påminnelse: **nästa kalenderdag kl 16:00 (Europe/Stockholm)** efter `forsta_sms_skickad_vid`, om obesvarat och kampanjen tillåter påminnelse
+- automatisk utskickning via `netlify/functions/enkat-remind-scheduled.mts` (gemensam logik med `src/lib/enkat-remind-runner.ts`)
 - ingen påminnelse om svar redan finns
 
 ---
@@ -387,8 +388,8 @@ Följande finns nu i kod:
 - upload-preview
 - kampanjskapande
 - första utskick
-- kömodell för första batch och schemalagd Netlify-funktion
-- manuell påminnelse
+- kömodell för första batch och schemalagd Netlify-funktion (`enkat-send-queue`)
+- automatisk påminnelse via `enkat-remind-scheduled` (ingen påminnelseknapp i UI; `POST /api/enkat/remind` finns för ev. drift)
 - publik enkätlänk och submit
 - dashboard
 - kampanjhistorik

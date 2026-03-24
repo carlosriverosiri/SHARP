@@ -19,7 +19,8 @@
 - **Backendlogik:** `src/lib/enkat-*`
 - **Databas:** Supabase (enkätmigreringar)
 - **SMS:** 46elks
-- **Kö/fördröjt utskick:** Netlify function `netlify/functions/enkat-send-queue.mts`
+- **Kö/fördröjt utskick (första SMS):** `netlify/functions/enkat-send-queue.mts`
+- **Schemalagd påminnelse:** `netlify/functions/enkat-remind-scheduled.mts` (nästa dag 16:00 Europe/Stockholm)
 
 ---
 
@@ -28,7 +29,7 @@
 - `POST /api/enkat/upload` - parse + validera CSV och returnera preview
 - `GET/POST /api/enkat/settings` - läs/spara gemensam lista över bokningstyper som aldrig ska följas upp
 - `POST /api/enkat/send` - skapa kampanj + utskick
-- `POST /api/enkat/remind` - skicka påminnelse till obesvarade
+- `POST /api/enkat/remind` - påminnelse till obesvarade (samma tidsregler som cron; **används inte från personal-UI**, ev. drift/verktyg)
 - `POST /api/enkat/submit` - publik submit via kod
 - `GET /api/enkat/dashboard` - nyckeltal/analys
 - `GET /api/enkat/report` - periodrapport
@@ -61,7 +62,7 @@ Nyckelidéer:
 - Den gemensamma listan lagras i Supabase och kan uppdateras av administratör (via `/personal/enkat`; i UI visas ingen ständig informationsruta om lagring — se `ENKAT-UI-SPEC.md`).
 - Bokningstyper som finns kvar i den aktuella filen ska visas som kryssrutor så att användaren aktivt väljer vad som ska ingå i utskicket.
 - Deduplicering prioriterar nybesök/remiss över återbesök bland de rader som återstår efter filtrering.
-- Max en påminnelse per utskick.
+- Max en påminnelse per utskick; tidpunkt styrs i servern (nästa kalenderdag 16:00 Europe/Stockholm efter första SMS).
 - `submit` är publik men strikt validerad (kod, giltighet, redan använd).
 - Dashboard ska skydda integritet vid lågt underlag.
 - Profilkoppling till vårdgivarnamn styr vad en vanlig användare får se.
@@ -76,7 +77,7 @@ Nyckelidéer:
 - checkbox-urval av bokningstyper i den aktuella filen
 - klassificering av bokningstyper
 - kampanjskapande + första utskick
-- manuell påminnelse
+- automatisk påminnelse (schemalagd); ingen påminnelseknapp i portalen
 - publik enkätsida och submit
 - dashboard + rapport + kampanjhistorik
 - fördröjningsanalys baserat på besökstid/starttid
@@ -116,7 +117,7 @@ Kopiera och fyll i:
 Jag arbetar i SHARP (Astro + Supabase + 46elks) med en intern enkätmodul.
 
 Bakgrund:
-- Adminflöde: importera CSV -> preview -> skapa kampanj -> skicka SMS -> ev. påminnelse
+- Adminflöde: importera CSV -> preview -> skapa kampanj -> skicka SMS; påminnelse 16:00 följande dag automatiskt om aktiverat
 - Publik sida: /e/[kod] för anonymt svar
 - API: upload/send/remind/submit/dashboard/report/campaigns
 - Databas: enkat_kampanjer, enkat_utskick, enkat_svar, enkat_delivery_log

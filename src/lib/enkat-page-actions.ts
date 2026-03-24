@@ -39,7 +39,6 @@ type CreateCampaignActionArgs = {
   campaignNameInput: HTMLInputElement;
   smsTemplateInput: HTMLInputElement | HTMLTextAreaElement;
   sendReminderInput: HTMLInputElement;
-  reminderHoursInput: HTMLInputElement;
   previewUi: EnkatPreviewUi;
   setBanner: SetBanner;
   afterCreate: () => void;
@@ -146,7 +145,6 @@ export async function createCampaignAction({
   campaignNameInput,
   smsTemplateInput,
   sendReminderInput,
-  reminderHoursInput,
   previewUi,
   setBanner,
   afterCreate
@@ -178,7 +176,6 @@ export async function createCampaignAction({
         smsTemplate: smsTemplateInput.value || '',
         sendNow: true,
         sendReminder: !!sendReminderInput.checked,
-        reminderAfterHours: Number(reminderHoursInput.value || 48),
         previewToken: currentPreview.previewToken
       })
     }, 'Kunde inte skapa kampanjen.');

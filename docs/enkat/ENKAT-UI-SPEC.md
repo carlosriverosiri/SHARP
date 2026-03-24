@@ -252,11 +252,10 @@ Låta användaren välja hur kampanjen ska skickas.
 
 - Kampanjnamn
 - SMS-mall
-- fallback för bokningstyp
-- skicka nu / skicka senare
-- påminnelse Ja/Nej
-- påminn efter antal timmar
-- sändningsfönster (valfritt, V1 eller V1.1)
+- fallback för bokningstyp (om relevant i importflödet)
+- skicka nu / skicka senare (första SMS via kö)
+- påminnelse Ja/Nej — vid Ja: **automatisk** påminnelse **16:00 följande dag** (svensk tid) till obesvarade; högst ett extra SMS per mottagare; ingen tidsinställning per användare
+- sändningsfönster (valfritt, **ej** implementerat i nuvarande UI)
 
 ### SMS-mall
 
