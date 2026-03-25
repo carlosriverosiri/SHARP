@@ -150,6 +150,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Fritextsanering i submit**: `submit.ts` maskar nu uppenbara mejladresser, svenska telefonnummer även med `+46`, mellanslag eller bindestreck, samt sannolika personnummer innan lagring
 - **Verifierad preview**: `send.ts` accepterar nu signerad `previewToken` från upload i stället för råa klientrader
 - **Idempotent kampanjskapande**: `enkat_kampanjer.preview_token_hash` används för att stoppa dubbelsubmit av samma preview
+- **Låst CTA efter skick**: knappen `Skapa kampanj` blir nu grå för aktuell preview efter lyckat skick och låses upp först när filen läses in på nytt
 - **Atomar svarsinlämning**: `submit.ts` använder SQL-funktionen `submit_enkat_response` så att claim, svar och `total_svar` sker i samma transaktion
 - **Tidigare dataskopning**: `dashboard.ts` och `report.ts` filtrerar nu på vårdgivare redan i databasanropen för självvy och adminfilter, i stället för att läsa in alla rader först
 - **Mindre logglookup i dashboard**: leveransloggen mappar nu bara de `enkat_utskick` som faktiskt förekommer i aktuell loggperiod, inte hela tabellen
@@ -158,6 +159,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Staging-URL borttagen**: SMS-funktionen saknar inte längre hårdkodad fallback; loggar varning om URL saknas
 - **Netlify-envfix för SMS**: `enkat-sms.ts` läser nu först från `process.env` och sedan från Astro-miljön, så att schemalagda Netlify-funktioner kan använda 46elks och `SITE`/`PUBLIC_SITE_URL` utan att krascha
 - **Större direktbatch för första SMS**: `send.ts` försöker nu skicka upp till 50 första SMS direkt innan resterande lämnas till `enkat-send-queue`
+- **Svarsfrekvens per patient**: dashboarden räknar nu svarsfrekvens mot unika patienter som fått första SMS, inte mot total SMS-trafik inklusive påminnelser
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline

@@ -339,14 +339,14 @@ export function renderKpiRow(providers: ProviderCardData[]): string {
   return `
     <div class="kpi-row">
       <div class="kpi-card">
-        <div class="kpi-card-label">Utskickade</div>
+        <div class="kpi-card-label">Patienter kontaktade</div>
         <div class="kpi-card-value">${escapeHtml(totalSent)}</div>
         <div class="kpi-card-sub">${escapeHtml(providers.length)} vårdgivare</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-label">Besvarade</div>
         <div class="kpi-card-value">${escapeHtml(totalAnswered)}</div>
-        <div class="kpi-card-sub">av ${escapeHtml(totalSent)} utskickade</div>
+        <div class="kpi-card-sub">av ${escapeHtml(totalSent)} patienter</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-label">Svarsfrekvens</div>
@@ -433,7 +433,8 @@ export function renderProviderCard(item: ProviderCardData): string {
       </div>
 
       <div class="provider-meta">
-        Påminnelser: ${escapeHtml(item.reminderCount || 0)}
+        Patienter kontaktade: ${escapeHtml(item.sentCount || 0)}
+        · Påminnelser: ${escapeHtml(item.reminderCount || 0)}
         · Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
       </div>
 

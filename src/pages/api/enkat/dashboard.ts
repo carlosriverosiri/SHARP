@@ -33,6 +33,12 @@ type UtskickProviderRow = {
   vardgivare_namn: string | null;
 };
 
+type ProviderDeliveryStats = {
+  sentPatientIds: Set<string>;
+  deliveredPatientIds: Set<string>;
+  reminderPatientIds: Set<string>;
+};
+
 function uniqueProviderNames(rows: ProviderNameRow[]): string[] {
   return [...new Set(
     rows
@@ -190,7 +196,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       delayByProvider.set(provider, current);
     }
 
-    const sentCountByProvider = new Map<string, { sent: number; delivered: number; reminder: number }>();
+    const sentCountByProvider = new Map<string, ProviderDeliveryStats>();
     if (allLogs.length > 0) {
       const utskickIds = [...new Set(
         allLogs
@@ -231,23 +237,27 @@ export const GET: APIRoute = async ({ cookies, url }) => {
           continue;
         }
 
-        const current = sentCountByProvider.get(provider) || { sent: 0, delivered: 0, reminder: 0 };
-        if (log.status === 'sent') current.sent += 1;
-        if (log.status === 'delivered') current.delivered += 1;
-        if (log.typ === 'paminnelse' && log.status === 'sent') current.reminder += 1;
+        const current = sentCountByProvider.get(provider) || {
+          sentPatientIds: new Set<string>(),
+          deliveredPatientIds: new Set<string>(),
+          reminderPatientIds: new Set<string>()
+        };
+        if (log.typ === 'forsta_sms' && log.status === 'sent') current.sentPatientIds.add(log.utskick_id);
+        if (log.typ === 'forsta_sms' && log.status === 'delivered') current.deliveredPatientIds.add(log.utskick_id);
+        if (log.typ === 'paminnelse' && log.status === 'sent') current.reminderPatientIds.add(log.utskick_id);
         sentCountByProvider.set(provider, current);
       }
     }
 
     const summaries = Array.from(byProvider.entries())
       .map(([providerName, providerRows]) => {
-        const counts = sentCountByProvider.get(providerName) || { sent: 0, delivered: 0, reminder: 0 };
+        const counts = sentCountByProvider.get(providerName);
         return summarizeProvider(
           providerName,
           providerRows,
-          counts.sent,
-          counts.delivered,
-          counts.reminder,
+          counts?.sentPatientIds.size || 0,
+          counts?.deliveredPatientIds.size || 0,
+          counts?.reminderPatientIds.size || 0,
           delayByProvider.get(providerName) || []
         );
       })

@@ -1477,6 +1477,8 @@ Svara anonymt: [LÄNK]</textarea>
     const reportPeriod = document.getElementById('reportPeriod') as HTMLSelectElement;
     const reportProviderFilter = document.getElementById('reportProviderFilter') as HTMLSelectElement | null;
     const refreshReportBtn = document.getElementById('refreshReportBtn') as HTMLButtonElement | null;
+    const defaultCreateCampaignBtnLabel = createCampaignBtn?.textContent?.trim() || 'Skapa kampanj';
+    let createCampaignLockedForCurrentPreview = false;
 
     if (!campaignNameInput.value.trim()) {
       campaignNameInput.value = 'Patientupplevelse';
@@ -1488,6 +1490,24 @@ Svara anonymt: [LÄNK]</textarea>
 
     function setExcludedBookingTypeSettingsStatus(type: BannerType, message: string) {
       setElementBanner(excludedBookingTypeSettingsStatus, type, message);
+    }
+
+    function syncCreateCampaignButton(): void {
+      if (!createCampaignBtn) return;
+      const currentPreview = previewUi.getCurrentPreview();
+      const hasPreview = !!currentPreview?.previewToken && !!currentPreview?.selectedRows?.length;
+      createCampaignBtn.disabled = !hasPreview || createCampaignLockedForCurrentPreview;
+      createCampaignBtn.textContent = createCampaignLockedForCurrentPreview
+        ? 'Kampanj skickad'
+        : defaultCreateCampaignBtnLabel;
+      createCampaignBtn.title = createCampaignLockedForCurrentPreview
+        ? 'Läs in filen igen för att skapa en ny kampanj.'
+        : '';
+    }
+
+    function resetCreateCampaignState(): void {
+      createCampaignLockedForCurrentPreview = false;
+      syncCreateCampaignButton();
     }
 
     const previewUi = createEnkatPreviewUi({
@@ -1505,6 +1525,7 @@ Svara anonymt: [LÄNK]</textarea>
 
     async function runAutoPreview() {
       if (!fileInput.files?.length) return;
+      resetCreateCampaignState();
       await submitPreviewAction({
         form,
         fileInput,
@@ -1512,6 +1533,7 @@ Svara anonymt: [LÄNK]</textarea>
         previewUi,
         setBanner
       });
+      syncCreateCampaignButton();
     }
 
     function syncClearButton() {
@@ -1573,6 +1595,7 @@ Svara anonymt: [LÄNK]</textarea>
     excludedBookingTypePatternsInput?.addEventListener('input', () => {
       if (excludedPatternsDebounce) clearTimeout(excludedPatternsDebounce);
       previewUi.clearPreview();
+      resetCreateCampaignState();
       excludedPatternsDebounce = setTimeout(() => {
         if (fileInput.files?.length) void runAutoPreview();
       }, 400);
@@ -1600,10 +1623,12 @@ Svara anonymt: [LÄNK]</textarea>
       statusBanner.className = 'banner info';
       statusBanner.textContent = '';
       previewUi.clearAnalysis();
+      resetCreateCampaignState();
     });
 
     previewUi.syncSelectedFileName();
     syncClearButton();
+    syncCreateCampaignButton();
 
     form.addEventListener('submit', async (event: SubmitEvent) => {
       event.preventDefault();
@@ -1655,6 +1680,8 @@ Svara anonymt: [LÄNK]</textarea>
         previewUi,
         setBanner,
         afterCreate: () => {
+          createCampaignLockedForCurrentPreview = true;
+          syncCreateCampaignButton();
           void refreshEnkatViews();
         }
       });

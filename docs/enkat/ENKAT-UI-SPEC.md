@@ -281,6 +281,7 @@ Detta minskar risken för fel innan utskick.
 ### Primär CTA
 
 - `Skapa kampanj och skicka`
+- efter lyckat skick ska CTA låsas/gråas ut för aktuell preview så att samma uppladdning inte kan råka skickas igen utan att filen först läses in på nytt
 
 Sekundära:
 

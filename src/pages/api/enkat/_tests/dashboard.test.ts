@@ -208,6 +208,7 @@ describe('GET /api/enkat/dashboard', () => {
     mocks.state.enkatDeliveryLogResults.push({
       data: [
         { status: 'sent', typ: 'forsta_sms', utskick_id: 'u1' },
+        { status: 'sent', typ: 'forsta_sms', utskick_id: 'u2' },
         { status: 'delivered', typ: 'forsta_sms', utskick_id: 'u1' },
         { status: 'sent', typ: 'paminnelse', utskick_id: 'u2' }
       ],
@@ -222,6 +223,14 @@ describe('GET /api/enkat/dashboard', () => {
             besoksdatum: '2026-03-18',
             besoksstart_tid: '08:00',
             forsta_sms_skickad_vid: '2026-03-18T09:00:00.000Z',
+            svarad_vid: null
+          },
+          {
+            id: 'u2',
+            vardgivare_namn: 'Dr Test',
+            besoksdatum: '2026-03-18',
+            besoksstart_tid: '09:00',
+            forsta_sms_skickad_vid: '2026-03-18T09:30:00.000Z',
             svarad_vid: null
           }
         ],
@@ -271,7 +280,7 @@ describe('GET /api/enkat/dashboard', () => {
               { type: 'forbattra', text: 'Mer information', createdAt: '2026-03-18T11:00:00.000Z' }
             ],
             delayMetrics: {
-              totalRows: 1
+              totalRows: 2
             }
           }
         ],

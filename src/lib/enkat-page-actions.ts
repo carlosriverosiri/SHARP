@@ -17,6 +17,7 @@ type SendCampaignData = {
   status: string;
   totalSent: number;
   totalFailed: number;
+  alreadyCreated?: boolean;
 };
 
 type SaveExcludedBookingTypesActionArgs = {
@@ -41,7 +42,7 @@ type CreateCampaignActionArgs = {
   sendReminderInput: HTMLInputElement;
   previewUi: EnkatPreviewUi;
   setBanner: SetBanner;
-  afterCreate: () => void;
+  afterCreate: (data: SendCampaignData) => void;
 };
 
 function resolveCampaignName(rawValue: string): string {
@@ -168,10 +169,11 @@ export async function createCampaignAction({
 
     setBanner(
       'success',
-      `Kampanj skapad. Status: ${data.status}. Skickade: ${data.totalSent}, misslyckade: ${data.totalFailed}.`
+      data.alreadyCreated
+        ? `Kampanjen finns redan för den här uppladdningen. Status: ${data.status}. Skickade: ${data.totalSent}, misslyckade: ${data.totalFailed}.`
+        : `Kampanj skapad. Status: ${data.status}. Skickade: ${data.totalSent}, misslyckade: ${data.totalFailed}.`
     );
-    button.disabled = false;
-    afterCreate();
+    afterCreate(data);
   } catch (error) {
     console.error(error);
     setBanner('error', getErrorText(error, 'Ett oväntat fel uppstod när kampanjen skulle skapas.'));
