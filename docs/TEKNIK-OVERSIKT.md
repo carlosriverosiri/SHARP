@@ -100,7 +100,7 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 
 ## Viktiga nyckelfiler
 
-- `astro.config.mjs` – Astro/Netlify‑konfiguration + redirects
+- `astro.config.mjs` – Astro/Netlify‑konfiguration + redirects (`build.inlineStylesheets: 'always'` minskar FOUC; Google Fonts laddas icke‑blockerande i `BaseLayout.astro`)
 - `netlify.toml` – build, headers, functions, caching
 - `.github/workflows/verify.yml` – CI för test, `astro check` och build
 - `src/pages/api/**` – API‑endpoints (AI, SMS, Zotero, etc.)

@@ -27,7 +27,14 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     
     <a href={homeUrl} class="flex-shrink-0">
-      <img src="/images/branding/logo.svg" alt={isEnglish ? "Clinic logo" : "Klinikens logotyp"} class="h-10 w-auto" />
+      <img
+        src="/images/branding/logo.svg"
+        alt={isEnglish ? "Clinic logo" : "Klinikens logotyp"}
+        class="h-10 w-auto"
+        width="168"
+        height="40"
+        decoding="async"
+      />
     </a>
 
     <nav class="hidden lg:flex items-center space-x-2">
@@ -674,7 +681,14 @@ const searchUrl = isEnglish ? '/en/search' : '/sok';
     <!-- Header med logo och stäng-knapp -->
     <div class="sticky top-0 bg-slate-900 border-b border-slate-700 px-5 py-4 flex items-center justify-between">
       <a href={homeUrl} class="flex-shrink-0">
-        <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi" class="h-8 w-auto brightness-0 invert" />
+        <img
+          src="/images/branding/logo.svg"
+          alt="Södermalms Ortopedi"
+          class="h-8 w-auto brightness-0 invert"
+          width="134"
+          height="32"
+          decoding="async"
+        />
       </a>
       <button id="close-mobile-menu" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" aria-label={isEnglish ? "Close menu" : "Stäng menyn"}>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

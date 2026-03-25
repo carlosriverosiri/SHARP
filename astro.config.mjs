@@ -71,8 +71,8 @@ export default defineConfig({
   compressHTML: true,
 
   build: {
-    // Inline small CSS for faster initial render
-    inlineStylesheets: 'auto',
+    // Inline CSS into HTML to avoid FOUC when external Tailwind chunks load after slow head resources
+    inlineStylesheets: 'always',
     // Minify HTML output
     assets: '_astro',
   },

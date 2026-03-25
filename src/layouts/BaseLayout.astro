@@ -53,6 +53,29 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- FOUC: logo.svg uses width/height 100%; Tailwind may load after first paint on slow networks -->
+    <style is:inline>
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+      }
+      #main-header > div a[class*='flex-shrink'] img,
+      #main-header a.flex-shrink-0 img {
+        height: 2.5rem;
+        width: auto;
+        max-width: min(100%, 12rem);
+        display: block;
+      }
+      #mobile-menu .sticky.top-0 a img,
+      #mobile-menu a.flex-shrink-0 img {
+        height: 2rem;
+        width: auto;
+        max-width: min(100%, 10rem);
+        display: block;
+      }
+    </style>
     <title>{title}</title>
     
     <!-- DNS Prefetch för lazy-loadade resurser (kartan) -->
@@ -104,15 +127,20 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={title} />
     
-    <!-- Fonts - Non-blocking load -->
+    <!-- Fonts: load without blocking first paint (Tailwind + layout CSS first) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
     <noscript>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
     </noscript>
 
     <!-- Preload critical resources -->
