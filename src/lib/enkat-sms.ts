@@ -72,8 +72,7 @@ export function buildEnkatSmsMessage(
   const { siteUrl } = getEnkatSmsConfig();
   const defaultInitialTemplate =
     'Hur var besöket hos [VÅRDGIVARE] [DATUM_KORT]?\n' +
-    'Svara: [LÄNK]\n' +
-    'Anonymt.';
+    'Svara anonymt: [LÄNK]';
 
   const defaultReminderTemplate =
     'Påminnelse — enkät om besöket [DATUM_KORT] hos [VÅRDGIVARE].\n' +
