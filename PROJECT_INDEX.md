@@ -93,6 +93,9 @@ Diagnosinformation med referenser och FAQ.
 - `/sjukdomar/axel/rotatorcuff`
 - `/sjukdomar/axel/slap-skada`
 
+**Engelska axel / AC (evidens):**
+- `/en/diseases/shoulder/ac-joint-horizontal-paradigm` — horisontell instabilitet, flikvy + Chart.js (`src/components/AcJointHorizontalParadigm.astro`).
+
 **Komponenter:**
 - `RefLink.astro` - Referenslänkar med tooltip
 - `RefDrawer.astro` - Referenslåda

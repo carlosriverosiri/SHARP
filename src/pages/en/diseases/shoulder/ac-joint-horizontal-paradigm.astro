@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import HorizontalParadigmTabs from '../../../../components/AcJointHorizontalParadigm.astro';
+import RefDrawer from '../../../../components/RefDrawer.astro';
+
+const siteUrl = 'https://sodermalmsortopedi.se';
+const authorName = 'Dr. Carlos Rivero Siri';
+const authorUrl = 'https://sodermalmsortopedi.se/om-oss/vart-team/dr-carlos-rivero-siri';
+const currentDate = new Date().toISOString().split('T')[0];
+const lastMedicalReview = '25 March 2026';
+
+const title = 'AC joint dislocations and horizontal instability | Södermalms Ortopedi';
+const description =
+  'Treatment algorithms for Rockwood IV and ISAKOS type IIIA/IIIB in AC joint injuries — interactive figures and linked references.';
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: 'AC joint dislocations and horizontal instability',
+  author: { '@type': 'Person', name: authorName, url: authorUrl },
+  dateModified: currentDate,
+  reviewedBy: { '@type': 'Person', name: authorName, url: authorUrl },
+  isBasedOn: `${siteUrl}/en/diseases/shoulder/ac-joint-dislocation`,
+  about: {
+    '@type': 'MedicalCondition',
+    name: 'Acromioclavicular joint dislocation',
+    possibleTreatment: [
+      { '@type': 'MedicalTherapy', name: 'Conservative treatment and rehabilitation' },
+      { '@type': 'MedicalTherapy', name: 'Surgical AC joint stabilisation' },
+    ],
+  },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  alternateUrl="/sjukdomar/axel/nyckelbensleden-ur-led"
+  type="article"
+>
+  <meta slot="head" property="article:author" content={authorName} />
+  <meta slot="head" property="article:section" content="Shoulder" />
+  <meta
+    slot="head"
+    name="keywords"
+    content="AC joint dislocation, horizontal instability, Rockwood type IV, Rockwood type III, ISAKOS IIIA IIIB, acromioclavicular joint, Feichtinger, evidence-based shoulder surgery"
+  />
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schemaData)} />
+  <script
+    is:inline
+    type="application/ld+json"
+    slot="head"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/en/` },
+        { '@type': 'ListItem', position: 2, name: 'Diseases', item: `${siteUrl}/en/diseases` },
+        { '@type': 'ListItem', position: 3, name: 'Shoulder', item: `${siteUrl}/en/diseases/shoulder` },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: 'AC joint dislocation',
+          item: `${siteUrl}/en/diseases/shoulder/ac-joint-dislocation`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 5,
+          name: 'Horizontal instability',
+          item: `${siteUrl}/en/diseases/shoulder/ac-joint-horizontal-paradigm`,
+        },
+      ],
+    })}
+  />
+
+  <section class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white pt-8 pb-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <nav class="flex flex-wrap items-center gap-2 text-sm mb-4 text-slate-400" aria-label="Breadcrumb">
+        <a href="/en" class="hover:text-white">Home</a>
+        <span class="text-slate-600">/</span>
+        <a href="/en/diseases/shoulder/ac-joint-dislocation" class="hover:text-white">AC joint dislocation</a>
+        <span class="text-slate-600">/</span>
+        <span class="text-emerald-300">Horizontal instability</span>
+      </nav>
+
+      <p class="text-emerald-400/90 text-xs font-bold uppercase tracking-wider mb-2">Deep dive · clinician-oriented</p>
+      <h1 class="text-3xl md:text-4xl font-black mb-4 leading-tight tracking-tight">
+        AC joint dislocations and horizontal instability
+      </h1>
+      <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-3xl mb-6">
+        Treatment algorithms for <strong class="text-white">Rockwood IV</strong> and{' '}
+        <strong class="text-white">ISAKOS type IIIA/IIIB</strong> — with interactive figures and linked sources.
+      </p>
+
+      <div class="flex flex-wrap gap-3 text-sm">
+        <a
+          href="/en/diseases/shoulder/ac-joint-dislocation"
+          class="inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 text-white font-medium transition-colors"
+        >
+          ← Main AC dislocation article
+        </a>
+        <span class="text-slate-500 self-center text-xs">
+          Medically reviewed {lastMedicalReview} · {authorName}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-stone-50 min-h-[40vh]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      <HorizontalParadigmTabs />
+
+      <p class="text-center text-sm text-slate-500 mt-10">
+        <a href="/sjukdomar/axel/nyckelbensleden-ur-led" class="text-sky-600 hover:underline"
+          >Svenska: Nyckelbenet ur led</a
+        >
+      </p>
+    </div>
+  </div>
+
+  <RefDrawer lang="en" />
+</BaseLayout>
