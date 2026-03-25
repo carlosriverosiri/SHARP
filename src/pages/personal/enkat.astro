@@ -1303,9 +1303,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
         <div class="form-group">
           <label for="smsTemplate">SMS-mall</label>
-          <textarea id="smsTemplate" class="input" style="min-height:120px;">Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?
-Svara här: [LÄNK]
-Enkäten är anonym. Tack!</textarea>
+          <p class="helper" style="margin: 0 0 8px;">
+            Placeholders: <code>[VÅRDGIVARE]</code>, <code>[DATUM]</code> (långt, t.ex. 23 mars 2026), <code>[DATUM_KORT]</code> (kort, t.ex. 23/3 — rekommenderas i SMS),
+            <code>[BOKNINGSTYP]</code>, <code>[LÄNK]</code>
+          </p>
+          <textarea id="smsTemplate" class="input" style="min-height:120px;">Hur var besöket hos [VÅRDGIVARE] [DATUM_KORT]?
+Svara: [LÄNK]
+Anonymt.</textarea>
         </div>
 
         <div class="actions">

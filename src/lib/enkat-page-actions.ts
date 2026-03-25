@@ -44,24 +44,10 @@ type CreateCampaignActionArgs = {
   afterCreate: () => void;
 };
 
-function getTodayCampaignDateLabel(): string {
-  return new Date().toLocaleDateString('sv-SE');
-}
-
 function resolveCampaignName(rawValue: string): string {
   const trimmed = (rawValue || '').trim();
-  const todayLabel = getTodayCampaignDateLabel();
   const defaultBase = 'Patientupplevelse';
-
-  if (!trimmed) {
-    return `${defaultBase} ${todayLabel}`;
-  }
-
-  if (trimmed.includes(todayLabel)) {
-    return trimmed;
-  }
-
-  return `${trimmed} ${todayLabel}`;
+  return trimmed || defaultBase;
 }
 
 export async function saveExcludedBookingTypesAction({

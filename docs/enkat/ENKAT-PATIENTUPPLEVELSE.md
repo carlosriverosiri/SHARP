@@ -249,7 +249,7 @@ Utskicket sker **automatiskt** via schemalagd Netlify-funktion `enkat-remind-sch
 
 I `/personal/enkat` finns bland annat:
 
-- kampanjnamn och SMS-mall
+- kampanjnamn och SMS-mall (placeholders: `[VÅRDGIVARE]`, `[DATUM]`, `[DATUM_KORT]` — kort datum utan år, t.ex. 23/3 — `[BOKNINGSTYP]`, `[LÄNK]`; standardmall använder `[DATUM_KORT]` för färre tecken per SMS)
 - kryssruta för automatisk påminnelse (Ja/Nej) med informationstext om 16:00 följande dag
 - första utskick: direkt eller kö (`enkat-send-queue`)
 

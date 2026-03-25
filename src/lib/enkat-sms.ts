@@ -51,6 +51,18 @@ export function formatEnkatVisitDate(date: string) {
   }
 }
 
+/** Kompakt datum utan år (t.ex. 23/3) — sparar tecken i SMS. */
+export function formatEnkatVisitDateShort(date: string) {
+  try {
+    return new Intl.DateTimeFormat('sv-SE', {
+      day: 'numeric',
+      month: 'numeric'
+    }).format(new Date(`${date}T12:00:00`));
+  } catch {
+    return date;
+  }
+}
+
 export function buildEnkatSmsMessage(
   template: string | null | undefined,
   row: EnkatSmsRow,
@@ -59,19 +71,19 @@ export function buildEnkatSmsMessage(
 ) {
   const { siteUrl } = getEnkatSmsConfig();
   const defaultInitialTemplate =
-    'Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?\n' +
-    'Svara här: [LÄNK]\n' +
-    'Enkäten är anonym. Tack!';
+    'Hur var besöket hos [VÅRDGIVARE] [DATUM_KORT]?\n' +
+    'Svara: [LÄNK]\n' +
+    'Anonymt.';
 
   const defaultReminderTemplate =
-    'Hej! Om du vill hjälpa oss förbättra mottagningen får du gärna svara på vår korta anonyma enkät om ditt besök hos [VÅRDGIVARE] den [DATUM].\n' +
-    'Svara här: [LÄNK]\n' +
-    'Tack!';
+    'Påminnelse — enkät om besöket [DATUM_KORT] hos [VÅRDGIVARE].\n' +
+    'Svara: [LÄNK]';
 
   const baseTemplate = options?.reminder ? defaultReminderTemplate : defaultInitialTemplate;
 
   return (template || baseTemplate)
     .replaceAll('[VÅRDGIVARE]', formatProviderName(row.providerName))
+    .replaceAll('[DATUM_KORT]', formatEnkatVisitDateShort(row.visitDate))
     .replaceAll('[DATUM]', formatEnkatVisitDate(row.visitDate))
     .replaceAll('[BOKNINGSTYP]', patientFriendlyBookingType(row.bookingTypeRaw))
     .replaceAll('[LÄNK]', `${siteUrl}/e/${code}`);

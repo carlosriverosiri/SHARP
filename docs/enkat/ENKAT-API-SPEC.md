@@ -294,7 +294,7 @@ Denna endpoint ska:
 ```json
 {
   "campaignName": "Patientupplevelse vecka 11",
-  "smsTemplate": "Hej! Hur nöjd var du med ditt besök hos [VÅRDGIVARE] den [DATUM]?",
+  "smsTemplate": "Hur var besöket hos [VÅRDGIVARE] [DATUM_KORT]?\nSvara: [LÄNK]\nAnonymt.",
   "sendNow": true,
   "scheduledSendAt": null,
   "sendReminder": true,

@@ -250,7 +250,7 @@ Låta användaren välja hur kampanjen ska skickas.
 
 ### Fält
 
-- Kampanjnamn
+- Kampanjnamn (tomt fält ger standardnamnet `Patientupplevelse`; inget datum läggs automatiskt till i namnet — besöksdatum visas i tabellkolumnen Datum)
 - SMS-mall
 - fallback för bokningstyp (om relevant i importflödet)
 - skicka nu / skicka senare (första SMS via kö)
@@ -264,7 +264,9 @@ Bör visas i ett större textfält.
 Systemet bör kunna ersätta:
 
 - `[VÅRDGIVARE]`
-- `[DATUM]`
+- `[DATUM]` (långt datum, t.ex. 23 mars 2026)
+- `[DATUM_KORT]` (kompakt utan år, t.ex. 23/3 — färre tecken i SMS)
+- `[BOKNINGSTYP]` (om relevant)
 - `[LÄNK]`
 
 ### Preview av SMS
