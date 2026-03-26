@@ -76,9 +76,10 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     * { box-sizing: border-box; }
 
     .page {
+      --page-pad-x: 16px;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 24px 16px 48px;
+      padding: 24px var(--page-pad-x) 48px;
     }
 
     .header {
@@ -141,6 +142,23 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
     .card h2, .card h3 {
       margin: 0 0 12px;
+    }
+
+    /* Kant-till-kant inom sidans innehållsyta (jämför med sidans horisontella padding) */
+    .campaigns-hero {
+      margin-left: calc(-1 * var(--page-pad-x));
+      margin-right: calc(-1 * var(--page-pad-x));
+      padding-left: max(var(--page-pad-x), 16px);
+      padding-right: max(var(--page-pad-x), 16px);
+      padding-top: 24px;
+      padding-bottom: 32px;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      box-shadow: none;
+      background: linear-gradient(180deg, #eef2f6 0%, #f8fafc 45%, #ffffff 100%);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
     .helper {
@@ -856,6 +874,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       /* Fullbreddssektioner: mindre nästlad padding, mer luft som hero-liknande band */
       .page {
         max-width: none;
+        --page-pad-x: 0px;
         padding: 12px 0 36px;
       }
       .header {
@@ -1616,7 +1635,7 @@ Svara anonymt: [LÄNK]</textarea>
       <div id="dashboardContent" class="section"></div>
     </section>
 
-    <section class="card section">
+    <section class="card section campaigns-hero">
       <h2>Kampanjhistorik</h2>
       <p class="card-intro">Visar de senaste enkätkampanjerna. Påminnelse skickas ut 16:00 följande dag till de som inte har svarat på enkäten (högst en gång per mottagare).</p>
       <div class="actions">

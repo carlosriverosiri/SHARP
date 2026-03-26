@@ -602,13 +602,13 @@ export function renderCampaignTable(campaigns: CampaignCardData[]): string {
     <div class="campaign-table-wrap">
       <table class="campaign-table">
         <colgroup>
-          <col style="width: 30%">
-          <col style="width: 12%">
+          <col style="width: 16%">
+          <col style="width: 15%">
           <col style="width: 10%">
           <col style="width: 8%">
-          <col style="width: 20%">
+          <col style="width: 25%">
+          <col style="width: 14%">
           <col style="width: 12%">
-          <col style="width: 8%">
         </colgroup>
         <thead>
           <tr>
