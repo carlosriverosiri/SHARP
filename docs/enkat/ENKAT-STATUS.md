@@ -22,6 +22,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - `supabase/migrations/027-enkat-robusthet.sql`
 - `supabase/migrations/028-enkat-submit-fix-utskick-id-ambiguity.sql`
 - `supabase/migrations/029-enkat-normalize-patientupplevelse-kampanj-namn.sql` (data: döper om datum-suffixed titlar till enbart `Patientupplevelse`)
+- `supabase/migrations/030-enkat-normalize-patientupplevelse-kampanj-namn-kompakt.sql` (data: samma för `Patientupplevelse20260324` utan mellanslag)
 
 #### Backend
 - `src/lib/enkat-booking-classifier.ts`

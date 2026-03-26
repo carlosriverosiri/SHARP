@@ -33,6 +33,15 @@ describe('enkat-page-helpers', () => {
     expect(html).toContain('Patientupp');
   });
 
+  it('adds mobile short label for Patientupplevelse with date suffix', () => {
+    for (const name of ['Patientupplevelse 2026-03-24', 'Patientupplevelse 20260324', 'patientupplevelse20260324']) {
+      const html = formatCampaignNameForHistoryCell(name);
+      expect(html, name).toContain('campaign-name--full');
+      expect(html, name).toContain('campaign-name--short');
+      expect(html, name).toContain('Patientupp');
+    }
+  });
+
   it('does not abbreviate other campaign names', () => {
     expect(formatCampaignNameForHistoryCell('Vecka 12')).toBe('Vecka 12');
     expect(formatCampaignNameForHistoryCell('Patientupplevelse extra')).toBe('Patientupplevelse extra');

@@ -247,9 +247,17 @@ export function escapeHtml(value: unknown): string {
 /** Visas i kampanjhistorik under 640px; fullständigt namn döljs visuellt men finns kvar för skärmläsare. */
 const CAMPAIGN_NAME_PATIENTUPPLEVELSE_MOBILE_SHORT = 'Patientupp';
 
+/** Exakt "Patientupplevelse" eller samma stam + datum (YYYY-MM-DD, YYYYMMDD, med/utan mellanslag). */
+function isPatientupplevelseCampaignLabel(label: string): boolean {
+  if (/^patientupplevelse$/i.test(label)) return true;
+  if (/^patientupplevelse\s+(\d{4}-\d{2}-\d{2}|\d{8})$/i.test(label)) return true;
+  if (/^patientupplevelse\d{8}$/i.test(label)) return true;
+  return false;
+}
+
 export function formatCampaignNameForHistoryCell(namn: string | null): string {
   const label = (namn || '').trim() || 'Namnlös';
-  if (/^patientupplevelse$/i.test(label)) {
+  if (isPatientupplevelseCampaignLabel(label)) {
     return `<span class="campaign-name--full">${escapeHtml(label)}</span><span class="campaign-name--short" aria-hidden="true">${escapeHtml(CAMPAIGN_NAME_PATIENTUPPLEVELSE_MOBILE_SHORT)}</span>`;
   }
   return escapeHtml(label);
