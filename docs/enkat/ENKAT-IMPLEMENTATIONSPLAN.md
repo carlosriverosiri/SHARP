@@ -59,6 +59,8 @@ Följande delar är nu implementerade i kod:
 - profilkoppling till `vardgivare_namn`
 - länk från personalportalen
 
+**Drift:** Modulen används i verklig verksamhet med god svarsfrekvens och tydlig nytta av fritext (se `ENKAT-STATUS.md` / `MASTERDOKUMENT.md`).
+
 Det betyder att dokumentet nedan ska läsas som:
 
 - historisk byggordning
@@ -79,13 +81,13 @@ Det betyder att dokumentet nedan ska läsas som:
 
 - ladda upp fil via drag & drop eller knapp
 - parsea semikolonseparerad fil
-- validera de fasta kärnkolumnerna: `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`, `Bokningstyp`, `Diagnoser`
+- validera de fasta kärnkolumnerna: `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`, `Bokningstyp`, `Diagnoser`, `Starttid`
 - behandla tom `Bokningstyp` som ej uppföljningsbar (raden ska bort i preview/utskick)
 - sortera bort rader där `Diagnoser` är tom
 - tillämpa en gemensam lista för bokningstyper som aldrig ska följas upp, innan deduplicering
 - spara den gemensamma listan i Supabase så att den delas mellan datorer och användare
 - visa kvarvarande bokningstyper i aktuell fil som kryssrutor för positivt urval
-- acceptera `Starttid` som valfri tilläggskolumn
+- kräva `Starttid` som kolumn och att varje uppföljningsbar rad har en giltig starttid
 - validera telefonnummer utan att onödigt skriva om redan korrekta `+46`-nummer
 - deduplicera på `Patient-ID`, fallback telefon
 - klassificera bokningstyper

@@ -9,6 +9,10 @@
 
 `Enkät` är en intern kvalitetsmodul i SHARP där personal importerar CSV, skickar SMS-enkäter via 46elks, samlar anonyma svar och följer resultat per vårdgivare i dashboard/rapport.
 
+### Drifterfarenhet (uppdatering)
+
+Modulen används i skarp drift med gott utfall: **44 svar på 82 utskickna SMS** (ca **54 %** svarsfrekvens) — högre än förväntat. SMS-mallen och länken **ryms i ett enda SMS-segment**, vilket håller **kostnaden till en SMS-avgift per utskick** (plus eventuell påminnelse enligt inställning). **Fritextkommentarerna** har gett stort värde i vardagen och har **redan lett till justerad patientinformation före mottagningsbesök** (stängd kvalitetsloop utan att vänta på större rapporter).
+
 ---
 
 ## 2) Arkitektur (kort)
@@ -71,6 +75,8 @@ Nyckelidéer:
 
 ## 6) Vad som redan fungerar (V1-läge)
 
+I praktiken bedöms flödet som **stabilt i drift** (import → utskick → svar → dashboard/rapport). Nedan teknisk checklista:
+
 - CSV-import + preview med felrader/dubletter
 - gemensam Supabase-lagrad lista för bokningstyper som automatiskt sorteras bort
 - `Diagnoser` som hårt urvalskrav i importen
@@ -80,18 +86,22 @@ Nyckelidéer:
 - automatisk påminnelse (schemalagd); ingen påminnelseknapp i portalen
 - publik enkätsida och submit
 - dashboard + rapport + kampanjhistorik
+- dashboard/rapport kan filtreras på rå bokningstyp via snabbval (`Kuralink`, `Knä`, `Axel`, `Armbåge`)
 - fördröjningsanalys baserat på besökstid/starttid
+- enkel jämförelse mellan förmiddags- och eftermiddagsbesök samt andel svar före påminnelse
 - publikt formulär: se `ENKAT-PATIENTFORMULAR-MALL.md` (layout, mobil, färger)
 
 ---
 
 ## 7) Kända förbättringsspår
 
-- skarpa tester med riktiga utskick och större batcher
+Prioriteten har skiftat: **kärnflödet är verifierat i verklig användning**; listan nedan är främst **vidareutveckling**, inte blockers.
+
 - rapportexport (CSV/PDF)
 - bättre visualisering av fördröjningsmått
-- polish i adminflödet
+- polish i adminflödet vid behov
 - ev. mer automatiserad profil/vårdgivarkoppling
+- fortsatt bevakning vid **mycket stora batcher** (kö/46elks) — inget känt problem i nuvarande volym
 
 ---
 

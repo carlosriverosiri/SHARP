@@ -70,10 +70,45 @@ describe('enkat-page-sections', () => {
       providerFilterEl
     });
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/dashboard?days=90&provider=Dr%20A', expect.objectContaining({ credentials: 'include' }));
+    expect(fetchMock).toHaveBeenCalledWith('/api/enkat/dashboard?days=90&provider=Dr+A', expect.objectContaining({ credentials: 'include' }));
     expect(bannerEl.textContent).toBe('Visar resultat för 1 vårdgivare.');
     expect(contentEl.innerHTML).toContain('Dr A');
     expect(Array.from(providerFilterEl.querySelectorAll('option')).map((option) => option.value)).toEqual(['', 'Dr A', 'Dr B']);
+  });
+
+  it('includes selected booking type filters in dashboard requests', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      jsonResponse({
+        success: true,
+        data: {
+          scope: 'admin',
+          availableProviders: ['Dr A'],
+          providers: [],
+          totals: {
+            providerCount: 0
+          }
+        }
+      })
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const bannerEl = document.createElement('div');
+    const contentEl = document.createElement('div');
+    const providerFilterEl = document.createElement('select');
+    providerFilterEl.innerHTML = '<option value="">Alla</option><option value="Dr A">Dr A</option>';
+    providerFilterEl.value = 'Dr A';
+
+    await loadDashboardSection({
+      bannerEl,
+      contentEl,
+      providerFilterEl,
+      bookingTypeFilterIds: ['kna', 'axel']
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/enkat/dashboard?days=90&provider=Dr+A&bookingTypes=kna%2Caxel',
+      expect.objectContaining({ credentials: 'include' })
+    );
   });
 
   it('loads report section for an unconfigured self view', async () => {
@@ -106,6 +141,42 @@ describe('enkat-page-sections', () => {
     expect(fetchMock).toHaveBeenCalledWith('/api/enkat/report?period=month', expect.objectContaining({ credentials: 'include' }));
     expect(bannerEl.textContent).toBe('Rapport laddad: Senaste 30 dagarna.');
     expect(contentEl.innerHTML).toContain('Välj vårdgivarnamn först.');
+  });
+
+  it('includes selected booking type filters in report requests', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      jsonResponse({
+        success: true,
+        data: {
+          scope: 'self',
+          configured: false,
+          periodLabel: 'Senaste 90 dagarna',
+          message: 'Ingen data.'
+        }
+      })
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const bannerEl = document.createElement('div');
+    const contentEl = document.createElement('div');
+    const periodEl = document.createElement('select');
+    periodEl.innerHTML = '<option value="quarter" selected>Quarter</option>';
+    const providerFilterEl = document.createElement('select');
+    providerFilterEl.innerHTML = '<option value="">Alla</option><option value="Dr A">Dr A</option>';
+    providerFilterEl.value = 'Dr A';
+
+    await loadReportSection({
+      bannerEl,
+      contentEl,
+      periodEl,
+      providerFilterEl,
+      bookingTypeFilterIds: ['kuralink']
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/enkat/report?period=quarter&provider=Dr+A&bookingTypes=kuralink',
+      expect.objectContaining({ credentials: 'include' })
+    );
   });
 
   it('loads campaign history without manual reminder controls', async () => {

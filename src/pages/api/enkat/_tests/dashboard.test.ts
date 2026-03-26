@@ -6,7 +6,10 @@ const mocks = vi.hoisted(() => {
   const state = {
     enkatSvarResults: [] as QueryResult[],
     enkatDeliveryLogResults: [] as QueryResult[],
-    enkatUtskickResults: [] as QueryResult[]
+    enkatUtskickResults: [] as QueryResult[],
+    enkatSvarBuilders: [] as any[],
+    enkatDeliveryLogBuilders: [] as any[],
+    enkatUtskickBuilders: [] as any[]
   };
 
   const nextResult = (queue: QueryResult[], fallback: QueryResult): QueryResult => {
@@ -26,8 +29,11 @@ const mocks = vi.hoisted(() => {
         select: vi.fn(() => builder),
         gte: vi.fn(() => builder),
         order: vi.fn(() => builder),
-        eq: vi.fn(() => builder)
+        eq: vi.fn(() => builder),
+        or: vi.fn(() => builder)
       };
+
+      state.enkatSvarBuilders.push(builder);
 
       return builder;
     }
@@ -43,6 +49,8 @@ const mocks = vi.hoisted(() => {
         eq: vi.fn(() => builder)
       };
 
+      state.enkatDeliveryLogBuilders.push(builder);
+
       return builder;
     }
 
@@ -55,8 +63,11 @@ const mocks = vi.hoisted(() => {
         not: vi.fn(() => builder),
         gte: vi.fn(() => builder),
         eq: vi.fn(() => builder),
-        in: vi.fn(() => builder)
+        in: vi.fn(() => builder),
+        or: vi.fn(() => builder)
       };
+
+      state.enkatUtskickBuilders.push(builder);
 
       return builder;
     }
@@ -114,6 +125,9 @@ describe('GET /api/enkat/dashboard', () => {
     mocks.state.enkatSvarResults.length = 0;
     mocks.state.enkatDeliveryLogResults.length = 0;
     mocks.state.enkatUtskickResults.length = 0;
+    mocks.state.enkatSvarBuilders.length = 0;
+    mocks.state.enkatDeliveryLogBuilders.length = 0;
+    mocks.state.enkatUtskickBuilders.length = 0;
 
     mocks.arInloggadMock.mockResolvedValue(true);
     mocks.hamtaAnvandareMock.mockResolvedValue({
@@ -290,6 +304,61 @@ describe('GET /api/enkat/dashboard', () => {
         }
       }
     });
+  });
+
+  it('applies booking type filters to answer and utskick queries', async () => {
+    mocks.resolveEnkatProviderScopeMock.mockResolvedValueOnce({
+      isAdmin: true,
+      ownProviderName: null,
+      effectiveProviderFilter: ''
+    });
+    mocks.state.enkatSvarResults.push(
+      {
+        data: [],
+        error: null
+      },
+      {
+        data: [],
+        error: null
+      }
+    );
+    mocks.state.enkatDeliveryLogResults.push({
+      data: [
+        { status: 'sent', typ: 'forsta_sms', utskick_id: 'u-filtered' }
+      ],
+      error: null
+    });
+    mocks.state.enkatUtskickResults.push(
+      {
+        data: [],
+        error: null
+      },
+      {
+        data: [
+          { id: 'u-filtered', vardgivare_namn: 'Dr Filter' }
+        ],
+        error: null
+      }
+    );
+
+    const response = await GET({
+      cookies: {} as Parameters<typeof GET>[0]['cookies'],
+      url: createUrl('http://localhost/api/enkat/dashboard?bookingTypes=kna,axel')
+    } as Parameters<typeof GET>[0]);
+
+    expect(response.status).toBe(200);
+    expect(mocks.state.enkatSvarBuilders[0].or).toHaveBeenCalledWith(
+      'bokningstyp_raw.ilike.*knä*,bokningstyp_raw.ilike.*kna*,bokningstyp_raw.ilike.*axel*'
+    );
+    expect(mocks.state.enkatSvarBuilders[1].or).toHaveBeenCalledWith(
+      'bokningstyp_raw.ilike.*knä*,bokningstyp_raw.ilike.*kna*,bokningstyp_raw.ilike.*axel*'
+    );
+    expect(mocks.state.enkatUtskickBuilders[0].or).toHaveBeenCalledWith(
+      'bokningstyp_raw.ilike.*knä*,bokningstyp_raw.ilike.*kna*,bokningstyp_raw.ilike.*axel*'
+    );
+    expect(mocks.state.enkatUtskickBuilders[1].or).toHaveBeenCalledWith(
+      'bokningstyp_raw.ilike.*knä*,bokningstyp_raw.ilike.*kna*,bokningstyp_raw.ilike.*axel*'
+    );
   });
 
   it('returns 500 when the delivery log query fails', async () => {

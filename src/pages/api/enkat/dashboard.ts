@@ -1,5 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import {
+  buildEnkatBookingTypeRawOrFilter,
+  parseEnkatBookingTypeFilterIds
+} from '../../../lib/enkat-booking-type-filters';
 import { resolveEnkatProviderScope } from '../../../lib/enkat-provider-scope';
 import { ANONYMITY_THRESHOLD, average, summarizeDelayRows, type DeliveryDelayRow } from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
@@ -105,6 +109,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
   const days = Math.max(1, Math.min(365, Number(url.searchParams.get('days') || 90)));
   const providerFilter = url.searchParams.get('provider')?.trim() || '';
+  const bookingTypeFilterIds = parseEnkatBookingTypeFilterIds(url.searchParams.get('bookingTypes'));
+  const bookingTypeRawOrFilter = buildEnkatBookingTypeRawOrFilter(bookingTypeFilterIds);
   const fromDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
   try {
@@ -131,6 +137,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       rowsQuery = rowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
     }
 
+    if (bookingTypeRawOrFilter) {
+      rowsQuery = rowsQuery.or(bookingTypeRawOrFilter);
+    }
+
     const { data: rows, error } = await rowsQuery;
 
     if (error) {
@@ -148,12 +158,16 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let delayQuery = supabaseAdmin
       .from('enkat_utskick')
-      .select('id, vardgivare_namn, besoksdatum, besoksstart_tid, forsta_sms_skickad_vid, svarad_vid')
+      .select('id, vardgivare_namn, besoksdatum, besoksstart_tid, forsta_sms_skickad_vid, paminnelse_skickad_vid, svarad_vid')
       .not('forsta_sms_skickad_vid', 'is', null)
       .gte('forsta_sms_skickad_vid', fromDate);
 
     if (effectiveProviderFilter) {
       delayQuery = delayQuery.eq('vardgivare_namn', effectiveProviderFilter);
+    }
+
+    if (bookingTypeRawOrFilter) {
+      delayQuery = delayQuery.or(bookingTypeRawOrFilter);
     }
 
     const { data: utskickRowsForDelay, error: delayError } = await delayQuery;
@@ -164,10 +178,16 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let providerRows: ProviderNameRow[] = [];
     if (isAdmin) {
-      const { data, error: providerError } = await supabaseAdmin
+      let providerRowsQuery = supabaseAdmin
         .from('enkat_svar')
         .select('vardgivare_namn')
         .gte('created_at', fromDate);
+
+      if (bookingTypeRawOrFilter) {
+        providerRowsQuery = providerRowsQuery.or(bookingTypeRawOrFilter);
+      }
+
+      const { data, error: providerError } = await providerRowsQuery;
 
       if (providerError) {
         throw providerError;
@@ -214,6 +234,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
         if (effectiveProviderFilter) {
           utskickProviderQuery = utskickProviderQuery.eq('vardgivare_namn', effectiveProviderFilter);
+        }
+
+        if (bookingTypeRawOrFilter) {
+          utskickProviderQuery = utskickProviderQuery.or(bookingTypeRawOrFilter);
         }
 
         const { data: utskickProviderRows, error: utskickProviderError } = await utskickProviderQuery;

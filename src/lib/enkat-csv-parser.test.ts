@@ -8,8 +8,8 @@ function joinCsv(rows: string[][]): string {
 describe('enkat-csv-parser', () => {
   it('requires Diagnoser column in the import file', () => {
     const csv = joinCsv([
-      ['PatientID', 'Mobiltelefon', 'Vardgivare', 'Datum', 'Bokningstyp'],
-      ['p1', '0701234567', 'Dr A', '2026-03-15', 'Nybesök']
+      ['PatientID', 'Mobiltelefon', 'Vardgivare', 'Datum', 'Bokningstyp', 'Starttid'],
+      ['p1', '0701234567', 'Dr A', '2026-03-15', 'Nybesök', '08:00']
     ]);
 
     const result = parseEnkatCsv(csv);
@@ -17,6 +17,34 @@ describe('enkat-csv-parser', () => {
     expect(result.totalRows).toBe(0);
     expect(result.validRows).toBe(0);
     expect(result.errors[0]?.message).toContain('diagnoser');
+  });
+
+  it('requires Starttid column in the import file', () => {
+    const csv = joinCsv([
+      ['PatientID', 'Mobiltelefon', 'Vardgivare', 'Datum', 'Bokningstyp', 'Diagnoser'],
+      ['p1', '0701234567', 'Dr A', '2026-03-15', 'Nybesök', 'M17']
+    ]);
+
+    const result = parseEnkatCsv(csv);
+
+    expect(result.totalRows).toBe(0);
+    expect(result.validRows).toBe(0);
+    expect(result.errors[0]?.message).toContain('starttid');
+  });
+
+  it('rejects rows with empty or invalid Starttid', () => {
+    const csv = joinCsv([
+      ['PatientID', 'Mobiltelefon', 'Vardgivare', 'Datum', 'Bokningstyp', 'Diagnoser', 'Starttid'],
+      ['p1', '0701234567', 'Dr A', '2026-03-15', 'Nybesök', 'M17', ''],
+      ['p2', '0707654321', 'Dr B', '2026-03-15', 'Återbesök', 'M17', '09:30']
+    ]);
+
+    const result = parseEnkatCsv(csv);
+
+    expect(result.totalRows).toBe(2);
+    expect(result.validRows).toBe(1);
+    expect(result.errors.some((e) => e.field === 'Starttid')).toBe(true);
+    expect(result.selectedRows[0]?.patientId).toBe('p2');
   });
 
   it('auto-excludes rows with empty Diagnoser without turning them into validation errors', () => {

@@ -9,9 +9,19 @@ type DelayBucket = {
   responseRate: number;
 };
 
+type VisitStartSegment = {
+  label: string;
+  sent: number;
+  answered: number;
+  answeredBeforeReminder: number;
+  responseRate: number;
+  beforeReminderRate: number;
+};
+
 type DelayMetrics = {
   averageDelayHours?: number;
   buckets?: DelayBucket[];
+  visitStartSegments?: VisitStartSegment[];
 };
 
 type CommentItem = {
@@ -128,6 +138,30 @@ function rateColorClass(rate: number): string {
 
 function scoreColorClass(score: number): string {
   return score >= 4 ? 'score-high' : score >= 3 ? 'score-mid' : 'score-low';
+}
+
+function formatPercent(rate: number | undefined): string {
+  return `${Math.round((rate || 0) * 100)}%`;
+}
+
+function renderVisitStartInsights(delayMetrics?: DelayMetrics): string {
+  const segments = (delayMetrics?.visitStartSegments || []).filter((segment) => segment.sent > 0);
+  if (!segments.length) {
+    return '';
+  }
+
+  return `
+    <div class="delay-insights">
+      ${segments.map((segment) => `
+        <div class="delay-insight-card">
+          <div class="delay-insight-title">${escapeHtml(segment.label)}</div>
+          <div class="delay-insight-value">${escapeHtml(formatPercent(segment.responseRate))}</div>
+          <div class="delay-insight-meta">Svar totalt: ${escapeHtml(segment.answered)}/${escapeHtml(segment.sent)}</div>
+          <div class="delay-insight-sub">Före påminnelse: <strong>${escapeHtml(formatPercent(segment.beforeReminderRate))}</strong></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 export function setElementBanner(
@@ -438,6 +472,8 @@ export function renderProviderCard(item: ProviderCardData): string {
         · Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
       </div>
 
+      ${renderVisitStartInsights(item.delayMetrics)}
+
       ${commentHtml}
     </div>
   `;
@@ -626,8 +662,10 @@ export function renderReportProvider(item: ReportProviderData): string {
 
       <div class="provider-meta">
         Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
-        · Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(bucket.responseRate)})`).join(' · ') || 'Ingen data ännu'}
+        · Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(formatPercent(bucket.responseRate))})`).join(' · ') || 'Ingen data ännu'}
       </div>
+
+      ${renderVisitStartInsights(item.delayMetrics)}
     </div>
   `;
 }
@@ -639,18 +677,24 @@ export function updateSelectOptions(
 ): void {
   if (!selectEl) return;
 
-  const current = new Set(
-    Array.from(selectEl.querySelectorAll('option'))
-      .map((option) => option.value)
-  );
+  const placeholderOptions = Array.from(selectEl.querySelectorAll('option'))
+    .filter((option) => option.value === '');
+  const normalizedValues = [...new Set(values || [])];
+  const desiredValues = selectedValue && !normalizedValues.includes(selectedValue)
+    ? [...normalizedValues, selectedValue]
+    : normalizedValues;
 
-  for (const value of values || []) {
-    if (!current.has(value)) {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = value;
-      selectEl.appendChild(option);
-    }
+  selectEl.innerHTML = '';
+  for (const option of placeholderOptions) {
+    selectEl.appendChild(option);
+  }
+
+  for (const value of desiredValues) {
+    if (!value) continue;
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    selectEl.appendChild(option);
   }
 
   if (selectedValue !== undefined) {

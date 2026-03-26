@@ -54,6 +54,7 @@ type DashboardSectionContext = {
   bannerEl: HTMLElement;
   contentEl: HTMLElement;
   providerFilterEl: HTMLSelectElement | null;
+  bookingTypeFilterIds?: string[];
 };
 
 type CampaignHistorySectionContext = {
@@ -68,20 +69,29 @@ type ReportSectionContext = {
   contentEl: HTMLElement;
   periodEl: HTMLSelectElement;
   providerFilterEl: HTMLSelectElement | null;
+  bookingTypeFilterIds?: string[];
 };
 
 export async function loadDashboardSection({
   bannerEl,
   contentEl,
-  providerFilterEl
+  providerFilterEl,
+  bookingTypeFilterIds = []
 }: DashboardSectionContext): Promise<void> {
   setElementBanner(bannerEl, 'info', 'Laddar resultatöversikt...');
   contentEl.innerHTML = '';
 
   try {
     const provider = providerFilterEl?.value || '';
+    const params = new URLSearchParams({ days: '90' });
+    if (provider) {
+      params.set('provider', provider);
+    }
+    if (bookingTypeFilterIds.length > 0) {
+      params.set('bookingTypes', bookingTypeFilterIds.join(','));
+    }
     const data = await fetchApiData<DashboardData>(
-      `/api/enkat/dashboard?days=90${provider ? `&provider=${encodeURIComponent(provider)}` : ''}`,
+      `/api/enkat/dashboard?${params.toString()}`,
       undefined,
       'Kunde inte läsa dashboarddata.'
     );
@@ -185,7 +195,8 @@ export async function loadReportSection({
   bannerEl,
   contentEl,
   periodEl,
-  providerFilterEl
+  providerFilterEl,
+  bookingTypeFilterIds = []
 }: ReportSectionContext): Promise<void> {
   setElementBanner(bannerEl, 'info', 'Laddar rapport...');
   contentEl.innerHTML = '';
@@ -193,8 +204,15 @@ export async function loadReportSection({
   try {
     const period = periodEl.value || 'month';
     const provider = providerFilterEl?.value || '';
+    const params = new URLSearchParams({ period });
+    if (provider) {
+      params.set('provider', provider);
+    }
+    if (bookingTypeFilterIds.length > 0) {
+      params.set('bookingTypes', bookingTypeFilterIds.join(','));
+    }
     const data = await fetchApiData<ReportData>(
-      `/api/enkat/report?period=${encodeURIComponent(period)}${provider ? `&provider=${encodeURIComponent(provider)}` : ''}`,
+      `/api/enkat/report?${params.toString()}`,
       undefined,
       'Kunde inte läsa rapporten.'
     );

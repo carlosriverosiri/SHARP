@@ -1,5 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getErrorMessage, jsonResponse as json } from '../../../lib/enkat-api-helpers';
+import {
+  buildEnkatBookingTypeRawOrFilter,
+  parseEnkatBookingTypeFilterIds
+} from '../../../lib/enkat-booking-type-filters';
 import { resolveEnkatProviderScope } from '../../../lib/enkat-provider-scope';
 import { ANONYMITY_THRESHOLD, average, summarizeDelayRows, type DeliveryDelayRow } from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
@@ -80,6 +84,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
   const period = String(url.searchParams.get('period') || 'month');
   const providerFilter = url.searchParams.get('provider')?.trim() || '';
+  const bookingTypeFilterIds = parseEnkatBookingTypeFilterIds(url.searchParams.get('bookingTypes'));
+  const bookingTypeRawOrFilter = buildEnkatBookingTypeRawOrFilter(bookingTypeFilterIds);
   const range = startForPeriod(period);
 
   try {
@@ -107,6 +113,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       currentRowsQuery = currentRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
     }
 
+    if (bookingTypeRawOrFilter) {
+      currentRowsQuery = currentRowsQuery.or(bookingTypeRawOrFilter);
+    }
+
     const { data: currentRows, error: currentError } = await currentRowsQuery;
 
     if (currentError) {
@@ -123,6 +133,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       previousRowsQuery = previousRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
     }
 
+    if (bookingTypeRawOrFilter) {
+      previousRowsQuery = previousRowsQuery.or(bookingTypeRawOrFilter);
+    }
+
     const { data: previousRows, error: previousError } = await previousRowsQuery;
 
     if (previousError) {
@@ -131,13 +145,17 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let currentDelayRowsQuery = supabaseAdmin
       .from('enkat_utskick')
-      .select('vardgivare_namn, besoksdatum, besoksstart_tid, forsta_sms_skickad_vid, svarad_vid')
+      .select('vardgivare_namn, besoksdatum, besoksstart_tid, forsta_sms_skickad_vid, paminnelse_skickad_vid, svarad_vid')
       .not('forsta_sms_skickad_vid', 'is', null)
       .gte('forsta_sms_skickad_vid', range.from)
       .lte('forsta_sms_skickad_vid', range.to);
 
     if (effectiveProviderFilter) {
       currentDelayRowsQuery = currentDelayRowsQuery.eq('vardgivare_namn', effectiveProviderFilter);
+    }
+
+    if (bookingTypeRawOrFilter) {
+      currentDelayRowsQuery = currentDelayRowsQuery.or(bookingTypeRawOrFilter);
     }
 
     const { data: currentDelayRows, error: currentDelayError } = await currentDelayRowsQuery;
@@ -148,11 +166,17 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
     let providerRows: ProviderNameRow[] = [];
     if (isAdmin) {
-      const { data, error: providerError } = await supabaseAdmin
+      let providerRowsQuery = supabaseAdmin
         .from('enkat_svar')
         .select('vardgivare_namn')
         .gte('created_at', range.from)
         .lte('created_at', range.to);
+
+      if (bookingTypeRawOrFilter) {
+        providerRowsQuery = providerRowsQuery.or(bookingTypeRawOrFilter);
+      }
+
+      const { data, error: providerError } = await providerRowsQuery;
 
       if (providerError) {
         throw providerError;

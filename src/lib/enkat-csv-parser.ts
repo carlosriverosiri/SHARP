@@ -61,7 +61,15 @@ export type EnkatParseResult = {
   errors: EnkatValidationError[];
 };
 
-const REQUIRED_HEADERS = ['patientid', 'mobiltelefon', 'vardgivare', 'datum', 'bokningstyp', 'diagnoser'] as const;
+const REQUIRED_HEADERS = [
+  'patientid',
+  'mobiltelefon',
+  'vardgivare',
+  'datum',
+  'bokningstyp',
+  'diagnoser',
+  'starttid'
+] as const;
 
 function canonicalizeHeader(value: string): string {
   return normalizeSwedishText(value).replace(/[^a-z0-9]/g, '');
@@ -266,6 +274,16 @@ export function parseEnkatCsv(
       return;
     }
 
+    const visitStartTime = normalizeTime(cleanCell(row, headerMap.starttid));
+    if (!visitStartTime) {
+      errors.push({
+        rowIndex,
+        field: 'Starttid',
+        message: 'Starttid saknas eller har ogiltigt format. Varje bokning måste ha en giltig starttid (t.ex. 08:00).'
+      });
+      return;
+    }
+
     const matchedExcludedPattern = findExcludedBookingTypePattern(bookingTypeRaw, excludedBookingTypePatterns);
     if (matchedExcludedPattern) {
       addAutoExcludedGroup(
@@ -281,7 +299,6 @@ export function parseEnkatCsv(
     const providerName = cleanCell(row, headerMap.vardgivare);
     const normalizedPhone = normalizePhone(cleanCell(row, headerMap.mobiltelefon));
     const normalizedDate = normalizeDate(cleanCell(row, headerMap.datum));
-    const visitStartTime = normalizeTime(cleanCell(row, headerMap.starttid));
     const bookingTypeNormalized = classifyBookingType(bookingTypeRaw);
 
     if (!patientId) {

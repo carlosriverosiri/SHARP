@@ -6,6 +6,8 @@
 
 **Aktuellt publikt formulär (utseende, mobil, mall för framtida formulär):** `ENKAT-PATIENTFORMULAR-MALL.md`
 
+**Drift (uppdatering):** Modulen används i skarp drift. I ett tidigt produktionsutskick: **44 svar på 82 skickade SMS** (ca **54 %** svarsfrekvens). SMS-mallen är trimmad så att **första meddelandet ryms i ett segment** (lägre kostnad per mottagare). **Fritextkommentarerna** har visat sig särskilt användbara och har **redan lett till justerad information till patienter före mottagningsbesök**. Mer samlat: `MASTERDOKUMENT.md` och `ENKAT-STATUS.md`.
+
 ---
 
 ## 1. Syfte
@@ -73,7 +75,7 @@ src/pages/api/enkat/dashboard.ts
 src/lib/enkat-csv-parser.ts
 src/lib/enkat-booking-classifier.ts
 netlify/functions/enkat-send-queue.mts
-supabase/migrations/009-enkat.sql
+supabase/migrations/023-enkat.sql (och senare enkätrelaterade migreringar; se `ENKAT-STATUS.md`)
 ```
 
 ---
@@ -98,10 +100,10 @@ b5kp8fc;+46707676108;Sophie Lantz;2026-02-02;KuralinkFysiskt;
 - varje rad verkar ha ett extra avslutande `;`
 - telefonnummer är redan i internationellt format `+467...`
 - datum är i ISO-format `YYYY-MM-DD`
-- de fasta kärnkolumnerna i verklig drift är `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`, `Bokningstyp` och `Diagnoser`
+- de fasta kärnkolumnerna i verklig drift är `Patient-ID`, `Mobiltelefon`, `Vårdgivare`, `Datum`, `Bokningstyp`, `Diagnoser` och `Starttid`
 - `Bokningstyp` kan ändras över tid och får inte hårdkodas som en sluten lista
 - rader utan värde i `Diagnoser` ska inte gå vidare till utskick
-- `Starttid` kan förekomma i exporten och bör stödjas när den finns
+- `Starttid` ska finnas för varje rad som ska följas upp; tom eller ogiltig starttid ska ge valideringsfel (i praktiken hör ihop med att bokningen är ofullständig)
 
 ### Förväntade kolumner
 
@@ -113,7 +115,7 @@ b5kp8fc;+46707676108;Sophie Lantz;2026-02-02;KuralinkFysiskt;
 | `Datum` | Ja | `2026-02-02` | Besöksdatum |
 | `Bokningstyp` | Ja | `3. REMISS AXEL` | Fri text från källsystem |
 | `Diagnoser` | Ja | `M75.1` | Tom cell betyder att raden ska sorteras bort före preview |
-| `Starttid` | Nej | `08:40` | Starttid för besöket, om tillgänglig i exporten |
+| `Starttid` | Ja | `08:40` | Starttid för besöket; tom eller ogiltig cell ska inte gå vidare till utskick |
 
 ### Parserkrav
 
@@ -127,9 +129,9 @@ Parsern ska:
 - validera datum
 - validera telefonnummer
 - inte ändra redan korrekta nummer i `+46`-format i onödan
-- kräva `Bokningstyp` och `Diagnoser` som kolumner i filen
+- kräva `Bokningstyp`, `Diagnoser` och `Starttid` som kolumner i filen
 - sortera bort rader där `Diagnoser` är tom
-- hantera saknad `Starttid` utan att flödet bryts
+- avvisa rader där `Starttid` saknas eller inte kan tolkas som tid (t.ex. `08:00`)
 - visa felrader tydligt i preview
 - vara tolerant mot mindre variationer i rubriker, whitespace och teckenkodning
 
@@ -249,7 +251,7 @@ Utskicket sker **automatiskt** via schemalagd Netlify-funktion `enkat-remind-sch
 
 I `/personal/enkat` finns bland annat:
 
-- kampanjnamn och SMS-mall (placeholders: `[VÅRDGIVARE]`, `[DATUM]`, `[DATUM_KORT]` — kort datum utan år, t.ex. 23/3 — `[BOKNINGSTYP]`, `[LÄNK]`; standardmall använder `[DATUM_KORT]` för färre tecken per SMS)
+- kampanjnamn och SMS-mall (placeholders: `[VÅRDGIVARE]`, `[DATUM]`, `[DATUM_KORT]` — kort datum utan år, t.ex. 23/3 — `[BOKNINGSTYP]`, `[LÄNK]`; standardmall använder `[DATUM_KORT]` för färre tecken per SMS). I drift har detta gett **ett SMS-segment per första utskick** (ingen uppdelning i flera SMS för själva inbjudan — kostnad **en SMS per mottagare** för första utskick; påminnelse är ett till SMS om den skickas)
 - kryssruta för automatisk påminnelse (Ja/Nej) med informationstext om 16:00 följande dag
 - första utskick: direkt eller kö (`enkat-send-queue`)
 

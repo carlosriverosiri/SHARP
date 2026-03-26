@@ -7,6 +7,7 @@ import {
   formatExcludedBookingTypePatterns,
   getDefaultExcludedBookingTypePatternText
 } from '../../lib/enkat-follow-up-rules';
+import { ENKAT_BOOKING_TYPE_FILTERS } from '../../lib/enkat-booking-type-filters';
 import { harMinstPortalRoll } from '../../lib/portal-roles';
 
 if (!await arInloggad(Astro.cookies)) {
@@ -93,6 +94,13 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       margin: 0 0 8px;
       font-size: 28px;
       line-height: 1.1;
+    }
+
+    .page-title {
+      font-size: clamp(32px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
     }
 
     .page-intro {
@@ -532,6 +540,82 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       max-width: 220px;
     }
 
+    .toolbar-multiselect {
+      position: relative;
+      min-width: 260px;
+      max-width: 340px;
+    }
+
+    .toolbar-multiselect-summary {
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: white;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.4;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .toolbar-multiselect-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .toolbar-multiselect-summary::after {
+      content: '▾';
+      color: var(--muted);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .toolbar-multiselect[open] .toolbar-multiselect-summary::after {
+      transform: rotate(180deg);
+    }
+
+    .toolbar-multiselect-value {
+      color: var(--muted);
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toolbar-multiselect-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 20;
+      width: 100%;
+      min-width: 260px;
+      display: grid;
+      gap: 6px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .toolbar-multiselect-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 4px;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .toolbar-multiselect-option input {
+      margin: 0;
+      accent-color: var(--primary);
+    }
+
     .data-card {
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -769,7 +853,36 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     }
 
     @media (max-width: 640px) {
-      .page { padding: 16px 12px 40px; }
+      /* Fullbreddssektioner: mindre nästlad padding, mer luft som hero-liknande band */
+      .page {
+        max-width: none;
+        padding: 12px 0 36px;
+      }
+      .header {
+        padding: 0 16px 16px;
+        margin-bottom: 8px;
+      }
+      .grid {
+        gap: 0;
+      }
+      .card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 18px 16px;
+        box-shadow: none;
+      }
+      .card + .card {
+        border-top: none;
+      }
+      .dropzone {
+        padding: 18px 14px;
+        border-radius: 12px;
+      }
+      .import-upload .dropzone {
+        min-height: 150px;
+        padding: 16px 14px 14px;
+      }
       h1 { font-size: 28px; }
       .summary-grid { grid-template-columns: 1fr; }
       #summaryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -778,8 +891,16 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
         grid-template-columns: 1fr;
       }
       .toolbar-select,
-      .toolbar-select.narrow {
+      .toolbar-select.narrow,
+      .toolbar-multiselect {
         max-width: none;
+      }
+      .toolbar-multiselect {
+        min-width: 0;
+        width: 100%;
+      }
+      .toolbar-multiselect-panel {
+        min-width: 0;
       }
       .toggle-row {
         width: 100%;
@@ -970,6 +1091,43 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       line-height: 1.5;
     }
 
+    .delay-insights {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .delay-insight-card {
+      border: 1px solid var(--enk-line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .delay-insight-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--enk-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .delay-insight-value {
+      margin-top: 4px;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--enk-text);
+      line-height: 1.1;
+    }
+
+    .delay-insight-meta,
+    .delay-insight-sub {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--enk-muted);
+      line-height: 1.45;
+    }
+
     .provider-comments {
       display: grid;
       gap: 8px;
@@ -1156,6 +1314,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
       .provider-grid { grid-template-columns: 1fr; }
       .score-grid { grid-template-columns: repeat(2, 1fr); }
+      .delay-insights { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -1166,7 +1325,7 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
     <div class="header">
       <div>
-        <h1>Patientupplevelse via SMS</h1>
+        <h1 class="page-title">Patientupplevelse via SMS</h1>
         <p class="page-intro">
           Importera en CSV, filtrera bort irrelevanta bokningstyper och skapa enkätutskick utan att lämna sidan.
         </p>
@@ -1382,13 +1541,36 @@ Svara anonymt: [LÄNK]</textarea>
       <p class="card-intro">
         Vårdgivare ser bara sina egna resultat. Administratörer ser alla vårdgivare sida vid sida.
       </p>
-      {isAdmin && (
-        <div class="actions">
+      <div class="actions">
+        {isAdmin && (
           <select id="dashboardProviderFilter" class="input toolbar-select">
             <option value="">Alla vårdgivare</option>
           </select>
-        </div>
-      )}
+        )}
+        <details id="dashboardBookingTypeFilter" class="toolbar-multiselect">
+          <summary class="toolbar-multiselect-summary">
+            <span>Bokningstyper</span>
+            <span id="dashboardBookingTypeFilterSummary" class="toolbar-multiselect-value">Alla</span>
+          </summary>
+          <div class="toolbar-multiselect-panel">
+            <label class="toolbar-multiselect-option">
+              <input type="checkbox" data-booking-filter-all checked />
+              <span>Alla</span>
+            </label>
+            {ENKAT_BOOKING_TYPE_FILTERS.map((filter) => (
+              <label class="toolbar-multiselect-option">
+                <input
+                  type="checkbox"
+                  value={filter.id}
+                  data-booking-filter-option
+                  data-booking-filter-label={filter.label}
+                />
+                <span>{filter.label}</span>
+              </label>
+            ))}
+          </div>
+        </details>
+      </div>
       <div id="dashboardBanner" class="banner visible info">Laddar resultatöversikt...</div>
       <div id="dashboardContent" class="section"></div>
     </section>
@@ -1412,6 +1594,29 @@ Svara anonymt: [LÄNK]</textarea>
             <option value="">Alla vårdgivare</option>
           </select>
         )}
+        <details id="reportBookingTypeFilter" class="toolbar-multiselect">
+          <summary class="toolbar-multiselect-summary">
+            <span>Bokningstyper</span>
+            <span id="reportBookingTypeFilterSummary" class="toolbar-multiselect-value">Alla</span>
+          </summary>
+          <div class="toolbar-multiselect-panel">
+            <label class="toolbar-multiselect-option">
+              <input type="checkbox" data-booking-filter-all checked />
+              <span>Alla</span>
+            </label>
+            {ENKAT_BOOKING_TYPE_FILTERS.map((filter) => (
+              <label class="toolbar-multiselect-option">
+                <input
+                  type="checkbox"
+                  value={filter.id}
+                  data-booking-filter-option
+                  data-booking-filter-label={filter.label}
+                />
+                <span>{filter.label}</span>
+              </label>
+            ))}
+          </div>
+        </details>
         <select id="reportPeriod" class="input toolbar-select narrow">
           <option value="week">Senaste 7 dagarna</option>
           <option value="month" selected>Senaste 30 dagarna</option>
@@ -1441,6 +1646,12 @@ Svara anonymt: [LÄNK]</textarea>
     } from '../../lib/enkat-page-sections';
 
     type BannerType = 'info' | 'error' | 'success';
+    type BookingTypeFilterControl = {
+      detailsEl: HTMLDetailsElement | null;
+      summaryEl: HTMLElement | null;
+      allCheckboxEl: HTMLInputElement | null;
+      optionEls: HTMLInputElement[];
+    };
 
     const form = document.getElementById('uploadForm') as HTMLFormElement;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -1469,6 +1680,8 @@ Svara anonymt: [LÄNK]</textarea>
     const dashboardBanner = document.getElementById('dashboardBanner') as HTMLElement;
     const dashboardContent = document.getElementById('dashboardContent') as HTMLElement;
     const dashboardProviderFilter = document.getElementById('dashboardProviderFilter') as HTMLSelectElement | null;
+    const dashboardBookingTypeFilter = document.getElementById('dashboardBookingTypeFilter') as HTMLDetailsElement | null;
+    const dashboardBookingTypeFilterSummary = document.getElementById('dashboardBookingTypeFilterSummary') as HTMLElement | null;
     const campaignsBanner = document.getElementById('campaignsBanner') as HTMLElement;
     const campaignsContent = document.getElementById('campaignsContent') as HTMLElement;
     const refreshCampaignsBtn = document.getElementById('refreshCampaignsBtn') as HTMLButtonElement | null;
@@ -1476,6 +1689,8 @@ Svara anonymt: [LÄNK]</textarea>
     const reportContent = document.getElementById('reportContent') as HTMLElement;
     const reportPeriod = document.getElementById('reportPeriod') as HTMLSelectElement;
     const reportProviderFilter = document.getElementById('reportProviderFilter') as HTMLSelectElement | null;
+    const reportBookingTypeFilter = document.getElementById('reportBookingTypeFilter') as HTMLDetailsElement | null;
+    const reportBookingTypeFilterSummary = document.getElementById('reportBookingTypeFilterSummary') as HTMLElement | null;
     const refreshReportBtn = document.getElementById('refreshReportBtn') as HTMLButtonElement | null;
     const defaultCreateCampaignBtnLabel = createCampaignBtn?.textContent?.trim() || 'Skapa kampanj';
     let createCampaignLockedForCurrentPreview = false;
@@ -1491,6 +1706,108 @@ Svara anonymt: [LÄNK]</textarea>
     function setExcludedBookingTypeSettingsStatus(type: BannerType, message: string) {
       setElementBanner(excludedBookingTypeSettingsStatus, type, message);
     }
+
+    function createBookingTypeFilterControl(
+      detailsEl: HTMLDetailsElement | null,
+      summaryEl: HTMLElement | null
+    ): BookingTypeFilterControl {
+      return {
+        detailsEl,
+        summaryEl,
+        allCheckboxEl: detailsEl?.querySelector<HTMLInputElement>('[data-booking-filter-all]') || null,
+        optionEls: Array.from(detailsEl?.querySelectorAll<HTMLInputElement>('[data-booking-filter-option]') || [])
+      };
+    }
+
+    function getSelectedBookingTypeFilterIds(control: BookingTypeFilterControl): string[] {
+      if (!control.allCheckboxEl || control.allCheckboxEl.checked) {
+        return [];
+      }
+
+      return control.optionEls
+        .filter((input) => input.checked)
+        .map((input) => input.value)
+        .filter(Boolean);
+    }
+
+    function syncBookingTypeFilterSummary(control: BookingTypeFilterControl): void {
+      if (!control.summaryEl) return;
+
+      const selectedLabels = control.optionEls
+        .filter((input) => input.checked)
+        .map((input) => input.dataset.bookingFilterLabel || input.value);
+
+      control.summaryEl.textContent = selectedLabels.length > 0 ? selectedLabels.join(', ') : 'Alla';
+    }
+
+    function syncBookingTypeFilterSelection(control: BookingTypeFilterControl, changedInput?: HTMLInputElement): void {
+      const allCheckbox = control.allCheckboxEl;
+      if (!allCheckbox) return;
+
+      if (changedInput === allCheckbox && allCheckbox.checked) {
+        control.optionEls.forEach((input) => {
+          input.checked = false;
+        });
+      }
+
+      const hasSpecificSelections = control.optionEls.some((input) => input.checked);
+
+      if (changedInput && changedInput !== allCheckbox && changedInput.checked) {
+        allCheckbox.checked = false;
+      } else if (!hasSpecificSelections) {
+        allCheckbox.checked = true;
+      }
+
+      if (changedInput === allCheckbox && !allCheckbox.checked && !hasSpecificSelections) {
+        allCheckbox.checked = true;
+      }
+
+      syncBookingTypeFilterSummary(control);
+    }
+
+    function bindBookingTypeFilterControl(
+      control: BookingTypeFilterControl,
+      onChange: () => void
+    ): void {
+      if (!control.detailsEl || !control.allCheckboxEl) return;
+
+      syncBookingTypeFilterSelection(control);
+
+      control.allCheckboxEl.addEventListener('change', () => {
+        syncBookingTypeFilterSelection(control, control.allCheckboxEl || undefined);
+        onChange();
+      });
+
+      control.optionEls.forEach((input) => {
+        input.addEventListener('change', () => {
+          syncBookingTypeFilterSelection(control, input);
+          onChange();
+        });
+      });
+
+      document.addEventListener('click', (event: MouseEvent) => {
+        const target = event.target;
+        if (!control.detailsEl?.open) return;
+        if (!(target instanceof Node)) return;
+        if (control.detailsEl.contains(target)) return;
+        control.detailsEl.open = false;
+      });
+
+      document.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key !== 'Escape') return;
+        if (!control.detailsEl?.open) return;
+        control.detailsEl.open = false;
+      });
+    }
+
+    const dashboardBookingTypeFilterControl = createBookingTypeFilterControl(
+      dashboardBookingTypeFilter,
+      dashboardBookingTypeFilterSummary
+    );
+    const reportBookingTypeFilterControl = createBookingTypeFilterControl(
+      reportBookingTypeFilter,
+      reportBookingTypeFilterSummary
+    );
 
     function syncCreateCampaignButton(): void {
       if (!createCampaignBtn) return;
@@ -1638,10 +1955,15 @@ Svara anonymt: [LÄNK]</textarea>
     const loadDashboard = () => loadDashboardSection({
       bannerEl: dashboardBanner,
       contentEl: dashboardContent,
-      providerFilterEl: dashboardProviderFilter
+      providerFilterEl: dashboardProviderFilter,
+      bookingTypeFilterIds: getSelectedBookingTypeFilterIds(dashboardBookingTypeFilterControl)
     });
 
     dashboardProviderFilter?.addEventListener('change', () => {
+      void loadDashboard();
+    });
+
+    bindBookingTypeFilterControl(dashboardBookingTypeFilterControl, () => {
       void loadDashboard();
     });
 
@@ -1649,7 +1971,8 @@ Svara anonymt: [LÄNK]</textarea>
       bannerEl: reportBanner,
       contentEl: reportContent,
       periodEl: reportPeriod,
-      providerFilterEl: reportProviderFilter
+      providerFilterEl: reportProviderFilter,
+      bookingTypeFilterIds: getSelectedBookingTypeFilterIds(reportBookingTypeFilterControl)
     });
 
     const refreshEnkatViews = async () => {
@@ -1696,6 +2019,10 @@ Svara anonymt: [LÄNK]</textarea>
     });
 
     reportProviderFilter?.addEventListener('change', () => {
+      void loadReport();
+    });
+
+    bindBookingTypeFilterControl(reportBookingTypeFilterControl, () => {
       void loadReport();
     });
 

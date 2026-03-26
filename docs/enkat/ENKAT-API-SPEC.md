@@ -134,9 +134,6 @@ Fält:
 - `Datum`
 - `Bokningstyp`
 - `Diagnoser`
-
-Valfria:
-
 - `Starttid`
 
 ### Server-side logik
@@ -145,7 +142,7 @@ Valfria:
 2. läs fil
 3. parse med semikolonstöd
 4. validera kolumnrubriker
-5. validera varje rad
+5. validera varje rad (inklusive att `Starttid` är ifylld och giltig för rader som inte redan sorterats bort)
 6. sortera bort rader där `Diagnoser` är tom
 7. sortera bort bokningstyper som finns i den sparade listan över "följ aldrig upp"
 8. räkna vilka bokningstyper som återstår i den aktuella filen och returnera dem som checkbox-alternativ
@@ -215,8 +212,8 @@ Valfria:
 
 - visa *varför* dubblettrad valdes bort
 - skriv inte till databasen här
-- om `Starttid` finns ska den returneras i preview
-- `Bokningstyp` och `Diagnoser` är obligatoriska kolumner i filen
+- `Starttid` ska finnas som kolumn och varje rad som går till utskick ska ha en parsbar starttid i preview
+- `Bokningstyp`, `Diagnoser` och `Starttid` är obligatoriska kolumner i filen
 - rader med tom `Bokningstyp` ska markeras som ogiltiga och inte gå vidare till utskick
 - rader med tom `Diagnoser` ska auto-bortsorteras, inte bli en felrad
 - bokningstyper som finns i listan över "följs aldrig upp" ska inte bli felrader, utan sorteras bort separat

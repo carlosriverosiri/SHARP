@@ -4,7 +4,13 @@
 
 ## Nuvarande läge
 
-Enkätmodulen är inte bara dokumenterad utan till stora delar också implementerad.
+Enkätmodulen är inte bara dokumenterad utan till stora delar också implementerad och **används i skarp drift** med gott utfall (se nedan).
+
+### Verksamhetserfarenhet (patientupplevelse)
+
+- **Svarsfrekvens:** i ett tidigt produktionsutskick: **44 svar på 82 skickade SMS** (ca **54 %**) — högre än förväntat.
+- **SMS-kostnad:** innehållet **ryms i ett SMS-segment** per mottagare vid första utskick (standardmall med kort datum m.m.); kostnad **en SMS per utskick** om inget extra segment behövs (påminnelse är separat enligt kampanjinställning).
+- **Fritext:** kommentarsfälten har gett **tydligt värde** i vardagen och har **redan lett till förändringar** i vilken information patienter får **före mottagningsbesöket** (kvalitetsförbättring utifrån patientröst).
 
 ### Byggt i kod
 
@@ -63,6 +69,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - gemensam sparad lista för bokningstyper som aldrig ska följas upp
 - automatisk bortsortering av bokningstyper som matchar den sparade listan
 - kolumnen `Diagnoser` krävs i importfilen och tom cell auto-bortsorterar raden före preview
+- kolumnen `Starttid` krävs i importfilen; tom eller ogiltig starttid ger valideringsfel och raden skickas inte
 - checkbox-lista över bokningstyper i aktuell fil för positivt urval inför varje utskick
 - preview med felrader och dubletthantering
 - signerad preview-token mellan upload och send
@@ -77,7 +84,9 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - adminvy sida vid sida
 - kampanjhistorik
 - periodrapport
+- bokningstypsfilter i dashboard/rapport via dropdown med kryssrutor (`Alla`, `Kuralink`, `Knä`, `Axel`, `Armbåge`) med matchning mot `bokningstyp_raw`
 - fördröjningsanalys baserat på `Starttid` / tid till första SMS
+- jämförelse mellan `Förmiddag` och `Eftermiddag`, inklusive andel svar före påminnelse
 - patientvänliga bokningstyper i SMS och på enkätsidan
 - "Dr." prefix på vårdgivarnamn i patientkommunikation
 
@@ -136,7 +145,7 @@ Följande är synkade med nuvarande beteende (automatisk påminnelse nästa dag 
 
 - `docs/enkat/ENKAT-SMOKE-TEST.csv` fungerade i riktigt UI
 - första testutskick nådde testmobil via 46elks
-- kvar att verifiera i nästa pass är publik enkätlänk, testsvar och att hela flödet landar rätt i dashboard/rapport med korrekt `SITE`/`PUBLIC_SITE_URL`
+- **Hela kedjan i drift:** publik länk, inskickade svar, dashboard/rapport och rimlig svarsfrekvens har bekräftats i verklig kampanj (se **Verksamhetserfarenhet** ovan). `SITE` / `PUBLIC_SITE_URL` ska fortsatt peka på rätt publik domän vid nya miljöer.
 
 ## Nyligen genomförd kodgranskning
 
@@ -160,6 +169,8 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Netlify-envfix för SMS**: `enkat-sms.ts` läser nu först från `process.env` och sedan från Astro-miljön, så att schemalagda Netlify-funktioner kan använda 46elks och `SITE`/`PUBLIC_SITE_URL` utan att krascha
 - **Större direktbatch för första SMS**: `send.ts` försöker nu skicka upp till 50 första SMS direkt innan resterande lämnas till `enkat-send-queue`
 - **Svarsfrekvens per patient**: dashboarden räknar nu svarsfrekvens mot unika patienter som fått första SMS, inte mot total SMS-trafik inklusive påminnelser
+- **Bokningstypsfilter i analysen**: dashboard och rapport kan nu filtreras på rå bokningstyp via fasta snabbval (`Kuralink`, `Knä`, `Axel`, `Armbåge`) i en dropdown med kryssrutor; flera val kombineras som OR-filter
+- **Starttidsanalys i resultatkort**: dashboard och rapport visar nu även en enkel jämförelse mellan förmiddags- och eftermiddagsbesök samt hur stor andel som svarade innan påminnelse gick ut; fördröjningsberäkningen hanterar nu `besoksstart_tid` som `HH:MM:SS` från Postgres (tidigare kunde analysen bli tom trots att starttid fanns i underlaget)
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline
@@ -171,9 +182,8 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 ## Kvarvarande prioriterade steg
 
 ### Högst prioritet
-- verifiera publik enkätlänk och testsvar end-to-end med korrekt `SITE`/`PUBLIC_SITE_URL`
-- kontrollera att profilkopplingen fungerar korrekt för vanliga användare
-- verifiera att kömodellen beter sig bra vid större batcher
+- säkerställa att **nya miljöer/domäner** har korrekt `SITE` / `PUBLIC_SITE_URL` innan utskick
+- vid **mycket stora volymer:** bevaka kö (`enkat-send-queue`) och 46elks-gränser (inget känt problem i nuvarande volym)
 
 ### Nästa rimliga förbättringar
 - export av rapport (CSV/PDF)
@@ -195,8 +205,7 @@ Om du öppnar projektet på en ny dator ska du tänka:
 - `SITE` och `PUBLIC_SITE_URL` ska peka på aktuell publik domän. Under test kan `https://sodermalm.netlify.app` användas tills `https://specialist.se` är klar
 - profilkoppling måste vara satt
 - `/personal/enkat` är huvudsidan
-- nästa fokus är testning och polish, inte grundarkitektur
-- nästa fokus efter det är mer verklig testning, eventuellt ett separat export-/visualiseringspass och bara därefter ytterligare polish av återstående wiring i `enkat.astro`
+- **grundflödet är i drift** med god svarsfrekvens och tydlig nytta av fritext; fortsatt arbete handlar främst om **export, visualisering och polish** vid behov
 - previewn kräver nu `Diagnoser`, sorterar bort tomma diagnoser automatiskt och visar bokningstyperna i filen som kryssrutor
 - den gemensamma listan över bokningstyper som aldrig ska följas upp sparas i Supabase och kan uppdateras av admin från `/personal/enkat` (i UI visas ingen ständig informationsruta om lagring — se `ENKAT-UI-SPEC.md`)
 - publikt patientformulär som referens: `ENKAT-PATIENTFORMULAR-MALL.md`

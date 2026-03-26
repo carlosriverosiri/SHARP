@@ -357,6 +357,12 @@ Sektion för senaste kommentarer:
 - `Vad var bra?`
 - `Vad hade kunnat vara bättre?`
 
+### Starttid och svarsbeteende
+
+- visa enkel jämförelse mellan `Förmiddag` och `Eftermiddag`
+- visa både total svarsfrekvens och andel som svarade före påminnelse
+- jämförelsen ska bygga på `Starttid` (obligatorisk kolumn och värde för rader som går till utskick)
+
 ### Lågt underlag
 
 Om underlaget är mindre än anonymitetströskeln:
@@ -372,6 +378,14 @@ Om underlaget är mindre än anonymitetströskeln:
 ### Grundregel
 
 Chef/admin ska kunna se alla vårdgivare sida vid sida.
+
+### Filter i nuvarande UI
+
+- `Alla vårdgivare` eller vald vårdgivare
+- dropdown med kryssrutor för bokningstypsfilter
+- default: `Alla`
+- nuvarande snabbfilter: `Kuralink`, `Knä`, `Axel`, `Armbåge`
+- matchning sker mot `bokningstyp_raw` (rå text från CSV), inte bara mot normaliserad klass
 
 ### Vyer
 
@@ -432,6 +446,17 @@ Stödja återkommande uppföljning, t.ex. månadsvis.
 - vårdgivare
 - bokningstyp
 
+### Nuvarande bokningstypsfilter
+
+- rapporten använder samma dropdownmodell som dashboarden
+- `Alla` är förkryssad från start
+- användaren kan sedan välja en eller flera av:
+  - `Kuralink`
+  - `Knä`
+  - `Axel`
+  - `Armbåge`
+- flera val behandlas som ett OR-filter mot `bokningstyp_raw`
+
 ### Innehåll
 
 - antal skickade
@@ -442,6 +467,8 @@ Stödja återkommande uppföljning, t.ex. månadsvis.
 - förbättring mot föregående period
 - positiva teman
 - förbättringsområden
+- enkel jämförelse `Förmiddag` / `Eftermiddag`
+- andel svar före påminnelse
 
 ### CTA
 

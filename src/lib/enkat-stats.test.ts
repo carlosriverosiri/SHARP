@@ -17,6 +17,11 @@ describe('enkat-stats', () => {
     expect(calculateDelayHours('2026-03-15', '08:00', '2026-03-15T10:30:00')).toBe(2.5);
   });
 
+  it('accepts Postgres-style TIME strings with seconds', () => {
+    expect(calculateDelayHours('2026-03-15', '08:00:00', '2026-03-15T10:30:00')).toBe(2.5);
+    expect(calculateDelayHours('2026-03-15', '07:30:00', '2026-03-15T17:00:00')).toBe(9.5);
+  });
+
   it('buckets delay hours on the intended boundaries', () => {
     expect(bucketForDelay(6)).toBe('0-6h');
     expect(bucketForDelay(6.01)).toBe('6-24h');
@@ -44,20 +49,46 @@ describe('enkat-stats', () => {
       {
         vardgivare_namn: 'Dr A',
         besoksdatum: '2026-03-15',
+        besoksstart_tid: '13:00',
+        forsta_sms_skickad_vid: '2026-03-15T17:00:00',
+        paminnelse_skickad_vid: '2026-03-16T16:00:00',
+        svarad_vid: '2026-03-16T18:00:00'
+      },
+      {
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
         besoksstart_tid: null,
         forsta_sms_skickad_vid: '2026-03-15T11:00:00',
         svarad_vid: null
       }
     ]);
 
-    expect(summary.measuredCount).toBe(2);
-    expect(summary.averageDelayHours).toBe(2);
+    expect(summary.measuredCount).toBe(3);
+    expect(summary.averageDelayHours).toBe(2.67);
     expect(summary.buckets).toEqual([
       {
         bucket: '0-6h',
+        sent: 3,
+        answered: 2,
+        responseRate: 0.667
+      }
+    ]);
+    expect(summary.visitStartSegments).toEqual([
+      {
+        label: 'Förmiddag',
         sent: 2,
         answered: 1,
-        responseRate: 0.5
+        answeredBeforeReminder: 1,
+        responseRate: 0.5,
+        beforeReminderRate: 0.5
+      },
+      {
+        label: 'Eftermiddag',
+        sent: 1,
+        answered: 1,
+        answeredBeforeReminder: 0,
+        responseRate: 1,
+        beforeReminderRate: 0
       }
     ]);
   });
