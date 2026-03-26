@@ -1165,13 +1165,17 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
     }
 
     .campaign-table-wrap {
-      overflow: auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
       border: 1px solid var(--enk-line);
       border-radius: 14px;
     }
 
+    /* Minbredd så kolumner inte kollapsar ovanpå varandra i smala vyer — scrolla horisontellt */
     .campaign-table {
       width: 100%;
+      min-width: 720px;
       border-collapse: collapse;
       font-size: 14px;
       table-layout: fixed;
@@ -1189,13 +1193,17 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       text-align: left;
       position: sticky;
       top: 0;
+      z-index: 1;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .campaign-table td {
       padding: 12px 14px;
       border-bottom: 1px solid var(--enk-line);
       vertical-align: middle;
+      overflow: hidden;
     }
 
     .campaign-table tbody tr:last-child td {
@@ -1218,26 +1226,35 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
       white-space: nowrap;
     }
 
+    .campaign-table .campaign-name--short {
+      display: none;
+    }
+
     .campaign-table .cell-date {
       color: var(--enk-muted);
       font-size: 13px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .campaign-table .cell-num {
       font-variant-numeric: tabular-nums;
       text-align: right;
+      white-space: nowrap;
     }
 
     .campaign-rate-bar {
       display: flex;
       align-items: center;
       gap: 8px;
+      min-width: 0;
+      width: 100%;
     }
 
     .campaign-rate-bar .progress-bar {
-      flex: 1;
-      min-width: 60px;
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
     .campaign-rate-bar .rate-label {
@@ -1319,6 +1336,29 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
 
     @media (max-width: 640px) {
       .kpi-row { grid-template-columns: 1fr; }
+
+      .campaign-table th,
+      .campaign-table td {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      /* Fullständigt "Patientupplevelse" döljs visuellt; skärmläsare läser fortfarande .campaign-name--full */
+      .campaign-table .campaign-name--full {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .campaign-table .campaign-name--short {
+        display: inline;
+      }
     }
   </style>
   <div class="page">
@@ -1345,8 +1385,9 @@ import PortalLayout from '../../layouts/PortalLayout.astro';
               <span class="csv-col-cell">Datum</span>
               <span class="csv-col-cell">Bokningstyp</span>
               <span class="csv-col-cell">Diagnoser</span>
+              <span class="csv-col-cell">Starttid</span>
             </div>
-            <p class="helper csv-cols-note">Rader utan diagnos sorteras bort. <code>Starttid</code> är valfri.</p>
+            <p class="helper csv-cols-note">Rader utan diagnos sorteras bort. <code>Starttid</code> krävs på varje rad som ska skickas.</p>
           </div>
 
           <form id="uploadForm" class="import-upload">

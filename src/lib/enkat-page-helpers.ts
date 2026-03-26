@@ -244,6 +244,17 @@ export function escapeHtml(value: unknown): string {
     .replaceAll("'", '&#39;');
 }
 
+/** Visas i kampanjhistorik under 640px; fullständigt namn döljs visuellt men finns kvar för skärmläsare. */
+const CAMPAIGN_NAME_PATIENTUPPLEVELSE_MOBILE_SHORT = 'Patientupp';
+
+export function formatCampaignNameForHistoryCell(namn: string | null): string {
+  const label = (namn || '').trim() || 'Namnlös';
+  if (/^patientupplevelse$/i.test(label)) {
+    return `<span class="campaign-name--full">${escapeHtml(label)}</span><span class="campaign-name--short" aria-hidden="true">${escapeHtml(CAMPAIGN_NAME_PATIENTUPPLEVELSE_MOBILE_SHORT)}</span>`;
+  }
+  return escapeHtml(label);
+}
+
 export function formatDateTime(value: unknown): string {
   if (!value) return '—';
   try {
@@ -555,7 +566,7 @@ export function renderCampaignTable(campaigns: CampaignCardData[]): string {
 
     return `
       <tr>
-        <td class="cell-name">${escapeHtml(item.namn || 'Namnlös')}</td>
+        <td class="cell-name">${formatCampaignNameForHistoryCell(item.namn)}</td>
         <td class="cell-date">${escapeHtml(formatShortDate(item.created_at))}</td>
         <td class="cell-num">${escapeHtml(item.total_skickade)}</td>
         <td class="cell-num">${escapeHtml(item.total_svar)}</td>

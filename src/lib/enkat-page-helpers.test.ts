@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   escapeHtml,
   fetchApiData,
+  formatCampaignNameForHistoryCell,
   getManuallyExcludedRows,
   normalizePatternText,
   renderErrorsTable,
@@ -22,6 +23,19 @@ describe('enkat-page-helpers', () => {
 
   it('escapes html-sensitive characters', () => {
     expect(escapeHtml('<tag attr="x">Tom & Jerry</tag>')).toBe('&lt;tag attr=&quot;x&quot;&gt;Tom &amp; Jerry&lt;/tag&gt;');
+  });
+
+  it('adds mobile short label for exact Patientupplevelse campaign name', () => {
+    const html = formatCampaignNameForHistoryCell('Patientupplevelse');
+    expect(html).toContain('campaign-name--full');
+    expect(html).toContain('Patientupplevelse');
+    expect(html).toContain('campaign-name--short');
+    expect(html).toContain('Patientupp');
+  });
+
+  it('does not abbreviate other campaign names', () => {
+    expect(formatCampaignNameForHistoryCell('Vecka 12')).toBe('Vecka 12');
+    expect(formatCampaignNameForHistoryCell('Patientupplevelse extra')).toBe('Patientupplevelse extra');
   });
 
   it('counts manually excluded rows from unchecked booking types', () => {
