@@ -1,0 +1,472 @@
+---
+/**
+ * Rockwood IV operative vs conservative score carousel (Feichtinger et al. type IV subgroup).
+ * Astro-native port of a React sketch — avoids adding React to the stack.
+ * Pairs with RefDrawer via .ref-trigger (same pattern as RefLink.astro).
+ */
+import RefLink from './RefLink.astro';
+
+const feichtingerRef = {
+  id: '1',
+  text: 'Feichtinger X, Dahm F, Schallmayer D, Boesmueller S, Fialka C, Mittermayr R. Surgery improves the clinical and radiological outcome in Rockwood type IV dislocations, whereas Rockwood type III dislocations benefit from conservative treatment. Knee Surg Sports Traumatol Arthrosc. 2021;29(7):2143-2151.',
+  url: 'https://doi.org/10.1007/s00167-020-06193-0',
+};
+
+/** Short visible citation on the card (EN page); pagination per journal issue. */
+const feichtingerCardCitation =
+  'Feichtinger X, Dahm F, Schallmayer D, Boesmueller S, Fialka C, Mittermayr R. Surgery improves the clinical and radiological outcome in Rockwood type IV dislocations, whereas Rockwood type III dislocations benefit from conservative treatment. Knee Surg Sports Traumatol Arthrosc. 2021;29(7):2143–2151.';
+
+const charts = [
+  {
+    id: 'vas',
+    title: 'Visual Analog Scale',
+    abbr: 'VAS',
+    yLabel: 'VAS',
+    yMin: 0,
+    yMax: 10,
+    yStep: 2,
+    operative: [0, 0, 1.8, 4, 4.5],
+    conservative: [2, 3, 5.5, 7.5, 8],
+    significant: false,
+    pValue: null,
+    insight:
+      'Trend toward lower pain scores in the operative arm; difference not statistically significant.',
+  },
+  {
+    id: 'cs',
+    title: 'Constant Score',
+    abbr: 'CS',
+    yLabel: 'Score',
+    yMin: 60,
+    yMax: 110,
+    yStep: 10,
+    operative: [70, 85, 94, 99, 100],
+    conservative: [62, 72, 89, 94, 94],
+    significant: false,
+    pValue: null,
+    insight: 'Higher median in the operative group without statistical significance.',
+  },
+  {
+    id: 'ases',
+    title: 'American Shoulder & Elbow Surgeons Score',
+    abbr: 'ASES',
+    yLabel: 'Score',
+    yMin: 0,
+    yMax: 150,
+    yStep: 30,
+    operative: [63, 88, 95, 100, 100],
+    conservative: [40, 60, 88, 95, 97],
+    significant: false,
+    pValue: null,
+    insight: 'Numerically better operative scores; conservative cohort more dispersed.',
+  },
+  {
+    id: 'acji',
+    title: 'Acromioclavicular Joint Instability Score',
+    abbr: 'ACJI',
+    yLabel: 'Score',
+    yMin: 0,
+    yMax: 150,
+    yStep: 30,
+    operative: [55, 70, 92, 100, 110],
+    conservative: [38, 48, 62, 82, 90],
+    significant: true,
+    pValue: 'p < 0.001',
+    insight:
+      'Significantly better with surgery. ACJI captures horizontal instability features other scores may miss.',
+  },
+];
+---
+
+<aside
+  id="ac-rw4-sidebar"
+  class="ac-rw4-sidebar not-prose w-full max-w-md mx-auto lg:mx-0 rounded-2xl border border-slate-200/80 bg-white shadow-lg shadow-slate-900/5 overflow-hidden font-sans text-slate-800"
+  aria-label="Rockwood type IV outcome scores"
+  data-charts={JSON.stringify(charts)}
+>
+  <div
+    class="ac-rw4-sidebar__head px-5 pt-5 pb-4 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white border-b border-white/10"
+  >
+    <h2 class="text-2xl font-black tracking-tight leading-none m-0">Rockwood IV</h2>
+    <p class="text-sm font-medium text-slate-200/95 mt-2 mb-0 leading-snug">Operative vs conservative care</p>
+    <p class="text-[11px] text-slate-400 mt-2 mb-0 tracking-wide uppercase">
+      AC joint injury · Type IV subgroup
+    </p>
+  </div>
+
+  <div
+    class="flex border-b border-slate-200 bg-slate-50/90"
+    role="tablist"
+    aria-label="Outcome measure"
+    data-ac-rw4-tabs
+  >
+    {
+      charts.map((c, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="ac-rw4-tab flex-1 py-2.5 px-1 text-[13px] font-semibold text-slate-500 border-b-[3px] border-transparent transition-colors hover:text-slate-700 data-[active=true]:text-emerald-800 data-[active=true]:border-emerald-700"
+          data-idx={String(i)}
+          data-active={i === 0 ? 'true' : 'false'}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          id={`ac-rw4-tab-${c.id}`}
+        >
+          {c.abbr}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="px-5 pt-3">
+    <h3
+      class="ac-rw4-title text-[15px] font-bold text-slate-900 leading-snug m-0 transition-opacity duration-300"
+      data-ac-rw4-title
+    >
+      {charts[0].title}
+    </h3>
+  </div>
+
+  <div class="px-3 pt-1 pb-0 flex justify-center">
+    <div
+      class="ac-rw4-chartwrap w-full transition-opacity duration-300"
+      data-ac-rw4-chart
+      aria-hidden="false"
+    >
+      <!-- SVG injected by client script -->
+    </div>
+  </div>
+
+  <div
+    class="px-5 pb-3 text-[13px] leading-relaxed text-slate-600 min-h-[3.25rem] transition-opacity duration-300"
+    data-ac-rw4-insight
+    aria-live="polite"
+  >
+    <span
+      class="ac-rw4-badge hidden mr-1.5 align-middle text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-emerald-100 text-emerald-900"
+      data-ac-rw4-badge
+    >
+      Significant
+    </span>
+    <span data-ac-rw4-insight-text>{charts[0].insight}</span>
+  </div>
+
+  <div class="flex items-center justify-center gap-3 pb-3.5" data-ac-rw4-nav>
+    <button
+      type="button"
+      class="ac-rw4-arrow text-slate-400 hover:text-slate-600 text-xl leading-none px-2 py-0.5 bg-transparent border-0 cursor-pointer"
+      data-ac-rw4-prev
+      aria-label="Previous chart">‹</button
+    >
+    <div class="flex items-center gap-2" role="presentation" data-ac-rw4-dots></div>
+    <button
+      type="button"
+      class="ac-rw4-arrow text-slate-400 hover:text-slate-600 text-xl leading-none px-2 py-0.5 bg-transparent border-0 cursor-pointer"
+      data-ac-rw4-next
+      aria-label="Next chart">›</button
+    >
+  </div>
+
+  <div
+    class="border-t border-slate-200 px-5 py-3 bg-slate-50/60 text-[11px] leading-relaxed text-slate-600"
+  >
+    <p class="m-0 font-semibold text-slate-700 text-[10px] uppercase tracking-wide">Reference</p>
+    <p class="mt-1.5 mb-0">
+      {feichtingerCardCitation}{' '}
+      <a
+        href={feichtingerRef.url}
+        class="text-emerald-800 underline decoration-emerald-800/40 underline-offset-2 hover:text-emerald-950"
+        target="_blank"
+        rel="noopener noreferrer">DOI</a>
+      <span class="inline-flex items-baseline gap-0.5 ml-0.5">
+        <RefLink id={feichtingerRef.id} text={feichtingerRef.text} url={feichtingerRef.url} />
+      </span>
+    </p>
+  </div>
+
+  <div
+    class="border-t border-slate-200 px-5 py-2.5 text-[11px] text-slate-500 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2"
+  >
+    <span class="whitespace-nowrap">n = 18 operative / 9 conservative</span>
+    <span class="whitespace-nowrap sm:text-end">Mean FU ~4.8 yr (type IV subgroup)</span>
+  </div>
+</aside>
+
+<script>
+  (function initRockwoodIVSidebar() {
+    const root = document.getElementById('ac-rw4-sidebar');
+    if (!root) return;
+
+    const raw = root.dataset.charts;
+    if (!raw) return;
+
+    let charts: Array<{
+      id: string;
+      title: string;
+      abbr: string;
+      yLabel: string;
+      yMin: number;
+      yMax: number;
+      yStep: number;
+      operative: number[];
+      conservative: number[];
+      significant: boolean;
+      pValue: string | null;
+      insight: string;
+    }>;
+    try {
+      charts = JSON.parse(raw);
+    } catch {
+      return;
+    }
+
+    const titleEl = root.querySelector('[data-ac-rw4-title]');
+    const chartEl = root.querySelector('[data-ac-rw4-chart]');
+    const insightTextEl = root.querySelector('[data-ac-rw4-insight-text]');
+    const insightWrap = root.querySelector('[data-ac-rw4-insight]');
+    const badgeEl = root.querySelector('[data-ac-rw4-badge]');
+    const tabs = root.querySelectorAll('.ac-rw4-tab');
+    const dotsWrap = root.querySelector('[data-ac-rw4-dots]');
+    const prevBtn = root.querySelector('[data-ac-rw4-prev]');
+    const nextBtn = root.querySelector('[data-ac-rw4-next]');
+
+    if (
+      !titleEl ||
+      !chartEl ||
+      !insightTextEl ||
+      !insightWrap ||
+      !badgeEl ||
+      !dotsWrap ||
+      !prevBtn ||
+      !nextBtn
+    ) {
+      return;
+    }
+
+    const elTitle = titleEl as HTMLElement;
+    const elChart = chartEl as HTMLElement;
+    const elInsightText = insightTextEl as HTMLElement;
+    const elInsight = insightWrap as HTMLElement;
+    const elBadge = badgeEl as HTMLElement;
+    const elDots = dotsWrap as HTMLElement;
+    const btnPrev = prevBtn as HTMLButtonElement;
+    const btnNext = nextBtn as HTMLButtonElement;
+
+    const OP = '#059669';
+    const CON = '#475569';
+    const GRID = '#e2e8f0';
+    const MUTED = '#64748b';
+
+    let idx = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    function toY(
+      v: number,
+      yMin: number,
+      yMax: number,
+      padTop: number,
+      plotH: number
+    ): number {
+      return padTop + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+    }
+
+    function boxPlotSvg(
+      data: number[],
+      color: string,
+      x: number,
+      chartYMin: number,
+      chartYMax: number,
+      svgH: number,
+      padTop: number,
+      padBot: number
+    ): string {
+      const [min, q1, med, q3, max] = data;
+      const plotH = svgH - padTop - padBot;
+      const ty = (v: number) => toY(v, chartYMin, chartYMax, padTop, plotH);
+      const boxW = 50;
+      const half = boxW / 2;
+      const fill = color === OP ? 'rgba(5, 150, 105, 0.14)' : 'rgba(71, 85, 105, 0.14)';
+      return `
+        <g>
+          <line x1="${x}" y1="${ty(max)}" x2="${x}" y2="${ty(min)}" stroke="${color}" stroke-width="2" />
+          <line x1="${x - 13}" y1="${ty(min)}" x2="${x + 13}" y2="${ty(min)}" stroke="${color}" stroke-width="2" />
+          <line x1="${x - 13}" y1="${ty(max)}" x2="${x + 13}" y2="${ty(max)}" stroke="${color}" stroke-width="2" />
+          <rect x="${x - half}" y="${ty(q3)}" width="${boxW}" height="${Math.max(1, ty(q1) - ty(q3))}" fill="${fill}" stroke="${color}" stroke-width="2.5" rx="3" />
+          <line x1="${x - half}" y1="${ty(med)}" x2="${x + half}" y2="${ty(med)}" stroke="${color}" stroke-width="3" />
+        </g>`;
+    }
+
+    function renderChart(chart: (typeof charts)[0]): string {
+      const svgW = 310;
+      const svgH = 240;
+      const padTop = 38;
+      const padBot = 40;
+      const padLeft = 50;
+      const padRight = 18;
+      const plotH = svgH - padTop - padBot;
+      const plotW = svgW - padLeft - padRight;
+      const opX = padLeft + plotW * 0.3;
+      const conX = padLeft + plotW * 0.7;
+      const steps: number[] = [];
+      for (let v = chart.yMin; v <= chart.yMax; v += chart.yStep) steps.push(v);
+      const ty = (v: number) => toY(v, chart.yMin, chart.yMax, padTop, plotH);
+
+      const grid = steps
+        .map(
+          (v) => `
+        <g>
+          <line x1="${padLeft}" y1="${ty(v)}" x2="${svgW - padRight}" y2="${ty(v)}" stroke="${GRID}" stroke-width="1" />
+          <text x="${padLeft - 7}" y="${ty(v) + 4}" text-anchor="end" font-size="10.5" fill="${MUTED}" font-weight="500">${v}</text>
+        </g>`
+        )
+        .join('');
+
+      let bracket = '';
+      if (chart.significant && chart.pValue) {
+        bracket = `
+        <g>
+          <line x1="${opX}" y1="${padTop - 12}" x2="${opX}" y2="${padTop - 18}" stroke="#0f172a" stroke-width="1.5" />
+          <line x1="${opX}" y1="${padTop - 18}" x2="${conX}" y2="${padTop - 18}" stroke="#0f172a" stroke-width="1.5" />
+          <line x1="${conX}" y1="${padTop - 12}" x2="${conX}" y2="${padTop - 18}" stroke="#0f172a" stroke-width="1.5" />
+          <text x="${(opX + conX) / 2}" y="${padTop - 23}" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">${chart.pValue}</text>
+        </g>`;
+      }
+
+      return `<svg viewBox="0 0 ${svgW} ${svgH}" width="100%" class="ac-rw4-svg max-w-[330px] mx-auto block" role="img" aria-label="${chart.title} box plot">
+        ${grid}
+        <text x="13" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="${MUTED}" font-weight="600" transform="rotate(-90 13 ${padTop + plotH / 2})">${chart.yLabel}</text>
+        ${boxPlotSvg(chart.operative, OP, opX, chart.yMin, chart.yMax, svgH, padTop, padBot)}
+        ${boxPlotSvg(chart.conservative, CON, conX, chart.yMin, chart.yMax, svgH, padTop, padBot)}
+        ${bracket}
+        <text x="${opX}" y="${svgH - padBot + 18}" text-anchor="middle" font-size="11.5" fill="${OP}" font-weight="700">Operative</text>
+        <text x="${conX}" y="${svgH - padBot + 18}" text-anchor="middle" font-size="11.5" fill="${CON}" font-weight="700">Conservative</text>
+      </svg>`;
+    }
+
+    function setTabState(i: number) {
+      tabs.forEach((tab, j) => {
+        const on = j === i;
+        tab.setAttribute('data-active', on ? 'true' : 'false');
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+
+    function renderDots() {
+      elDots.innerHTML = charts
+        .map((_, i) => {
+          const w = i === idx ? 18 : 7;
+          const bg = i === idx ? '#059669' : '#cbd5e1';
+          return `<button type="button" class="ac-rw4-dot h-[7px] rounded border-0 p-0 cursor-pointer transition-all duration-300" style="width:${w}px;background:${bg}" data-idx="${i}" aria-label="Show ${charts[i].abbr}" />`;
+        })
+        .join('');
+      elDots.querySelectorAll('.ac-rw4-dot').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const i = Number((btn as HTMLElement).dataset.idx);
+          if (!Number.isNaN(i)) goTo(i);
+        });
+      });
+    }
+
+    function flashAnimate() {
+      const targets: HTMLElement[] = [elTitle, elChart, elInsight];
+      for (const el of targets) {
+        el.classList.add('opacity-40', 'translate-y-1');
+      }
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          for (const el of targets) {
+            el.classList.remove('opacity-40', 'translate-y-1');
+          }
+        });
+      });
+    }
+
+    function applyIndex(i: number) {
+      idx = i;
+      const chart = charts[idx];
+      elTitle.textContent = chart.title;
+      elInsightText.textContent = chart.insight;
+      elChart.innerHTML = renderChart(chart);
+      if (chart.significant) {
+        elBadge.classList.remove('hidden');
+      } else {
+        elBadge.classList.add('hidden');
+      }
+      setTabState(idx);
+      renderDots();
+    }
+
+    function goTo(i: number) {
+      const next = (i + charts.length) % charts.length;
+      flashAnimate();
+      setTimeout(() => applyIndex(next), 70);
+    }
+
+    function startAuto() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => goTo(idx + 1), 5500);
+    }
+
+    function stopAuto() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const i = Number((tab as HTMLElement).dataset.idx);
+        if (!Number.isNaN(i)) {
+          flashAnimate();
+          setTimeout(() => applyIndex(i), 70);
+        }
+      });
+    });
+
+    btnPrev.addEventListener('click', () => goTo(idx - 1));
+    btnNext.addEventListener('click', () => goTo(idx + 1));
+
+    root.addEventListener('mouseenter', () => {
+      stopAuto();
+    });
+    root.addEventListener('mouseleave', () => {
+      startAuto();
+    });
+    root.addEventListener('focusin', () => {
+      stopAuto();
+    });
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) {
+        startAuto();
+      }
+    });
+
+    applyIndex(0);
+    startAuto();
+  })();
+</script>
+
+<style>
+  .ac-rw4-sidebar .ac-rw4-title,
+  .ac-rw4-sidebar .ac-rw4-chartwrap,
+  .ac-rw4-sidebar [data-ac-rw4-insight] {
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .ac-rw4-sidebar :global(.ref-trigger) {
+    font-size: 0.7rem;
+    vertical-align: super;
+    color: rgb(5 150 105);
+  }
+
+  .ac-rw4-tab:focus-visible {
+    outline: 2px solid rgb(5 150 105);
+    outline-offset: 2px;
+  }
+
+  .ac-rw4-arrow:focus-visible,
+  .ac-rw4-dot:focus-visible {
+    outline: 2px solid rgb(5 150 105);
+    outline-offset: 2px;
+  }
+</style>

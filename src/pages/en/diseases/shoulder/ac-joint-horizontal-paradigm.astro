@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import HorizontalParadigmTabs from '../../../../components/AcJointHorizontalParadigm.astro';
+import RockwoodIVScoreSidebar from '../../../../components/RockwoodIVScoreSidebar.astro';
 import RefDrawer from '../../../../components/RefDrawer.astro';
 
 const siteUrl = 'https://sodermalmsortopedi.se';
@@ -107,10 +108,17 @@ const schemaData = {
   </section>
 
   <div class="bg-stone-50 min-h-[40vh]">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
-      <HorizontalParadigmTabs />
+    <div
+      class="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] gap-10 xl:gap-12 items-start"
+    >
+      <div class="min-w-0 order-1">
+        <HorizontalParadigmTabs />
+      </div>
+      <div class="order-2 lg:order-2 lg:sticky lg:top-24 shrink-0">
+        <RockwoodIVScoreSidebar />
+      </div>
 
-      <p class="text-center text-sm text-slate-500 mt-10">
+      <p class="text-center text-sm text-slate-500 mt-2 col-span-full order-3">
         <a href="/sjukdomar/axel/nyckelbensleden-ur-led" class="text-sky-600 hover:underline"
           >Svenska: Nyckelbenet ur led</a
         >
