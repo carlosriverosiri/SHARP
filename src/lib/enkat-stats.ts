@@ -47,29 +47,6 @@ export function bucketForDelay(delayHours: number): string {
   return '48h+';
 }
 
-function visitWindowForStartTime(time: string | null): 'Förmiddag' | 'Eftermiddag' | null {
-  if (!time) return null;
-  const m = String(time).trim().match(/^(\d{1,2})/);
-  if (!m) return null;
-  const hour = Number.parseInt(m[1], 10);
-  if (Number.isNaN(hour)) return null;
-  return hour < 12 ? 'Förmiddag' : 'Eftermiddag';
-}
-
-function answeredBeforeReminder(row: DeliveryDelayRow): boolean {
-  if (!row.svarad_vid) return false;
-  if (!row.paminnelse_skickad_vid) return true;
-
-  const answeredAt = new Date(row.svarad_vid).getTime();
-  const reminderAt = new Date(row.paminnelse_skickad_vid).getTime();
-
-  if (Number.isNaN(answeredAt) || Number.isNaN(reminderAt)) {
-    return false;
-  }
-
-  return answeredAt < reminderAt;
-}
-
 export function summarizeDelayRows(rows: DeliveryDelayRow[]) {
   const measured = rows
     .map((row) => {
@@ -77,34 +54,21 @@ export function summarizeDelayRows(rows: DeliveryDelayRow[]) {
       if (delayHours === null) return null;
       return {
         delayHours,
-        answered: !!row.svarad_vid,
-        answeredBeforeReminder: answeredBeforeReminder(row),
-        visitWindow: visitWindowForStartTime(row.besoksstart_tid)
+        answered: !!row.svarad_vid
       };
     })
     .filter(Boolean) as Array<{
       delayHours: number;
       answered: boolean;
-      answeredBeforeReminder: boolean;
-      visitWindow: 'Förmiddag' | 'Eftermiddag' | null;
     }>;
 
   const bucketMap = new Map<string, { sent: number; answered: number }>();
-  const visitWindowMap = new Map<string, { sent: number; answered: number; answeredBeforeReminder: number }>();
   for (const row of measured) {
     const key = bucketForDelay(row.delayHours);
     const current = bucketMap.get(key) || { sent: 0, answered: 0 };
     current.sent += 1;
     if (row.answered) current.answered += 1;
     bucketMap.set(key, current);
-
-    if (row.visitWindow) {
-      const currentVisitWindow = visitWindowMap.get(row.visitWindow) || { sent: 0, answered: 0, answeredBeforeReminder: 0 };
-      currentVisitWindow.sent += 1;
-      if (row.answered) currentVisitWindow.answered += 1;
-      if (row.answeredBeforeReminder) currentVisitWindow.answeredBeforeReminder += 1;
-      visitWindowMap.set(row.visitWindow, currentVisitWindow);
-    }
   }
 
   return {
@@ -115,21 +79,6 @@ export function summarizeDelayRows(rows: DeliveryDelayRow[]) {
       sent: values.sent,
       answered: values.answered,
       responseRate: values.sent > 0 ? Number((values.answered / values.sent).toFixed(3)) : 0
-    })),
-    visitStartSegments: ['Förmiddag', 'Eftermiddag']
-      .map((label) => {
-        const values = visitWindowMap.get(label);
-        if (!values) return null;
-
-        return {
-          label,
-          sent: values.sent,
-          answered: values.answered,
-          answeredBeforeReminder: values.answeredBeforeReminder,
-          responseRate: values.sent > 0 ? Number((values.answered / values.sent).toFixed(3)) : 0,
-          beforeReminderRate: values.sent > 0 ? Number((values.answeredBeforeReminder / values.sent).toFixed(3)) : 0
-        };
-      })
-      .filter(Boolean)
+    }))
   };
 }

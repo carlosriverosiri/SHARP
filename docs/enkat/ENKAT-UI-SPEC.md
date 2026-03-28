@@ -357,11 +357,11 @@ Sektion för senaste kommentarer:
 - `Vad var bra?`
 - `Vad hade kunnat vara bättre?`
 
-### Starttid och svarsbeteende
+### Starttid och fördröjning
 
-- visa enkel jämförelse mellan `Förmiddag` och `Eftermiddag`
-- visa både total svarsfrekvens och andel som svarade före påminnelse
-- jämförelsen ska bygga på `Starttid` (obligatorisk kolumn och värde för rader som går till utskick)
+- visa **medel tid till SMS** och **fördröjningsfönster** (t.ex. 0–6 h) utifrån `Starttid` och utskickstid
+- `Starttid` är obligatorisk kolumn och värde för rader som går till utskick
+- ingen separat förmiddag/eftermiddag-panel i dashboardens resultatkort (för enklare layout)
 
 ### Lågt underlag
 
@@ -467,8 +467,7 @@ Stödja återkommande uppföljning, t.ex. månadsvis.
 - förbättring mot föregående period
 - positiva teman
 - förbättringsområden
-- enkel jämförelse `Förmiddag` / `Eftermiddag`
-- andel svar före påminnelse
+- fördröjningsmått som i dashboarden (utan förmiddag/eftermiddag-uppdelning)
 
 ### CTA
 

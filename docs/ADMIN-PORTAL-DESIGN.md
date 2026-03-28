@@ -27,6 +27,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 | **Min profil** | `/personal/profil` | Egen profilsida för namnvisning, mobilnummer, vårdgivarkoppling och profilbild |
 | **Administration** | `/personal/admin` | Skapa användare, hantera roller, skicka återställningslänkar och administrera läkare |
 | **Länkar & SMS** | `/personal/lankar-sms` | Kopiera kortlänkar och skicka SMS |
+| **Patientupplevelse** | `/personal/enkat` | CSV-import, SMS-enkät, dashboard/rapport (`docs/enkat/MASTERDOKUMENT.md`) |
 | **Resurser** | `/personal/resurser` | Dokument, länkar, instruktionsvideor |
 | **Lösenordsåterställning** | `/personal/aterstall-losenord` | Självbetjäning |
 
@@ -40,6 +41,7 @@ En intern personalportal med inloggningsfunktion. Portalen samlar administrativa
 /personal/profil              → Min profil
 /personal/admin              → Administration (användare, roller, läkare)
 /personal/lankar-sms          → Kopiera länkar & Skicka SMS
+/personal/enkat               → Patientupplevelse (enkät via SMS)
 /personal/resurser            → Dokument och resurser
 /personal/aterstall-losenord  → Återställ lösenord
 /copy-links                   → Redirect till /personal/lankar-sms

@@ -26,6 +26,22 @@ Modulen används i skarp drift med gott utfall: **44 svar på 82 utskickna SMS**
 - **Kö/fördröjt utskick (första SMS):** `netlify/functions/enkat-send-queue.mts`
 - **Schemalagd påminnelse:** `netlify/functions/enkat-remind-scheduled.mts` (nästa dag 16:00 Europe/Stockholm)
 
+### Modulkarta (faktisk kod — verifiera mot `src/`)
+
+Använd denna när du promptar extern AI om **befintlig** implementation (så svaren inte hallunicerar filer eller glömmer delar av flödet):
+
+| Område | Huvudsakliga filer |
+|--------|---------------------|
+| Admin-UI | `src/pages/personal/enkat.astro`, `src/lib/enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts`, `enkat-page-actions.ts` |
+| Publik enkät | `src/pages/e/[kod].astro` |
+| API (Astro routes) | `src/pages/api/enkat/upload.ts`, `settings.ts`, `send.ts`, `remind.ts`, `submit.ts`, `dashboard.ts`, `report.ts`, `campaigns.ts` |
+| Domänlogik | `enkat-csv-parser.ts`, `enkat-booking-classifier.ts`, `enkat-follow-up-rules.ts`, `enkat-preview-token.ts`, `enkat-sms.ts`, `enkat-queue.ts`, `enkat-remind-runner.ts`, `enkat-reminder-time.ts`, `enkat-stats.ts`, `enkat-free-text-sanitizer.ts`, `enkat-booking-type-filters.ts`, `enkat-provider-scope.ts`, `enkat-api-helpers.ts` |
+| Tester | `src/pages/api/enkat/_tests/*`, `src/lib/enkat-*.test.ts`, `enkat-page-*.test.ts` |
+| Bakgrundsbatch | `netlify/functions/enkat-send-queue.mts`, `enkat-remind-scheduled.mts` |
+| Databas | `supabase/migrations/023-enkat.sql` och senare `024`–`030` med enkätprefix (se `ENKAT-STATUS.md`) |
+
+**SHARP-specifika kopplingar** (måste ersättas eller brytas ut vid egen app): portalinloggning (`src/lib/auth` m.m.), `supabaseAdmin`, rad-/rollstyrning via `enkat-provider-scope.ts` och vårdgivarnamn i profil, temporär kryptering av telefon (`POOL_ENCRYPTION_KEY` i kö/sändning), samt `SITE` / `PUBLIC_SITE_URL` för länkar i SMS.
+
 ---
 
 ## 3) Aktuella endpoints
@@ -87,8 +103,7 @@ I praktiken bedöms flödet som **stabilt i drift** (import → utskick → svar
 - publik enkätsida och submit
 - dashboard + rapport + kampanjhistorik
 - dashboard/rapport kan filtreras på rå bokningstyp via snabbval (`Kuralink`, `Knä`, `Axel`, `Armbåge`)
-- fördröjningsanalys baserat på besökstid/starttid
-- enkel jämförelse mellan förmiddags- och eftermiddagsbesök samt andel svar före påminnelse
+- fördröjningsanalys baserat på besökstid/starttid (medel tid till SMS och fördröjningsfönster; ingen förmiddag/eftermiddag-uppdelning i huvudvyn)
 - publikt formulär: se `ENKAT-PATIENTFORMULAR-MALL.md` (layout, mobil, färger)
 
 ---
@@ -116,10 +131,15 @@ Hela enkätdokumentationen ligger i `docs/enkat/`:
 - `ENKAT-API-SPEC.md`
 - `ENKAT-UI-SPEC.md`
 - `ENKAT-SQL-SPEC.md`
+- `ENKAT-UTBRYTNING.md` — SHARP-beroenden, miljövariabler och checklista vid egen applikation
 
 ---
 
 ## 9) Promptmall till extern AI
+
+**Versionsnot:** Om du klistrar in masterdokumentet i ett AI-verktyg, ange **datum** eller **git-commit** för SHARP så mottagaren kan jämföra mot aktuell kod. Exporterade “AI Council”-körningar kan innehålla en **inbäddad äldre kopia** av detta dokument — lita på filen i repot, inte på citerad text i gamla körloggar.
+
+### A) Förändringar inom SHARP
 
 Kopiera och fyll i:
 
@@ -129,19 +149,40 @@ Jag arbetar i SHARP (Astro + Supabase + 46elks) med en intern enkätmodul.
 Bakgrund:
 - Adminflöde: importera CSV -> preview -> skapa kampanj -> skicka SMS; påminnelse 16:00 följande dag automatiskt om aktiverat
 - Publik sida: /e/[kod] för anonymt svar
-- API: upload/send/remind/submit/dashboard/report/campaigns
-- Databas: enkat_kampanjer, enkat_utskick, enkat_svar, enkat_delivery_log
+- API: upload/settings/send/remind/submit/dashboard/report/campaigns
+- Databas: enkat_kampanjer, enkat_utskick, enkat_svar, enkat_delivery_log, enkat_installningar
+- Verifiera modulkarta och filvägar mot docs/enkat/MASTERDOKUMENT.md (avsnitt Modulkarta)
+
+Repo-referens: branch/commit […]
 
 Mål:
 [Beskriv exakt vad du vill förbättra]
 
 Krav:
-- Behåll nuvarande arkitektur (Astro/Supabase/46elks)
-- Föreslå konkreta kodnära steg (inte bara teori)
+- Behåll nuvarande arkitektur (Astro/Supabase/46elks) såvida jag inte skriver annat
+- Föreslå konkreta kodnära steg (filer/funktioner), inte bara teori
 - Nämn risker, testplan och migrationspåverkan
 
 Fråga:
 [Din specifika fråga]
+```
+
+### B) Utbrytning till fristående applikation (greenfield eller migrering)
+
+Använd när målet är **egen produkt** eller **annan stack** — då ska AI **inte** utgå från att allt är Astro routes, utan först återge nuvarande beteende och sedan föreslå motsvarighet.
+
+```text
+Utgå från befintlig funktion i SHARP (Patientupplevelse/enkät) dokumenterad i docs/enkat/.
+Bifogat: MASTERDOKUMENT.md + ENKAT-SQL-SPEC.md + ENKAT-API-SPEC.md + ENKAT-UTBRYTNING.md (eller peka på repo/commit).
+
+Uppgift:
+1) Sammanfatta nuvarande beteende och datamodell utifrån dokumentation + typiska kodvägar (upload, previewToken, send, kö, remind, submit, dashboard).
+2) Lista SHARP-specifika antaganden som måste ersättas (auth, RLS, Netlify-funktioner, krypteringsnyckel, miljövariabler).
+3) Föreslå arkitektur för en fristående app — men märk tydligt vad som är **ny design** vs **1:1-port** av nuvarande flöde.
+4) Peka ut juridik/hosting som **egen** bedömning (jurist/DPN); dokumentera inte lagpåståenden som fakta.
+
+Mål för nya systemet:
+[…]
 ```
 
 ---
@@ -154,5 +195,19 @@ Fråga:
   - UI-fråga -> `ENKAT-UI-SPEC.md` + vid behov `ENKAT-PATIENTFORMULAR-MALL.md`
   - databasfråga -> `ENKAT-SQL-SPEC.md`
   - plan/prioritering -> `ENKAT-STATUS.md` + `ENKAT-IMPLEMENTATIONSPLAN.md`
+  - utbrytning / egen produkt -> `ENKAT-UTBRYTNING.md` + `ENKAT-SQL-SPEC.md` + promptmall B) i detta dokument
+- **Råd från “AI Council” eller andra modeller** om t.ex. Next.js, Inngest, molnleverantör är ofta **greenfield**-rekommendationer. Jämför alltid mot tabellen *Modulkarta* och faktiska API-rutter ovan innan du ändrar SHARP.
 
 Det ger snabbare och mer träffsäkra svar än att skicka allt varje gång.
+
+---
+
+## 11) Om AI-svar om “bästa stack” (t.ex. körning #27)
+
+Vid frågor som *“bygg om som fristående system med maximal stabilitet”* brukar modeller föreslå **generiska** arkitekturer (NestJS/Fastify, Prisma, BullMQ, Docker, EU-VPS m.m.). Det är användbart som **idébank**, men:
+
+- Det speglar **inte** den nuvarande SHARP-koden (Astro SSR/API routes, Supabase-klient, Netlify Scheduler).
+- **Juridiska** slutsatser om hosting (Cloud Act, Schrems II, “måste vara EU”) måste verifieras för **ert** avtal och **er** data — dokumenteras inte här som krav.
+- För utbrytning: be AI att först **kartlägga nuvarande gränssnitt** (API + tabeller + bakgrundsjobb), sedan föreslå ny stack — annars riskerar ni att tappa dolda beroenden (preview-signering, idempotent kampanjskapande, `submit_enkat_response`, m.m.).
+
+Se promptmall B) ovan.

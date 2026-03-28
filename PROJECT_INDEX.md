@@ -1,6 +1,6 @@
 # Projektindexering - Södermalms Ortopedi
 
-**Senast uppdaterad:** 2026-01-04
+**Senast uppdaterad:** 2026-03-28
 
 ## 📋 Översikt
 Astro-webbplats för Södermalms Ortopedi med Tailwind CSS och TypeScript. Komponentbaserad arkitektur med modulära system för operationer, diagnoser och Fråga Doktorn.
@@ -147,6 +147,14 @@ Diagnosinformation med referenser och FAQ.
 - `superadmin` > `admin` > `personal` enligt `src/lib/portal-roles.ts`.
 - `admin` används för känsligare verktyg och gemensamma inställningar.
 - `personal` är standardroll för vanliga användare.
+
+### Patientupplevelse (enkät via SMS)
+
+- **Admin:** `src/pages/personal/enkat.astro` — CSV-import, preview, kampanj, SMS-mall, dashboard/rapport/historik i samma vy.
+- **Publik enkät:** `src/pages/e/[kod].astro`
+- **API:** `src/pages/api/enkat/*` (upload, settings, send, submit, dashboard, report, campaigns, remind)
+- **Bakgrund:** `netlify/functions/enkat-send-queue.mts`, `enkat-remind-scheduled.mts`
+- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md` (översikt + modulkarta för extern AI), övriga filer i `docs/enkat/`, särskilt `ENKAT-UTBRYTNING.md` vid planering av fristående app.
 
 ---
 
@@ -311,6 +319,8 @@ SHARP/
 |----------|----------|
 | `docs/OPERATION-SIDOR.md` | Hur man skapar/redigerar operationssidor |
 | `docs/LANKAR-OCH-SMS.md` | Kortlänkssystem i personalportalen (Supabase-first) |
+| `docs/enkat/MASTERDOKUMENT.md` | Patientupplevelse/enkät: kontext till extern AI, endpoints, modulkarta |
+| `docs/enkat/ENKAT-UTBRYTNING.md` | Checklista och beroenden vid utbrytning till egen applikation |
 | `docs/BILDHANTERING.md` | Bildformat, storlekar, optimering |
 | `docs/CHECKLIST.md` | Checklista för nya sidor |
 | `README.md` | Snabbstart och deployment |

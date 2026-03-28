@@ -2,6 +2,8 @@
 
 > Kort handoff-dokument för att snabbt kunna fortsätta arbetet från en annan dator eller i en ny chat.
 
+**Snabb navigering:** Översikt och modulkarta för extern AI → `MASTERDOKUMENT.md`. Utbrytning till egen app → `ENKAT-UTBRYTNING.md`.
+
 ## Nuvarande läge
 
 Enkätmodulen är inte bara dokumenterad utan till stora delar också implementerad och **används i skarp drift** med gott utfall (se nedan).
@@ -26,6 +28,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 
 #### Backend
 - `src/lib/enkat-booking-classifier.ts`
+- `src/lib/enkat-booking-type-filters.ts`
 - `src/lib/enkat-csv-parser.ts`
 - `src/lib/enkat-free-text-sanitizer.ts`
 - `src/lib/enkat-follow-up-rules.ts`
@@ -88,8 +91,7 @@ Enkätmodulen är inte bara dokumenterad utan till stora delar också implemente
 - kampanjhistorik
 - periodrapport
 - bokningstypsfilter i dashboard/rapport via dropdown med kryssrutor (`Alla`, `Kuralink`, `Knä`, `Axel`, `Armbåge`) med matchning mot `bokningstyp_raw`
-- fördröjningsanalys baserat på `Starttid` / tid till första SMS
-- jämförelse mellan `Förmiddag` och `Eftermiddag`, inklusive andel svar före påminnelse
+- fördröjningsanalys baserat på `Starttid` / tid till första SMS (medel och fördröjningsfönster; ingen förmiddag/eftermiddag-panel i resultatkort)
 - patientvänliga bokningstyper i SMS och på enkätsidan
 - "Dr." prefix på vårdgivarnamn i patientkommunikation
 
@@ -112,10 +114,12 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 ## Dokumentation att läsa först på nästa dator
 
 1. `docs/enkat/ENKAT-STATUS.md`
-2. `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
-3. `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
-4. `docs/enkat/ENKAT-API-SPEC.md`
-5. `docs/enkat/ENKAT-UI-SPEC.md`
+2. `docs/enkat/MASTERDOKUMENT.md` (modulkarta + promptmallar till extern AI)
+3. `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
+4. `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
+5. `docs/enkat/ENKAT-API-SPEC.md`
+6. `docs/enkat/ENKAT-UI-SPEC.md`
+7. `docs/enkat/ENKAT-UTBRYTNING.md` (vid planering av fristående produkt)
 
 ## Praktiskt testflöde
 
@@ -137,12 +141,13 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 Följande är synkade med nuvarande beteende (automatisk påminnelse nästa dag 16:00 Europe/Stockholm, ingen påminnelseknapp i UI, `paminnelse_efter_timmar` oanvänd för nya kampanjer):
 
 - `ENKAT-STATUS.md` (denna fil)
+- `MASTERDOKUMENT.md`
+- `ENKAT-UTBRYTNING.md`
 - `ENKAT-API-SPEC.md`
 - `ENKAT-PATIENTUPPLEVELSE.md`
 - `ENKAT-IMPLEMENTATIONSPLAN.md`
 - `ENKAT-UI-SPEC.md`
 - `ENKAT-SQL-SPEC.md` (kolumnkommentar för `paminnelse_efter_timmar`)
-- `MASTERDOKUMENT.md`
 
 ## Senast verifierat manuellt
 
@@ -173,7 +178,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Större direktbatch för första SMS**: `send.ts` försöker nu skicka upp till 50 första SMS direkt innan resterande lämnas till `enkat-send-queue`
 - **Svarsfrekvens per patient**: dashboarden räknar nu svarsfrekvens mot unika patienter som fått första SMS, inte mot total SMS-trafik inklusive påminnelser
 - **Bokningstypsfilter i analysen**: dashboard och rapport kan nu filtreras på rå bokningstyp via fasta snabbval (`Kuralink`, `Knä`, `Axel`, `Armbåge`) i en dropdown med kryssrutor; flera val kombineras som OR-filter
-- **Starttidsanalys i resultatkort**: dashboard och rapport visar nu även en enkel jämförelse mellan förmiddags- och eftermiddagsbesök samt hur stor andel som svarade innan påminnelse gick ut; fördröjningsberäkningen hanterar nu `besoksstart_tid` som `HH:MM:SS` från Postgres (tidigare kunde analysen bli tom trots att starttid fanns i underlaget)
+- **Starttidsanalys i resultatkort**: fördröjningsberäkningen hanterar `besoksstart_tid` som `HH:MM:SS` från Postgres (tidigare kunde analysen bli tom trots att starttid fanns i underlaget). En tidigare förmiddag/eftermiddag-uppdelning med andel svar före påminnelse togs bort från huvudvyns resultatkort för enklare layout; medel tid till SMS och fördröjningsfönster finns kvar.
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem
 - **Koddeduplicering**: delad `jsonResponse()` i `enkat-api-helpers.ts`, delad statistiklogik i `enkat-stats.ts`
 - **Klientstädning**: `enkat.astro` kör nu bundlad script-modul och delar upp klientlogiken i `enkat-page-helpers.ts`, `enkat-page-preview.ts`, `enkat-page-sections.ts` och `enkat-page-actions.ts` i stället för att ha nästan allt inline

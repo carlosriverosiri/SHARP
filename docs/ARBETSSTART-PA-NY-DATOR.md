@@ -101,7 +101,7 @@ Börja med att kontrollera att projektet faktiskt fungerar:
 - enkätsidan `/personal/enkat`
 - länkverktyget `/personal/lankar-sms`
 
-Om du arbetar med `Enkät`, kontrollera särskilt att dessa anrop inte ger fel i terminalen eller webbläsaren:
+Om du arbetar med **patientupplevelse / enkät**, läs först `docs/enkat/MASTERDOKUMENT.md` (modulkarta). Kontrollera särskilt att dessa anrop inte ger fel i terminalen eller webbläsaren:
 
 - `/api/enkat/campaigns`
 - `/api/enkat/dashboard`

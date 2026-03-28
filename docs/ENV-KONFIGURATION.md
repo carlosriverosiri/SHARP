@@ -111,6 +111,27 @@ PUBLIC_SITE_URL=https://sodermalm.netlify.app
 
 ---
 
+## Patientupplevelse (enkät / SMS-enkät)
+
+Används av `src/pages/api/enkat/*`, `src/lib/enkat-sms.ts` och Netlify-funktionerna `enkat-send-queue` / `enkat-remind-scheduled`.
+
+```bash
+# 46elks (samma leverantör som övrig SMS i projektet där det är aktiverat)
+ELKS_API_USER=...
+ELKS_API_PASSWORD=...
+
+# Temporär kryptering av telefon i utskickskön — krävs i produktion för köfunktionen
+# (saknas nyckel → 500 från enkat-send-queue)
+POOL_ENCRYPTION_KEY=...
+
+# Preview-token mellan upload och send signeras med PERSONAL_SESSION_SECRET
+# (fallback i kod till SUPABASE_SERVICE_ROLE_KEY om den saknas — se enkat-preview-token.ts)
+```
+
+Mer arkitektur och checklista vid utbrytning: `docs/enkat/ENKAT-UTBRYTNING.md`.
+
+---
+
 ## SMS-portal (framtid)
 
 ```bash

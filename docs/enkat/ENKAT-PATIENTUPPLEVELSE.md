@@ -65,16 +65,38 @@ Personal (/personal/enkat)
 
 ### Föreslagna filer
 
+> **Aktuell modulkarta** (alltid verifiera mot repo): se tabellen *Modulkarta* i `MASTERDOKUMENT.md`.
+
 ```text
 src/pages/personal/enkat.astro
 src/pages/e/[kod].astro
 src/pages/api/enkat/upload.ts
+src/pages/api/enkat/settings.ts
 src/pages/api/enkat/send.ts
-src/pages/api/enkat/report.ts
+src/pages/api/enkat/remind.ts
+src/pages/api/enkat/submit.ts
 src/pages/api/enkat/dashboard.ts
-src/lib/enkat-csv-parser.ts
+src/pages/api/enkat/report.ts
+src/pages/api/enkat/campaigns.ts
+src/lib/enkat-api-helpers.ts
 src/lib/enkat-booking-classifier.ts
+src/lib/enkat-booking-type-filters.ts
+src/lib/enkat-csv-parser.ts
+src/lib/enkat-follow-up-rules.ts
+src/lib/enkat-free-text-sanitizer.ts
+src/lib/enkat-page-actions.ts
+src/lib/enkat-page-helpers.ts
+src/lib/enkat-page-preview.ts
+src/lib/enkat-page-sections.ts
+src/lib/enkat-preview-token.ts
+src/lib/enkat-provider-scope.ts
+src/lib/enkat-queue.ts
+src/lib/enkat-remind-runner.ts
+src/lib/enkat-reminder-time.ts
+src/lib/enkat-sms.ts
+src/lib/enkat-stats.ts
 netlify/functions/enkat-send-queue.mts
+netlify/functions/enkat-remind-scheduled.mts
 supabase/migrations/023-enkat.sql (och senare enkätrelaterade migreringar; se `ENKAT-STATUS.md`)
 ```
 
@@ -559,26 +581,25 @@ Därför bör systemet kombinera:
 
 ## 12. API-design
 
-### Rekommenderade endpoints
+### Endpoints (implementerade — detalj i `ENKAT-API-SPEC.md`)
 
 | Endpoint | Funktion |
 |---|---|
 | `POST /api/enkat/upload` | parse, validera, deduplicera fil |
+| `GET` / `POST /api/enkat/settings` | läsa/spara gemensam exkluderingslista |
 | `POST /api/enkat/send` | skapa kampanj och utskick |
-| `POST /api/enkat/remind` | skicka påminnelser |
+| `POST /api/enkat/remind` | skicka påminnelser (drift/verktyg; normalt schemalagt) |
 | `POST /api/enkat/submit` | ta emot svar från patientsidan |
 | `GET /api/enkat/dashboard` | dashboarddata |
 | `GET /api/enkat/report` | rapportdata per period |
+| `GET /api/enkat/campaigns` | kampanjhistorik |
 
-### Background job
+### Bakgrundsjobb (Netlify)
 
-Om större batcher ska skickas bör Netlify Function användas:
+- `netlify/functions/enkat-send-queue.mts` — köade första-SMS efter `send`
+- `netlify/functions/enkat-remind-scheduled.mts` — automatiska påminnelser
 
-- `netlify/functions/enkat-send-queue.mts`
-
-Den kan återanvända logik från:
-
-- `netlify/functions/scheduled-sms.mts`
+*(Kort-varsel använder en separat schemalagd funktion `scheduled-sms.mts` — samma 46elks-leverantör men annat flöde.)*
 
 ---
 

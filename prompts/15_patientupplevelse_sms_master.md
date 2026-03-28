@@ -23,11 +23,13 @@ The module must also be discoverable from the personal portal. Add a visible nav
 
 Relevant existing references:
 
-- `src/pages/personal/kort-varsel.astro`
-- `netlify/functions/scheduled-sms.mts`
-- `src/lib/kryptering.ts`
+- `docs/enkat/MASTERDOKUMENT.md` — översikt, endpoints, **modulkarta** (faktiska filer)
+- `docs/enkat/ENKAT-UTBRYTNING.md` — om modulen ska brytas ut till egen app
 - `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
 - `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
+- `src/pages/personal/kort-varsel.astro` (mönster för personalverktyg)
+- `netlify/functions/scheduled-sms.mts` (annat flöde; enkät använder `enkat-send-queue` / `enkat-remind-scheduled`)
+- `src/lib/kryptering.ts`
 
 ---
 
@@ -245,16 +247,18 @@ Treat raw comments as more sensitive than aggregate scores.
 - `src/pages/personal/enkat.astro`
 - `src/pages/e/[kod].astro`
 - `src/pages/api/enkat/upload.ts`
+- `src/pages/api/enkat/settings.ts`
 - `src/pages/api/enkat/send.ts`
 - `src/pages/api/enkat/submit.ts`
 - `src/pages/api/enkat/dashboard.ts`
+- `src/pages/api/enkat/report.ts`
+- `src/pages/api/enkat/campaigns.ts`
+- `src/pages/api/enkat/remind.ts`
 - `src/lib/enkat-csv-parser.ts`
 - `src/lib/enkat-booking-classifier.ts`
-- `supabase/migrations/009-enkat.sql`
-
-Optional if needed:
-
+- `supabase/migrations/023-enkat.sql` (och senare enkätmigreringar; se `docs/enkat/ENKAT-STATUS.md`)
 - `netlify/functions/enkat-send-queue.mts`
+- `netlify/functions/enkat-remind-scheduled.mts`
 
 ### Database tables
 
@@ -264,6 +268,7 @@ Create or propose:
 - `enkat_utskick`
 - `enkat_svar`
 - `enkat_delivery_log`
+- `enkat_installningar` (gemensam exkluderingslista för bokningstyper)
 
 Use UUIDs.
 Use `created_at`.

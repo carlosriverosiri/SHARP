@@ -4,46 +4,34 @@
 >
 > Fokus: robust V1 med tydlig validering, säker datahantering och förutsägbara svar från API-lagret.
 
+**Synk med kod:** Listan nedan ska stämma med filer i `src/pages/api/enkat/*.ts` (exkl. `_tests/`). Vid nya routes: uppdatera denna fil och `MASTERDOKUMENT.md` §3.
+
 ---
 
 ## 1. Översikt
 
-### Status just nu
-
-Följande endpoints är nu implementerade i projektet:
-
-- `POST /api/enkat/upload`
-- `POST /api/enkat/send`
-- `POST /api/enkat/submit`
-- `GET /api/enkat/dashboard`
-- `GET /api/enkat/report`
-- `GET /api/enkat/campaigns`
-- `POST /api/enkat/remind`
-
-Dessutom finns en schemalagd Netlify-funktion för första utskick:
-
-- `netlify/functions/enkat-send-queue.mts`
-
-Den första versionen har nu följande API-endpoints:
+### Implementerade HTTP-endpoints
 
 | Endpoint | Metod | Syfte |
 |---|---|---|
 | `/api/enkat/upload` | `POST` | Parse, validera och förhandsgranska CSV |
-| `/api/enkat/send` | `POST` | Skapa kampanj och utskick |
-| `/api/enkat/submit` | `POST` | Ta emot patientsvar |
-| `/api/enkat/dashboard` | `GET` | Hämta dashboarddata |
-| `/api/enkat/report` | `GET` | Hämta rapportdata per period |
-| `/api/enkat/remind` | `POST` | Skicka påminnelser till obesvarade |
+| `/api/enkat/settings` | `GET` | Läs gemensam exkluderingslista (bokningstyper) |
+| `/api/enkat/settings` | `POST` | Spara gemensam exkluderingslista |
+| `/api/enkat/send` | `POST` | Skapa kampanj och utskick (kräver signerad preview-token) |
+| `/api/enkat/submit` | `POST` | Ta emot patientsvar (publik, kodvaliderad) |
+| `/api/enkat/dashboard` | `GET` | Dashboarddata |
+| `/api/enkat/report` | `GET` | Rapportdata per period |
+| `/api/enkat/campaigns` | `GET` | Kampanjhistorik |
+| `/api/enkat/remind` | `POST` | Påminnelser till obesvarade (samma tidsregler som cron; **inte** personal-UI) |
 
-Ytterligare endpoint som nu finns:
+Kommentar: `/api/enkat/campaigns/[id]` finns ännu inte som separat detaljendpoint.
 
-| Endpoint | Metod | Syfte |
-|---|---|---|
-| `/api/enkat/campaigns` | `GET` | Lista tidigare kampanjer |
+### Bakgrundsprocesser (ej HTTP)
 
-Kommentar:
-
-`/api/enkat/campaigns/[id]` finns ännu inte som separat detaljendpoint.
+| Komponent | Syfte |
+|-----------|--------|
+| `netlify/functions/enkat-send-queue.mts` | Bearbetar köade första-SMS efter `send` |
+| `netlify/functions/enkat-remind-scheduled.mts` | Schemalagda påminnelser (t.ex. var 10:e minut) |
 
 ---
 
@@ -708,8 +696,4 @@ API-specen bör stödja tre huvudmål:
 2. robust och spårbart utskick
 3. rollstyrd analys med integritetsskydd
 
-Om denna spec följs kommer nästa steg kunna vara:
-
-- faktisk implementation av Astro API-routes
-- konkret UI-spec
-- eller direkt arbete med migreringen `009-enkat.sql`
+Implementationen motsvarar denna spec i Astro API-routes under `src/pages/api/enkat/`. Databasschema: migreringar `023-enkat.sql` och följande enkätrelaterade migreringar (se `ENKAT-STATUS.md`).

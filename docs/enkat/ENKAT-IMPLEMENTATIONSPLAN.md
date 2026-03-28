@@ -2,6 +2,8 @@
 
 > Konkret byggplan för första versionen av enkätmodulen i SHARP.
 
+**Aktuell kodöversikt** (filer, endpoints, beroenden): `MASTERDOKUMENT.md`. **Utbrytning till egen applikation:** `ENKAT-UTBRYTNING.md`.
+
 ---
 
 ## Målbild
@@ -117,7 +119,7 @@ Klar.
 
 - `src/pages/api/enkat/send.ts`
 - `netlify/functions/enkat-send-queue.mts`
-- migration `supabase/migrations/009-enkat.sql`
+- migration `supabase/migrations/023-enkat.sql` (och följande enkätrelaterade migreringar; se `ENKAT-STATUS.md`)
 - tabell/logik för `enkat_delivery_log`
 
 ### Funktioner

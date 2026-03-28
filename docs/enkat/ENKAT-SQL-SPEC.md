@@ -503,7 +503,7 @@ Särskilt viktigt att kommentera:
 
 ## 13. Rekommenderad genomförandeordning
 
-När själva `009-enkat.sql` skrivs bör den byggas i denna ordning:
+När basmigreringen för enkät (i repo: `023-enkat.sql` och uppföljningar) skrivs eller utökas bör den byggas i denna ordning:
 
 1. skapa tabeller
 2. skapa constraints

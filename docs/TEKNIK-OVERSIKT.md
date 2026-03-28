@@ -131,6 +131,7 @@ Exempel på centrala variabler:
 2. **Personalverktyg** (länkar, SMS, admin)
 3. **AI Council** (multi‑modell analys, research, källverifiering)
 4. **Kort‑varsel** (kampanjer, prioritering, automation)
+5. **Patientupplevelse / enkät** (CSV → SMS → anonymt svar, dashboard per vårdgivare)
 
 ---
 
@@ -151,6 +152,15 @@ Exempel på centrala variabler:
 - **Databas:** `kort_varsel_patienter`, `sms_kampanjer`, `sms_kampanj_mottagare`
 - **Integrationer:** 46elks (SMS)
 - **Flöde (kort):** kampanj skapas → patienter prioriteras → schemalagd utskick → svar via kortlänk
+
+### Patientupplevelse (enkät)
+
+- **UI:** `src/pages/personal/enkat.astro`, publik sida `src/pages/e/[kod].astro`
+- **API:** `src/pages/api/enkat/*`
+- **Databas:** `enkat_kampanjer`, `enkat_utskick`, `enkat_svar`, `enkat_delivery_log`, `enkat_installningar`
+- **Bakgrund:** `netlify/functions/enkat-send-queue.mts`, `enkat-remind-scheduled.mts`
+- **Integrationer:** 46elks (SMS), Supabase (service role i API)
+- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md`, `docs/enkat/ENKAT-UTBRYTNING.md` (vid utbrytning)
 
 ### Personalportal
 
@@ -184,6 +194,15 @@ Exempel på centrala variabler:
 - `GET /api/kampanj/*` – skapa/avsluta/lista kampanjer
 - `GET /api/pool/*` – hantera patientpool
 
+### Patientupplevelse (enkät)
+
+- `POST /api/enkat/upload` – CSV preview  
+- `GET`/`POST /api/enkat/settings` – exkluderingslista  
+- `POST /api/enkat/send` – kampanj + utskick  
+- `POST /api/enkat/submit` – patientsvar  
+- `GET /api/enkat/dashboard`, `report`, `campaigns`  
+- `POST /api/enkat/remind` – påminnelse (drift; normalt schemalagt jobb)
+
 ### Kunskapsbas (KB)
 
 - `GET /api/kunskapsbas/projects`
@@ -203,6 +222,7 @@ Exempel på centrala variabler:
 
 - **AI Council:** session, projekt, profil, responses, syntheses
 - **Kort‑varsel:** kampanj, mottagare, patientpool, prioritet
+- **Enkät:** kampanj, utskick (unik kod), svar, leveranslogg, inställningar
 - **Personal:** profil, audit‑logg, sms‑statistik, resurser
 
 ---

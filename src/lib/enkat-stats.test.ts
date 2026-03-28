@@ -73,23 +73,5 @@ describe('enkat-stats', () => {
         responseRate: 0.667
       }
     ]);
-    expect(summary.visitStartSegments).toEqual([
-      {
-        label: 'Förmiddag',
-        sent: 2,
-        answered: 1,
-        answeredBeforeReminder: 1,
-        responseRate: 0.5,
-        beforeReminderRate: 0.5
-      },
-      {
-        label: 'Eftermiddag',
-        sent: 1,
-        answered: 1,
-        answeredBeforeReminder: 0,
-        responseRate: 1,
-        beforeReminderRate: 0
-      }
-    ]);
   });
 });
