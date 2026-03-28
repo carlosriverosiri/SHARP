@@ -23,8 +23,7 @@ The module must also be discoverable from the personal portal. Add a visible nav
 
 Relevant existing references:
 
-- `docs/enkat/MASTERDOKUMENT.md` — översikt, endpoints, **modulkarta** (faktiska filer)
-- `docs/enkat/ENKAT-UTBRYTNING.md` — om modulen ska brytas ut till egen app
+- `docs/enkat/MASTERDOKUMENT.md` — **hela** kontexten för extern AI (modulkarta, endpoints, utbrytning §8); en fil räcker
 - `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
 - `docs/enkat/ENKAT-IMPLEMENTATIONSPLAN.md`
 - `src/pages/personal/kort-varsel.astro` (mönster för personalverktyg)

@@ -2,6 +2,8 @@
 
 > System för att fylla avbokade operationstider via SMS-utskick
 
+**Utbrytning / extern AI:** Allt i **en** fil (denna README + `MASTER.md` + del 1–7) finns i [MASTER-DOCUMENT.md](./MASTER-DOCUMENT.md). Bygg om med (från repo-rot): `powershell -ExecutionPolicy Bypass -File docs/kort-varsel/build-master-document.ps1` (eller `pwsh` om du har PowerShell 7).
+
 ---
 
 ## Innehåll

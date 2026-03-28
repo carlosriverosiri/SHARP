@@ -2,7 +2,7 @@
 
 > Konkret byggplan för första versionen av enkätmodulen i SHARP.
 
-**Aktuell kodöversikt** (filer, endpoints, beroenden): `MASTERDOKUMENT.md`. **Utbrytning till egen applikation:** `ENKAT-UTBRYTNING.md`.
+**Aktuell kodöversikt och utbrytning:** `MASTERDOKUMENT.md` (§2–§8). En fil räcker som AI-kontext.
 
 ---
 

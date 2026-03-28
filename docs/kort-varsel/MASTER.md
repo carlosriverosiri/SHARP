@@ -1,51 +1,54 @@
-# Kort Varsel-SMS: Masterdokumentation
+# Kort varsel-SMS: Masterdokumentation
 
-> Komplett dokumentation for systemet som fyller avbokade operationstider via SMS-utskick.
+> Komplett översikt för systemet som fyller avbokade operationstider via SMS-utskick.
 >
-> Senast uppdaterad: 2026-02-18
+> **Senast uppdaterad:** 2026-03-28 (synkad med kod i `src/pages/personal/kort-varsel.astro`, `src/pages/s/[kod].astro`, `src/pages/api/kampanj/*`, `src/pages/api/pool/*`, `netlify/functions/scheduled-sms.mts`, migreringar `001`–`008`).
+>
+> Fördjupning: [01-TEKNISK.md](./01-TEKNISK.md) m.fl. — denna fil är den kondenserade sanningskällan för arkitektur och filpekare.
 
 ---
 
-## Innehall
+## Innehåll
 
 - [1. Sammanfattning](#1-sammanfattning)
 - [2. Systemarkitektur](#2-systemarkitektur)
-- [3. Flode och prioritering](#3-flode-och-prioritering)
+- [3. Flöde och prioritering](#3-flöde-och-prioritering)
 - [4. Databas](#4-databas)
 - [5. SMS-hantering (46elks)](#5-sms-hantering-46elks)
 - [6. Patientpool](#6-patientpool)
-- [7. Smart intervall-logik](#7-smart-intervall-logik)
+- [7. Intervall och gradvis utskick](#7-intervall-och-gradvis-utskick)
 - [8. Patientens svarssida](#8-patientens-svarssida)
 - [9. Personaldashboard](#9-personaldashboard)
 - [10. Statistik och analys](#10-statistik-och-analys)
 - [11. Prediktion](#11-prediktion)
-- [12. AI-forberedelse och ML-pipeline](#12-ai-forberedelse-och-ml-pipeline)
+- [12. AI-förberedelse och ML-pipeline](#12-ai-förberedelse-och-ml-pipeline)
 - [13. GDPR och juridik](#13-gdpr-och-juridik)
-- [14. Sakerhet](#14-sakerhet)
+- [14. Säkerhet](#14-säkerhet)
 - [15. Ekonomi och ROI](#15-ekonomi-och-roi)
 - [16. Open source-plan](#16-open-source-plan)
 - [17. Kommersiell vision](#17-kommersiell-vision)
 - [18. Filstruktur](#18-filstruktur)
-- [19. Miljovanvariabler](#19-miljovariabler)
+- [19. Miljövariabler](#19-miljövariabler)
 - [20. Migrering och databas-setup](#20-migrering-och-databas-setup)
 - [21. Status och roadmap](#21-status-och-roadmap)
+- [22. Relation till andra SHARP-moduler](#22-relation-till-andra-sharp-moduler)
 - [Detaljdokumentation](#detaljdokumentation)
 
 ---
 
 ## 1. Sammanfattning
 
-Kort Varsel-SMS ar ett system som automatiskt kontaktar patienter pa vantelistan nar operationstider blir lediga. Patienter far SMS med en lank och kan svara JA eller NEJ via en enkel webbsida. Systemet skickar SMS i prioritetsordning med adaptiva intervall beroende pa hur lang tid det ar kvar till operationen.
+Kort varsel-SMS är ett system som kontaktar patienter på väntelistan när operationstider blir lediga. Patienter får SMS med länk och kan svara JA eller NEJ via en webbsida. Utskick sker gradvis (kö) med intervall som styrs av prioritetsflaggor och kampanjinställningar.
 
-**Karnfunktioner:**
-- Patientpool med prioritering och filtrering
-- Automatiska SMS-utskick med gradvis eskalering
-- Svarshantering (JA / NEJ / STOPP for opt-out)
-- Smart intervall-logik baserad pa tid och bradskegrad
-- Statistik, trender och prediktionsforberedelse
-- GDPR-compliant med kryptering och IMY-kontakt
+**Kärnfunktioner:**
 
-**Ekonomisk effekt:** En avbokad operation kostar ~10 000-50 000 kr i forlorad intakt. Systemet kostar ~100 kr/manad + ~0,50 kr per SMS. En fylld lucka per vecka ger ~80 000 kr/manad i bidrag.
+- Patientpool med prioritering (akut / sjukskriven / ont / ålder m.m.)
+- Automatiska SMS-utskick via Netlify schemalagd funktion
+- Svarshantering (JA / NEJ / reserv) med atomär RPC; opt-out via SMS (STOPP m.fl.) och webb
+- Statistik, trender och förberedelse för prediktion/ML (databaslagret)
+- Kryptering av telefonnummer (`POOL_ENCRYPTION_KEY`); samma nyckel används även av enkätmodulens kö (se §22)
+
+**Ekonomisk effekt (indikativ):** En avbokad operation kan kosta tiotusentals kronor i tappad kapacitet; SMS-kostnad per utskick är marginal i jämförelse.
 
 ---
 
@@ -55,12 +58,12 @@ Kort Varsel-SMS ar ett system som automatiskt kontaktar patienter pa vantelistan
 
 | Komponent | Teknologi | Funktion |
 |-----------|-----------|----------|
-| Frontend | Astro + Tailwind CSS | SSR-renderade sidor |
-| Backend | Astro API Routes | Serverlosa endpoints |
-| Databas | Supabase (PostgreSQL) | Tabeller, RLS, triggers |
-| SMS | 46elks | Skicka/ta emot SMS |
-| Hosting | Netlify | Deploy, schemalagda funktioner |
-| Grafer | Chart.js | Statistikvisualisering |
+| Frontend | Astro + Tailwind CSS | SSR-sidor |
+| Backend | Astro API Routes | Serverlösa HTTP-endpoints |
+| Databas | Supabase (PostgreSQL) | Tabeller, RLS, triggers, RPC |
+| SMS | 46elks | Utgående och inkommande (webhook) |
+| Hosting | Netlify | Deploy; schemalagda funktioner |
+| Grafer | Chart.js | Statistik (vid behov) |
 
 ### Arkitekturdiagram
 
@@ -69,7 +72,7 @@ Kort Varsel-SMS ar ett system som automatiskt kontaktar patienter pa vantelistan
                     ↓
               [Supabase DB]
                     ↓
-            [Netlify Scheduled Function]
+     [Netlify Scheduled Function: scheduled-sms.mts]
                     ↓
               [46elks SMS API]
                     ↓
@@ -77,53 +80,46 @@ Kort Varsel-SMS ar ett system som automatiskt kontaktar patienter pa vantelistan
                     ↓
               [Svarssida /s/[kod]]
                     ↓
-              [Supabase → uppdatera status]
+         [POST /api/kampanj/svar → registrera_ja_svar RPC]
 ```
 
-### Serverlos arkitektur
+### Viktiga körmoment
 
-- **Netlify Functions:** `scheduled-sms.mts` kor varje minut och skickar nasta SMS i kon
-- **Astro API Routes:** Hanterar CRUD for kampanjer, pool, statistik
-- **Supabase RLS:** Radnivasakerhet -- personal ser bara sin kliniks data
-- **46elks Webhook:** Inkommande SMS tas emot via `/api/sms/inkommande`
+- **`netlify/functions/scheduled-sms.mts`:** Körs enligt cron `* * * * *` (varje minut), definierat i filens `export const config` — inte i `netlify.toml`.
+- **Astro API:** Kampanj, pool, statistik, inkommande SMS-webhook.
+- **RLS:** Aktiverat på kampanj-, mottagar- och pooltabeller (se migreringar).
 
 ---
 
-## 3. Flode och prioritering
+## 3. Flöde och prioritering
 
-### Huvudflode
+### Huvudflöde
 
-```
-1. Operationstid blir ledig
-2. Personal skapar SMS-kampanj (valjer patienter, prioritet, tid)
-3. System skickar SMS i prioritetsordning, ett i taget
-4. Patient klickar lank → svarar JA/NEJ pa webbsida
-5. Forsta JA-svar: Personal ringer och bekraftar
-6. Utskick avslutas (automatiskt vid JA eller manuellt)
-```
+1. Operationstid blir ledig.
+2. Personal skapar SMS-kampanj (väljer patienter, tid, filter för op-storlek/sida m.m.).
+3. System skickar SMS i prioritetsordning, ett i taget, med väntetid mellan utskick.
+4. Patient öppnar länk → svarar JA eller NEJ (och vid JA: preop-bekräftelse enligt UI).
+5. Första giltiga JA kan ge bokad plats; senare JA kan bli reserv (RPC-semantik).
+6. Kampanj avslutas manuellt eller när utfall registrerats.
 
-### Prioriteringsordning
+### Prioriteringsordning (affärslogik)
 
-| Prio | Kategori | Beskrivning |
-|------|----------|-------------|
-| 1 | AKUT | Maste opereras snarast |
-| 2 | Sjukskriven | Vantar pa att aterga i arbete |
-| 3 | Mycket ont | Hog smartniva |
-| 4 | Pensionar (67+) | Flexibla tider |
-| 5 | Normal | Standardprioritering |
+1. **AKUT** — måste opereras snarast  
+2. **Sjukskriven**  
+3. **Mycket ont** (`har_ont`)  
+4. **Pensionär (67+)** — styrs i praktiken av fältet `alder` i poolen  
+5. **Normal**
 
-Inom varje prioritetsniva sorteras patienter efter:
-- **Operationsstorlek** (Liten: 5-15 min, Stor: 15-60 min, Bada)
-- **Sida** (HO/VA) -- for optimering av operationsutrustning
+Inom nivåer används även **operationsstorlek** (liten/stor) och **sida** (höger/vänster) för matchning mot kampanjfilter — se migrering `006-operationsstorlek.sql`.
 
-### SMS-modeller
+### SMS-modeller (koncept)
 
-| Modell | Innehall | Anvandning |
-|--------|----------|------------|
-| Modell A | Vag text ("kort varsel") | Utan samtycke |
-| Modell B | Detaljerad ("avbokad tid [datum]") | Med samtycke |
+| Modell | Innehåll | Användning |
+|--------|----------|-------------|
+| Modell A | Vag text (“kort varsel”) | Utan samtycke |
+| Modell B | Detaljerad information | Med samtycke (`har_samtycke`) |
 
-Texten anpassas dynamiskt baserat pa antal platser (1-3) och tidsblock.
+Exakt copy och villkor finns i personal-UI och `s/[kod].astro` / demosida `om-oss/kort-varsel-demo`.
 
 ---
 
@@ -131,501 +127,205 @@ Texten anpassas dynamiskt baserat pa antal platser (1-3) och tidsblock.
 
 ### Huvudtabeller
 
-**`sms_kampanjer`** -- Varje SMS-utskick
+**`sms_kampanjer`** — ett utskick / kampanj
 
-| Kolumn | Typ | Beskrivning |
-|--------|-----|-------------|
-| id | UUID | Primar nyckel |
-| skapad_av | UUID | Personalens ID |
-| status | TEXT | `aktiv`, `avslutad`, `pausad` |
-| resultat | TEXT | `fylld_via_sms`, `fylld_manuellt`, `misslyckad`, `avbruten`, `timeout` |
-| antal_platser | INTEGER | 1-3 |
-| tidsblock | TEXT | T.ex. "Morgon (08-12)" |
-| intervall_minuter | INTEGER | Minuter mellan SMS |
-| created_at | TIMESTAMPTZ | Skapad |
+| Kolumn (urval) | Beskrivning |
+|----------------|-------------|
+| `id` | UUID |
+| `datum`, `tidsblock`, `operation_typ`, `lakare` | Operationskontext |
+| `antal_platser`, `antal_fyllda` | 1–3 platser |
+| `status` | `aktiv`, `fylld`, `avslutad` (inga värden `pausad` i nuvarande schema) |
+| `utfall` | `fylld_via_sms`, `fylld_manuellt`, `misslyckad`, `avbruten`, `timeout` |
+| `batch_intervall_minuter`, `nasta_utskick_vid` | Gradvis utskick |
+| `skapad_av`, `skapad_vid` | Spårning |
+| `filter_op_liten`, `filter_op_stor`, `filter_sida` | Filter (migration 006) |
 
-**`sms_kampanj_mottagare`** -- Varje patient i ett utskick
+**`sms_kampanj_mottagare`** — en rad per patient i en kampanj
 
-| Kolumn | Typ | Beskrivning |
-|--------|-----|-------------|
-| id | UUID | Primar nyckel |
-| kampanj_id | UUID | FK till kampanj |
-| patient_id | UUID | FK till patientpool |
-| unik_kod | TEXT | >= 16 tecken, UUID v4 |
-| status | TEXT | `vantar`, `skickad`, `ja_svar`, `nej_svar`, `timeout` |
-| svarstid_sekunder | INTEGER | Auto-beraknad via trigger |
-| utskick_timme | INTEGER | Timme vid utskick (0-23) |
-| utskick_veckodag | INTEGER | Veckodag (0=sondag) |
+| Kolumn (urval) | Beskrivning |
+|----------------|-------------|
+| `unik_kod` | Unik länkkod (UUID-format i praktiken) |
+| `skickad_vid` | När SMS skickats (NULL = ej skickat) |
+| `svar` | `ja`, `nej`, `reserv`, `avregistrerad` |
+| `akut`, `sjukskriven`, `har_ont`, `intervall_till_nasta` | Kopierade prioritetsfält + minuter till nästa SMS |
+| `utskick_timme`, `utskick_veckodag`, historikfält | Statistik/ML (migration 007–008) |
 
-**`kort_varsel_patienter`** -- Patientpoolen
+**`kort_varsel_patienter`** — patientpool
 
-| Kolumn | Typ | Beskrivning |
-|--------|-----|-------------|
-| id | UUID | Primar nyckel |
-| telefon_krypterad | TEXT | AES-256-krypterat telefonnummer |
-| telefon_hash | TEXT | SHA-256-hash for deduplicering |
-| namn | TEXT | Patientens namn |
-| prioritet | INTEGER | 1-5 |
-| status | TEXT | `Tillganglig`, `Kontaktad`, `Reserv`, `NEJ`, `Bokad` |
-| operationsstorlek | TEXT | `liten`, `stor`, `bada` |
-| sida | TEXT | `HO`, `VA`, `Bada` |
-| lakare_id | UUID | FK till lakare |
+| Kolumn (urval) | Beskrivning |
+|----------------|-------------|
+| `telefon_krypterad`, `telefon_hash`, `telefon_masked` | Kontakt |
+| `namn`, `har_samtycke` | Visning och SMS-modell |
+| `lakare` | **TEXT[]** — array av läkare (migration 006; inte längre en enkel UUID-FK i baseline) |
+| `flexibel_lakare` | Kan operera av annan läkare |
+| `akut`, `har_ont`, `sjukskriven`, `alder` | Prioritet |
+| `op_liten`, `op_stor`, `sida` | Matchning mot ledig tid |
+| `status` | `tillganglig`, `kontaktad`, `reserv`, `nej`, `bokad`, `avregistrerad` |
+| `utgar_vid` | Standard **7 dagar** från tillagd (auto-radering enligt `002-kort-varsel.sql`) |
 
-### Atomisk JA-svar-funktion
+### Atomiskt JA-svar
 
-```sql
-registrera_ja_svar(p_unik_kod TEXT, p_bekraftat_preop BOOLEAN)
-```
-
-Anvander `FOR UPDATE` radlasning for att forhindra race conditions. Returnerar:
-- `'first'` -- Forsta JA-svar, tiden ar bokad
-- `'reserve'` -- Tiden redan fylld, patienten ar reserv
-- `'already_filled'` -- Utskicket ar redan avslutat
+**RPC:** `registrera_ja_svar(p_unik_kod TEXT, p_bekraftat_preop BOOLEAN)` i `002-kort-varsel.sql`, anropas från `src/pages/api/kampanj/svar.ts`. Använder radlåsning för att undvika dubbelbokning. Returvärden inkluderar bland annat första JA vs reserv vs redan fylld kampanj (se funktionens `resultat` i SQL).
 
 ---
 
 ## 5. SMS-hantering (46elks)
 
-### Utgaende SMS
+### Utgående SMS
 
 - **Endpoint:** `POST https://api.46elks.com/a1/sms`
-- **Autentisering:** HTTP Basic Auth (`ELKS_API_USER:ELKS_API_PASSWORD`)
-- **Kostnad:** ~0,40-0,60 kr per SMS
-- **Avsandare:** Konfigurerat kliniknamn
+- **Autentisering:** HTTP Basic (`ELKS_API_USER`, `ELKS_API_PASSWORD`)
+- **Avsändare:** I kod ofta `from: 'Specialist'` — bör överensstämma med 46elks-konto och klinikens avtal
 
 ### Inkommande SMS
 
-- **Webhook:** `/api/sms/inkommande`
-- **Opt-out-nyckelord:** STOPP, STOP, AVSLUTA, AVREGISTRERA, TA BORT MIG
+- **Webhook:** `POST /api/sms/inkommande` (`src/pages/api/sms/inkommande.ts`)
+- **Opt-out:** Meddelande normaliseras till versaler; träff om text innehåller något av: **STOPP**, **STOP**, **AVSLUTA**, **AVREGISTRERA**, **TA BORT MIG**, **NEJ TACK**
 
-### Automatiska svar
+### Automatiska svar (utgående efter händelse)
 
-| Haendelse | SMS-svar |
-|-----------|----------|
-| Forsta JA | Bekraftelse med instruktioner |
-| JA som reserv | Info om reservplats |
-| Tid fylld | Tack for intresse |
+Bekräftelse-SMS skickas från samma endpoint-logik vid opt-out och i kampanjflödet vid JA/NEJ (se `inkommande.ts` och `kampanj/svar.ts`).
 
 ---
 
 ## 6. Patientpool
 
-### Patientstatus
+### Statusvärden (databas)
 
 | Status | Beskrivning |
 |--------|-------------|
-| Tillganglig | Kan kontaktas |
-| Kontaktad | SMS skickat, vantar svar |
-| Reserv | Svarade JA nar tiden redan fylld |
-| NEJ | Tackade nej |
-| Bokad | Bekraftad bokning |
+| `tillganglig` | Kan kontaktas |
+| `kontaktad` | SMS skickat, väntar svar |
+| `reserv` | JA när tid redan fylld |
+| `nej` | Tackat nej |
+| `bokad` | Bekräftad bokning |
+| `avregistrerad` | Opt-out eller manuellt borttagen |
 
-### Sortering
+### API (pool)
 
-Kolumner sorterbara: Prioritet, Namn, Alder, Lakare, Dagar till planerad op.
-Reservlista auto-prioriteras baserat pa samma kriterier.
+| Metod | Väg | Syfte |
+|-------|-----|--------|
+| `GET` | `/api/pool/lista` | Lista poolen |
+| `POST` | `/api/pool/lagg-till` | Lägg till patient |
+| `POST` | `/api/pool/uppdatera` | Uppdatera rad |
+| `POST` | `/api/pool/ta-bort` | Ta bort rad |
 
 ---
 
-## 7. Smart intervall-logik
+## 7. Intervall och gradvis utskick
 
-Tid mellan SMS anpassas automatiskt:
+Schemalagd funktion `scheduled-sms.mts` skickar **högst ett** SMS per körning per relevant kampanj och sätter `nasta_utskick_vid` utifrån mottagarens `intervall_till_nasta`, annars kampanjens `batch_intervall_minuter`, annars **10 minuter** för “normal” patient.
 
-| Dagar till operation | Basintervall |
-|---------------------|--------------|
-| Samma dag | 5 minuter |
-| 1 dag | 5-10 minuter |
-| 2 dagar | 10 minuter |
-| 3+ dagar | 20 minuter |
+Typiska intervall i kommentarer/migreringar: **AKUT 60 min**, **sjukskriven 30 min**, **mycket ont 20 min**, **normal 10 min** (eller kampanjoverride).
 
-### Tidsjusteringar
-
-- **Narmre 16:00:** Kortare intervall (tryckokning)
-- **Tidig morgon/sen kvall:** Langre intervall
-- **Manuell override:** Personal kan justera intervallet
-
-### Varningar
-
-Automatiska varningar om utskicket riskerar att inte hinna klart innan arbetsdagens slut.
+Personal-UI kan visa varningar om utskick riskerar att inte hinna före dagens slut — se `kort-varsel.astro`.
 
 ---
 
 ## 8. Patientens svarssida
 
-**URL:** `/s/[kod]` (unik 16+ tecken-kod per patient)
-
-### Steg
-
-1. Patient klickar lank i SMS
-2. Sidan visar operationsinformation och preop-fragor
-3. Patient valjer JA eller NEJ
-
-### Dynamisk blodfornningsvarning
-
-| Dagar till op | Visning |
-|---------------|---------|
-| 1 dag | Varning (rott) |
-| 2 dagar | Info (gult) |
-| 3+ dagar | Ingen varning |
-
-### Tillstand
-
-- **JA (forsta):** Bekraftelse + instruktioner
-- **JA (reserv):** Info om reservplats
-- **NEJ:** Tack-meddelande
-- **Stangd:** Tiden ar redan fylld
+- **URL:** `/s/[kod]` — fil `src/pages/s/[kod].astro`
+- Flöde: information om tidslucka → JA/NEJ → vid behov preop-frågor → bekräftelse eller reserv/stängt läge
+- Opt-out-knapp på sidan kompletterar SMS-nyckelord
 
 ---
 
 ## 9. Personaldashboard
 
-**URL:** `/personal/kort-varsel`
-
-### Funktioner
-
-- Skapa nytt SMS-utskick
-- Realtidsvy over svar (JA/NEJ/vantar)
-- Avsluta kampanj (fylld via SMS, fylld manuellt, misslyckad, avbruten)
-- Utoka kampanj (lagg till fler patienter)
-- Bekrafta efter telefonsamtal
-- Aggregerad statistik
+- **URL:** `/personal/kort-varsel` — `src/pages/personal/kort-varsel.astro`
 
 ### Aktiv kampanj-indikator
 
-Rod/gul prick i headern. Pollar `/api/kampanj/aktiv` var 30:e sekund.
+- **Komponent:** `src/components/KortVarselIndikator.astro`
+- **Beteende:** På sidor under `/personal` pollas `GET /api/kampanj/aktiv` var **30:e sekund**. Vid aktiv kampanj visas en **flytande knapp** nere till höger (röd = utskick pågår, gul = status `fylld` / väntar på bekräftelse). Det är inte en prick i sidhuvudet — dokumentation som säger “header” är föråldrad.
 
-### Profil
+### Kampanj-API (urval)
 
-Personal registrerar mobilnummer i `/personal/profil` for SMS-notifieringar.
+| Metod | Väg | Syfte |
+|-------|-----|--------|
+| `GET` | `/api/kampanj/aktiv` | Indikator + sammanfattning |
+| `GET` | `/api/kampanj/lista` | Lista kampanjer |
+| `POST` | `/api/kampanj/skapa` | Skapa kampanj |
+| `POST` | `/api/kampanj/svar` | Registrera patientsvar (RPC) |
+| `POST` | `/api/kampanj/avsluta` | Avsluta med utfall |
+| `POST` | `/api/kampanj/utoka` | Utöka mottagarlista |
+| `POST` | `/api/kampanj/utoka-platser` | Fler platser |
+| `GET` | `/api/kampanj/status` | Status för en kampanj |
+
+### Övrigt
+
+- **Demosida (publik):** `/om-oss/kort-varsel-demo` — `kort-varsel-demo.astro`
+- **Profil:** Personal kan ange mobilnummer för notifieringar under `/personal/profil` (om aktiverat i er deployment)
 
 ---
 
 ## 10. Statistik och analys
 
-### Datakallor
+### API
 
-- `sms_kampanjer` -- Kampanjdata
-- `sms_kampanj_mottagare` -- Individuella svar och svarstider
-- `kort_varsel_patienter` -- Patientegenskaper
-
-### Statistikvyer
-
-1. Oversikt (kampanjer, svarsfrekvens, snitt svarstid)
-2. Svarstid per prioritet
-3. Svarsfrekvens per kategori
-4. Per operationsstorlek
-5. Per lakare
-6. Per sida (HO/VA)
-7. Per vantetid till planerad operation
-8. Per tid pa dygnet
-9. Per veckodag
-10. Trendanalys
-
-### API-endpoints
-
-| Endpoint | Beskrivning |
-|----------|-------------|
-| `GET /api/statistik/oversikt?dagar=30` | Oversiktsdata |
-| `GET /api/statistik/svarstid` | Svarstider per dimension |
-| `GET /api/statistik/trend?granularitet=manad&dagar=365` | Trender |
+| Metod | Väg | Syfte |
+|-------|-----|--------|
+| `GET` | `/api/statistik/oversikt?dagar=30` | Översikt |
+| `GET` | `/api/statistik/svarstid` | Svarstider |
+| `GET` | `/api/statistik/trend?granularitet=manad&dagar=365` | Trender |
 
 ### Tekniskt
 
-- Chart.js v4.5.1 med dynamisk import
-- 5 minuters cache
-- SQL-vyer med `PERCENTILE_CONT(0.5)` for medianberakning
-- Trigger `trg_berakna_svarstid` auto-beraknar svarstid pa uppdatering
-
-### Migration
-
-`007-statistik.sql` -- Lagger till statistikkolumner, trigger och vyer.
+- Trigger för svarstid: **`trigger_berakna_svarstid`** på `sms_kampanj_mottagare` (migration `007-statistik.sql` — inte namnet `trg_berakna_svarstid`)
+- `utskick_veckodag` i AI-migreringen: **1 = måndag … 7 = söndag** (kommentar i `008-ai-forberedelse.sql`)
 
 ---
 
 ## 11. Prediktion
 
-### Vision
-
-Innan utskick startar ska systemet kunna saga: "Med 5 patienter har du 90% chans att fylla tiden."
-
-### Matematik
-
-```
-P(minst ett JA bland N patienter) = 1 - Π(1 - p_i)
-N = ln(1 - mal) / ln(1 - effektiv_JA-rate)
-```
-
-Effektiv JA-rate = JA-rate x svarsfrekvens.
-
-### Viktade faktorer
-
-| Faktor | Paverkan |
-|--------|----------|
-| Tid pa dygnet | ±15% |
-| Veckodag | ±10% |
-| Dagar till planerad op | ±20% |
-| Matchande sida | +10% |
-| Matchande lakare | +5% |
-
-### Datakrav
-
-| Fas | Minsta datapunkter | Metod |
-|-----|-------------------|-------|
-| Regelbaserad | 100+ (rek. 500+) | Viktat genomsnitt |
-| Enkel ML | 500+ | Logistisk regression |
-| Avancerad ML | 2000+ | XGBoost / Random Forest |
-| LLM-assisterad | Valfritt | Naturligt sprak + prediktion |
-
-### Status
-
-Konceptstadium -- datasamling pagar (se avsnitt 12).
+Koncept: innan utskick estimera sannolikhet att fylla luckan. Matematik och viktade faktorer beskrivs i [03-PREDIKTION.md](./03-PREDIKTION.md). Kräver tillräcklig historik; regelbaserad fas före ML.
 
 ---
 
-## 12. AI-forberedelse och ML-pipeline
+## 12. AI-förberedelse och ML-pipeline
 
-### Datasamling (aktiv)
-
-Foljer kolumner samlas automatiskt:
-- Utskickstimme och veckodag
-- Patientens tidigare forfragan, JA, NEJ (historik)
-- Svarstid i sekunder
-- Prediktionsresultat vs utfall
-
-### Nya tabeller
-
-**`patient_svarshistorik`** -- Aggregerad per telefon_hash
-
-| Kolumn | Beskrivning |
-|--------|-------------|
-| telefon_hash | SHA-256 (icke reversibel) |
-| antal_forfragan | Totalt antal SMS |
-| antal_ja | Antal JA-svar |
-| antal_nej | Antal NEJ-svar |
-| ja_rate | Beraknad JA-andel |
-| snitt_svarstid_sek | Genomsnittlig svarstid |
-
-**`sms_prediktioner`** -- Prediktionsloggen
-
-| Kolumn | Beskrivning |
-|--------|-------------|
-| kampanj_id | FK till kampanj |
-| prediktion_chans | Forutsagd chans (0-1) |
-| prediktion_antal_sms | Forväntat antal SMS |
-| faktiskt_resultat | `fylld` / `misslyckad` |
-| prediktion_korrekt | Utfall inom ±15% |
-
-### ML-ready vy
-
-`v_ml_training_data` exponerar alla features for traningsdata:
-- `target_ja` (malvariabel)
-- `feat_akut`, `feat_sjukskriven`, `feat_har_ont`, `feat_pensionar`
-- `feat_alder`, `feat_sida_hoger`, `feat_op_liten`, `feat_op_stor`
-- `feat_timme`, `feat_veckodag`, `feat_morgon`, `feat_helg`
-- `feat_historisk_ja_rate`
-
-### Triggers
-
-- `trg_fyll_utskick_metadata` -- Auto-fyller timme/veckodag vid utskick
-- `trg_uppdatera_svarshistorik` -- Auto-uppdaterar patienthistorik vid svar
-
-### Export
-
-- SQL: `\COPY (SELECT * FROM v_ml_training_data) TO 'data.csv' WITH CSV HEADER`
-- API: `GET /api/ml/training-data`
-
-### Migration
-
-`008-ai-forberedelse.sql` -- Tabeller, vyer, triggers for ML-data.
+- **Migration:** `008-ai-forberedelse.sql` — bland annat `patient_svarshistorik`, `sms_prediktioner`, vy `v_ml_training_data`, triggers `trg_fyll_utskick_metadata`, `trg_uppdatera_svarshistorik`
+- **Export:** SQL `\COPY` från `v_ml_training_data` är det primära sättet att ta ut träningsdata
+- **HTTP:** Det finns **ingen** implementerad `GET /api/ml/training-data` i nuvarande kodbas; lägg till själv om ni vill exponera samma data via API
 
 ---
 
 ## 13. GDPR och juridik
 
-### Rattslig grund
+Se [04-GDPR.md](./04-GDPR.md) för djupdykning. Kort i förhållande till **schema**:
 
-- **Artikel 6.1(f)** -- Berattigat intresse (fylla avbokade tider)
-- **Artikel 9.2(a)** -- Samtycke for halsodata (vid detaljerade SMS)
+- **Auto-radering i pool:** `utgar_vid` sätts standard till **7 dagar** efter tillagd (`002-kort-varsel.sql`); funktionen `rensa_gamla_kampanjer()` i samma migrering rensar bland annat kampanjer äldre än 7 dagar.
+- **Telefon:** krypterat + hash för matchning
+- **IMY:** Dokumentation nämner brev 2026-01-24 — verifiera status i er interna juridiska spårning
 
-### Vad lagras
-
-| Data | Skydd | Bes/kvarhallning |
-|------|-------|-------------------|
-| Telefonnummer | AES-256-krypterat | 30 dagar |
-| Telefon-hash | SHA-256 (icke reversibel) | For deduplicering |
-| Namn | Klartext | 30 dagar |
-| Prioritet | Nummer (1-5) | 30 dagar |
-| SMS-text | Ej lagrad | -- |
-
-### Vad som INTE lagras
-
-- Personnummer
-- Diagnoskoder
-- Medicinska detaljer (prioritet ar en siffra, inte en diagnos)
-
-### Tredjeparter
-
-| Tjanst | Data som delas | DPA |
-|--------|---------------|-----|
-| 46elks | Telefonnummer + SMS-text | Ja (LEK 2022:482) |
-| Supabase | Krypterad data | Ja |
-| Netlify | Serverlosa funktioner | Ja |
-
-46elks: Egna servrar i Stockholm/Uppsala/Goteborg. Bekraftat av 46elks 2026-01-24.
-
-### IMY-kontakt
-
-Brev skickat till `dso@imy.se` 2026-01-24 med tre fragor:
-1. PDL vs GDPR for detta system (friliggande fran journalsystem)
-2. EU-molntjanster (Supabase ar SOC 2-certifierad)
-3. Ytterligare rekommendationer
-
-### Patientrattigheter
-
-- **Opt-out:** SMS-nyckelord (STOPP m.fl.) eller webbknapp
-- **Radering:** Kontakta kliniken
-- **Registerutdrag:** Pa begaran
+Policytexter i tabellform med “30 dagar” ska **justeras mot faktisk retention** i SQL och era personuppgiftsbiträdesavtal.
 
 ---
 
-## 14. Sakerhet
+## 14. Säkerhet
 
-### Kryptering
-
-- **At rest:** AES-256 for telefonnummer
-- **In transit:** HTTPS/TLS for all kommunikation
-- **Hashing:** SHA-256 for deduplicering
-
-### Atkomstkontroll
-
-- Supabase RLS (Row Level Security) -- personal ser bara sin kliniks data
-- Unika koder >= 16 tecken (UUID v4) for svarssidor
-- Inga klartextnummer i UI
-
-### Atomicitet
-
-`registrera_ja_svar()` anvander `FOR UPDATE` radlasning -- forhindrar att tva patienter bokar samma tid samtidigt.
-
-### Loggning
-
-- `audit_logg` -- Alla atgarder tidsstamplade
-- Samtycke tidsstamplat vid preop-bekraftelse
+- **Kryptering:** `src/lib/kryptering.ts` — AES-256-CBC med nyckel från `POOL_ENCRYPTION_KEY` (samma princip som i Netlify-funktionen, som använder scrypt + dekryptering för utskick)
+- **RLS** på känsliga tabeller
+- **Unika koder** för publika länkar (UUID-liknande strängar)
+- **Atomaritet:** `registrera_ja_svar` med radlåsning
 
 ---
 
 ## 15. Ekonomi och ROI
 
-### Kostnad per kampanj
-
-~10-20 kr (20-40 SMS a 0,50 kr)
-
-### Kostnad per manad
-
-- Supabase: ~100 kr (Free/Pro)
-- 46elks: ~50-200 kr beroende pa volym
-- Netlify: Gratis (Free tier)
-
-### Intaktsforlust vid avbokning
-
-- Liten operation: ~10 000-15 000 kr
-- Stor operation: ~25 000-50 000 kr
-- Per timme OR-tid: ~15 000-50 000 kr
-
-### Samuelsonsk marginalanalys
-
-Nar fasta kostnader ar tackta (personal, hyra, utrustning redan pa plats) ger en fylld lucka 50-70% bidragsmarginal:
-- Intakt: ~25 000 kr
-- Rorlig kostnad: ~5 000 kr
-- **Bidrag: ~20 000 kr**
-
-### ROI
-
-En fylld lucka per vecka = ~80 000 kr/manad i bidrag.
-Systemkostnad: ~200-400 kr/manad.
-**Aterbetalning: < 1 arbetsdag.**
+Indikativa siffror — uppdatera mot er kliniks nyckeltal. SMS ~0,40–0,60 kr/st (prislista 46elks). Nytta i form av minskad tom OR-tid dominerar ofta kostnaden.
 
 ---
 
 ## 16. Open source-plan
 
-### Mal
-
-Gora systemet tillgangligt som oppen kallkod for andra kliniker med liknande problem.
-
-### MVP for open source
-
-- Patientpool med prioritering
-- SMS-utskick med gradvis eskalering
-- Svarshantering
-- Kampanjhantering
-- Grundlaggande statistik
-
-### Generalisering
-
-- `${CLINIC_NAME}` istallet for hardkodat kliniknamn
-- Konfigurerbar lakarelista
-- i18n-ready (svenska som standard)
-- Abstrakt SMS-granssnitt (`SMS_PROVIDER=46elks | twilio | mock`)
-
-### Demo-lage
-
-`SMS_PROVIDER=mock` -- inga riktiga SMS skickas, perfekt for test och demo.
-
-### Deploy
-
-One-click Netlify Deploy-knapp planerad.
-
-### Licens
-
-MIT eller Apache 2.0 (rekommenderad).
-
-### Roadmap
-
-1. Stabilisera och testa i produktion
-2. Extrahera till eget repo, skapa demo-lage
-3. Publicera pa GitHub, deploy-knapp, blogg/LinkedIn
+Översikt i [05-OPEN-SOURCE.md](./05-OPEN-SOURCE.md): generalisering av kliniknamn, SMS-provider-abstraktion, demo-läge m.m.
 
 ---
 
 ## 17. Kommersiell vision
 
-### Kort sikt (2024-2025)
-
-Losa ett problem valdig bra: fylla avbokade operationstider.
-
-### Medellang sikt (2025-2027)
-
-Patientpoolsplattform med vantelistor, kommunikation, grundlaggande patientregister.
-
-### Lang sikt (2027+)
-
-AI-nativt journalsystem.
-
-### Affarsmodell
-
-| Modell | Pris |
-|--------|------|
-| Intern anvandning | ~500 kr/manad |
-| SaaS Starter | 990 kr/manad |
-| SaaS Professional | 2 490 kr/manad |
-| SaaS Enterprise | 4 990 kr/manad |
-| White-label/licensiering | Forhandling |
-
-### Malgrupper
-
-- 50+ privata ortopedkliniker i Sverige
-- Dagkirurgiska enheter
-- Ogonkliniker, tandvardskedjor
-- Veterinarkliniker
-- Nordiska motsvarigheter
-
-### Risker
-
-- GDPR-incident
-- SMS-leverantor andrar villkor
-- Supabase driftstopp
-- Konkurrent
-- AI-utvecklingen avstannar
+Långsiktiga idéer i [06-VISION.md](./06-VISION.md).
 
 ---
 
@@ -635,99 +335,84 @@ AI-nativt journalsystem.
 src/
   pages/
     personal/
-      kort-varsel.astro       # Personaldashboard
-      profil.astro             # Personalprofil (mobilnummer)
+      kort-varsel.astro          # Personaldashboard
+      profil.astro               # Profil (mobil m.m.)
     s/
-      [kod].astro              # Patientens svarssida
+      [kod].astro                # Patientens svarssida
     api/
-      kampanj/                 # Kampanj-CRUD
-      pool/                    # Patientpool-CRUD
-      statistik/               # Statistik-endpoints
+      kampanj/
+        aktiv.ts lista.ts skapa.ts svar.ts avsluta.ts utoka.ts utoka-platser.ts status.ts
+      pool/
+        lista.ts lagg-till.ts uppdatera.ts ta-bort.ts
+      statistik/
+        oversikt.ts svarstid.ts trend.ts
       sms/
-        inkommande.ts          # 46elks webhook
+        inkommande.ts            # 46elks webhook
     om-oss/
-      kort-varsel-demo.astro   # Offentlig demosida
+      kort-varsel-demo.astro     # Publik demo/förklaring
+  components/
+    KortVarselIndikator.astro    # Flytande indikator på /personal/*
   lib/
-    kryptering.ts              # AES-256 + SHA-256
+    kryptering.ts                # Kryptering/dekryptering telefon
 
 netlify/
   functions/
-    scheduled-sms.mts          # Schemalagd SMS-funktion (varje minut)
+    scheduled-sms.mts            # Cron * * * * * — gradvis SMS
 
-supabase/
-  migrations/
-    001-initial-setup.sql      # Grundtabeller
-    002-kort-varsel.sql        # Kort varsel-tabeller
-    003-lakare.sql             # Lakare
-    004-profilbilder.sql       # Avatarer
-    005-prioritet.sql          # Prioritetssystem
-    006-operationsstorlek.sql  # Operationsstorlek och sida
-    007-statistik.sql          # Statistik (trigger, vyer)
-    008-ai-forberedelse.sql    # ML-data (triggers, vyer, historik)
+supabase/migrations/
+  001-initial-setup.sql
+  002-kort-varsel.sql            # Kärna: kampanj, mottagare, pool, RPC
+  003-lakare.sql
+  004-profilbilder.sql
+  005-prioritet.sql
+  006-operationsstorlek.sql
+  007-statistik.sql
+  008-ai-forberedelse.sql
 ```
+
+Repo kan innehålla **ytterligare** migreringar (enkät, AI Council m.m.) — de påverkar inte kort varsel-tabellerna om de inte explicit ändrar dem.
 
 ---
 
-## 19. Miljovariabler
+## 19. Miljövariabler
 
-| Variabel | Beskrivning |
-|----------|-------------|
-| `PUBLIC_SUPABASE_URL` | Supabase-projektets URL |
-| `PUBLIC_SUPABASE_ANON_KEY` | Publik Supabase-nyckel |
-| `SUPABASE_SERVICE_ROLE_KEY` | Servernyckeln (hemlig) |
-| `ELKS_API_USER` | 46elks API-anvandarnamn |
-| `ELKS_API_PASSWORD` | 46elks API-losenord |
-| `POOL_ENCRYPTION_KEY` | AES-256-nyckel for telefonnummer |
-| `SITE` | Webbplatsens URL (for SMS-lankar) |
+| Variabel | Syfte |
+|----------|--------|
+| `PUBLIC_SUPABASE_URL` | Supabase-URL |
+| `PUBLIC_SUPABASE_ANON_KEY` | Publik nyckel (klient) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role (API routes + Netlify) |
+| `ELKS_API_USER`, `ELKS_API_PASSWORD` | 46elks |
+| `POOL_ENCRYPTION_KEY` | Telefon kort varsel (och enkätens kö använder samma namn i drift) |
+| `SITE` / `PUBLIC_SITE_URL` | Bas-URL i SMS-länkar (`scheduled-sms.mts` faller tillbaka på konfigurerad default om saknas) |
 
 ---
 
 ## 20. Migrering och databas-setup
 
-Kor migreringar i ordning:
-
-```bash
-psql -f supabase/migrations/001-initial-setup.sql
-psql -f supabase/migrations/002-kort-varsel.sql
-psql -f supabase/migrations/003-lakare.sql
-psql -f supabase/migrations/004-profilbilder.sql
-psql -f supabase/migrations/005-prioritet.sql
-psql -f supabase/migrations/006-operationsstorlek.sql
-psql -f supabase/migrations/007-statistik.sql
-psql -f supabase/migrations/008-ai-forberedelse.sql
-```
-
-Eller kopiera SQL:en till Supabase Dashboard > SQL Editor.
+Kör i ordning `001` … `008` (samma som ovan). På Supabase: SQL Editor eller CLI enligt er rutin.
 
 ---
 
 ## 21. Status och roadmap
 
-### Klart
+### Klart (implementation i kod)
 
-- Patientpool med prioritering
-- SMS-utskick med gradvis eskalering
-- Svarshantering (JA / NEJ / STOPP)
-- Smart intervall-logik
-- Operationsstorlek och sida
-- Statistik och dashboard
-- Trendanalys
-- AI-forberedelse (datasamling aktiv)
-- IMY-brev skickat
+- Pool, kampanj, gradvis utskick, patientwebb, STOPP-webhook, statistik-API, AI-schema/triggers, demo-sida, aktiv-indikator
 
-### Planerat
+### Planerat / produkt
 
-- Regelbaserad prediktion (kraver 500+ datapunkter)
-- ML-modell (kraver 2000+ datapunkter)
-- Open source-release
-- Multi-klinik-stod
-- SaaS-lansering
+- Regelbaserad prediktion i UI, ML, open source-paketering, multi-klinik — se respektive dokuments roadmap
+
+---
+
+## 22. Relation till andra SHARP-moduler
+
+- **Enkät (SMS-enkät):** Separat datamodell under `enkat_*`-tabeller och egna Netlify-funktioner — se `docs/enkat/MASTERDOKUMENT.md`. **Gemensamt:** 46elks, Supabase, ofta `SITE` / `PUBLIC_SITE_URL`, och **`POOL_ENCRYPTION_KEY`** för krypterad telefon i kö/utskick.
+- **Kort varsel** ska inte förväxlas med enkätmodulen i dokumentation eller prompts.
 
 ---
 
 ## Detaljdokumentation
-
-For fordjupning, se respektive fil:
 
 | Dokument | Fil |
 |----------|-----|
@@ -737,4 +422,5 @@ For fordjupning, se respektive fil:
 | GDPR | [04-GDPR.md](./04-GDPR.md) |
 | Open Source | [05-OPEN-SOURCE.md](./05-OPEN-SOURCE.md) |
 | Vision | [06-VISION.md](./06-VISION.md) |
-| AI-forberedelse | [07-AI-FORBEREDELSE.md](./07-AI-FORBEREDELSE.md) |
+| AI-förberedelse | [07-AI-FORBEREDELSE.md](./07-AI-FORBEREDELSE.md) |
+| **En fil för extern AI (utbrytning)** | [MASTER-DOCUMENT.md](./MASTER-DOCUMENT.md) — hela MASTER + README + 01–07 |

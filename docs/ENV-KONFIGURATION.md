@@ -128,7 +128,7 @@ POOL_ENCRYPTION_KEY=...
 # (fallback i kod till SUPABASE_SERVICE_ROLE_KEY om den saknas — se enkat-preview-token.ts)
 ```
 
-Mer arkitektur och checklista vid utbrytning: `docs/enkat/ENKAT-UTBRYTNING.md`.
+Mer arkitektur och checklista vid utbrytning: `docs/enkat/MASTERDOKUMENT.md` §8.
 
 ---
 

@@ -2,7 +2,7 @@
 
 > Kort handoff-dokument för att snabbt kunna fortsätta arbetet från en annan dator eller i en ny chat.
 
-**Snabb navigering:** Översikt och modulkarta för extern AI → `MASTERDOKUMENT.md`. Utbrytning till egen app → `ENKAT-UTBRYTNING.md`.
+**Snabb navigering:** För extern AI räcker **`MASTERDOKUMENT.md`** (innehåller även utbrytning §8). Övriga filer i `docs/enkat/` är valfri fördjupning i repot.
 
 ## Nuvarande läge
 
@@ -119,7 +119,7 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 4. `docs/enkat/ENKAT-PATIENTUPPLEVELSE.md`
 5. `docs/enkat/ENKAT-API-SPEC.md`
 6. `docs/enkat/ENKAT-UI-SPEC.md`
-7. `docs/enkat/ENKAT-UTBRYTNING.md` (vid planering av fristående produkt)
+7. Utbrytning: se `MASTERDOKUMENT.md` §8 (`ENKAT-UTBRYTNING.md` är endast pekare)
 
 ## Praktiskt testflöde
 
@@ -141,8 +141,7 @@ Annars kan inte dashboard/report avgöra vilka egna resultat som ska visas för 
 Följande är synkade med nuvarande beteende (automatisk påminnelse nästa dag 16:00 Europe/Stockholm, ingen påminnelseknapp i UI, `paminnelse_efter_timmar` oanvänd för nya kampanjer):
 
 - `ENKAT-STATUS.md` (denna fil)
-- `MASTERDOKUMENT.md`
-- `ENKAT-UTBRYTNING.md`
+- `MASTERDOKUMENT.md` (inkl. utbrytning §8)
 - `ENKAT-API-SPEC.md`
 - `ENKAT-PATIENTUPPLEVELSE.md`
 - `ENKAT-IMPLEMENTATIONSPLAN.md`

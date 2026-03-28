@@ -160,7 +160,7 @@ Exempel på centrala variabler:
 - **Databas:** `enkat_kampanjer`, `enkat_utskick`, `enkat_svar`, `enkat_delivery_log`, `enkat_installningar`
 - **Bakgrund:** `netlify/functions/enkat-send-queue.mts`, `enkat-remind-scheduled.mts`
 - **Integrationer:** 46elks (SMS), Supabase (service role i API)
-- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md`, `docs/enkat/ENKAT-UTBRYTNING.md` (vid utbrytning)
+- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md` (för extern AI räcker denna fil; utbrytning §8)
 
 ### Personalportal
 

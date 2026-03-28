@@ -154,7 +154,7 @@ Diagnosinformation med referenser och FAQ.
 - **Publik enkät:** `src/pages/e/[kod].astro`
 - **API:** `src/pages/api/enkat/*` (upload, settings, send, submit, dashboard, report, campaigns, remind)
 - **Bakgrund:** `netlify/functions/enkat-send-queue.mts`, `enkat-remind-scheduled.mts`
-- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md` (översikt + modulkarta för extern AI), övriga filer i `docs/enkat/`, särskilt `ENKAT-UTBRYTNING.md` vid planering av fristående app.
+- **Dokumentation:** `docs/enkat/MASTERDOKUMENT.md` räcker som **enda bilaga** till extern AI (inkl. utbrytning §8); övriga filer i `docs/enkat/` är valfri fördjupning i repo.
 
 ---
 
@@ -320,7 +320,7 @@ SHARP/
 | `docs/OPERATION-SIDOR.md` | Hur man skapar/redigerar operationssidor |
 | `docs/LANKAR-OCH-SMS.md` | Kortlänkssystem i personalportalen (Supabase-first) |
 | `docs/enkat/MASTERDOKUMENT.md` | Patientupplevelse/enkät: kontext till extern AI, endpoints, modulkarta |
-| `docs/enkat/ENKAT-UTBRYTNING.md` | Checklista och beroenden vid utbrytning till egen applikation |
+| `docs/enkat/ENKAT-UTBRYTNING.md` | Kort pekare; utbrytning beskrivs i `MASTERDOKUMENT.md` §8 |
 | `docs/BILDHANTERING.md` | Bildformat, storlekar, optimering |
 | `docs/CHECKLIST.md` | Checklista för nya sidor |
 | `README.md` | Snabbstart och deployment |
