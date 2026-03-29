@@ -140,6 +140,11 @@ export function setElementBanner(
   message: string
 ): void {
   if (!element) return;
+  if (!message.trim()) {
+    element.className = 'banner';
+    element.textContent = '';
+    return;
+  }
   element.className = `banner visible ${type}`;
   element.textContent = message;
 }

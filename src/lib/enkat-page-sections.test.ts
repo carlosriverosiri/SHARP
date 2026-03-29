@@ -71,7 +71,8 @@ describe('enkat-page-sections', () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith('/api/enkat/dashboard?days=90&provider=Dr+A', expect.objectContaining({ credentials: 'include' }));
-    expect(bannerEl.textContent).toBe('Visar resultat för 1 vårdgivare.');
+    expect(bannerEl.textContent).toBe('');
+    expect(bannerEl.className).toBe('banner');
     expect(contentEl.innerHTML).toContain('Dr A');
     expect(Array.from(providerFilterEl.querySelectorAll('option')).map((option) => option.value)).toEqual(['', 'Dr A', 'Dr B']);
   });

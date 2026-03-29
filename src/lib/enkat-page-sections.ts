@@ -97,13 +97,12 @@ export async function loadDashboardSection({
     );
 
     updateSelectOptions(providerFilterEl, data.scope === 'admin' ? data.availableProviders || [] : [], provider);
-    setElementBanner(
-      bannerEl,
-      'success',
-      data.scope === 'admin'
-        ? `Visar resultat för ${data.totals.providerCount} vårdgivare.`
-        : 'Visar dina egna resultat för de senaste 90 dagarna.'
-    );
+    if (data.scope === 'admin') {
+      // Admin ser vårdgivarna i korten — ingen extra statusrad efter lyckad laddning.
+      setElementBanner(bannerEl, 'success', '');
+    } else {
+      setElementBanner(bannerEl, 'success', 'Visar dina egna resultat för de senaste 90 dagarna.');
+    }
 
     if (data.scope === 'self') {
       if (!data.configured) {
