@@ -150,7 +150,11 @@ export function setElementBanner(
 }
 
 export function getErrorText(error: unknown, fallbackMessage: string): string {
-  return error instanceof Error && error.message ? error.message : fallbackMessage;
+  const raw = error instanceof Error && error.message ? error.message : fallbackMessage;
+  if (raw === 'Ej inloggad') {
+    return 'Inloggningen kunde inte verifieras för den här delen av sidan. Ladda om sidan. Om det kvarstår: logga ut och logga in igen.';
+  }
+  return raw;
 }
 
 function getNetworkErrorMessage(fallbackMessage: string, error: unknown): string {

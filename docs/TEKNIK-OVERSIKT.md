@@ -42,6 +42,7 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 - `/personal/admin` hanterar användare och roller via Supabase Auth Admin API.
 - Återställningslänk för lösenord använder Supabase `resetPasswordForEmail(...)` och samma self-service-sida för användaren.
 - Säkerhetsheaders via Netlify.
+- **PWA (service worker)** i `public/sw.js`: GET till `/api/` och `/personal` går **inte** genom cache-first (alltid nätverk), så session-styrd data (t.ex. enkät-dashboard) följer aktuell inloggning och inte gamla felmeddelanden från cache.
 
 ## AI‑plattform (AI Council)
 

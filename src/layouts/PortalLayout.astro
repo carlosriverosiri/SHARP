@@ -124,16 +124,30 @@ function getInitials(value: string): string {
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden;
       z-index: 50;
     }
     .portal-sidebar-header {
-      padding-bottom: 1.5rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid #334155;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-decoration: none;
       color: inherit;
       display: block;
+      flex-shrink: 0;
+    }
+    .portal-sidebar-user {
+      flex-shrink: 0;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #334155;
+    }
+    .portal-sidebar-nav {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      margin-right: -0.25rem;
+      padding-right: 0.25rem;
     }
     .portal-sidebar-header img { height: 32px; filter: brightness(0) invert(1); }
     .portal-nav-section { margin-bottom: 1.5rem; }
@@ -152,13 +166,9 @@ function getInitials(value: string): string {
     .portal-nav-link:hover { background: #334155; color: white; }
     .portal-nav-link.active { background: #0284c7; color: white; }
     .portal-nav-link svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .portal-sidebar-footer {
-      margin-top: auto; padding-top: 1.5rem;
-      border-top: 1px solid #334155;
-    }
     .portal-user-info {
       display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.75rem; margin-bottom: 0.75rem;
+      padding: 0.75rem; margin-bottom: 0.5rem;
       background: #334155; border-radius: 0.5rem;
       text-decoration: none; color: inherit;
       transition: background 0.2s ease, transform 0.2s ease;
@@ -229,6 +239,7 @@ function getInitials(value: string): string {
     .portal-mobile-drawer nav a:hover,
     .portal-mobile-drawer nav a.active { background: #334155; color: white; }
     .portal-mobile-drawer nav a svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .portal-mobile-drawer .portal-logout-btn { margin-bottom: 1rem; }
     .portal-mobile-section { margin-bottom: 1.5rem; }
     .portal-mobile-section-title {
       font-size: 0.6875rem; font-weight: 600; color: #64748b;
@@ -257,20 +268,7 @@ function getInitials(value: string): string {
     <a href="/" class="portal-sidebar-header" title="Tillbaka till hemsidan">
       <img src="/images/branding/logo.svg" alt="Södermalms Ortopedi">
     </a>
-    <nav>
-      {sections.map((section) => (
-        <div class="portal-nav-section">
-          <div class="portal-nav-section-title">{section.title}</div>
-          {section.items.map((item) => (
-            <a href={item.href} class={`portal-nav-link${isActive(item.href) ? ' active' : ''}`}>
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon}/></svg>
-              {item.label}
-            </a>
-          ))}
-        </div>
-      ))}
-    </nav>
-    <div class="portal-sidebar-footer">
+    <div class="portal-sidebar-user">
       {(email || userId || userName) && (
         <a href="/personal/profil" class="portal-user-info" title={userInfoTitle}>
           <div class="portal-user-avatar">
@@ -291,6 +289,19 @@ function getInitials(value: string): string {
         Logga ut
       </a>
     </div>
+    <nav class="portal-sidebar-nav">
+      {sections.map((section) => (
+        <div class="portal-nav-section">
+          <div class="portal-nav-section-title">{section.title}</div>
+          {section.items.map((item) => (
+            <a href={item.href} class={`portal-nav-link${isActive(item.href) ? ' active' : ''}`}>
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon}/></svg>
+              {item.label}
+            </a>
+          ))}
+        </div>
+      ))}
+    </nav>
   </aside>
 
   <!-- Mobile top bar -->
@@ -309,6 +320,25 @@ function getInitials(value: string): string {
       <button type="button" class="portal-mobile-close" id="portalMobileClose">
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
+      {(email || userId || userName) && (
+        <a href="/personal/profil" class="portal-user-info portal-mobile-user-info" title={userInfoTitle}>
+          <div class="portal-user-avatar">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" loading="lazy" decoding="async" />
+            ) : (
+              getInitials(displayUserName)
+            )}
+          </div>
+          <div class="portal-user-details">
+            <span class="portal-user-name">{displayUserName}</span>
+            <span class="portal-user-role">{userRoleLabel}</span>
+          </div>
+        </a>
+      )}
+      <a href="/personal/oversikt?logout=true" class="portal-logout-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logga ut
+      </a>
       <nav>
         {sections.map((section) => (
           <div class="portal-mobile-section">
@@ -321,22 +351,7 @@ function getInitials(value: string): string {
             ))}
           </div>
         ))}
-        {(email || userId || userName) && (
-          <a href="/personal/profil" class="portal-user-info portal-mobile-user-info" title={userInfoTitle}>
-            <div class="portal-user-avatar">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="" loading="lazy" decoding="async" />
-              ) : (
-                getInitials(displayUserName)
-              )}
-            </div>
-            <div class="portal-user-details">
-              <span class="portal-user-name">{displayUserName}</span>
-              <span class="portal-user-role">{userRoleLabel}</span>
-            </div>
-          </a>
-        )}
-        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #334155;">
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #334155;">
           <a href="/" style="color: #94a3b8;">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             Tillbaka till hemsidan

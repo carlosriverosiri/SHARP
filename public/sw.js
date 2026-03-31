@@ -9,7 +9,7 @@
  * Version: 1.0.0
  */
 
-const CACHE_NAME = 'so-ortopedi-v3';
+const CACHE_NAME = 'so-ortopedi-v4';
 
 // Resurser att cachelagra vid installation
 const PRECACHE_URLS = [
@@ -89,6 +89,13 @@ self.addEventListener('fetch', (event) => {
   // Ignorera externa API-anrop och analytics
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // API och inloggad personalportal måste alltid gå mot nätverket — annars kan cache-first
+  // ge t.ex. gammalt 401 ("Ej inloggad") medan sidan visar inloggad användare i layouten.
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/personal')) {
+    event.respondWith(fetch(event.request));
     return;
   }
 

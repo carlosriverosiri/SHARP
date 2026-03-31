@@ -1,7 +1,13 @@
+const JSON_AUTH_HEADERS: HeadersInit = {
+  'Content-Type': 'application/json',
+  'Cache-Control': 'private, no-store, must-revalidate',
+  Vary: 'Cookie'
+};
+
 export function jsonResponse<T = unknown>(data: T, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json' }
+    headers: JSON_AUTH_HEADERS
   });
 }
 
