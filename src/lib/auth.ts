@@ -11,6 +11,7 @@
 import type { AstroCookies } from 'astro';
 import type { User } from '@supabase/supabase-js';
 import { supabase, loggaHandelse, supabaseKonfigurerad } from './supabase';
+import { createSupabaseServerClient } from './supabase-ssr-astro';
 import { harMinstPortalRoll, normalizePortalRole, type PortalRole } from './portal-roles';
 
 // ============================================
@@ -26,7 +27,7 @@ const SESSION_SECRET = import.meta.env.PERSONAL_SESSION_SECRET || 'default-sessi
 const USE_SUPABASE = true;
 
 // ============================================
-// JWT-HJÄLPER (för snabb lokal validering)
+// JWT / metadata (visningsnamn — inte för sessionvalidering)
 // ============================================
 type JwtPayload = {
   exp?: number;
@@ -39,26 +40,6 @@ type JwtPayload = {
     display_name?: string;
   };
 };
-
-function decodeJwtPayload(token: string): JwtPayload | null {
-  try {
-    const parts = token.split('.');
-    if (parts.length < 2) return null;
-    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
-    const json = Buffer.from(padded, 'base64').toString('utf8');
-    return JSON.parse(json) as JwtPayload;
-  } catch {
-    return null;
-  }
-}
-
-function accessTokenIsValid(accessToken: string, leewaySeconds = 60): boolean {
-  const payload = decodeJwtPayload(accessToken);
-  if (!payload?.exp) return false;
-  const now = Math.floor(Date.now() / 1000);
-  return payload.exp - leewaySeconds > now;
-}
 
 function formatDisplayNameFromEmail(email: string): string {
   const localPart = email.split('@')[0]?.trim() || '';
@@ -107,18 +88,18 @@ export interface Anvandare {
  * Kontrollerar om användaren är inloggad
  * Förlänger också sessionen om den är aktiv (sliding timeout)
  */
-export async function arInloggad(cookies: AstroCookies): Promise<boolean> {
+export async function arInloggad(cookies: AstroCookies, request?: Request): Promise<boolean> {
   if (USE_SUPABASE) {
-    return await kontrolleraSupabaseSession(cookies);
-  } else {
-    return kontrolleraEnkelSession(cookies);
+    if (!request) return false;
+    return await kontrolleraSupabaseSession(cookies, request);
   }
+  return kontrolleraEnkelSession(cookies);
 }
 
 /**
  * Hämtar inloggad användare (endast Supabase-läge)
  */
-export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare | null> {
+export async function hamtaAnvandare(cookies: AstroCookies, request?: Request): Promise<Anvandare | null> {
   if (!USE_SUPABASE) {
     // I enkelt läge, returnera en dummy-användare
     const isLoggedIn = kontrolleraEnkelSession(cookies);
@@ -133,7 +114,8 @@ export async function hamtaAnvandare(cookies: AstroCookies): Promise<Anvandare |
     return null;
   }
 
-  return await hamtaVerifieradSupabaseAnvandare(cookies);
+  if (!request) return null;
+  return await hamtaVerifieradSupabaseAnvandare(cookies, request);
 }
 
 /**
@@ -160,13 +142,20 @@ export async function loggaIn(
  */
 export async function loggaUt(cookies: AstroCookies, request?: Request): Promise<void> {
   if (USE_SUPABASE) {
-    const user = await hamtaAnvandare(cookies);
+    const user = request ? await hamtaAnvandare(cookies, request) : null;
     if (user) {
       await loggaHandelse(user.id, user.email, 'UTLOGGNING', {}, request);
     }
-    await supabase.auth.signOut();
     cookies.delete('sb-access-token', { path: '/' });
     cookies.delete('sb-refresh-token', { path: '/' });
+    if (request) {
+      try {
+        const supabaseSsr = createSupabaseServerClient(cookies, request);
+        await supabaseSsr.auth.signOut();
+      } catch {
+        // ignorera om SSR-klient inte kan skapas
+      }
+    }
   } else {
     cookies.delete(SESSION_COOKIE_NAME, { path: '/' });
   }
@@ -220,8 +209,8 @@ function enkelLoggaIn(
 // SUPABASE LÄGE (framtid)
 // ============================================
 
-async function kontrolleraSupabaseSession(cookies: AstroCookies): Promise<boolean> {
-  return Boolean(await hamtaVerifieradSupabaseAnvandare(cookies));
+async function kontrolleraSupabaseSession(cookies: AstroCookies, request: Request): Promise<boolean> {
+  return Boolean(await hamtaVerifieradSupabaseAnvandare(cookies, request));
 }
 
 function skapaAnvandareFranSupabaseUser(user: User): Anvandare {
@@ -233,41 +222,32 @@ function skapaAnvandareFranSupabaseUser(user: User): Anvandare {
   };
 }
 
-function rensaSupabaseSession(cookies: AstroCookies): void {
+async function rensaSupabaseSession(cookies: AstroCookies, request: Request): Promise<void> {
   cookies.delete('sb-access-token', { path: '/' });
   cookies.delete('sb-refresh-token', { path: '/' });
+  try {
+    const supabaseSsr = createSupabaseServerClient(cookies, request);
+    await supabaseSsr.auth.signOut();
+  } catch {
+    // ignorera
+  }
 }
 
-async function hamtaVerifieradSupabaseAnvandare(cookies: AstroCookies): Promise<Anvandare | null> {
-  const accessToken = cookies.get('sb-access-token')?.value;
-  const refreshToken = cookies.get('sb-refresh-token')?.value;
-
-  if (!accessToken) return null;
-
+async function hamtaVerifieradSupabaseAnvandare(cookies: AstroCookies, request: Request): Promise<Anvandare | null> {
   try {
-    if (accessTokenIsValid(accessToken)) {
-      const { data: { user }, error } = await supabase.auth.getUser(accessToken);
-      if (!error && user) {
-        return skapaAnvandareFranSupabaseUser(user);
-      }
-    }
-
-    if (refreshToken) {
-      const { data, error } = await supabase.auth.refreshSession({
-        refresh_token: refreshToken
-      });
-      const refreshedUser = data.user ?? data.session?.user ?? null;
-
-      if (!error && data.session && refreshedUser) {
-        sparaSupabaseSession(cookies, data.session.access_token, data.session.refresh_token);
-        return skapaAnvandareFranSupabaseUser(refreshedUser);
-      }
+    const supabaseSsr = createSupabaseServerClient(cookies, request);
+    const {
+      data: { user },
+      error
+    } = await supabaseSsr.auth.getUser();
+    if (!error && user) {
+      return skapaAnvandareFranSupabaseUser(user);
     }
   } catch {
-    // Rensa ogiltiga sessionscookies om Supabase-verifieringen fallerar.
+    // Ogiltig session
   }
 
-  rensaSupabaseSession(cookies);
+  await rensaSupabaseSession(cookies, request);
   return null;
 }
 
@@ -277,9 +257,12 @@ async function supabaseLoggaIn(
   losenord: string,
   request?: Request
 ): Promise<{ success: boolean; error?: string }> {
-  
   if (!email || !losenord) {
     return { success: false, error: 'E-post och lösenord krävs' };
+  }
+
+  if (!request) {
+    return { success: false, error: 'Systemfel: saknar HTTP-request vid inloggning.' };
   }
 
   // Kontrollera om Supabase är korrekt konfigurerad
@@ -289,7 +272,8 @@ async function supabaseLoggaIn(
   }
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const supabaseSsr = createSupabaseServerClient(cookies, request);
+    const { data, error } = await supabaseSsr.auth.signInWithPassword({
       email,
       password: losenord
     });
@@ -313,9 +297,10 @@ async function supabaseLoggaIn(
     }
 
     if (data?.session) {
-      // Spara tokens i cookies
-      sparaSupabaseSession(cookies, data.session.access_token, data.session.refresh_token);
-      
+      // Chunkade auth-kakor sätts av @supabase/ssr via signIn; rensa ev. gamla en-kaks-sessioner
+      cookies.delete('sb-access-token', { path: '/' });
+      cookies.delete('sb-refresh-token', { path: '/' });
+
       // Logga lyckad inloggning
       try {
         await loggaHandelse(
@@ -341,27 +326,22 @@ async function supabaseLoggaIn(
   }
 }
 
-function sparaSupabaseSession(
-  cookies: AstroCookies, 
-  accessToken: string, 
-  refreshToken: string | undefined
-): void {
-  cookies.set('sb-access-token', accessToken, {
-    path: '/',
-    httpOnly: true,
-    secure: import.meta.env.PROD,
-    sameSite: 'lax', // 'lax' för att fungera med redirects
-    maxAge: SESSION_DURATION_SECONDS
-  });
-  
-  if (refreshToken) {
-    cookies.set('sb-refresh-token', refreshToken, {
-      path: '/',
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax', // 'lax' för att fungera med redirects
-      maxAge: 60 * 60 * 24 * 7 // 7 dagar för refresh token
-    });
+/**
+ * Access token för anrop som proxar användarens Supabase-session (t.ex. AI-råd).
+ * Anropa endast efter att åtkomst redan kontrollerats med getUser.
+ */
+export async function hamtaSupabaseAccessToken(
+  cookies: AstroCookies,
+  request: Request
+): Promise<string | null> {
+  try {
+    const supabaseSsr = createSupabaseServerClient(cookies, request);
+    const { data: userData, error: userError } = await supabaseSsr.auth.getUser();
+    if (userError || !userData.user) return null;
+    const { data: sessionData } = await supabaseSsr.auth.getSession();
+    return sessionData.session?.access_token ?? null;
+  } catch {
+    return null;
   }
 }
 
@@ -448,8 +428,8 @@ export function arSupabaseAktiverat(): boolean {
 /**
  * Kontrollerar om användaren är admin
  */
-export async function arAdmin(cookies: AstroCookies): Promise<boolean> {
-  const user = await hamtaAnvandare(cookies);
+export async function arAdmin(cookies: AstroCookies, request?: Request): Promise<boolean> {
+  const user = await hamtaAnvandare(cookies, request);
   return user ? harMinstPortalRoll(user.roll, 'admin') : false;
 }
 

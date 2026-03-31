@@ -198,8 +198,8 @@ function buildLinkData(payload: Record<string, unknown>, options: { allowSystemF
 }
 
 // GET - List all links with optional filters
-export const GET: APIRoute = async ({ cookies, url }) => {
-  if (!await arInloggad(cookies)) return jsonRes({ error: 'Ej inloggad' }, 401);
+export const GET: APIRoute = async ({ cookies, url, request }) => {
+  if (!await arInloggad(cookies, request)) return jsonRes({ error: 'Ej inloggad' }, 401);
   const supabase = getSupabase();
   if (!supabase) return jsonRes({ error: 'Supabase ej konfigurerat', links: [] }, 500);
 
@@ -284,8 +284,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
 // POST - Create new link
 export const POST: APIRoute = async ({ request, cookies }) => {
-  if (!await arInloggad(cookies)) return jsonRes({ error: 'Ej inloggad' }, 401);
-  const anvandare = await hamtaAnvandare(cookies);
+  if (!await arInloggad(cookies, request)) return jsonRes({ error: 'Ej inloggad' }, 401);
+  const anvandare = await hamtaAnvandare(cookies, request);
   const supabase = getSupabase();
   if (!supabase) return jsonRes({ error: 'Supabase ej konfigurerat' }, 500);
 
@@ -328,8 +328,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
 // PUT - Update link
 export const PUT: APIRoute = async ({ request, cookies }) => {
-  if (!await arInloggad(cookies)) return jsonRes({ error: 'Ej inloggad' }, 401);
-  const anvandare = await hamtaAnvandare(cookies);
+  if (!await arInloggad(cookies, request)) return jsonRes({ error: 'Ej inloggad' }, 401);
+  const anvandare = await hamtaAnvandare(cookies, request);
   const supabase = getSupabase();
   if (!supabase) return jsonRes({ error: 'Supabase ej konfigurerat' }, 500);
 
@@ -364,7 +364,7 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
 
 // PATCH - Archive / restore link
 export const PATCH: APIRoute = async ({ request, cookies }) => {
-  if (!await arInloggad(cookies)) return jsonRes({ error: 'Ej inloggad' }, 401);
+  if (!await arInloggad(cookies, request)) return jsonRes({ error: 'Ej inloggad' }, 401);
   const supabase = getSupabase();
   if (!supabase) return jsonRes({ error: 'Supabase ej konfigurerat' }, 500);
 
@@ -392,8 +392,8 @@ export const PATCH: APIRoute = async ({ request, cookies }) => {
 };
 
 // DELETE - Delete non-system links
-export const DELETE: APIRoute = async ({ cookies, url }) => {
-  if (!await arInloggad(cookies)) return jsonRes({ error: 'Ej inloggad' }, 401);
+export const DELETE: APIRoute = async ({ cookies, url, request }) => {
+  if (!await arInloggad(cookies, request)) return jsonRes({ error: 'Ej inloggad' }, 401);
   const supabase = getSupabase();
   if (!supabase) return jsonRes({ error: 'Supabase ej konfigurerat' }, 500);
 

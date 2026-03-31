@@ -582,9 +582,8 @@ Worker-logik:
 1. Hämta Dispatch från databasen
 2. Kontrollera att status är QUEUED (idempotens)
 3. Dekryptera telefonnumret
-4. Bygg SMS-text: "Hej! Vi vill gärna höra hur ditt besök var.
-   Svara här: {PUBLIC_SURVEY_URL}/{uniqueCode}"
-   (SMS:et måste rymmas i 160 tecken = ett segment)
+4. Bygg SMS-text från mall med placeholders (i SHARP: `enkat-sms.ts`, t.ex. [VÅRDGIVARE], [DATUM_KORT], [LÄNK]; ofta formuleringen ”Svara anonymt: [LÄNK]”)
+   (SMS:et bör rymmas i ett segment om möjligt)
 5. Skicka via SmsProvider
 6. Uppdatera Dispatch: status → SENT, sentAt → now()
 7. Skapa DeliveryLog (eventType: SENT eller FAILED)

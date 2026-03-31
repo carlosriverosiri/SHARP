@@ -75,6 +75,7 @@ Nyckelidéer:
 - ett utskick kan ge max ett svar
 - leveranslogg sparar faktisk skickstatus/fel
 - analys ska vara vårdgivarspecifik, patientanonym i rapportering
+- patient-ID från CSV lagras endast som `patient_id_hash` (SHA-256 hex i `send.ts`); tabellen `enkat_svar` har inget patientidentifierarfält — koppling till utskick sker via FK
 - unik `preview_token_hash` på kampanj stoppar dubbelskapande från samma preview
 - atomärt svar: Postgres-funktion `submit_enkat_response` (transaktion, race-säker)
 
@@ -93,6 +94,8 @@ Nyckelidéer:
 - Dashboard skyddar integritet vid lågt underlag (tröskel `ANONYMITY_THRESHOLD` i kod).
 - Profilkoppling till vårdgivarnamn styr vad en vanlig användare får se jämfört med admin.
 - Publik enkät: strukturerade betyg (1–5) + valfria fritextfält; mobilanpassad (detaljerad layout beskrivs i repo under `ENKAT-PATIENTFORMULAR-MALL.md` om du behöver pixel-nivå).
+- Kampanjnamn: tomt fält ger standardnamnet `Patientupplevelse`; inget datum läggs automatiskt till i namnet (besöksdatum visas i tabellkolumnen).
+- SMS-mall: placeholder `[DATUM_KORT]` (kompakt datum utan år) och kortare standardtexter i `enkat-sms.ts` så inbjudan ofta ryms i **ett** SMS-segment; formuleringen *Svara anonymt: [LÄNK]* används där det passar.
 
 ---
 
@@ -109,6 +112,8 @@ Nyckelidéer:
 - dashboard + rapport + kampanjhistorik
 - filter på rå bokningstyp (`Kuralink`, `Knä`, `Axel`, `Armbåge`)
 - fördröjningsanalys: medel tid till SMS + tidsfönster (ingen förmiddag/eftermiddag-panel i huvudvyn)
+- personal/admin (översikt alla vårdgivare): efter lyckad dashboard-laddning visas ingen grön informationsbanner överst (tom banner döljs); vårdgivare ser fortfarande kort bekräftelse om egna resultat
+- resultatkort: tydligare typografi på avsnittsrubriker inom kort (fetare h2/h3)
 
 ---
 

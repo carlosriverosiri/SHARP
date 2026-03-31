@@ -12,7 +12,7 @@ import { supabase } from '../../lib/supabase';
 import { arInloggad } from '../../lib/auth';
 
 // Om redan inloggad, redirecta till översikt
-if (await arInloggad(Astro.cookies)) {
+if (await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal/oversikt');
 }
 

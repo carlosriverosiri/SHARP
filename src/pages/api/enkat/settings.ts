@@ -34,8 +34,8 @@ function buildSettingsPayload(record?: { exkludera_bokningstyper?: unknown; upda
   };
 }
 
-export const GET: APIRoute = async ({ cookies }) => {
-  if (!await arInloggad(cookies)) {
+export const GET: APIRoute = async ({ cookies, request }) => {
+  if (!await arInloggad(cookies, request)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
   }
 
@@ -65,11 +65,11 @@ export const GET: APIRoute = async ({ cookies }) => {
 };
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return json({ success: false, error: 'Kunde inte hämta användare' }, 401);
   }

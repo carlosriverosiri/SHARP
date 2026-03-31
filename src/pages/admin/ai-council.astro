@@ -23,11 +23,11 @@ import '../../styles/ai-council.css';
 import '../../styles/ai-council-page.css';
 
 // Check authentication
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal');
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 if (!anvandare) {
   return Astro.redirect('/personal');
 }

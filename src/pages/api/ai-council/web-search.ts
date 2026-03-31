@@ -189,7 +189,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const startTime = Date.now();
   
   // Check authentication
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },

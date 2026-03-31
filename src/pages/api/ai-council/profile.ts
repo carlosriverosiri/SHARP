@@ -9,6 +9,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { hamtaSupabaseAccessToken } from '../../../lib/auth';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = import.meta.env.SUPABASE_URL;
@@ -113,7 +114,7 @@ export function generateSystemPrompt(profile: UserProfile): string {
   return prompt;
 }
 
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ cookies, request }) => {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat' }), {
       status: 500,
@@ -121,7 +122,7 @@ export const GET: APIRoute = async ({ cookies }) => {
     });
   }
 
-  const accessToken = cookies.get('sb-access-token')?.value;
+  const accessToken = await hamtaSupabaseAccessToken(cookies, request);
   if (!accessToken) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -175,7 +176,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const accessToken = cookies.get('sb-access-token')?.value;
+  const accessToken = await hamtaSupabaseAccessToken(cookies, request);
   if (!accessToken) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,

@@ -24,8 +24,8 @@ function getSupabase() {
 }
 
 // GET - List contexts
-export const GET: APIRoute = async ({ cookies }) => {
-  const inloggad = await arInloggad(cookies);
+export const GET: APIRoute = async ({ cookies, request }) => {
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad', contexts: [] }), {
       status: 401,
@@ -33,7 +33,7 @@ export const GET: APIRoute = async ({ cookies }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare', contexts: [] }), {
       status: 401,
@@ -82,7 +82,7 @@ export const GET: APIRoute = async ({ cookies }) => {
 
 // POST - Save context
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const inloggad = await arInloggad(cookies);
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -90,7 +90,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare' }), {
       status: 401,
@@ -149,7 +149,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
 // PATCH - Update context (name, context text, or increment use count)
 export const PATCH: APIRoute = async ({ request, cookies, url }) => {
-  const inloggad = await arInloggad(cookies);
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -157,7 +157,7 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare' }), {
       status: 401,
@@ -238,8 +238,8 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
 };
 
 // DELETE - Delete context
-export const DELETE: APIRoute = async ({ cookies, url }) => {
-  const inloggad = await arInloggad(cookies);
+export const DELETE: APIRoute = async ({ cookies, url, request }) => {
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -247,7 +247,7 @@ export const DELETE: APIRoute = async ({ cookies, url }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare' }), {
       status: 401,

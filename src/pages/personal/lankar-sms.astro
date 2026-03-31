@@ -15,11 +15,11 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 import PortalLayout from '../../layouts/PortalLayout.astro';
 
 // Kontrollera inloggning
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect(`/personal?next=${encodeURIComponent(`${new URL(Astro.request.url).pathname}${new URL(Astro.request.url).search}`)}`);
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 
 // Ikoner för varje kategori
 const categoryIcons: Record<string, string> = {

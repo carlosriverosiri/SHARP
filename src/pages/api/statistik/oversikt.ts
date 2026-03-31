@@ -56,8 +56,8 @@ interface OversiktData {
   };
 }
 
-export const GET: APIRoute = async ({ url, cookies }) => {
-  if (!await arInloggad(cookies)) {
+export const GET: APIRoute = async ({ url, cookies, request }) => {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ error: 'Ej inloggad' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }

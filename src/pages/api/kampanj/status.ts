@@ -12,9 +12,9 @@ import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 
-export const GET: APIRoute = async ({ url, cookies }) => {
+export const GET: APIRoute = async ({ url, cookies, request }) => {
   // Kontrollera inloggning
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ error: 'Ej inloggad' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }

@@ -20,14 +20,14 @@ export const GET: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad', items: [] }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare', items: [] }), {
       status: 200,
@@ -110,14 +110,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,
@@ -206,14 +206,14 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,
@@ -279,14 +279,14 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,

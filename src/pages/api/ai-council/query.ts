@@ -9,7 +9,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { arInloggad } from '../../../lib/auth';
+import { arInloggad, hamtaSupabaseAccessToken } from '../../../lib/auth';
 import { createClient } from '@supabase/supabase-js';
 import { generateSystemPrompt } from './profile';
 
@@ -1904,7 +1904,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   const useStreaming = url.searchParams.get('stream') === 'true';
   
   // Check authentication
-  const inloggad = await arInloggad(cookies);
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -1984,7 +1984,7 @@ SVARSSTIL:
   let userProfileContext = '';
   if (SUPABASE_URL && SUPABASE_ANON_KEY) {
     try {
-      const accessToken = cookies.get('sb-access-token')?.value;
+      const accessToken = await hamtaSupabaseAccessToken(cookies, request);
       if (accessToken) {
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
           global: { headers: { Authorization: `Bearer ${accessToken}` } }

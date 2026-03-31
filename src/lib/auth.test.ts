@@ -17,8 +17,22 @@ vi.mock('./supabase', () => ({
   supabaseKonfigurerad: true
 }));
 
+const mockGetUser = vi.fn();
+const mockGetSession = vi.fn();
+const mockSignOut = vi.fn();
+
+vi.mock('./supabase-ssr-astro', () => ({
+  createSupabaseServerClient: vi.fn(() => ({
+    auth: {
+      getUser: mockGetUser,
+      getSession: mockGetSession,
+      signInWithPassword: vi.fn(),
+      signOut: mockSignOut
+    }
+  }))
+}));
+
 import { arInloggad, hamtaAnvandare } from './auth';
-import { supabase } from './supabase';
 
 class MockCookies {
   private store = new Map<string, string>();
@@ -47,9 +61,10 @@ class MockCookies {
   }
 }
 
-function createJwt(payload: Record<string, unknown>): string {
-  const encode = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url');
-  return `${encode({ alg: 'HS256', typ: 'JWT' })}.${encode(payload)}.test-signature`;
+function testRequest(): Request {
+  return new Request('https://example.test/personal', {
+    headers: { cookie: 'irrelevant=1' }
+  });
 }
 
 function createSupabaseUser(overrides: Partial<User> = {}): User {
@@ -75,53 +90,32 @@ function createSupabaseUser(overrides: Partial<User> = {}): User {
 }
 
 describe('auth supabase session verification', () => {
-  const getUserMock = vi.mocked(supabase.auth.getUser);
-  const refreshSessionMock = vi.mocked(supabase.auth.refreshSession);
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('rejects a forged access token even if the payload looks valid', async () => {
-    const forgedToken = createJwt({
-      sub: 'attacker-id',
-      email: 'attacker@example.com',
-      app_metadata: { role: 'superadmin' },
-      exp: Math.floor(Date.now() / 1000) + 3600
-    });
-    const cookies = new MockCookies({
-      'sb-access-token': forgedToken
-    });
-
-    getUserMock.mockResolvedValue({
+  it('returns null when Supabase getUser rejects session', async () => {
+    const cookies = new MockCookies();
+    mockGetUser.mockResolvedValue({
       data: { user: null },
-      error: new Error('invalid token') as never
+      error: new Error('invalid session') as never
     });
 
-    const user = await hamtaAnvandare(cookies as unknown as AstroCookies);
+    const user = await hamtaAnvandare(cookies as unknown as AstroCookies, testRequest());
 
     expect(user).toBeNull();
-    expect(getUserMock).toHaveBeenCalledWith(forgedToken);
-    expect(cookies.value('sb-access-token')).toBeUndefined();
+    expect(mockGetUser).toHaveBeenCalled();
+    expect(mockSignOut).toHaveBeenCalled();
   });
 
-  it('returns the verified Supabase user for a valid access token', async () => {
-    const accessToken = createJwt({
-      sub: 'user-1',
-      email: 'carlos@example.com',
-      app_metadata: { role: 'superadmin' },
-      exp: Math.floor(Date.now() / 1000) + 3600
-    });
-    const cookies = new MockCookies({
-      'sb-access-token': accessToken
-    });
-
-    getUserMock.mockResolvedValue({
+  it('returns the verified Supabase user when getUser succeeds', async () => {
+    const cookies = new MockCookies();
+    mockGetUser.mockResolvedValue({
       data: { user: createSupabaseUser() },
       error: null
     });
 
-    const user = await hamtaAnvandare(cookies as unknown as AstroCookies);
+    const user = await hamtaAnvandare(cookies as unknown as AstroCookies, testRequest());
 
     expect(user).toEqual({
       id: 'user-1',
@@ -129,43 +123,18 @@ describe('auth supabase session verification', () => {
       roll: 'superadmin',
       namn: 'Carlos Test'
     });
-    expect(getUserMock).toHaveBeenCalledWith(accessToken);
+    expect(mockSignOut).not.toHaveBeenCalled();
   });
 
-  it('refreshes an expired session and updates cookies', async () => {
-    const expiredToken = createJwt({
-      sub: 'user-1',
-      email: 'carlos@example.com',
-      exp: Math.floor(Date.now() / 1000) - 60
-    });
-    const refreshedUser = createSupabaseUser({
-      user_metadata: { full_name: 'Carlos Refreshed' }
-    });
-    const cookies = new MockCookies({
-      'sb-access-token': expiredToken,
-      'sb-refresh-token': 'refresh-token-1'
-    });
-
-    refreshSessionMock.mockResolvedValue({
-      data: {
-        session: {
-          access_token: 'fresh-access-token',
-          refresh_token: 'fresh-refresh-token',
-          user: refreshedUser
-        },
-        user: refreshedUser
-      },
+  it('arInloggad mirrors hamtaAnvandare truthiness', async () => {
+    const cookies = new MockCookies();
+    mockGetUser.mockResolvedValue({
+      data: { user: createSupabaseUser() },
       error: null
-    } as never);
+    });
 
-    const loggedIn = await arInloggad(cookies as unknown as AstroCookies);
+    const loggedIn = await arInloggad(cookies as unknown as AstroCookies, testRequest());
 
     expect(loggedIn).toBe(true);
-    expect(getUserMock).not.toHaveBeenCalled();
-    expect(refreshSessionMock).toHaveBeenCalledWith({
-      refresh_token: 'refresh-token-1'
-    });
-    expect(cookies.value('sb-access-token')).toBe('fresh-access-token');
-    expect(cookies.value('sb-refresh-token')).toBe('fresh-refresh-token');
   });
 });

@@ -9,6 +9,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { hamtaSupabaseAccessToken } from '../../../../lib/auth';
 import { supabaseAdmin } from '../../../../lib/supabase';
 import { decryptApiKey } from '../../../../lib/zotero-crypto';
 import { rateLimitedFetch } from '../../../../lib/zotero-rate-limiter';
@@ -30,10 +31,10 @@ interface ZoteroCollection {
   };
 }
 
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ cookies, request }) => {
   try {
     // Hämta access token
-    const accessToken = cookies.get('sb-access-token')?.value;
+    const accessToken = await hamtaSupabaseAccessToken(cookies, request);
 
     if (!accessToken) {
       return new Response(JSON.stringify({ 

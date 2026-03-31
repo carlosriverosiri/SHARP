@@ -13,9 +13,9 @@ import type { APIRoute } from 'astro';
 import { arInloggad } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ cookies, request }) => {
   // Kontrollera inloggning
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ harAktiv: false }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }

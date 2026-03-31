@@ -482,6 +482,7 @@ Första versionen bör implementera följande standard:
 | `id` | UUID | Primärnyckel |
 | `kampanj_id` | UUID | FK till kampanj |
 | `unik_kod` | TEXT | Unik publik kod |
+| `patient_id_hash` | TEXT | Valfri SHA-256-hash av CSV patient-ID (ingen klartext i DB) |
 | `vardgivare_namn` | TEXT | Vårdgivare |
 | `besoksdatum` | DATE | Datum för besök |
 | `besoksstart_tid` | TIME | Starttid för besöket, om tillgänglig |
@@ -526,6 +527,8 @@ Denna tabell bör betraktas som **nödvändig redan i V1**, inte som en senare f
 ### PII-princip
 
 Rekommendation: ingen långsiktig lagring av patient-ID eller telefon i slutmodellen.
+
+**Nuvarande implementation:** värde från kolumnen `Patient ID` i importfilen hashas till `patient_id_hash` på `enkat_utskick` innan lagring. Tabellen `enkat_svar` innehåller inga patientidentifierare — endast betyg, valfria kommentarer och FK till utskick/kampanj.
 
 Om driftssäker kö krävs kan telefonnummer lagras:
 

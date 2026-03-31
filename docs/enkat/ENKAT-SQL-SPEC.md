@@ -218,6 +218,8 @@ Om tillfällig kontaktdata måste lagras för utskick ska den:
 
 Hashning bör ske innan lagring.
 
+I SHARP beräknas hashen vid skapande av utskick: `crypto.createHash('sha256').update(patientId).digest('hex')` i `src/pages/api/enkat/send.ts` (`hashPatientId`).
+
 ---
 
 ## 5. Tabell: `enkat_svar`

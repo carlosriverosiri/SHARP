@@ -10,6 +10,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { hamtaSupabaseAccessToken } from '../../../../lib/auth';
 import { supabaseAdmin } from '../../../../lib/supabase';
 import { encryptApiKey, isValidApiKeyFormat, maskApiKey } from '../../../../lib/zotero-crypto';
 import { checkRateLimit, recordRequest } from '../../../../lib/zotero-rate-limiter';
@@ -43,8 +44,8 @@ interface ZoteroKeyInfo {
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    // Hämta access token från cookie
-    const accessToken = cookies.get('sb-access-token')?.value;
+    // Hämta access token från session (chunkade kakor)
+    const accessToken = await hamtaSupabaseAccessToken(cookies, request);
 
     if (!accessToken) {
       return new Response(JSON.stringify({ 
@@ -214,9 +215,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 /**
  * GET: Hämta befintlig konfiguration (utan API-nyckel)
  */
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ cookies, request }) => {
   try {
-    const accessToken = cookies.get('sb-access-token')?.value;
+    const accessToken = await hamtaSupabaseAccessToken(cookies, request);
 
     if (!accessToken) {
       return new Response(JSON.stringify({ 
@@ -287,9 +288,9 @@ export const GET: APIRoute = async ({ cookies }) => {
 /**
  * DELETE: Ta bort Zotero-konfiguration
  */
-export const DELETE: APIRoute = async ({ cookies }) => {
+export const DELETE: APIRoute = async ({ cookies, request }) => {
   try {
-    const accessToken = cookies.get('sb-access-token')?.value;
+    const accessToken = await hamtaSupabaseAccessToken(cookies, request);
 
     if (!accessToken) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {

@@ -11,11 +11,11 @@ import { hamtaAnvandare, arInloggad } from '../../lib/auth';
 import { supabaseAdmin, supabaseKonfigurerad } from '../../lib/supabase';
 
 // Kontrollera inloggning
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal');
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 
 // Om användare är null trots inloggning, omdirigera
 if (!anvandare) {

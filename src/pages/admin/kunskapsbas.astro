@@ -17,11 +17,11 @@ import '../../styles/global.css';
 import QuickPrompt from '../../components/QuickPrompt.astro';
 
 // Check authentication
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal');
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 if (!anvandare) {
   return Astro.redirect('/personal');
 }

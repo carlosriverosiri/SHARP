@@ -26,7 +26,7 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   // Kontrollera att användaren är inloggad
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ error: 'Du måste vara inloggad för att skicka SMS' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -42,7 +42,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   // Hämta användarinfo för loggning
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   const userId = anvandare?.id || 'unknown';
 
   // Rate limiting

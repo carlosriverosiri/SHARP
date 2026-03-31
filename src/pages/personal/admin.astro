@@ -19,7 +19,7 @@ import {
 } from '../../lib/portal-roles';
 import { supabaseAdmin } from '../../lib/supabase';
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 
 // Endast inloggade
 if (!anvandare) {

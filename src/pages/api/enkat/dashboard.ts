@@ -97,12 +97,12 @@ function summarizeProvider(
   };
 }
 
-export const GET: APIRoute = async ({ cookies, url }) => {
-  if (!await arInloggad(cookies)) {
+export const GET: APIRoute = async ({ cookies, url, request }) => {
+  if (!await arInloggad(cookies, request)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return json({ success: false, error: 'Kunde inte hämta användare' }, 401);
   }

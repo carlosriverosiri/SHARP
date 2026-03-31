@@ -14,7 +14,7 @@ import { hamtaAnvandare } from '../../../lib/auth';
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     // Kontrollera inloggning
-    const anvandare = await hamtaAnvandare(cookies);
+    const anvandare = await hamtaAnvandare(cookies, request);
     if (!anvandare) {
       return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
         status: 401,

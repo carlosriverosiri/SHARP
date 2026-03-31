@@ -13,7 +13,7 @@ import { hamtaAnvandare } from '../../lib/auth';
 import { portalRoleLabel } from '../../lib/portal-roles';
 import { supabaseAdmin } from '../../lib/supabase';
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 
 // Hämta profil
 let profil: any = null;

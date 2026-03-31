@@ -26,8 +26,8 @@ function getSupabase() {
 }
 
 // GET - List sessions
-export const GET: APIRoute = async ({ cookies, url }) => {
-  const inloggad = await arInloggad(cookies);
+export const GET: APIRoute = async ({ cookies, url, request }) => {
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -35,7 +35,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,
@@ -121,12 +121,12 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
 // POST - Save session
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const inloggad = await arInloggad(cookies);
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
@@ -275,12 +275,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
 // PATCH - Update session (rename, change project)
 export const PATCH: APIRoute = async ({ request, cookies, url }) => {
-  const inloggad = await arInloggad(cookies);
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
@@ -349,13 +349,13 @@ export const PATCH: APIRoute = async ({ request, cookies, url }) => {
 };
 
 // DELETE - Delete session
-export const DELETE: APIRoute = async ({ cookies, url }) => {
-  const inloggad = await arInloggad(cookies);
+export const DELETE: APIRoute = async ({ cookies, url, request }) => {
+  const inloggad = await arInloggad(cookies, request);
   if (!inloggad) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }

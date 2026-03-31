@@ -20,7 +20,7 @@ const CATEGORIES = {
 };
 
 // GET - Hämta alla projekt med antal items per kategori
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ cookies, request }) => {
   if (!supabaseUrl || !supabaseKey) {
     return new Response(JSON.stringify({ error: 'Supabase ej konfigurerat', projects: [] }), {
       status: 200,
@@ -30,14 +30,14 @@ export const GET: APIRoute = async ({ cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad', projects: [] }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare', projects: [] }), {
       status: 200,
@@ -115,7 +115,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     console.error('User not logged in');
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     console.error('Could not get user');
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
@@ -200,14 +200,14 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,
@@ -269,14 +269,14 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare' }), {
       status: 401,

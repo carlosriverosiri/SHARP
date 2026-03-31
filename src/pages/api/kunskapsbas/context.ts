@@ -23,14 +23,14 @@ export const GET: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad', context: '' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hämta användare', context: '' }), {
       status: 200,

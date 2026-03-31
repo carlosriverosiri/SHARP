@@ -24,7 +24,7 @@ import { arInloggad } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ error: 'Ej inloggad' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }

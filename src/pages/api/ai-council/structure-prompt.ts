@@ -59,7 +59,7 @@ interface StructureResponse {
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   // Kontrollera autentisering
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },

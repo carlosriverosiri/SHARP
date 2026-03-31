@@ -170,12 +170,15 @@ async function cleanupCampaign(campaignId: string) {
     .eq('id', campaignId);
 }
 
-async function requireAuthenticatedUser(cookies: AstroCookies): Promise<Anvandare | Response> {
-  if (!await arInloggad(cookies)) {
+async function requireAuthenticatedUser(
+  cookies: AstroCookies,
+  request: Request
+): Promise<Anvandare | Response> {
+  if (!await arInloggad(cookies, request)) {
     return json({ success: false, error: 'Ej inloggad' }, 401);
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   return anvandare ?? json({ success: false, error: 'Kunde inte hämta användare' }, 401);
 }
 
@@ -354,7 +357,7 @@ function resolveCampaignStatus(sendNow: boolean, fallbackStatus: string, sentCou
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const anvandare = await requireAuthenticatedUser(cookies);
+  const anvandare = await requireAuthenticatedUser(cookies, request);
   if (anvandare instanceof Response) {
     return anvandare;
   }

@@ -24,14 +24,14 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
   
   // Check auth
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad', context: null }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare', context: null }), {
       status: 200,
@@ -190,14 +190,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-  if (!arInloggad(cookies)) {
+  if (!(await arInloggad(cookies, request))) {
     return new Response(JSON.stringify({ error: 'Ej inloggad' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(JSON.stringify({ error: 'Kunde inte hamta anvandare' }), {
       status: 401,

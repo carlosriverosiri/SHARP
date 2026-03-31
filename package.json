@@ -16,6 +16,7 @@
     "@astrojs/check": "^0.9.6",
     "@astrojs/netlify": "^6.6.4",
     "@astrojs/sitemap": "^3.6.0",
+    "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.5",

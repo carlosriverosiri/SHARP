@@ -184,14 +184,14 @@ async function skickaSMS(telefon: string, meddelande: string): Promise<boolean> 
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   // Kontrollera inloggning
-  if (!await arInloggad(cookies)) {
+  if (!await arInloggad(cookies, request)) {
     return new Response(
       JSON.stringify({ error: 'Ej inloggad' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  const anvandare = await hamtaAnvandare(cookies);
+  const anvandare = await hamtaAnvandare(cookies, request);
   if (!anvandare) {
     return new Response(
       JSON.stringify({ error: 'Kunde inte hämta användare' }),

@@ -17,7 +17,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       const { arInloggad, hamtaAnvandare } = await import('./lib/auth');
       
       // Kontrollera om användaren är inloggad
-      const inloggad = await arInloggad(context.cookies);
+      const inloggad = await arInloggad(context.cookies, context.request);
       
       if (!inloggad) {
         // Inte inloggad - omdirigera till inloggning
@@ -25,7 +25,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       }
       
       // Hämta användarinfo och lägg till i context.locals
-      const anvandare = await hamtaAnvandare(context.cookies);
+      const anvandare = await hamtaAnvandare(context.cookies, context.request);
       if (anvandare) {
         context.locals.user = anvandare;
       }

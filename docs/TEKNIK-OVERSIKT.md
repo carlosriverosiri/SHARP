@@ -29,14 +29,14 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
 ## Databas & lagring
 
 - **Supabase** för:
-  - Auth (Supabase session cookies)
+  - Auth (session i **httpOnly-kakor** via `@supabase/ssr` — JWT kan delas i flera kakor så webbläsarens storleksgräns per kaka inte bryter inloggning)
   - Data för AI Council, kort‑varsel, loggning, profiler.
 - Migrationer och schema i `supabase/`.
 - Kryptering av känsliga fält (t.ex. telefonnummer i kort‑varsel).
 
 ## Autentisering & säkerhet
 
-- Cookie‑baserad session (Supabase access/refresh tokens).
+- Cookie‑baserad session: `createServerClient` från `@supabase/ssr` i `src/lib/supabase-ssr-astro.ts` + `arInloggad(cookies, request)` / `hamtaAnvandare(cookies, request)` (behöver `Request` för korrekt cookie‑läsning).
 - Roll‑baserat (admin/personal) via app metadata.
 - SSR‑sidor kräver inloggning med `arInloggad(...)`.
 - `/personal/admin` hanterar användare och roller via Supabase Auth Admin API.

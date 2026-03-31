@@ -9,7 +9,7 @@ export const prerender = false;
 import { arInloggad, loggaUt, hamtaAnvandare } from '../../lib/auth';
 import PortalLayout from '../../layouts/PortalLayout.astro';
 
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal');
 }
 
@@ -18,7 +18,7 @@ if (Astro.url.searchParams.get('logout') === 'true') {
   return Astro.redirect('/personal');
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 ---
 
 <PortalLayout

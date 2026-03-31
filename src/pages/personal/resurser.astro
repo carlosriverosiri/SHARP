@@ -6,11 +6,11 @@ import { arInloggad, hamtaAnvandare } from '../../lib/auth';
 import { supabaseAdmin } from '../../lib/supabase';
 
 // Kontrollera inloggning
-if (!await arInloggad(Astro.cookies)) {
+if (!await arInloggad(Astro.cookies, Astro.request)) {
   return Astro.redirect('/personal');
 }
 
-const anvandare = await hamtaAnvandare(Astro.cookies);
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
 
 // Hantera POST-requests (lägg till, ta bort)
 let meddelande = '';

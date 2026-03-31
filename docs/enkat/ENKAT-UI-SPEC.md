@@ -417,6 +417,12 @@ Aggregerad översikt:
 - variation mellan vårdgivare
 - svarsfrekvens totalt
 
+### Statusbanner och rubriker (nuvarande implementation)
+
+- **Admin/chef** (översikt med alla vårdgivare): efter lyckad laddning av resultatöversikten visas ingen grön informationsbanner — tom success-text döljer bannern så informationen inte duplicerar vårdgivarlistan. Fel visas fortfarande i bannern.
+- **Vårdgivare** (endast egna resultat): efter lyckad laddning visas en kort grön bekräftelse, t.ex. att egna resultat för senaste 90 dagarna visas.
+- **Resultatkort:** avsnittsrubriker (h2/h3) inom kort har förstärkt typsnittsvikt för tydligare hierarki.
+
 ### Viktig designprincip
 
 Jämförelsevyn ska vara analytisk, inte “leaderboard”.
