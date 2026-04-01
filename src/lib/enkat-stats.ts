@@ -47,6 +47,73 @@ export function bucketForDelay(delayHours: number): string {
   return '48h+';
 }
 
+/** Aggregerad SMS/svar-kedja: första utskick vs påminnelse (en rad per mottagare i `enkat_utskick`). */
+export type SmsRoundStats = {
+  /** Mottagare som fått första SMS inom perioden (samma filter som dashboard). */
+  firstSmsRecipients: number;
+  /** Svarade utan att någon påminnelse registrerats (första kontakten räcker). */
+  answeredAfterFirstOnly: number;
+  /** Mottagare som fått skickad påminnelse. */
+  remindersSent: number;
+  /** Svarade efter att påminnelse skickats (svarstid ≥ påminnelsetid). */
+  answeredAfterReminder: number;
+  /** answeredAfterFirstOnly / firstSmsRecipients */
+  firstRoundRate: number;
+  /** answeredAfterReminder / remindersSent, eller null om inga påminnelser. */
+  reminderRoundRate: number | null;
+};
+
+/**
+ * Räknar svarsfrekvens för första SMS resp. för påminnelse-rundan utifrån `enkat_utskick`.
+ * Förutsätter att påminnelse bara sätts när den faktiskt skickats till obesvarade.
+ */
+export function summarizeSmsRoundStats(rows: DeliveryDelayRow[]): SmsRoundStats {
+  let firstSmsRecipients = 0;
+  let answeredAfterFirstOnly = 0;
+  let remindersSent = 0;
+  let answeredAfterReminder = 0;
+
+  for (const row of rows) {
+    if (!row.forsta_sms_skickad_vid) {
+      continue;
+    }
+
+    firstSmsRecipients += 1;
+
+    const hasReminder = Boolean(row.paminnelse_skickad_vid);
+    const hasAnswer = Boolean(row.svarad_vid);
+
+    if (!hasReminder && hasAnswer) {
+      answeredAfterFirstOnly += 1;
+    }
+
+    if (hasReminder) {
+      remindersSent += 1;
+      if (hasAnswer && row.svarad_vid && row.paminnelse_skickad_vid) {
+        const answeredAt = new Date(row.svarad_vid).getTime();
+        const reminderAt = new Date(row.paminnelse_skickad_vid).getTime();
+        if (!Number.isNaN(answeredAt) && !Number.isNaN(reminderAt) && answeredAt >= reminderAt) {
+          answeredAfterReminder += 1;
+        }
+      }
+    }
+  }
+
+  const firstRoundRate =
+    firstSmsRecipients > 0 ? Number((answeredAfterFirstOnly / firstSmsRecipients).toFixed(4)) : 0;
+  const reminderRoundRate =
+    remindersSent > 0 ? Number((answeredAfterReminder / remindersSent).toFixed(4)) : null;
+
+  return {
+    firstSmsRecipients,
+    answeredAfterFirstOnly,
+    remindersSent,
+    answeredAfterReminder,
+    firstRoundRate,
+    reminderRoundRate
+  };
+}
+
 export function summarizeDelayRows(rows: DeliveryDelayRow[]) {
   const measured = rows
     .map((row) => {

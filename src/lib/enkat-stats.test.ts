@@ -3,7 +3,8 @@ import {
   average,
   bucketForDelay,
   calculateDelayHours,
-  summarizeDelayRows
+  summarizeDelayRows,
+  summarizeSmsRoundStats
 } from './enkat-stats';
 
 describe('enkat-stats', () => {
@@ -73,5 +74,40 @@ describe('enkat-stats', () => {
         responseRate: 0.667
       }
     ]);
+  });
+
+  it('summarizes first-SMS vs reminder response funnel', () => {
+    const stats = summarizeSmsRoundStats([
+      {
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
+        besoksstart_tid: '08:00',
+        forsta_sms_skickad_vid: '2026-03-15T09:00:00',
+        svarad_vid: '2026-03-15T12:00:00'
+      },
+      {
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
+        besoksstart_tid: '09:00',
+        forsta_sms_skickad_vid: '2026-03-15T10:00:00',
+        paminnelse_skickad_vid: '2026-03-16T15:00:00',
+        svarad_vid: '2026-03-16T18:00:00'
+      },
+      {
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
+        besoksstart_tid: '10:00',
+        forsta_sms_skickad_vid: '2026-03-15T11:00:00',
+        paminnelse_skickad_vid: '2026-03-16T15:00:00',
+        svarad_vid: null
+      }
+    ]);
+
+    expect(stats.firstSmsRecipients).toBe(3);
+    expect(stats.answeredAfterFirstOnly).toBe(1);
+    expect(stats.remindersSent).toBe(2);
+    expect(stats.answeredAfterReminder).toBe(1);
+    expect(stats.firstRoundRate).toBeCloseTo(1 / 3, 4);
+    expect(stats.reminderRoundRate).toBe(0.5);
   });
 });

@@ -6,23 +6,27 @@ import {
   renderKpiRow,
   renderProviderCard,
   renderReportProvider,
+  renderSmsRoundCard,
   setElementBanner,
   updateSelectOptions,
   type CampaignCardData,
   type ProviderCardData,
-  type ReportProviderData
+  type ReportProviderData,
+  type SmsRoundStats
 } from './enkat-page-helpers';
 
 type DashboardSelfData = {
   scope: 'self';
   configured: boolean;
   message?: string;
+  smsRoundStats?: SmsRoundStats;
 } & Partial<ProviderCardData>;
 
 type DashboardAdminData = {
   scope: 'admin';
   availableProviders?: string[];
   providers?: ProviderCardData[];
+  smsRoundStats?: SmsRoundStats;
   totals: {
     providerCount: number;
   };
@@ -110,17 +114,31 @@ export async function loadDashboardSection({
         return;
       }
 
-      contentEl.innerHTML = renderProviderCard(data as ProviderCardData);
+      const smsRound = renderSmsRoundCard(data.smsRoundStats);
+      contentEl.innerHTML = smsRound + renderProviderCard(data as ProviderCardData);
       return;
     }
 
     const providers = data.providers || [];
+    const smsRound = renderSmsRoundCard(data.smsRoundStats);
+
     if (!providers.length) {
-      contentEl.innerHTML = '<div class="muted-box">Inga enkätsvar hittades ännu för vald period.</div>';
+      if (data.smsRoundStats && data.smsRoundStats.firstSmsRecipients > 0) {
+        contentEl.innerHTML =
+          smsRound +
+          '<div class="muted-box">Inga enkätsvar i vald period, men utskick finns. Justera filter eller tidsfönster.</div>';
+      } else {
+        contentEl.innerHTML =
+          smsRound +
+          '<div class="muted-box">Inga enkätsvar hittades ännu för vald period.</div>';
+      }
       return;
     }
 
-    contentEl.innerHTML = renderKpiRow(providers) + `<div class="provider-grid">${providers.map((item) => renderProviderCard(item)).join('')}</div>`;
+    contentEl.innerHTML =
+      smsRound +
+      renderKpiRow(providers) +
+      `<div class="provider-grid">${providers.map((item) => renderProviderCard(item)).join('')}</div>`;
   } catch (error) {
     console.error(error);
     setElementBanner(bannerEl, 'error', getErrorText(error, 'Kunde inte ladda resultatöversikten.'));

@@ -552,6 +552,21 @@ Ser:
 - klienten ska inte själv avgöra om data får visas
 - chef/admin får ett bredare dataset men ska fortfarande få tydlig sample-size information
 
+### `smsRoundStats` (första SMS vs påminnelse)
+
+I svaret ingår `smsRoundStats` (både `scope: self` och `scope: admin`), beräknat från `enkat_utskick` med samma tidsfönster (`days`) och filter (`provider`, `bookingTypes`) som övriga dashboardrader:
+
+| Fält | Betydelse |
+|------|-----------|
+| `firstSmsRecipients` | Antal mottagare som fått första enkät-SMS i perioden |
+| `answeredAfterFirstOnly` | Svarade utan att någon påminnelse registrerats på raden |
+| `remindersSent` | Antal rader där påminnelse skickats |
+| `answeredAfterReminder` | Svar registrerade efter påminnelsetidpunkten (`svarad_vid` ≥ `paminnelse_skickad_vid`) |
+| `firstRoundRate` | `answeredAfterFirstOnly / firstSmsRecipients` (0–1) |
+| `reminderRoundRate` | `answeredAfterReminder / remindersSent`, eller `null` om inga påminnelser skickats |
+
+UI visar detta som två KPI-kort ovanför övriga dashboardrutor.
+
 ---
 
 ## 8. `GET /api/enkat/report`

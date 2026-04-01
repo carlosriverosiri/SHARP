@@ -1,3 +1,7 @@
+import type { SmsRoundStats } from './enkat-stats';
+
+export type { SmsRoundStats };
+
 type ApiSuccessEnvelope<T> = {
   success?: boolean;
   data?: T;
@@ -357,6 +361,44 @@ export function renderErrorsTable(rows: ValidationErrorRow[]): string {
         </tr>
       `).join('')
     : '<tr><td colspan="3">Inga valideringsfel hittades.</td></tr>';
+}
+
+/** Visar svarsfrekvens: (1) bland alla som fått första SMS, (2) bland de som fått påminnelse. */
+export function renderSmsRoundCard(stats: SmsRoundStats | null | undefined): string {
+  const s = stats ?? {
+    firstSmsRecipients: 0,
+    answeredAfterFirstOnly: 0,
+    remindersSent: 0,
+    answeredAfterReminder: 0,
+    firstRoundRate: 0,
+    reminderRoundRate: null as number | null
+  };
+
+  const firstPct = Math.round(s.firstRoundRate * 100);
+  const remPct =
+    s.reminderRoundRate === null ? null : Math.round(s.reminderRoundRate * 100);
+
+  const reminderSub =
+    s.remindersSent === 0
+      ? 'Inga påminnelser skickade i vald period.'
+      : `${escapeHtml(s.answeredAfterReminder)} svar av ${escapeHtml(s.remindersSent)} påminnelse-SMS`;
+
+  return `
+    <div class="kpi-row sms-round-row" role="region" aria-label="Svarsfrekvens första SMS och påminnelse">
+      <div class="kpi-card sms-round-card">
+        <div class="kpi-card-label">Svar efter första SMS</div>
+        <div class="kpi-card-value">${escapeHtml(firstPct)}%</div>
+        <div class="kpi-card-sub">${escapeHtml(s.answeredAfterFirstOnly)} svar av ${escapeHtml(s.firstSmsRecipients)} med första SMS (ingen påminnelse)</div>
+        <div class="kpi-card-hint">Andel av alla som fått första enkät-SMS som svarade innan påminnelse skickades.</div>
+      </div>
+      <div class="kpi-card sms-round-card">
+        <div class="kpi-card-label">Svar efter påminnelse</div>
+        <div class="kpi-card-value">${remPct === null ? '—' : escapeHtml(remPct) + '%'}</div>
+        <div class="kpi-card-sub">${reminderSub}</div>
+        <div class="kpi-card-hint">Andel av skickade påminnelser där patienten sedan svarade (svar efter påminnelsen).</div>
+      </div>
+    </div>
+  `;
 }
 
 export function renderKpiRow(providers: ProviderCardData[]): string {

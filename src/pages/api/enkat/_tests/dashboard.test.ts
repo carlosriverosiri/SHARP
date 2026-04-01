@@ -100,18 +100,14 @@ vi.mock('../../../../lib/enkat-provider-scope', () => ({
   resolveEnkatProviderScope: mocks.resolveEnkatProviderScopeMock
 }));
 
-vi.mock('../../../../lib/enkat-stats', () => ({
-  ANONYMITY_THRESHOLD: 2,
-  average: (values: number[]) => {
-    if (values.length === 0) {
-      return 0;
-    }
-
-    const sum = values.reduce((total, value) => total + value, 0);
-    return Number((sum / values.length).toFixed(2));
-  },
-  summarizeDelayRows: mocks.summarizeDelayRowsMock
-}));
+vi.mock('../../../../lib/enkat-stats', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../../../lib/enkat-stats')>();
+  return {
+    ...actual,
+    ANONYMITY_THRESHOLD: 2,
+    summarizeDelayRows: mocks.summarizeDelayRowsMock
+  };
+});
 
 import { GET } from '../dashboard';
 
@@ -237,7 +233,8 @@ describe('GET /api/enkat/dashboard', () => {
             besoksdatum: '2026-03-18',
             besoksstart_tid: '08:00',
             forsta_sms_skickad_vid: '2026-03-18T09:00:00.000Z',
-            svarad_vid: null
+            paminnelse_skickad_vid: null,
+            svarad_vid: '2026-03-18T10:00:00.000Z'
           },
           {
             id: 'u2',
@@ -245,7 +242,8 @@ describe('GET /api/enkat/dashboard', () => {
             besoksdatum: '2026-03-18',
             besoksstart_tid: '09:00',
             forsta_sms_skickad_vid: '2026-03-18T09:30:00.000Z',
-            svarad_vid: null
+            paminnelse_skickad_vid: '2026-03-19T15:00:00.000Z',
+            svarad_vid: '2026-03-19T17:00:00.000Z'
           }
         ],
         error: null
@@ -298,6 +296,14 @@ describe('GET /api/enkat/dashboard', () => {
             }
           }
         ],
+        smsRoundStats: {
+          firstSmsRecipients: 2,
+          answeredAfterFirstOnly: 1,
+          remindersSent: 1,
+          answeredAfterReminder: 1,
+          firstRoundRate: 0.5,
+          reminderRoundRate: 1
+        },
         totals: {
           providerCount: 1,
           answerCount: 2

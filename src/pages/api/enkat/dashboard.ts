@@ -5,7 +5,13 @@ import {
   parseEnkatBookingTypeFilterIds
 } from '../../../lib/enkat-booking-type-filters';
 import { resolveEnkatProviderScope } from '../../../lib/enkat-provider-scope';
-import { ANONYMITY_THRESHOLD, average, summarizeDelayRows, type DeliveryDelayRow } from '../../../lib/enkat-stats';
+import {
+  ANONYMITY_THRESHOLD,
+  average,
+  summarizeDelayRows,
+  summarizeSmsRoundStats,
+  type DeliveryDelayRow
+} from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
 
@@ -287,18 +293,21 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
       })
       .sort((a, b) => a.providerName.localeCompare(b.providerName, 'sv'));
 
+    const smsRoundStats = summarizeSmsRoundStats(allDelayRows);
+
     if (!isAdmin) {
       const own = summaries.find((item) => item.providerName === ownProviderName);
       return json({
         success: true,
         data: own
-          ? { scope: 'self', configured: true, ...own }
+          ? { scope: 'self', configured: true, smsRoundStats, ...own }
           : {
               scope: 'self',
               configured: true,
               providerName: ownProviderName,
               sampleSize: 0,
               canShowDetails: false,
+              smsRoundStats,
               message: 'Inga enkätsvar hittades ännu för ditt vårdgivarnamn i vald period.'
             }
       });
@@ -321,6 +330,7 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
         anonymityThreshold: ANONYMITY_THRESHOLD,
         availableProviders,
         providers: filtered,
+        smsRoundStats,
         totals: {
           providerCount: filtered.length,
           answerCount: filtered.reduce((sum, item) => sum + item.sampleSize, 0)
