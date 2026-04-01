@@ -8,8 +8,8 @@ import {
 } from './enkat-stats';
 
 describe('enkat-stats', () => {
-  it('calculates averages with two decimals', () => {
-    expect(average([1, 2, 2])).toBe(1.67);
+  it('calculates averages rounded to one decimal', () => {
+    expect(average([1, 2, 2])).toBe(1.7);
     expect(average([])).toBe(0);
   });
 
@@ -65,7 +65,7 @@ describe('enkat-stats', () => {
     ]);
 
     expect(summary.measuredCount).toBe(3);
-    expect(summary.averageDelayHours).toBe(2.67);
+    expect(summary.averageDelayHours).toBe(2.7);
     expect(summary.buckets).toEqual([
       {
         bucket: '0-6h',

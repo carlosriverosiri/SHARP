@@ -9,9 +9,10 @@ export type DeliveryDelayRow = {
 
 export const ANONYMITY_THRESHOLD = 5;
 
+/** Medelvärde avrundat till en decimal (visning av enkätbetyg m.m.). */
 export function average(values: number[]): number {
   if (!values.length) return 0;
-  return Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(2));
+  return Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(1));
 }
 
 /** Parsar besöksstart oavsett om källan är `HH:MM` (CSV) eller `HH:MM:SS` (Postgres TIME). */

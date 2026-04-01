@@ -227,6 +227,11 @@ export function escapeHtml(value: unknown): string {
     .replaceAll("'", '&#39;');
 }
 
+/** Ett decimaltecken för medelbetyg, deltavärden och timmar i enkät-UI. */
+export function formatEnkatMeanScore(value: number): string {
+  return Number(value).toFixed(1);
+}
+
 /** Visas i kampanjhistorik under 640px; fullständigt namn döljs visuellt men finns kvar för skärmläsare. */
 const CAMPAIGN_NAME_PATIENTUPPLEVELSE_MOBILE_SHORT = 'Patientupp';
 
@@ -431,7 +436,7 @@ export function renderKpiRow(providers: ProviderCardData[]): string {
       </div>
       <div class="kpi-card">
         <div class="kpi-card-label">Medelbetyg</div>
-        <div class="kpi-card-value">${escapeHtml(overallAvg.toFixed(1))}</div>
+        <div class="kpi-card-value">${escapeHtml(formatEnkatMeanScore(overallAvg))}</div>
         <div class="kpi-card-sub">Helhetsbetyg (1–5)</div>
       </div>
     </div>
@@ -476,7 +481,7 @@ export function renderProviderCard(item: ProviderCardData): string {
           <h3 class="provider-card-name">${escapeHtml(item.providerName)}</h3>
           <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
         </div>
-        <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(item.overallAverage)}</div>
+        <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(formatEnkatMeanScore(item.overallAverage))}</div>
       </div>
 
       <div class="progress-bar-wrap">
@@ -489,19 +494,19 @@ export function renderProviderCard(item: ProviderCardData): string {
 
       <div class="score-grid">
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.overallAverage)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.overallAverage))}</div>
           <div class="score-item-label">Helhet</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.bemotande)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.bemotande))}</div>
           <div class="score-item-label">Bemötande</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.information)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.information))}</div>
           <div class="score-item-label">Information</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.lyssnadPa)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.lyssnadPa))}</div>
           <div class="score-item-label">Lyssnad på</div>
         </div>
       </div>
@@ -509,7 +514,7 @@ export function renderProviderCard(item: ProviderCardData): string {
       <div class="provider-meta">
         Patienter kontaktade: ${escapeHtml(item.sentCount || 0)}
         · Påminnelser: ${escapeHtml(item.reminderCount || 0)}
-        · Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
+        · Tid till SMS: ${escapeHtml(formatEnkatMeanScore(item.delayMetrics?.averageDelayHours ?? 0))} h
       </div>
 
       ${commentHtml}
@@ -674,32 +679,32 @@ export function renderReportProvider(item: ReportProviderData): string {
           <div class="provider-card-sample">${escapeHtml(item.sampleSize)} svar</div>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-          <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(item.overallAverage)}</div>
-          <span class="delta-badge ${deltaClass}">${deltaSymbol} ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(item.deltaVsPrevious)}</span>
+          <div class="score-badge ${scoreColorClass(item.overallAverage)}">${escapeHtml(formatEnkatMeanScore(item.overallAverage))}</div>
+          <span class="delta-badge ${deltaClass}">${deltaSymbol} ${item.deltaVsPrevious >= 0 ? '+' : ''}${escapeHtml(formatEnkatMeanScore(item.deltaVsPrevious))}</span>
         </div>
       </div>
 
       <div class="score-grid">
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.overallAverage)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.overallAverage))}</div>
           <div class="score-item-label">Helhet</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.bemotande)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.bemotande))}</div>
           <div class="score-item-label">Bemötande</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.information)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.information))}</div>
           <div class="score-item-label">Information</div>
         </div>
         <div class="score-item">
-          <div class="score-item-value">${escapeHtml(item.subscores.lyssnadPa)}</div>
+          <div class="score-item-value">${escapeHtml(formatEnkatMeanScore(item.subscores.lyssnadPa))}</div>
           <div class="score-item-label">Lyssnad på</div>
         </div>
       </div>
 
       <div class="provider-meta">
-        Tid till SMS: ${escapeHtml(item.delayMetrics?.averageDelayHours ?? 0)} h
+        Tid till SMS: ${escapeHtml(formatEnkatMeanScore(item.delayMetrics?.averageDelayHours ?? 0))} h
         · Fördröjningsfönster: ${(item.delayMetrics?.buckets || []).map((bucket) => `${escapeHtml(bucket.bucket)} (${escapeHtml(formatPercent(bucket.responseRate))})`).join(' · ') || 'Ingen data ännu'}
       </div>
     </div>

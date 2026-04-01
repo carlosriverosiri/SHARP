@@ -205,7 +205,7 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
       return {
         providerName,
         ...currentSummary,
-        deltaVsPrevious: Number((currentSummary.overallAverage - previousSummary.overallAverage).toFixed(2))
+        deltaVsPrevious: Number((currentSummary.overallAverage - previousSummary.overallAverage).toFixed(1))
       };
     }).sort((a, b) => a.providerName.localeCompare(b.providerName, 'sv'));
 
