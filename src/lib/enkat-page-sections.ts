@@ -12,6 +12,7 @@ import {
   type CampaignCardData,
   type ProviderCardData,
   type ReportProviderData,
+  type SmsRoundHelhetsbetyg,
   type SmsRoundStats
 } from './enkat-page-helpers';
 
@@ -20,6 +21,8 @@ type DashboardSelfData = {
   configured: boolean;
   message?: string;
   smsRoundStats?: SmsRoundStats;
+  smsRoundHelhetsbetyg?: SmsRoundHelhetsbetyg;
+  anonymityThreshold?: number;
 } & Partial<ProviderCardData>;
 
 type DashboardAdminData = {
@@ -27,6 +30,8 @@ type DashboardAdminData = {
   availableProviders?: string[];
   providers?: ProviderCardData[];
   smsRoundStats?: SmsRoundStats;
+  smsRoundHelhetsbetyg?: SmsRoundHelhetsbetyg;
+  anonymityThreshold?: number;
   totals: {
     providerCount: number;
   };
@@ -114,13 +119,21 @@ export async function loadDashboardSection({
         return;
       }
 
-      const smsRound = renderSmsRoundCard(data.smsRoundStats);
+      const smsRound = renderSmsRoundCard(
+        data.smsRoundStats,
+        data.smsRoundHelhetsbetyg ?? null,
+        data.anonymityThreshold ?? 5
+      );
       contentEl.innerHTML = smsRound + renderProviderCard(data as ProviderCardData);
       return;
     }
 
     const providers = data.providers || [];
-    const smsRound = renderSmsRoundCard(data.smsRoundStats);
+    const smsRound = renderSmsRoundCard(
+      data.smsRoundStats,
+      data.smsRoundHelhetsbetyg ?? null,
+      data.anonymityThreshold ?? 5
+    );
 
     if (!providers.length) {
       if (data.smsRoundStats && data.smsRoundStats.firstSmsRecipients > 0) {

@@ -4,6 +4,7 @@ import {
   bucketForDelay,
   calculateDelayHours,
   summarizeDelayRows,
+  summarizeSmsRoundHelhetsbetyg,
   summarizeSmsRoundStats
 } from './enkat-stats';
 
@@ -109,5 +110,41 @@ describe('enkat-stats', () => {
     expect(stats.answeredAfterReminder).toBe(1);
     expect(stats.firstRoundRate).toBeCloseTo(1 / 3, 4);
     expect(stats.reminderRoundRate).toBe(0.5);
+  });
+
+  it('summarizes helhetsbetyg per SMS-runda with anonymity threshold', () => {
+    const rows = [
+      {
+        id: 'a',
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
+        besoksstart_tid: '08:00',
+        forsta_sms_skickad_vid: '2026-03-15T09:00:00.000Z',
+        paminnelse_skickad_vid: null,
+        svarad_vid: '2026-03-15T12:00:00.000Z'
+      },
+      {
+        id: 'b',
+        vardgivare_namn: 'Dr A',
+        besoksdatum: '2026-03-15',
+        besoksstart_tid: '09:00',
+        forsta_sms_skickad_vid: '2026-03-15T10:00:00.000Z',
+        paminnelse_skickad_vid: '2026-03-16T15:00:00.000Z',
+        svarad_vid: '2026-03-16T18:00:00.000Z'
+      }
+    ] as const;
+
+    const scores = new Map<string, number>([
+      ['a', 4],
+      ['b', 2]
+    ]);
+
+    const under = summarizeSmsRoundHelhetsbetyg([...rows], scores, 5);
+    expect(under.afterFirstSmsOnly).toEqual({ sampleSize: 1, averageHelhet: null });
+    expect(under.afterReminder).toEqual({ sampleSize: 1, averageHelhet: null });
+
+    const over = summarizeSmsRoundHelhetsbetyg([...rows], scores, 1);
+    expect(over.afterFirstSmsOnly).toEqual({ sampleSize: 1, averageHelhet: 4 });
+    expect(over.afterReminder).toEqual({ sampleSize: 1, averageHelhet: 2 });
   });
 });

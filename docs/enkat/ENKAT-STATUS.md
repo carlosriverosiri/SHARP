@@ -177,6 +177,7 @@ Följande förbättringar är gjorda efter en samlad kodgranskning:
 - **Större direktbatch för första SMS**: `send.ts` försöker nu skicka upp till 50 första SMS direkt innan resterande lämnas till `enkat-send-queue`
 - **Svarsfrekvens per patient**: dashboarden räknar nu svarsfrekvens mot unika patienter som fått första SMS, inte mot total SMS-trafik inklusive påminnelser
 - **SMS-rundor i dashboard**: `smsRoundStats` visar svarsfrekvens (1) bland alla som fått första SMS men inget påminnelse-SMS på raden, och (2) andel som svarat efter skickad påminnelse, med nämnare = antal skickade påminnelser
+- **Helhetsbetyg per SMS-runda**: `smsRoundHelhetsbetyg` (API) visar medel helhetsbetyg per samma två grupper, kopplat via `enkat_svar.utskick_id`; snitt döljs under samma anonymitetströskel som vårdgivarkort när gruppen är för liten
 - **Bokningstypsfilter i analysen**: dashboard och rapport kan nu filtreras på rå bokningstyp via fasta snabbval (`Kuralink`, `Knä`, `Axel`, `Armbåge`) i en dropdown med kryssrutor; flera val kombineras som OR-filter
 - **Starttidsanalys i resultatkort**: fördröjningsberäkningen hanterar `besoksstart_tid` som `HH:MM:SS` från Postgres (tidigare kunde analysen bli tom trots att starttid fanns i underlaget). En tidigare förmiddag/eftermiddag-uppdelning med andel svar före påminnelse togs bort från huvudvyns resultatkort för enklare layout; medel tid till SMS och fördröjningsfönster finns kvar.
 - **Felhantering i kö**: `enkat-queue.ts` loggar nu fel vid batch-lookups istället för att svälja dem

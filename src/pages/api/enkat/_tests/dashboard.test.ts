@@ -188,6 +188,7 @@ describe('GET /api/enkat/dashboard', () => {
       {
         data: [
           {
+            utskick_id: 'u1',
             vardgivare_namn: 'Dr Test',
             helhetsbetyg: 4,
             bemotande: 4,
@@ -198,6 +199,7 @@ describe('GET /api/enkat/dashboard', () => {
             created_at: '2026-03-18T10:00:00.000Z'
           },
           {
+            utskick_id: 'u2',
             vardgivare_namn: 'Dr Test',
             helhetsbetyg: 5,
             bemotande: 5,
@@ -269,6 +271,10 @@ describe('GET /api/enkat/dashboard', () => {
       data: {
         scope: 'admin',
         anonymityThreshold: 2,
+        smsRoundHelhetsbetyg: {
+          afterFirstSmsOnly: { sampleSize: 1, averageHelhet: null },
+          afterReminder: { sampleSize: 1, averageHelhet: null }
+        },
         availableProviders: ['Dr Test'],
         providers: [
           {

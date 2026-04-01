@@ -115,6 +115,68 @@ export function summarizeSmsRoundStats(rows: DeliveryDelayRow[]): SmsRoundStats 
   };
 }
 
+/** Utskickrad med id för koppling mot `enkat_svar.utskick_id`. */
+export type DeliveryUtskickRow = DeliveryDelayRow & { id: string };
+
+export type SmsRoundHelhetsbetygBreakdown = {
+  sampleSize: number;
+  /** Medel om sampleSize >= tröskel, annars null (samma princip som vårdgivarkort). */
+  averageHelhet: number | null;
+};
+
+/** Medel helhetsbetyg per samma två grupper som `summarizeSmsRoundStats`. */
+export type SmsRoundHelhetsbetyg = {
+  afterFirstSmsOnly: SmsRoundHelhetsbetygBreakdown;
+  afterReminder: SmsRoundHelhetsbetygBreakdown;
+};
+
+/**
+ * Helhetsbetyg uppdelat efter svar utan påminnelse vs svar efter påminnelse.
+ * Kräver att `helhetByUtskickId` motsvarar besvarade utskick (en rad per utskick).
+ */
+export function summarizeSmsRoundHelhetsbetyg(
+  rows: DeliveryUtskickRow[],
+  helhetByUtskickId: Map<string, number>,
+  anonymityThreshold: number
+): SmsRoundHelhetsbetyg {
+  const firstScores: number[] = [];
+  const reminderScores: number[] = [];
+
+  for (const row of rows) {
+    if (!row.forsta_sms_skickad_vid) continue;
+
+    const score = helhetByUtskickId.get(row.id);
+    if (score === undefined) continue;
+
+    const hasReminder = Boolean(row.paminnelse_skickad_vid);
+    const hasAnswer = Boolean(row.svarad_vid);
+
+    if (!hasReminder && hasAnswer) {
+      firstScores.push(score);
+    }
+
+    if (hasReminder && hasAnswer && row.svarad_vid && row.paminnelse_skickad_vid) {
+      const answeredAt = new Date(row.svarad_vid).getTime();
+      const reminderAt = new Date(row.paminnelse_skickad_vid).getTime();
+      if (!Number.isNaN(answeredAt) && !Number.isNaN(reminderAt) && answeredAt >= reminderAt) {
+        reminderScores.push(score);
+      }
+    }
+  }
+
+  const breakdown = (scores: number[]): SmsRoundHelhetsbetygBreakdown => {
+    const sampleSize = scores.length;
+    const averageHelhet =
+      sampleSize >= anonymityThreshold ? average(scores) : null;
+    return { sampleSize, averageHelhet };
+  };
+
+  return {
+    afterFirstSmsOnly: breakdown(firstScores),
+    afterReminder: breakdown(reminderScores)
+  };
+}
+
 export function summarizeDelayRows(rows: DeliveryDelayRow[]) {
   const measured = rows
     .map((row) => {

@@ -9,8 +9,10 @@ import {
   ANONYMITY_THRESHOLD,
   average,
   summarizeDelayRows,
+  summarizeSmsRoundHelhetsbetyg,
   summarizeSmsRoundStats,
-  type DeliveryDelayRow
+  type DeliveryDelayRow,
+  type DeliveryUtskickRow
 } from '../../../lib/enkat-stats';
 import { arInloggad, hamtaAnvandare } from '../../../lib/auth';
 import { supabaseAdmin } from '../../../lib/supabase';
@@ -18,6 +20,7 @@ import { supabaseAdmin } from '../../../lib/supabase';
 export const prerender = false;
 
 type SurveyRow = {
+  utskick_id: string;
   vardgivare_namn: string;
   helhetsbetyg: number;
   bemotande: number;
@@ -135,7 +138,7 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
 
     let rowsQuery = supabaseAdmin
       .from('enkat_svar')
-      .select('vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, kommentar_bra, kommentar_forbattra, created_at')
+      .select('utskick_id, vardgivare_namn, helhetsbetyg, bemotande, information, lyssnad_pa, kommentar_bra, kommentar_forbattra, created_at')
       .gte('created_at', fromDate)
       .order('created_at', { ascending: false });
 
@@ -204,7 +207,14 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
 
     const allRows = (rows || []) as SurveyRow[];
     const allLogs = (sentLogs || []) as DeliveryLogRow[];
-    const allDelayRows = (utskickRowsForDelay || []) as DeliveryDelayRow[];
+    const allDelayRows = (utskickRowsForDelay || []) as DeliveryUtskickRow[];
+
+    const helhetByUtskickId = new Map<string, number>();
+    for (const row of allRows) {
+      if (row.utskick_id) {
+        helhetByUtskickId.set(row.utskick_id, row.helhetsbetyg);
+      }
+    }
 
     const byProvider = new Map<string, SurveyRow[]>();
     for (const row of allRows) {
@@ -294,20 +304,34 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
       .sort((a, b) => a.providerName.localeCompare(b.providerName, 'sv'));
 
     const smsRoundStats = summarizeSmsRoundStats(allDelayRows);
+    const smsRoundHelhetsbetyg = summarizeSmsRoundHelhetsbetyg(
+      allDelayRows,
+      helhetByUtskickId,
+      ANONYMITY_THRESHOLD
+    );
 
     if (!isAdmin) {
       const own = summaries.find((item) => item.providerName === ownProviderName);
       return json({
         success: true,
         data: own
-          ? { scope: 'self', configured: true, smsRoundStats, ...own }
+          ? {
+              scope: 'self',
+              configured: true,
+              anonymityThreshold: ANONYMITY_THRESHOLD,
+              smsRoundStats,
+              smsRoundHelhetsbetyg,
+              ...own
+            }
           : {
               scope: 'self',
               configured: true,
+              anonymityThreshold: ANONYMITY_THRESHOLD,
               providerName: ownProviderName,
               sampleSize: 0,
               canShowDetails: false,
               smsRoundStats,
+              smsRoundHelhetsbetyg,
               message: 'Inga enkätsvar hittades ännu för ditt vårdgivarnamn i vald period.'
             }
       });
@@ -331,6 +355,7 @@ export const GET: APIRoute = async ({ cookies, url, request }) => {
         availableProviders,
         providers: filtered,
         smsRoundStats,
+        smsRoundHelhetsbetyg,
         totals: {
           providerCount: filtered.length,
           answerCount: filtered.reduce((sum, item) => sum + item.sampleSize, 0)
