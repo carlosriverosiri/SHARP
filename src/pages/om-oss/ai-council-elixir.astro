@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const title = "AI Council — Elixir Edition";
-const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 5-fas pipeline, Claim Ledger, 8 modeller i 2 tiers och automatisk verifiering av PMID/DOI i vetenskapliga svar.";
+const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipeline med Orchestrator, Claim Ledger, 8 modeller i 2 tiers, ReferenceEnricher och CitationVerifier för PMID/PMCID/DOI.";
 ---
 
 <BaseLayout title={title} description={description}>
@@ -34,9 +34,8 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
             Samma koncept, ny stack
           </p>
           <p class="text-slate-400 max-w-2xl mx-auto">
-            Multi-modell AI-rådgivning med automatisk syntes — ombyggd i 
-            <strong class="text-purple-400">Elixir/Phoenix</strong> för maximal stabilitet, 
-            realtids-UI via LiveView och minimalt underhåll.
+            Fristående Phoenix-app (<code class="text-purple-300 text-sm">AiCouncilEx</code>) — multi-modell AI-rådgivning med automatisk syntes,
+            <strong class="text-purple-400">realtids-UI via LiveView</strong> och samma typ av arkitektur som i produktion byggs i repots Dockerfile.
           </p>
           <div class="mt-5 flex flex-wrap justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
             <span class="px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10">Elixir</span>
@@ -69,9 +68,9 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-semibold text-white mb-2">Erlang/OTP-stabilitet</h3>
+              <h3 class="text-lg font-semibold text-white mb-2">Erlang/OTP &amp; BEAM</h3>
               <p class="text-slate-400 text-sm">
-                Byggd på BEAM-plattformen som driver telekomsystem med 99.9999999% uptime.
+                Körs på Erlang/OTP och BEAM — samma familj av runtime som används i feltoleranta, långlivade backendsystem.
               </p>
             </div>
 
@@ -115,7 +114,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                   verifieras de automatiskt efter supersyntesen via <strong class="text-emerald-400">PubMed</strong>, <strong class="text-emerald-400">PMC ID Converter</strong> respektive <strong class="text-emerald-400">Crossref</strong>.
                 </p>
                 <p class="text-slate-400 text-xs">
-                  Före verifieringen normaliserar AI Council referensrader, försöker komplettera saknade identifierare konservativt och bygger om Zotero-listan automatiskt. Målet är att minska hallucinerade referenser och göra litteraturlistor enklare att kontrollera och importera vidare till till exempel Zotero.
+                  Efter supersyntes kör appen <strong class="text-slate-300">ReferenceEnricher</strong> (normalisering och konservativ komplettering av identifierare) och därefter <strong class="text-slate-300">CitationVerifier</strong> mot PubMed, PMC och Crossref. Zotero-listan i svaret kan byggas om utifrån det resultatet. Målet är färre felaktiga referenser och enklare manuell granskning.
                 </p>
                 <p class="text-slate-500 text-xs mt-2">
                   Verifieringen kontrollerar identifierare och metadata, men ersätter inte manuell bedömning av om rätt artikel verkligen stödjer rätt påstående i brödtexten.
@@ -170,7 +169,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
               5-fas pipeline
             </h2>
             <p class="text-slate-400 max-w-xl mx-auto">
-              Varje fråga genomgår fem steg — från föranalys till kvalitetssäkrat slutsvar.
+              Fem synliga steg i UI:t motsvarar <code class="text-purple-300 text-xs">Orchestrator.run/4</code> — från brief till supersyntes; därefter referenskomplettering och verifiering innan körningen markeras klar.
             </p>
           </div>
 
@@ -184,7 +183,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                 </div>
                 <div>
                   <h4 class="text-blue-400 font-semibold">Brief</h4>
-                  <p class="text-slate-400 text-sm">Gemini analyserar frågan: tolkning, strategi, komplexitet och domänrisknivå.</p>
+                  <p class="text-slate-400 text-sm">Vald <strong class="text-slate-300">syntesmotor</strong> (samma inställning som för syntesfasen) tolkar frågan — standard är <strong class="text-slate-300">Gemini 3.1 Pro</strong>: tolkning, strategi, komplexitet och domänrisk. Vid byte av syntesleverantör körs brief med den modellen.</p>
                 </div>
               </div>
             </div>
@@ -218,7 +217,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                 </div>
                 <div>
                   <h4 class="text-violet-400 font-semibold">Syntes via Claim Ledger</h4>
-                  <p class="text-slate-400 text-sm">Alla påståenden extraheras, klassificeras (supported/contested/unsupported) och skrivs till syntestext.</p>
+                  <p class="text-slate-400 text-sm">Två API-anrop internt: extrahering till strukturerat Claim Ledger-JSON och skrivning av syntestext. Påståenden klassificeras (supported / contested / unsupported / ambiguous) med <code class="text-violet-300 text-xs">confidence_self</code> och <code class="text-violet-300 text-xs">confidence_evidence</code>.</p>
                 </div>
               </div>
             </div>
@@ -252,7 +251,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
                 </div>
                 <div>
                   <h4 class="text-emerald-400 font-semibold">Supersyntes</h4>
-                  <p class="text-slate-400 text-sm">Uppdaterat Claim Ledger med changes-diff → slutgiltigt kvalitetssäkrat svar med spårbarhet.</p>
+                  <p class="text-slate-400 text-sm">Ny extraktion + skrivning efter deliberation — uppdaterat ledger med changes-diff (added / removed / reworded / flagged). Därefter <strong class="text-slate-300">ReferenceEnricher</strong> och <strong class="text-slate-300">CitationVerifier</strong> på sluttexten.</p>
                 </div>
               </div>
             </div>
@@ -264,7 +263,7 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
-              <span class="ml-2 text-slate-500 text-xs font-mono">delibereringsroller.config</span>
+              <span class="ml-2 text-slate-500 text-xs font-mono">Prompts @deliberation_roles</span>
             </div>
             <div class="p-6">
               <h4 class="text-white font-semibold mb-4">Delibereringsroller i Runda 2</h4>
@@ -805,33 +804,34 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
-              <span class="ml-2 text-slate-500 text-xs font-mono">architecture.ex</span>
+              <span class="ml-2 text-slate-500 text-xs font-mono">orchestrator.ex</span>
             </div>
             <pre class="p-6 text-xs text-slate-300 font-mono overflow-x-auto"><code>┌─────────────────────────────────────────────────────┐
 │              Webbläsare (LiveView WebSocket)           │
 │  ┌───────────────┐  ┌───────────────────────────────┐ │
-│  │ Kontext-fält  │  │ Prompt + "Kör Council"        │ │
+│  │ Kontext-fält  │  │ Prompt + körning              │ │
 │  └───────────────┘  └───────────────────────────────┘ │
 │  ┌───────────────────────────────────────────────────┐ │
-│  │ Brief → Runda 1 → Syntes → Runda 2 → Supersyntes│ │
+│  │ Brief → R1 → Syntes → R2 → Supersyntes → enrich │ │
 │  └───────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────┤
 │                   Phoenix Endpoint                       │
 │  ┌──────────────────────────────────────────────────┐  │
-│  │           Orchestrator.run/4 (Task.async)         │  │
+│  │     AiCouncilEx.AI.Orchestrator.run/4            │  │
+│  │     R1/R2: Task.async per modell                  │  │
 │  │  OpenAI ─┐                                        │  │
-│  │  Claude ─┼── Parallell → ClaimLedger → Syntes     │  │
+│  │  Claude ─┼── parallellt → ClaimLedger + syntes   │  │
 │  │  Gemini ─┤                                        │  │
 │  │  Grok   ─┘                                        │  │
 │  └──────────────────────────────────────────────────┘  │
-│  ┌────────────┐  ┌───────────┐  ┌────────────────┐    │
-│  │Provider.ex │  │Prompts.ex │  │ ClaimLedger.ex │    │
-│  │retry + CB  │  │6 builders │  │ JSON parse     │    │
-│  └────────────┘  └───────────┘  └────────────────┘    │
+│  ┌──────────────────┐ ┌────────────┐ ┌─────────────────┐ │
+│  │ AI.Provider      │ │ Prompts  │ │ ClaimLedger     │ │
+│  │ retry + CB (ETS) │ │ presets  │ │ Jason parse     │ │
+│  └──────────────────┘ └────────────┘ └─────────────────┘ │
+│  ┌ ReferenceEnricher │  ┌ CitationVerifier (PubMed…) ┐  │
+│  └───────────────────┘  └────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────┐  │
-│  │              PostgreSQL (Ecto)                     │  │
-│  │  runs: prompt | context | brief | responses |     │  │
-│  │        synthesis | deliberations | super_synthesis │  │
+│  │         PostgreSQL via Ecto (körningar / m.m.)      │  │
 │  └──────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘</code></pre>
           </div>
@@ -840,23 +840,23 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-gradient-to-b from-purple-500/10 to-slate-800/50 border border-purple-500/30 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-purple-400 font-bold">Ex</div>
-              <h4 class="text-white font-semibold mb-1">Elixir 1.19</h4>
-              <p class="text-slate-500 text-sm">Funktionellt, skalbart</p>
+              <h4 class="text-white font-semibold mb-1">Elixir 1.16</h4>
+              <p class="text-slate-500 text-sm">Prod-Dockerfile; mix krav ~&gt; 1.15</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-orange-400 font-bold">Ph</div>
-              <h4 class="text-white font-semibold mb-1">Phoenix 1.8</h4>
-              <p class="text-slate-500 text-sm">Webbramverk</p>
+              <h4 class="text-white font-semibold mb-1">Phoenix 1.8.3</h4>
+              <p class="text-slate-500 text-sm">Webbramverk (mix.exs)</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-indigo-400 font-bold">LV</div>
               <h4 class="text-white font-semibold mb-1">LiveView 1.1</h4>
-              <p class="text-slate-500 text-sm">Realtids-UI</p>
+              <p class="text-slate-500 text-sm">mix: ~&gt; 1.1.0</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-blue-400 font-bold">PG</div>
-              <h4 class="text-white font-semibold mb-1">PostgreSQL 18</h4>
-              <p class="text-slate-500 text-sm">Databas</p>
+              <h4 class="text-white font-semibold mb-1">PostgreSQL</h4>
+              <p class="text-slate-500 text-sm">Via Ecto + Postgrex</p>
             </div>
           </div>
 
@@ -864,12 +864,12 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-sky-400 font-bold">Tw</div>
               <h4 class="text-white font-semibold mb-1">Tailwind CSS</h4>
-              <p class="text-slate-500 text-sm">+ DaisyUI</p>
+              <p class="text-slate-500 text-sm">v4 + DaisyUI (vendor plugin)</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-red-400 font-bold">OTP</div>
-              <h4 class="text-white font-semibold mb-1">Erlang/OTP 28</h4>
-              <p class="text-slate-500 text-sm">BEAM-plattform</p>
+              <h4 class="text-white font-semibold mb-1">Erlang/OTP 26</h4>
+              <p class="text-slate-500 text-sm">Enligt prod-Dockerfile</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 text-center">
               <div class="text-2xl mb-3 text-cyan-400 font-bold">Dk</div>
@@ -882,6 +882,10 @@ const description = "AI Council Elixir Edition: multi-modell AI-rådgivning med 
               <p class="text-slate-500 text-sm">Markdown-rendering</p>
             </div>
           </div>
+
+          <p class="text-slate-500 text-xs text-center mt-6 max-w-2xl mx-auto">
+            Versionsangivelser följer <code class="text-slate-400">mix.exs</code>, <code class="text-slate-400">mix.lock</code> och <code class="text-slate-400">Dockerfile</code> i AiCouncilEx-repot; lokala eller molnmiljöer kan använda nyare Elixir/OTP om ni uppdaterar byggfilerna.
+          </p>
         </div>
       </div>
     </section>

@@ -413,13 +413,6 @@ export function renderSmsRoundCard(
     ? `<div class="kpi-card-helhet-snitt" role="status">${renderHelhetsbetygSnittLine(h.afterReminder, anonymityThreshold)}</div>`
     : '';
 
-  const interpretation = h
-    ? `
-    <p class="sms-round-footnote">
-      Samma grupper som svarsfrekvensen ovan. Om medelvärdena skiljer sig kan det ge en indikation på om senare svar (t.ex. efter påminnelse) följer ett annat mönster — t.ex. om vissa patienter dröjer med att svara. Det är inte ett bevis på orsak; använd tillsammans med svarsfrekvens när du bedömer om påminnelse ska behållas.
-    </p>`
-    : '';
-
   return `
     <div class="kpi-row sms-round-row" role="region" aria-label="Svarsfrekvens första SMS och påminnelse">
       <div class="kpi-card sms-round-card">
@@ -436,7 +429,7 @@ export function renderSmsRoundCard(
         ${reminderHelhetBlock}
         <div class="kpi-card-hint">Andel av skickade påminnelser där patienten sedan svarade (svar efter påminnelsen).</div>
       </div>
-    </div>${interpretation}
+    </div>
   `;
 }
 

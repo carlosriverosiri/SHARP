@@ -43,6 +43,8 @@ AI Council är byggt kring PCP för att hålla allt logiskt och spårbart:
 
 Det här är vår huvudmodell och ska genomsyra alla sidor, demos och arbetsflöden.
 
+**Fristående Elixir-app (AiCouncilEx):** Publik beskrivning av pipeline, modeller och tech stack som stämmer mot Elixir-repot finns på sidan **`/om-oss/ai-council-elixir`** (`src/pages/om-oss/ai-council-elixir.astro`). Den är **inte** samma implementation som `/admin/ai-council` i Astro.
+
 ## Åtkomst
 
 **URL:** `/admin/ai-council`
