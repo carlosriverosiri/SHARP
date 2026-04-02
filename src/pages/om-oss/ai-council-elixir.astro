@@ -59,6 +59,8 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
             <strong class="text-purple-400">upp till 8 AI-modeller parallellt</strong>, syntetiserar svaren via 
             <strong class="text-purple-400">Claim Ledger</strong>-metodik, och kör en delibereringsomgång 
             där modellerna granskar varandra. Resultatet: en <strong class="text-white">supersyntes</strong>.
+            Språk i brief, syntes, deliberering och supersyntes följer i första hand <strong class="text-slate-300">frågetexten</strong>
+            (<code class="text-purple-300 text-xs">Prompts.infer_response_language/1</code>; tydliga markörer som &quot;på svenska&quot; väger tyngst; annars ofta engelska).
           </p>
 
           <div class="grid md:grid-cols-3 gap-6">
@@ -217,7 +219,7 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
                 </div>
                 <div>
                   <h4 class="text-violet-400 font-semibold">Syntes via Claim Ledger</h4>
-                  <p class="text-slate-400 text-sm">Två API-anrop internt: extrahering till strukturerat Claim Ledger-JSON och skrivning av syntestext. Påståenden klassificeras (supported / contested / unsupported / ambiguous) med <code class="text-violet-300 text-xs">confidence_self</code> och <code class="text-violet-300 text-xs">confidence_evidence</code>.</p>
+                  <p class="text-slate-400 text-sm">Två API-anrop internt: extrahering till strukturerat Claim Ledger-JSON och skrivning av syntestext — båda via <strong class="text-slate-300">samma valda syntesmotor</strong> som brief (standard Gemini 3.1 Pro). Vid fel: legacy-syntes med samma motor. Påståenden klassificeras (supported / contested / unsupported / ambiguous) med <code class="text-violet-300 text-xs">confidence_self</code> och <code class="text-violet-300 text-xs">confidence_evidence</code>.</p>
                 </div>
               </div>
             </div>
@@ -251,7 +253,7 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
                 </div>
                 <div>
                   <h4 class="text-emerald-400 font-semibold">Supersyntes</h4>
-                  <p class="text-slate-400 text-sm">Ny extraktion + skrivning efter deliberation — uppdaterat ledger med changes-diff (added / removed / reworded / flagged). Därefter <strong class="text-slate-300">ReferenceEnricher</strong> och <strong class="text-slate-300">CitationVerifier</strong> på sluttexten.</p>
+                  <p class="text-slate-400 text-sm">Ny extraktion + skrivning efter deliberation — uppdaterat ledger med changes-diff (<code class="text-emerald-300 text-xs">added</code> / <code class="text-emerald-300 text-xs">removed</code> / <code class="text-emerald-300 text-xs">reworded</code> / <code class="text-emerald-300 text-xs">flagged_uncertain</code>). Därefter <strong class="text-slate-300">ReferenceEnricher</strong> och <strong class="text-slate-300">CitationVerifier</strong> på sluttexten.</p>
                 </div>
               </div>
             </div>
@@ -556,7 +558,7 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
                   <span class="text-slate-400">Omformulerade för precision</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-xs">flagged</span>
+                  <span class="px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-xs">flagged_uncertain</span>
                   <span class="text-slate-400">Markerade som osäkra</span>
                 </div>
               </div>
@@ -601,7 +603,7 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
                   <span class="text-emerald-400 mt-0.5">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                   </span>
-                  <span>6 inbyggda promptmallar + egna sparade mallar</span>
+                  <span>4 inbyggda promptmallar (Diagnoser, Referenser, Anatomi, Anatomiblock) + egna sparade favoritmallar</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-400 mt-0.5">
@@ -885,6 +887,7 @@ const description = "AI Council Elixir Edition (Phoenix LiveView): 5-fas pipelin
 
           <p class="text-slate-500 text-xs text-center mt-6 max-w-2xl mx-auto">
             Versionsangivelser följer <code class="text-slate-400">mix.exs</code>, <code class="text-slate-400">mix.lock</code> och <code class="text-slate-400">Dockerfile</code> i AiCouncilEx-repot; lokala eller molnmiljöer kan använda nyare Elixir/OTP om ni uppdaterar byggfilerna.
+            Fullständig dokumentation genereras i repot som <code class="text-slate-400">docs/MASTER.md</code> (<code class="text-slate-400">mix docs.sync_master</code>).
           </p>
         </div>
       </div>
