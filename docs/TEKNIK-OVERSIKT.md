@@ -32,6 +32,7 @@ Det här dokumentet sammanfattar teknik, integrationer och systemdelar i projekt
   - Auth (session i **httpOnly-kakor** via `@supabase/ssr` — JWT kan delas i flera kakor så webbläsarens storleksgräns per kaka inte bryter inloggning)
   - Data för AI Council, kort‑varsel, loggning, profiler.
 - Migrationer och schema i `supabase/`.
+- Migration `031-function-search-path-hardening.sql` sätter fast `search_path` på utvalda publika funktioner (Supabase linter `function_search_path_mutable`).
 - Kryptering av känsliga fält (t.ex. telefonnummer i kort‑varsel).
 
 ## Autentisering & säkerhet
