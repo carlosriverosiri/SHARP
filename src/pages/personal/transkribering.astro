@@ -1,0 +1,664 @@
+---
+/**
+ * Transkribering — installations- och arbetsguide för SHARP Dictation Daemon.
+ * Endast inloggad personal.
+ *
+ * Syftet med sidan: användaren ska kunna läsa i ordning och vid varje steg
+ * kopiera en färdigformulerad prompt till Cursor för att bygga lösningen
+ * på en ny dator.
+ */
+export const prerender = false;
+
+import { arInloggad, hamtaAnvandare } from '../../lib/auth';
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+if (!await arInloggad(Astro.cookies, Astro.request)) {
+  return Astro.redirect('/personal');
+}
+
+const anvandare = await hamtaAnvandare(Astro.cookies, Astro.request);
+
+const prompt1 = `Skapa ett nytt Python-projekt "SHARP Dictation Daemon" i den här mappen.
+Krav:
+- Python 3.10–3.12, Windows 10/11, NVIDIA CUDA (float16).
+- Skapa följande filer: sharp_dictation.py, replacements_medical.json, requirements.txt, README.md.
+- I requirements.txt: faster-whisper, pynput, pyperclip, numpy, soundfile, sounddevice.
+- README.md får ENDAST innehålla en kort projektöversikt och en hänvisning till att själva installationsguiden bor på SHARPs intranät/personalportal under "Transkribering". Skriv inte om eller kopiera installationsstegen i README.
+- Bekräfta i ett kort svar att filerna är skapade och vilka kommandon jag ska köra härnäst för att komma vidare.
+Inga andra filer eller funktioner ska läggas till.`;
+
+const prompt2 = `Skapa en virtuell Python-miljö i projektmappen och installera beroenden.
+Steg:
+1. Kör: py -3.12 -m venv .venv   (eller 3.11 om 3.12 saknas)
+2. Aktivera: .\\.venv\\Scripts\\Activate.ps1
+3. Kör: pip install --upgrade pip
+4. Installera alla paket enligt requirements.txt.
+5. Verifiera att "python -c \\"import faster_whisper, pynput, pyperclip, sounddevice; print('OK')\\"" skriver ut OK.
+Om CUDA saknas, avbryt och säg exakt vilka NVIDIA-komponenter som behöver installeras innan vi fortsätter.
+Lägg INTE till några nya paket eller ändrade versioner utan att fråga först.`;
+
+const prompt3 = `Skriv ett litet Python-testskript "tools/prefetch_model.py" som laddar in KBLab/kb-whisper-large via faster-whisper på CUDA med compute_type="float16".
+Skriptet ska:
+- Skriva ut "Laddar modell…" före.
+- Mäta tiden det tar.
+- Skriva "Modell klar i X sekunder, VRAM-användning visad via nvidia-smi om tillgängligt." efter.
+- INTE göra någon transkribering ännu; bara instansiera modellen och avsluta.
+Kör skriptet och rapportera tid och eventuella fel. Uppdatera INGA andra filer.`;
+
+const prompt4 = `Implementera sharp_dictation.py enligt följande specifikation. Följ varje punkt strikt.
+
+Arkitektur:
+- En bakgrundsprocess utan GUI.
+- Laddar KBLab/kb-whisper-large via faster-whisper på CUDA med compute_type="float16" vid start och håller modellen i VRAM.
+- beam_size = 1.
+- vad_filter = True med standardparametrar, men MIN_AUDIO_SECONDS = 0.15 (korta kliniska kommandon som "ja", "höger" får inte filtreras bort).
+
+Styrning (globala hotkeys via pynput):
+- F8 = "läkardiktat" (initial_prompt med ortopedisk svensk kontext).
+- F9 = "cursor/kodning" (initial_prompt anpassad för svensk teknisk text utan medicinska termer).
+- F10 = "allmänt" (initial_prompt neutralt svenskt vardagsspråk).
+- STRIKT push-to-talk: spela in medan tangenten hålls nere, transkribera så fort den släpps. Ingen toggle.
+
+Ljudinspelning:
+- 16 kHz mono via sounddevice, buffrat i minnet (ingen filskrivning till disk under normal drift).
+- Avbryt inspelning efter max 60 s för säkerhets skull.
+
+Transkribering:
+- Efter transkribering ska texten passera en post-processing-funktion som läser replacements_medical.json och ersätter ord case-insensitivt men bevarar ursprunglig skiftlägesmarkör där möjligt.
+
+Textinmatning:
+- Spara nuvarande urklipp.
+- Skriv transkriptionen till urklippet.
+- Simulera Ctrl+V via pynput.
+- VÄNTA time.sleep(0.25) efter Ctrl+V innan urklippet återställs. Detta är en patientsäkerhetskritisk paus — får INTE tas bort eller sänkas under 0.20.
+
+Loggning:
+- Skriv ENDAST till en lokal loggfil i %LOCALAPPDATA%\\SHARP-Dictation\\daemon.log
+- Logga: start, modell laddad, tid per transkription, längd på ljud, vilket profil-läge (F8/F9/F10), samt fel.
+- Logga ALDRIG själva transkriberade texten.
+
+Skriv tydliga docstrings på svenska men koden på engelska. Skriv klart hela filen i ett svep och förklara sedan på svenska (max 10 punkter) vad jag ska göra nästa steg för att provköra den.`;
+
+const prompt5 = `Skapa filen replacements_medical.json som ett JSON-objekt med svenska ortopediska felstavningar → korrekt term.
+Struktur:
+{
+  "supraskapular": "supraskapularis",
+  "akromioklavikular": "akromioklavikulär",
+  "acledsartros": "AC-ledsartros"
+}
+Fyll på med max 20 försiktiga, säkra ersättningar för axel-/knä-/armbågsterminologi. Om du är osäker på en term — utelämna hellre den. Skriv en kort kommentar i README.md om att listan utökas löpande efter validering.`;
+
+const prompt6 = `Hjälp mig provköra daemon:
+1. Aktivera .venv i PowerShell.
+2. Kör: python sharp_dictation.py
+3. Invänta raden "Modell klar" innan du fortsätter.
+4. Öppna Notepad. Håll F10, säg "det här är ett test", släpp. Texten ska klistras in.
+5. Testa F9 med: "importera pandas som pd".
+6. Testa F8 med: "akromioklavikulär ledsartros höger".
+Om något inte fungerar — läs senaste raderna i daemon.log och föreslå EN fix i taget. Rusa inte framåt med flera ändringar.`;
+
+const prompt7 = `Skapa en Windows-startare start_sharp_dictation.vbs i projektmappen som:
+- Kör .venv\\Scripts\\pythonw.exe sharp_dictation.py utan synligt fönster.
+- Loggar startfel till %LOCALAPPDATA%\\SHARP-Dictation\\start-error.log.
+Skapa också en genväg start_sharp_dictation.lnk (instruktion i README om hur man skapar den manuellt om skriptning inte fungerar).
+Ändra INGET i sharp_dictation.py i det här steget.`;
+
+const prompt8 = `Skapa en PowerShell-installer tools\\install_autostart.ps1 som registrerar en Task Scheduler-uppgift:
+- Namn: "SHARP Dictation Daemon"
+- Trigger: vid inloggning för den aktuella användaren
+- Körs som inloggad användare, INTE med högsta behörighet (ingen /RL HIGHEST, ingen -RunLevel Highest)
+- Åtgärd: starta start_sharp_dictation.vbs i projektmappen
+- Villkor: "Starta endast om dator använder nätström" = AV, "Fortsätt vid batteri" = PÅ.
+Skriv också tools\\uninstall_autostart.ps1 som tar bort uppgiften igen.
+Förklara i kommentarer i skriptet varför /RL HIGHEST inte används.`;
+
+const prompt9 = `Skapa tools\\validate_dictation.py som:
+- Tar en mapp med .wav-filer (16 kHz, mono) som indata.
+- Kör varje fil genom samma faster-whisper-konfiguration som daemon (KBLab/kb-whisper-large, beam_size=1, float16).
+- Skriver ut filnamn + transkription i en CSV-rapport reports/validation.csv.
+Lägg INTE in något medicinskt innehåll i exempel — mata bara fram verktyget. Jag spelar själv in mina testfraser.`;
+---
+
+<PortalLayout
+  title="Transkribering"
+  activePath="/personal/transkribering"
+  email={anvandare?.email}
+  role={anvandare?.roll}
+  userId={anvandare?.id}
+  userName={anvandare?.namn}
+>
+  <style>
+    .tr-wrap {
+      max-width: 56rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 1280px) {
+      .tr-wrap {
+        grid-template-columns: minmax(0, 1fr) 14rem;
+        gap: 2rem;
+        align-items: start;
+      }
+    }
+
+    .tr-article {
+      background: white;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      padding: 1.75rem 1.25rem 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      min-width: 0;
+    }
+    @media (min-width: 768px) {
+      .tr-article { padding: 2.25rem 2.5rem 2.75rem; }
+    }
+
+    .tr-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #0369a1;
+      margin-bottom: 0.5rem;
+    }
+
+    .tr-article h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.15;
+      margin: 0 0 0.5rem 0;
+    }
+    @media (min-width: 768px) {
+      .tr-article h1 { font-size: 2.25rem; }
+    }
+
+    .tr-subtitle {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: #475569;
+      margin: 0 0 1rem 0;
+      line-height: 1.4;
+    }
+
+    .tr-meta {
+      font-size: 0.8125rem;
+      color: #64748b;
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .tr-meta span {
+      background: #f1f5f9;
+      color: #334155;
+      padding: 0.125rem 0.625rem;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .tr-lead {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: #334155;
+      margin-bottom: 1.5rem;
+    }
+
+    .tr-article h2 {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 2.25rem 0 0.75rem;
+      line-height: 1.25;
+    }
+    .tr-article h3 {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 1.25rem 0 0.5rem;
+    }
+    .tr-article p,
+    .tr-article li {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: #475569;
+    }
+    .tr-article ul,
+    .tr-article ol {
+      padding-left: 1.25rem;
+      margin: 0.25rem 0 1rem;
+    }
+    .tr-article li { margin-bottom: 0.4rem; }
+    .tr-article code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.375rem;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.85em;
+      color: #0f172a;
+    }
+
+    .tr-step {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.875rem;
+      padding: 1.25rem 1.25rem 1.25rem;
+      margin: 1.25rem 0;
+      background: #fafbfc;
+    }
+    .tr-step > h2 {
+      margin-top: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 0.625rem;
+    }
+    .tr-step .tr-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.875rem;
+      height: 1.875rem;
+      border-radius: 0.625rem;
+      background: #0369a1;
+      color: white;
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+
+    .tr-callout {
+      border-radius: 0.75rem;
+      padding: 0.875rem 1rem;
+      font-size: 0.9rem;
+      color: #334155;
+      margin: 1rem 0 1.25rem;
+      line-height: 1.55;
+      border: 1px solid transparent;
+    }
+    .tr-callout.info { background: #f0f9ff; border-color: #bae6fd; }
+    .tr-callout.warn { background: #fff7ed; border-color: #fed7aa; }
+    .tr-callout.danger { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+    .tr-callout strong { color: #0c4a6e; }
+    .tr-callout.warn strong { color: #9a3412; }
+    .tr-callout.danger strong { color: #991b1b; }
+
+    .tr-prompt {
+      position: relative;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 1rem 1rem 1rem;
+      margin: 0.75rem 0 0.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .tr-prompt-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+    .tr-prompt-actions {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+    .tr-copy-btn {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tr-copy-btn:hover { background: #334155; color: white; }
+    .tr-copy-btn.copied { background: #065f46; border-color: #065f46; color: white; }
+
+    .tr-kbd {
+      display: inline-block;
+      border: 1px solid #cbd5e1;
+      border-bottom-width: 2px;
+      border-radius: 0.3rem;
+      padding: 0.05rem 0.45rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8125rem;
+      background: white;
+      color: #0f172a;
+    }
+
+    .tr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .tr-table th,
+    .tr-table td {
+      text-align: left;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .tr-table th {
+      background: #f8fafc;
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tr-toc {
+      position: sticky;
+      top: 1rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1rem 1rem 1.1rem;
+      font-size: 0.875rem;
+    }
+    .tr-toc h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #475569;
+      margin: 0 0 0.6rem 0;
+    }
+    .tr-toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+    .tr-toc li { counter-increment: toc; margin-bottom: 0.35rem; }
+    .tr-toc li::before {
+      content: counter(toc) ". ";
+      color: #94a3b8;
+      font-variant-numeric: tabular-nums;
+    }
+    .tr-toc a {
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .tr-toc a:hover { color: #0369a1; text-decoration: underline; }
+    @media (max-width: 1279px) { .tr-toc { display: none; } }
+
+    .tr-back {
+      margin-top: 1.5rem;
+      font-size: 0.9375rem;
+    }
+    .tr-back a {
+      color: #0369a1;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .tr-back a:hover { text-decoration: underline; }
+  </style>
+
+  <div class="tr-wrap">
+    <article class="tr-article">
+      <p class="tr-eyebrow">Personalportalen · Installationsguide</p>
+      <h1>Transkribering</h1>
+      <p class="tr-subtitle">SHARP Dictation Daemon — lokal, blixtsnabb och osynlig diktering med KB Whisper Large</p>
+
+      <div class="tr-meta">
+        <span>Version 1.0</span>
+        <span>Senast uppdaterad: april 2026</span>
+        <span>Windows 10/11 · NVIDIA GPU</span>
+        <span>Endast inloggad personal</span>
+      </div>
+
+      <p class="tr-lead">
+        Den här sidan är en installations- och arbetsguide för att sätta upp min egen dikteringslösning på en ny dator. Läs i ordning från steg 1 till
+        steg 10. Vid varje steg finns en färdig prompt som kopieras rakt in i <strong>Cursor</strong>, så att lösningen byggs upp på exakt samma sätt
+        varje gång — utan att något hittas på vid sidan om.
+      </p>
+
+      <div class="tr-callout danger">
+        <strong>Patientdatalagen (2008:355):</strong>
+        Läkaren bär alltid det fulla ansvaret för journalens riktighet. AI-transkribering är ett beslutsstöd, inte en garanti för felfri medicinsk
+        terminologi. All text ska granskas manuellt innan den sparas i journal eller skickas externt. Använd inte detta verktyg för realtidstranskribering
+        av patientsamtal.
+      </div>
+
+      <section>
+        <h2>Översikt</h2>
+        <p>
+          SHARP Dictation Daemon är en osynlig bakgrundsprocess i Python som kör <code>faster-whisper</code> med modellen <code>KBLab/kb-whisper-large</code>
+          lokalt på grafikkortet. Den startas automatiskt med Windows utan administratörsrättigheter, och tre globala kortkommandon styr olika språklägen
+          (allmänt, Cursor/kodning, läkardiktat).
+        </p>
+        <p>Flödet är renodlat <em>push-to-talk</em>:</p>
+        <ol>
+          <li>Håll ned en funktionstangent (t.ex. <span class="tr-kbd">F10</span>) medan du pratar.</li>
+          <li>Släpp tangenten — ljudet transkriberas lokalt på GPU.</li>
+          <li>Texten klistras in via urklipp (<span class="tr-kbd">Ctrl</span>+<span class="tr-kbd">V</span>) där markören står.</li>
+          <li>En JSON-ordlista rättar vanliga medicinska felstavningar innan inklistring.</li>
+        </ol>
+
+        <table class="tr-table">
+          <thead>
+            <tr><th>Komponent</th><th>Val</th><th>Motiv</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Motor</td><td><code>faster-whisper</code> (CTranslate2) på CUDA, <code>compute_type=float16</code></td><td>Snabbaste lokala inferensen på Windows med NVIDIA.</td></tr>
+            <tr><td>Modell</td><td><code>KBLab/kb-whisper-large</code></td><td>Officiell KBLab-modell med inbyggda CT2-checkpoints; ca 47 % lägre WER på generell svenska.</td></tr>
+            <tr><td>Minneshantering</td><td>Laddas till VRAM vid daemon-start och hålls kvar</td><td>Eliminerar laddtid vid varje diktat.</td></tr>
+            <tr><td>Styrning</td><td><code>pynput</code> (globala hotkeys)</td><td>Fungerar utan admin-rättigheter (minsta privilegium).</td></tr>
+            <tr><td>Textinmatning</td><td>Urklipp + simulerat <span class="tr-kbd">Ctrl</span>+<span class="tr-kbd">V</span>, med paus innan återställning</td><td>Snabbast, men paus krävs för att undvika att gammal text klistras in.</td></tr>
+            <tr><td>Autostart</td><td>Windows Task Scheduler vid inloggning, <em>utan</em> högsta behörighet</td><td>Robust, men undviker onödig säkerhetsrisk.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Förutsättningar på datorn</h2>
+        <ul>
+          <li><strong>Hårdvara:</strong> NVIDIA GPU med minst 10–12 GB VRAM. Referensmaskinen använder <em>RTX 5070 Ti, 16 GB VRAM</em>.</li>
+          <li><strong>Operativsystem:</strong> Windows 10 eller 11 (64-bit), personligt användarkonto (inte delad maskin).</li>
+          <li><strong>Mjukvara:</strong> Aktuell NVIDIA-drivrutin, Python 3.10–3.12 (rekommenderas), <code>git</code>, Cursor installerat.</li>
+          <li><strong>Nätverk:</strong> Internet krävs första gången för att ladda ned modellvikter till <code>%USERPROFILE%\.cache\huggingface</code>. Därefter körs allt lokalt.</li>
+          <li><strong>Disk:</strong> Ca 4–6 GB ledigt för modellfiler.</li>
+        </ul>
+      </section>
+
+      <section id="steg-1" class="tr-step">
+        <h2><span class="tr-step-num">1</span> Skapa projektmappen</h2>
+        <p>Lägg all kod och alla inställningar i en egen, lätt hittbar mapp på datorn (t.ex. <code>C:\Dev\SHARP-DICTATION\</code>). Mappen ska inte ligga inne i ASTRO-projektet — det här är ett fristående Python-verktyg.</p>
+        <div class="tr-callout info">
+          <strong>Mål för steget:</strong> Öppna Cursor i en tom projektmapp och låt Cursor initiera projektet med rätt struktur.
+        </div>
+        <p><strong>Promt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-1" type="button">Kopiera</button></div>
+<pre id="p-step-1" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt1}</pre>
+        </div>
+      </section>
+
+      <section id="steg-2" class="tr-step">
+        <h2><span class="tr-step-num">2</span> Skapa virtuell miljö och installera beroenden</h2>
+        <p>Använd en virtuell miljö så att projektets paket inte krockar med andra Python-verktyg på datorn.</p>
+        <div class="tr-callout info">
+          <strong>Mål för steget:</strong> <code>.venv</code> aktiv i projektmappen och alla paket installerade utan fel.
+        </div>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-2" type="button">Kopiera</button></div>
+<pre id="p-step-2" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt2}</pre>
+        </div>
+      </section>
+
+      <section id="steg-3" class="tr-step">
+        <h2><span class="tr-step-num">3</span> Ladda ned KB Whisper Large (officiell modell)</h2>
+        <p>Modellen laddas ned en gång från Hugging Face och cachas lokalt. Använd officiella <code>KBLab/kb-whisper-large</code> — inga tredjepartskonverteringar.</p>
+        <div class="tr-callout warn">
+          <strong>Varning:</strong>
+          Använd aldrig anonyma “CT2-konverteringar” från tredje part. KBLab publicerar själva officiella CTranslate2-checkpoints som <code>faster-whisper</code> kan läsa direkt.
+        </div>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-3" type="button">Kopiera</button></div>
+<pre id="p-step-3" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt3}</pre>
+        </div>
+      </section>
+
+      <section id="steg-4" class="tr-step">
+        <h2><span class="tr-step-num">4</span> Bygg kärnan i <code>sharp_dictation.py</code></h2>
+        <p>Det här är den osynliga bakgrundsprocessen. Inget GUI, ingen systemtray — bara en konsollprocess (senare dold) som lyssnar på tangenterna.</p>
+        <div class="tr-callout info">
+          <strong>Mål för steget:</strong> En daemon som laddar modellen i VRAM vid start och som svarar på push-to-talk utan toggle-beteende.
+        </div>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-4" type="button">Kopiera</button></div>
+<pre id="p-step-4" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt4}</pre>
+        </div>
+      </section>
+
+      <section id="steg-5" class="tr-step">
+        <h2><span class="tr-step-num">5</span> Skapa ordlistan <code>replacements_medical.json</code></h2>
+        <p>AI-modellen kan inte garantera 100 % korrekt medicinsk stavning. Ordlistan rättar kända felstavningar som ett sista steg innan texten klistras in.</p>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-5" type="button">Kopiera</button></div>
+<pre id="p-step-5" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt5}</pre>
+        </div>
+      </section>
+
+      <section id="steg-6" class="tr-step">
+        <h2><span class="tr-step-num">6</span> Provkörning innan autostart</h2>
+        <p>Innan daemon läggs in i Task Scheduler ska den köras manuellt i ett terminalfönster så att eventuella fel syns direkt.</p>
+        <div class="tr-callout info">
+          <strong>Mål för steget:</strong> Daemon startar utan fel, modellen laddas i VRAM, och F8/F9/F10 fungerar med push-to-talk i ett vanligt anteckningsblock (Notepad).
+        </div>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-6" type="button">Kopiera</button></div>
+<pre id="p-step-6" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt6}</pre>
+        </div>
+      </section>
+
+      <section id="steg-7" class="tr-step">
+        <h2><span class="tr-step-num">7</span> Dölj konsollfönstret</h2>
+        <p>När daemon fungerar i synligt läge ska den göras osynlig. Det enklaste sättet är att köra via <code>pythonw.exe</code> (utan konsollfönster) och paketera en liten startare.</p>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-7" type="button">Kopiera</button></div>
+<pre id="p-step-7" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt7}</pre>
+        </div>
+      </section>
+
+      <section id="steg-8" class="tr-step">
+        <h2><span class="tr-step-num">8</span> Autostart via Task Scheduler (utan admin)</h2>
+        <p>Uppgiften ska startas vid inloggning och <em>inte</em> med högsta behörighet.</p>
+        <div class="tr-callout warn">
+          <strong>Viktig säkerhetsregel:</strong>
+          Konfigurera <em>inte</em> uppgiften med <code>/RL HIGHEST</code>. Den ska köras som den inloggade användaren, inget annat.
+        </div>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-8" type="button">Kopiera</button></div>
+<pre id="p-step-8" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt8}</pre>
+        </div>
+      </section>
+
+      <section id="steg-9" class="tr-step">
+        <h2><span class="tr-step-num">9</span> Validera på medicinska diktat</h2>
+        <p>Innan verktyget används skarpt i arbetet måste modellens precision kontrolleras i den egna miljön.</p>
+        <ol>
+          <li>Spela in 50–100 testfraser med typisk ortopedisk terminologi (axel, knä, armbåge).</li>
+          <li>Notera varje felstavning.</li>
+          <li>Lägg återkommande fel i <code>replacements_medical.json</code>.</li>
+          <li>Upprepa tills lista är stabil.</li>
+        </ol>
+        <p><strong>Prompt till Cursor:</strong></p>
+        <div class="tr-prompt">
+          <div class="tr-prompt-actions"><button class="tr-copy-btn" data-copy-target="#p-step-9" type="button">Kopiera</button></div>
+<pre id="p-step-9" class="tr-prompt-body" style="margin:0;white-space:pre-wrap">{prompt9}</pre>
+        </div>
+      </section>
+
+      <section id="steg-10" class="tr-step">
+        <h2><span class="tr-step-num">10</span> Klart — så här fungerar den dagliga användningen</h2>
+        <ul>
+          <li><span class="tr-kbd">F10</span> hållas nere → släpp → text klistras in där markören står (allmänt).</li>
+          <li><span class="tr-kbd">F9</span> → teknisk svensk text (t.ex. när du beskriver krav i Cursor).</li>
+          <li><span class="tr-kbd">F8</span> → läkardiktat med ortopedisk kontext. <strong>Granska alltid manuellt</strong>.</li>
+          <li>Loggen i <code>%LOCALAPPDATA%\SHARP-Dictation\daemon.log</code> visar ev. fel. Inga transkriberade texter sparas där.</li>
+          <li>Vid nya felstavningar: uppdatera <code>replacements_medical.json</code> och starta om daemon.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Felsökning (snabb checklista)</h2>
+        <ul>
+          <li><strong>Modellen laddas inte / CUDA-fel:</strong> Uppdatera NVIDIA-drivrutin, kontrollera att <code>nvidia-smi</code> visar kortet, kör steg 3 igen.</li>
+          <li><strong>Ingenting klistras in:</strong> Kontrollera att fönstret du dikterar i har fokus; öka pausen efter Ctrl+V från 0.25 s till 0.40 s.</li>
+          <li><strong>Gammal text klistras in:</strong> Pausen är för kort — öka den, och logga in/ut för att rensa gamla Task Scheduler-uppgifter.</li>
+          <li><strong>F8/F9/F10 svarar inte:</strong> En annan app kapar tangenten. Byt bindning i sharp_dictation.py (t.ex. till F7/F11/F12).</li>
+          <li><strong>Korta ord ("ja", "höger") försvinner:</strong> Sänk <code>MIN_AUDIO_SECONDS</code> ytterligare eller stäng av VAD tillfälligt för test.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Vad som <em>inte</em> ingår i detta</h2>
+        <ul>
+          <li>Ingen realtidstranskribering av patientbesök.</li>
+          <li>Ingen koppling till journalsystem, molntjänst eller extern databas.</li>
+          <li>Inget grafiskt användargränssnitt och ingen installer med admin-rättigheter.</li>
+          <li>Ingen inbäddad funktion på den här Astro-sajten — sajten dokumenterar, men kör inte, lösningen.</li>
+        </ul>
+      </section>
+
+      <p class="tr-back">
+        <a href="/personal/oversikt">← Tillbaka till översikt</a>
+      </p>
+    </article>
+
+    <aside class="tr-toc" aria-label="Innehåll">
+      <h3>Gå till steg</h3>
+      <ol>
+        <li><a href="#steg-1">Skapa projektmappen</a></li>
+        <li><a href="#steg-2">Virtuell miljö + beroenden</a></li>
+        <li><a href="#steg-3">Ladda ned KB Whisper Large</a></li>
+        <li><a href="#steg-4">Bygg kärnan i daemon</a></li>
+        <li><a href="#steg-5">Medicinsk ordlista (JSON)</a></li>
+        <li><a href="#steg-6">Provkörning</a></li>
+        <li><a href="#steg-7">Dölj konsollfönstret</a></li>
+        <li><a href="#steg-8">Autostart (utan admin)</a></li>
+        <li><a href="#steg-9">Validera på diktat</a></li>
+        <li><a href="#steg-10">Daglig användning</a></li>
+      </ol>
+    </aside>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('click', (e) => {
+      const btn = e.target instanceof Element ? e.target.closest('[data-copy-target]') : null;
+      if (!btn) return;
+      const sel = btn.getAttribute('data-copy-target');
+      if (!sel) return;
+      const node = document.querySelector(sel);
+      if (!node) return;
+      const text = node.textContent || '';
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Kopierat!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1600);
+      }).catch(() => {
+        btn.textContent = 'Kunde inte kopiera';
+      });
+    });
+  </script>
+</PortalLayout>
